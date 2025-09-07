@@ -1,0 +1,96 @@
+<!--
+
+
+
+                                .....      ...
+                          ...... .   .````.   .  . .. .
+                    ........... . .l~[[][_?+l` .      .....
+                 ............... :[_<<,!i'I{[]I .     .........
+              ................. ^1i-'>>][<~^[-{, .    ...........
+            ................... <-I^`/?\\?/^.i~_ .    ..............
+          ..................... "1I!'+<}{~_`l;{: .    ...............
+         .'..................... l]~I,:l!,;:<]! .     .......  ........
+       .'........................ `>~]]?-?}+>^ .      ..  ..   ....... .
+      .'..........................  .'^",^'.  ..    .   ..    ........  .
+     .'''''.................   . .                     ..    ......... . ..
+    .'''''.`'''''''''''...'.<]+>_i[+]__+}~[<,]]-+-_-`...    .......... .  .
+    '''''''   .        ...  lI!;l:!l: ^^l,;"`l^l,'::                  . .  .
+   .''''''./f(i-tr?~j|{.''[u':   ^. ~x)>+/r|"iul x{\_|nf]t!<|+j()ln|]. ... .
+   ''''''` oZf<>[qfravk..,oxU[O_O): /Znx^\B,"odh"$vM|"Wn^B?1hn#ud]qrz^ . . .
+   '''''''.QJj~\dz?/Zf0^.)Q;Z}cju '.-tXO _q |Z-d|O{mi O1 XcXj\Q; itxp, .  . .
+  .''''''''`^,`^^", `"  :ji ';    . .,`     `   '   ^ .   "^      ",  .  .. .
+   ''''''''.,::!`';l:::::,":."I;:I^`;,^;;": ^;:^`:I: ,:;,,"::Il!;I:'..  .  .
+   ''''''''',;:!^;i><<:l~<i!.I<i<<,Ill<><ll"'>i!i:li`"i>i!>>ii;;:;,' . ..  .
+   .''''''''"^^`^+>Ill"I~i>>::~i>iI!`^l!l!;i`;:!i.I!I !!>il;Il`'''``.. .   .
+    '''''''^i><<>ii<i.i<l><>i>!il!!.I<~!lI>>i!"';ii!;.!:ii :l>!!!;;i` .   .
+    ''''''''.........'... . ,<~~^">~+;`i!<ii l!,i<,.   .  .          . .
+     ''''''''''''''''''''''''''`'``^^^``^`'....'.''...................   .
+      '`'''''''''''''''''.''..'`^^^^^^^^`'.......  ...................  .
+       '''''''''''''''''''''`^^^"""^^^^`'''''''....................... .
+        .`''''''''''''''''`^^^^^^^^^^`....... .........    ............
+          '`''''''''''''``'^I!!+++:^~!><: !'.iIl;^:.   ..............
+           .''''''''''`^^;-l--?,,-~~><;!~!+i>i+i+<l_~<I....
+             ..'''''`^""`_Y{unzi>nnz[c?]1j}{xxX1|(xc}r(
+              .````^""""""":,"^""'.'..^'.' . `''..'
+            .`^^,"""",,,,""^^^^`..'.......''```'.....
+        . .'^",,""",,,,,,,"^^^`''''.......`^```.....
+      .'''^",,,,",,,,,,,,""^^`'''''```''''````....
+'''''``^",,,",,,,,,,,,,""""^^^`^^^^'.......              ..''.
+....^",,,,,,,,,::::,,,"""^`'..'```.                     .`'..
+.'`",,,"`^"^^",,,:,,"""^^.                          ..''''..
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mizar Verifier</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; background-color: #f4f4f9; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 2em; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        textarea { width: 100%; height: 300px; box-sizing: border-box; margin-bottom: 1em; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        pre { background-color: #eee; padding: 1em; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mizar Proof Verifier</h1>
+        <p>Write your Mizar proof below and click "Verify" to run the checker.</p>
+        <textarea id="mizarCode" placeholder="environ ... begin ... theorem ... proof ... end;"></textarea>
+        <button onclick="verifyProof()">Verify</button>
+        <h2>Result:</h2>
+        <pre id="resultOutput">The verifier output will appear here.</pre>
+    </div>
+
+    <script>
+        async function verifyProof() {
+            const code = document.getElementById('mizarCode').value;
+            const outputElement = document.getElementById('resultOutput');
+            outputElement.textContent = 'Verifying...';
+
+            const response = await fetch('/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code })
+            });
+
+            const data = await response.json();
+            if (data.status === 'success') {
+                outputElement.textContent = `✅ Verification Successful!\n\n${data.raw_output}`;
+            } else if (data.status === 'failure') {
+                let errorDisplay = `❌ Verification Failed\n\nErrors Found:\n`;
+                data.errors.forEach(error => {
+                    errorDisplay += `• Line ${error.line}, Column ${error.character}: ${error.message}\n`;
+                });
+                errorDisplay += `\nFull Output:\n${data.raw_output}`;
+                outputElement.textContent = errorDisplay;
+            } else {
+                outputElement.textContent = `⚠️ Error: ${data.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

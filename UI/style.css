@@ -1,0 +1,139 @@
+/* QuaNTecH Color Scheme */
+:root {
+    --bg-default: #1B263B;
+    --bg-paper: #000000;
+    --primary-teal: #00A99D;
+    --secondary-orange: #F76C6C;
+    --warning-purple: #B45EFF;
+    --text-primary: #E0E1DD;
+    --text-secondary: #9FFFFF;
+    --border-color: #4F5D75;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-default);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 2rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1rem;
+}
+
+header h1 {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.editor-container, .results-container {
+    background-color: var(--bg-paper);
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+h2 {
+    margin-top: 0;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+#proof-editor {
+    width: 100%;
+    height: 400px;
+    background-color: #0d1117;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+#verify-button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    background-color: var(--primary-teal);
+    color: var(--bg-paper);
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#verify-button:hover {
+    background-color: #00c7b9;
+}
+
+#verify-button.loading {
+    cursor: not-allowed;
+    background-color: var(--border-color);
+}
+
+
+#results-panel .placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: var(--border-color);
+    font-style: italic;
+}
+
+.result-card {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-left: 4px solid;
+}
+
+.result-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-secondary);
+}
+
+.result-card.explanation { border-color: var(--primary-teal); }
+.result-card.suggestion { border-color: var(--warning-purple); }
+.result-card.encouragement { border-color: var(--secondary-orange); }
+.result-card.grammar { border-color: #4CAF50; }
+.result-card.dual-layer { border-color: #FFD700; }
+
+.verdict {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.verdict.success { background-color: #00a99d2a; color: var(--primary-teal); }
+.verdict.error { background-color: #f76c6c2a; color: var(--secondary-orange); }
+
+.powered-by {
+    font-size: 0.8rem;
+    text-align: right;
+    color: var(--border-color);
+    margin-top: 1rem;
+}
