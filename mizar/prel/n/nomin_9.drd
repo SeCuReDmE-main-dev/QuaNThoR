@@ -1,0 +1,929 @@
+<?xml version="1.0"?>
+<ReductionRegistrations>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="XBOOLE_0"/>
+<ArticleID name="ZFMISC_1"/>
+<ArticleID name="SUBSET_1"/>
+<ArticleID name="RELAT_1"/>
+<ArticleID name="XTUPLE_0"/>
+<ArticleID name="ORDINAL1"/>
+<ArticleID name="FUNCT_1"/>
+<ArticleID name="PARTFUN1"/>
+<ArticleID name="MCART_1"/>
+<ArticleID name="FUNCT_2"/>
+<ArticleID name="FINSET_1"/>
+<ArticleID name="CARD_1"/>
+<ArticleID name="FINSEQ_1"/>
+<ArticleID name="NOMIN_1"/>
+<ArticleID name="NUMBERS"/>
+<ArticleID name="XREAL_0"/>
+<ArticleID name="INT_1"/>
+<ArticleID name="FINSEQ_2"/>
+<ArticleID name="XBOOLEAN"/>
+<ArticleID name="CARD_3"/>
+<ArticleID name="MARGREL1"/>
+<ArticleID name="NOMIN_9"/>
+</Signature>
+<Reduction aid="NOMIN_9" nr="1">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="18"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="4"/>
+<Adjective nr="22"/>
+<Adjective nr="38">
+<LocusVar nr="1"/>
+</Adjective>
+<Adjective nr="39"/>
+</Cluster>
+</Typ>
+<Func kind="K" nr="28">
+<LocusVar nr="2"/>
+<Func kind="K" nr="97">
+<LocusVar nr="1"/>
+</Func>
+</Func>
+<LocusVar nr="2"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="2">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="198">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+</Func>
+<Num nr="1"/>
+</Func>
+<LocusVar nr="1"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="3">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="198">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+</Func>
+<Num nr="2"/>
+</Func>
+<LocusVar nr="2"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="4">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="198">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+</Func>
+<Num nr="3"/>
+</Func>
+<LocusVar nr="3"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="5">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="198">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+</Func>
+<Num nr="4"/>
+</Func>
+<LocusVar nr="4"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="6">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="198">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+</Func>
+<Num nr="5"/>
+</Func>
+<LocusVar nr="5"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="7">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="198">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+</Func>
+<Num nr="6"/>
+</Func>
+<LocusVar nr="6"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="8">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="198">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+</Func>
+<Num nr="7"/>
+</Func>
+<LocusVar nr="7"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="9">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="198">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+</Func>
+<Num nr="8"/>
+</Func>
+<LocusVar nr="8"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="10">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="198">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+</Func>
+<Num nr="9"/>
+</Func>
+<LocusVar nr="9"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="11">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="200">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+<LocusVar nr="10"/>
+</Func>
+<Num nr="1"/>
+</Func>
+<LocusVar nr="1"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="12">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="200">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+<LocusVar nr="10"/>
+</Func>
+<Num nr="2"/>
+</Func>
+<LocusVar nr="2"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="13">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="200">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+<LocusVar nr="10"/>
+</Func>
+<Num nr="3"/>
+</Func>
+<LocusVar nr="3"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="14">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="200">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+<LocusVar nr="10"/>
+</Func>
+<Num nr="4"/>
+</Func>
+<LocusVar nr="4"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="15">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="200">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+<LocusVar nr="10"/>
+</Func>
+<Num nr="5"/>
+</Func>
+<LocusVar nr="5"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="16">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="200">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+<LocusVar nr="10"/>
+</Func>
+<Num nr="6"/>
+</Func>
+<LocusVar nr="6"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="17">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="200">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+<LocusVar nr="10"/>
+</Func>
+<Num nr="7"/>
+</Func>
+<LocusVar nr="7"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="18">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="200">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+<LocusVar nr="10"/>
+</Func>
+<Num nr="8"/>
+</Func>
+<LocusVar nr="8"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="19">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="200">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+<LocusVar nr="10"/>
+</Func>
+<Num nr="9"/>
+</Func>
+<LocusVar nr="9"/>
+</Reduction>
+<Reduction aid="NOMIN_9" nr="20">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="54">
+<Func kind="K" nr="200">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+<LocusVar nr="6"/>
+<LocusVar nr="7"/>
+<LocusVar nr="8"/>
+<LocusVar nr="9"/>
+<LocusVar nr="10"/>
+</Func>
+<Num nr="10"/>
+</Func>
+<LocusVar nr="10"/>
+</Reduction>
+</ReductionRegistrations>

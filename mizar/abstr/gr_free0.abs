@@ -1,0 +1,603 @@
+:: Free Product of Groups
+::  by Sebastian Koch
+::
+:: Received April 27, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies FUNCT_1, PBOOLE, RELAT_1, XBOOLE_0, ALGSTR_0, FUNCOP_1, SUBSET_1,
+      RLVECT_2, STRUCT_0, CARD_3, TARSKI, BINOP_1, ZFMISC_1, MCART_1, MONOID_0,
+      GROUP_1, SEMI_AF1, FUNCT_4, FINSEQ_1, NAT_1, XXREAL_0, GROUP_6, FUNCT_2,
+      WELLORD1, GROUP_7, PARTFUN1, REWRITE1, EQREL_1, WAYBEL26, AFINSQ_1,
+      ORDINAL4, MSUALG_6, FINSEQ_5, MSUALG_5, ARYTM_0, ARYTM_1, ARYTM_3,
+      CARD_1, NUMBERS, PRE_POLY, FUNCT_5, FINSEQ_2, MSSUBFAM, PRELAMB, GR_CY_1,
+      FUNCT_6, FINSEQ_4, RFINSEQ, GROUP_19, GROUP_23, GR_FREE0, VECTSP13;
+ notations TARSKI, XBOOLE_0, ENUMSET1, XTUPLE_0, ZFMISC_1, SUBSET_1, RELAT_1,
+      FUNCT_1, ORDINAL1, RELSET_1, PARTFUN1, FUNCT_2, NAT_D, BINOP_1, FUNCT_3,
+      FUNCOP_1, FUNCT_4, CARD_1, PBOOLE, FUNCT_5, CARD_3, FUNCT_6, NUMBERS,
+      XCMPLX_0, XXREAL_0, FINSEQ_1, EQREL_1, FINSEQ_2, FINSEQ_4, FINSEQ_5,
+      REWRITE1, AFINSQ_1, PRE_POLY, STRUCT_0, ALGSTR_0, GROUP_1, GROUP_4,
+      GROUP_6, MONOID_0, PRALG_1, RFINSEQ, ALG_1, MSUALG_5, GROUP_7, GROUP_19,
+      GROUP_23, WAYBEL26, ALGSTR_4;
+ constructors MONOID_0, PRALG_2, RELSET_1, FUNCT_4, REWRITE1, WAYBEL26,
+      ALGSTR_4, FINSEQ_5, MSUALG_5, PRE_POLY, FUNCT_3, FUNCT_5, GROUP_4,
+      FINSEQOP, FINSEQ_4, RFINSEQ, NAT_D, GROUP_19, GROUP_23;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, FINSEQ_1, STRUCT_0,
+      GROUP_1, GROUP_2, MONOID_0, ORDINAL1, FUNCOP_1, RELSET_1, GROUP_7,
+      REWRITE1, RELAT_2, EQREL_1, AFINSQ_1, ALGSTR_4, VECTSP_1, XXREAL_0,
+      GROUP_12, XREAL_0, NAT_1, FACIRC_2, XTUPLE_0, PRE_POLY, GR_CY_1, CARD_1,
+      PBOOLE, TOPS_5;
+ requirements NUMERALS, BOOLE, SUBSET, REAL, ARITHM;
+
+
+begin :: Preliminaries
+
+:: into FINSEQ_1
+theorem :: GR_FREE0:1
+  for p being FinSequence st len p <> 0 holds p|1 = <* p.1 *>;
+
+theorem :: GR_FREE0:2
+  for p being FinSequence st len p <> 0
+  holds p/^(len p -' 1) = <* p.len p *>;
+
+:: into FUNCT_5
+theorem :: GR_FREE0:3
+  for f being Function, x being object st x in dom f
+  holds (uncurry <*f*>).(1,x) = f.x;
+
+:: reformulation of TOPGEN5
+:: into FUNCT_6
+theorem :: GR_FREE0:4
+  for f being Function, x being object st x in dom f
+  holds (commute <*f*>).x = <*f.x*>;
+
+:: into REWRITE1
+registration
+  let X be FinSequence-membered set, R be Relation of X;
+  cluster non trivial -> FinSequence-yielding for RedSequence of R;
+end;
+
+:: generalization of GROUP_7:39
+:: into GROUP_7
+theorem :: GR_FREE0:5
+  for I being non empty set, i being Element of I
+  for F being Group-Family of I
+  st I is trivial holds F.i,product F are_isomorphic;
+
+:: into MONOID_0
+registration
+  cluster {}*+^ -> non empty trivial;
+  cluster {}*+^+<0> -> non empty trivial;
+end;
+
+begin :: Free Product of Groups
+
+reserve x,y,z for object, X for set, I for non empty set, i,j for Element of I,
+    M0 for multMagma-yielding Function,
+    M for non empty multMagma-yielding Function,
+    M1, M2, M3 for non empty multMagma,
+    G for Group-like multMagma-Family of I,
+    H for Group-like associative multMagma-Family of I;
+
+definition
+  let M0;
+  func FreeAtoms(M0) -> Relation equals
+:: GR_FREE0:def 1
+  *graph(Carrier M0);
+end;
+
+theorem :: GR_FREE0:6
+  [x,y] in FreeAtoms(M0) iff x in dom M0 & y in (Carrier M0).x;
+
+theorem :: GR_FREE0:7
+  for i being Element of dom M
+  holds [i,x] in FreeAtoms(M) iff x in the carrier of (M.i);
+
+theorem :: GR_FREE0:8
+  for N being multMagma-Family of I
+  holds [i,x] in FreeAtoms(N) iff x in the carrier of (N.i);
+
+theorem :: GR_FREE0:9
+  M0 = {} iff FreeAtoms(M0) = {};
+
+registration
+  cluster FreeAtoms({}) -> empty;
+  let M;
+  cluster FreeAtoms(M) -> non empty;
+end;
+
+registration
+  let I, G;
+  cluster FreeAtoms(G) -> non empty;
+end;
+
+theorem :: GR_FREE0:10
+  FreeAtoms(M) = union the set of all [:{i},the carrier of M.i :]
+    where i is Element of dom M;
+
+theorem :: GR_FREE0:11
+  FreeAtoms(<*M1*>) = [: {1}, the carrier of M1 :];
+
+theorem :: GR_FREE0:12
+  FreeAtoms(<*M1,M2*>) = [: {1}, the carrier of M1 :] \/
+    [: {2}, the carrier of M2 :];
+
+theorem :: GR_FREE0:13
+  FreeAtoms(<*M1,M2,M3*>) = [: {1}, the carrier of M1 :] \/
+    [: {2}, the carrier of M2 :] \/ [: {3}, the carrier of M3 :];
+
+theorem :: GR_FREE0:14
+  for x1 being Element of M1 holds [1,x1] in FreeAtoms(<*M1*>) &
+     [1,x1] in FreeAtoms(<*M1,M2*>) & [1,x1] in FreeAtoms(<*M1,M2,M3*>);
+
+theorem :: GR_FREE0:15
+  for x2 being Element of M2
+  holds [2,x2] in FreeAtoms(<*M1,M2*>) & [2,x2] in FreeAtoms(<*M1,M2,M3*>);
+
+theorem :: GR_FREE0:16
+  for x3 being Element of M3 holds [3,x3] in FreeAtoms(<*M1,M2,M3*>);
+
+theorem :: GR_FREE0:17
+  FreeAtoms(X --> M1) = [: X, the carrier of M1 :];
+
+theorem :: GR_FREE0:18
+  for N0 being multMagma-yielding Function
+  holds FreeAtoms(M0 +* N0) c= FreeAtoms(M0) \/ FreeAtoms(N0);
+
+theorem :: GR_FREE0:19
+  for N0 being multMagma-yielding Function st M0 tolerates N0
+  holds FreeAtoms(M0 +* N0) = FreeAtoms(M0) \/ FreeAtoms(N0);
+
+theorem :: GR_FREE0:20
+  for p being FinSequence of FreeAtoms(G)
+  ex q being FinSequence of FreeAtoms(G)
+  st len p = len q &
+    for k being Nat,i being Element of I, g being Element of G.i st p.k = [i,g]
+    ex h being Element of G.i st g*h = 1_(G.i) & (Rev q).k = [i,h];
+
+reserve p, q for FinSequence of FreeAtoms(H), g,h for Element of H.i,
+  k for Nat;
+
+theorem :: GR_FREE0:21
+  ex q st len p = len q &
+    for k, i, g st p.k = [i,g] holds (Rev q).k = [i,g"];
+
+theorem :: GR_FREE0:22
+  for g being Element of G.i holds <*[i,g]*> is FinSequence of FreeAtoms(G);
+
+theorem :: GR_FREE0:23
+  for g being Element of G.i, h being Element of G.j
+  holds <*[i,g],[j,h]*> is FinSequence of FreeAtoms(G);
+
+definition
+  let I be set, G be Group-like multMagma-Family of I;
+  func ReductionRel(G) -> Relation of FreeAtoms(G)*+^+<0> means
+:: GR_FREE0:def 2
+
+  (I is empty implies it = {}) & (I is non empty implies
+  ex I9 being non empty set, G9 being Group-like multMagma-Family of I9
+  st I = I9 & G = G9 &
+  for p,q being FinSequence of FreeAtoms(G9) holds [p,q] in it iff
+    (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9
+     st p = s^<* [i,1_(G9.i)] *>^t & q = s^t) or
+    (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9,
+       g,h being Element of (G9.i)
+     st p = s^<* [i,g],[i,h] *>^t & q = s^<* [i,g*h] *>^t));
+end;
+
+definition
+  let I, G;
+  redefine func ReductionRel(G) means
+:: GR_FREE0:def 3
+
+  for p,q being FinSequence of FreeAtoms(G) holds [p,q] in it iff
+    (ex s,t being FinSequence of FreeAtoms(G), i being Element of I
+     st p = s^<* [i,1_(G.i)] *>^t & q = s^t) or
+    (ex s,t being FinSequence of FreeAtoms(G), i being Element of I,
+       g,h being Element of (G.i)
+     st p = s^<* [i,g],[i,h] *>^t & q = s^<* [i,g*h] *>^t);
+end;
+
+theorem :: GR_FREE0:24
+  for p,q,r being FinSequence of FreeAtoms(G) st [p,q] in ReductionRel(G)
+  holds [p^r,q^r] in ReductionRel(G) & [r^p,r^q] in ReductionRel(G);
+
+theorem :: GR_FREE0:25
+  for p,q being FinSequence of FreeAtoms(G), g,h being Element of G.i
+  holds [p^<*[i,g],[i,h]*>^q, p^<*[i,g*h]*>^q] in ReductionRel(G);
+
+theorem :: GR_FREE0:26
+  for g,h being Element of G.i
+  holds [<*[i,g],[i,h]*>, <*[i,g*h]*>] in ReductionRel(G);
+
+theorem :: GR_FREE0:27
+  for p,q being FinSequence of FreeAtoms(G)
+  holds [p^<*[i,1_(G.i)]*>^q, p^q] in ReductionRel(G);
+
+theorem :: GR_FREE0:28
+  [<*[i,1_(G.i)]*>,{}] in ReductionRel(G);
+
+theorem :: GR_FREE0:29
+  dom ReductionRel(G) c= FreeAtoms(G)* & rng ReductionRel(G) = FreeAtoms(G)* &
+    field ReductionRel(G) = FreeAtoms(G)*;
+
+theorem :: GR_FREE0:30
+  for x,y being object st [x,y] in ReductionRel(G)
+  holds x is FinSequence of FreeAtoms(G) & y is FinSequence of FreeAtoms(G);
+
+theorem :: GR_FREE0:31
+  for p,q being FinSequence of FreeAtoms(G), g,h being Element of G.i
+  st g*h = 1_(G.i) holds ReductionRel(G) reduces p^<*[i,g],[i,h]*>^q, p^q;
+
+theorem :: GR_FREE0:32
+  for p,q being FinSequence of FreeAtoms(G) st len p = len q &
+    for k being Nat, i being Element of I, g,h being Element of G.i
+    st p.k = [i,g] & g*h = 1_(G.i) holds (Rev q).k = [i,h]
+  holds ReductionRel(G) reduces p^q,{};
+
+theorem :: GR_FREE0:33
+  (len p = len q & for k, i, g st p.k = [i,g] holds (Rev q).k = [i,g"])
+  implies ReductionRel(H) reduces p^q,{} & ReductionRel(H) reduces q^p,{};
+
+theorem :: GR_FREE0:34
+  for p,q being FinSequence st [p,q] in ReductionRel(G) holds len p = len q + 1
+;
+
+theorem :: GR_FREE0:35
+  for p,q being FinSequence of FreeAtoms(G) st ReductionRel(G) reduces p,q
+  holds p = q or len q < len p;
+
+registration
+  let I, G;
+  cluster ReductionRel(G) -> strongly-normalizing;
+end;
+
+theorem :: GR_FREE0:36
+  {} is_a_normal_form_wrt ReductionRel G;
+
+theorem :: GR_FREE0:37
+  for g being Element of G.i st g <> 1_(G.i)
+  holds <* [i,g] *> is_a_normal_form_wrt ReductionRel G;
+
+theorem :: GR_FREE0:38
+  for p,q1,q2 being FinSequence of FreeAtoms(G)
+  st [p,q1] in ReductionRel(G) & [p,q2] in ReductionRel(G) & q1 <> q2 holds (
+  ex s,t being FinSequence of FreeAtoms(G), i being Element of I,
+      f,g,h being Element of G.i st
+    p = s^<*[i,f],[i,g],[i,h]*>^t &
+      ((q1 = s^<*[i,f*g],[i,h]*>^t & q2 = s^<*[i,f],[i,g*h]*>^t) or
+       (q1 = s^<*[i,f],[i,g*h]*>^t & q2 = s^<*[i,f*g],[i,h]*>^t))
+  ) or ex r,s,t being FinSequence of FreeAtoms(G), i,j being Element of I st
+    (p = r^<*[i,1_(G.i)]*>^s^<*[j,1_(G.j)]*>^t &
+      ((q1 = r^s^<*[j,1_(G.j)]*>^t & q2 = r^<*[i,1_(G.i)]*>^s^t) or
+       (q1 = r^<*[i,1_(G.i)]*>^s^t & q2 = r^s^<*[j,1_(G.j)]*>^t))
+    ) or ex g,h being Element of G.i st
+      (p = r^<*[i,g],[i,h]*>^s^<*[j,1_(G.j)]*>^t &
+        ((q1 = r^<*[i,g*h]*>^s^<*[j,1_(G.j)]*>^t &
+          q2 = r^<*[i,g],[i,h]*>^s^t) or
+        (q1 = r^<*[i,g],[i,h]*>^s^t &
+          q2 = r^<*[i,g*h]*>^s^<*[j,1_(G.j)]*>^t))) or
+      (p = r^<*[j,1_(G.j)]*>^s^<*[i,g],[i,h]*>^t &
+        ((q1 = r^<*[j,1_(G.j)]*>^s^<*[i,g*h]*>^t &
+          q2 = r^s^<*[i,g],[i,h]*>^t) or
+        (q1 = r^s^<*[i,g],[i,h]*>^t &
+          q2 = r^<*[j,1_(G.j)]*>^s^<*[i,g*h]*>^t))) or
+      ex g9,h9 being Element of G.j
+      st p = r^<*[i,g],[i,h]*>^s^<*[j,g9],[j,h9]*>^t &
+        ((q1 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t &
+          q2 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t) or
+        (q1 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t &
+          q2 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t));
+
+registration
+  let I, H;
+  cluster ReductionRel(H) -> subcommutative;
+end;
+
+registration
+  let I, H;
+  cluster ReductionRel(H) -> complete with_UN_property;
+end;
+
+theorem :: GR_FREE0:39
+  for g being Element of H.i, h being Element of H.j
+  holds <*[i,g]*>,<*[j,h]*> are_convertible_wrt ReductionRel H iff
+    (g = 1_(H.i) & h = 1_(H.j)) or (i = j & g = h);
+
+theorem :: GR_FREE0:40
+  for p1,p2,q1,q2 being FinSequence of FreeAtoms(G)
+  st ReductionRel(G) reduces p1,q1 & ReductionRel(G) reduces p2,q2
+  holds ReductionRel(G) reduces p1^p2,q1^q2;
+
+theorem :: GR_FREE0:41
+  I is trivial implies for p being non empty FinSequence of FreeAtoms(G)
+    ex g being Element of G.i st ReductionRel(G) reduces p,<*[i,g]*>;
+
+theorem :: GR_FREE0:42
+  for p1,p2,q1,q2 being FinSequence of FreeAtoms(H)
+  st p1,q1 are_convertible_wrt ReductionRel(H) &
+    p2,q2 are_convertible_wrt ReductionRel(H)
+  holds p1^p2,q1^q2 are_convertible_wrt ReductionRel(H);
+
+registration
+  let I be set, H be Group-like associative multMagma-Family of I;
+  cluster EqCl ReductionRel H -> compatible;
+end;
+
+theorem :: GR_FREE0:43
+  p^q is_a_normal_form_wrt ReductionRel H & len p <> 0 & len q <> 0 implies
+    (p.len p)`1 <> (q.1)`1;
+
+definition
+  let I be set, H be Group-like associative multMagma-Family of I;
+  func FreeProduct(H) -> strict multMagma equals
+:: GR_FREE0:def 4
+  FreeAtoms(H)*+^+<0> ./. EqCl ReductionRel H;
+end;
+
+reserve s,t for Element of FreeProduct(H);
+
+theorem :: GR_FREE0:44
+  for I being set, H being Group-like associative multMagma-Family of I
+  holds 1_FreeProduct(H) = Class(EqCl ReductionRel H,{});
+
+theorem :: GR_FREE0:45
+  for I being empty set, H being Group-like associative multMagma-Family of I
+  holds the carrier of FreeProduct(H) = { 1_FreeProduct(H) };
+
+registration
+  let I be set, H be Group-like associative multMagma-Family of I;
+  cluster FreeProduct(H) -> Group-like non empty;
+end;
+
+definition
+  let I be set, H be Group-like associative multMagma-Family of I;
+  redefine func FreeProduct(H) -> strict Group;
+end;
+
+registration
+  let I be empty set, H be Group-like associative multMagma-Family of I;
+  cluster FreeProduct(H) -> trivial;
+end;
+
+theorem :: GR_FREE0:46
+  s = Class(EqCl ReductionRel H,p) & t = Class(EqCl ReductionRel H,q) implies
+    s*t = Class(EqCl ReductionRel H,p^q);
+
+definition
+  let I, H, i, g;
+  func [* i,g *] -> Element of FreeProduct(H) equals
+:: GR_FREE0:def 5
+  Class(EqCl ReductionRel H,<*[i,g]*>);
+end;
+
+theorem :: GR_FREE0:47
+  <*[i,g]*> in [*i,g*];
+
+theorem :: GR_FREE0:48
+  [* i,1_(H.i) *] = 1_FreeProduct(H);
+
+theorem :: GR_FREE0:49
+  for g being Element of H.i, h being Element of H.j
+  holds [* i,g *] = [* j,h *] iff (g = 1_(H.i) & h = 1_(H.j)) or(i = j & g = h)
+;
+
+theorem :: GR_FREE0:50
+  [* i, g *] * [* i, h *] = [* i, g*h *];
+
+theorem :: GR_FREE0:51
+  [* i, g *]" = [* i, g" *];
+
+theorem :: GR_FREE0:52
+  for f,g being ManySortedSet of I holds dom commute <* <: f,g :> *> = I;
+
+theorem :: GR_FREE0:53
+  for g being Element of G.i holds <*[i,g]*> =
+    (commute <*<:(the carrier of G.i)-->i,id the carrier of(G.i):>*>).g;
+
+theorem :: GR_FREE0:54
+  rng commute <*<:(the carrier of G.i)-->i,id the carrier of(G.i):>*> =
+    1-tuples_on [: {i},the carrier of G.i :];
+
+definition
+  let I, H, i;
+  func injection(H,i) -> Function of H.i,FreeProduct(H) equals
+:: GR_FREE0:def 6
+  (proj Class EqCl ReductionRel H) *
+    (commute <*<:(the carrier of H.i)-->i,id the carrier of(H.i):>*>);
+end;
+
+theorem :: GR_FREE0:55
+  injection(H,i).g = [* i, g *];
+
+registration
+  let I, H, i;
+  cluster injection(H,i) -> multiplicative one-to-one;
+end;
+
+theorem :: GR_FREE0:56
+  I is trivial implies injection(H,i) is bijective;
+
+theorem :: GR_FREE0:57
+  I is trivial implies H.i, FreeProduct(H) are_isomorphic;
+
+definition
+  let I, H, s;
+  func nf s -> FinSequence of FreeAtoms(H) means
+:: GR_FREE0:def 7
+
+  it in s & it is_a_normal_form_wrt ReductionRel(H);
+end;
+
+theorem :: GR_FREE0:58
+  s = Class(EqCl ReductionRel H,p) implies nf s = nf(p,ReductionRel H);
+
+theorem :: GR_FREE0:59
+  t = Class(EqCl ReductionRel H,(nf s)|k) implies nf t = (nf s)|k;
+
+theorem :: GR_FREE0:60
+  t = Class(EqCl ReductionRel H,(nf s)/^k) implies nf t = (nf s)/^k;
+
+theorem :: GR_FREE0:61
+  nf 1_FreeProduct(H) = {};
+
+theorem :: GR_FREE0:62
+  len nf s = 0 implies s = 1_FreeProduct(H);
+
+theorem :: GR_FREE0:63
+  g <> 1_(H.i) implies nf [* i, g *] = <* [i,g] *>;
+
+theorem :: GR_FREE0:64
+  len nf s = 1 implies ex i, g st g <> 1_(H.i) & s = [* i, g *];
+
+theorem :: GR_FREE0:65
+  ((nf s).len nf s)`1 <> ((nf t).1)`1 implies nf(s * t) = (nf s) ^ nf t;
+
+theorem :: GR_FREE0:66
+  k <= len nf s implies
+  ex s1, s2 being Element of FreeProduct(H)
+  st s = s1 * s2 & nf s = (nf s1)^nf s2 & len nf s1 = k;
+
+definition
+  let I, H;
+  let G be Group;
+  mode Homomorphism-Family of H, G -> Function-yielding ManySortedSet of I
+    means
+:: GR_FREE0:def 8
+
+  for i being Element of I holds it.i is Homomorphism of H.i, G;
+end;
+
+definition
+  let I, H;
+  func injection H -> Homomorphism-Family of H, FreeProduct(H) means
+:: GR_FREE0:def 9
+
+  for i being Element of I holds it.i = injection(H,i);
+end;
+
+definition
+  let I, H;
+  let G be Group, F be Homomorphism-Family of H, G;
+  redefine func uncurry F -> Function of FreeAtoms(H), G;
+end;
+
+definition
+  let I, H;
+  let G be Group, p be FinSequence of FreeAtoms(H);
+  let F be Function of FreeAtoms(H), G;
+  redefine func F*p -> FinSequence of G;
+end;
+
+definition
+  let I, H, s;
+  func factorization(s) -> FinSequence of FreeProduct(H) equals
+:: GR_FREE0:def 10
+  (uncurry injection H)*nf s;
+end;
+
+theorem :: GR_FREE0:67
+  factorization 1_FreeProduct(H) = {};
+
+theorem :: GR_FREE0:68
+  for g being Element of H.i st g <> 1_(H.i)
+  holds factorization [* i,g *] = <* [* i,g *] *>;
+
+theorem :: GR_FREE0:69
+  ((nf s).len nf s)`1 <> ((nf t).1)`1 implies
+    factorization(s * t) = factorization(s) ^ factorization(t);
+
+theorem :: GR_FREE0:70
+  for s being Element of FreeProduct(H), k being Nat
+  st 1 <= k & k <= len factorization(s)
+  ex i being Element of I, g being Element of H.i
+  st (factorization(s)).k = [* i, g *];
+
+theorem :: GR_FREE0:71
+  Product factorization(s) = s;
+
+registration
+  let I, H;
+  let s be Element of FreeProduct H;
+  reduce Product factorization(s) to s;
+end;
+
+:: definition
+  :: let I, H;
+  :: let G be Group, F be Homomorphism-Family of H, G;
+  :: func Ext F -> Homomorphism of FreeProduct(H), G means
+  :: for s holds it.s = Product((uncurry F)*nf(s));
+  :: existence; :: the homomorphism property is a bit tricky to show
+  :: uniqueness;
+:: end;
+
+:: theorem
+  :: Ext injection H = id FreeProduct(H);
+
+begin :: Additional Definitions
+
+registration
+  let G1, G2 be Group;
+  cluster <% G1, G2 %> -> Group-like associative for multMagma-Family of 2;
+end;
+
+definition
+  let G1, G2 be Group;
+  func G1 ^* G2 -> strict Group means
+:: GR_FREE0:def 11
+  ex H being Group-like associative multMagma-Family of 2
+  st H = <% G1, G2 %> & it = FreeProduct(H);
+end;
+
+definition
+  let G be Group;
+  attr G is free means
+:: GR_FREE0:def 12
+  ex c being Cardinal st G, FreeProduct(c --> INT.Group) are_isomorphic;
+end;
+
+registration
+  cluster trivial -> free for Group;
+  cluster INT.Group -> free;
+  let c be Cardinal;
+  cluster FreeProduct(c --> INT.Group) -> free for Group;
+end;
+
+theorem :: GR_FREE0:72
+  for G, H being Group st G,H are_isomorphic holds G is free iff H is free;
+
+registration
+  cluster free for Group;
+end;
+
+definition
+  let G be Group;
+  attr G is free-abelian means
+:: GR_FREE0:def 13
+  ex c being Cardinal st G, sum(c --> INT.Group) are_isomorphic;
+end;
+
+registration
+  cluster trivial -> free-abelian for Group;
+  cluster INT.Group -> free-abelian;
+  let c be Cardinal;
+  cluster sum(c --> INT.Group) -> free-abelian for Group;
+end;
+
+theorem :: GR_FREE0:73
+  for G, H being Group st G,H are_isomorphic
+  holds G is free-abelian iff H is free-abelian;
+
+registration
+  cluster free-abelian for Group;
+end;
+

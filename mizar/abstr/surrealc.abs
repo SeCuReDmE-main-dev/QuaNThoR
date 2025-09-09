@@ -1,0 +1,894 @@
+:: Conway's Normal Form in the {M}izar System
+::  by Karol P\kak
+::
+:: Received April 10, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MCART_1, FACIRC_1, RELAT_1, TARSKI, XBOOLE_0, SUBSET_1, XXREAL_0,
+      ARYTM_3, FUNCT_1, ZFMISC_1, CARD_1, ORDINAL2, ORDINAL1, PBOOLE, CARD_3,
+      GROUP_9, NUMBERS, AFINSQ_1, ORDINAL4, VALUED_0, NAT_1, ARYTM_1, XCMPLX_0,
+      MATHMORP, GLIB_000, WAYBEL_3, COHSP_1, NORMSP_1, REAL_1, COMPLEX1,
+      SERIES_1, SURREALO, SURREALR, SURREALN, SURREALC, VECTSP_1, MEMBER_1,
+      FUNCOP_1, SURREAL0;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, XTUPLE_0, SUBSET_1, RELAT_1, FUNCT_1,
+      RELSET_1, PBOOLE, ORDINAL1, ORDINAL2, CARD_1, NUMBERS, XCMPLX_0,
+      XXREAL_0, XREAL_0, ORDINAL4, AFINSQ_1, ORDINAL7, COHSP_1, SURREAL0,
+      SURREALO, SURREALR, SURREALI, SURREALN;
+ constructors RELSET_1, NEWTON, AFINSQ_1, ORDERS_5, ORDINAL7, COHSP_1,
+      SURREALR, SURREALI, SURREALN;
+ registrations XBOOLE_0, RELAT_1, XTUPLE_0, ORDINAL1, ORDINAL3, FUNCT_1, NAT_1,
+      XREAL_0, ORDINAL2, CARD_1, AFINSQ_1, VALUED_0, FOMODEL0, INT_1, XXREAL_0,
+      NUMBERS, XCMPLX_0, RAT_1, SURREAL0, SURREALO, SURREALR, SURREALI,
+      SURREALN, FUNCOP_1;
+ requirements BOOLE, SUBSET, NUMERALS, ARITHM, REAL;
+
+
+begin :: Commensurability in Archimedean Classes of Surreal Numbers
+
+reserve A,B for Ordinal,
+        o for object,
+        x,y,z for Surreal,
+        n for Nat,
+        r,r1,r2 for Real;
+
+theorem :: SURREALC:1
+  uReal.r in Day omega;
+
+definition
+  func No_omega -> No_ordinal uSurreal equals
+:: SURREALC:def 1
+    No_uOrdinal_op omega;
+end;
+
+definition
+  let x,y be Surreal;
+  pred x,y are_commensurate means
+:: SURREALC:def 2
+    (ex n be positive Nat st x < uInt.n * y) &
+    (ex n be positive Nat st y < uInt.n * x);
+  symmetry;
+end;
+
+theorem :: SURREALC:2
+  x is positive implies x,x are_commensurate;
+
+theorem :: SURREALC:3
+  x,y are_commensurate implies x is positive;
+
+theorem :: SURREALC:4
+  for x,y,z be Surreal st
+    x,y are_commensurate & y,z are_commensurate holds x,z are_commensurate;
+
+theorem :: SURREALC:5
+  for x,y,z be Surreal st
+    x==y & x,z are_commensurate holds y,z are_commensurate;
+
+theorem :: SURREALC:6
+  for x,y,z be Surreal st
+    x,z are_commensurate & x <= y <= z holds
+  x,y are_commensurate & y,z are_commensurate;
+
+theorem :: SURREALC:7
+   x,y are_commensurate iff
+     ex n be positive Nat st x < uInt.n * y & y < uInt.n * x;
+
+theorem :: SURREALC:8
+  x is positive & x == y implies x,y are_commensurate;
+
+definition
+  let x,y be Surreal;
+  pred x infinitely< y means
+:: SURREALC:def 3
+    for r be positive Real holds x * uReal.r < y;
+end;
+
+theorem :: SURREALC:9
+   x infinitely< y implies x < y;
+
+theorem :: SURREALC:10
+  for r be Real holds uReal.r infinitely< No_omega;
+
+theorem :: SURREALC:11
+  for x,y,z be Surreal st x <= y infinitely< z
+    holds x infinitely< z;
+
+theorem :: SURREALC:12
+  for x,y,z be Surreal st x infinitely< y <= z
+    holds x infinitely< z;
+
+theorem :: SURREALC:13
+  for r be positive Real, x,y be Surreal st x infinitely< y
+     holds x * uReal.r infinitely< y &
+            x infinitely< y * uReal.r;
+
+theorem :: SURREALC:14
+  for x,y,z be Surreal st x infinitely< y infinitely< z
+    holds x infinitely< z;
+
+theorem :: SURREALC:15
+  x,y are_commensurate & y infinitely< z implies
+      x infinitely< z;
+
+theorem :: SURREALC:16
+  x,y are_commensurate & z infinitely< x implies
+      z infinitely< y;
+
+theorem :: SURREALC:17
+  x == y & y infinitely< z implies x infinitely< z;
+
+theorem :: SURREALC:18
+  x infinitely< z & y infinitely< z implies x + y infinitely< z;
+
+theorem :: SURREALC:19
+  x == y & z infinitely< x implies z infinitely< y;
+
+theorem :: SURREALC:20
+  0_No <= x infinitely< y implies x*uReal.r < y;
+
+begin :: Conway's $\omega$-map
+
+definition
+  let A;
+  func No_omega_op A -> ManySortedSet of Day A means
+:: SURREALC:def 4
+    ex S be c=-monotone Function-yielding Sequence st
+      dom S = succ A & it = S.A &
+      for B st B in succ A
+        ex SB be ManySortedSet of Day B st S.B = SB &
+          for x be object st x in Day B holds
+            SB.x = [{0_No}\/{(union rng (S|B).xL) *' (uReal.r)
+                        where xL is Element of L_x, r is Element of REAL:
+                        xL in L_x & r is positive},
+                    {(union rng (S|B).xR) *' (uReal.r)
+                        where xR is Element of R_x, r is Element of REAL:
+                        xR in R_x & r is positive}];
+end;
+
+theorem :: SURREALC:21
+  for S be c=-monotone Function-yielding Sequence st
+    for B st B in dom S
+      ex SB be ManySortedSet of Day B st S.B = SB &
+        for x be object st x in Day B holds
+          SB.x = [{0_No}\/{(union rng (S|B).xL) *' (uReal.r)
+                           where xL is Element of L_x, r is Element of REAL:
+                           xL in L_x & r is positive},
+                  {(union rng (S|B).xR) *' (uReal.r)
+                           where xR is Element of R_x, r is Element of REAL:
+                           xR in R_x & r is positive}]
+    holds
+  for A st A in dom S holds No_omega_op A = S.A;
+
+definition
+  let x;
+  func No_omega^ x -> set equals
+:: SURREALC:def 5
+    (No_omega_op born x).x;
+end;
+
+registration
+  let x;
+  cluster No_omega^ x -> surreal;
+end;
+
+registration
+  let x;
+  cluster No_omega^ x -> positive;
+end;
+
+theorem :: SURREALC:22
+  o in L_(No_omega^ x) iff o = 0_No or
+     ex xL be Surreal, r be positive Real st
+        xL in L_x & o = (No_omega^ xL) * uReal.r;
+
+theorem :: SURREALC:23
+  o in R_(No_omega^ x) iff
+    ex xR be Surreal, r be positive Real st
+        xR in R_x & o = (No_omega^ xR) * uReal.r;
+
+theorem :: SURREALC:24
+   x <= y implies No_omega^ x <= No_omega^ y;
+
+theorem :: SURREALC:25
+   x < y implies No_omega^ x infinitely< No_omega^ y;
+
+theorem :: SURREALC:26
+  No_omega^ 0_No = 1_No;
+
+theorem :: SURREALC:27
+  (No_omega^ x) * (No_omega^ y) == No_omega^ (x+y);
+
+theorem :: SURREALC:28
+  (No_omega^ x)" == No_omega^ (-x);
+
+theorem :: SURREALC:29
+   for xL,x be Surreal
+      st xL <= x & xL,No_omega^ y are_commensurate &
+          not x,No_omega^ y are_commensurate holds
+        No_omega^ y infinitely< x;
+
+theorem :: SURREALC:30
+   for x,xR be Surreal
+      st 0_No < x <= xR & xR,No_omega^ y are_commensurate &
+          not x,No_omega^ y are_commensurate holds
+        x infinitely< No_omega^ y;
+
+definition
+  let x be Surreal;
+  func |.x.| -> Surreal equals
+:: SURREALC:def 6
+    x if 0_No <= x otherwise -x;
+end;
+
+theorem :: SURREALC:31
+   0_No <= |.x.|;
+
+theorem :: SURREALC:32
+  |.x.| = x or |.x.| = -x;
+
+theorem :: SURREALC:33
+  x == 0_No iff |.x.| == 0_No;
+
+theorem :: SURREALC:34
+  - |.x.| <= x <= |.x.|;
+
+theorem :: SURREALC:35
+  -y <= x <= y iff |.x.| <= y;
+
+theorem :: SURREALC:36
+  not x == 0_No implies |.x.| is positive;
+
+theorem :: SURREALC:37
+  |.x + y.| <= |.x.| + |.y.|;
+
+theorem :: SURREALC:38
+   x == 0_No implies |. -x .| == |.x.|;
+
+theorem :: SURREALC:39
+  not x == 0_No implies |. -x .| = |.x.|;
+
+theorem :: SURREALC:40
+  |. -x .| == |.x.|;
+
+theorem :: SURREALC:41
+  |.x.| infinitely< z & |.y.| infinitely< z implies
+     |. x+y .| infinitely< z;
+
+theorem :: SURREALC:42
+  |.x.| infinitely< z implies |. -x .| infinitely< z;
+
+theorem :: SURREALC:43
+  |.x.| infinitely< z & |.y.| infinitely< z implies
+     |. x - y .| infinitely< z;
+
+theorem :: SURREALC:44
+  |.y.| infinitely< x implies not x + y == 0_No;
+
+theorem :: SURREALC:45
+  |.y.| infinitely< |.x.| implies not x + y == 0_No;
+
+theorem :: SURREALC:46
+  |.y.| infinitely< x implies not x ==0_No;
+
+theorem :: SURREALC:47
+  |.y.| infinitely< |.x.| implies not x ==0_No;
+
+theorem :: SURREALC:48
+  x==y implies |.x.| == |.y.|;
+
+theorem :: SURREALC:49
+  |. |.x.| - |.y.| .| <= |.x - y.|;
+
+theorem :: SURREALC:50
+  |. |.x.| .| = |.x.|;
+
+theorem :: SURREALC:51
+  x <= y <= z implies |.y.| <= |.x.|+|.z.|;
+
+theorem :: SURREALC:52
+  -y < x < y iff |.x.| < y;
+
+theorem :: SURREALC:53
+  0_No <= x infinitely< y implies |.x*uReal.r.| infinitely< y;
+
+begin :: Unique Representation of Positive Surreal Number
+      :: as a Pair of Commensurate Leader and Positive Real Number
+
+definition
+  let x be Surreal;
+  assume not x == 0_No;
+  func omega-y x -> uSurreal means
+:: SURREALC:def 7
+     |.x.|, No_omega^ it are_commensurate;
+end;
+
+theorem :: SURREALC:54
+  x,No_omega^ y are_commensurate
+      implies ex s be positive Real st
+        |. x - (No_omega^ y * uReal.s) .| infinitely< x;
+
+theorem :: SURREALC:55
+  x is positive &
+       |. x - (No_omega^ y * uReal.r) .| infinitely< x
+       implies r is positive;
+
+theorem :: SURREALC:56
+  not x == 0_No implies omega-y x = omega-y - x;
+
+definition
+  let x be Surreal;
+  assume not x == 0_No;
+  func omega-r x -> non zero Real means
+:: SURREALC:def 8
+    |.x - No_omega^ omega-y x * uReal.it .| infinitely< |.x.|;
+end;
+
+theorem :: SURREALC:57
+  for n be positive Nat st
+    |.y.| * uReal.((n+1)/n) < |.x.| holds |.x.|,|.x+y.| are_commensurate;
+
+theorem :: SURREALC:58
+  |.x.| is positive implies not x ==0_No;
+
+theorem :: SURREALC:59
+  x*uReal.r1 < y*uReal.r2 & 0 < r implies x*uReal.(r1*r) < y*uReal.(r2 *r);
+
+theorem :: SURREALC:60
+  x*uReal.r1 <= y*uReal.r2 & 0 <= r implies
+    x*uReal.(r1*r) <= y*uReal.(r2 *r);
+
+theorem :: SURREALC:61
+  not x == 0_No & not y == 0_No implies
+    (omega-y x = omega-y y iff |.x.|,|.y.| are_commensurate);
+
+theorem :: SURREALC:62
+  not x == 0_No & not (x+y) == 0_No &
+    omega-y x = omega-y (x + y) &
+    omega-r x = omega-r (x+y) implies |.y.| infinitely< |.x.|;
+
+theorem :: SURREALC:63
+  |.y.| infinitely< |.x.| implies
+      not x == 0_No & not (x+y) == 0_No &
+       omega-y x = omega-y (x + y) &
+       omega-r x = omega-r (x+y);
+
+theorem :: SURREALC:64
+  not x==0_No & y == 0_No implies y infinitely< |.x.|;
+
+theorem :: SURREALC:65
+  uReal.r == 0_No implies r=0;
+
+theorem :: SURREALC:66
+  x is positive & r <> 0 implies
+    |. uReal.r * x .|, x are_commensurate;
+
+scheme :: SURREALC:sch 1
+ Simplest{P[Surreal]}:
+  ex s be uSurreal st P[s] &
+    for x be uSurreal st P[x] & x <> s holds born s in born x
+provided
+ ex x be Surreal st P[x] and
+ for x,y,z be Surreal st x <= y <= z & P[x] & P[z] holds P[y];
+
+definition
+  let f be Function;
+  attr f is surreal-valued means
+:: SURREALC:def 9
+     rng f is surreal-membered;
+end;
+
+registration
+  let s be Surreal;
+  cluster <%s%> -> surreal-valued;
+end;
+
+registration
+  cluster surreal-valued for Sequence;
+end;
+
+registration
+   let f be surreal-valued Function;
+   cluster rng f -> surreal-membered;
+end;
+
+definition
+  mode Surreal-Sequence is surreal-valued Sequence;
+end;
+
+registration
+  let X be surreal-membered set;
+  cluster -> surreal-membered for Subset of X;
+end;
+
+registration
+  let f be surreal-valued Function;
+  let X be set;
+  cluster f|X -> surreal-valued;
+end;
+
+registration
+  let f,g be Surreal-Sequence;
+  cluster f^g -> surreal-valued;
+end;
+
+definition
+  let f be Function;
+  attr f is uniq-surreal-valued means
+:: SURREALC:def 10
+     rng f is uniq-surreal-membered;
+end;
+
+registration
+  let s be uSurreal;
+  cluster <%s%> -> uniq-surreal-valued;
+end;
+
+registration
+  cluster uniq-surreal-valued for Sequence;
+end;
+
+registration
+  let f be uniq-surreal-valued Function;
+  cluster rng f -> uniq-surreal-membered;
+end;
+
+definition
+  mode uSurreal-Sequence is uniq-surreal-valued Sequence;
+end;
+
+registration
+  let X be uniq-surreal-membered set;
+  cluster -> uniq-surreal-membered for Subset of X;
+end;
+
+registration
+  let f be uniq-surreal-valued Function;
+  let X be set;
+  cluster f|X -> uniq-surreal-valued;
+end;
+
+registration
+  let f,g be uSurreal-Sequence;
+  cluster f^g -> uniq-surreal-valued;
+end;
+
+registration
+  cluster uniq-surreal-membered -> surreal-membered for set;
+end;
+
+registration
+  cluster uniq-surreal-valued -> surreal-valued for Function;
+end;
+
+definition
+  let S be Surreal-Sequence;
+  attr S is strictly_decreasing means
+:: SURREALC:def 11
+    for a,b be Ordinal st a in b in dom S
+      for sa,sb be Surreal st sa=S.a & sb=S.b holds
+       sb < sa;
+end;
+
+registration
+  let s be uSurreal;
+  cluster <%s%> -> strictly_decreasing;
+end;
+
+registration
+  cluster strictly_decreasing for uSurreal-Sequence;
+end;
+
+registration
+  let s1,s2 be non-zero Sequence;
+  cluster s1^s2 -> non-zero;
+end;
+
+registration
+  cluster non-zero for Sequence of REAL;
+end;
+
+begin :: $\alpha$-term - An Essential Component of the Conway Normal Form
+
+definition
+  let s be object, y be Surreal, r be Real;
+  let x be object;
+  attr x is (s,y,r)_term means
+:: SURREALC:def 12
+    not x +'-' s ==0_No &
+    omega-y (x +'-' s) == y & omega-r (x +'-' s) = r;
+end;
+
+definition
+  let s, y be Surreal, r be Real;
+  let x be Surreal;
+  redefine attr x is (s,y,r)_term means
+:: SURREALC:def 13
+    not x - s ==0_No &
+    omega-y (x - s) == y & omega-r (x - s) = r;
+end;
+
+theorem :: SURREALC:67
+   r <> 0 implies not uReal.r * No_omega^ y == 0_No;
+
+theorem :: SURREALC:68
+   r <> 0 implies omega-y (uReal.r * No_omega^ y) = Unique_No y;
+
+theorem :: SURREALC:69
+  for s be Surreal st r <>0 holds
+       s + uReal.r* No_omega^ y is (s,y,r)_term;
+
+theorem :: SURREALC:70
+  x == y & not x==0_No implies
+     omega-y x = omega-y y & omega-r x = omega-r y;
+
+theorem :: SURREALC:71
+  for s be Surreal st r <>0 holds
+       s + uReal.r* No_omega^ y+x is (s,y,r)_term iff
+         |.x.| infinitely< No_omega^ y;
+
+theorem :: SURREALC:72
+  for s be Surreal st r<>0 & x is (s,y,r)_term & x== z holds
+    z is (s,y,r)_term;
+
+theorem :: SURREALC:73
+  for s be Surreal st r <> 0 holds
+    x is (s,y,r)_term iff
+    |. x - (s + uReal.r* No_omega^ y).| infinitely< No_omega^y;
+
+theorem :: SURREALC:74
+  for s,p be Surreal st r <>0
+      for x,y,z be Surreal st x is (s,p,r)_term & z is (s,p,r)_term &
+          x <= y <= z
+  holds y is (s,p,r)_term;
+
+begin :: Conway's Generalization of Partial Sums
+
+definition
+  let r be Sequence of REAL;
+  let y,s be Sequence;
+  let alpha be Ordinal;
+  let x be Surreal;
+  pred x in_meets_terms s,y,r,alpha means
+:: SURREALC:def 14
+     for beta be Ordinal,sb,yb be Surreal st
+       beta in alpha & sb=s.beta & yb = y.beta holds
+         x is (sb,yb,r.beta)_term;
+end;
+
+definition
+  let r be Sequence of REAL;
+  let y,s be Sequence;
+  let alpha be Ordinal;
+  pred s,y,r simplest_on_position alpha means
+:: SURREALC:def 15
+      for sa be Surreal st sa = s.alpha holds
+        (0 = alpha implies sa = 0_No) &
+        (0 <> alpha implies
+           sa in_meets_terms s,y,r,alpha &
+           for x be uSurreal st x in_meets_terms s,y,r,alpha & x <> sa
+             holds born sa in born x);
+end;
+
+theorem :: SURREALC:75
+  for r be Sequence of REAL
+    for y,s1,s2 be Sequence
+      for alpha be Ordinal st s1|alpha = s2|alpha &
+         x in_meets_terms s1,y,r,alpha holds
+  x in_meets_terms s2,y,r,alpha;
+
+theorem :: SURREALC:76
+  for r be Sequence of REAL
+    for y,s1,s2 be Sequence
+      for alpha be Ordinal st
+    s1.alpha is uSurreal & s2.alpha is uSurreal &
+    s1|alpha = s2|alpha &
+    s1,y,r simplest_on_position alpha &
+    s2,y,r simplest_on_position alpha
+  holds
+    s1.alpha = s2.alpha;
+
+definition
+  let r be Sequence of REAL;
+  let y,s be Sequence;
+  let alpha be Ordinal;
+  pred s,y,r simplest_up_to alpha means
+:: SURREALC:def 16
+    for beta be Ordinal st beta in alpha holds
+      s,y,r simplest_on_position beta;
+end;
+
+theorem :: SURREALC:77
+for r be Sequence of REAL
+  for y be Sequence
+       for s1,s2 be uSurreal-Sequence
+           for alpha be Ordinal st
+       alpha c= dom s1 & alpha c= dom s2 &
+      s1,y,r simplest_up_to alpha &
+      s2,y,r simplest_up_to alpha
+    holds s1|alpha = s2|alpha;
+
+theorem :: SURREALC:78
+  for r be Sequence of REAL
+    for y,s be Sequence
+      for alpha, beta be Ordinal st beta c= alpha &
+        s,y,r simplest_up_to alpha
+  holds s,y,r simplest_up_to beta;
+
+theorem :: SURREALC:79
+  for r be Sequence of REAL
+    for y,s be Sequence
+      for alpha be Ordinal holds
+  x in_meets_terms s,y,r,alpha iff x in_meets_terms (s|succ alpha),y,r,alpha;
+
+theorem :: SURREALC:80
+  for r be Sequence of REAL
+    for y,s be Sequence
+       for alpha be Ordinal holds
+    s|succ alpha,y,r simplest_on_position alpha iff
+    s,y,r simplest_on_position alpha;
+
+theorem :: SURREALC:81
+  for r be non-zero Sequence of REAL
+    for p,s be Sequence
+       for alpha be Ordinal st alpha c= dom r
+         for x,y,z be Surreal st
+    x<=y<=z & x in_meets_terms s,p,r,alpha & z in_meets_terms s,p,r,alpha
+  holds y in_meets_terms s,p,r,alpha;
+
+theorem :: SURREALC:82
+  for r be non-zero Sequence of REAL
+    for y be strictly_decreasing Surreal-Sequence
+      ex s be uSurreal-Sequence st
+        dom s = succ (dom r/\dom y) & s,y,r simplest_up_to dom s;
+
+definition
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  func Partial_Sums(r,y) -> uSurreal-Sequence means
+:: SURREALC:def 17
+     dom it = succ (dom r/\dom y) &
+     for A st A in dom it holds it,y,r simplest_on_position A;
+end;
+
+definition
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  func Sum(r,y) -> uSurreal equals
+:: SURREALC:def 18
+    Partial_Sums(r,y). (dom r/\dom y);
+end;
+
+registration
+  let s be strictly_decreasing Surreal-Sequence;
+  let A be Ordinal;
+  cluster s|A -> strictly_decreasing;
+end;
+
+registration
+  let R be non-zero Relation;
+  let X be set;
+  cluster R|X -> non-zero;
+end;
+
+theorem :: SURREALC:83
+  for r be Sequence of REAL
+    for y,s be Sequence
+       for A,B be Ordinal st A c= B holds
+         x in_meets_terms s,y,r,A iff x in_meets_terms s,y|B,r|B,A;
+
+theorem :: SURREALC:84
+  for r be Sequence of REAL for y,s be Sequence
+      for A,B be Ordinal st B c= A holds
+   s,y|A,r|A simplest_on_position B iff s,y,r simplest_on_position B;
+
+theorem :: SURREALC:85
+  for r be non-zero Sequence of REAL
+    for y be strictly_decreasing Surreal-Sequence
+      for A be Ordinal holds
+  Partial_Sums(r,y)|succ A = Partial_Sums(r|A,y|A);
+
+begin :: Conway Names for Surreal Numbers
+
+definition
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  let alpha be Ordinal;
+  let x be Surreal;
+  pred r,y,alpha name_like x means
+:: SURREALC:def 19
+    alpha c= dom r = dom y &
+     for beta be Ordinal st beta in alpha
+         for Pb be Surreal st Pb = Partial_Sums(r,y).beta holds
+            not x == Pb &
+            r.beta = omega-r (x - Pb) &
+            y.beta = omega-y (x - Pb);
+end;
+
+theorem :: SURREALC:86
+  for r be non-zero Sequence of REAL
+    for y be strictly_decreasing Surreal-Sequence
+      for alpha,beta be Ordinal st alpha c= beta & r,y,beta name_like x
+  holds r,y,alpha name_like x;
+
+theorem :: SURREALC:87
+  for r1,r2 be non-zero Sequence of REAL,
+       y1,y2 be strictly_decreasing Surreal-Sequence,
+       A be Ordinal
+    st r1,y1,A name_like x & r2,y2,A name_like x
+  holds r1|A = r2|A & y1|A = y2|A;
+
+theorem :: SURREALC:88
+  for r be non-zero Sequence of REAL,
+       y be strictly_decreasing Surreal-Sequence,
+       A be Ordinal st r,y,A name_like x
+    holds x in_meets_terms Partial_Sums(r,y),y,r,A;
+
+theorem :: SURREALC:89
+  for r be non-zero Sequence of REAL,
+    y be strictly_decreasing Surreal-Sequence
+  holds Sum(r,y) in_meets_terms Partial_Sums(r,y),y,r,dom r/\dom y;
+
+theorem :: SURREALC:90
+  for r be non-zero Sequence of REAL,
+    y be Sequence, s be Surreal-Sequence
+  for A,B be Ordinal st B in A c= dom r/\dom y & A c= dom s
+    for yb be Surreal st yb = y.B &
+      x in_meets_terms s,y,r,A & z in_meets_terms s,y,r,A
+  holds |.x - z.| infinitely< No_omega^ yb;
+
+theorem :: SURREALC:91
+  for r be non-zero Sequence of REAL
+    for y be strictly_decreasing Surreal-Sequence
+      for alpha be Ordinal st r,y,alpha name_like x
+  holds r|alpha,y|alpha,alpha name_like x;
+
+theorem :: SURREALC:92
+  for r be non-zero Sequence of REAL,
+       y be strictly_decreasing Surreal-Sequence st
+       z in_meets_terms Partial_Sums(r,y),y,r,dom r/\dom y &
+  not z == Sum(r,y)
+     for A be Ordinal,yA be Surreal st A in dom r/\dom y & yA = y.A holds
+         omega-y ( Sum(r,y) - z) < yA;
+
+theorem :: SURREALC:93
+  for r be non-zero Sequence of REAL,
+      y be strictly_decreasing Surreal-Sequence
+    for A be Ordinal st A c= dom r /\ dom y
+    holds Partial_Sums(r,y).A = Sum(r|A,y|A);
+
+theorem :: SURREALC:94
+  for r be non-zero Sequence of REAL,
+       y be strictly_decreasing Surreal-Sequence st
+       x in_meets_terms Partial_Sums(r,y),y,r,dom r/\dom y &
+       z in_meets_terms Partial_Sums(r,y),y,r,dom r/\dom y &
+  not x == z
+     for A be Ordinal,yA be Surreal st A in dom r/\dom y & yA = y.A holds
+         omega-y (x - z) < yA;
+
+theorem :: SURREALC:95
+  (for r be non-zero Sequence of REAL,
+       y be strictly_decreasing uSurreal-Sequence st dom r = dom y &
+            r,y,dom r name_like x holds not Sum(r,y) == x)
+  implies
+   for alpha be Ordinal
+    ex r be non-zero Sequence of REAL,
+       y be strictly_decreasing uSurreal-Sequence st
+         dom r = succ alpha = dom y &
+         r,y,succ alpha name_like x;
+
+definition
+  let s be Surreal-Sequence;
+  func born s -> Ordinal-Sequence means
+:: SURREALC:def 20
+   dom it = dom s &
+  for alpha be Ordinal st alpha in dom s
+     for sa be Surreal st sa =s.alpha
+     holds it.alpha = born sa;
+end;
+
+theorem :: SURREALC:96
+  for r be Sequence of REAL, y be Surreal-Sequence
+    for s be uSurreal-Sequence
+      for A be Ordinal st s,y,r simplest_up_to A & A c= succ dom y holds
+  s|A is one-to-one;
+
+registration
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  cluster Partial_Sums(r,y) -> one-to-one;
+end;
+
+theorem :: SURREALC:97
+  for r be Sequence of REAL
+    for y be Surreal-Sequence
+      for s be uSurreal-Sequence,alpha be Ordinal st
+         s,y,r simplest_up_to alpha & s|alpha is one-to-one
+  holds (born s)|alpha is increasing;
+
+registration
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  cluster born Partial_Sums(r,y) -> increasing;
+end;
+
+theorem :: SURREALC:98
+  for r be non-zero Sequence of REAL,
+      y be strictly_decreasing Surreal-Sequence,
+      s be uSurreal-Sequence, A be Ordinal st
+    A c= dom r & x in_meets_terms s,y,r,A & s,y,r simplest_up_to succ A
+  holds rng born (s|succ A) c= succ born_eq x;
+
+theorem :: SURREALC:99
+  for r be non-zero Sequence of REAL,
+    y be strictly_decreasing Surreal-Sequence
+  holds dom r/\dom y c= born Sum(r,y);
+
+::$N Conway Normal Form:
+theorem :: SURREALC:100
+  for x be Surreal ex r be non-zero Sequence of REAL,
+      y be strictly_decreasing uSurreal-Sequence st
+         dom r = dom y c= born_eq x & Sum(r,y) == x;
+
+theorem :: SURREALC:101
+  for r be non-zero Sequence of REAL,
+      y be strictly_decreasing uSurreal-Sequence st dom r=dom y holds
+   r,y,dom r name_like Sum(r,y);
+
+theorem :: SURREALC:102
+  for r1,r2 be non-zero Sequence of REAL,
+      y1,y2 be strictly_decreasing uSurreal-Sequence st
+         dom r1 = dom y1 & dom r2 = dom y2 &
+         Sum(r1,y1) == Sum(r2,y2)
+  holds r1=r2 & y1=y2;
+
+theorem :: SURREALC:103
+  for r be non-zero Sequence of REAL,
+      y be strictly_decreasing uSurreal-Sequence,
+      A be Ordinal st A c= dom r = dom y
+    for x,z be Surreal st r,y,A name_like x & x == z holds
+      r,y,A name_like z;
+
+definition
+  let x be surreal number;
+  func name-ord x -> Ordinal means
+:: SURREALC:def 21
+    ex r be non-zero Sequence of REAL,
+       y be strictly_decreasing uSurreal-Sequence st
+         it = dom r = dom y & Sum(r,y) == x;
+end;
+
+theorem :: SURREALC:104
+  for r be non-zero Sequence of REAL,
+      y be strictly_decreasing uSurreal-Sequence,
+      x be Surreal st dom r = dom y & Sum(r,y) == x
+  holds name-ord x = dom r;
+
+definition
+  let x be surreal number;
+  func name-r x -> non-zero Sequence of REAL means
+:: SURREALC:def 22
+    ex y be strictly_decreasing uSurreal-Sequence st
+         dom y = dom it & Sum(it,y)==x;
+end;
+
+definition
+  let x be surreal number;
+  func name-y x -> strictly_decreasing uSurreal-Sequence means
+:: SURREALC:def 23
+       dom name-r x = dom it & Sum(name-r x,it)==x;
+end;
+
+theorem :: SURREALC:105
+  dom name-r x = name-ord x = dom name-y x;
+
+theorem :: SURREALC:106
+  name-r x, name-y x, name-ord x name_like x;

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Environ aid="TEST">
+ <Directive name="vocabularies" argnr="1">
+  <Ident name="HIDDEN" line="1" col="1"/>
+ </Directive>
+ <Directive name="notations" argnr="1">
+  <Ident name="HIDDEN" line="1" col="1"/>
+ </Directive>
+ <Directive name="definitions" argnr="0">
+ </Directive>
+ <Directive name="theorems" argnr="0">
+ </Directive>
+ <Directive name="schemes" argnr="0">
+ </Directive>
+ <Directive name="registrations" argnr="0">
+ </Directive>
+ <Directive name="constructors" argnr="1">
+  <Ident name="HIDDEN" line="1" col="1"/>
+ </Directive>
+ <Directive name="requirements" argnr="1">
+  <Ident name="HIDDEN" line="1" col="1"/>
+ </Directive>
+ <Directive name="equalities" argnr="0">
+ </Directive>
+ <Directive name="expansions" argnr="0">
+ </Directive>
+</Environ>

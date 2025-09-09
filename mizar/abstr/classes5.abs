@@ -1,0 +1,924 @@
+:: {U}-Small and {U}-Locally Small Categories
+::  by Roland Coghetto
+:: 
+:: Received November 8, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies PARTFUN1, ARYTM_0, MCART_1, MCART_2, CAT_6, FUNCT_5, GRCAT_1,
+      COMPLFLD, FINSEQ_1, ENS_1, RELAT_2, SUBSET_1, CARD_1, FUNCOP_1, ORDINAL1,
+      CARD_3, FUNCT_2, FINSET_1, ORDINAL2, CLASSES2, CLASSES3, CLASSES4,
+      NUMBERS, ARYTM_3, XXREAL_0, CLASSES5, FIB_NUM2, CAT_2, CAT_1, FUNCT_1,
+      ZFMISC_1, RELAT_1, STRUCT_0, ALGSTR_0, GRAPH_1, NATTRA_1, XBOOLE_0,
+      WELLORD1, TARSKI, MONOID_0, GROUP_1, NAT_1, FINSEQ_2, PBOOLE, SUPINF_2,
+      VECTSP_1, BINOP_1, MATRIX_1, XCMPLX_0, EQREL_1;
+ notations XCMPLX_0, PARTFUN1, FUNCT_4, OPPCAT_1, FUNCT_5, GRCAT_1, COMPLFLD,
+      XTUPLE_0, ENS_1, GROUP_6, SUBSET_1, ORDINAL1, NUMBERS, FUNCOP_1, CARD_1,
+      FINSET_1, CARD_3, CLASSES3, XXREAL_0, FIB_NUM2, TARSKI, XBOOLE_0,
+      EQREL_1, ZFMISC_1, RELAT_1, FUNCT_1, FUNCT_2, BINOP_1, STRUCT_0, GRAPH_1,
+      CAT_1, CAT_2, NATTRA_1, ALGSTR_0, GROUP_1, ISOCAT_1, CLASSES2, CLASSES4,
+      FINSEQ_2, VECTSP_1, MATRIX_1, FINSEQ_1, WELLORD2;
+ constructors CIRCUIT2, FUNCT_5, GRCAT_1, RING_3, ENS_1, ISOCAT_1, CLASSES1,
+      CLASSES3, CLASSES4, FIB_NUM2, MATRIX_1, BINOP_2, WELLORD2;
+ registrations XCMPLX_0, NAT_1, OPPCAT_1, CLASSES2, ALGSTR_1, ALGSTR_0,
+      GRCAT_1, COMPLFLD, FINSET_1, RING_3, RING_4, XBOOLE_0, FUNCT_1, RELAT_1,
+      ENS_1, ZFMISC_1, SUBSET_1, ORDINAL1, CARD_1, CLASSES3, CARD_3, CLASSES4,
+      RELSET_1, FUNCT_2, STRUCT_0, CAT_1, VECTSP_1, XXREAL_0, NECKLA_2,
+      EQREL_1, FUNCOP_1, FINSEQ_1, FOMODEL0;
+ requirements REAL, NUMERALS, ARITHM, SUBSET, BOOLE;
+
+
+begin :: Preliminaries
+
+theorem :: CLASSES5:1
+  for X being non empty set holds
+  {[A,B] where A,B is Element of X : (B = {} implies A = {})} =
+  [:X,X:] \ [: X \ { {} } , { {} } :];
+
+theorem :: CLASSES5:2
+  for X being non empty set st {{}} is Element of X holds not {{}} in Funcs X;
+
+theorem :: CLASSES5:3
+  EvenNAT is denumerable;
+
+theorem :: CLASSES5:4
+  OddNAT is denumerable;
+
+theorem :: CLASSES5:5
+  for X,Y being non empty set, y being Element of Y holds
+  [:X,{y}:] c= union Funcs(X,Y);
+
+theorem :: CLASSES5:6
+  for X being non empty set for n be non zero Nat st
+  n-tuples_on X is finite holds X is finite;
+
+theorem :: CLASSES5:7
+  for X being non empty set holds union SmallestPartition X = X;
+
+theorem :: CLASSES5:8
+  for X being non empty set holds X,SmallestPartition X are_equipotent;
+
+theorem :: CLASSES5:9
+  for C being strict Category holds (C opp) opp = C;
+
+definition
+  let x1,x2,x3,x4,x5 be object;
+  func [x1,x2,x3,x4,x5] -> object equals
+:: CLASSES5:def 1
+[[x1,x2,x3,x4],x5];
+end;
+
+definition
+  let x be object;
+  attr x is quintuple means
+:: CLASSES5:def 2
+
+  ex x1,x2,x3,x4,x5 being object st x = [x1,x2,x3,x4,x5];
+end;
+
+registration
+  let x1,x2,x3,x4,x5 be object;
+  cluster [x1,x2,x3,x4,x5] -> quintuple;
+end;
+
+theorem :: CLASSES5:10
+  for x1,x2,x3,x4,x5,y1,y2,y3,y4,y5 being object st
+  [x1,x2,x3,x4,x5] = [y1,y2,y3,y4,y5] holds x1 = y1 & x2 = y2 &
+  x3 = y3 & x4 = y4 & x5 = y5;
+
+registration
+  cluster quintuple for object;
+end;
+
+registration
+  cluster quintuple for set;
+end;
+
+definition
+  let x be object;
+  assume x is quintuple;
+  func x`1 -> object means
+:: CLASSES5:def 3
+
+  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds it = y1;
+end;
+
+definition
+  let x be object;
+  assume x is quintuple;
+  func x`2 -> object means
+:: CLASSES5:def 4
+
+  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds it = y2;
+end;
+
+definition
+  let x be object;
+  assume x is quintuple;
+  func x`3 -> object means
+:: CLASSES5:def 5
+
+  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds it = y3;
+end;
+
+definition
+  let x be object;
+  assume x is quintuple;
+  func x`4 -> object means
+:: CLASSES5:def 6
+
+  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds it = y4;
+end;
+
+definition
+  let x be object;
+  assume x is quintuple;
+  func x`5 -> object means
+:: CLASSES5:def 7
+
+  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds it = y5;
+end;
+
+registration
+  let x1,x2,x3,x4,x5 be object;
+  reduce [x1,x2,x3,x4,x5]`1 to x1;
+  reduce [x1,x2,x3,x4,x5]`2 to x2;
+  reduce [x1,x2,x3,x4,x5]`3 to x3;
+  reduce [x1,x2,x3,x4,x5]`4 to x4;
+  reduce [x1,x2,x3,x4,x5]`5 to x5;
+end;
+
+registration
+  let x be quintuple object;
+  reduce [x`1,x`2,x`3,x`4,x`5] to x;
+end;
+
+begin :: Some elementary properties
+
+reserve U for Universe;
+reserve x for Element of U;
+
+theorem :: CLASSES5:11
+  for x1,x2,x3 being object st x = [x1,x2,x3] holds
+  x1 is Element of U & x2 is Element of U & x3 is Element of U;
+
+theorem :: CLASSES5:12
+  for x1,x2,x3,x4 being object st x = [x1,x2,x3,x4] holds
+  x1 is Element of U & x2 is Element of U & x3 is Element of U &
+  x4 is Element of U;
+
+theorem :: CLASSES5:13
+  for x1,x2,x3,x4,x5 being Element of U holds [x1,x2,x3,x4,x5] is Element of U;
+
+theorem :: CLASSES5:14
+  for x1,x2,x3,x4,x5 being object st x = [x1,x2,x3,x4,x5] holds
+  x1 is Element of U & x2 is Element of U & x3 is Element of U &
+  x4 is Element of U & x5 is Element of U;
+
+definition
+  let U be Universe;
+  let u1,u2,u3 be Element of U;
+  redefine func [u1,u2,u3] -> Element of U;
+  let u4 be Element of U;
+  redefine func [u1,u2,u3,u4] -> Element of U;
+  let u5 be Element of U;
+  redefine func [u1,u2,u3,u4,u5] -> Element of U;
+end;
+
+theorem :: CLASSES5:15
+  for x being Subset of FinSETS st x is finite holds x is Element of FinSETS;
+
+theorem :: CLASSES5:16
+  for X being finite set st X c= FinSETS holds X in FinSETS;
+
+theorem :: CLASSES5:17
+  union {NAT} c= FinSETS & not union {NAT} in FinSETS &
+  not {NAT} c= FinSETS & not {NAT} in FinSETS;
+
+theorem :: CLASSES5:18
+  for x being object holds x in U iff {x} in U;
+
+theorem :: CLASSES5:19
+  for X being set for n being non zero Nat st
+  Funcs(Seg n,{X}) is Element of U holds X is Element of U;
+
+theorem :: CLASSES5:20
+  for X being set for n being non zero Nat st
+  n-tuples_on {X} is Element of U holds X is Element of U;
+
+theorem :: CLASSES5:21
+  for X being set st union X in U holds X in U;
+
+begin :: Set and Class
+
+definition
+  let X be non empty set;
+  let x be object;
+  attr x is X-set means
+:: CLASSES5:def 8
+x in X;
+end;
+
+definition
+  let X be non empty set;
+  mode Set of X -> set means
+:: CLASSES5:def 9
+
+  it is X-set;
+end;
+
+theorem :: CLASSES5:22
+  for U1,U2 being Universe st U1 in U2 holds
+  for x being object st x is U1-set holds x is U2-set;
+
+theorem :: CLASSES5:23
+  for U1,U2 being Universe st U1 in U2 holds
+  for x being Set of U1 holds x is Set of U2;
+
+theorem :: CLASSES5:24
+  for x being Set of FinSETS holds x is finite;
+
+theorem :: CLASSES5:25
+  for x being Subset of FinSETS st x is finite holds x is Set of FinSETS;
+
+theorem :: CLASSES5:26
+  for x being object holds x is Set of FinSETS iff x is FinSet;
+
+definition
+  let U be Universe;
+  let x be object;
+  attr x is U-Class means
+:: CLASSES5:def 10
+x in bool U & not x in U;
+end;
+
+theorem :: CLASSES5:27
+  for x being set st x is U-Class holds x is non empty;
+
+definition
+  let U be Universe;
+  mode class of U -> non empty set means
+:: CLASSES5:def 11
+
+  it is U-Class;
+end;
+
+theorem :: CLASSES5:28
+  for X being finite Subset of U holds X in U;
+
+theorem :: CLASSES5:29
+  for C being class of U holds C is non finite;
+
+theorem :: CLASSES5:30
+  for X being Set of U holds U \ X is class of U;
+
+theorem :: CLASSES5:31
+  for X being non finite Subset of FinSETS holds X is class of FinSETS;
+
+theorem :: CLASSES5:32
+  NAT is class of FinSETS;
+
+theorem :: CLASSES5:33
+  EvenNAT is class of FinSETS;
+
+theorem :: CLASSES5:34
+  OddNAT is class of FinSETS;
+
+theorem :: CLASSES5:35
+  for x being object holds
+  not x is U-Class or not x is U-set;
+
+theorem :: CLASSES5:36
+  for U1,U2 being Universe st U1 in U2 holds
+  for x being object st x is U1-Class holds x is U2-set;
+
+theorem :: CLASSES5:37
+  union {NAT} is FinSETS-Class & not {NAT} is FinSETS-Class &
+  not {NAT} is FinSETS-set;
+
+begin
+
+reserve U1,U2 for Universe;
+
+theorem :: CLASSES5:38
+  for x being object holds ex U st x is U-set;
+
+theorem :: CLASSES5:39
+  for x being set holds x is GrothendieckUniverse(x)-set;
+
+definition
+  let U1,U2 be Universe;
+  func sup(U1,U2) -> Universe equals
+:: CLASSES5:def 12
+ U1 if U2 in U1
+  otherwise U2;
+end;
+
+theorem :: CLASSES5:40
+  for U1,U2 being Universe
+  for x being Set of U1 for y being Set of U2 holds
+  ex z being Set of sup(U1,U2) st
+  for a being object holds a in z iff a = x or a = y;
+
+theorem :: CLASSES5:41
+  for X being Set of U holds union X is Set of U;
+
+theorem :: CLASSES5:42
+  for X being set st union X is Set of U holds X is Set of U;
+
+theorem :: CLASSES5:43
+  for X being set st union X is empty holds X is U-set;
+
+theorem :: CLASSES5:44
+  for X being class of U holds union X is class of U;
+
+theorem :: CLASSES5:45
+  ex X being set st union X is class of FinSETS & not X is class of FinSETS &
+    not X is Set of FinSETS & X is Set of SETS;
+
+theorem :: CLASSES5:46
+  for X being Set of U
+  for Y being set st Y in X holds Y is Set of U;
+
+theorem :: CLASSES5:47
+  for X being class of U,Y being set st Y in X holds Y is Set of U;
+
+begin :: U-petit
+
+definition
+  let U be Universe;
+  let x be set;
+  attr x is U-petit means
+:: CLASSES5:def 13
+    ex u being Element of U st u,x are_equipotent;
+end;
+
+theorem :: CLASSES5:48
+  for X being Element of U holds X is U-petit;
+
+theorem :: CLASSES5:49
+ for x being set holds
+  x is U-petit iff card x in card U;
+
+theorem :: CLASSES5:50
+  for x being set holds {x} is U-petit;
+
+definition
+  let U be Universe;
+  let G be Group;
+  attr G is U-element means
+:: CLASSES5:def 14
+  the carrier of G is Element of U;
+end;
+
+theorem :: CLASSES5:51
+  for G being Group st G is U-element holds
+    the multF of G is Element of U;
+
+definition
+  let U be Universe;
+  let G be Group;
+  attr G is U-petit means
+:: CLASSES5:def 15
+  ex g being Group st g is U-element & G,g are_isomorphic;
+end;
+
+definition
+  let U be Universe;
+  let C be Category;
+  attr C is U-element means
+:: CLASSES5:def 16
+
+    (the carrier of C) is Element of U &
+    (the carrier' of C) is Element of U;
+end;
+
+theorem :: CLASSES5:52
+  for C being Category st C is U-element holds
+  the Source of C is Element of U & the Target of C is Element of U &
+  the Comp of C is Element of U;
+
+theorem :: CLASSES5:53
+  for o,m being Element of U holds 1Cat(o,m) is U-element;
+
+registration
+  let U be Universe;
+  cluster U-element for Category;
+end;
+
+definition
+  let U be Universe;
+  let C be Category;
+  attr C is U-petit means
+:: CLASSES5:def 17
+    ex c being strict Category st c is U-element & C ~= c;
+end;
+
+theorem :: CLASSES5:54
+  for A being Category
+  for a being Object of A holds [[id a,id a],id a] in the Comp of A;
+
+theorem :: CLASSES5:55
+  for o,m being object holds the Comp of 1Cat(o,m) = {[[m,m],m]};
+
+theorem :: CLASSES5:56
+  for o,m being object for c being Object of 1Cat(o,m) holds c = o;
+
+theorem :: CLASSES5:57
+  for o,m being object for c being Element of 1Cat(o,m) holds
+  c is Object of 1Cat(o,m) & c = o & id c = m;
+
+theorem :: CLASSES5:58
+  for o1,o2,m1,m2 being object holds 1Cat(o1,m1) ~= 1Cat(o2,m2);
+
+theorem :: CLASSES5:59
+  for o,m being object holds 1Cat(o,m) is U-petit;
+
+registration
+  let U be Universe;
+  cluster U-petit for Category;
+end;
+
+theorem :: CLASSES5:60
+  ex C being U-petit Category st
+  not the carrier of C is Element of U & the carrier' of C is Element of U;
+
+theorem :: CLASSES5:61
+  ex C being U-petit Category st
+  not the carrier of C is Element of U & not the carrier' of C is Element of U;
+
+theorem :: CLASSES5:62
+  ex C being U-petit Category st
+  the carrier of C is Element of U & not the carrier' of C is Element of U;
+
+theorem :: CLASSES5:63
+  ex C being U-petit Category st C is non U-element;
+
+theorem :: CLASSES5:64
+  for C being strict Category st C is U-element holds C is U-petit;
+
+definition
+  let U be Universe;
+  let C be Category;
+  attr C is U-Category means
+:: CLASSES5:def 18
+  for x,y being Object of C holds Hom(x,y) is U-petit;
+end;
+
+registration
+  let U be Universe;
+  cluster U-Category for Category;
+end;
+
+theorem :: CLASSES5:65
+  for C,D being Category for F being Functor of C,D holds
+  F c= [:(the carrier' of C), (the carrier' of D):];
+
+theorem :: CLASSES5:66
+  for C,D being Category holds
+  Funct(C,D) c= bool [:(the carrier' of C),(the carrier' of D):];
+
+theorem :: CLASSES5:67
+  for C,D being Category holds
+  NatTrans(C,D) c= [: [:bool [:(the carrier' of C), (the carrier' of D):],
+                        bool [:(the carrier' of C), (the carrier' of D):]:],
+                      bool [:(the carrier of C), (the carrier' of D):] :];
+
+theorem :: CLASSES5:68
+  for X,Y,Z being set st X in U & Y in U & Z in U holds
+  bool [: [:bool [:X, Y:],bool [:X,Y:]:],bool [:Z,Y:] :] in U;
+
+theorem :: CLASSES5:69
+  for X,Y being non empty set st
+  Funcs(X,Y) is Element of U holds X is Element of U;
+
+::$N PROP 1.1.1 a) SGA4
+theorem :: CLASSES5:70
+  for C,D being Category st C is U-element & D is U-element holds
+  Functors(C,D) is U-element;
+
+theorem :: CLASSES5:71
+  for c being set st c in card U holds card (bool c) in U;
+
+theorem :: CLASSES5:72
+  for c1,c2 being Cardinal st c1 in card U & c2 in card U holds
+  card bool [:c1,c2:] in U;
+
+begin :: GroupCat
+
+definition
+  let x be object;
+  func op0(x) -> Element of {x} equals
+:: CLASSES5:def 19
+x;
+  func op1(x) -> UnOp of {x} equals
+:: CLASSES5:def 20
+x .--> x;
+  func op2(x) -> BinOp of {x} equals
+:: CLASSES5:def 21
+(x,x) :-> x;
+end;
+
+theorem :: CLASSES5:73
+  op0(0) = op0 & op1(0) = op1 & op2(0) = op2;
+
+definition
+  let x be object;
+  func Trivial-addLoopStr(x) -> non empty addLoopStr equals
+:: CLASSES5:def 22
+  addLoopStr(# {x},op2(x),op0(x) #);
+end;
+
+theorem :: CLASSES5:74
+  Trivial-addLoopStr = Trivial-addLoopStr(0);
+
+theorem :: CLASSES5:75
+  for x being object holds Trivial-addLoopStr(x) is strict AddGroup;
+
+theorem :: CLASSES5:76
+  op0(x) is Element of U & op1(x) is Element of U &
+  op2(x) is Element of U;
+
+theorem :: CLASSES5:77
+  comp Trivial-addLoopStr(x) is Element of U;
+
+theorem :: CLASSES5:78
+  ex y being Element of U st GO y, Trivial-addLoopStr(x);
+
+theorem :: CLASSES5:79
+  (union the set of all the carrier of Trivial-addLoopStr(x) where
+  x is Element of U) = U;
+
+theorem :: CLASSES5:80
+  Trivial-addLoopStr(x) in GroupObjects U;
+
+theorem :: CLASSES5:81
+  GroupObjects(U),U are_equipotent;
+
+theorem :: CLASSES5:82
+  not GroupObjects(U) is U-petit;
+
+begin
+
+definition
+  let C be Category;
+  func CatToSet C -> set equals
+:: CLASSES5:def 23
+   [the carrier of C,the carrier' of C, the Source of C,the Target of C,
+    the Comp of C];
+end;
+
+definition
+  let C be quintuple set;
+  attr C is StrCategory-like means
+:: CLASSES5:def 24
+
+  ex y1,y2,y3,y4,y5 being set st y1 = C`1 & y2 = C`2 & y3 = C`3 & y4 = C`4 &
+  y5 = C`5 & y3 is Function of y2,y1 & y4 is Function of y2,y1 &
+  y5 is PartFunc of [:y2,y2:],y2;
+end;
+
+registration
+  cluster StrCategory-like for quintuple set;
+end;
+
+definition
+  let C be StrCategory-like quintuple set;
+  func SetToCat C -> strict CatStr means
+:: CLASSES5:def 25
+    ex y1,y2 being set,y3,y4 being Function of y2,y1,
+    y5 being PartFunc of [:y2,y2:],y2 st
+    y1 = C`1 & y2 = C`2 & y3 = C`3 & y4 = C`4 & y5 = C`5 &
+    it = CatStr(# y1,y2,y3,y4,y5 #);
+end;
+
+definition
+  let C be StrCategory-like quintuple set;
+  attr C is Category-like means
+:: CLASSES5:def 26
+
+    ex y1,y2 being set,y3,y4 being Function of y2,y1,
+    y5 being PartFunc of [:y2,y2:],y2 st
+    y1 = C`1 & y2 = C`2 & y3 = C`3 & y4 = C`4 & y5 = C`5 &
+    CatStr(# y1,y2,y3,y4,y5 #) is Category;
+end;
+
+registration
+  cluster Category-like for StrCategory-like quintuple set;
+end;
+
+registration
+  cluster non empty Category-like for StrCategory-like quintuple set;
+end;
+
+definition
+  let C be Category-like StrCategory-like quintuple set;
+  func Obj(C) -> set equals
+:: CLASSES5:def 27
+C`1;
+end;
+
+definition
+  let C be Category-like StrCategory-like quintuple set;
+  func Mor(C) -> set equals
+:: CLASSES5:def 28
+C`2;
+end;
+
+definition
+  let C be Category-like StrCategory-like quintuple set;
+  attr C is non-empty means
+:: CLASSES5:def 29
+Obj(C) is non empty;
+end;
+
+registration
+  cluster non-empty for Category-like StrCategory-like quintuple set;
+end;
+
+definition
+  mode CategorySet is non-empty Category-like StrCategory-like quintuple set;
+end;
+
+theorem :: CLASSES5:83
+  for C being CategorySet holds C is non empty;
+
+registration
+  cluster -> non empty for CategorySet;
+end;
+
+definition
+  let C be CategorySet;
+  func SetToCat C -> strict Category means
+:: CLASSES5:def 30
+
+    ex y1,y2 being set,y3,y4 being Function of y2,y1,
+    y5 being PartFunc of [:y2,y2:],y2 st
+    y1 = C`1 & y2 = C`2 & y3 = C`3 & y4 = C`4 & y5 = C`5 &
+    it = CatStr(# y1,y2,y3,y4,y5 #);
+end;
+
+definition
+  let C be strict Category;
+  redefine func CatToSet C -> CategorySet;
+end;
+
+theorem :: CLASSES5:84
+  for C being CategorySet holds CatToSet SetToCat C = C;
+
+theorem :: CLASSES5:85
+  for C being strict Category holds SetToCat CatToSet C = C;
+
+theorem :: CLASSES5:86
+  for C being Category holds (C is U-element iff CatToSet C is U-set);
+
+theorem :: CLASSES5:87
+  for C being CategorySet holds (C is U-set iff SetToCat C is U-element);
+
+definition
+  let C,D be CategorySet;
+  pred C ~= D means
+:: CLASSES5:def 31
+SetToCat C ~= SetToCat D;
+end;
+
+theorem :: CLASSES5:88
+  for C,D being strict Category st C ~= D holds CatToSet C ~= CatToSet D;
+
+definition
+  let U be Universe;
+  let C be CategorySet;
+  attr C is U-petit means
+:: CLASSES5:def 32
+ex c being CategorySet st c is U-set & C ~= c;
+end;
+
+theorem :: CLASSES5:89
+  for C being strict Category holds C is U-petit iff CatToSet C is U-petit;
+
+definition
+  let C,D be CategorySet;
+  func Funct(C,D) -> set equals
+:: CLASSES5:def 33
+    Funct(SetToCat C,SetToCat D);
+end;
+
+definition
+  let C,D be CategorySet;
+  func Functors(C,D) -> CategorySet equals
+:: CLASSES5:def 34
+    CatToSet Functors(SetToCat C,SetToCat D);
+end;
+
+theorem :: CLASSES5:90
+  for C,D being CategorySet holds
+  Obj Functors(C,D) = Funct(SetToCat C,SetToCat D) &
+  Mor Functors(C,D) = NatTrans(SetToCat C,SetToCat D);
+
+::$N PROP 1.1.1 a) SGA4
+theorem :: CLASSES5:91
+  for C,D being CategorySet st C is U-set & D is U-set holds
+  Functors(C,D) is U-set;
+
+begin :: Small and locally-small categories
+
+notation
+  let U be Universe;
+  let C be Category;
+  synonym C is U-small for C is U-element;
+end;
+
+registration
+  let U be Universe;
+  cluster U-small for Category;
+end;
+
+theorem :: CLASSES5:92
+  for o,m being set st not (m is U-set) or not (o is U-set) holds
+  not 1Cat(o,m) is U-small;
+
+theorem :: CLASSES5:93
+  for o,m being object st 1Cat(o,m) is U-small holds m is U-set &
+  o is U-set;
+
+registration
+  let U be Universe;
+  cluster non U-small for Category;
+end;
+
+definition
+  let U be Universe;
+  let C be Category;
+  attr C is U-locally_small means
+:: CLASSES5:def 35
+
+  for x,y being Object of C holds Hom(x,y) is U-set;
+end;
+
+registration
+  let U be Universe;
+  cluster U-locally_small for Category;
+end;
+
+registration
+  let U be Universe;
+  cluster U-locally_small for non void non empty Category;
+end;
+
+theorem :: CLASSES5:94
+  for C being U-small Category holds C is U-locally_small;
+
+theorem :: CLASSES5:95
+  for o being object holds not 1Cat(o,U) is U-locally_small;
+
+registration
+  let U be Universe;
+  cluster non U-locally_small for Category;
+end;
+
+theorem :: CLASSES5:96
+  for C being U-locally_small Category st the carrier of C is U-set holds
+  union the set of all Hom(a,b) where a,b is Object of C is Element of U;
+
+::https://ncatlab.org/nlab/show/locally+small+category
+theorem :: CLASSES5:97
+  for C being U-locally_small Category st the carrier of C is U-set holds
+  C is U-small;
+
+theorem :: CLASSES5:98
+  for C,D being U-small Category holds Functors(C,D) is U-small &
+  NatTrans(C,D) is U-set;
+
+theorem :: CLASSES5:99
+  for C being U-small Category holds C opp is U-small Category;
+
+theorem :: CLASSES5:100
+  for C being U-locally_small Category holds C opp is U-locally_small Category;
+
+begin :: Examples
+
+definition
+  let X be set;
+  redefine func id X -> Element of Funcs(X,X);
+end;
+
+theorem :: CLASSES5:101
+  Funcs U c< U;
+
+theorem :: CLASSES5:102
+  Funcs U is U-Class;
+
+theorem :: CLASSES5:103
+  not [:U,U:] \ [: U\{{}},{{}} :] is Element of U;
+
+theorem :: CLASSES5:104
+  proj1 Maps U c= [:U,U:] &
+  ([:U,U:] \ [: U \ { {} } , { {} } :]) c= proj1 Maps U &
+  proj2 Maps U = Funcs U;
+
+theorem :: CLASSES5:105
+  Maps U c= U;
+
+theorem :: CLASSES5:106
+  the carrier' of Ens U is U-Class;
+
+theorem :: CLASSES5:107
+  Ens U is non U-small Category & the carrier of (Ens U) is U-Class &
+  the carrier' of (Ens U) is U-Class;
+
+theorem :: CLASSES5:108
+  for U,V being Universe st U in V holds Ens U is V-small Category;
+
+definition
+  let AbG be AbGroup;
+  func # AbG -> Function of
+    [:the carrier of AbG, the carrier of AbG:],the carrier of AbG equals
+:: CLASSES5:def 36
+  the addF of AbG;
+end;
+
+definition
+  let K be Field;
+  let o be object;
+  let n be Nat;
+  func nMatrixFieldCat(K,o,n) -> non empty non void strict CatStr equals
+:: CLASSES5:def 37
+  CatStr(# {o},
+           (the carrier of n-G_Matrix_over K),
+           (the carrier of (n-G_Matrix_over K)) --> o,
+           (the carrier of (n-G_Matrix_over K)) --> o,
+           #(n-G_Matrix_over K)
+         #);
+end;
+
+registration
+  let K be Field;
+  let o be object;
+  let n be Nat;
+  cluster nMatrixFieldCat(K,o,n) -> Category-like;
+end;
+
+registration
+  let K be Field;
+  let o be object;
+  let n be Nat;
+  cluster nMatrixFieldCat(K,o,n) -> transitive;
+end;
+
+registration
+  let K be Field;
+  let o be object;
+  let n be Nat;
+  cluster nMatrixFieldCat(K,o,n) -> associative;
+end;
+
+registration
+  let K be Field;
+  let o be object;
+  let n be Nat;
+  cluster nMatrixFieldCat(K,o,n) -> reflexive;
+end;
+
+registration
+  let K be Field;
+  let o be object;
+  let n be Nat;
+  cluster nMatrixFieldCat(K,o,n) -> with_identities;
+end;
+
+theorem :: CLASSES5:109
+  for K being Field for o being Element of U
+  for n being non zero Nat st the carrier of K is Element of U holds
+  the carrier of nMatrixFieldCat(K,o,n) is trivial &
+  nMatrixFieldCat(K,o,n) is U-small Category &
+  nMatrixFieldCat(K,o,n) is U-locally_small Category;
+
+theorem :: CLASSES5:110
+  for o being Element of FinSETS
+  for n being non zero Nat holds
+  the carrier of nMatrixFieldCat(F_Real,o,n) is trivial &
+  the carrier of nMatrixFieldCat(F_Real,o,n) is FinSETS-set &
+  not nMatrixFieldCat(F_Real,o,n) is FinSETS-small Category &
+  not nMatrixFieldCat(F_Real,o,n) is FinSETS-locally_small Category &
+  nMatrixFieldCat(F_Real,o,n) is SETS-small Category &
+  nMatrixFieldCat(F_Real,o,n) is SETS-locally_small Category;
+
+theorem :: CLASSES5:111
+  for o being Element of FinSETS
+  for n being non zero Nat holds
+  the carrier of nMatrixFieldCat(F_Complex,o,n) is trivial &
+  the carrier of nMatrixFieldCat(F_Complex,o,n) is FinSETS-set &
+  not nMatrixFieldCat(F_Complex,o,n) is FinSETS-small Category &
+  not nMatrixFieldCat(F_Complex,o,n) is FinSETS-locally_small Category &
+  nMatrixFieldCat(F_Complex,o,n) is SETS-small Category &
+  nMatrixFieldCat(F_Complex,o,n) is SETS-locally_small Category;
+

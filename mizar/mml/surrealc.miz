@@ -1,0 +1,5551 @@
+:: Conway's Normal Form in the {M}izar System
+::  by Karol P\kak
+::
+:: Received April 10, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MCART_1, FACIRC_1, RELAT_1, TARSKI, XBOOLE_0, SUBSET_1, XXREAL_0,
+      ARYTM_3, FUNCT_1, ZFMISC_1, CARD_1, ORDINAL2, ORDINAL1, PBOOLE, CARD_3,
+      GROUP_9, NUMBERS, AFINSQ_1, ORDINAL4, VALUED_0, NAT_1, ARYTM_1, XCMPLX_0,
+      MATHMORP, GLIB_000, WAYBEL_3, COHSP_1, NORMSP_1, REAL_1, COMPLEX1,
+      SERIES_1, SURREALO, SURREALR, SURREALN, SURREALC, VECTSP_1, MEMBER_1,
+      FUNCOP_1, SURREAL0;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, XTUPLE_0, SUBSET_1, RELAT_1, FUNCT_1,
+      RELSET_1, PBOOLE, ORDINAL1, ORDINAL2, CARD_1, NUMBERS, XCMPLX_0,
+      XXREAL_0, XREAL_0, ORDINAL4, AFINSQ_1, ORDINAL7, COHSP_1, SURREAL0,
+      SURREALO, SURREALR, SURREALI, SURREALN;
+ constructors RELSET_1, NEWTON, AFINSQ_1, ORDERS_5, ORDINAL7, COHSP_1,
+      SURREALR, SURREALI, SURREALN;
+ registrations XBOOLE_0, RELAT_1, XTUPLE_0, ORDINAL1, ORDINAL3, FUNCT_1, NAT_1,
+      XREAL_0, ORDINAL2, CARD_1, AFINSQ_1, VALUED_0, FOMODEL0, INT_1, XXREAL_0,
+      NUMBERS, XCMPLX_0, RAT_1, SURREAL0, SURREALO, SURREALR, SURREALI,
+      SURREALN, FUNCOP_1;
+ requirements BOOLE, SUBSET, NUMERALS, ARITHM, REAL;
+ definitions TARSKI, ORDINAL1, SURREAL0, SURREALO;
+ equalities ORDINAL1, SURREAL0, SURREALR, SURREALO;
+ expansions SURREAL0, SURREALO, SURREALR, SURREALI;
+ theorems RELAT_1, TARSKI, ZFMISC_1, FUNCT_1, XBOOLE_0, XBOOLE_1, XXREAL_0,
+      NAT_1, ORDINAL1, ORDINAL2, AFINSQ_1, ORDINAL3, ORDINAL4, CARD_1,
+      WELLORD2, XREAL_1, PARTFUN1, ORDINAL7, CARD_5, XCMPLX_1, SEQ_4, XREAL_0,
+      SURREAL0, SURREALO, SURREALR, SURREALI, SURREALN;
+ schemes ORDINAL1, ORDINAL2, CLASSES1, XXREAL_1, SURREALR;
+
+begin :: Commensurability in Archimedean Classes of Surreal Numbers
+
+reserve A,B for Ordinal,
+        o for object,
+        x,y,z for Surreal,
+        n for Nat,
+        r,r1,r2 for Real;
+
+theorem Th1:
+  uReal.r in Day omega
+proof
+  born_eq sReal.r c= born sReal.r c= omega by SURREALO:def 5,SURREALN:49;
+  then
+A1:born_eq sReal.r c= omega by XBOOLE_1:1;
+  uReal.r = Unique_No sReal.r by SURREALN:def 7;
+  then born_eq sReal.r = born_eq uReal.r = born uReal.r
+    by SURREALO:def 10,33,48;
+  then uReal.r in Day born uReal.r c= Day omega by A1,SURREAL0:def 18,35;
+  hence thesis;
+end;
+
+definition
+  func No_omega -> No_ordinal uSurreal equals
+    No_uOrdinal_op omega;
+  coherence;
+end;
+
+definition
+  let x,y be Surreal;
+  pred x,y are_commensurate means
+    (ex n be positive Nat st x < uInt.n * y) &
+    (ex n be positive Nat st y < uInt.n * x);
+  symmetry;
+end;
+
+theorem Th2:
+  x is positive implies x,x are_commensurate
+proof
+  assume x is positive;
+  then
+A1: x= 0_No +x < x +x by SURREALR:44;
+A2: 1_No+1_No=uInt.(1+1) by SURREALN:11,13;
+  1_No * x = x;
+  then x+x == (1_No+1_No)*x by SURREALR:67;
+  then x < uInt.(1+1)*x by A2,A1,SURREALO:4;
+  hence thesis;
+end;
+
+theorem Th3:
+  x,y are_commensurate implies x is positive
+proof
+  assume that
+A1: x,y are_commensurate and
+A2: not x is positive;
+  consider n be positive Nat such that
+A3:x < uInt.n * y by A1;
+  consider m be positive Nat such that
+A4:y < uInt.m * x by A1;
+  uInt.n is positive;
+  then
+A5: y *uInt.n < uInt.n *(uInt.m * x) by SURREALR:70,A4;
+  uInt.n *(uInt.m * x) == (uInt.n * uInt.m) * x
+  == uInt.(n *m) * x by SURREALR:51,SURREALR:69,SURREALN:15;
+  then uInt.n *(uInt.m * x) == uInt.(n *m) * x by SURREALO:4;
+  then
+A6: y *uInt.n <= uInt.(n *m) * x by A5,SURREALO:4;
+  then
+A7:x < uInt.(n *m) * x by A3,SURREALO:4;
+  per cases;
+  suppose n*m =1;
+    hence thesis by A6,A3,SURREALN:11;
+  end;
+  suppose
+A8: x < 0_No & n*m <>1;
+    1<= n*m by NAT_1:14;
+    then 1 < n*m by A8,XXREAL_0:1;
+    then uInt.(n *m) * x < uInt.1 * x = 1_No * x
+    by A8,SURREALR:71,SURREALN:9,11;
+    then uInt.(n *m) * x <= x;
+    hence thesis by A6,A3,SURREALO:4;
+  end;
+  suppose
+A9: 0_No <= x;
+    then x == 0_No by A2;
+    then uInt.(n *m) * x == uInt.(n *m) * 0_No = 0_No by SURREALR:51;
+    hence thesis by A9,A7,SURREALO:4;
+  end;
+end;
+
+theorem Th4:
+  for x,y,z be Surreal st
+    x,y are_commensurate & y,z are_commensurate holds x,z are_commensurate
+proof
+  let x,y,z be Surreal such that
+A1: x,y are_commensurate & y,z are_commensurate;
+  thus ex n be positive Nat st x < uInt.n * z
+  proof
+    consider n be positive Nat such that
+A2: x < uInt.n * y by A1;
+    consider m be positive Nat such that
+A3: y < uInt.m * z by A1;
+    take nm=n*m;
+    uInt.n is positive;
+    then
+A4: uInt.n * y < uInt.n * (uInt.m * z) by A3,SURREALR:70;
+    uInt.n * (uInt.m * z) == (uInt.n * uInt.m) * z ==
+    uInt.nm * z by SURREALR:51,SURREALR:69,SURREALN:15;
+    then uInt.n * (uInt.m * z) == uInt.nm * z by SURREALO:4;
+    then uInt.n * y <= uInt.nm * z by A4,SURREALO:4;
+    hence thesis by A2,SURREALO:4;
+  end;
+  consider n be positive Nat such that
+A5: y < uInt.n * x by A1;
+  consider m be positive Nat such that
+A6: z < uInt.m * y by A1;
+  take nm=n*m;
+  uInt.m is positive;
+  then
+A7:uInt.m * y < uInt.m * (uInt.n * x) by A5,SURREALR:70;
+  uInt.m * (uInt.n * x) == (uInt.m * uInt.n) * x ==
+  uInt.nm * x by SURREALR:51,SURREALR:69,SURREALN:15;
+  then uInt.m * (uInt.n * x) == uInt.nm * x by SURREALO:4;
+  then uInt.m * y <= uInt.nm * x by A7,SURREALO:4;
+  hence thesis by A6,SURREALO:4;
+end;
+
+theorem Th5:
+  for x,y,z be Surreal st
+    x==y & x,z are_commensurate holds y,z are_commensurate
+proof
+  let x,y,z be Surreal such that
+A1:x==y & x,z are_commensurate;
+  thus ex n be positive Nat st y < uInt.n * z
+  proof
+    consider n be positive Nat such that
+A2: x < uInt.n * z by A1;
+    y < uInt.n * z by A1,A2,SURREALO:4;
+    hence thesis;
+  end;
+  consider n be positive Nat such that
+A3: z < uInt.n * x by A1;
+  uInt.n * x == uInt.n * y by A1,SURREALR:51;
+  then z < uInt.n * y by A3,SURREALO:4;
+  hence thesis;
+end;
+
+theorem
+  for x,y,z be Surreal st
+    x,z are_commensurate & x <= y <= z holds
+  x,y are_commensurate & y,z are_commensurate
+proof
+  let x,y,z be Surreal such that
+A1:x,z are_commensurate & x <= y <= z;
+A2:x is positive & z is positive by A1,Th3;
+  per cases by A1;
+  suppose x==y or y==z;
+    hence thesis by A1,Th5,A2,Th2;
+  end;
+  suppose
+A3: x < y < z;
+    consider n be positive Nat such that
+A4: z < uInt.n * x by A1;
+    y <= z by A3;
+    then
+A5: y < uInt.n * x by A4,SURREALO:4;
+    0_No < uInt.n by SURREALI:def 8;
+    then uInt.n * x <= uInt.n * y by A3,SURREALR:70;
+    then
+A6: z < uInt.n * y by A4,SURREALO:4;
+A7: y < uInt.1*z by A3,SURREALN:11;
+    y = uInt.1*y by SURREALN:11;
+    hence thesis by A3,A7,A6,A5;
+  end;
+end;
+
+theorem Th7:
+   x,y are_commensurate iff
+     ex n be positive Nat st x < uInt.n * y & y < uInt.n * x
+proof
+  thus x,y are_commensurate implies
+     ex n be positive Nat st x < uInt.n * y & y < uInt.n * x
+  proof
+    assume
+A1: x,y are_commensurate;
+A2: x is positive & y is positive by A1,Th3;
+    consider n be positive Nat such that
+A3: x < uInt.n * y by A1;
+    consider m be positive Nat such that
+A4: y < uInt.m * x by A1;
+    take n+m;
+    n+0 < n+m & m+0 < n+m by XREAL_1:6;
+    then uInt.n * y <= uInt.(n+m)* y & uInt.m * x <= uInt.(n+m)* x
+    by A2,SURREALR:70,SURREALN:9;
+    hence thesis by A3,A4,SURREALO:4;
+  end;
+  thus thesis;
+end;
+
+theorem Th8:
+  x is positive & x == y implies x,y are_commensurate by Th2,Th5;
+
+definition
+  let x,y be Surreal;
+  pred x infinitely< y means
+    for r be positive Real holds x * uReal.r < y;
+end;
+
+theorem Th9:
+   x infinitely< y implies x < y
+proof
+  assume x infinitely< y;
+  then x*1_No < y by SURREALN:48;
+  hence thesis;
+end;
+
+theorem
+  for r be Real holds uReal.r infinitely< No_omega
+proof
+  let r be Real;
+  let s be positive Real;
+A1: r*s+0 < r*s+1 by XREAL_1:6;
+  uReal.r * uReal.s == uReal.(r*s) by SURREALN:57;
+  then
+A2: uReal.r * uReal.s < uReal.(r*s+1) by A1,SURREALN:51,SURREALO:4;
+  uReal.(r*s+1) <= No_omega by Th1,SURREALN:76;
+  hence thesis by A2,SURREALO:4;
+end;
+
+theorem Th11:
+  for x,y,z be Surreal st x <= y infinitely< z
+    holds x infinitely< z
+proof
+  let x,y,z be Surreal such that A1:x <= y infinitely< z;
+  let r be positive Real;
+  0_No <= uReal.r by SURREALI:def 8;
+  then x * uReal.r <= y * uReal.r < z by A1,SURREALR:75;
+  hence thesis by SURREALO:4;
+end;
+
+theorem
+  for x,y,z be Surreal st x infinitely< y <= z
+    holds x infinitely< z by SURREALO:4;
+
+theorem Th13:
+  for r be positive Real, x,y be Surreal st x infinitely< y
+     holds x * uReal.r infinitely< y &
+            x infinitely< y * uReal.r
+proof
+  let r be positive Real, x,y be Surreal such that
+A1: x infinitely< y;
+  thus x * uReal.r infinitely< y
+  proof
+    let s be positive Real;
+    (x * uReal.r) * uReal.s == x * (uReal.s * uReal.r) ==
+    x * uReal.(s* r) by SURREALN:57,SURREALR:69,SURREALR:51;
+    then (x * uReal.r) * uReal.s == x * uReal.(s * r) < y
+    by A1,SURREALO:4;
+    hence thesis by SURREALO:4;
+  end;
+  let s be positive Real;
+A2: 0_No < uReal.r by SURREALI:def 8;
+A3: x * uReal.(s*(1/r))*uReal.r < y * uReal.r by A1,A2,SURREALR:70;
+  s*((1/r)*r) =s * 1 by XCMPLX_1:106;
+  then s*(1/r)*r =s;
+  then x * uReal.(s*(1/r))*uReal.r == x * (uReal.(s*(1/r))*uReal.r) ==
+  x* uReal.s by SURREALR:69,SURREALR:51, SURREALN:57;
+  then x * uReal.(s*(1/r))*uReal.r == x* uReal.s by SURREALO:4;
+  hence x * uReal.s < y * uReal.r by A3,SURREALO:4;
+end;
+
+theorem Th14:
+  for x,y,z be Surreal st x infinitely< y infinitely< z
+    holds x infinitely< z
+proof
+  let x,y,z be Surreal such that
+A1: x infinitely< y infinitely< z;
+  let r be positive Real;
+  y * uReal.1 < z by A1;
+  then y <= z by SURREALN:48;
+  hence thesis by A1,SURREALO:4;
+end;
+
+theorem Th15:
+  x,y are_commensurate & y infinitely< z implies
+      x infinitely< z
+proof
+  assume
+A1: x,y are_commensurate & y infinitely< z;
+  then consider n be positive Nat such that
+A2:x < y*uInt.n;
+  let r be positive Real;
+  0_No < uReal.r by SURREALI:def 8;
+  then
+A3: x *uReal.r < y*uInt.n * uReal.r by A2,SURREALR:70;
+  uInt.n = uDyadic.n = uReal.n by SURREALN:46,def 5;
+  then y*uInt.n * uReal.r == y * (uInt.n * uReal.r) ==
+  y * uReal.(n*r) by SURREALR:69,SURREALR:51,SURREALN:57;
+  then y*uInt.n * uReal.r == y * uReal.(n*r) by SURREALO:4;
+  then x *uReal.r <= y * uReal.(n*r) by A3,SURREALO:4;
+  hence thesis by A1,SURREALO:4;
+end;
+
+Lm1:x * uReal.r * uReal.r1 == x * uReal.(r*r1)
+proof
+  x * uReal.r*uReal.r1 == x * ( uReal.r*uReal.r1) ==
+  x * uReal.(r*r1) by SURREALR:69,SURREALR:51,SURREALN:57;
+  hence thesis by SURREALO:4;
+end;
+
+Lm2: r<>0 implies x * uReal.r * uReal.(1/r) == x
+proof
+  assume r <>0;
+  then (1/r)*r=1 by XCMPLX_1:106;
+  then x * uReal.r*uReal.(1/r) == x * uReal.1 by Lm1;
+  hence thesis by SURREALN:48;
+end;
+
+Lm3: x * uReal.r * uReal.r1 * uReal.r2 == x * uReal.(r*r1*r2)
+proof
+  x * uReal.r*uReal.r1*uReal.r2 == x * uReal.(r*r1) * uReal.r2
+    == x * uReal.(r*r1*r2) by Lm1,SURREALR:51;
+  hence thesis by SURREALO:4;
+end;
+
+theorem Th16:
+  x,y are_commensurate & z infinitely< x implies
+      z infinitely< y
+proof
+  assume
+A1: x,y are_commensurate & z infinitely< x;
+  then consider n be positive Nat such that
+A2:x < y*uInt.n;
+  let r be positive Real;
+  z *uReal.(r*n) <= x by A1;
+  then
+A3:z *uReal.(r*n) < y*uInt.n by SURREALO:4,A2;
+A4: 0_No < uReal.(1/n) by SURREALI:def 8;
+  uInt.n = uDyadic.n = uReal.n by SURREALN:46,def 5;
+  then z *uReal.(r*n)*uReal.(1/n) < y*uReal.n * uReal.(1/n)==y
+  by A4,Lm2,A3,SURREALR:70;
+  then
+A5:z *uReal.(r*n)*uReal.(1/n) < y by SURREALO:4;
+  r*n*(1/n) = r*(n*(1/n))= r*1 by XCMPLX_1:106;
+  then z *uReal.(r*n)*uReal.(1/n) == z *(uReal.(r*n)*uReal.(1/n)) ==
+  z * uReal.r by SURREALR:69,SURREALR:51,SURREALN:57;
+  then z *uReal.(r*n)*uReal.(1/n) == z * uReal.r by SURREALO:4;
+  hence thesis by A5,SURREALO:4;
+end;
+
+theorem Th17:
+  x == y & y infinitely< z implies x infinitely< z
+proof
+  assume
+A1:x==y & y infinitely< z;
+  let r be positive Real;
+  x*uReal.r == y*uReal.r < z by A1,SURREALR:51;
+  hence thesis by SURREALO:4;
+end;
+
+theorem Th18:
+  x infinitely< z & y infinitely< z implies x + y infinitely< z
+proof
+  assume
+A1: x infinitely< z & y infinitely< z;
+  let r be positive Real;
+  set R=uReal.r,H=uReal.(1/2);
+A2: 1/2+1/2=1;
+  x infinitely< z * H & y infinitely< z * H by A1,Th13;
+  then x * R < z *H & y * R <= z *H;
+  then
+A3:  x * R + y * R < z *H + z*H by SURREALR:44;
+  z *H + z*H == z *(H + H) == z* 1_No =z
+  by A2,SURREALN:55,48,SURREALR:51,SURREALR:67;
+  then z *H + z*H == z by SURREALO:4;
+  then (x + y) * R == x * R + y * R < z by A3,SURREALO:4,SURREALR:67;
+  hence thesis by SURREALO:4;
+end;
+
+theorem
+  x == y & z infinitely< x implies z infinitely< y by SURREALO:4;
+
+theorem Th20:
+  0_No <= x infinitely< y implies x*uReal.r < y
+proof
+  assume
+A1:0_No <= x infinitely< y;
+  per cases;
+  suppose r is positive;
+    hence thesis by A1;
+  end;
+  suppose r <= 0;
+    then uReal.r <= 0_No by SURREALN:51,47;
+    then uReal.r*x <= 0_No*x by A1,SURREALR:75;
+    then uReal.r*x <= x < y by A1,SURREALO:4,Th9;
+    hence thesis by SURREALO:4;
+  end;
+end;
+
+begin :: Conway's $\omega$-map
+
+definition
+  let A;
+  func No_omega_op A -> ManySortedSet of Day A means :Def4:
+    ex S be c=-monotone Function-yielding Sequence st
+      dom S = succ A & it = S.A &
+      for B st B in succ A
+        ex SB be ManySortedSet of Day B st S.B = SB &
+          for x be object st x in Day B holds
+            SB.x = [{0_No}\/{(union rng (S|B).xL) *' (uReal.r)
+                        where xL is Element of L_x, r is Element of REAL:
+                        xL in L_x & r is positive},
+                    {(union rng (S|B).xR) *' (uReal.r)
+                        where xR is Element of R_x, r is Element of REAL:
+                        xR in R_x & r is positive}];
+  existence
+  proof
+    deffunc D(Ordinal) = Day $1;
+    deffunc H(object,c=-monotone Function-yielding Sequence) = [{0_No}\/
+    {(union rng $2.xL) *' (uReal.r) where xL is Element of L_$1, r is
+    Element of REAL:xL in L_$1 & r is positive},
+    {(union rng $2.xR) *' (uReal.r) where xR is Element of R_$1, r is
+    Element of REAL:xR in R_$1 & r is positive}];
+A1: for S be c=-monotone Function-yielding Sequence st
+    for A be Ordinal st A in dom S holds dom (S.A) = D(A) holds
+    for A be Ordinal,x be object st x in dom (S.A) holds H(x,S|A) = H(x,S)
+    proof
+      let S be c=-monotone Function-yielding Sequence such that
+A2:   for A be Ordinal st A in dom S holds dom (S.A) = D(A);
+      let A be Ordinal,x be object such that
+A3:   x in dom (S.A);
+      S.A<>{} by A3;
+      then
+A4:   A in dom S by FUNCT_1:def 2;
+      then
+A5:   dom (S.A) = D(A) by A2;
+      then reconsider x as Surreal by A3;
+A6:   x = [L_x,R_x];
+A7:   for y be object st y in L_x\/R_x ex B be Ordinal st
+      y in dom (S.B) & B in A
+      proof
+        let y be object;
+        assume y in L_x\/R_x;
+        then consider O be Ordinal such that
+A8:     O in A & y in Day O by A5,A3,A6,SURREAL0:46;
+        dom (S.O) = Day O by A2,A4,A8,ORDINAL1:10;
+        hence thesis by A8;
+      end;
+A9:   {(union rng S.xL) *' (uReal.r) where xL is Element of L_x,
+      r is Element of REAL: xL in L_x & r is positive} c=
+      {(union rng (S|A).xL) *' (uReal.r) where xL is Element of L_x,
+      r is Element of REAL:xL in L_x & r is positive}
+      proof
+        let y be object such that
+A10:    y in {(union rng S.xL) *' (uReal.r)
+        where xL is Element of L_x,
+        r is Element of REAL: xL in L_x & r is positive};
+        consider xL be Element of L_x, r be Element of REAL such that
+A11:    y = (union rng S.xL) *' (uReal.r) &
+        xL in L_x & r is positive by A10;
+        xL in L_x\/R_x by A11,XBOOLE_0:def 3;
+        then ex B be Ordinal st xL in dom (S.B) & B in A by A7;
+        then (union rng (S|A)).xL = (union rng S).xL by SURREALR:5;
+        hence thesis by A11;
+      end;
+      {(union rng (S|A).xL) *' (uReal.r) where xL is Element of L_x,
+      r is Element of REAL: xL in L_x & r is positive} c=
+      {(union rng S.xL) *' (uReal.r) where xL is Element of L_x,
+      r is Element of REAL:xL in L_x & r is positive}
+      proof
+        let y be object such that
+A12:    y in {(union rng (S|A).xL) *' (uReal.r)
+        where xL is Element of L_x,
+        r is Element of REAL: xL in L_x & r is positive};
+        consider xL be Element of L_x, r be Element of REAL such that
+A13:    y= (union rng (S|A).xL) *' (uReal.r) &
+        xL in L_x & r is positive by A12;
+        xL in L_x\/R_x by A13,XBOOLE_0:def 3;
+        then ex B be Ordinal st
+        xL in dom (S.B) & B in A by A7;
+        then (union rng (S|A)).xL = (union rng S).xL by SURREALR:5;
+        hence thesis by A13;
+      end;
+      then
+A14:  L_H(x,S|A) = L_H(x,S) by A9,XBOOLE_0:def 10;
+A15:  {(union rng S.xL) *' (uReal.r) where xL is Element of R_x,
+      r is Element of REAL: xL in R_x & r is positive} c=
+      {(union rng (S|A).xL) *' (uReal.r) where xL is Element of R_x,
+      r is Element of REAL:xL in R_x & r is positive}
+      proof
+        let y be object such that
+A16:    y in {(union rng S.xL) *' (uReal.r)
+        where xL is Element of R_x,
+        r is Element of REAL: xL in R_x & r is positive};
+        consider xL be Element of R_x, r be Element of REAL such that
+A17:    y= (union rng S.xL) *' (uReal.r) &
+        xL in R_x & r is positive by A16;
+        xL in L_x\/R_x by A17,XBOOLE_0:def 3;
+        then ex B be Ordinal st xL in dom (S.B) & B in A by A7;
+        then (union rng (S|A)).xL = (union rng S).xL by SURREALR:5;
+        hence thesis by A17;
+      end;
+      {(union rng (S|A).xL) *' (uReal.r) where xL is Element of R_x,
+      r is Element of REAL: xL in R_x & r is positive} c=
+      {(union rng S.xL) *' (uReal.r) where xL is Element of R_x,
+      r is Element of REAL:xL in R_x & r is positive}
+      proof
+        let y be object such that
+A18:    y in {(union rng (S|A).xL) *' (uReal.r)
+        where xL is Element of R_x,
+        r is Element of REAL: xL in R_x & r is positive};
+        consider xL be Element of R_x, r be Element of REAL such that
+A19:    y= (union rng (S|A).xL) *' (uReal.r) &
+        xL in R_x & r is positive by A18;
+        xL in L_x\/R_x by A19,XBOOLE_0:def 3;
+        then ex B be Ordinal st xL in dom (S.B) & B in A by A7;
+        then (union rng (S|A)).xL = (union rng S).xL by SURREALR:5;
+        hence thesis by A19;
+      end;
+      hence thesis by A14,A15,XBOOLE_0:def 10;
+    end;
+A20: for A,B be Ordinal st A c= B holds D(A) c= D(B) by SURREAL0:35;
+    consider S be c=-monotone Function-yielding Sequence such that
+A21: dom S = succ A & for B be Ordinal st B in succ A
+      ex SB be ManySortedSet of D(B) st S.B = SB &
+      for x be object st x in D(B) holds SB.x = H(x,S|B)
+      from SURREALR:sch 1(A1,A20);
+    A in succ A by ORDINAL1:8;
+    then consider SB be ManySortedSet of D(A) such that
+A22: S.A = SB & for x be object st x in D(A) holds SB.x = H(x,S|A) by A21;
+    take SB,S;
+    thus thesis by A21,A22;
+  end;
+  uniqueness
+  proof
+    deffunc D(Ordinal) = Day $1;
+    deffunc H(object,c=-monotone Function-yielding Sequence) = [{0_No}\/
+    {(union rng $2.xL) *' (uReal.r) where xL is Element of L_$1, r is
+    Element of REAL:xL in L_$1 & r is positive},
+    {(union rng $2.xR) *' (uReal.r) where xR is Element of R_$1, r is
+    Element of REAL:xR in R_$1 & r is positive}];
+    let O1,O2 be ManySortedSet of D(A);
+    given S1 be c=-monotone Function-yielding Sequence such that
+A23:dom S1 = succ A & S1.A = O1 &
+    for B be Ordinal st B in succ A
+         ex SB be ManySortedSet of D(B) st S1.B = SB &
+           for x be object st x in D(B) holds
+             SB.x = H(x,S1|B);
+    given S2 be c=-monotone Function-yielding Sequence such that
+A24:dom S2 = succ A & S2.A = O2 &
+    for B be Ordinal st B in succ A
+         ex SB be ManySortedSet of D(B) st S2.B = SB &
+           for x be object st x in D(B) holds
+             SB.x = H(x,S2|B);
+A25: for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of D(B) st S1.B = SB &
+        for x be object st x in D(B) holds SB.x = H(x,S1|B) by A23;
+A26: for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of D(B) st S2.B = SB &
+        for x be object st x in D(B) holds SB.x = H(x,S2|B) by A24;
+A27: succ A c= dom S1 & succ A c= dom S2 by A23,A24;
+    S1|succ A = S2|succ A from SURREALR:sch 2(A27,A25,A26);
+    then S1 = S2|succ A by A23;
+    hence thesis by A23,A24;
+  end;
+end;
+
+theorem Th21:
+  for S be c=-monotone Function-yielding Sequence st
+    for B st B in dom S
+      ex SB be ManySortedSet of Day B st S.B = SB &
+        for x be object st x in Day B holds
+          SB.x = [{0_No}\/{(union rng (S|B).xL) *' (uReal.r)
+                           where xL is Element of L_x, r is Element of REAL:
+                           xL in L_x & r is positive},
+                  {(union rng (S|B).xR) *' (uReal.r)
+                           where xR is Element of R_x, r is Element of REAL:
+                           xR in R_x & r is positive}]
+    holds
+  for A st A in dom S holds No_omega_op A = S.A
+proof
+  deffunc D(Ordinal) = Day $1;
+  deffunc H(object,c=-monotone Function-yielding Sequence) = [{0_No}\/
+  {(union rng $2.xL) *' (uReal.r) where xL is Element of L_$1, r is
+  Element of REAL:xL in L_$1 & r is positive},
+  {(union rng $2.xR) *' (uReal.r) where xR is Element of R_$1, r is
+  Element of REAL:xR in R_$1 & r is positive}];
+  let S1 be c=-monotone Function-yielding Sequence such that
+A1:for B be Ordinal st B in dom S1
+       ex SB be ManySortedSet of D(B) st S1.B = SB &
+         for x be object st x in D(B) holds SB.x = H(x,S1|B);
+  let A be Ordinal such that
+A2: A in dom S1;
+A3:succ A c= dom S1 by A2,ORDINAL1:21;
+  consider S2 be c=-monotone Function-yielding Sequence such that
+A4:dom S2 = succ A & S2.A = No_omega_op A &
+      for B be Ordinal st B in succ A
+         ex SB be ManySortedSet of D(B) st S2.B = SB &
+           for x be object st x in D(B) holds
+             SB.x = H(x,S2|B) by Def4;
+A5: for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of D(B) st S1.B = SB &
+        for x be object st x in D(B) holds SB.x = H(x,S1|B) by A1,A3;
+A6: for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of D(B) st S2.B = SB &
+      for x be object st x in D(B) holds SB.x = H(x,S2|B) by A4;
+A7: succ A c= dom S1 & succ A c= dom S2 by A2,ORDINAL1:21,A4;
+A8: S1|succ A = S2|succ A from SURREALR:sch 2(A7,A5,A6);
+  A in succ A by ORDINAL1:8;
+  hence thesis by A4,A8,FUNCT_1:49;
+end;
+
+definition
+  let x;
+  func No_omega^ x -> set equals
+    (No_omega_op born x).x;
+  coherence;
+end;
+
+Lm4: No_omega^ x is pair &
+  (o in L_(No_omega^ x) iff o = 0_No or
+      ex xL be Surreal, r be positive Real st
+         xL in L_x & o = (No_omega^ xL) *' (uReal.r) ) &
+  (o in R_(No_omega^ x) iff
+      ex xR be Surreal, r be positive Real st
+         xR in R_x & o = (No_omega^ xR) *' (uReal.r))
+proof
+  set A = born x;
+  deffunc X(set,c=-monotone Function-yielding Sequence) =
+  {(union rng $2.xL) *' (uReal.r) where xL is Element of $1, r is
+  Element of REAL:xL in $1 & r is positive};
+  deffunc H(object,c=-monotone Function-yielding Sequence) =
+  [{0_No}\/ X(L_$1,$2),X(R_$1,$2)];
+  consider S be c=-monotone Function-yielding Sequence such that
+A1:dom S = succ A & No_omega_op A = S.A and
+A2:for B be Ordinal st B in succ A
+   ex SB be ManySortedSet of Day B st S.B = SB &
+     for x be object st x in Day B holds SB.x = H(x,S|B) by Def4;
+  consider SA be ManySortedSet of Day A such that
+A3:S.A = SA and
+A4:for x be object st x in Day A holds SA.x = H(x,S|A) by A2,ORDINAL1:6;
+  x in Day A by SURREAL0:def 18;
+  then
+A5: No_omega^ x = H(x,S|A) by A1,A3,A4;
+  hence No_omega^ x is pair;
+  A6: for T be surreal-membered set st T =L_x or T=R_x
+  for o holds o in X(T,S|A) iff ex y be Surreal, r be positive Real st
+  y in T & o = (No_omega^ y) *' (uReal.r)
+  proof
+    let T be surreal-membered set such that
+A7: T =L_x or T=R_x;
+    let o;
+    thus o in X(T,S|A)implies ex y be Surreal, r be positive Real st
+    y in T & o = (No_omega^ y) *' (uReal.r)
+    proof
+      assume o in X(T,S|A);
+      then consider a be Element of T, r be Element of REAL such that
+A8:   o = (union rng (S|A).a) *' (uReal.r) & a in T & r is positive;
+      reconsider a as Surreal by SURREAL0:def 16,A8;
+      reconsider r as positive Real by A8;
+      take a,r;
+      set B = born a;
+A9:   a in L_x\/ R_x by A7,A8,XBOOLE_0:def 3;
+      then
+A10:  B in A by SURREALO:1;
+A11:  B in succ A by A9,SURREALO:1,ORDINAL1:8;
+      then consider SB be ManySortedSet of Day B such that
+A12:  S.B = SB &
+      for x be object st x in Day B holds SB.x = H(x,S|B) by A2;
+A13:  dom SB = Day B by PARTFUN1:def 2;
+A14:  a in Day B by SURREAL0:def 18;
+A15:  SB.a = (union rng S).a by SURREALR:2,A12,A13,A14,A11,A1;
+      SB.a = No_omega^ a by A11,A1,A2,Th21,A12;
+      hence thesis by SURREALR:5,A10,A13,A14,A12,A8,A15;
+    end;
+    given a be Surreal, r be positive Real such that
+A16: a in T & o = (No_omega^ a) *' (uReal.r);
+    set B = born a;
+A17: a in L_x\/ R_x by A7,A16,XBOOLE_0:def 3;
+    then
+A18: B in A by SURREALO:1;
+A19:B in succ A by A17,SURREALO:1,ORDINAL1:8;
+    then consider SB be ManySortedSet of Day B such that
+A20: S.B = SB & for x be object st x in Day B holds
+    SB.x = H(x,S|B) by A2;
+A21: No_omega_op B = S.B by A19,A1,A2,Th21;
+A22: dom SB = Day B by PARTFUN1:def 2;
+A23: a in Day B by SURREAL0:def 18;
+    SB.a = (union rng S).a by SURREALR:2,A20,A22,A23,A19,A1;
+    then
+A24: (union rng (S|A).a) = No_omega^ a
+    by SURREALR:5,A18,A22,A23,A20,A21;
+    r in REAL by XREAL_0:def 1;
+    hence thesis by A16,A24;
+  end;
+  thus o in L_(No_omega^ x) implies o = 0_No or
+  ex xL be Surreal, r be positive Real st
+    xL in L_x & o = (No_omega^ xL) *' (uReal.r)
+  proof
+    assume o in L_(No_omega^ x) & o <> 0_No;
+    then o in X(L_x,S|A) by A5,ZFMISC_1:136;
+    hence thesis by A6;
+  end;
+  thus (o = 0_No or ex xL be Surreal, r be positive Real st
+  xL in L_x & o = (No_omega^ xL) *' (uReal.r))
+  implies o in L_(No_omega^ x)
+  proof
+    assume o = 0_No or ex xL be Surreal, r be positive Real st
+    xL in L_x & o = (No_omega^ xL) *' (uReal.r);
+    then per cases;
+    suppose o = 0_No;
+      hence thesis by A5,ZFMISC_1:136;
+    end;
+    suppose ex xL be Surreal, r be positive Real st
+      xL in L_x & o = (No_omega^ xL) *' (uReal.r);
+      then o in X(L_x,S|A) by A6;
+      hence thesis by A5,XBOOLE_0:def 3;
+    end;
+  end;
+  thus o in R_(No_omega^ x) implies
+  ex xL be Surreal, r be positive Real st
+  xL in R_x & o = (No_omega^ xL) *' (uReal.r) by A5,A6;
+  assume ex xL be Surreal, r be positive Real st
+  xL in R_x & o = (No_omega^ xL) *' (uReal.r);
+  hence thesis by A5,A6;
+end;
+
+Lm5: No_omega^ x is positive Surreal &
+  for y1,y2,Ny1,Ny2 be Surreal st  Ny1 = No_omega^ y1 & Ny2 = No_omega^ y2
+    holds
+  (y1 <= y2 implies Ny1 <= Ny2)&( y1 < y2 implies Ny1 infinitely< Ny2)
+proof
+  defpred P[Ordinal] means
+  (for x be Surreal st x in Day $1 holds No_omega^ x is positive Surreal) &
+  (for y1,y2,Ny1,Ny2 be Surreal st
+  y1 in Day $1 & y2 in Day $1 & Ny1 = No_omega^ y1 & Ny2 = No_omega^ y2
+  holds (y1 <= y2 implies Ny1 <= Ny2)&( y1 < y2 implies Ny1 infinitely< Ny2));
+A1: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that
+A2: for C be Ordinal st C in D holds P[C];
+    thus
+A3:for x be Surreal st x in Day D holds
+      No_omega^ x is positive Surreal
+    proof
+      let x be Surreal such that
+A4:   x in Day D;
+      reconsider N=No_omega^ x as pair set by Lm4;
+A5:   born x c= D by A4,SURREAL0:def 18;
+      L_N\/R_N is surreal-membered
+      proof
+        let o such that
+A6:     o in L_N\/R_N;
+        per cases by A6,XBOOLE_0:def 3;
+        suppose o=0_No;
+          hence thesis;
+        end;
+        suppose o<>0_No & o in L_N;
+          then ex a be Surreal, r be positive Real st
+            a in L_x & o = (No_omega^ a) *' (uReal.r) by Lm4;
+          hence thesis;
+        end;
+        suppose o in R_N;
+          then ex a be Surreal, r be positive Real st
+          a in R_x & o = (No_omega^ a) *' (uReal.r) by Lm4;
+          hence thesis;
+        end;
+      end;
+      then consider M be Ordinal such that
+A7:   for o st o in L_N\/R_N
+      ex A be Ordinal st A in M & o in Day A by SURREAL0:47;
+      L_N << R_N
+      proof
+        let a,b be Surreal such that
+A8:    a in L_N & b in R_N;
+        consider xR be Surreal, r be positive Real such that
+A9:    xR in R_x & b = (No_omega^ xR) *' (uReal.r) by A8,Lm4;
+        xR in L_x \/ R_x by A9,XBOOLE_0:def 3;
+        then
+A10:    born xR in born x by SURREALO:1;
+        then
+A11:    born xR in D by A5;
+A12:    xR in Day born xR by SURREAL0:def 18;
+        then reconsider NxR=No_omega^ xR as positive Surreal by A10,A2, A5;
+A13:    NxR * uReal.r is positive;
+        per cases by A8,Lm4;
+        suppose a = 0_No;
+          hence thesis by A13,A9;
+        end;
+        suppose ex xL be Surreal, r be positive Real st
+          xL in L_x & a = (No_omega^ xL) *' (uReal.r);
+          then consider xL be Surreal, s be positive Real such that
+A14:      xL in L_x & a = (No_omega^ xL) *' (uReal.s);
+          xL in L_x \/ R_x by A14,XBOOLE_0:def 3;
+          then
+A15:      born xL in born x by SURREALO:1;
+          then
+A16:      born xL in D by A5;
+          set B = born xL\/born xR;
+A17:      B in D by A11,A16,ORDINAL3:12;
+A18:      xL in Day born xL by SURREAL0:def 18;
+          then reconsider NxL=No_omega^ xL as positive Surreal by A15,A5,A2;
+A19:      Day born xL c= Day B & Day born xR c= Day B
+          by XBOOLE_1:7,SURREAL0:35;
+          L_x << R_x by SURREAL0:45;
+          then xL < xR by A14,A9;
+          then NxL infinitely< NxR by A17,A19,A18,A12,A2;
+          then NxL infinitely< NxR * uReal.r by Th13;
+          then NxL * uReal.s < NxR * uReal.r;
+          hence thesis by A14,A9;
+        end;
+      end;
+      then [L_N,R_N] in Day M by A7,SURREAL0:46;
+      then reconsider N as Surreal;
+A20:  0_No in L_N by Lm4;
+      L_N << {N} & N in {N} by SURREALO:11,TARSKI:def 1;
+      hence thesis by A20,SURREALI:def 8;
+    end;
+    defpred W[Ordinal] means
+    for y1,y2,Ny1,Ny2 be Surreal st born y1 (+) born y2 = $1 &
+    y1 in Day D & y2 in Day D & Ny1 = No_omega^ y1 & Ny2 = No_omega^ y2 holds
+    (y1 <= y2 implies  Ny1 <= Ny2) & (y1 < y2 implies Ny1 infinitely< Ny2);
+A21: for E be Ordinal st for F be Ordinal st F in E holds W[F] holds W[E]
+    proof
+      let E be Ordinal such that
+A22:  for F be Ordinal st F in E holds W[F];
+      let y1,y2,Ny1,Ny2 be Surreal such that
+A23:  born y1 (+) born y2 = E &
+      y1 in Day D & y2 in Day D & Ny1 = No_omega^ y1 & Ny2 = No_omega^ y2;
+      thus y1 <= y2 implies Ny1 <= Ny2
+      proof
+        assume y1 <= y2;
+        then
+A24:    L_y1 << {y2} & {y1} << R_y2 by SURREAL0:43;
+A25:    L_Ny1 << {Ny2}
+        proof
+          let a,b be Surreal such that
+A26:      a in L_Ny1 & b in {Ny2};
+          per cases by A26,Lm4,A23;
+          suppose
+A27:        a = 0_No;
+            Ny2 is positive by A3,A23;
+            hence thesis by A27,A26,TARSKI:def 1;
+          end;
+          suppose ex xL be Surreal, r be positive Real st
+            xL in L_y1 & a = (No_omega^ xL) *' (uReal.r);
+            then consider xL be Surreal, r be positive Real such that
+A28:        xL in L_y1 & a = (No_omega^ xL) *' (uReal.r);
+A29:        xL in L_y1 \/ R_y1 by A28,XBOOLE_0:def 3;
+            then born xL c= born y1 c= D
+            by SURREALO:1,SURREAL0:def 18,ORDINAL1:def 2,A23;
+            then born xL c= D by XBOOLE_1:1;
+            then
+A30:        xL in Day born xL c= Day D by SURREAL0:def 18,SURREAL0:35;
+            then reconsider NxL = No_omega^ xL as positive Surreal by A3;
+            y2 in {y2} by TARSKI:def 1;
+            then
+A31:        xL < y2 by A24,A28;
+            born xL (+) born y2 in E by A29,SURREALO:1,A23,ORDINAL7:94;
+            then NxL infinitely< Ny2 by A23,A30,A31,A22;
+            then NxL * uReal.r < Ny2;
+            hence thesis by A28,A26,TARSKI:def 1;
+          end;
+        end;
+        {Ny1} << R_Ny2
+        proof
+          let a,b be Surreal such that
+A32:      a in {Ny1} & b in R_Ny2;
+          consider xR be Surreal, r be positive Real such that
+A33:      xR in R_y2 & b = (No_omega^ xR) *' (uReal.r) by A23,A32,Lm4;
+A34:      xR in L_y2 \/ R_y2 by A33,XBOOLE_0:def 3;
+          then born xR c= born y2 c= D
+          by SURREALO:1,SURREAL0:def 18,ORDINAL1:def 2,A23;
+          then born xR c= D by XBOOLE_1:1;
+          then
+A35:      xR in Day born xR c= Day D by SURREAL0:def 18,SURREAL0:35;
+          then reconsider NxR = No_omega^ xR as positive Surreal by A3;
+          y1 in {y1} by TARSKI:def 1;
+          then
+A36:      y1 < xR by A24,A33;
+          born y1 (+) born xR in E by A34,SURREALO:1,A23,ORDINAL7:94;
+          then Ny1 infinitely< NxR by A23,A35,A36,A22;
+          then Ny1 infinitely< NxR * uReal.r by Th13;
+          then Ny1* uReal.1 < NxR * uReal.r;
+          hence thesis by A33,SURREALN:48,A32,TARSKI:def 1;
+        end;
+        hence thesis by A25,SURREAL0:43;
+      end;
+      assume
+A37:  y1 < y2;
+      let r be positive Real;
+A38:  born y1 c= D & born y2 c= D by A23,SURREAL0:def 18;
+      per cases by A37,SURREALO:13;
+      suppose ex y1R be Surreal st y1R in R_y1 & y1 < y1R <= y2;
+        then consider y1R be Surreal such that
+A39:    y1R in R_y1 & y1 < y1R <= y2;
+A40:    y1R in L_y1 \/ R_y1 by A39,XBOOLE_0:def 3;
+        then
+A41:    born y1R in born y1 by SURREALO:1;
+        y1R in Day born y1R by SURREAL0:def 18;
+        then reconsider Ny1R=No_omega^ y1R as positive Surreal by A41,A38,A2;
+A42:    Ny1 in {Ny1} << R_Ny1 by TARSKI:def 1,SURREALO:11;
+A43:    Ny1 < Ny1R *uReal.(1/r) by A42,A39,A23,Lm4;
+        uReal.r is positive;
+        then
+A44:    Ny1 * uReal.r < Ny1R *uReal.(1/r) * uReal.r
+        by A43,SURREALR:70;
+        (1/r)*r =1 by XCMPLX_1:106;
+        then Ny1R *uReal.(1/r) * uReal.r == Ny1R *(uReal.(1/r) * uReal.r)==
+        Ny1R *1_No by SURREALR:51,SURREALR:69,SURREALN:48,57;
+        then Ny1R *uReal.(1/r) * uReal.r == Ny1R *1_No = Ny1R
+        by SURREALO:4;
+        then
+A45:    Ny1*uReal.r < Ny1R by A44,SURREALO:4;
+        born y1R c= born y1 c= D
+        by ORDINAL1:def 2,SURREAL0:def 18,SURREALO:1,A23,A40;
+        then born y1R c= D by XBOOLE_1:1;
+        then
+A46:    y1R in Day born y1R c= Day D by SURREAL0:def 18,SURREAL0:35;
+        born y1R (+) born y2 in born y1 (+) born y2
+        by A40,SURREALO:1,ORDINAL7:94;
+        then Ny1R <= Ny2 by A39,A46,A23,A22;
+        hence Ny1* uReal.r < Ny2 by A45,SURREALO:4;
+      end;
+      suppose ex y2L be Surreal st y2L in L_y2 & y1 <= y2L < y2;
+        then consider y2L be Surreal such that
+A47:    y2L in L_y2 & y1 <= y2L < y2;
+A48:    y2L in L_y2 \/ R_y2 by A47,XBOOLE_0:def 3;
+        then
+A49:    born y2L in born y2 by SURREALO:1;
+        y2L in Day born y2L by SURREAL0:def 18;
+        then reconsider Ny2L=No_omega^ y2L as positive Surreal by A49,A38,A2;
+A50:    L_Ny2 << {Ny2} & Ny2 in {Ny2} by TARSKI:def 1,SURREALO:11;
+A51:    Ny2L *uReal.r in L_Ny2 by A47,A23,Lm4;
+        born y2L c= born y2 c= D
+        by ORDINAL1:def 2,SURREAL0:def 18,SURREALO:1,A23,A48;
+        then born y2L c= D by XBOOLE_1:1;
+        then
+A52:    y2L in Day born y2L c= Day D by SURREAL0:def 18,SURREAL0:35;
+        born y1 (+) born y2L in born y1 (+) born y2
+        by A48,SURREALO:1,ORDINAL7:94;
+        then
+A53:    Ny1 <= Ny2L by A52,A47,A23,A22;
+        uReal.r is positive;
+        then 0_No <= uReal.r;
+        then Ny1 * uReal.r <= Ny2L * uReal.r by SURREALR:75,A53;
+        hence Ny1* uReal.r < Ny2 by A51,A50,SURREALO:4;
+      end;
+    end;
+A54:for E be Ordinal holds W[E] from ORDINAL1:sch 2(A21);
+    let y1,y2,Ny1,Ny2 be Surreal such that
+A55: y1 in Day D & y2 in Day D & Ny1 = No_omega^ y1 & Ny2 = No_omega^ y2;
+    W[born y1 (+) born y2] by A54;
+    hence thesis by A55;
+  end;
+A56:for E be Ordinal holds P[E] from ORDINAL1:sch 2(A1);
+  x in Day born x by SURREAL0:def 18;
+  hence No_omega^ x is positive Surreal by A56;
+  let y1,y2,Ny1,Ny2 be Surreal such that
+A57: Ny1 = No_omega^ y1 & Ny2 = No_omega^ y2;
+A58: y1 in Day born y1 & y2 in Day born y2 by SURREAL0:def 18;
+   Day born y1 c= Day (born y1\/born y2) &
+  Day born y2 c= Day (born y1\/born y2) by XBOOLE_1:7,SURREAL0:35;
+  hence thesis by A57,A58,A56;
+end;
+
+registration
+  let x;
+  cluster No_omega^ x -> surreal;
+  coherence by Lm5;
+end;
+
+registration
+  let x;
+  cluster No_omega^ x -> positive;
+  coherence by Lm5;
+end;
+
+theorem Th22:
+  o in L_(No_omega^ x) iff o = 0_No or
+     ex xL be Surreal, r be positive Real st
+        xL in L_x & o = (No_omega^ xL) * uReal.r
+proof
+  thus o in L_(No_omega^ x) implies o = 0_No or
+    ex xL be Surreal, r be positive Real st
+          xL in L_x & o = (No_omega^ xL) * uReal.r
+  proof
+    assume o in L_(No_omega^ x) & not o = 0_No;
+    then consider xL be Surreal, r be positive Real such that
+A1: xL in L_x & o = (No_omega^ xL) *' (uReal.r) by Lm4;
+    o = (No_omega^ xL) * uReal.r by A1;
+    hence thesis by A1;
+  end;
+  assume o = 0_No or ex xL be Surreal, r be positive Real st
+  xL in L_x & o = (No_omega^ xL) * uReal.r;
+  then per cases;
+  suppose o=0_No;
+    hence thesis by Lm4;
+  end;
+  suppose ex xL be Surreal, r be positive Real st
+    xL in L_x & o = (No_omega^ xL) * uReal.r;
+    hence thesis by Lm4;
+  end;
+end;
+
+theorem Th23:
+  o in R_(No_omega^ x) iff
+    ex xR be Surreal, r be positive Real st
+        xR in R_x & o = (No_omega^ xR) * uReal.r
+proof
+  thus o in R_(No_omega^ x) implies
+      ex xR be Surreal, r be positive Real st
+          xR in R_x & o = (No_omega^ xR) * uReal.r
+  proof
+    assume o in R_(No_omega^ x);
+    then consider xR be Surreal, r be positive Real such that
+A1: xR in R_x & o = (No_omega^ xR) *' (uReal.r) by Lm4;
+    o = (No_omega^ xR) * uReal.r by A1;
+    hence thesis by A1;
+  end;
+  thus thesis by Lm4;
+end;
+
+theorem
+   x <= y implies No_omega^ x <= No_omega^ y by Lm5;
+
+theorem Th25:
+   x < y implies No_omega^ x infinitely< No_omega^ y by Lm5;
+
+theorem Th26:
+  No_omega^ 0_No = 1_No
+proof
+  set O= No_omega^ 0_No;
+A1:0_No in L_O by Th22;
+  L_O c= {0_No}
+  proof
+    let o such that A2:o in L_O & not o in {0_No};
+    o <> 0_No by A2,TARSKI:def 1;
+    then ex xL be Surreal, r be positive Real st
+      xL in L_0_No & o = (No_omega^ xL) * uReal.r by A2,Th22;
+    hence thesis;
+  end;
+  then
+A3: L_O = {0_No} by A1,ZFMISC_1:33;
+  R_O ={}
+  proof
+    assume R_O <>{};
+    then consider o such that
+A4: o in R_O by XBOOLE_0:def 1;
+    ex xR be Surreal, r be positive Real st
+    xR in R_0_No & o = (No_omega^ xR) * uReal.r by A4,Th23;
+    hence thesis;
+  end;
+  hence thesis by A3;
+end;
+
+theorem Th27:
+  (No_omega^ x) * (No_omega^ y) == No_omega^ (x+y)
+proof
+  defpred P[Ordinal] means for x,y be Surreal st born x (+) born y = $1 holds
+    (No_omega^ x) * (No_omega^ y) == No_omega^ (x+y);
+A1: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that
+A2: for C be Ordinal st C in D holds P[C];
+    let x,y be Surreal such that
+A3: born x (+) born y = D;
+    set Nx = No_omega^ x,Ny=No_omega^ y,xy=x+y,Nxy = No_omega^ xy;
+A4: Nx*Ny =[comp(L_ Nx,Nx,Ny,L_Ny) \/ comp(R_Nx,Nx,Ny,R_Ny),
+    comp(L_Nx,Nx,Ny,R_Ny) \/ comp(R_Nx,Nx,Ny,L_Ny)]
+    by SURREALR:50;
+A5: x + y = [(L_x ++ {y})\/({x} ++ L_y), (R_x ++ {y}) \/({x} ++ R_y)]
+    by SURREALR:28;
+A6: for a be Surreal st a in L_(Nx*Ny)
+    ex b be Surreal st b in L_Nxy & a <= b
+    proof
+      let a be Surreal such that
+A7:   a in L_(Nx*Ny);
+      per cases by A7,A4,XBOOLE_0:def 3;
+      suppose a in comp(R_Nx,Nx,Ny,R_Ny);
+        then consider x1,y1 be Surreal such that
+A8:     a = x1*Ny + Nx*y1 - x1*y1 & x1 in R_Nx & y1 in R_Ny
+        by SURREALR:def 15;
+        consider xL be Surreal, r be positive Real such that
+A9:     xL in R_x & x1 = (No_omega^ xL) * uReal.r by A8,Th23;
+        consider yL be Surreal, s be positive Real such that
+A10:    yL in R_y & y1 = (No_omega^ yL) * uReal.s by A8,Th23;
+A11:    0_No < y1 by A10,SURREALI:def 8;
+A12:    0_No < x1 by A9,SURREALI:def 8;
+        set H=uReal.(1/2);
+        1/2+1/2=1;
+        then (x1*y1) *H + (x1*y1)*H == (x1*y1) *(H + H) ==
+          (x1*y1)* 1_No = x1*y1
+        by SURREALN:55,48,SURREALR:51,67;
+        then
+A13:    (x1*y1) *H + (x1*y1)*H == x1*y1 by SURREALO:4;
+        x in {x} << R_x by TARSKI:def 1,SURREALO:11;
+        then Nx infinitely< No_omega^ xL by A9,Th25;
+        then Nx infinitely< x1 by A9,Th13;
+        then Nx infinitely< H*x1 by Th13;
+        then Nx < H*x1 by Th9;
+        then Nx*y1 <= H *x1*y1 == H*(x1*y1) by SURREALR:70,A11,SURREALR:69;
+        then
+A14:    Nx*y1 <= H*(x1*y1) by SURREALO:4;
+        y in {y} << R_y by TARSKI:def 1,SURREALO:11;
+        then Ny infinitely< No_omega^ yL by A10,Th25;
+        then Ny infinitely< y1 by Th13,A10;
+        then Ny infinitely< H*y1 by Th13;
+        then Ny < H*y1 by Th9;
+        then Ny*x1 <= H*y1*x1 == H*(x1*y1) by SURREALR:70,A12,SURREALR:69;
+        then Ny*x1 <= H*(x1*y1) by SURREALO:4;
+        then Nx*y1 + Ny*x1 <= H*(x1*y1) + H*(x1*y1) by SURREALR:43,A14;
+        then Nx*y1 + Ny*x1 <= x1*y1 by A13,SURREALO:4;
+        then a <= 0_No in L_Nxy by A8,Th22,SURREALR:45;
+        hence thesis;
+      end;
+      suppose a in comp(L_ Nx,Nx,Ny,L_Ny);
+        then consider x1,y1 be Surreal such that
+A15:    a = x1*Ny + Nx*y1 - x1*y1 & x1 in L_Nx & y1 in L_Ny
+        by SURREALR:def 15;
+        per cases by A15,Th22;
+        suppose
+A16:      x1 = 0_No;
+          per cases by A15,Th22;
+          suppose y1 = 0_No;
+            then a in L_Nxy by Th22,A16,A15;
+            hence thesis;
+          end;
+          suppose ex yL be Surreal, s be positive Real st
+            yL in L_y & y1 = (No_omega^ yL) * uReal.s;
+            then consider yL be Surreal, s be positive Real such that
+A17:        yL in L_y & y1 = (No_omega^ yL) * uReal.s;
+            yL in L_y\/R_y by A17,XBOOLE_0:def 3;
+            then
+A18:        born x (+) born yL in born x (+) born y
+            by ORDINAL7:94,SURREALO:1;
+A19:        a == (Nx*(No_omega^ yL)) * uReal.s ==
+            No_omega^ (x+yL) * uReal.s
+            by A17,A18,A3,A2,SURREALR:69,SURREALR:54,A15,A16;
+            x in {x} by TARSKI:def 1;
+            then x+yL in {x} ++ L_y by A17,SURREALR:def 8;
+            then x+yL in L_xy by A5,XBOOLE_0:def 3;
+            then No_omega^ (x+yL) * uReal.s in L_Nxy by Th22;
+            hence thesis by A19,SURREALO:9;
+          end;
+        end;
+        suppose ex xL be Surreal, r be positive Real st
+          xL in L_x & x1 = (No_omega^ xL) * uReal.r;
+          then consider xL be Surreal, r be positive Real such that
+A20:      xL in L_x & x1 = (No_omega^ xL) * uReal.r;
+A21:      xL in L_x\/R_x by A20,XBOOLE_0:def 3;
+          then born xL in born x by SURREALO:1;
+          then
+A22:      (No_omega^ xL) * (No_omega^ y) == No_omega^ (xL+y)
+          by A3,A2,ORDINAL7:94;
+A23:      uReal.r* (No_omega^ xL) * Ny ==
+          uReal.r* ((No_omega^ xL) * Ny) == uReal.r * No_omega^ (xL+y)
+          by A22,SURREALR:69,SURREALR:54;
+          then
+A24:      uReal.r* (No_omega^ xL) * Ny == uReal.r * No_omega^ (xL+y)
+          by SURREALO:9;
+          per cases by A15,Th22;
+          suppose
+A25:        y1 = 0_No;
+            y in {y} by TARSKI:def 1;
+            then xL+y in L_x ++ {y} by A20,SURREALR:def 8;
+            then xL+y in L_xy by A5,XBOOLE_0:def 3;
+            then No_omega^ (xL+y) * uReal.r in L_Nxy by Th22;
+            hence thesis by A20,A23,SURREALO:9,A15,A25;
+          end;
+          suppose ex yL be Surreal, s be positive Real st
+            yL in L_y & y1 = (No_omega^ yL) * uReal.s;
+            then consider yL be Surreal, s be positive Real such that
+A26:        yL in L_y & y1 = (No_omega^ yL) * uReal.s;
+            yL in L_y\/R_y by A26,XBOOLE_0:def 3;
+            then born xL (+) born yL in  born x (+) born yL
+            in born x (+) born y by A21,SURREALO:1,ORDINAL7:94;
+            then Nx*y1 == Nx * (No_omega^ yL) * uReal.s
+            == No_omega^ (x+yL) * uReal.s
+            by A3,A2,A26,SURREALR:69,SURREALR:54;
+            then
+A27:        Nx*y1 == No_omega^ (x+yL) * uReal.s by SURREALO:9;
+A28:        - x1*y1 <= - 0_No = 0_No
+            by A20,A26,SURREALI:def 8,SURREALR:10;
+            x in {x} by TARSKI:def 1;
+            then x+yL in {x} ++ L_y by A26,SURREALR:def 8;
+            then
+A29:        x+yL in L_xy by A5,XBOOLE_0:def 3;
+            y in {y} by TARSKI:def 1;
+            then xL+y in L_x ++ {y} by A20,SURREALR:def 8;
+            then
+A30:        xL+y in L_xy by A5,XBOOLE_0:def 3;
+            per cases;
+            suppose xL+y <= x+yL;
+              then
+A31:          No_omega^ (xL+y) <= No_omega^ (x+yL) by Lm5;
+              0_No <= uReal.r by SURREALI:def 8;
+              then No_omega^ (xL+y)* uReal.r <= No_omega^ (x+yL) *uReal.r
+              by A31,SURREALR:75;
+              then x1 * Ny <= No_omega^ (x+yL) *uReal.r by A20,A24,SURREALO:4;
+              then x1 * Ny +Nx*y1 <=
+                 No_omega^ (x+yL) *uReal.r +No_omega^ (x+yL) * uReal.s
+                 == No_omega^ (x+yL)*(uReal.r + uReal.s)
+              by A27,SURREALR:43,67;
+              then x1 * Ny +Nx*y1 <= No_omega^ (x+yL)*(uReal.r + uReal.s)
+              by SURREALO:4;
+              then
+A32:          x1 * Ny +Nx*y1 + - x1*y1 <=
+                No_omega^ (x+yL)*(uReal.r + uReal.s) +0_No
+                = No_omega^ (x+yL)*(uReal.r + uReal.s)
+              by A28,SURREALR:43;
+A33:          No_omega^ (x+yL)*(uReal.r + uReal.s)
+              == No_omega^ (x+yL)*uReal.(r + s)
+              by SURREALR:54,SURREALN:55;
+              No_omega^ (x+yL)*uReal.(r + s) in L_Nxy by A29,Th22;
+              hence thesis by A33,A32,A15,SURREALO:4;
+            end;
+            suppose x+yL <= xL+y;
+              then
+A34:          No_omega^ (x+yL) <= No_omega^ (xL+y) by Lm5;
+              0_No <= uReal.s by SURREALI:def 8;
+              then No_omega^ (x+yL)* uReal.s <= No_omega^ (xL+y) *uReal.s
+              by A34,SURREALR:75;
+              then Nx * y1 <= No_omega^ (xL+y) *uReal.s by A27,SURREALO:4;
+              then x1 * Ny +Nx*y1 <= No_omega^ (xL+y) *uReal.r +
+              No_omega^ (xL+y) * uReal.s
+              == No_omega^ (xL+y)*(uReal.r + uReal.s)
+              by A20,A24,SURREALR:43,67;
+              then x1 * Ny +Nx*y1 <= No_omega^ (xL+y)*(uReal.r + uReal.s)
+              by SURREALO:4;
+              then
+A35:          x1 * Ny +Nx*y1 + - x1*y1
+              <= No_omega^ (xL+y)*(uReal.r + uReal.s) +0_No
+              = No_omega^ (xL+y)*(uReal.r + uReal.s)
+              by A28,SURREALR:43;
+A36:          No_omega^ (xL+y)*(uReal.r + uReal.s) ==
+              No_omega^ (xL+y)*uReal.(r + s)
+              by SURREALR:54,SURREALN:55;
+              take Y2=No_omega^ (xL+y)*uReal.(r + s);
+              thus thesis by A36,A30,Th22,A35,A15,SURREALO:4;
+            end;
+          end;
+        end;
+      end;
+    end;
+A37:for a be Surreal st a in R_Nxy
+    ex b be Surreal st b in R_(Nx*Ny) & b <= a
+    proof
+      let a be Surreal such that A38:a in R_Nxy;
+      consider xR be Surreal, r be positive Real such that
+A39:  xR in R_xy & a = (No_omega^ xR) * uReal.r by A38,Th23;
+      per cases by A39,A5,XBOOLE_0:def 3;
+      suppose xR in R_x ++ {y};
+        then consider x1,y1 be Surreal such that
+A40:    x1 in R_x & y1 in {y} & xR = x1 + y1 by SURREALR:def 8;
+        set R = (No_omega^ x1) * uReal.r;
+        set A = R*Ny + Nx*0_No - R*0_No;
+A41:    R in R_Nx by A40,Th23;
+        0_No in L_Ny by Th22;
+        then A in comp(R_Nx,Nx,Ny,L_Ny) by A41,SURREALR:def 15;
+        then
+A42:    A in R_(Nx*Ny) by XBOOLE_0:def 3,A4;
+A43:    a = (No_omega^ (x1+y)) * uReal.r by A39,A40,TARSKI:def 1;
+        x1 in L_x\/R_x by A40,XBOOLE_0:def 3;
+        then born x1 (+) born y in born x (+) born y
+        by ORDINAL7:94,SURREALO:1;
+        then a == (No_omega^ y) * (No_omega^ x1) * uReal.r
+        == (No_omega^ y) * ((No_omega^ x1) * uReal.r)
+        by A3,A2,SURREALR:54,A43,SURREALR:69;
+        hence thesis by A42,SURREALO:4;
+      end;
+      suppose xR in {x} ++ R_y;
+        then consider x1,y1 be Surreal such that
+A44:    x1 in {x} & y1 in R_y & xR = x1 + y1 by SURREALR:def 8;
+        set R = (No_omega^ y1) * uReal.r;
+        set A = 0_No*Ny + Nx*R - 0_No*R;
+A45:    R in R_Ny by A44,Th23;
+        0_No in L_Nx by Th22;
+        then A in comp(L_Nx,Nx,Ny,R_Ny) by A45,SURREALR:def 15;
+        then
+A46:    A in R_(Nx*Ny) by XBOOLE_0:def 3,A4;
+A47:    a = (No_omega^ (x+y1)) * uReal.r by A39,A44,TARSKI:def 1;
+        y1 in L_y\/R_y by A44,XBOOLE_0:def 3;
+        then born x (+) born y1 in born x (+) born y
+        by ORDINAL7:94,SURREALO:1;
+        then a == (No_omega^ x) * (No_omega^ y1) * uReal.r
+        == (No_omega^ x) * ((No_omega^ y1) * uReal.r)
+        by A3,A2,SURREALR:54,A47,SURREALR:69;
+        hence thesis by A46,SURREALO:4;
+      end;
+    end;
+A48: Nx*Ny = [L_(Nx*Ny),R_(Nx*Ny)] & Nxy = [L_Nxy,R_Nxy];
+A49: for a be Surreal st a in L_Nxy
+    ex b be Surreal st b in L_(Nx*Ny) & a <= b
+    proof
+      let a be Surreal such that
+A50:  a in L_Nxy;
+      per cases;
+      suppose
+A51:    a=0_No;
+        set A = 0_No*Ny + Nx*0_No - 0_No*0_No;
+        0_No in L_Nx & 0_No in L_Ny by Th22;
+        then A in comp(L_Nx,Nx,Ny,L_Ny) by SURREALR:def 15;
+        then A in L_(Nx*Ny) by XBOOLE_0:def 3,A4;
+        hence thesis by A51;
+      end;
+      suppose not a =0_No;
+        then consider xR be Surreal, r be positive Real such that
+A52:    xR in L_xy & a = (No_omega^ xR) * uReal.r by A50,Th22;
+        per cases by A52,A5,XBOOLE_0:def 3;
+        suppose xR in L_x ++ {y};
+          then consider x1,y1 be Surreal such that
+A53:      x1 in L_x & y1 in {y} & xR = x1 + y1 by SURREALR:def 8;
+          set R = (No_omega^ x1) * uReal.r;
+          set A = R*Ny + Nx*0_No - R*0_No;
+A54:      R in L_Nx by A53,Th22;
+          0_No in L_Ny by Th22;
+          then A in comp(L_Nx,Nx,Ny,L_Ny) by A54,SURREALR:def 15;
+          then
+A55:      A in L_(Nx*Ny) by XBOOLE_0:def 3,A4;
+A56:      a = (No_omega^ (x1+y)) * uReal.r by A53,TARSKI:def 1,A52;
+          x1 in L_x\/R_x by A53,XBOOLE_0:def 3;
+          then born x1 (+) born y in born x (+) born y
+          by ORDINAL7:94,SURREALO:1;
+          then a == (No_omega^ y) * (No_omega^ x1) * uReal.r
+          == (No_omega^ y) * ((No_omega^ x1) * uReal.r)
+          by A3,A2,SURREALR:54,A56,SURREALR:69;
+          hence thesis by A55,SURREALO:4;
+        end;
+        suppose xR in {x} ++ L_y;
+          then consider x1,y1 be Surreal such that
+A57:      x1 in {x} & y1 in L_y & xR = x1 + y1 by SURREALR:def 8;
+A58:      x1=x by A57,TARSKI:def 1;
+          set R = (No_omega^ y1) * uReal.r;
+          set A = 0_No*Ny + Nx*R - 0_No*R;
+A59:      R in L_Ny by A57,Th22;
+          0_No in L_Nx by Th22;
+          then A in comp(L_Nx,Nx,Ny,L_Ny) by A59,SURREALR:def 15;
+          then
+A60:      A in L_(Nx*Ny) by XBOOLE_0:def 3,A4;
+          y1 in L_y\/R_y by A57,XBOOLE_0:def 3;
+          then born x (+) born y1 in born x (+) born y
+          by ORDINAL7:94,SURREALO:1;
+          then a == (No_omega^ x) * (No_omega^ y1) * uReal.r
+          == (No_omega^ x) * ((No_omega^ y1) * uReal.r)
+          by A3,A2,SURREALR:54,A52,A57,A58,SURREALR:69;
+          hence thesis by A60,SURREALO:4;
+        end;
+      end;
+    end;
+A61: for x,y,a be Surreal st born x (+) born y = D &
+    a in comp(L_No_omega^ x,No_omega^ x,No_omega^ y,R_No_omega^ y)
+    holds ex b be Surreal st b in R_No_omega^ (x+y) & b <= a
+    proof
+      let x,y,a be Surreal such that
+A62:  born x (+) born y = D;
+      set Nx = No_omega^ x,Ny=No_omega^ y;
+      assume a in comp(L_Nx,Nx,Ny,R_Ny);
+      then consider x1,y1 be Surreal such that
+A63:  a = x1*Ny + Nx*y1 - x1*y1 & x1 in L_Nx & y1 in R_Ny
+      by SURREALR:def 15;
+A64:  x + y = [(L_x ++ {y})\/({x} ++ L_y), (R_x ++ {y}) \/({x} ++ R_y)]
+      by SURREALR:28;
+      consider yL be Surreal, s be positive Real such that
+A65:  yL in R_y & y1 = (No_omega^ yL) * uReal.s by A63,Th23;
+      yL in L_y\/R_y by A65,XBOOLE_0:def 3;
+      then
+A66:  born x (+) born yL in born x (+) born y
+      by ORDINAL7:94,SURREALO:1;
+      per cases;
+      suppose
+A67:    x1 = 0_No;
+        a == (Nx*(No_omega^ yL)) * uReal.s == No_omega^ (x+yL) * uReal.s
+        by A65,A63,A67,A66,A62,A2,SURREALR:69,54;
+        then
+A68:    a == No_omega^ (x+yL) * uReal.s by SURREALO:9;
+        x in {x} by TARSKI:def 1;
+        then x+yL in {x} ++ R_y by A65,SURREALR:def 8;
+        then x+yL in R_(x+y) by A64,XBOOLE_0:def 3;
+        hence thesis by A68,Th23;
+      end;
+      suppose x1<>0_No;
+        then consider xL be Surreal, r be positive Real such that
+A69:    xL in L_x & x1 = (No_omega^ xL) * uReal.r by A63,Th22;
+        Nx*y1 == Nx * (No_omega^ yL) * uReal.s == No_omega^ (x+yL) * uReal.s
+        by A65,A66,A62,A2,SURREALR:69,SURREALR:54;
+        then
+A70:    Nx*y1 == No_omega^ (x+yL) * uReal.s by SURREALO:9;
+        x in {x} by TARSKI:def 1;
+        then x+yL in {x} ++ R_y by A65,SURREALR:def 8;
+        then
+A71:    x+yL in R_(x+y) by A64,XBOOLE_0:def 3;
+A72:    0_No <= y1 by A65,SURREALI:def 8;
+A73:    0_No <= x1 * Ny by A69,SURREALI:def 8;
+        set H=uReal.(1/2);
+        1/2+1/2=1;
+        then (Nx*y1) *H + (Nx*y1)*H == (Nx*y1) *(H + H)
+        == (Nx*y1)* 1_No = Nx*y1 by SURREALN:55,48,SURREALR:51,67;
+        then (Nx*y1) *H + (Nx*y1)*H==Nx*y1 by SURREALO:4;
+        then
+A74:    (H*(Nx*y1) + H*(Nx*y1)) +- x1*y1 == Nx*y1 +- x1*y1
+        by SURREALR:32;
+        x in {x} & L_x << {x} by TARSKI:def 1,SURREALO:11;
+        then No_omega^ xL infinitely< Nx by A69,Th25;
+        then x1 infinitely< Nx by A69,Th13;
+        then x1 infinitely< H*Nx by Th13;
+        then x1 <= H*Nx by Th9;
+        then x1*y1 <= (H*Nx)*y1 == H*(Nx*y1) by A72,SURREALR:75,SURREALR:69;
+        then x1*y1 <= H*(Nx*y1) by SURREALO:4;
+        then 0_No <= H*(Nx*y1) - (x1*y1) by SURREALR:46;
+        then H*(Nx*y1) = 0_No + H*(Nx*y1) <= (H*(Nx*y1)) +(H*(Nx*y1) - x1*y1)
+        = (H*(Nx*y1) + H*(Nx*y1)) +- x1*y1
+        by SURREALR:43,SURREALR:37;
+        then H*(Nx*y1) <= Nx*y1 +- x1*y1 by A74,SURREALO:4;
+        then
+A75:    H*(Nx*y1) = H*(Nx*y1) + 0_No
+        <= x1 * Ny + (Nx*y1 +- x1*y1) = a
+        by A73,A63,SURREALR:43,SURREALR:37;
+        H*(Nx*y1) ==H*(No_omega^ (x+yL) * uReal.s) ==
+        (H*uReal.s)*No_omega^ (x+yL) by A70,SURREALR:54,69;
+        then
+A76:    H*(Nx*y1) == (H*uReal.s)*No_omega^ (x+yL) by SURREALO:4;
+        (H*uReal.s)*No_omega^ (x+yL) == uReal.(1/2*s) *No_omega^ (x+yL)
+        by SURREALR:54,SURREALN:57;
+        then H*(Nx*y1) == uReal.(1/2*s) *No_omega^ (x+yL) by A76,SURREALO:4;
+        then uReal.(1/2*s) *No_omega^ (x+yL) <= a by A75,SURREALO:4;
+        hence thesis by A71,Th23;
+      end;
+    end;
+    for a be Surreal st a in R_(Nx*Ny) ex b be Surreal st b in R_Nxy & b <= a
+    proof
+      let a be Surreal;
+      assume a in R_(Nx*Ny);
+      then per cases by A4,XBOOLE_0:def 3;
+      suppose a in comp(L_Nx,Nx,Ny,R_Ny);
+        hence thesis by A61,A3;
+      end;
+      suppose a in comp(R_Nx,Nx,Ny,L_Ny);
+        then a in comp(L_Ny,Ny,Nx,R_Nx) by SURREALR:53;
+        hence thesis by A61,A3;
+      end;
+    end;
+    hence thesis by A6,A37,SURREAL0:44,A48,A49;
+  end;
+  for D be Ordinal holds P[D] from ORDINAL1:sch 2(A1);
+  hence thesis;
+end;
+
+theorem
+  (No_omega^ x)" == No_omega^ (-x)
+proof
+  set X = No_omega^ x;
+A1:not No_omega^ x == 0_No by SURREALI:def 8;
+  x - x == 0_No by SURREALR:39;
+  then
+A2: No_omega^ (x-x) == No_omega^ (0_No) = 1_No by Th26,Lm5;
+  (No_omega^ x) * (No_omega^ (-x)) == No_omega^ (x-x) by Th27;
+  then (No_omega^ x) * (No_omega^ (-x)) == No_omega^ (0_No) = 1_No
+  by A2,SURREALO:4;
+  hence thesis by SURREALI:42,A1;
+end;
+
+theorem Th29:
+   for xL,x be Surreal
+      st xL <= x & xL,No_omega^ y are_commensurate &
+          not x,No_omega^ y are_commensurate holds
+        No_omega^ y infinitely< x
+proof
+  set O=No_omega^ y;
+  let xL,x be Surreal such that
+A1: xL <= x & xL,No_omega^ y are_commensurate  and
+A2: not x,O are_commensurate and
+A3: not O infinitely< x;
+  consider r be positive Real such that
+A4:not O * uReal.r < x by A3;
+  consider n be Nat such that
+A5:r < n by SEQ_4:3;
+  reconsider n as positive Nat by A5;
+A6:O is positive;
+  uReal.r < uReal.n = uDyadic.n = uInt.n by A5,SURREALN:51,46,def 5;
+  then O * uReal.r < O*uInt.n by A6,SURREALR:70;
+  then
+A7: x < O*uInt.n by A4,SURREALO:4;
+  consider k be positive Nat such that
+A8: O < uInt.k * xL by A1;
+  uInt.k is positive;
+  then 0_No <= uInt.k;
+  then uInt.k * xL <= uInt.k * x by A1,SURREALR:75;
+  then O < uInt.k * x by A8,SURREALO:4;
+  hence thesis by A2,A7;
+end;
+
+theorem Th30:
+   for x,xR be Surreal
+      st 0_No < x <= xR & xR,No_omega^ y are_commensurate &
+          not x,No_omega^ y are_commensurate holds
+        x infinitely< No_omega^ y
+proof
+  set O=No_omega^ y;
+  let x,xR be Surreal such that
+A1: 0_No < x <= xR & xR,No_omega^ y are_commensurate and
+A2: not x,O are_commensurate and
+A3: not x infinitely< O;
+  consider r be positive Real such that
+A4:not x * uReal.r < O by A3;
+  consider n be Nat such that
+A5:r < n by SEQ_4:3;
+  reconsider n as positive Nat by A5;
+  uReal.r < uReal.n = uDyadic.n = uInt.n by A5,SURREALN:51,46,def 5;
+  then x * uReal.r < x*uInt.n by A1,SURREALR:70;
+  then
+A6: O < x*uInt.n by A4,SURREALO:4;
+  consider k be positive Nat such that
+A7: xR < uInt.k * O by A1;
+  x < uInt.k * O by A7,A1,SURREALO:4;
+  hence thesis by A2,A6;
+end;
+
+definition
+  let x be Surreal;
+  func |.x.| -> Surreal equals :Def6:
+    x if 0_No <= x otherwise -x;
+  coherence;
+  correctness;
+end;
+
+theorem Th31:
+   0_No <= |.x.|
+proof
+  per cases;
+  suppose 0_No <= x;
+    hence thesis by Def6;
+  end;
+  suppose
+A1: x < 0_No;
+    then 0_No = -0_No < -x by SURREALR:10;
+    hence thesis by Def6,A1;
+  end;
+end;
+
+theorem
+  |.x.| = x or |.x.| = -x by Def6;
+
+theorem
+  x == 0_No iff |.x.| == 0_No
+proof
+  thus x == 0_No implies |.x.| == 0_No by Def6;
+  assume
+A1: |.x.| == 0_No;
+  thus x <= 0_No by A1,Def6;
+  assume x < 0_No;
+  then 0_No = -0_No < -x & |.x.| = -x by Def6,SURREALR:10;
+  hence thesis by A1;
+end;
+
+theorem Th34:
+  - |.x.| <= x <= |.x.|
+proof
+  per cases;
+  suppose
+A1: 0_No <= x;
+    then
+A2: |.x.| = x by Def6;
+    -x <= -0_No= 0_No by A1,SURREALR:10;
+    hence thesis by A2,A1,SURREALO:4;
+  end;
+  suppose
+A3: x < 0_No;
+    then
+A4: 0_No= -0_No <= -x by SURREALR:10;
+    |.x.|= -x by A3,Def6;
+    hence thesis by A4,A3,SURREALO:4;
+  end;
+end;
+
+theorem Th35:
+  -y <= x <= y iff |.x.| <= y
+proof
+  thus -y <= x <= y implies |.x.| <= y
+  proof
+    assume
+A1: -y <= x <= y;
+    then -x <= - - y = y by SURREALR:10;
+    hence thesis by A1,Def6;
+  end;
+  assume
+A2: |.x.| <= y;
+  0_No <= |.x.| by Th31;
+  then
+A3: 0_No <= y by A2,SURREALO:4;
+  per cases;
+  suppose
+A4: 0_No <=x;
+    -y <= -0_No = 0_No by A3,SURREALR:10;
+    hence thesis by A2,Def6,A4,SURREALO:4;
+  end;
+  suppose
+A5: x < 0_No; then
+    -x <= - - y by A2,Def6;
+    hence thesis by SURREALR:10,A3,A5,SURREALO:4;
+  end;
+end;
+
+theorem Th36:
+  not x == 0_No implies |.x.| is positive
+proof
+  assume not x == 0_No;
+  then per cases;
+  suppose
+A1: 0_No < x;
+    then 0_No <= x;
+    hence thesis by A1,Def6;
+  end;
+  suppose
+A2: x < 0_No;
+    then |.x.| = -x by Def6;
+    hence thesis by A2,SURREALR:10,23;
+  end;
+end;
+
+theorem Th37:
+  |.x + y.| <= |.x.| + |.y.|
+proof
+  - |.x.| <= x <= |.x.| & - |.y.| <= y <= |.y.| by Th34;
+  then - (|.x.| +|.y.|) = - |.x.| + -|.y.| <= x+y <= |.x.| +|.y.|
+  by SURREALR:40,43;
+  hence thesis by Th35;
+end;
+
+theorem Th38:
+   x == 0_No implies |. -x .| == |.x.|
+proof
+  assume
+A1: x==0_No;
+  then -x == - 0_No=0_No by SURREALR:10;
+  then |.-x.| ==0_No  & |.x.| == 0_No by A1,Def6;
+  hence thesis by SURREALO:4;
+end;
+
+theorem Th39:
+  not x == 0_No implies |. -x .| = |.x.|
+proof
+  assume not x == 0_No;
+  then per cases;
+  suppose
+A1: 0_No < x;
+    then
+A2: |. -x .| = - - x by SURREALR:10,23,Def6;
+    0_No <= x by A1;
+    hence thesis by Def6,A2;
+  end;
+  suppose A3: x < 0_No;
+    then 0_No <= -x by SURREALR:10,23;
+    then |. -x .| = -x by Def6;
+    hence thesis by A3,Def6;
+  end;
+end;
+
+theorem Th40:
+  |. -x .| == |.x.| by Th39,Th38;
+
+theorem Th41:
+  |.x.| infinitely< z & |.y.| infinitely< z implies
+     |. x+y .| infinitely< z
+proof
+  assume
+A1: |.x.| infinitely< z & |.y.| infinitely< z;
+  let r be positive Real;
+  set R=uReal.r,H=uReal.(1/2);
+A2: 1/2+1/2=1;
+  |.x.| infinitely< z * H & |.y.| infinitely< z * H by A1,Th13;
+  then |. x .|* R < z *H & |. y .|* R <= z *H;
+  then
+A3: |. x .|* R + |. y .|* R < z *H + z*H by SURREALR:44;
+  z *H + z*H == z *(H + H) == z* 1_No =z
+  by A2,SURREALN:55,48,SURREALR:51,67;
+  then z *H + z*H == z by SURREALO:4;
+  then
+A4: |. x .|* R + |. y .|* R < z by A3,SURREALO:4;
+A5: 0_No <= R by SURREALI:def 8;
+  |.x + y.| * R <= (|.x.| + |.y.|) * R ==
+  |. x .|* R + |. y .|* R by Th37,A5,SURREALR:75,67;
+  then |.x + y.| * R <= |. x .|* R + |. y .|* R by SURREALO:4;
+  hence thesis by A4,SURREALO:4;
+end;
+
+theorem Th42:
+  |.x.| infinitely< z implies |. -x .| infinitely< z
+proof
+  assume
+A1: |.x.| infinitely< z;
+  let r be positive Real;
+  |. -x .| * uReal.r == |.x.| * uReal.r < z by Th40,A1,SURREALR:51;
+  hence thesis by SURREALO:4;
+end;
+
+theorem Th43:
+  |.x.| infinitely< z & |.y.| infinitely< z implies
+     |. x - y .| infinitely< z
+proof
+  assume
+A1: |.x.| infinitely< z & |.y.| infinitely< z;
+  then |. - y  .| infinitely< z by Th42;
+  hence thesis by Th41,A1;
+end;
+
+theorem  Th44:
+  |.y.| infinitely< x implies not x + y == 0_No
+proof
+  assume
+A1: |.y.| infinitely< x;
+  then
+A2: |.y.| < x by Th9;
+  per cases;
+  suppose
+A3: 0_No <= y;
+    then y < x by A2,Def6;
+    then
+A4: y+y < x+y by SURREALR:44;
+    0_No = 0_No+0_No <= y+y by A3,SURREALR:43;
+    hence thesis by A4,SURREALO:4;
+  end;
+  suppose y < 0_No;
+    then |.y.| = - y by Def6;
+    then
+A5: -y+y < x+y by A1,Th9,SURREALR:44;
+    y-y == 0_No by SURREALR:39;
+    hence thesis by A5,SURREALO:4;
+  end;
+end;
+
+theorem  Th45:
+  |.y.| infinitely< |.x.| implies not x + y == 0_No
+proof
+  assume
+A1: |.y.| infinitely< |.x.|;
+  per cases by Def6;
+  suppose |.x.| = x;
+    hence thesis by A1,Th44;
+  end;
+  suppose |.x.| = -x;
+    then
+A2: |.-y.| infinitely< -x by Th40,Th17,A1;
+    -x + -y = - (x+y) by SURREALR:40;
+    hence thesis by A2,Th44,SURREALR:24;
+  end;
+end;
+
+theorem  Th46:
+  |.y.| infinitely< x implies not x ==0_No
+proof
+  assume |.y.| infinitely< x;
+  then 0_No <= |.y.| < x by Th9,Th31;
+  hence thesis by SURREALO:4;
+end;
+
+theorem  Th47:
+  |.y.| infinitely< |.x.| implies not x ==0_No
+proof
+  assume
+A1: |.y.| infinitely< |.x.|;
+  |.x.| = x or |.x.|= -x by Def6;
+  hence thesis by SURREALR:24,A1,Th46;
+end;
+
+theorem Th48:
+  x==y implies |.x.| == |.y.|
+proof
+  assume
+A1:x==y;
+  per cases;
+  suppose 0_No <= x;
+    then |.x.| = x & 0_No <=y by Def6,A1,SURREALO:4;
+    hence thesis by A1,Def6;
+  end;
+  suppose x < 0_No;
+    then |.x.| = - x & y < 0_No & -x == -y by Def6,A1,SURREALO:4,SURREALR:10;
+    hence thesis by Def6;
+  end;
+end;
+
+theorem Th49:
+  |. |.x.| - |.y.| .| <= |.x - y.|
+proof
+  y-y == 0_No by SURREALR:39;
+  then x = x+0_No == x+(y+-y) = x+ -y +y
+  by SURREALR:43,SURREALR:37;
+  then |.x.| == |.x+ -y + y.| <= |.x+ -y.| +|.y.| by Th37,Th48;
+  then |.x.| <= |.x+ -y.| +|.y.| by SURREALO:4;
+  then
+A1: |.x.| - |.y.| <= |.x+ -y.| by SURREALR:42;
+  x-x == 0_No by SURREALR:39;
+  then y = y+0_No == y+(x+-x) = y+ -x +x by SURREALR:43,37;
+  then |.y.| == |.y+ -x + x.| <= |.y+ -x.| +|.x.| by Th37,Th48;
+  then
+A2: |.y.| <= |.y+ -x.| +|.x.| by SURREALO:4;
+  - (x +-y) = -x + - - y by SURREALR:40
+  .= -x + y;
+  then
+  |.y+ -x.| = |.-(x +-y).| == |. x +-y.| by Th39,Th38;
+  then |.y+ -x.| +|.x.| == |.x +- y.| + |.x.| by SURREALR:43;
+  then |.y.| <= |.x +- y.| + |.x.| by A2,SURREALO:4;
+  then - |.x - y.| - |.x.| = -(|.x - y.| + |.x.|) <= - |.y.|
+  by SURREALR:40,SURREALR:10;
+  then - |.x - y.| <= |.x.| - |.y.| by SURREALR:42;
+  hence thesis by A1,Th35;
+end;
+
+theorem
+  |. |.x.| .| = |.x.| by Th31,Def6;
+
+theorem Th51:
+  x <= y <= z implies |.y.| <= |.x.|+|.z.|
+proof
+  assume A1:x <= y <= z;
+  per cases;
+  suppose 0_No <= y;
+    then
+A2: |.y.| = y & |.z.| = z by A1,SURREALO:4,Def6;
+    0_No <= |.x.| by Th31;
+    then |.z.|= 0_No +|.z.| <= |.x.|+|.z.| by SURREALR:43;
+    hence thesis by A2,A1,SURREALO:4;
+  end;
+  suppose
+A3: y < 0_No;
+    then x < 0_No by A1,SURREALO:4;
+    then |.y.| = - y & |.x.| = -x by A3,Def6;
+    then
+A4: |.y.| <= |.x.| by A1,SURREALR:10;
+    0_No <= |.z.| by Th31;
+    then |.x.|= 0_No +|.x.| <= |.x.|+|.z.| by SURREALR:43;
+    hence thesis by A4,SURREALO:4;
+  end;
+end;
+
+theorem Th52:
+  -y < x < y iff |.x.| < y
+proof
+  thus -y < x < y implies |.x.| < y
+  proof
+    assume
+A1: -y < x < y;
+    then -x < - - y = y by SURREALR:10;
+    hence thesis by A1,Def6;
+  end;
+  assume
+A2: |.x.| < y;
+  0_No <= |.x.| by Th31;
+  then
+A3: 0_No <= y by A2,SURREALO:4;
+  per cases;
+  suppose
+A4: 0_No <=x;
+    0_No <= |.x.| by Th31;
+    then 0_No < y by A2,SURREALO:4;
+    then -y < -0_No = 0_No by SURREALR:10;
+    hence thesis by A2,A4,Def6,SURREALO:4;
+  end;
+  suppose
+A5: x < 0_No;
+    then -x < - - y by A2,Def6;
+    hence thesis by SURREALR:10,A3,A5,SURREALO:4;
+  end;
+end;
+
+theorem Th53:
+  0_No <= x infinitely< y implies |.x*uReal.r.| infinitely< y
+proof
+  assume
+A1:0_No <= x infinitely< y;
+  let s be positive Real;
+  per cases;
+  suppose 0_No <= x*uReal.r;
+    then |.x*uReal.r.| = x*uReal.r by Def6;
+    then |.x*uReal.r.| * uReal.s == x*uReal.(r *s) < y by Th20,A1,Lm1;
+    hence thesis by SURREALO:4;
+  end;
+  suppose x*uReal.r < 0_No;
+    then
+A2: |.x*uReal.r.| = - (x*uReal.r) by Def6;
+    x* (- uReal.r) == x*uReal.-r by SURREALN:56,SURREALR:51;
+    then - (x*uReal.r) == x*uReal.-r by SURREALR:58;
+    then |.x*uReal.r.| * uReal.s == x*uReal.(-r) *uReal.s ==
+    x*uReal.((-r) *s) by A2,SURREALR:51,Lm1;
+    then |.x*uReal.r.| * uReal.s == x*uReal.((-r) *s) < y
+    by Th20,A1,SURREALO:4;
+    hence thesis by SURREALO:4;
+  end;
+end;
+
+Lm6: x is positive implies ex y st x,No_omega^ y are_commensurate
+proof
+  assume
+A1: x is positive;
+  defpred P[Ordinal] means for x st x is positive & born x =$1 holds
+  ex y st x,No_omega^ y are_commensurate;
+A2: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that
+A3: for C be Ordinal st C in D holds P[C];
+    let x such that
+A4: x is positive & born x =D;
+    set X = ||.x.||;
+    per cases;
+    suppose ex x1,y be Surreal st x1 in (L_X \/ R_X)\{0_No} &
+      x1,No_omega^ y are_commensurate & x,No_omega^ y are_commensurate;
+      then consider x1,y be Surreal such that
+A5:   x1 in (L_X \/ R_X)\{0_No} &
+      x1,No_omega^ y are_commensurate & x,No_omega^ y are_commensurate;
+      take y;
+      thus thesis by A5;
+    end;
+    suppose
+A6:   for x1,y be Surreal st x1 in (L_X \/ R_X)\{0_No} &
+      x1,No_omega^ y are_commensurate holds
+      not x,No_omega^ y are_commensurate;
+      defpred P[object,object] means
+      $2 is Surreal & for a,b be Surreal st a=$1 & $2= b
+      holds a,No_omega^ b are_commensurate;
+A7:   for o st o in (L_X \/ R_X)\{0_No} ex u being object st P[o,u]
+      proof
+        let o such that
+A8:     o in (L_X \/ R_X)\{0_No};
+        reconsider o as Surreal by A8,SURREAL0:def 16;
+        reconsider o as positive Surreal by A4,A8,SURREALI:21;
+        (L_X \/ R_X)\{0_No} c= L_x \/R_x by A4,SURREALI:20;
+        then born o in born x by A8,SURREALO:1;
+        then consider y such that
+A9:     o,No_omega^ y are_commensurate by A3,A4;
+        take y;
+        thus thesis by A9;
+      end;
+      consider Y be Function such that
+A10:  dom Y = (L_X \/ R_X)\{0_No} &
+      for o st o in (L_X \/ R_X)\{0_No} holds P[o,Y.o] from CLASSES1:sch 1(A7);
+      set Y1 = Y.: (L_X \{0_No}), Y2 = Y.: (R_X\{0_No});
+      dom Y = (L_X\{0_No}) \/(R_X\{0_No}) by A10,XBOOLE_1:42;
+      then A11: rng Y = Y.:dom Y = Y1 \/ Y2 by RELAT_1:113,120;
+      rng Y is surreal-membered
+      proof
+        let o;
+        assume o in rng Y;
+        then ex a be object st a in dom Y & Y.a = o by FUNCT_1:def 3;
+        hence thesis by A10;
+      end;
+      then consider M be Ordinal such that
+A12:  for o st o in Y1\/Y2 ex A be Ordinal st A in M & o in Day A
+      by A11,SURREAL0:47;
+A13:  x in {x} & L_x << {x} << R_x by SURREALO:11,TARSKI:def 1;
+      Y1 << Y2
+      proof
+        let a,b be Surreal such that
+A14:    a in Y1 & b in Y2 and
+A15:    not a < b;
+        consider a1 be object such that
+A16:    a1 in dom Y & a1 in L_X\{0_No} & a = Y.a1 by A14,FUNCT_1:def 6;
+        reconsider a1 as Surreal by SURREAL0:def 16,A16;
+A17:    a1,No_omega^ a are_commensurate by A16,A10;
+        a1 in L_X & a1 <>0_No by A16,ZFMISC_1:56;
+        then a1 in L_x by A4,SURREALI:def 9;
+        then
+A18:    a1 <= x by A13;
+        not x,No_omega^ a are_commensurate by A6,A16,A10,A17;
+        then
+A19:    No_omega^ a infinitely< x by Th29,A16,A10,A18;
+        consider b1 be object such that
+A20:    b1 in dom Y & b1 in R_X\{0_No} & b = Y.b1 by A14,FUNCT_1:def 6;
+        reconsider b1 as Surreal by A20,SURREAL0:def 16;
+A21:    b1,No_omega^ b are_commensurate by A20,A10;
+        b1 in R_x by A20,A4,SURREALI:def 9;
+        then
+A22:    x <= b1 by A13;
+        not x,No_omega^ b are_commensurate by A6,A20,A10,A21;
+        then x infinitely< No_omega^ b by Th30,A20,A10,A4,A22;
+        then No_omega^ a < No_omega^ b by Th9,A19,Th14;
+        hence thesis by A15,Lm5;
+      end;
+      then [Y1,Y2] in Day M by A12,SURREAL0:46;
+      then reconsider YY=[Y1,Y2] as Surreal;
+      set N = No_omega^ YY;
+A23:  L_N << {N} << R_N & N in {N} by SURREALO:11,TARSKI:def 1;
+A24:  L_X << {N}
+      proof
+        let a,b be Surreal such that
+A25:    a in L_X & b in {N};
+A26:    b= N by A25,TARSKI:def 1;
+A27:    a in L_X \/ R_X by A25,XBOOLE_0:def 3;
+        per cases;
+        suppose a = 0_No;
+          hence thesis by A26,SURREALI:def 8;
+        end;
+        suppose a<>0_No;
+          then
+A28:      a in L_X\{0_No} & a in dom Y by A10,A27,A25,ZFMISC_1:56;
+          then
+A29:      Y.a in Y1 = YY`1 by FUNCT_1:def 6;
+          then reconsider Ya=Y.a as Surreal by SURREAL0:def 16;
+          a,No_omega^ Ya are_commensurate by A28,A10;
+          then consider n be positive Nat such that
+A30:      a < (No_omega^ Ya)*uInt.n;
+          uInt.n = uDyadic.n = uReal.n by SURREALN:46,def 5;
+          then
+A31:      a <= (No_omega^ Ya)*uReal.n by A30;
+          (No_omega^ Ya)*uReal.n in L_N by Th22,A29;
+          hence thesis by A23,A25,A31,SURREALO:4;
+        end;
+      end;
+A32:  {N} << R_X
+      proof
+        let b,a be Surreal such that
+A33:    b in {N} & a in R_X;
+A34:    b= N by A33,TARSKI:def 1;
+A35:    a in L_X \/ R_X by A33,XBOOLE_0:def 3;
+        a is positive by A33,A4,SURREALI:def 9;
+        then a<>0_No by SURREALO:3;
+        then
+A36:    a in R_X\{0_No} & a in dom Y by A10,A35,A33,ZFMISC_1:56;
+        then
+A37:    Y.a in Y2 = R_YY by FUNCT_1:def 6;
+        then reconsider Ya=Y.a as Surreal by SURREAL0:def 16;
+        a,No_omega^ Ya are_commensurate by A36,A10;
+        then consider n be positive Nat such that
+A38:    No_omega^ Ya < a * uInt.n;
+A39:    uReal.(1/n) is positive;
+        uInt.n = uDyadic.n = uReal.n by SURREALN:46,def 5;
+        then
+A40:    No_omega^ Ya * uReal.(1/n) < a * uReal.n * uReal.(1/n)
+        by A38,A39,SURREALR:70;
+        (1/n)*n=1 by XCMPLX_1:106;
+        then a * uReal.n*uReal.(1/n) == a * ( uReal.(1/n)*uReal.n) ==
+        a* 1_No = a by SURREALN:57,48,SURREALR:69,SURREALR:51;
+        then a * uReal.n*uReal.(1/n) <= a by SURREALO:4;
+        then
+A41:    No_omega^ Ya * uReal.(1/n) < a by A40,SURREALO:4;
+        N <= (No_omega^ Ya)*uReal.(1/n) by A23,Th23,A37;
+        hence thesis by A34,A41,SURREALO:4;
+      end;
+A42:  x==X by A4,SURREALI:18;
+A43:  x,X are_commensurate by Th8,A4,SURREALI:18;
+A44:  {X} << R_N
+      proof
+        let a,b be Surreal such that
+A45:    a in {X} & b in R_N;
+        consider xR be Surreal, r be positive Real such that
+A46:    xR in R_YY & b = (No_omega^ xR) * uReal.r by A45,Th23;
+        consider b1 be object such that
+A47:    b1 in dom Y & b1 in R_X\{0_No} & xR = Y.b1 by A46,FUNCT_1:def 6;
+        reconsider b1 as Surreal by A47,SURREAL0:def 16;
+A48:    b1,No_omega^ xR are_commensurate by A47,A10;
+        b1 in R_x by A47,A4,SURREALI:def 9;
+        then
+A49:    x <= b1 by A13;
+        not x,No_omega^ xR are_commensurate by A6,A47,A10,A48;
+        then x infinitely< No_omega^ xR by Th30,A47,A10,A4,A49;
+        then x infinitely< b by A46,Th13;
+        then X < b by Th9,A43,Th15;
+        hence thesis by A45,TARSKI:def 1;
+      end;
+A50:  L_N << {X}
+      proof
+        let a,b be Surreal such that
+A51:    a in L_N & b in {X};
+        per cases;
+        suppose a = 0_No;
+          then a < X by SURREALI:def 8;
+          hence thesis by A51,TARSKI:def 1;
+        end;
+        suppose a<>0_No;
+          then consider xL be Surreal, r be positive Real such that
+A52:      xL in L_YY & a = (No_omega^ xL) * uReal.r by A51,Th22;
+          consider a1 be object such that
+A53:      a1 in dom Y & a1 in L_X\{0_No} & xL = Y.a1 by A52,FUNCT_1:def 6;
+          reconsider a1 as Surreal by A53,SURREAL0:def 16;
+A54:      a1,No_omega^ xL are_commensurate by A53,A10;
+          a1 in L_X & a1 <>0_No by A53,ZFMISC_1:56;
+          then a1 in L_x by A4,SURREALI:def 9;
+          then
+A55:      a1 <= x by A13;
+          not x,No_omega^ xL are_commensurate by A6,A53,A10,A54;
+          then No_omega^ xL infinitely< x by Th29,A53,A10,A55;
+          then a < X by A52,A42,SURREALO:4;
+          hence thesis by A51,TARSKI:def 1;
+        end;
+      end;
+      N==X by SURREAL0:43,A24,A44,A50,A32;
+      then x,No_omega^ YY are_commensurate by Th8,A42,Th5;
+      hence thesis;
+    end;
+  end;
+  for D be Ordinal holds P[D] from ORDINAL1:sch 2(A2);
+  then P[born x];
+  hence thesis by A1;
+end;
+
+Lm7: x is positive implies for y1,y2 be Surreal st
+       x,No_omega^ y1 are_commensurate & x,No_omega^ y2 are_commensurate
+   holds y1 <= y2
+proof
+  assume x is positive;
+  let y1,y2 be Surreal such that
+  A1:x,No_omega^ y1 are_commensurate & x,No_omega^ y2 are_commensurate
+  and A2: y2 < y1;
+  No_omega^ y2 infinitely< No_omega^ y1 by Lm5,A2;
+  then x infinitely< No_omega^ y1 by Th15,A1;
+  then x < x by Th9,Th16,A1;
+  hence thesis by SURREALO:3;
+end;
+
+begin :: Unique Representation of Positive Surreal Number
+      :: as a Pair of Commensurate Leader and Positive Real Number
+
+definition
+  let x be Surreal;
+  assume A1:not x == 0_No;
+  func omega-y x -> uSurreal means :Def7:
+     |.x.|, No_omega^ it are_commensurate;
+  existence
+  proof
+    consider y such that
+A2: |.x.|,No_omega^ y are_commensurate by A1,Th36,Lm6;
+    set c = Unique_No y;
+    c == y by SURREALO:def 10;
+    then No_omega^ c == No_omega^ y by Lm5;
+    then No_omega^ c, No_omega^ y are_commensurate by Th2,Th5;
+    hence thesis by A2,Th4;
+  end;
+  uniqueness
+  proof
+    let y1,y2 be uSurreal such that
+A3: |.x.|, No_omega^ y1 are_commensurate and
+A4: |.x.|, No_omega^ y2 are_commensurate;
+    y1 == y2 by A1,Th36,A3,A4,Lm7;
+    hence thesis by SURREALO:50;
+  end;
+end;
+
+theorem Th54:
+  x,No_omega^ y are_commensurate
+      implies ex s be positive Real st
+        |. x - (No_omega^ y * uReal.s) .| infinitely< x
+proof
+  assume
+A1: x,No_omega^ y are_commensurate;
+  set N= No_omega^ y;
+  defpred L[object] means $1 is Real & for r be Real st r=$1 holds
+  N * uReal.r <= x;
+  defpred R[object] means $1 is Real & for r be Real st r=$1 holds
+  x < N * uReal.r;
+A2: for r,s being ExtReal st L[r] & R[s] holds r <= s
+  proof
+    let l,r be ExtReal such that
+A3: L[l] & R[r];
+    reconsider L=l,R=r as Real by A3;
+A4: 0_No <= No_omega^ y by SURREALI:def 8;
+    (No_omega^ y) * (uReal.L) <= x < No_omega^ y * uReal.R by A3;
+    then No_omega^ y * uReal.L < No_omega^ y * uReal.R by SURREALO:4;
+    hence thesis by SURREALN:51,A4,SURREALR:75;
+  end;
+  consider s be ExtReal such that
+A5: for r be ExtReal st L[r] holds r <= s and
+A6: for r be ExtReal st R[r] holds s <= r from XXREAL_1:sch 1(A2);
+  consider n be positive Nat such that
+A7: x < uInt.n * N & N < uInt.n * x by A1,Th7;
+A8:uReal.n = uDyadic.n = uInt.n by SURREALN:46,def 5;
+  0_No < uReal.(1/n) by SURREALI:def 8;
+  then
+A9: N * uReal.(1/n) < x * uReal.n * uReal.(1/n) by A7,A8,SURREALR:70;
+  x * uReal.n*uReal.(1/n) == x by Lm2;
+  then
+A10: L[1/n] by A9,SURREALO:4;
+  then
+A11:1/n <= s by A5;
+  R[n] by A7,A8;
+  then
+A12: s <= n by A6;
+  n in REAL & 1/n in REAL by XREAL_0:def 1;
+  then s in REAL by A11,A12,XXREAL_0:45;
+  then reconsider s as Real;
+  reconsider s as positive Real by A10,A5;
+  per cases;
+  suppose
+A13: N * uReal.s <= x;
+    set x1 = x - (N * uReal.s);
+    take s;
+A14: 0_No + N * uReal.s <= x by A13;
+    then
+A15: 0_No <= x1 by SURREALR:41;
+    x1 infinitely< x
+    proof
+      given r be positive Real such that
+A16:  x <= x1* uReal.r;
+      consider n2 be Nat such that
+A17:  r < n2 by SEQ_4:3;
+      set n= n2+2;
+      n2 <= n by NAT_1:11;
+      then uReal.r <= uReal.n by SURREALN:51,A17,XXREAL_0:2;
+      then x1*uReal.r <= x1*uReal.n by A15,SURREALR:75;
+      then
+A18:  x <= x1* uReal.n by A16,SURREALO:4;
+A19:  - (x * uReal.n) = x * (-uReal.n) by SURREALR:58;
+      x1* uReal.n == x * uReal.n+((-(N * uReal.s)) * uReal.n) by SURREALR:67;
+      then x <= x * uReal.n + ((- (N * uReal.s)) * uReal.n) by A18,SURREALO:4;
+      then x* (uReal.1 -uReal.n)
+      == x*uReal.1 - (x * (uReal.n)) <= ((- (N * uReal.s)) * uReal.n)
+      by A19,SURREALR:67,42,SURREALN:48;
+      then x * (uReal.1 + -uReal.n) <= ((- (N * uReal.s)) * uReal.n)
+      by SURREALO:4;
+      then
+A20:  - ((- (N * uReal.s)) * uReal.n) <= -(x * (uReal.1 + -uReal.n))
+      by SURREALR:10;
+      - uReal.n == uReal.-n by SURREALN:56;
+      then uReal.1 + -uReal.n == uReal.1 + uReal.-n ==
+      uReal.(1+-n) by SURREALR:43,SURREALN:55;
+      then uReal.1 + -uReal.n == uReal.(1+-n) by SURREALO:4;
+      then -(uReal.1 + -uReal.n) == -uReal.(1+-n) == uReal.-(1+-n)
+      by SURREALR:10,SURREALN:56;
+      then -(uReal.1 + -uReal.n) == uReal.-(1+-n) by SURREALO:4;
+      then
+A21:  -(x * (uReal.1 + -uReal.n)) = x * (-(uReal.1 + -uReal.n)) ==
+      x * uReal.-(1+-n) by SURREALR:58,SURREALR:51;
+A22:  n-1= n2+1;
+      then
+A23:  0_No <= uReal.(1/(n-1)) by SURREALI:def 8;
+      - ((- (N * uReal.s)) * uReal.n) = - - (N * uReal.s * uReal.n)
+        by SURREALR:58;
+      then N * uReal.s * uReal.n = - -(N * uReal.s * uReal.n)
+      <= x * uReal.-(1+-n) by A21,A20,SURREALO:4;
+      then N * uReal.s * uReal.n *uReal.(1/(n-1))
+      <= x * uReal.(n-1)*uReal.(1/(n-1)) == x by A23,SURREALR:75,A22,Lm2;
+      then
+A24:  N * uReal.s * uReal.n *uReal.(1/(n-1)) <= x by SURREALO:4;
+      N * uReal.s * uReal.n *uReal.(1/(n-1)) ==
+      N* (uReal.(s *n*(1/(n-1)))) by Lm3;
+      then L [s* n * (1/(n-1))] by A24,SURREALO:4;
+      then s* n * (1/(n-1)) <= s by A5;
+      then (s* n) * ((1/(n-1)) * (n-1)) =
+      s* n * (1/(n-1)) * (n-1) <= s*(n-1) & (1/(n-1)) * (n-1) = 1
+      by A22,XCMPLX_1:106,XREAL_1:64;
+      then n2+1+1 <= n2+1 by XREAL_1:68;
+      hence thesis by NAT_1:13;
+    end;
+    hence |. x - (N * uReal.s) .| infinitely< x by A14,Def6,SURREALR:41;
+  end;
+  suppose
+A25:x < N * uReal.s;
+    set x1 = N * uReal.s - x;
+    take s;
+A26: x+0_No < N * uReal.s by A25;
+    then
+A27:0_No < x1 by SURREALR:42;
+A28: x1 infinitely< x
+    proof
+      given r be positive Real such that
+A29:  x <= x1* uReal.r;
+      consider n be Nat such that
+A30:  r < n by SEQ_4:3;
+      x1*uReal.r < x1*uReal.n by A30,SURREALN:51,A27,SURREALR:70;
+      then
+A31:  x < x1* uReal.n by A29,SURREALO:4;
+A32:  - (-x)* uReal.n = - - (x* uReal.n) by SURREALR:58;
+      x*uReal.1 + x* uReal.n == x * (uReal.1+uReal.n) ==
+      x*uReal.(1+n) by SURREALN:55,SURREALR:67,SURREALR:51;
+      then
+A33:  x*uReal.1 + x* uReal.n == x*uReal.(1+n) by SURREALO:4;
+      x1* uReal.n == (N * uReal.s * uReal.n) + (-x)* uReal.n by SURREALR:67;
+      then x < (N * uReal.s * uReal.n) + (-x)* uReal.n by A31,SURREALO:4;
+      then x*uReal.1 - (-x)* uReal.n < N * uReal.s * uReal.n
+      by SURREALR:41,SURREALN:48;
+      then
+A34:  x*uReal.(1+n) < N * uReal.s * uReal.n by A32,A33,SURREALO:4;
+      0_No < uReal.(1/(n+1)) by SURREALI:def 8;
+      then
+A35:  x*uReal.(1+n) * uReal.(1/(n+1)) <
+      N * uReal.s * uReal.n * uReal.(1/(n+1)) by A34,SURREALR:70;
+      x*uReal.(1+n) * uReal.(1/(n+1)) == x by Lm2;
+      then
+A36:  x < N * uReal.s * uReal.n * uReal.(1/(n+1)) by A35,SURREALO:4;
+      N * uReal.s * uReal.n *uReal.(1/(n+1)) ==
+      N* (uReal.(s *n*(1/(n+1)))) by Lm3;
+      then R [s* n * (1/(n+1))] by A36,SURREALO:4;
+      then (s* n) * ((1/(n+1)) * (n+1)) = s* n * (1/(n+1)) * (n+1)
+        >= s*(n+1) & (1/(n+1)) * (n+1) = 1 by A6,XCMPLX_1:106,XREAL_1:64;
+      then n >= n+1 by XREAL_1:68;
+      hence thesis by NAT_1:13;
+    end;
+A37:not x1 == 0_No by A26,SURREALR:42;
+    - x1 = -(N * uReal.s) + - - x by SURREALR:40
+    .= x +-(N * uReal.s);
+    then x1 = |. x1 .| = |. x +-(N * uReal.s) .|
+    by A26,SURREALR:42,A37,Th39,Def6;
+    hence thesis by A28;
+  end;
+end;
+
+theorem
+  x is positive &
+       |. x - (No_omega^ y * uReal.r) .| infinitely< x
+       implies r is positive
+proof
+  assume that
+A1: x is positive & |. x - (No_omega^ y * uReal.r) .| infinitely< x and
+A2: not r is positive;
+A3:0_No <= x by A1;
+A4:0_No <= No_omega^ y by SURREALI:def 8;
+  uReal.r <= 0_No by A2,SURREALN:51,47;
+  then No_omega^ y * uReal.r <= No_omega^ y * 0_No =0_No
+  by A4,SURREALR:75;
+  then -0_No <= - (No_omega^ y * uReal.r) by SURREALR:10;
+  then
+A5: x + 0_No <= x + - (No_omega^ y * uReal.r) &
+  0_No + 0_No <= x + - (No_omega^ y * uReal.r)
+  by A3,SURREALR:43;
+  |. x +- (No_omega^ y * uReal.r) .| < x by A1,Th9;
+  hence thesis by A5,Def6;
+end;
+
+Lm8:x,No_omega^ y are_commensurate &
+      |. x - (No_omega^ y * uReal.r1) .| infinitely< x &
+       |. x - (No_omega^ y * uReal.r2) .| infinitely< x
+   implies r2 <= r1
+proof
+  set N=No_omega^ y;
+  assume that
+A1: x,No_omega^ y are_commensurate  and
+A2: |. x - (N * uReal.r1) .| infinitely< x &
+  |. x - (N * uReal.r2) .| infinitely< x and
+A3: r1 < r2;
+A4:  |. x - (N * uReal.r1) - ( x - (N * uReal.r2)).| infinitely< x
+  by A2,Th43;
+A5:x +- (N * uReal.r1) + - ( x +- (N * uReal.r2)) =
+  x +- (N * uReal.r1) + (- x + - - (N * uReal.r2)) by SURREALR:40
+  .= x +( - (N * uReal.r1) + ((N * uReal.r2) + - x)) by SURREALR:37
+  .= x + ((- (N * uReal.r1) + (N * uReal.r2)) + - x) by SURREALR:37
+  .= (x + -x) + (- (N * uReal.r1) + (N * uReal.r2)) by SURREALR:37;
+A6: x -x ==0_No by SURREALR:39;
+  - (N * uReal.r1) = N * (-uReal.r1) == N*uReal.-r1
+  by SURREALN:56,SURREALR:51,58;
+  then - (N * uReal.r1) + (N * uReal.r2) == N*uReal.-r1 + N*uReal.r2
+  == N*(uReal.-r1 + uReal.r2) by SURREALR:43,SURREALR:67;
+  then - (N * uReal.r1) + (N * uReal.r2) ==
+  N*(uReal.-r1 + uReal.r2) == N* uReal.(-r1 + r2)
+  by SURREALN:55,SURREALR:51,SURREALO:4;
+  then - (N * uReal.r1) + (N * uReal.r2) == N* uReal.(-r1 + r2) by SURREALO:4;
+  then x +- (N * uReal.r1) + - ( x +- (N * uReal.r2))
+  == 0_No + N* uReal.(-r1 + r2)
+  =N* uReal.(-r1 + r2) by A5,A6,SURREALR:43;
+  then
+A7: |.N* uReal.(-r1 + r2) .| infinitely< x by Th48,A4,Th17;
+  consider n be positive Nat such that
+A8: x < N * uInt.n by A1;
+A9: uReal.n = uDyadic.n = uInt.n by SURREALN:46,def 5;
+A10: 0 < r2 - r1 by A3,XREAL_1:50;
+A11: 0_No < uReal.(r2 - r1) by A3,XREAL_1:50,SURREALN:47,51;
+  0_No < N by SURREALI:def 8;
+  then 0_No <= N* uReal.(r2 - r1) by A11,SURREALR:72;
+  then
+A12: |.N* uReal.(r2 - r1) .| = N* uReal.(r2 - r1) by Def6;
+  (r2 - r1) *(n/(r2-r1)) = n by A10,XCMPLX_1:87;
+  then N* uReal.(r2 - r1) * uReal.(n/(r2-r1)) ==
+  N* uReal.n by Lm1;
+  then N* uReal.n <= x by A12,A7,A10,SURREALO:4;
+  hence thesis by A8,A9;
+end;
+
+theorem Th56:
+  not x == 0_No implies omega-y x = omega-y - x
+proof
+  assume
+A1: not x == 0_No;
+  then
+A2: |.x.|, No_omega^ omega-y x are_commensurate by Def7;
+A3: |.x.| =|.-x.| by A1,Th39;
+  not - x == 0_No by A1,SURREALR:24;
+  hence thesis by A2,A3,Def7;
+end;
+
+Lm9: |.x.|,No_omega^ y are_commensurate &
+       |. x - (No_omega^ y * uReal.r1) .| infinitely< |.x.| &
+        |. x - (No_omega^ y * uReal.r2) .| infinitely< |.x.|
+    implies r2 = r1
+proof
+  set X=|.x.|,N=No_omega^ y;
+  assume
+A1: X,No_omega^ y are_commensurate &
+    |. x - (N * uReal.r1) .| infinitely< X &
+    |. x - (N * uReal.r2) .| infinitely< X;
+  reconsider X  as positive Surreal by A1,Th3;
+  per cases by Def6;
+  suppose X=x;
+    then r1 <= r2 <= r1 by A1,Lm8;
+    hence thesis by XXREAL_0:1;
+  end;
+  suppose
+A2: X=-x;
+    then
+A3: x +- (N * uReal.r1) = -X + - (N * uReal.r1)
+    .= - (X + N * uReal.r1) by SURREALR:40;
+    - uReal.- r1 == uReal. - - r1 by SURREALN:56;
+    then - (N * uReal.- r1) = N * (- uReal.- r1)
+    == N * (uReal.r1) by SURREALR:51,SURREALR:58;
+    then X + N * uReal.r1 == X + - (N * uReal.- r1) by SURREALR:43;
+    then x +- (N * uReal.r1) == - (X + - (N * uReal.- r1))
+    by A3,SURREALR:10;
+    then |. x +- (N * uReal.r1) .| ==
+    |. - (X + - (N * uReal.- r1)) .| ==
+    |. X + - (N * uReal.- r1) .| by Th48,Th39,Th38;
+    then |. x +- (N * uReal.r1) .| ==
+    |. X + - (N * uReal.- r1) .| by SURREALO:4;
+    then
+A4: |. X - (N * uReal.- r1) .| infinitely< X by A1,Th17;
+A5: x +- (N * uReal.r2) = -X + - (N * uReal.r2) by A2
+    .= - (X + N * uReal.r2) by SURREALR:40;
+    - uReal.- r2 == uReal. - - r2 by SURREALN:56;
+    then - (N * uReal.- r2) = N * (- uReal.- r2)
+    == N * (uReal.r2) by SURREALR:51,SURREALR:58;
+    then X + N * uReal.r2 == X + - (N * uReal.- r2) by SURREALR:43;
+    then x +- (N * uReal.r2) == - (X + - (N * uReal.- r2))
+    by A5,SURREALR:10;
+    then |. x +- (N * uReal.r2) .| ==
+    |. - (X + - (N * uReal.- r2)) .| ==
+    |. X + - (N * uReal.- r2) .| by Th48,Th39,Th38;
+    then |. x +- (N * uReal.r2) .| == |. X + - (N * uReal.- r2) .|
+    by SURREALO:4;
+    then |. X - (N * uReal.- r2) .| infinitely< X by A1,Th17;
+    then -r1 <= -r2 <= - r1 by A4,A1,Lm8;
+    then -r1=-r2 by XXREAL_0:1;
+    hence thesis;
+  end;
+end;
+
+definition
+  let x be Surreal;
+  assume A1:not x == 0_No;
+  func omega-r x -> non zero Real means :Def8:
+    |.x - No_omega^ omega-y x * uReal.it .| infinitely< |.x.|;
+  existence
+  proof
+    reconsider X = |.x.| as positive Surreal by A1,Th36;
+    set y = omega-y X;
+A2: X = |.X.| by Th31,Def6;
+    not -x == 0_No by A1,SURREALR:24;
+    then not X == 0_No by A1,Def6;
+    then X, No_omega^ omega-y X are_commensurate by A2,Def7;
+    then consider s be positive Real such that
+A3: |. X - (No_omega^ y * uReal.s) .| infinitely< X by Th54;
+    per cases by Def6;
+    suppose
+A4:   X = x;
+      take s;
+      thus thesis by A3,A4;
+    end;
+    suppose
+A5:   X=-x;
+      then
+A6:   X +- (No_omega^ y * uReal.s)
+      = - (x + No_omega^ y * uReal.s) by SURREALR:40;
+      take -s;
+      - uReal.- s == uReal. - - s by SURREALN:56;
+      then - (No_omega^ y * uReal.- s) = No_omega^ y * (- uReal.- s)
+      == No_omega^ y * (uReal.s) by SURREALR:51,SURREALR:58;
+      then x + No_omega^ y * uReal.s == x + - (No_omega^ y * uReal.- s)
+      by SURREALR:43;
+      then X +- (No_omega^ y * uReal.s) == - (x + - (No_omega^ y * uReal.- s))
+      by SURREALR:10,A6;
+      then |. X +- (No_omega^ y * uReal.s) .| ==
+      |. - (x + - (No_omega^ y * uReal.- s)) .| ==
+      |. x + - (No_omega^ y * uReal.- s) .| by Th48,Th39,Th38;
+      then |. X +- (No_omega^ y * uReal.s) .| ==
+      |. x + - (No_omega^ y * uReal.- s) .| by SURREALO:4;
+      then |. x + - (No_omega^ y * uReal.- s) .| infinitely< X by A3,Th17;
+      hence thesis by A5,A1,Th56;
+    end;
+  end;
+  uniqueness
+  proof
+    let r1,r2 be non zero Real such that
+A7: |.x - No_omega^ omega-y x * uReal.r1 .| infinitely< |.x.| and
+A8: |.x - No_omega^ omega-y x * uReal.r2 .| infinitely< |.x.|;
+    |.x.|,No_omega^ omega-y x are_commensurate by A1,Def7;
+    hence thesis by A7,A8,Lm9;
+  end;
+end;
+
+theorem Th57:
+  for n be positive Nat st
+    |.y.| * uReal.((n+1)/n) < |.x.| holds |.x.|,|.x+y.| are_commensurate
+proof
+  let n be positive Nat;
+  assume
+A1: |.y.| * uReal.((n+1)/n) < |.x.|;
+  0_No <= |.y.| & 0_No <= uReal.((n+1)/n) by SURREALI:def 8,Th31;
+  then 0_No=0_No*|.y.| <= uReal.((n+1)/n)*|.y.| by SURREALR:75;
+  then
+A2: 0_No < |.x.| by A1,SURREALO:4;
+A3:0_No < uReal.(n /(n+1)) by SURREALI:def 8;
+A4: 1/((n+1)/n) = n /(n+1) by XCMPLX_1:57;
+  |.y.| == |.y.| * uReal.((n+1)/n)*uReal.(n /(n+1))
+  < |.x.| *uReal.(n /(n+1)) by A1,A4,Lm2,A3,SURREALR:70;
+  then
+A5: |.- y.| == |.y.| <|.x.| *uReal.(n /(n+1)) by SURREALO:4,Th39,Th38;
+  then |.- y.| < |.x.| *uReal.(n /(n+1)) by SURREALO:4;
+  then - (|.x.| *uReal.(n /(n+1))) < - |.- y.| by SURREALR:10;
+  then
+A6: |.x.| + - (|.x.| *uReal.(n /(n+1))) < |.x.| +- |.- y .|
+  by SURREALR:44;
+A7: - (|.x.| *uReal.(n /(n+1))) = |.x.| * (-uReal.(n /(n+1)))==
+  |.x.| * uReal.-(n /(n+1)) by SURREALN:56,SURREALR:51,58;
+  1 -(n /(n+1)) = (n+1)/(n+1) - (n /(n+1)) by XCMPLX_1:60
+  .= (n+1-n)/(n+1) by XCMPLX_1:120;
+  then
+A8: 1 +-(n /(n+1)) = 1/(n+1);
+A9: |.x.| = |.x.| * uReal.1 by SURREALN:48;
+  |.x.| + - (|.x.| *uReal.(n /(n+1)))
+  == |.x.| * uReal.1+ |.x.| * uReal.-(n /(n+1))
+  == |.x.| * (uReal.1+ uReal.-(n /(n+1))) by A7,SURREALR:43,67,SURREALN:48;
+  then |.x.| + - (|.x.| *uReal.(n /(n+1))) ==
+  |.x.| * (uReal.1+ uReal.-(n /(n+1))) ==
+  |.x.| * uReal.(1/(n+1)) by A8,SURREALN:55,SURREALR:51,SURREALO:4;
+  then
+A10: |.x.| + - (|.x.| *uReal.(n /(n+1))) ==
+  |.x.| * uReal.(1/(n+1)) by SURREALO:4;
+  n < n+1 by NAT_1:13;
+  then n/(n+1) < 1 by XREAL_1:189;
+  then |.x.| * uReal.(n /(n+1)) <= |.x.| * 1_No = |.x.|
+  by SURREALN:48,51,A2,SURREALR:70;
+  then
+A11: |.-y.|== |.y.| < |.x.| by A5,SURREALO:4;
+  then |.-y.|+0_No = |.-y.| < |.x.| by SURREALO:4;
+  then 0_No <= |.x.| - |.- y .| by SURREALR:42;
+  then
+A12: |. |.x.| +- |.- y .| .| = |.x.| +- |.- y .| by Def6;
+A13: |.x.| * uReal.(1/(n+1)) < |. |.x.| +- |.- y .| .|
+  by A10,A12,A6,SURREALO:4;
+A14: uInt.(n+1) = uDyadic.(n+1) = uReal.(n+1) by SURREALN:46,def 5;
+A15: uInt.2 = uDyadic.2 = uReal.2 by SURREALN:46,def 5;
+A16: 0_No < uReal.(n+1) by SURREALI:def 8;
+A17: 1/ ( 1/(n+1)) = n+1 by XCMPLX_1:56;
+  |. |.x.| - |.- y .| .| <= |.x - - y.| by Th49;
+  then |.x.| * uReal.(1/(n+1)) < |.x + y.| by A13,SURREALO:4;
+  then |.x.|==|.x.| * uReal.(1/(n+1))* uReal.(n+1) < |.x + y.| * uReal.(n+1)
+  by A16,SURREALR:70,A17,Lm2;
+  then
+A18: |.x.| < |.x + y.| * uInt.(n+1) by SURREALO:4,A14;
+A19: |.y.| + |.x.| < |.x.| +|.x.| by A11,SURREALR:44;
+  uReal.1 + uReal.1 == uReal.(1+1) by SURREALN:55;
+  then |.x.| +|.x.| == |.x.| * (uReal.1 + uReal.1) ==
+  |.x.| * uReal.2 by A9,SURREALR:67,SURREALR:51;
+  then |.x.| +|.x.| == |.x.| * uReal.2 by SURREALO:4;
+  then
+A20: |.y.| + |.x.| < |.x.| * uReal.2 by A19,SURREALO:4;
+  |.x+y.| <= |.x.| + |.y.| by Th37;
+  then |.x+y.| < |.x.| * uInt.2 by A15,A20,SURREALO:4;
+  hence thesis by A18;
+end;
+
+theorem
+  |.x.| is positive implies not x ==0_No by Def6;
+
+theorem Th59:
+  x*uReal.r1 < y*uReal.r2 & 0 < r implies x*uReal.(r1*r) < y*uReal.(r2 *r)
+proof
+  assume
+A1:x*uReal.r1 < y*uReal.r2 & 0 < r;
+  then 0_No < uReal.r by SURREALI:def 8;
+  then
+A2: x*uReal.r1*uReal.r < y*uReal.r2 *uReal.r by A1,SURREALR:70;
+  x*uReal.r1*uReal.r == x*uReal.(r1*r) by Lm1;
+  then x*uReal.(r1*r) < y*uReal.r2 *uReal.r ==
+  y*uReal.(r2 *r) by A2,SURREALO:4,Lm1;
+  hence thesis by SURREALO:4;
+end;
+
+theorem
+  x*uReal.r1 <= y*uReal.r2 & 0 <= r implies
+    x*uReal.(r1*r) <= y*uReal.(r2 *r)
+proof
+  assume
+A1:x*uReal.r1 <= y*uReal.r2 & 0 <= r;
+  then 0_No <= uReal.r by SURREALN:51,47;
+  then
+A2: x*uReal.r1*uReal.r <= y*uReal.r2 *uReal.r by A1,SURREALR:75;
+  x*uReal.r1*uReal.r == x*uReal.(r1*r) by Lm1;
+  then x*uReal.(r1*r) <= y*uReal.r2 *uReal.r ==
+  y*uReal.(r2 *r) by A2,SURREALO:4,Lm1;
+  hence thesis by SURREALO:4;
+end;
+
+theorem Th61:
+  not x == 0_No & not y == 0_No implies
+    (omega-y x = omega-y y iff |.x.|,|.y.| are_commensurate)
+proof
+  assume
+A1: not x == 0_No & not y == 0_No;
+  then
+A2: |.x.|, No_omega^ omega-y x are_commensurate &
+  |.y.|, No_omega^ omega-y y are_commensurate by Def7;
+  thus omega-y x = omega-y y implies |.x.|,|.y.| are_commensurate
+    by A2,Th4;
+  assume |.x.|,|.y.| are_commensurate;
+  then |.y.|, No_omega^ omega-y x are_commensurate by A2,Th4;
+  hence thesis by A1,Def7;
+end;
+
+theorem Th62:
+  not x == 0_No & not (x+y) == 0_No &
+    omega-y x = omega-y (x + y) &
+    omega-r x = omega-r (x+y) implies |.y.| infinitely< |.x.|
+proof
+  set r = omega-r x, w = omega-y x, N = No_omega^ w, R = uReal.r;
+  assume that
+A1: not x == 0_No & not (x+y) == 0_No and
+A2: w = omega-y (x + y) &
+  r = omega-r (x+y);
+  let s be positive Real;
+A3:  |.x.|, N are_commensurate & |.x+y.|, N are_commensurate
+  by A1,A2,Def7;
+A4: 0_No <= uReal.s by SURREALI:def 8;
+A5: |.x - N * R .| infinitely< |.x.| by A1,Def8;
+  |.x +y - N * R .| infinitely< |.x+y.| by A1,A2,Def8;
+  then
+A6: |.x +y +- N * R .| infinitely< |.x.| by Th16,A3,Th4;
+  N * R - N*R == 0_No by SURREALR:39;
+  then
+A7: - N * R +(N*R + -x) = (- N * R + N*R) + -x
+  ==0_No +-x = -x by SURREALR:43,SURREALR:37;
+A8: x -x ==0_No by SURREALR:39;
+  x +y + -x = y +(x + -x) by SURREALR:37;
+  then
+A9: x +y + -x == y+0_No =y by A8,SURREALR:43;
+  - - N*R = N*R;
+  then - (x +- N * R) = N*R + -x by SURREALR:40;
+  then x +y +- N * R +- (x +- N * R) = x +y + (- N * R +(N*R + -x))
+  == x +y + -x by A7,SURREALR:43,SURREALR:37;
+  then x +y +- N * R +- (x +- N * R) == y by A9,SURREALO:4;
+  then |.y.| == |.x +y +- N * R + - (x +- N * R).| <=
+  |.x +y +- N * R.| + |.- (x +- N * R).| by Th48,Th37;
+  then |.y.| <= |.x +y +- N * R.| + |.- (x +- N * R).| by SURREALO:4;
+  then |.y.| * uReal.s <= (|.x +y +- N * R.| + |.- (x +- N * R).|) * uReal.s
+  == |.x +y +- N * R.| * uReal.s + |.- (x +- N * R).| * uReal.s
+  by A4,SURREALR:67,75;
+  then
+A10: |.y.| * uReal.s <=
+  |.x +y +- N * R.| * uReal.s + |.- (x +- N * R).| * uReal.s
+  by SURREALO:4;
+A11: |.x.| = |.x.| * uReal.1 by SURREALN:48;
+  |.x +y +- N * R.| * uReal.(s *2)< |.x.| by A6;
+  then
+A12: |.x +y +- N * R.| * uReal.(s *2*(1/2)) <= |.x.| * uReal.(1* (1/2))
+  by Th59,A11;
+  |.x +- N * R.| * uReal.(s *2)< |.x.| by A5;
+  then
+A13: |.x +- N * R.| * uReal.(s *2*(1/2)) < |.x.| * uReal.(1* (1/2))
+  by Th59,A11;
+  |.x +- N * R.| * uReal.s == |. -(x +- N * R).| * uReal.s
+  by SURREALR:51,Th40;
+  then |.-(x +- N * R).| * uReal.(s *2*(1/2)) < |.x.| * uReal.(1* (1/2))
+  by A13,SURREALO:4;
+  then
+A14: |.x +y +- N * R.| * uReal.s + |.- (x +- N * R).| * uReal.s
+  < |.x.| * uReal.(1* (1/2)) + |.x.| * uReal.(1* (1/2)) by A12,SURREALR:44;
+  |.x.| * uReal.(1* (1/2)) + |.x.| * uReal.(1* (1/2))
+  == |.x.| *(uReal.(1/2)+uReal.(1/2)) ==
+  |.x.| *(uReal.((1/2)+(1/2))) by SURREALR:67,51,SURREALN:55;
+  then |.x.| * uReal.(1* (1/2)) + |.x.| * uReal.(1* (1/2)) ==
+  |.x.| *(uReal.1) = |.x.| by SURREALN:48,SURREALO:4;
+  then |.x +y +- N * R.| * uReal.s + |.- (x +- N * R).| * uReal.s < |.x.|
+  by A14,SURREALO:4;
+  hence thesis by A10,SURREALO:4;
+end;
+
+theorem Th63:
+  |.y.| infinitely< |.x.| implies
+      not x == 0_No & not (x+y) == 0_No &
+       omega-y x = omega-y (x + y) &
+       omega-r x = omega-r (x+y)
+proof
+  assume
+A1: |.y.| infinitely< |.x.|;
+  hence
+A2: not x == 0_No & not (x+y) == 0_No by Th45,Th47;
+A3: |.y.| * uReal.((2+1)/2) < |.x.| by A1;
+  then |.x.|,|.x+y.| are_commensurate by Th57;
+  hence
+A4: omega-y x = omega-y (x + y) by A2,Th61;
+  set N = No_omega^ omega-y x;
+A5:  |.x - N * uReal.omega-r x .| infinitely< |.x.| by A2,Def8;
+  |.x +y +- N * uReal.omega-r x .| infinitely< |.x.|
+  proof
+    let s be positive Real;
+A6: 0_No <= uReal.s by SURREALI:def 8;
+    set r = uReal.omega-r x;
+    x +y +- N * r = y +(x +- N * r) by SURREALR:37;
+    then |.x +y +- N * r .|*uReal.s <= (|.x +- N * r .| +|.y.|)*uReal.s
+    == |.x +- N * r .|*uReal.s + |.y.| *uReal.s by Th37,A6,SURREALR:67,75;
+    then
+A7: |.x +y +- N * r .|*uReal.s <=
+    |.x +- N * r .|*uReal.s + |.y.| *uReal.s by SURREALO:4;
+A8: |.x.| = |.x.| * uReal.1 by SURREALN:48;
+    |.x +- N * r.| * uReal.(s *2)< |.x.| by A5;
+    then
+A9: |.x +- N * r.| * uReal.(s *2*(1/2)) <= |.x.| * uReal.(1* (1/2))by Th59,A8;
+    |. y .| * uReal.(s *2)< |.x.| by A1;
+    then |.y.| * uReal.(s *2*(1/2)) < |.x.| * uReal.(1* (1/2)) by Th59,A8;
+    then
+A10: |.x +- N * r.| * uReal.s + |. y .| * uReal.s
+    < |.x.| * uReal.(1* (1/2)) + |.x.| * uReal.(1* (1/2))
+    by A9,SURREALR:44;
+    |.x.| * uReal.(1* (1/2)) + |.x.| * uReal.(1* (1/2))
+    == |.x.| *(uReal.(1/2)+uReal.(1/2)) == |.x.| *(uReal.((1/2)+(1/2)))
+    by SURREALR:67,51,SURREALN:55;
+    then |.x.| * uReal.(1* (1/2)) + |.x.| * uReal.(1* (1/2)) ==
+    |.x.| *(uReal.1) = |.x.| by SURREALN:48,SURREALO:4;
+    then |.x +- N * r.| * uReal.s + |. y .| * uReal.s < |.x.|
+    by A10,SURREALO:4;
+    hence thesis by A7,SURREALO:4;
+  end;
+  then |.x +y - N * uReal.omega-r x .| infinitely< |.x+y.| by A3,Th57,Th16;
+  hence thesis by A2,A4,Def8;
+end;
+
+theorem Th64:
+  not x==0_No & y == 0_No implies y infinitely< |.x.|
+proof
+  assume
+A1: not x==0_No & y == 0_No;
+  then
+A2: |.x.| is positive by Th36;
+  let r be positive Real;
+  uReal.r * y == uReal.r * 0_No = 0_No by A1,SURREALR:51;
+  hence thesis by SURREALO:4,A2;
+end;
+
+theorem
+  uReal.r == 0_No implies r=0
+proof
+  assume uReal.r == 0_No;
+  then 0 <= r <= 0 by SURREALN:51,47;
+  hence thesis;
+end;
+
+Lm10: x is positive & r > 0 implies
+  uReal.r * x, x are_commensurate
+proof
+  assume
+A1:  x is positive & r > 0;
+  consider n be Nat such that
+A2:r < n by SEQ_4:3;
+  n < n+1 by NAT_1:13;
+  then
+A3: r < n+1 by A2,XXREAL_0:2;
+  uReal.(n+1) = uDyadic.(n+1) = uInt.(n+1) by SURREALN:46,def 5;
+  then
+A4: uReal.r * x < x * uInt.(n+1) by A3,SURREALN:51,SURREALR:70,A1;
+  consider k be Nat such that
+A5:1/r < k by SEQ_4:3;
+  k < k+1 by NAT_1:13;
+  then
+A6: 1/r < k+1 by A5,XXREAL_0:2;
+  0_No < uReal.r * x by A1,SURREALI:def 8;
+  then
+A7: uReal.(1/r) * (uReal.r * x) < uReal.(k+1) * (uReal.r * x)
+  by A6,SURREALN:51,SURREALR:70;
+A8:uReal.(k+1) = uDyadic.(k+1) = uInt.(k+1) by SURREALN:46,def 5;
+  uReal.(1/r) * (uReal.r * x ) == x by Lm2,A1;
+  then x < (uReal.r * x) *uInt.(k+1) by A8,A7,SURREALO:4;
+  hence thesis by A4;
+end;
+
+theorem Th66:
+  x is positive & r <> 0 implies
+    |. uReal.r * x .|, x are_commensurate
+proof
+  assume
+A1:x is positive & r <> 0;
+  then per cases;
+  suppose
+A2: 0 < r;
+    then 0_No <= uReal.r * x by A1,SURREALI:def 8;
+    then uReal.r * x = |. uReal.r * x.| by Def6;
+    hence thesis by Lm10,A1,A2;
+  end;
+  suppose
+A3: r < 0;
+    0_No <= (uReal.-r) * x by A3,A1,SURREALI:def 8;
+    then
+A4: (uReal.-r) * x = |.(uReal.-r) * x.| by Def6;
+    (uReal.-r) *x == (-uReal.r)*x == - (uReal.r*x) by SURREALN:56,
+    SURREALR:51,SURREALR:58;
+    then (uReal.-r) *x == - (uReal.r*x) by SURREALR:58;
+    then |.(uReal.-r) * x.| == |.- (uReal.r*x).| == |. uReal.r*x .|
+    by Th48,Th39,Th38;
+    then (uReal.-r) * x == |. uReal.r*x .| by A4,SURREALO:4;
+    hence thesis by A3,Lm10,A1,Th5;
+  end;
+end;
+
+scheme Simplest{P[Surreal]}:
+  ex s be uSurreal st P[s] &
+    for x be uSurreal st P[x] & x <> s holds born s in born x
+provided
+A1: ex x be Surreal st P[x] and
+A2: for x,y,z be Surreal st x <= y <= z & P[x] & P[z] holds P[y]
+proof
+  consider x be Surreal such that
+A3:P[x] by A1;
+  set c = Unique_No x;
+A4: c == x by SURREALO:def 10;
+  defpred B[Ordinal] means ex y be uSurreal st born y = $1 & P[y];
+  B[born c] by A4,A3,A2;
+  then
+A5:ex A st B[A];
+  consider A such that
+A6:  B[A] & for B st B[B] holds A c= B from ORDINAL1:sch 1(A5);
+  consider s be uSurreal such that
+A7: born s = A & P[s] by A6;
+  take s;
+  thus P[s] by A7;
+  let y be uSurreal such that
+A8: P[y] & y <> s & not born s in born y;
+  born s c= born y c= born s by A8,ORDINAL1:16,A7,A6;
+  then
+A9: born s = born y by XBOOLE_0:def 10;
+  not y == s by A8,SURREALO:50;
+  then per cases;
+  suppose y < s;
+    then per cases by SURREALO:13;
+    suppose ex xR be Surreal st xR in R_y & y < xR <= s;
+      then consider xR be Surreal such that
+A10:  xR in R_y & y < xR <= s;
+      xR in L_y \/R_y by A10,XBOOLE_0:def 3;
+      then
+A11:  born xR in born y by SURREALO:1;
+A12:  Unique_No xR == xR by SURREALO:def 10;
+      then y <= Unique_No xR <= s by A10,SURREALO:4;
+      then
+A13:  A c= born Unique_No xR by A6,A8,A2,A7;
+      born Unique_No xR = born_eq Unique_No xR by SURREALO:48;
+      hence thesis by A11,A7,A9,ORDINAL1:5,A13,A12,SURREALO:def 5;
+    end;
+    suppose ex yL be Surreal st yL in L_s & y <= yL < s;
+      then consider yL be Surreal such that
+A14:  yL in L_s & y <= yL < s;
+      yL in L_s \/R_s by A14,XBOOLE_0:def 3;
+      then
+A15:  born yL in born s by SURREALO:1;
+A16:  Unique_No yL == yL by SURREALO:def 10;
+      then y <= Unique_No yL <= s by A14,SURREALO:4;
+      then
+A17:  A c= born Unique_No yL by A6,A8,A2,A7;
+      born Unique_No yL = born_eq Unique_No yL by SURREALO:48;
+      hence thesis by A15,A7,ORDINAL1:5,A17,A16,SURREALO:def 5;
+    end;
+  end;
+  suppose s < y;
+    then per cases by SURREALO:13;
+    suppose ex xR be Surreal st xR in R_s & s < xR <= y;
+      then consider xR be Surreal such that
+A18:  xR in R_s & s < xR <= y;
+      xR in L_s \/R_s by A18,XBOOLE_0:def 3;
+      then
+A19:  born xR in born s by SURREALO:1;
+A20:  Unique_No xR == xR by SURREALO:def 10;
+      then s <= Unique_No xR <= y by A18,SURREALO:4;
+      then
+A21:  A c= born Unique_No xR by A6,A8,A2,A7;
+      born Unique_No xR = born_eq Unique_No xR by SURREALO:48;
+      hence thesis by A19,A7,ORDINAL1:5,A21,A20,SURREALO:def 5;
+    end;
+    suppose ex yL be Surreal st yL in L_y & s <= yL < y;
+      then consider yL be Surreal such that
+A22:  yL in L_y & s <= yL < y;
+      yL in L_y \/R_y by A22,XBOOLE_0:def 3;
+      then
+A23:  born yL in born y by SURREALO:1;
+A24:  Unique_No yL == yL by SURREALO:def 10;
+      then s <= Unique_No yL <= y by A22,SURREALO:4;
+      then
+A25:  A c= born Unique_No yL by A6,A8,A2,A7;
+      born Unique_No yL = born_eq Unique_No yL by SURREALO:48;
+      hence thesis by A23,A7,A9,ORDINAL1:5,A25,A24,SURREALO:def 5;
+    end;
+  end;
+end;
+
+definition
+  let f be Function;
+  attr f is surreal-valued means :Def9:
+     rng f is surreal-membered;
+end;
+
+registration
+  let s be Surreal;
+  cluster <%s%> -> surreal-valued;
+  coherence
+    proof
+      rng <%s%> = {s} by AFINSQ_1:33;
+      hence thesis;
+    end;
+end;
+
+registration
+  cluster surreal-valued for Sequence;
+  existence
+  proof
+    take <%0_No%>;
+    thus thesis;
+  end;
+end;
+
+registration
+   let f be surreal-valued Function;
+   cluster rng f -> surreal-membered;
+   coherence by Def9;
+end;
+
+definition
+  mode Surreal-Sequence is surreal-valued Sequence;
+end;
+
+registration
+  let X be surreal-membered set;
+  cluster -> surreal-membered for Subset of X;
+  coherence by SURREAL0:def 16;
+end;
+
+registration
+  let f be surreal-valued Function;
+  let X be set;
+  cluster f|X -> surreal-valued;
+  coherence
+  proof
+    rng (f|X) c= rng f by RELAT_1:70;
+    hence thesis;
+  end;
+end;
+
+registration
+  let f,g be Surreal-Sequence;
+  cluster f^g -> surreal-valued;
+  coherence
+  proof
+    rng(f^g) = rng f \/ rng g by ORDINAL4:2;
+    hence thesis;
+  end;
+end;
+
+definition
+  let f be Function;
+  attr f is uniq-surreal-valued means :Def10:
+     rng f is uniq-surreal-membered;
+end;
+
+registration
+  let s be uSurreal;
+  cluster <%s%> -> uniq-surreal-valued;
+  coherence
+    proof
+      rng <%s%> = {s} by AFINSQ_1:33;
+      hence thesis;
+    end;
+end;
+
+registration
+  cluster uniq-surreal-valued for Sequence;
+  existence
+  proof
+    take <%0_No%>;
+    thus thesis;
+  end;
+end;
+
+registration
+  let f be uniq-surreal-valued Function;
+  cluster rng f -> uniq-surreal-membered;
+  coherence by Def10;
+end;
+
+definition
+  mode uSurreal-Sequence is uniq-surreal-valued Sequence;
+end;
+
+registration
+  let X be uniq-surreal-membered set;
+  cluster -> uniq-surreal-membered for Subset of X;
+  coherence by SURREALO:def 12;
+end;
+
+registration
+  let f be uniq-surreal-valued Function;
+  let X be set;
+  cluster f|X -> uniq-surreal-valued;
+  coherence
+  proof
+    rng (f|X) c= rng f by RELAT_1:70;
+    hence thesis;
+  end;
+end;
+
+registration
+  let f,g be uSurreal-Sequence;
+  cluster f^g -> uniq-surreal-valued;
+  coherence
+  proof
+    rng(f^g) = rng f \/ rng g by ORDINAL4:2;
+    hence thesis;
+  end;
+end;
+
+registration
+  cluster uniq-surreal-membered -> surreal-membered for set;
+  coherence;
+end;
+
+registration
+  cluster uniq-surreal-valued -> surreal-valued for Function;
+  coherence;
+end;
+
+definition
+  let S be Surreal-Sequence;
+  attr S is strictly_decreasing means :Def11:
+    for a,b be Ordinal st a in b in dom S
+      for sa,sb be Surreal st sa=S.a & sb=S.b holds
+       sb < sa;
+end;
+
+registration
+  let s be uSurreal;
+  cluster <%s%> -> strictly_decreasing;
+  coherence
+  proof
+    set S=<%s%>;
+    let a,b be Ordinal such that A1: a in b in dom S;
+    dom S={0} by CARD_1:49,AFINSQ_1:33;
+    hence thesis by A1,TARSKI:def 1;
+  end;
+end;
+
+registration
+  cluster strictly_decreasing for uSurreal-Sequence;
+  existence
+  proof
+    take <%0_No%>;
+    thus thesis;
+  end;
+end;
+
+registration
+  let s1,s2 be non-zero Sequence;
+  cluster s1^s2 -> non-zero;
+  coherence
+  proof
+    assume 0 in rng (s1^s2);
+    then 0 in (rng s1) \/ (rng s2) by ORDINAL4:2;
+    then 0 in rng s1 or 0 in rng s2 by XBOOLE_0:def 3;
+    hence thesis;
+  end;
+end;
+
+registration
+  cluster non-zero for Sequence of REAL;
+  existence
+  proof
+    take <%>REAL;
+    thus thesis;
+  end;
+end;
+
+begin :: $\alpha$-term - An Essential Component of the Conway Normal Form
+
+definition
+  let s be object, y be Surreal, r be Real;
+  let x be object;
+  attr x is (s,y,r)_term means
+    not x +'-' s ==0_No &
+    omega-y (x +'-' s) == y & omega-r (x +'-' s) = r;
+end;
+
+definition
+  let s, y be Surreal, r be Real;
+  let x be Surreal;
+  redefine attr x is (s,y,r)_term means
+    not x - s ==0_No &
+    omega-y (x - s) == y & omega-r (x - s) = r;
+  compatibility;
+end;
+
+theorem Th67:
+   r <> 0 implies not uReal.r * No_omega^ y == 0_No
+proof
+  assume r<>0;
+  then |. uReal.r * No_omega^ y .|, No_omega^ y are_commensurate by Th66;
+  then |. uReal.r * No_omega^ y .| is positive by Th3;
+  hence thesis by Def6;
+end;
+
+theorem Th68:
+   r <> 0 implies omega-y (uReal.r * No_omega^ y) = Unique_No y
+proof
+  assume r<>0;
+  then
+A1: |. uReal.r * No_omega^ y .|, No_omega^ y are_commensurate &
+  not uReal.r * No_omega^ y == 0_No by Th66,Th67;
+  y == Unique_No y by SURREALO:def 10;
+  then No_omega^ y == No_omega^ Unique_No y by Lm5;
+  then |. uReal.r * No_omega^ y .|, No_omega^ Unique_No y are_commensurate
+  by A1,Th5;
+  hence thesis by A1,Def7;
+end;
+
+theorem Th69:
+  for s be Surreal st r <>0 holds
+       s + uReal.r* No_omega^ y is (s,y,r)_term
+proof
+  let s be Surreal such that
+A1:r <> 0;
+  set R=uReal.r,N=No_omega^ y;
+  set sRNs = (s + R* N) + - s;
+  s - s == 0_No by SURREALR:39;
+  then
+A2: sRNs = R* N + (s +- s) == R* N + 0_No =R* N
+  by SURREALR:43,SURREALR:37;
+A3: not R* N == 0_No by A1,Th67;
+  then
+A4: not sRNs ==0_No by A2,SURREALO:4;
+A5: omega-y (R* N) = Unique_No y by A1,Th68;
+  |.R*N.| is positive by A1,Th67,Th36;
+  then |. sRNs .|, |.R*N.| are_commensurate by A2,Th48,Th8;
+  then
+A6: omega-y (sRNs ) = Unique_No y ==y
+  by SURREALO:def 10,A4,A5,Th61,A3;
+  then No_omega^ omega-y sRNs == N by Lm5;
+  then (No_omega^ omega-y sRNs) *R== N*R by SURREALR:51;
+  then - (No_omega^ omega-y sRNs) *R== - N*R by SURREALR:10;
+  then sRNs - (No_omega^ omega-y sRNs) * R == N*R - N*R ==0_No
+  by A2,SURREALR:43,SURREALR:39;
+  then sRNs +- (No_omega^ omega-y sRNs) * R ==0_No by SURREALO:4;
+  then |.sRNs +- (No_omega^ omega-y sRNs) * R.| == 0_No by Def6;
+  then |. sRNs - (No_omega^ omega-y sRNs) * R .|
+  infinitely< |.sRNs.| by A4, Th64;
+  hence thesis by A1,A4,Def8,A6;
+end;
+
+theorem Th70:
+  x == y & not x==0_No implies
+     omega-y x = omega-y y & omega-r x = omega-r y
+proof
+  assume
+A1: x == y & not x==0_No;
+A2: not y==0_No by A1,SURREALO:4;
+  |.x.| is positive by A1,Th36;
+  then
+A3: |.x.|,|.y.| are_commensurate by A1,Th48,Th8;
+  then
+A4: omega-y x = omega-y y by A2,A1,Th61;
+  set rx= omega-r x;
+  |.x - No_omega^ omega-y x * uReal.rx .| infinitely< |.x.| by A1,Def8;
+  then
+A5: |.x +- No_omega^ omega-y y * uReal.rx .| infinitely< |.y.|
+  by A4,A3, Th16;
+  x +- No_omega^ omega-y y * uReal.rx ==
+  y +- No_omega^ omega-y y * uReal.rx by SURREALR:43,A1;
+  then |.y - No_omega^ omega-y y * uReal.rx .| infinitely< |.y.|
+  by A5,Th17,Th48;
+  hence thesis by A2,Def8,A3,A1,Th61;
+end;
+
+theorem Th71:
+  for s be Surreal st r <>0 holds
+       s + uReal.r* No_omega^ y+x is (s,y,r)_term iff
+         |.x.| infinitely< No_omega^ y
+proof
+  let s be Surreal such that A1:r <>0;
+  set N = No_omega^ y,R=uReal.r,sRNx = s + R* N +x;
+  set sRNs = (s + R* N) + - s;
+  s - s == 0_No by SURREALR:39;
+  then
+A2: sRNs = R* N + (s +- s) == R* N + 0_No
+  =R* N by SURREALR:43,SURREALR:37;
+  not R* N == 0_No by A1,Th67;
+  then
+A3: not sRNs ==0_No by A2,SURREALO:4;
+A4: |. sRNs.| is positive by A3,Th36;
+A5: |.sRNs.|,|.N*R.| are_commensurate by A2,Th48,A4,Th8;
+A6: |.N*R.|,N are_commensurate by A1,Th66;
+  then
+A7: |.sRNs.|,N are_commensurate by Th4,A5;
+A8: sRNx +-s = s + (R* N +x) +-s by SURREALR:37
+  .= s+-s + (R* N +x) by SURREALR:37;
+  s-s ==0_No by SURREALR:39;
+  then
+A9: s+-s + (R* N +x) == 0_No + (R* N +x) =R* N +x by SURREALR:43;
+  sRNs + x == R* N +x by A2,SURREALR:43;
+  then
+A10: sRNx +- s == sRNs +x by A9,SURREALO:4,A8;
+A11: s + R* N is (s,y,r)_term by A1,Th69;
+  then
+A12: not sRNs == 0_No & omega-y (sRNs) == y & omega-r (sRNs) = r;
+  thus sRNx is (s,y,r)_term implies |.x.| infinitely< N
+  proof
+    assume
+A13: sRNx is (s,y,r)_term;
+    then
+A14: not sRNx +- s == 0_No &
+     omega-y (sRNx +- s) == y & omega-r (sRNx + - s) = r;
+A15: not sRNs+x ==0_No by A10,A14,SURREALO:4;
+A16: omega-y (sRNx +- s) = omega-y (sRNs +x) &
+    omega-r (sRNx + - s) = omega-r (sRNs + x) by A13,A10,Th70;
+A17: omega-r (sRNs + x) = omega-r (sRNs) by A13,A11,A10,Th70;
+    omega-y (sRNs)==omega-y (sRNs+x) by A14,A12,A16,SURREALO:4;
+    then omega-y sRNs = omega-y (sRNs + x) by SURREALO:50;
+    hence thesis by A7,Th16,A17,A15,A11,Th62;
+  end;
+  assume |.x.| infinitely< N;
+  then |.x.| infinitely< |.sRNs.| by A6,Th4,A5,Th16;
+  then
+A18: not sRNs+x == 0_No &
+  omega-y sRNs = omega-y (sRNs + x) &
+  omega-r sRNs = omega-r (sRNs+x) by Th63;
+  then not sRNx +- s == 0_No by A10,SURREALO:4;
+  hence thesis by A18,A10,Th70,A11;
+end;
+
+theorem Th72:
+  for s be Surreal st r<>0 & x is (s,y,r)_term & x== z holds
+    z is (s,y,r)_term
+proof
+  let s be Surreal;
+  assume
+A1: r<>0 & x is (s,y,r)_term & x==z;
+  then
+A2: not x + - s == 0_No &
+  omega-y (x +- s) == y & omega-r (x + - s) = r;
+  A3: x + - s == z+-s by A1,SURREALR:43;
+  not z + - s ==0_No by A2,A3,SURREALO:4;
+  hence thesis by A1,A3,Th70;
+end;
+
+theorem Th73:
+  for s be Surreal st r <> 0 holds
+    x is (s,y,r)_term iff
+    |. x - (s + uReal.r* No_omega^ y).| infinitely< No_omega^y
+proof
+  let s be Surreal such that
+A1: r <>0;
+  set N =No_omega^ y, R = uReal.r,sNR=s+R*N;
+  set X = x - sNR;
+  sNR-sNR==0_No by SURREALR:39;
+  then
+A2: sNR +X = x+(sNR+-sNR)==x+0_No = x by SURREALR:37,43;
+  thus x is (s,y,r)_term implies
+  |. X.| infinitely< N
+  proof
+    assume x is (s,y,r)_term;
+    then sNR +X is (s,y,r)_term by A2,Th72;
+    hence |.X.| infinitely< N by Th71;
+  end;
+  assume |.X.| infinitely< N;
+  then sNR +X is (s,y,r)_term by A1,Th71;
+  hence thesis by A2,Th72;
+end;
+
+theorem Th74:
+  for s,p be Surreal st r <>0
+      for x,y,z be Surreal st x is (s,p,r)_term & z is (s,p,r)_term &
+          x <= y <= z
+  holds y is (s,p,r)_term
+proof
+  let s,p be Surreal such that
+A1: r <>0;
+  let x,y,z be Surreal such that
+A2:x is (s,p,r)_term & z is (s,p,r)_term and
+A3:x <= y <= z;
+  set N =No_omega^ p, R = uReal.r,sNR=s+R*N;
+  set X = x - sNR,Y = y -sNR, Z=z-sNR;
+  |.X.| infinitely< N & |.Z.| infinitely< N by A2,Th73;
+  then
+A4: |.X.|+|.Z.| infinitely< N by Th18;
+  X <= Y <= Z by A3,SURREALR:43;
+  then |.Y.| infinitely< N by A4,Th11,Th51;
+  hence thesis by A1,Th73;
+end;
+
+begin :: Conway's Generalization of Partial Sums
+
+definition
+  let r be Sequence of REAL;
+  let y,s be Sequence;
+  let alpha be Ordinal;
+  let x be Surreal;
+  pred x in_meets_terms s,y,r,alpha means
+     for beta be Ordinal,sb,yb be Surreal st
+       beta in alpha & sb=s.beta & yb = y.beta holds
+         x is (sb,yb,r.beta)_term;
+end;
+
+definition
+  let r be Sequence of REAL;
+  let y,s be Sequence;
+  let alpha be Ordinal;
+  pred s,y,r simplest_on_position alpha means
+      for sa be Surreal st sa = s.alpha holds
+        (0 = alpha implies sa = 0_No) &
+        (0 <> alpha implies
+           sa in_meets_terms s,y,r,alpha &
+           for x be uSurreal st x in_meets_terms s,y,r,alpha & x <> sa
+             holds born sa in born x);
+end;
+
+theorem Th75:
+  for r be Sequence of REAL
+    for y,s1,s2 be Sequence
+      for alpha be Ordinal st s1|alpha = s2|alpha &
+         x in_meets_terms s1,y,r,alpha holds
+  x in_meets_terms s2,y,r,alpha
+proof
+  let r be Sequence of REAL;
+  let y,s1,s2 be Sequence;
+  let alpha be Ordinal such that
+A1: s1|alpha = s2|alpha and
+A2: x in_meets_terms s1,y,r,alpha;
+  let beta be Ordinal,sb,yb be Surreal such that
+A3: beta in alpha & sb=s2.beta & yb = y.beta;
+  s2.beta = (s2|alpha).beta & s1.beta = (s1|alpha).beta by A3,FUNCT_1:49;
+  hence x is (sb,yb,r.beta)_term by A3,A2,A1;
+end;
+
+theorem Th76:
+  for r be Sequence of REAL
+    for y,s1,s2 be Sequence
+      for alpha be Ordinal st
+    s1.alpha is uSurreal & s2.alpha is uSurreal &
+    s1|alpha = s2|alpha &
+    s1,y,r simplest_on_position alpha &
+    s2,y,r simplest_on_position alpha
+  holds
+    s1.alpha = s2.alpha
+proof
+  let r be Sequence of REAL;
+  let y,s1,s2 be Sequence;
+  let alpha be Ordinal such that
+A1: s1.alpha is uSurreal & s2.alpha is uSurreal and
+A2: s1|alpha = s2|alpha and
+A3: s1,y,r simplest_on_position alpha &
+  s2,y,r simplest_on_position alpha and
+A4:s1.alpha <> s2.alpha;
+  reconsider s1a=s1.alpha,s2a=s2.alpha as uSurreal by A1;
+  per cases;
+  suppose alpha = 0;
+    then s1.alpha = 0_No = s2.alpha by A1,A3;
+    hence thesis by A4;
+  end;
+  suppose
+A5: alpha <>0;
+    s1a in_meets_terms s1,y,r,alpha by A3;
+    then s1a in_meets_terms s2,y,r,alpha by A2,Th75;
+    then
+A6: born s2a in born s1a by A4,A3,A5;
+    s2a in_meets_terms s2,y,r,alpha by A3;
+    then s2a in_meets_terms s1,y,r,alpha by A2,Th75;
+    hence thesis by A6,A4,A3,A5;
+  end;
+end;
+
+definition
+  let r be Sequence of REAL;
+  let y,s be Sequence;
+  let alpha be Ordinal;
+  pred s,y,r simplest_up_to alpha means
+    for beta be Ordinal st beta in alpha holds
+      s,y,r simplest_on_position beta;
+end;
+
+theorem Th77:
+for r be Sequence of REAL
+  for y be Sequence
+       for s1,s2 be uSurreal-Sequence
+           for alpha be Ordinal st
+       alpha c= dom s1 & alpha c= dom s2 &
+      s1,y,r simplest_up_to alpha &
+      s2,y,r simplest_up_to alpha
+    holds s1|alpha = s2|alpha
+proof
+  let r be Sequence of REAL;
+  let y be Sequence;
+  let s1,s2 be uSurreal-Sequence;
+  let alpha be Ordinal such that
+A1:alpha c= dom s1 & alpha c= dom s2 and
+A2:s1,y,r simplest_up_to alpha & s2,y,r simplest_up_to alpha;
+  defpred P[Ordinal]
+  means $1 in alpha implies s1.$1 = s2.$1;
+A3: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that
+A4: for C be Ordinal st C in D holds P[C];
+    assume
+A5: D in alpha;
+    then
+A6: s1,y,r simplest_on_position D &
+    s2,y,r simplest_on_position D by A2;
+A7: D c= alpha by A5,ORDINAL1:def 2;
+A8: dom (s1|D)=D = dom (s2|D) by RELAT_1:62,A5,ORDINAL1:def 2,A1;
+A9: for x be object st x in D holds (s1|D).x = (s2|D).x
+    proof
+      let x be object such that
+A10:  x in D;
+      reconsider o=x as Ordinal by A10;
+      thus (s1|D).x = s1.o by A10,FUNCT_1:49
+      .= s2.o by A7,A4,A10
+      .= (s2|D).x by A10,FUNCT_1:49;
+    end;
+    s1.D in rng s1 & s2.D in rng s2 by A1,A5,FUNCT_1:def 3;
+    then s1.D is uSurreal & s2.D is uSurreal by SURREALO:def 12;
+    hence thesis by A9,A6,A8,FUNCT_1:2,Th76;
+  end;
+A11:for D be Ordinal holds P[D] from ORDINAL1:sch 2(A3);
+A12:dom (s1|alpha)=alpha = dom (s2|alpha) by A1,RELAT_1:62;
+  for x be object st x in alpha holds (s1|alpha).x = (s2|alpha).x
+  proof
+    let x be object such that
+A13:x in alpha;
+    reconsider o=x as Ordinal by A13;
+    thus (s1|alpha).x = s1.o by A13,FUNCT_1:49
+    .= s2.o by A11,A13
+    .= (s2|alpha).x by A13,FUNCT_1:49;
+  end;
+  hence thesis by A12,FUNCT_1:2;
+end;
+
+theorem
+  for r be Sequence of REAL
+    for y,s be Sequence
+      for alpha, beta be Ordinal st beta c= alpha &
+        s,y,r simplest_up_to alpha
+  holds s,y,r simplest_up_to beta;
+
+theorem Th79:
+  for r be Sequence of REAL
+    for y,s be Sequence
+      for alpha be Ordinal holds
+  x in_meets_terms s,y,r,alpha iff x in_meets_terms (s|succ alpha),y,r,alpha
+proof
+  let r be Sequence of REAL;
+  let y,s be Sequence;
+  let alpha be Ordinal;
+  thus x in_meets_terms s,y,r,alpha implies
+  x in_meets_terms s|succ alpha,y,r,alpha
+  proof
+    assume
+A1: x in_meets_terms s,y,r,alpha;
+    let beta be Ordinal,sb,yb be Surreal such that
+A2: beta in alpha & sb = (s|succ alpha).beta & yb = y.beta;
+    beta in succ alpha by A2,ORDINAL1:8;
+    then (s|succ alpha).beta = s.beta by FUNCT_1:49;
+    hence thesis by A1,A2;
+  end;
+  assume
+A3:x in_meets_terms s|succ alpha,y,r,alpha;
+  let beta be Ordinal,sb,yb be Surreal such that
+A4:beta in alpha & sb = s.beta & yb = y.beta;
+  beta in succ alpha by A4,ORDINAL1:8;
+  then (s|succ alpha).beta = s.beta by FUNCT_1:49;
+  hence thesis by A3,A4;
+end;
+
+theorem Th80:
+  for r be Sequence of REAL
+    for y,s be Sequence
+       for alpha be Ordinal holds
+    s|succ alpha,y,r simplest_on_position alpha iff
+    s,y,r simplest_on_position alpha
+proof
+  let r be Sequence of REAL;
+  let y,s be Sequence;
+  let alpha be Ordinal;
+  per cases;
+  suppose dom s c= succ alpha;
+    hence thesis by RELAT_1:68;
+  end;
+  suppose not dom s c= succ alpha;
+    thus s|succ alpha,y,r simplest_on_position alpha implies
+    s,y,r simplest_on_position alpha
+    proof
+      assume
+A1:   s|succ alpha,y,r simplest_on_position alpha;
+      let sa be Surreal such that
+A2:   sa = s.alpha;
+A3:   (s|succ alpha).alpha = sa by ORDINAL1:6,A2,FUNCT_1:49;
+      hence 0 = alpha implies sa = 0_No by A1;
+      assume
+A4:   0 <> alpha;
+      sa in_meets_terms s|succ alpha,y,r,alpha by A1,A3;
+      hence sa in_meets_terms s,y,r,alpha by Th79;
+      let x be uSurreal such that
+A5:   x in_meets_terms s,y,r,alpha & x <> sa;
+      x in_meets_terms s|succ alpha,y,r,alpha by A5,Th79;
+      hence thesis by A4,A1,A3,A5;
+    end;
+    assume
+A6: s,y,r simplest_on_position alpha;
+    let sa be Surreal such that
+A7: sa = (s|succ alpha).alpha;
+A8: s.alpha = sa by ORDINAL1:6,A7,FUNCT_1:49;
+    hence 0 = alpha implies sa = 0_No by A6;
+    assume
+A9: 0 <> alpha;
+    sa in_meets_terms s,y,r,alpha by A6,A8;
+    hence sa in_meets_terms s|succ alpha,y,r,alpha by Th79;
+    let x be uSurreal such that
+A10: x in_meets_terms s|succ alpha,y,r,alpha &
+    x <> sa;
+    x in_meets_terms s,y,r,alpha by A10,Th79;
+    hence thesis by A9,A6,A8,A10;
+  end;
+end;
+
+theorem Th81:
+  for r be non-zero Sequence of REAL
+    for p,s be Sequence
+       for alpha be Ordinal st alpha c= dom r
+         for x,y,z be Surreal st
+    x<=y<=z & x in_meets_terms s,p,r,alpha & z in_meets_terms s,p,r,alpha
+  holds y in_meets_terms s,p,r,alpha
+proof
+  let r be non-zero Sequence of REAL;
+  let p,s be Sequence;
+  let alpha be Ordinal such that alpha c= dom r;
+  let x,y,z be Surreal such that
+A1:x<=y<=z & x in_meets_terms s,p,r,alpha &
+  z in_meets_terms s,p,r,alpha;
+  let beta be Ordinal,sb,yb be Surreal such that
+A2: beta in alpha & sb=s.beta & yb = p.beta;
+  x is (sb,yb,r.beta)_term & z is (sb,yb,r.beta)_term by A1,A2;
+  hence thesis by A1,Th74;
+end;
+
+theorem Th82:
+  for r be non-zero Sequence of REAL
+    for y be strictly_decreasing Surreal-Sequence
+      ex s be uSurreal-Sequence st
+        dom s = succ (dom r/\dom y) & s,y,r simplest_up_to dom s
+proof
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  defpred P[Ordinal] means $1 c= dom r/\dom y implies
+    ex s be uSurreal-Sequence st
+      dom s = succ $1 & s,y,r simplest_up_to dom s;
+A1: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that
+A2: for C be Ordinal st C in D holds P[C];
+    assume
+A3: D c= dom r/\dom y;
+    then
+A4: D c= dom y & D c= dom r by XBOOLE_1:18;
+    A5 :D c= dom y & D c= dom r by A3,XBOOLE_1:18;
+    per cases;
+    suppose
+A6:   D={};
+      take s = <%0_No%>;
+      thus
+A7:   dom s = succ D by A6,AFINSQ_1:def 4;
+      let A be Ordinal such that
+A8:   A in dom s;
+      let sa be Surreal;
+      assume sa = s.A;
+      hence thesis by A8,A6,A7,ORDINAL1:8;
+    end;
+    suppose
+A9:   D is limit_ordinal & D<>{};
+      defpred U[object,object] means for A be Ordinal st A=$1
+      holds $2 is uSurreal-Sequence &
+      for s be uSurreal-Sequence st s=$2 holds
+      dom s = succ A & s,y,r simplest_up_to dom s;
+A10:  for e being object st e in D ex o st U[e,o]
+      proof
+        let e be object such that
+A11:    e in D;
+        reconsider E=e as Ordinal by A11;
+        consider s be uSurreal-Sequence such that
+A12:    dom s = succ E &
+        s,y,r simplest_up_to dom s by A11,ORDINAL1:def 2,A3,A2;
+        take s;
+        thus thesis by A12;
+      end;
+      consider S be Function such that
+A13:  dom S = D &
+      for o st o in D holds U[o,S.o] from CLASSES1:sch 1(A10);
+      o in rng S implies o is Function
+      proof
+        assume o in rng S;
+        then ex a be object st a in dom S & S.a =o by FUNCT_1:def 3;
+        hence thesis by A13;
+      end;
+      then S is Function-yielding by FUNCT_1:def 13;
+      then reconsider S as Function-yielding Function;
+      deffunc S(Ordinal) = S.$1.$1;
+      consider s be Sequence such that
+A14:  dom s = D &
+      for A be Ordinal st A in D holds s.A = S(A) from ORDINAL2:sch 2;
+      rng s is uniq-surreal-membered
+      proof
+        let a be object such that
+A15:    a in rng s;
+        consider x be object such that
+A16:    x in dom s & s.x =a by A15,FUNCT_1:def 3;
+        reconsider x as Ordinal by A16;
+        reconsider Sx =S.x as uSurreal-Sequence by A16,A13,A14;
+        x in succ x = dom Sx by A16,A14,A13,ORDINAL1:6;
+        then Sx.x in rng Sx by FUNCT_1:def 3;
+        then Sx.x is uSurreal by SURREALO:def 12;
+        hence thesis by A14,A16;
+      end;
+      then reconsider s as uSurreal-Sequence by Def10;
+      defpred S[Ordinal] means $1 in D implies S.$1 = s|succ $1 &
+      s,y,r simplest_on_position $1;
+A17:  for E be Ordinal holds S[E]
+      proof
+        let E be Ordinal;
+        assume
+A18:    E in D;
+        reconsider SE =S.E as uSurreal-Sequence by A18,A13;
+A19:    succ E c= D by ORDINAL1:def 2,A18,A9,ORDINAL1:28;
+A20:    dom SE = succ E &
+        SE,y,r simplest_up_to dom SE by A18,A13;
+A21:    dom (s|succ E) = succ E by A19,RELAT_1:62,A14;
+        o in succ E implies (s|succ E).o = SE.o
+        proof
+          assume
+A22:      o in succ E;
+          then reconsider o as Ordinal;
+A23:      (s|succ E).o = s.o by A22,FUNCT_1:49;
+          per cases by A22,ORDINAL1:8;
+          suppose
+A24:        o in E;
+A25:        o in D by A18,A24,ORDINAL1:10;
+            reconsider So =S.o as uSurreal-Sequence by A25,A13;
+A26:        So.o = s.o by A14,A18,A24,ORDINAL1:10;
+A27:        dom So = succ o & So,y,r simplest_up_to dom So by A25,A13;
+A28:        dom So c= dom SE by A27,A20,A22,ORDINAL1:21;
+A29:        SE,y,r simplest_up_to dom So by A28,A20;
+            (So|succ o).o = So.o & (SE|succ o).o = SE.o
+            by ORDINAL1:6,FUNCT_1:49;
+            hence thesis by A26,A23,A27,A29,A28,Th77;
+          end;
+          suppose o = E;
+            hence thesis by A23,A14,A18;
+          end;
+        end;
+        then
+A30:    s|succ E = SE by A20,A21,FUNCT_1:2;
+        E in succ E by ORDINAL1:6;
+        hence thesis by A20,A30,Th80;
+      end;
+      then
+A31:  s,y,r simplest_up_to D;
+      defpred upper[object,object] means $2 is Surreal &
+      for A be Ordinal st A= $1
+      for sa,ya be Surreal st sa = s.succ A & ya = y.succ A holds
+      $2 = sa + uReal.(r.succ A)* No_omega^ ya +No_omega^ ya;
+A32:  for e being object st e in D ex o st upper[e,o]
+      proof
+        let e be object such that
+A33:    e in D;
+        reconsider E=e as Ordinal by A33;
+        succ E in D by A33,A9,ORDINAL1:28;
+        then y.(succ E) in rng y & s.(succ E) in rng s
+        by A4,A14,FUNCT_1:def 3;
+        then reconsider ya = y.(succ E),sa=s.(succ E) as Surreal
+        by SURREAL0:def 16;
+        take o = sa + uReal.(r.succ E)* No_omega^ ya +No_omega^ ya;
+        thus thesis;
+      end;
+      consider upp be Function such that
+A34:  dom upp = D and
+A35:  for o st o in D holds upper[o,upp.o] from CLASSES1:sch 1(A32);
+A36:  rng upp is surreal-membered
+      proof
+        let o such that
+A37:    o in rng upp;
+        ex a be object st a in dom upp & upp.a = o by A37,FUNCT_1:def 3;
+        hence thesis by A34,A35;
+      end;
+A38:  for A,B be Ordinal st A in B in D
+      for uA,uB be Surreal st uA =upp.A & uB =upp.B
+      holds uB < uA
+      proof
+        let A,B be Ordinal such that
+A39:    A in B in D;
+        let uA,uB be Surreal such that
+A40:    uA =upp.A & uB =upp.B;
+        succ B in D by A39,A9,ORDINAL1:28;
+        then y.(succ B) in rng y & s.(succ B) in rng s
+        by A4,A14,FUNCT_1:def 3;
+        then reconsider yB = y.(succ B),sB=s.(succ B) as Surreal
+        by SURREAL0:def 16;
+A41:    A in D by A39,ORDINAL1:10;
+        then succ A in D by A9,ORDINAL1:28;
+        then y.(succ A) in rng y & s.(succ A) in rng s
+        by A4,A14,FUNCT_1:def 3;
+        then reconsider yA = y.(succ A),sA=s.(succ A) as Surreal
+        by SURREAL0:def 16;
+        set NA = No_omega^ yA,NB = No_omega^ yB;
+A42:    succ B in D by A39,A9,ORDINAL1:28;
+        s,y,r simplest_on_position succ B by A31,A39,A9,ORDINAL1:28;
+        then
+A43:    sB in_meets_terms s,y,r,succ B;
+        set n = 2;
+A44:    uA = sA + uReal.(r.succ A)* NA +NA &
+        uB = sB + uReal.(r.succ B)* NB +NB by A40,A41,A39,A35;
+A45:    succ A c= B by A39,ORDINAL1:21;
+        then sB  is (sA,yA,r.succ A)_term by A43,ORDINAL1:22;
+        then |.sB - (sA + uReal.(r.succ A)*NA) .| infinitely< NA by Th73;
+        then |.sB +- (sA + uReal.(r.succ A)*NA) .| infinitely< NA * uReal.(1/n)
+        by Th13;
+        then |.sB +- (sA + uReal.(r.succ A)*NA) .| < NA * uReal.(1/n) by Th9;
+        then sB - (sA + uReal.(r.succ A)*NA) < NA * uReal.(1/n) by Th52;
+        then
+A46:    sB < NA * uReal.(1/n) + (sA + uReal.(r.succ A)*NA)
+        by SURREALR:41;
+        uReal.(r.succ B)* NB +NB = uReal.(r.succ B)* NB + uReal.1 * NB
+        by SURREALN:48;
+        then
+A47:    uReal.(r.succ B)* NB +NB == (uReal.(r.succ B) + uReal.1) * NB
+        by SURREALR:67;
+        (uReal.(r.succ B) + uReal.1) * NB == uReal.(1+r.succ B) * NB
+        by SURREALR:51,SURREALN:55;
+        then
+A48:    uReal.(r.succ B)* NB +NB == uReal.(1+r.succ B) * NB
+        by A47,SURREALO:4;
+        yB < yA by Def11,A5,A45,ORDINAL1:22,A42;
+        then NB infinitely< NA by Lm5;
+        then 0_No <=NB infinitely< NA * uReal.(1/n) by Th13,SURREALI:def 8;
+        then uReal.(1+r.succ B) * NB < NA * uReal.(1/n) by Th20;
+        then
+A49:    uReal.(r.succ B)* NB +NB < NA * uReal.(1/n)
+        by A48,SURREALO:4;
+        uB = sB + (uReal.(r.succ B)* NB +NB) by A44,SURREALR:37;
+        then
+A50:    uB <= sB + NA * uReal.(1/n) by A49,SURREALR:44;
+        sB + NA * uReal.(1/n) < NA * uReal.(1/n) + (sA + uReal.(r.succ A)*NA)
+        + NA * uReal.(1/n) by A46,SURREALR:44;
+        then
+A51:    uB < NA * uReal.(1/n) + (sA + uReal.(r.succ A)*NA)
+        + NA * uReal.(1/n) by A50,SURREALO:4;
+        1/n+1/n = 1;
+        then
+A52:    NA*(uReal.(1/n) + uReal.(1/n)) == NA *1_No =NA
+        by SURREALR:51,SURREALN:55,SURREALN:48;
+        NA*(uReal.(1/n) + uReal.(1/n)) == NA*uReal.(1/n) + NA*uReal.(1/n)
+        by SURREALR:67;
+        then
+A53:    NA == NA*uReal.(1/n) + NA*uReal.(1/n) by A52,SURREALO:4;
+        NA * uReal.(1/n) + (sA + uReal.(r.succ A)*NA) + NA * uReal.(1/n)
+        = (NA * uReal.(1/n) + NA * uReal.(1/n)) + (sA + uReal.(r.succ A)*NA)
+        == NA +(sA + uReal.(r.succ A)*NA) by SURREALR:37,A53,SURREALR:43;
+        hence thesis by A44,A51,SURREALO:4;
+      end;
+      defpred lower[object,object] means $2 is Surreal &
+      for A be Ordinal st A= $1
+        for sa,ya be Surreal st sa = s.succ A & ya = y.succ A holds
+          $2 = sa + uReal.(r.succ A)* No_omega^ ya + -No_omega^ ya;
+A54:  for e being object st e in D ex o st lower[e,o]
+      proof
+        let e be object such that
+A55:    e in D;
+        reconsider E=e as Ordinal by A55;
+        succ E in D by A55,A9,ORDINAL1:28;
+        then y.(succ E) in rng y & s.(succ E) in rng s by A4,A14,FUNCT_1:def 3;
+        then reconsider ya = y.(succ E),sa=s.(succ E) as Surreal
+        by SURREAL0:def 16;
+        take o = sa + uReal.(r.succ E)* No_omega^ ya +- No_omega^ ya;
+        thus thesis;
+      end;
+      consider low be Function such that
+A56:  dom low = D and
+A57:  for o st o in D holds lower[o,low.o] from CLASSES1:sch 1(A54);
+A58:  rng low is surreal-membered
+      proof
+        let o such that
+A59:    o in rng low;
+        ex a be object st a in dom low & low.a = o by A59,FUNCT_1:def 3;
+        hence thesis by A56,A57;
+      end;
+A60:  for A,B be Ordinal st A in B in D
+      for lA,lB be Surreal st lA =low.A & lB =low.B holds lA < lB
+      proof
+        let A,B be Ordinal such that
+A61:    A in B in D;
+        let uA,uB be Surreal such that
+A62:    uA =low.A & uB =low.B;
+A63:    succ B in D c= dom y by A3,XBOOLE_1:18,A61,A9,ORDINAL1:28;
+        y.(succ B) in rng y & s.(succ B) in rng s
+        by A63,A14,FUNCT_1:def 3;
+        then reconsider yB = y.(succ B),sB=s.(succ B) as Surreal
+        by SURREAL0:def 16;
+A64:    A in D by A61,ORDINAL1:10;
+        then succ A in D by A9,ORDINAL1:28;
+        then y.(succ A) in rng y & s.(succ A) in rng s
+        by A4,A14,FUNCT_1:def 3;
+        then reconsider yA = y.(succ A),sA=s.(succ A) as Surreal
+        by SURREAL0:def 16;
+        set NA = No_omega^ yA,NB = No_omega^ yB;
+A65:    succ B in D by A61,A9,ORDINAL1:28;
+        s,y,r simplest_on_position succ B by A31,A61,A9,ORDINAL1:28;
+        then
+A66:    sB in_meets_terms s,y,r,succ B;
+        set n = 2;
+A67:    uA = sA + uReal.(r.succ A)* NA +- NA &
+        uB = sB + uReal.(r.succ B)* NB +- NB by A62,A64,A61,A57;
+A68:    succ A c= B by A61,ORDINAL1:21;
+        then sB  is (sA,yA,r.succ A)_term by A66,ORDINAL1:22;
+        then |.sB - (sA + uReal.(r.succ A)*NA) .| infinitely< NA by Th73;
+        then |.sB +- (sA + uReal.(r.succ A)*NA) .| infinitely<
+          NA * uReal.(1/n) by Th13;
+        then |.sB +- (sA + uReal.(r.succ A)*NA) .| < NA * uReal.(1/n)
+        by Th9;
+        then -(NA * uReal.(1/n)) < sB - (sA + uReal.(r.succ A)*NA) by Th52;
+        then
+A69:    -( NA * uReal.(1/n)) + (sA + uReal.(r.succ A)*NA) < sB by SURREALR:42;
+        - uReal.(r.succ B)* NB + NB = (- uReal.(r.succ B))* NB + (uReal.1) * NB
+        by SURREALR:58,SURREALN:48;
+        then
+A70:    -uReal.(r.succ B)* NB + NB == (-uReal.(r.succ B) + uReal.1) * NB
+        by SURREALR:67;
+        - uReal.(r.succ B) == uReal.-(r.succ B) by SURREALN:56;
+        then
+A71:    -uReal.(r.succ B) + uReal.1 == uReal.(-r.succ B) + uReal.1
+        by SURREALR:43;
+        uReal.(-r.succ B) + uReal.1 == uReal.(1+-r.succ B) by SURREALN:55;
+        then - uReal.(r.succ B) + uReal.1 == uReal.(1+-r.succ B)
+        by A71,SURREALO:4;
+        then (-uReal.(r.succ B) + uReal.1) * NB == uReal.(1+-r.succ B) * NB
+        by SURREALR:51;
+        then
+A72:    -uReal.(r.succ B)* NB + NB == uReal.(1+-r.succ B) * NB
+        by A70,SURREALO:4;
+        yB < yA by A4,Def11, A68,ORDINAL1:22,A65;
+        then NB infinitely< NA by Lm5;
+        then 0_No <=NB infinitely< NA * uReal.(1/n) by Th13,SURREALI:def 8;
+        then uReal.(1+-r.succ B) * NB < NA * uReal.(1/n) by Th20;
+        then -uReal.(r.succ B)* NB + NB < NA * uReal.(1/n) by A72,SURREALO:4;
+        then
+A73:    - NA * uReal.(1/n) < -(-uReal.(r.succ B)* NB + NB)
+        = - -uReal.(r.succ B)* NB + -NB by SURREALR:10,40;
+        sB + (uReal.(r.succ B)* NB +- NB) = uB by A67,SURREALR:37;
+        then
+A74:    sB + - (NA * uReal.(1/n)) < uB by A73,SURREALR:44;
+        - (NA * uReal.(1/n)) + (sA + uReal.(r.succ A)*NA)
+        +- (NA * uReal.(1/n)) <= sB + - (NA * uReal.(1/n))
+        by A69,SURREALR:44;
+        then
+A75:    - (NA * uReal.(1/n)) + (sA + uReal.(r.succ A)*NA)
+        +- (NA * uReal.(1/n)) < uB by A74,SURREALO:4;
+        1/n+1/n = 1;
+        then
+A76:    NA*(uReal.(1/n) + uReal.(1/n)) == NA *1_No =NA
+        by SURREALN:55,48,SURREALR:51;
+        NA*(uReal.(1/n) + uReal.(1/n)) == NA*uReal.(1/n) + NA*uReal.(1/n)
+        by SURREALR:67;
+        then NA == NA*uReal.(1/n) + NA*uReal.(1/n) by A76,SURREALO:4;
+        then - NA == -(NA*uReal.(1/n) + NA*uReal.(1/n)) by SURREALR:10;
+        then
+A77:    -NA == -(NA*uReal.(1/n)) +-( NA*uReal.(1/n)) by SURREALR:40;
+        - NA * uReal.(1/n) + (sA + uReal.(r.succ A)*NA) + - NA * uReal.(1/n)
+        = (-NA * uReal.(1/n) + - NA * uReal.(1/n)) + (sA + uReal.(r.succ A)*NA)
+        == - NA +(sA + uReal.(r.succ A)*NA)
+        by SURREALR:37,A77,SURREALR:43;
+        hence thesis by A75,A67,SURREALO:4;
+      end;
+A78:  for A be Ordinal st A in D
+      for lA,uA be Surreal st lA =low.A & uA =upp.A holds lA < uA
+      proof
+        let A be Ordinal such that
+A79:    A in D;
+        let lA,uA be Surreal such that
+A80:    lA =low.A & uA =upp.A;
+        succ A in D by A79,A9,ORDINAL1:28;
+        then y.(succ A) in rng y & s.(succ A) in rng s
+        by A4,A14,FUNCT_1:def 3;
+        then reconsider yA = y.(succ A),sA=s.(succ A) as Surreal
+        by SURREAL0:def 16;
+        set NA = No_omega^ yA;
+A81:    lA = sA + uReal.(r.succ A)* NA +- NA &
+        uA = sA + uReal.(r.succ A)* NA + NA by A79,A80,A57,A35;
+        -NA <= -0_No = 0_No by SURREALI:def 8,SURREALR:10;
+        then -NA < NA by SURREALI:def 8,SURREALO:4;
+        hence thesis by A81,SURREALR:44;
+      end;
+A82:  rng low << rng upp
+      proof
+        let l,u be Surreal such that
+A83:    l in rng low & u in rng upp;
+        consider A be object such that
+A84:    A in dom low & low.A = l by A83,FUNCT_1:def 3;
+        consider B be object such that
+A85:    B in dom upp & upp.B = u by A83,FUNCT_1:def 3;
+        reconsider A,B as Ordinal by A84,A85,A56,A34;
+        reconsider lowB =low.B,uppA=upp.A as Surreal
+        by A84,A85,A56,A57,A34,A35;
+        per cases by ORDINAL1:14;
+        suppose A=B;
+          hence thesis by A84,A85,A78,A56;
+        end;
+        suppose A in B;
+          then l < lowB <= u by A60,A84,A85,A34,A78;
+          hence thesis by SURREALO:4;
+        end;
+        suppose B in A;
+          then l <= uppA < u by A38,A84,A85,A56,A78;
+          hence thesis by SURREALO:4;
+        end;
+      end;
+      consider M be Ordinal such that
+A86:  for o st o in rng low \/ rng upp
+      ex A be Ordinal st A in M & o in Day A by A36,A58,SURREAL0:47;
+      [rng low,rng upp] in Day M by A82,A86,SURREAL0:46;
+      then reconsider rLU =[rng low,rng upp] as Surreal;
+      defpred Simpl[Surreal] means $1 in_meets_terms s,y,r,D;
+      rLU in_meets_terms s,y,r,D
+      proof
+        let A be Ordinal,sb,yb be Surreal such that
+A87:    A in D & sb=s.A & yb = y.A;
+        reconsider lowA =low.A,uppA=upp.A as Surreal by A87,A57,A35;
+A88:    succ A in D by A87,A9,ORDINAL1:28;
+        then y.(succ A) in rng y & s.(succ A) in rng s
+        by A4,A14,FUNCT_1:def 3;
+        then reconsider yA = y.(succ A),sA=s.(succ A) as Surreal
+        by SURREAL0:def 16;
+        set NA = No_omega^ yA;
+A89:    lowA = sA + uReal.(r.succ A)* NA +- NA &
+        uppA = sA + uReal.(r.succ A)* NA + NA by A87,A57,A35;
+A90:    r.A in rng r by A87,A4,FUNCT_1:def 3;
+        s,y,r simplest_on_position succ A by A31,A87,A9,ORDINAL1:28;
+        then
+A91:    sA in_meets_terms s,y,r,succ A;
+        sA is (sb,yb,r.A)_term by ORDINAL1:6,A87,A91;
+        then
+A92:    |. sA - (sb + uReal.(r.A)* No_omega^ yb).| infinitely<
+        No_omega^yb by Th73;
+        yA < yb by ORDINAL1:6,A88,A87,Def11,A5;
+        then
+A93:    NA infinitely< No_omega^ yb by Lm5;
+A94:    lowA in rng low & uppA in rng upp by A87,A56,A34,FUNCT_1:def 3;
+A95:    L_rLU << {rLU} << R_rLU & rLU in {rLU}
+        by SURREALO:11,TARSKI:def 1;
+        then - rLU < -(sA + uReal.(r.succ A)* NA +- NA) by A94,A89,SURREALR:10;
+        then
+A96:    - rLU + (sb + uReal.(r.A)* No_omega^ yb)
+        <= -(sA + uReal.(r.succ A)* NA +- NA)+(sb + uReal.(r.A)* No_omega^ yb)
+        by SURREALR:44;
+A97:    - rLU + (sb + uReal.(r.A)* No_omega^ yb) =
+        - rLU + - - (sb + uReal.(r.A)* No_omega^ yb)
+        .= - (rLU + - (sb + uReal.(r.A)* No_omega^ yb)) by SURREALR:40;
+A98:    -(sA + uReal.(r.succ A)* NA +- NA)+
+        (sb + uReal.(r.A)* No_omega^ yb)
+        =(-(sA + uReal.(r.succ A)* NA) +- -NA)+(sb+ uReal.(r.A)* No_omega^ yb)
+        by SURREALR:40
+        .= ((-sA+-(uReal.(r.succ A)* NA) + NA))+(sb+uReal.(r.A)* No_omega^ yb)
+        by SURREALR:40
+        .= -sA+(-(uReal.(r.succ A)* NA)+NA)+(sb+uReal.(r.A)* No_omega^ yb)
+        by SURREALR:37
+        .= -sA +- - (sb + uReal.(r.A)* No_omega^ yb)
+        + (- (uReal.(r.succ A)* NA) + NA) by SURREALR:37
+        .= -(sA +- (sb + uReal.(r.A)* No_omega^ yb)) +
+        (- (uReal.(r.succ A)* NA) + NA) by SURREALR:40;
+A99:   0_No <= NA by SURREALI:def 8;
+        then
+A100:   NA = |.NA.| by Def6;
+A101:   |.uReal.(r.succ A)* NA.| infinitely< No_omega^ yb
+        by A93,A99,Th53;
+        then |. (NA+ uReal.(r.succ A)* NA).| infinitely< No_omega^ yb
+        by A93,Th41,A100;
+        then
+A102:   |.(sA +- (sb + uReal.(r.A)* No_omega^ yb))
+        + (NA+ uReal.(r.succ A)* NA).|
+        infinitely< No_omega^ yb by A92,Th41;
+A103:   |.-(sA +- (sb + uReal.(r.A)* No_omega^ yb)).| infinitely<
+        No_omega^yb by A92,Th42;
+        |. (NA- uReal.(r.succ A)* NA).| infinitely< No_omega^ yb
+        by A93,Th43,A100,A101;
+        then
+A104:   |.-(sA +- (sb + uReal.(r.A)* No_omega^ yb))
+        + (NA+- uReal.(r.succ A)* NA) .| infinitely< No_omega^yb by A103,Th41;
+        -(sA +- (sb + uReal.(r.A)* No_omega^ yb))
+        + (NA+- uReal.(r.succ A)* NA) infinitely< No_omega^yb
+        by Th34,Th11,A104;
+        then
+A105:   - (rLU + - (sb + uReal.(r.A)* No_omega^ yb))
+        infinitely< No_omega^yb by A97,A96,A98,Th11;
+A106:   rLU +- (sb + uReal.(r.A)* No_omega^ yb) <=
+        sA + uReal.(r.succ A)* NA + NA +- (sb + uReal.(r.A)* No_omega^ yb)
+        by A94,A95,A89,SURREALR:44;
+A107:   sA + uReal.(r.succ A)* NA + NA +-
+        (sb + uReal.(r.A)* No_omega^ yb)=
+        sA + (uReal.(r.succ A)* NA + NA) +- (sb + uReal.(r.A)* No_omega^ yb)
+        by SURREALR:37
+        .= sA +- (sb + uReal.(r.A)* No_omega^ yb) + (NA+ uReal.(r.succ A)* NA)
+        by SURREALR:37;
+        (sA +- (sb + uReal.(r.A)* No_omega^ yb)) + (NA+ uReal.(r.succ A)* NA)
+        infinitely< No_omega^ yb by Th34,A102,Th11;
+        then rLU +- (sb + uReal.(r.A)* No_omega^ yb) infinitely< No_omega^ yb
+        by A107,A106,Th11;
+        then |. rLU-(sb+uReal.(r.A)* No_omega^ yb).| infinitely< No_omega^yb
+        by Def6,A105;
+        hence rLU is (sb,yb,r.A)_term by A90,Th73;
+      end;
+      then
+A108: ex x be Surreal st Simpl[x];
+A109: for x,y,z be Surreal st x <= y <= z & Simpl[x] & Simpl[z]
+      holds Simpl[y] by Th81,A3,XBOOLE_1:18;
+      consider sD be uSurreal such that
+A110: Simpl[sD] and
+A111: for x be uSurreal st Simpl[x] & x <> sD holds born sD in born x
+      from Simplest(A108,A109);
+      take ssD=s^<%sD%>;
+A112: dom <%sD%> = 1 by AFINSQ_1:def 4;
+      then dom ssD = (dom s)+^ 1 by ORDINAL4:def 1;
+      hence
+A113: dom ssD = succ D by A14,ORDINAL2:31;
+      let B be Ordinal such that
+A114: B in dom ssD;
+A115: dom s = dom ssD/\dom s by ORDINAL7:1,A14,A113;
+      for o be object st o in dom s holds s.o = ssD.o by ORDINAL4:def 1;
+      then
+A116: ssD|D = s by A115,FUNCT_1:46,A14;
+A117: s|D = s by A14;
+      per cases by A113,A114,ORDINAL1:8;
+      suppose
+A118:   B = D;
+        ssD,y,r simplest_on_position D
+        proof
+          let sa be Surreal such that
+A119:     sa = ssD.D;
+          0 in dom <%sD%> by A112,TARSKI:def 1,CARD_1:49;
+          then ssD.(D+^0) = <%sD%>.0 = sD by A14,ORDINAL4:def 1;
+          then
+A120:     sa = sD by A119,ORDINAL2:27;
+          thus 0 = D implies sa = 0_No by A9;
+          assume 0<>D;
+          thus sa in_meets_terms ssD,y,r,D by A110,A116,A117,Th75,A120;
+          let x be uSurreal;
+          thus thesis by A116,A117,Th75,A111,A120;
+        end;
+        hence thesis by A118;
+      end;
+      suppose
+A121:   B in D;
+        then
+A122:   s|succ B,y,r simplest_on_position B by A17,Th80;
+        ssD|succ B = s|succ B by A121,ORDINAL1:21,A116,RELAT_1:74;
+        hence thesis by A122,Th80;
+      end;
+    end;
+    suppose not D is limit_ordinal;
+      then consider d be Ordinal such that
+A123: D = succ d by ORDINAL1:29;
+A124: d in D by A123,ORDINAL1:6;
+      consider s be uSurreal-Sequence such that
+A125: dom s = succ d and
+A126: s,y,r simplest_up_to dom s by ORDINAL1:def 2,A124,A2,A3;
+      d in dom r & d in dom y by A124,XBOOLE_0:def 4,A3;
+      then
+A127: r.d in rng r & y.d in rng y by FUNCT_1:def 3;
+      then reconsider yd = y.d as Surreal by SURREAL0:def 16;
+      s.d in rng s by A125,A123,A124,FUNCT_1:def 3;
+      then reconsider sd=s.d as uSurreal by SURREALO:def 12;
+      set c = sd + uReal.(r.d)* No_omega^ yd;
+      s,y,r simplest_on_position d by A126,ORDINAL1:6,A125;
+      then
+A128: (0 = d implies sd = 0_No) &
+      (0 <> d implies sd in_meets_terms s,y,r,d &
+      for x be uSurreal st x in_meets_terms s,y,r,d & x <> sd
+      holds born sd in born x);
+      defpred Simpl[Surreal] means $1 in_meets_terms s,y,r,D;
+      c in_meets_terms s,y,r,D
+      proof
+        let b be Ordinal,sb,yb be Surreal such that
+A129:   b in D & sb=s.b & yb = y.b;
+A130:   b c= d by A129,A123,ORDINAL1:22;
+        per cases;
+        suppose b=d;
+          hence thesis by A127,Th69,A129;
+        end;
+        suppose b<>d;
+          then
+A131:     b in d by ORDINAL1:11,A130,XBOOLE_0:def 8;
+A132:     sd is (sb,yb,r.b)_term by A131,A129,A128;
+A133:     r.b in rng r by A129,A4,FUNCT_1:def 3;
+A134:     |. sd - (sb + uReal.(r.b)* No_omega^ yb).|
+          infinitely< No_omega^yb by A132,Th73;
+A135:     No_omega^ yd infinitely< No_omega^yb
+          by Th25,A129,Def11,A5,A131,A124;
+          |.uReal.(r.d)* No_omega^ yd.| infinitely< No_omega^yb
+          by A127,Th66,A135,Th15;
+          then
+A136:     |.sd +- (sb + uReal.(r.b)* No_omega^ yb).| +
+          |.uReal.(r.d)* No_omega^ yd.|
+          infinitely< No_omega^yb by A134,Th18;
+          (sd + uReal.(r.d)* No_omega^ yd) +- (sb + uReal.(r.b)* No_omega^ yb)
+          = sd +- (sb + uReal.(r.b)* No_omega^ yb) + uReal.(r.d)* No_omega^ yd
+          by SURREALR:37;
+          then |. c - (sb + uReal.(r.b)* No_omega^ yb).|
+          infinitely< No_omega^yb by Th11, A136,Th37;
+          hence thesis by A133,Th73;
+        end;
+      end;
+      then
+A137: ex x be Surreal st Simpl[x];
+A138: for x,y,z be Surreal st x <= y <= z & Simpl[x] & Simpl[z]
+      holds Simpl[y] by Th81,A3,XBOOLE_1:18;
+      consider sD be uSurreal such that
+A139: Simpl[sD] and
+A140: for x be uSurreal st Simpl[x] & x <> sD holds born sD in born x
+      from Simplest(A137,A138);
+      take ssD=s^<%sD%>;
+A141: dom <%sD%> = 1 by AFINSQ_1:def 4;
+      then dom ssD = (dom s)+^ 1 by ORDINAL4:def 1;
+      hence
+A142: dom ssD = succ D by A125,A123,ORDINAL2:31;
+      let B be Ordinal such that
+A143: B in dom ssD;
+A144: dom s = dom ssD/\dom s by ORDINAL7:1,A125,A123,A142;
+      for o be object st o in dom s holds s.o = ssD.o by ORDINAL4:def 1;
+      then
+A145: ssD|D = s by A144,FUNCT_1:46,A125,A123;
+A146: s|D = s by A125,A123;
+      per cases by A142,A143,ORDINAL1:8;
+      suppose
+A147:   B = D;
+        ssD,y,r simplest_on_position D
+        proof
+          let sa be Surreal such that
+A148:     sa = ssD.D;
+          0 in dom <%sD%> by A141,TARSKI:def 1,CARD_1:49;
+          then ssD.(D+^0) = <%sD%>.0 = sD by A125,A123,ORDINAL4:def 1;
+          then
+A149:     sa = sD by A148,ORDINAL2:27;
+          thus 0 = D implies sa = 0_No by A123;
+          assume 0<>D;
+          thus sa in_meets_terms ssD,y,r,D by A149,A139,A145,A146,Th75;
+          let x be uSurreal such that
+A150:     x in_meets_terms ssD,y,r,D & x <> sa;
+          thus born sa in born x by A140,A149,A150,A145,A146,Th75;
+        end;
+        hence thesis by A147;
+      end;
+      suppose
+A151:   B in D;
+        then
+A152:   s|succ B,y,r simplest_on_position B by A125,A126,A123,Th80;
+        ssD|succ B = s|succ B by A151,ORDINAL1:21,A145,RELAT_1:74;
+        hence thesis by A152,Th80;
+      end;
+    end;
+  end;
+  for D be Ordinal holds P[D] from ORDINAL1:sch 2(A1);
+  hence thesis;
+end;
+
+definition
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  func Partial_Sums(r,y) -> uSurreal-Sequence means :Def17:
+     dom it = succ (dom r/\dom y) &
+     for A st A in dom it holds it,y,r simplest_on_position A;
+  existence
+  proof
+    consider s be uSurreal-Sequence such that
+A1: dom s = succ (dom r/\dom y) &
+    s,y,r simplest_up_to dom s by Th82;
+    take s;
+    thus dom s = succ (dom r/\dom y) by A1;
+    thus thesis by A1;
+  end;
+  uniqueness
+  proof
+    let P1,P2 be uSurreal-Sequence such that
+A2: dom P1 = succ (dom r/\dom y) &
+    for A st A in dom P1 holds P1,y,r simplest_on_position A and
+A3: dom P2 = succ (dom r/\dom y) &
+    for A st A in dom P2 holds P2,y,r simplest_on_position A;
+    P1,y,r simplest_up_to dom P1 & P2,y,r simplest_up_to dom P2 by A2,A3;
+    then P1| dom P1 = P2|dom P2 by A2,A3,Th77;
+    hence thesis;
+  end;
+end;
+
+definition
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  func Sum(r,y) -> uSurreal equals
+    Partial_Sums(r,y). (dom r/\dom y);
+  coherence
+  proof
+    set D= dom r/\dom y;
+    D in succ D by ORDINAL1:6;
+    then D in dom Partial_Sums(r,y) by Def17;
+    then
+A1: Partial_Sums(r,y).D in rng Partial_Sums(r,y) by FUNCT_1:def 3;
+    rng Partial_Sums(r,y) is uniq-surreal-membered;
+    hence thesis by A1;
+  end;
+end;
+
+registration
+  let s be strictly_decreasing Surreal-Sequence;
+  let A be Ordinal;
+  cluster s|A -> strictly_decreasing;
+  coherence
+  proof
+    let a,b be Ordinal such that
+A1: a in b in dom (s|A);
+    let sa,sb be Surreal such that
+A2: sa=(s|A).a & sb=(s|A).b;
+A3: sa = s.a & sb = s.b by A1,ORDINAL1:10,A2,FUNCT_1:47;
+    a in b in dom s by A1,RELAT_1:57;
+    hence thesis by A3,Def11;
+  end;
+end;
+
+registration
+  let R be non-zero Relation;
+  let X be set;
+  cluster R|X -> non-zero;
+  coherence
+  proof
+    rng (R|X) c= rng R by RELAT_1:70;
+    hence thesis;
+  end;
+end;
+
+theorem Th83:
+  for r be Sequence of REAL
+    for y,s be Sequence
+       for A,B be Ordinal st A c= B holds
+         x in_meets_terms s,y,r,A iff x in_meets_terms s,y|B,r|B,A
+proof
+  let r be Sequence of REAL;
+  let y,s be Sequence;
+  let alpha,B be Ordinal such that
+A1: alpha c= B;
+  thus x in_meets_terms s,y,r,alpha implies x in_meets_terms s,y|B,r|B,alpha
+  proof
+    assume
+A2: x in_meets_terms s,y,r,alpha;
+    let beta be Ordinal,sb,yb be Surreal such that
+A3: beta in alpha & sb = s.beta & yb = (y|B).beta;
+    (r|B).beta = r.beta & yb = y.beta by A1,A3,FUNCT_1:49;
+    hence thesis by A2,A3;
+  end;
+  assume
+A4:x in_meets_terms s,y|B,r|B,alpha;
+  let beta be Ordinal,sb,yb be Surreal such that
+A5:beta in alpha & sb = s.beta & yb = y.beta;
+  (r|B).beta = r.beta & yb = (y|B).beta by A5,A1,FUNCT_1:49;
+  hence thesis by A4,A5;
+end;
+
+theorem Th84:
+  for r be Sequence of REAL for y,s be Sequence
+      for A,B be Ordinal st B c= A holds
+   s,y|A,r|A simplest_on_position B iff s,y,r simplest_on_position B
+proof
+  let r be Sequence of REAL;
+  let y,s be Sequence;
+  let A,B be Ordinal such that
+A1: B c= A;
+  thus s,y|A,r|A simplest_on_position B implies s,y,r simplest_on_position B
+  proof
+    assume
+A2: s,y|A,r|A simplest_on_position B;
+    let sa be Surreal such that
+A3: sa = s.B;
+    thus 0 = B implies sa = 0_No by A3,A2;
+    assume
+A4: B<>0;
+    sa in_meets_terms s,y|A,r|A,B by A3,A2;
+    hence sa in_meets_terms s,y,r,B by A1,Th83;
+    let x be uSurreal;
+    assume
+A5: x in_meets_terms s,y,r,B & x <> sa;
+    then x in_meets_terms s,y|A,r|A,B by A1,Th83;
+    hence thesis by A2,A3,A4,A5;
+  end;
+  assume
+A6: s,y,r simplest_on_position B;
+  let sa be Surreal such that
+A7: sa = s.B;
+  thus 0 = B implies sa = 0_No by A7,A6;
+  assume
+A8: B<>0;
+  sa in_meets_terms s,y,r,B by A7,A6;
+  hence sa in_meets_terms s,y|A,r|A,B by A1,Th83;
+  let x be uSurreal;
+  assume
+A9: x in_meets_terms s,y|A,r|A,B & x <> sa;
+  then x in_meets_terms s,y,r,B by A1,Th83;
+  hence thesis by A6,A7,A8,A9;
+end;
+
+theorem Th85:
+  for r be non-zero Sequence of REAL
+    for y be strictly_decreasing Surreal-Sequence
+      for A be Ordinal holds
+  Partial_Sums(r,y)|succ A = Partial_Sums(r|A,y|A)
+proof
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  let A be Ordinal;
+A1: dom Partial_Sums(r,y) = succ (dom r/\dom y) by Def17;
+  then
+A2:dom(Partial_Sums(r,y)|succ A) = succ(dom r/\dom y)/\succ A
+  by RELAT_1:61;
+  dom (r|A) = dom r /\ A & dom (y|A) = dom y /\ A by RELAT_1:61;
+  then
+A3: dom (r|A)/\dom (y|A) = (A/\dom r) /\ dom y /\ A by XBOOLE_1:16
+  .= A/\(dom r /\ dom y) /\ A by XBOOLE_1:16
+  .= (dom r /\ dom y) /\ (A/\A) by XBOOLE_1:16
+  .= (dom r /\ dom y) /\ A;
+A4: succ(dom r/\dom y)/\succ A = succ (dom (r|A)/\dom (y|A))
+  proof
+    per cases by ORDINAL1:16;
+    suppose
+A5:   dom r /\ dom y c= A;
+      then
+A6:   (dom r /\ dom y) /\ A = dom r /\ dom y by XBOOLE_1:28;
+      (dom r /\ dom y) in succ A by A5,ORDINAL1:22;
+      hence thesis by A6,A3,XBOOLE_1:28,ORDINAL1:21;
+    end;
+    suppose
+A7:   A in (dom r /\ dom y);
+      then
+A8:   A c= (dom r /\ dom y) by ORDINAL1:def 2;
+A9:   (dom r /\ dom y) /\A = A by A7,ORDINAL1:def 2,XBOOLE_1:28;
+      A in succ (dom r /\ dom y) by A8,ORDINAL1:22;
+      hence thesis by A9,A3,XBOOLE_1:28,ORDINAL1:21;
+    end;
+  end;
+  (Partial_Sums(r,y)|succ A), y|A,r|A simplest_up_to
+     dom (Partial_Sums(r,y)|succ A)
+  proof
+    let B be Ordinal such that
+A10:B in dom (Partial_Sums(r,y)|succ A);
+A11: succ B c= succ A & B c= A by A10,ORDINAL1:21,22;
+A12: (Partial_Sums(r,y)|succ A)|succ B = Partial_Sums(r,y)|succ B
+    by RELAT_1:74,A10,ORDINAL1:21;
+A13: B in dom Partial_Sums(r,y) by A1,A10,A2,XBOOLE_0:def 4;
+    Partial_Sums(r,y),y,r simplest_on_position B by A13,Def17;
+    then Partial_Sums(r,y),y|A,r|A simplest_on_position B by A11,Th84;
+    then Partial_Sums(r,y)|succ B,y|A,r|A simplest_on_position B by Th80;
+    hence (Partial_Sums(r,y)|succ A),y|A,r|A simplest_on_position B
+    by A12,Th80;
+  end;
+  hence thesis by A4,A1,RELAT_1:61,Def17;
+end;
+
+begin :: Conway Names for Surreal Numbers
+
+definition
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  let alpha be Ordinal;
+  let x be Surreal;
+  pred r,y,alpha name_like x means
+    alpha c= dom r = dom y &
+     for beta be Ordinal st beta in alpha
+         for Pb be Surreal st Pb = Partial_Sums(r,y).beta holds
+            not x == Pb &
+            r.beta = omega-r (x - Pb) &
+            y.beta = omega-y (x - Pb);
+end;
+
+theorem Th86:
+  for r be non-zero Sequence of REAL
+    for y be strictly_decreasing Surreal-Sequence
+      for alpha,beta be Ordinal st alpha c= beta & r,y,beta name_like x
+  holds r,y,alpha name_like x by XBOOLE_1:1;
+
+theorem Th87:
+  for r1,r2 be non-zero Sequence of REAL,
+       y1,y2 be strictly_decreasing Surreal-Sequence,
+       A be Ordinal
+    st r1,y1,A name_like x & r2,y2,A name_like x
+  holds r1|A = r2|A & y1|A = y2|A
+proof
+  let r1,r2 be non-zero Sequence of REAL,
+       y1,y2 be strictly_decreasing Surreal-Sequence,
+       A be Ordinal such that
+A1: r1,y1,A name_like x and
+A2: r2,y2,A name_like x;
+  defpred P[Ordinal] means
+    r1,y1,$1 name_like x & r2,y2,$1 name_like x implies
+      r1|$1 = r2|$1 & y1|$1 = y2|$1;
+A3: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that
+A4: for C be Ordinal st C in D holds P[C];
+    assume
+A5: r1,y1,D name_like x & r2,y2,D name_like x;
+A6: dom (r1|D) = D = dom (r2|D) &
+    dom (y1|D) = D = dom (y2|D) by A5,RELAT_1:62;
+A7: o in D implies (r1|D).o = (r2|D) .o & (y1|D).o = (y2|D) .o
+    proof
+      assume
+A8:   o in D;
+      then reconsider o as Ordinal;
+A9:   r1.o = (r1|D).o & r2.o = (r2|D).o &
+      y1.o = (y1|D).o & y2.o = (y2|D).o by A8,FUNCT_1:49;
+A10:  P[o] by A8,A4;
+      o c= dom r1 /\ dom y1 by A5,A8,ORDINAL1:def 2;
+      then o in succ (dom r1 /\ dom y1) by ORDINAL1:22;
+      then o in dom Partial_Sums(r1,y1) by Def17;
+      then Partial_Sums(r1,y1).o in rng Partial_Sums(r1,y1) by FUNCT_1:def 3;
+      then reconsider Po1=Partial_Sums(r1,y1).o as uSurreal
+        by SURREALO:def 12;
+      o c= dom r2 /\ dom y2 by A5,A8,ORDINAL1:def 2;
+      then o in succ (dom r2 /\ dom y2) by ORDINAL1:22;
+      then o in dom Partial_Sums(r2,y2) by Def17;
+      then Partial_Sums(r2,y2).o in rng Partial_Sums(r2,y2) by FUNCT_1:def 3;
+      then reconsider Po2=Partial_Sums(r2,y2).o as uSurreal
+        by SURREALO:def 12;
+A11:  Po1 = (Partial_Sums(r1,y1)|succ o).o
+        by FUNCT_1:49,ORDINAL1:6
+        .= Partial_Sums(r2|o,y2|o).o by Th85,A8,ORDINAL1:def 2,A10,A5,Th86
+        .=(Partial_Sums(r2,y2)|succ o).o by Th85
+        .= Po2 by ORDINAL1:6,FUNCT_1:49;
+      r1.o = omega-r (x - Po1) & y1.o = omega-y (x - Po1) &
+      r2.o = omega-r (x - Po2) & y2.o = omega-y (x - Po2) by A8,A5;
+      hence thesis by A11,A9;
+    end;
+    then o in D implies (r1|D).o = (r2|D) .o;
+    hence r1|D = r2|D by A6,FUNCT_1:2;
+    o in D implies (y1|D).o = (y2|D) .o by A7;
+    hence thesis by A6,FUNCT_1:2;
+  end;
+  for D be Ordinal holds P[D] from ORDINAL1:sch 2(A3);
+  hence thesis by A1,A2;
+end;
+
+theorem Th88:
+  for r be non-zero Sequence of REAL,
+       y be strictly_decreasing Surreal-Sequence,
+       A be Ordinal st r,y,A name_like x
+    holds x in_meets_terms Partial_Sums(r,y),y,r,A
+proof
+  let r be non-zero Sequence of REAL,
+  y be strictly_decreasing Surreal-Sequence,
+  A be Ordinal such that
+A1: r,y,A name_like x;
+  set s=Partial_Sums(r,y);
+  let beta be Ordinal,sb,yb be Surreal such that
+A2:  beta in A & sb=s.beta & yb = y.beta;
+A3: not x == sb & r.beta = omega-r (x - sb) &
+  y.beta = omega-y (x - sb) by A2,A1;
+A4: not x - sb == 0_No by A2,A1,SURREALR:47;
+  then
+A5: |.x - sb - No_omega^ yb* uReal.(r.beta).|
+  infinitely< |.x - sb.| by A2,A3,Def8;
+  |.x + - sb.|, No_omega^ yb are_commensurate by A2,A3,A4,Def7;
+  then
+A6: |.x - sb - No_omega^ yb* uReal.(r.beta).|
+  infinitely< No_omega^ yb by A5,Th16;
+A7: x - sb - No_omega^ yb* uReal.(r.beta) =
+  x + (- sb - No_omega^ yb* uReal.(r.beta)) by SURREALR:37
+  .= x -(sb +No_omega^ yb* uReal.(r.beta)) by SURREALR:40;
+  r.beta in rng r by A2,A1,FUNCT_1:def 3;
+  hence thesis by A6,A7,Th73;
+end;
+
+theorem Th89:
+  for r be non-zero Sequence of REAL,
+    y be strictly_decreasing Surreal-Sequence
+  holds Sum(r,y) in_meets_terms Partial_Sums(r,y),y,r,dom r/\dom y
+proof
+  let r be non-zero Sequence of REAL,
+    y be strictly_decreasing Surreal-Sequence;
+    dom r/\dom y in succ(dom r/\dom y) by ORDINAL1:6;
+    then
+A1: dom r/\dom y in dom Partial_Sums(r,y) by Def17;
+    Partial_Sums(r,y),y,r simplest_on_position dom r/\dom y by A1,Def17;
+    hence thesis;
+end;
+
+theorem Th90:
+  for r be non-zero Sequence of REAL,
+    y be Sequence, s be Surreal-Sequence
+  for A,B be Ordinal st B in A c= dom r/\dom y & A c= dom s
+    for yb be Surreal st yb = y.B &
+      x in_meets_terms s,y,r,A & z in_meets_terms s,y,r,A
+  holds |.x - z.| infinitely< No_omega^ yb
+proof
+  let r be non-zero Sequence of REAL, y be Sequence,
+      s be Surreal-Sequence;
+  let A,B be Ordinal such that
+A1: B in A c= dom r/\dom y & A c= dom s;
+  let yb be Surreal such that
+A2: yb = y.B and
+A3: x in_meets_terms s,y,r,A & z in_meets_terms s,y,r,A;
+  s.B in rng s by A1,FUNCT_1:def 3;
+  then reconsider sB=s.B as Surreal by SURREAL0:def 16;
+  set S = sB + uReal.(r.B)* No_omega^ yb;
+  x is (sB,yb,r.B)_term & z is (sB,yb,r.B)_term by A1,A2,A3;
+  then |. x - S.| infinitely< No_omega^yb &
+  |. z - S.| infinitely< No_omega^yb by Th73;
+  then
+A4: |. x - S -(z - S) .| infinitely< No_omega^yb by Th43;
+A5: (-S) -(-S) ==0_No by SURREALR:39;
+  x +- S + -(z +- S) = x +- S + (- -S +- z) by SURREALR:40
+  .= x +- S + - -S +- z by SURREALR:37
+  .= x + (- S + - -S) +- z by SURREALR:37
+  .= (- S + - -S) +(- z +x) by SURREALR:37;
+  then x - S -(z - S) == (x- z)+0_No = x-z by A5,SURREALR:43;
+  then |. x - S + -(z - S) .| == |. x-z .| by Th48;
+  hence thesis by Th11,A4;
+end;
+
+theorem
+  for r be non-zero Sequence of REAL
+    for y be strictly_decreasing Surreal-Sequence
+      for alpha be Ordinal st r,y,alpha name_like x
+  holds r|alpha,y|alpha,alpha name_like x
+proof
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  let A be Ordinal such that
+A1: r,y,A name_like x;
+A2: dom (r|A) = A & dom (y|A) = A by A1,RELAT_1:62;
+  thus A c= dom (r|A) = dom (y|A) by A2;
+  let B be Ordinal such that
+A3: B in A;
+  let Pb be Surreal such that
+A4: Pb = Partial_Sums(r|A,y|A).B;
+A5: Partial_Sums(r|A,y|A) = Partial_Sums(r,y)|succ A by Th85;
+  B in succ A by A3,ORDINAL1:8;
+  then Pb = Partial_Sums(r,y).B by A4,A5,FUNCT_1:49;
+  then not x == Pb & r.B = omega-r (x - Pb) &
+  y.B = omega-y (x - Pb) by A1,A3;
+  hence thesis by A3,FUNCT_1:49;
+end;
+
+theorem Th92:
+  for r be non-zero Sequence of REAL,
+       y be strictly_decreasing Surreal-Sequence st
+       z in_meets_terms Partial_Sums(r,y),y,r,dom r/\dom y &
+  not z == Sum(r,y)
+     for A be Ordinal,yA be Surreal st A in dom r/\dom y & yA = y.A holds
+         omega-y ( Sum(r,y) - z) < yA
+proof
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  set s = Partial_Sums(r,y),D=dom r/\dom y;
+  assume that
+A1: z in_meets_terms s,y,r,D and
+A2: not z == Sum(r,y);
+  let A be Ordinal,yA be Surreal;
+  assume
+A3: A in D & yA=y.A;
+A4: not Sum(r,y) - z == 0_No by SURREALR:47,A2;
+A5: Sum(r,y) in_meets_terms s,y,r,D by Th89;
+  dom Partial_Sums(r,y) =succ D by Def17;
+  then
+A6: |.Sum(r,y) -z.| infinitely< No_omega^ yA
+  by XBOOLE_1:7,A5,A3,A1,Th90;
+  |.Sum(r,y) +-z.|, No_omega^ omega-y (Sum(r,y) +-z) are_commensurate
+  by A4,Def7;
+  then No_omega^ omega-y (Sum(r,y) +-z) < No_omega^ yA by Th9,A6,Th15;
+  hence thesis by Lm5;
+end;
+
+theorem
+  for r be non-zero Sequence of REAL,
+      y be strictly_decreasing Surreal-Sequence
+    for A be Ordinal st A c= dom r /\ dom y
+    holds Partial_Sums(r,y).A = Sum(r|A,y|A)
+proof
+  let r be non-zero Sequence of REAL,
+      y be strictly_decreasing Surreal-Sequence;
+  let A be Ordinal such that
+A1: A c= dom r /\ dom y;
+  dom (r|A) = dom r /\ A & dom (y|A) = dom y /\ A by RELAT_1:61;
+  then
+A2: dom (r|A)/\dom (y|A) = (A/\dom r) /\ dom y /\A by XBOOLE_1:16
+  .= A/\(dom r /\ dom y) /\A by XBOOLE_1:16
+  .= (dom r /\ dom y) /\(A/\A) by XBOOLE_1:16
+  .= A by A1,XBOOLE_1:28;
+  thus Partial_Sums(r,y).A = (Partial_Sums(r,y)|succ A).A
+  by ORDINAL1:6,FUNCT_1:49
+  .= Sum(r|A,y|A) by A2,Th85;
+end;
+
+theorem
+  for r be non-zero Sequence of REAL,
+       y be strictly_decreasing Surreal-Sequence st
+       x in_meets_terms Partial_Sums(r,y),y,r,dom r/\dom y &
+       z in_meets_terms Partial_Sums(r,y),y,r,dom r/\dom y &
+  not x == z
+     for A be Ordinal,yA be Surreal st A in dom r/\dom y & yA = y.A holds
+         omega-y (x - z) < yA
+proof
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  set s = Partial_Sums(r,y),D=dom r/\dom y;
+  assume that
+A1: x in_meets_terms s,y,r,D &
+  z in_meets_terms s,y,r,D and
+A2: not x == z;
+  let A be Ordinal,yA be Surreal;
+  assume
+A3: A in D & yA=y.A;
+A4: not x - z == 0_No by SURREALR:47,A2;
+  dom Partial_Sums(r,y) =succ D by Def17;
+  then
+A5: |.x -z.| infinitely< No_omega^ yA by XBOOLE_1:7,A3,A1,Th90;
+  |.x -z.|, No_omega^ omega-y (x+-z) are_commensurate by A4,Def7;
+  then No_omega^ omega-y (x +-z) < No_omega^ yA by Th9,A5,Th15;
+  hence thesis by Lm5;
+end;
+
+theorem Th95:
+  (for r be non-zero Sequence of REAL,
+       y be strictly_decreasing uSurreal-Sequence st dom r = dom y &
+            r,y,dom r name_like x holds not Sum(r,y) == x)
+  implies
+   for alpha be Ordinal
+    ex r be non-zero Sequence of REAL,
+       y be strictly_decreasing uSurreal-Sequence st
+         dom r = succ alpha = dom y &
+         r,y,succ alpha name_like x
+proof
+  assume
+A1: for r be non-zero Sequence of REAL,
+     y be strictly_decreasing uSurreal-Sequence st dom r = dom y &
+     r,y,dom r name_like x holds not Sum(r,y) == x;
+  defpred P[Ordinal] means
+  ex r be non-zero Sequence of REAL,
+     y be strictly_decreasing uSurreal-Sequence st
+       dom r = succ $1 = dom y & r,y,succ $1 name_like x;
+A2: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that
+A3: for C be Ordinal st C in D holds P[C];
+    defpred U[object,object] means
+    $2 is pair & $2`1 is non-zero Sequence of REAL &
+    $2`2 is strictly_decreasing uSurreal-Sequence & for A be Ordinal st A=$1
+    for r be non-zero Sequence of REAL,
+    y be strictly_decreasing uSurreal-Sequence st r = $2`1 & y = $2`2
+    holds dom r = succ A = dom y & r,y,succ A name_like x;
+A4: for e being object st e in D ex o st U[e,o]
+    proof
+      let e be object such that
+A5:   e in D;
+      reconsider E=e as Ordinal by A5;
+      consider r1 be non-zero Sequence of REAL,
+      y1 be strictly_decreasing uSurreal-Sequence such that
+A6:   dom r1 = succ E = dom y1 & r1,y1,succ E name_like x by A5,A3;
+      take ry=[r1,y1];
+      thus ry is pair &ry`1 is non-zero Sequence of REAL &
+      ry`2 is strictly_decreasing uSurreal-Sequence;
+      let A be Ordinal such that
+A7:   A=e;
+      let r be non-zero Sequence of REAL,
+        y be strictly_decreasing uSurreal-Sequence;
+      thus thesis by A7,A6;
+    end;
+    consider S be Function such that
+A8: dom S = D &
+    for o st o in D holds U[o,S.o] from CLASSES1:sch 1(A4);
+    defpred R[object,object] means
+    for f be Function st f = (S.$1)`1 holds $2= f.$1;
+A9: for e being object st e in D ex o st R[e,o]
+    proof
+      let e be object such that
+A10:e in D;
+      reconsider e as Ordinal by A10;
+      reconsider SE1=(S.e)`1 as non-zero Sequence of REAL by A10,A8;
+      take o = SE1.e;
+      thus thesis;
+    end;
+    consider R be Function such that
+A11: dom R = D &
+    for o st o in D holds R[o,R.o] from CLASSES1:sch 1(A9);
+    reconsider R as Sequence by A11,ORDINAL1:def 7;
+    rng R c= REAL
+    proof
+      let y be object;
+      assume y in rng R;
+      then consider o such that
+A12:  o in D & R.o = y by A11,FUNCT_1:def 3;
+      reconsider o as Ordinal by A12;
+      reconsider SO1=(S.o)`1 as non-zero Sequence of REAL by A12,A8;
+      reconsider SO2=(S.o)`2 as strictly_decreasing Surreal-Sequence by A12,A8;
+      SO1.o in REAL by XREAL_0:def 1;
+      hence thesis by A12,A11;
+    end;
+    then reconsider R as Sequence of REAL by RELAT_1:def 19;
+    not 0 in rng R
+    proof
+      assume 0 in rng R;
+      then consider o such that
+A13:  o in D & R.o = 0 by A11,FUNCT_1:def 3;
+      reconsider o as Ordinal by A13;
+      reconsider SO1=(S.o)`1 as non-zero Sequence of REAL by A13,A8;
+      U[o,S.o] by A13,A8;
+      then dom SO1 = succ o;
+      then o in dom SO1 by ORDINAL1:6;
+      then SO1.o in rng SO1 by FUNCT_1:def 3;
+      hence thesis by A13,A11;
+    end;
+    then reconsider R as non-zero Sequence of REAL by ORDINAL1:def 15;
+    defpred Y[object,object] means
+    for f be Function st f = (S.$1)`2 holds $2= f.$1;
+A14: for e being object st e in D ex o st Y[e,o]
+    proof
+      let e be object such that
+A15:e in D;
+      reconsider e as Ordinal by A15;
+      reconsider SE2=(S.e)`2 as strictly_decreasing uSurreal-Sequence
+        by A15,A8;
+      take o = SE2.e;
+      thus thesis;
+    end;
+    consider Y be Function such that
+A16: dom Y = D &
+    for o st o in D holds Y[o,Y.o] from CLASSES1:sch 1(A14);
+    reconsider Y as Sequence by A16,ORDINAL1:def 7;
+    rng Y is uniq-surreal-membered
+    proof
+      let y be object;
+      assume y in rng Y;
+      then consider o such that
+A17:  o in D & Y.o = y by A16,FUNCT_1:def 3;
+      reconsider o as Ordinal by A17;
+      reconsider SO2=(S.o)`2 as strictly_decreasing uSurreal-Sequence
+      by A17,A8;
+      U[o,S.o] by A17,A8;
+      then dom SO2 = succ o;
+      then o in dom SO2 by ORDINAL1:6;
+      then SO2.o in rng SO2 by FUNCT_1:def 3;
+      then SO2.o is uSurreal by SURREALO:def 12;
+      hence thesis by A17,A16;
+    end;
+    then reconsider Y as uSurreal-Sequence by Def10;
+    defpred EQ[Ordinal] means
+    $1 in D implies
+    Y|succ $1 is strictly_decreasing &
+    R|succ $1 = (S.$1)`1 & Y|succ $1 = (S.$1)`2;
+A18: for E be Ordinal st for F be Ordinal st F in E holds EQ[F] holds EQ[E]
+    proof
+      let E be Ordinal such that
+A19:  for F be Ordinal st F in E holds EQ[F];
+      set YE = Y|succ E;
+      assume
+A20:  E in D;
+A21:  dom YE = succ E by A20,ORDINAL1:21,A16,RELAT_1:62;
+      reconsider r=(S.E)`1 as non-zero Sequence of REAL by A20,A8;
+      reconsider y=(S.E)`2 as strictly_decreasing uSurreal-Sequence by A20,A8;
+      set sE=succ E;
+      U[E,S.E] by A20,A8;
+      then
+A22:  dom r = succ E = dom y & r,y,sE name_like x;
+      thus YE is strictly_decreasing
+      proof
+        let a,b be Ordinal such that
+A23:    a in b in dom YE;
+        let sa,sb be Surreal such that
+A24:    sa=YE.a & sb=YE.b;
+A25:    sa = Y.a & sb = Y.b by A23,ORDINAL1:10,A24,FUNCT_1:47;
+        per cases by A23,ORDINAL1:8;
+        suppose
+A26:      b=E;
+A27:      a in D by A26,A20,A23,ORDINAL1:10;
+A28:      U[a,S.a] by A27,A8;
+          reconsider ra=(S.a)`1 as non-zero Sequence of REAL by A27,A8;
+          reconsider ya=(S.a)`2 as strictly_decreasing Surreal-Sequence
+          by A27,A8;
+A29:      dom ra = succ a = dom ya & ra,ya,succ a name_like x by A28;
+          succ a c= E by A26,A23,ORDINAL1:21;
+          then succ a in sE by ORDINAL1:22;
+          then
+A30:      succ a c= sE by ORDINAL1:def 2;
+          r,y,succ a name_like x by A22,A30;
+          then
+A31:      r|succ a = ra|succ a & y|succ a = ya|succ a by A29,Th87;
+          R|succ a = ra & Y|succ a = ya by A26,A23,A27,A19;
+          then sa = Y.a = ya.a by A23,ORDINAL1:6,10,A24,FUNCT_1:49;
+          then
+A32:      sa = y.a by A29,A31,FUNCT_1:49,ORDINAL1:6;
+          sb = y.b by A25,A26,A16,A20;
+          hence thesis by A23,A32,A22,Def11;
+        end;
+        suppose
+A33:      b in E;
+          then
+A34:      EQ[b] by A19;
+A35:      Y|succ b is strictly_decreasing by A34,A20,A33,ORDINAL1:10;
+          succ b c= D by A20,A33,ORDINAL1:10,21;
+          then
+A36:      dom (Y|succ b) = succ b by A16,RELAT_1:62;
+A37:      b in succ b by ORDINAL1:6;
+          then sa = (Y|succ b).a & sb = (Y|succ b).b
+          by A25,A36,FUNCT_1:47,A23,ORDINAL1:10;
+          hence thesis by A37,A35,A23,A36;
+        end;
+      end;
+      then reconsider YE as strictly_decreasing Surreal-Sequence;
+A38:  dom (R|sE) = sE by A20,A11,ORDINAL1:21,RELAT_1:62;
+A39:  o in sE implies (R|sE).o = r.o & YE.o = y.o
+      proof
+        assume
+A40:    o in sE;
+        then reconsider o as Ordinal;
+A41:    (R|succ E).o = R.o & YE.o = Y.o by A40,FUNCT_1:49;
+        per cases by A40,ORDINAL1:8;
+        suppose o = E;
+          hence thesis by A41,A20,A11,A16;
+        end;
+        suppose
+A42:      o in E;
+A43:      o in D by A42,A20,ORDINAL1:10;
+          then
+A44:      U[o,S.o] by A8;
+          reconsider ro=(S.o)`1 as non-zero Sequence of REAL by A8,A43;
+          reconsider yo=(S.o)`2 as strictly_decreasing Surreal-Sequence
+          by A8,A43;
+A45:      dom ro= succ o = dom yo & ro,yo,succ o name_like x by A44;
+          succ o c= E by A42,ORDINAL1:21;
+          then succ o in sE by ORDINAL1:22;
+          then
+A46:      succ o c= sE by ORDINAL1:def 2;
+          r,y,succ o name_like x by A22,A46;
+          then
+A47:      r|succ o = ro|succ o & y|succ o = yo|succ o by A45,Th87;
+          o in succ o by ORDINAL1:8;
+          then yo.o = y.o & ro.o= r.o by A47,A45,FUNCT_1:49;
+          hence thesis by A41,A42,A20,ORDINAL1:10,A11,A16;
+        end;
+      end;
+A48:  o in sE implies (R|sE).o = r.o by A39;
+      o in sE implies YE.o = y.o by A39;
+      hence thesis by A48,A22,A21,FUNCT_1:2,A38;
+    end;
+A49: for D be Ordinal holds EQ[D] from ORDINAL1:sch 2(A18);
+    Y is strictly_decreasing
+    proof
+      let a,b be Ordinal such that
+A50:  a in b in dom Y;
+      let sa,sb be Surreal such that
+A51:  sa=Y.a & sb=Y.b;
+      set B=Y|succ b;
+A52:  b in succ b by ORDINAL1:6;
+      a in succ b by A50,ORDINAL1:8;
+      then
+A53:  sa = B.a & sb=B.b by A51,ORDINAL1:6,FUNCT_1:49;
+A54:  dom B = succ b by RELAT_1:62,A50,ORDINAL1:21;
+      B is strictly_decreasing by A49,A50,A16;
+      hence sb < sa by A54,A50,A52,A53;
+    end;
+    then reconsider Y as strictly_decreasing Surreal-Sequence;
+A55: R,Y,D name_like x
+    proof
+      thus D c= dom R = dom Y by A16,A11;
+      let b be Ordinal such that
+A56:  b in D;
+      let Pb be Surreal such that
+A57:  Pb = Partial_Sums(R,Y).b;
+A58:  U[b,S.b] by A56,A8;
+      reconsider rb=(S.b)`1 as non-zero Sequence of REAL by A56,A8;
+      reconsider yb=(S.b)`2 as strictly_decreasing Surreal-Sequence by A56,A8;
+      set sb=succ b;
+A59:  dom rb = sb = dom yb & rb,yb,sb name_like x by A58;
+A60:  Y|succ b is strictly_decreasing &
+      R|succ b = rb & Y|succ b = yb by A49,A56;
+A61:  b in sb & sb in succ sb by ORDINAL1:6;
+      b in succ sb by ORDINAL1:6,8;
+      then Pb = (Partial_Sums(R,Y)|succ sb).b by A57,FUNCT_1:49
+      .= Partial_Sums(rb,yb).b by A60,Th85;
+      then not x == Pb & rb.b = omega-r (x - Pb) &
+      yb.b = omega-y (x - Pb) by A61,A59;
+      hence thesis by ORDINAL1:6,A60,FUNCT_1:49;
+    end;
+    then
+A62: not Sum(R,Y) == x by A1,A16;
+    then
+A63: not x - Sum(R,Y) ==0_No by SURREALR:47;
+    reconsider Rx = omega-r (x +- Sum(R,Y)) as Element of REAL
+    by XREAL_0:def 1;
+    not 0 in {Rx};
+    then not 0 in rng <%Rx%> by AFINSQ_1:33;
+    then reconsider RX=<%Rx%> as non-zero Sequence of REAL by ORDINAL1:def 15;
+    rng(R^RX) = rng R \/ rng RX by ORDINAL4:2;
+    then reconsider RRX = R^RX as non-zero Sequence of REAL by RELAT_1:def 19;
+    take RRX;
+A64: dom RX = 1 by AFINSQ_1:def 4;
+    then
+A65: dom RRX = (dom R)+^ 1 by ORDINAL4:def 1;
+    then
+A66: dom RRX = succ D by A11,ORDINAL2:31;
+    set  Yx = omega-y (x +- Sum(R,Y)), YX = <%Yx%>, YYX=Y^YX;
+A67: dom YX = 1 by AFINSQ_1:def 4;
+    then
+A68: dom YYX = (dom Y)+^ 1 by ORDINAL4:def 1;
+    then
+A69: dom YYX = succ D by A16,ORDINAL2:31;
+    0 in 1 by CARD_1:49,TARSKI:def 1;
+    then
+A70: Rx = RX.0 = RRX.(D+^0) & D+^0 = D &
+    Yx = YX.0 = YYX.(D+^0)
+    by A16,A11,A64,A67,ORDINAL4:def 1,ORDINAL2:27;
+    YYX is strictly_decreasing
+    proof
+      let a,b be Ordinal such that
+A71:  a in b in dom YYX;
+      let sa,sb be Surreal such that
+A72:  sa=YYX.a & sb=YYX.b;
+      per cases by A71,A69,ORDINAL1:8;
+      suppose
+A73:    b in D;
+        then a in D by A71,ORDINAL1:10;
+        then sa = Y.a & sb = Y.b by A72,A73,A16,ORDINAL4:def 1;
+        hence thesis by A71,A73,A16,Def11;
+      end;
+      suppose
+A74:    b=D;
+        sa = Y.a by A74,A72,A71,A16,ORDINAL4:def 1;
+        then
+A75:    omega-y ( Sum(R,Y) - x) < sa
+        by A11,A71,A74,A62,Th92,A55,Th88;
+        Yx = omega-y (-(x +- Sum(R,Y))) by A63,Th56
+        .= omega-y (-x + - - Sum(R,Y)) by SURREALR:40
+        .= omega-y (-x + Sum(R,Y));
+        hence thesis by A70,A74,A75,A72;
+      end;
+    end;
+    then reconsider YYX as strictly_decreasing uSurreal-Sequence;
+    take YYX;
+    thus dom RRX = succ D = dom YYX by A65,A11,A68,A16,ORDINAL2:31;
+    thus succ D c= dom RRX = dom YYX
+      by A65,A11,A67,A16,ORDINAL2:31,ORDINAL4:def 1;
+    let b be Ordinal such that
+A76: b in succ D;
+    let Pb be Surreal such that
+A77: Pb = Partial_Sums(RRX,YYX).b;
+A78: dom R = dom RRX/\dom R by ORDINAL7:1,A66,A11;
+    o in dom R implies R.o = RRX.o by ORDINAL4:def 1;
+    then
+A79: RRX|D = R by A78,FUNCT_1:46,A11;
+A80: dom Y = dom YYX/\dom Y by ORDINAL7:1,A69,A16;
+A81: o in dom Y implies Y.o = YYX.o by ORDINAL4:def 1;
+A82: Pb = (Partial_Sums(RRX,YYX)|succ D).b by A76,A77,FUNCT_1:49
+    .= Partial_Sums(RRX|D,YYX|D).b by Th85
+    .= Partial_Sums(R,Y).b by A79,A81,A80,FUNCT_1:46,A16;
+    per cases by A76,ORDINAL1:8;
+    suppose b= D;
+      hence thesis by A55,A1,A16,A82,A70;
+    end;
+    suppose
+A83:  b in D;
+      then RRX.b = R.b & YYX.b = Y.b by A11,A16,ORDINAL4:def 1;
+      hence thesis by A55,A83,A82;
+    end;
+  end;
+  for D be Ordinal holds P[D] from ORDINAL1:sch 2(A2);
+  hence thesis;
+end;
+
+definition
+  let s be Surreal-Sequence;
+  func born s -> Ordinal-Sequence means :Def20:
+   dom it = dom s &
+  for alpha be Ordinal st alpha in dom s
+     for sa be Surreal st sa =s.alpha
+     holds it.alpha = born sa;
+  existence
+  proof
+    defpred B[object,object] means
+    $2 is Ordinal & for sa be Surreal st sa =s.$1 holds $2 = born sa;
+A1: o in dom s implies ex u being object st B[o,u]
+    proof
+      assume o in dom s;
+      then s.o in rng s by FUNCT_1:def 3;
+      then reconsider so=s.o as Surreal by SURREAL0:def 16;
+      take born so;
+      thus thesis;
+    end;
+    consider b be Function such that
+A2: dom b = dom s &
+    for o st o in dom s holds B[o,b.o] from CLASSES1:sch 1(A1);
+    reconsider b as Sequence by A2,ORDINAL1:def 7;
+    consider M be Ordinal such that
+A3: for o st o in rng s ex A be Ordinal st A in M & o in Day A
+    by SURREAL0:47;
+    rng b c= M
+    proof
+      let a be object such that
+A4:   a in rng b;
+      consider o such that
+A5:   o in dom b & b.o = a by A4,FUNCT_1:def 3;
+A6:   s.o in rng s by A2,A5,FUNCT_1:def 3;
+      then reconsider so=s.o as Surreal by SURREAL0:def 16;
+      consider A be Ordinal such that
+A7:   A in M & so in Day A by A6,A3;
+      born so c= A by A7,SURREAL0:def 18;
+      then born so in M by A7,ORDINAL1:12;
+      hence thesis by A5,A2;
+    end;
+    then reconsider b as Ordinal-Sequence by ORDINAL2:def 4;
+    take b;
+    thus thesis by A2;
+  end;
+  uniqueness
+  proof
+    let b1,b2 be Ordinal-Sequence such that
+A8: dom b1 = dom s &
+    for alpha be Ordinal st alpha in dom s
+    for sa be Surreal st sa =s.alpha holds b1.alpha = born sa and
+A9: dom b2 = dom s &
+    for alpha be Ordinal st alpha in dom s
+    for sa be Surreal st sa =s.alpha
+    holds b2.alpha = born sa;
+    o in dom s implies b1.o =b2.o
+    proof
+      assume
+A10:  o in dom s;
+      then s.o in rng s by FUNCT_1:def 3;
+      then reconsider so=s.o as Surreal by SURREAL0:def 16;
+      b1.o = born so by A10,A8;
+      hence thesis by A10,A9;
+    end;
+    hence thesis by A8,A9,FUNCT_1:2;
+  end;
+end;
+
+theorem Th96:
+  for r be Sequence of REAL, y be Surreal-Sequence
+    for s be uSurreal-Sequence
+      for A be Ordinal st s,y,r simplest_up_to A & A c= succ dom y holds
+  s|A is one-to-one
+proof
+  let r be Sequence of REAL, y be Surreal-Sequence;
+  let s be uSurreal-Sequence;
+  let A be Ordinal such that
+A1: s,y,r simplest_up_to A & A c= succ dom y;
+A2: for a,b be Ordinal st a in b in dom (s|A) holds (s|A).a <> (s|A).b
+  proof
+    let a,b be Ordinal such that
+A3: a in b in dom (s|A);
+A4: b in A & b in dom s by A3,RELAT_1:57;
+    then a in dom s by A3,ORDINAL1:10;
+    then s.b in rng s & s.a in rng s by A4,FUNCT_1:def 3;
+    then reconsider sb=s.b,sa=s.a as uSurreal by SURREALO:def 12;
+A5: sa = (s|A).a & sb = (s|A).b by A3,FUNCT_1:47,ORDINAL1:10;
+A6: succ a c= b by A3,ORDINAL1:21;
+    s,y,r simplest_on_position b by A1,A3;
+    then sb in_meets_terms s,y,r,b;
+    then
+A7: sb in_meets_terms s,y,r,succ a by A6;
+    b c= dom y by A1,A4,ORDINAL1:22;
+    then y.a in rng y by A3,FUNCT_1:def 3;
+    then reconsider ya=y.a as Surreal by SURREAL0:def 16;
+    sb is (sa,ya,r.a)_term by A7,ORDINAL1:6;
+    then
+A8: not sb + - sa ==0_No;
+    not sb == sa
+    proof
+      assume sb == sa;
+      then sb +- sa == sa - sa == 0_No by SURREALR:43,39;
+      hence thesis by A8,SURREALO:4;
+    end;
+    hence thesis by A5;
+  end;
+  for x1,x2 be object st x1 in dom (s|A) & x2 in dom (s|A) & (s|A).x1 =(s|A).x2
+  holds x1=x2
+  proof
+    let x1,x2 be object such that
+A9: x1 in dom (s|A) & x2 in dom (s|A) & (s|A).x1 =(s|A).x2;
+    reconsider x1,x2 as Ordinal by A9;
+    not x1 in x2 & not x2 in x1 by A9,A2;
+    hence thesis by ORDINAL1:14;
+  end;
+  hence thesis by FUNCT_1:def 4;
+end;
+
+registration
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  cluster Partial_Sums(r,y) -> one-to-one;
+  coherence
+  proof
+    set s = Partial_Sums(r,y);
+    dom y/\dom r in succ dom y by XBOOLE_1:17,ORDINAL1:22;
+    then
+A1: dom s = succ (dom y/\dom r) c= succ dom y by ORDINAL1:21,Def17;
+    s,y,r simplest_up_to dom s by Def17;
+    then s|dom s is one-to-one by A1,Th96;
+    hence thesis;
+  end;
+end;
+
+theorem Th97:
+  for r be Sequence of REAL
+    for y be Surreal-Sequence
+      for s be uSurreal-Sequence,alpha be Ordinal st
+         s,y,r simplest_up_to alpha & s|alpha is one-to-one
+  holds (born s)|alpha is increasing
+proof
+  let r be Sequence of REAL;
+  let y be Surreal-Sequence;
+  let s be uSurreal-Sequence;
+  let alpha be Ordinal such that
+A1:  s,y,r simplest_up_to alpha & s|alpha is one-to-one;
+  for A,B be Ordinal st A in B in dom ((born s)|alpha) holds
+  ((born s)|alpha).A in ((born s)|alpha).B
+  proof
+    set bs = born s;
+    let A,B be Ordinal such that
+A2: A in B in dom (bs|alpha);
+A3: B in alpha & B in dom bs = dom s by Def20,A2,RELAT_1:57;
+A4: s,y,r simplest_on_position B by A1,A2;
+A5: B in dom s & A in dom s by A2,A3,ORDINAL1:10;
+    then s.B in rng s & s.A in rng s by FUNCT_1:def 3;
+    then reconsider sB=s.B,sA=s.A as uSurreal by SURREALO:def 12;
+A6: A in alpha by A2,ORDINAL1:10;
+A7: s,y,r simplest_on_position A by A1,A2,ORDINAL1:10;
+A8: A c= B by A2,ORDINAL1:def 2;
+    sB in_meets_terms s,y,r,B by A4;
+    then
+A9: sB in_meets_terms s,y,r,A by A8;
+A10: A<>B by A2;
+    B in dom (s|alpha) & A in dom (s|alpha) & sA = (s|alpha).A &
+    sB=(s|alpha).B by RELAT_1:57,A2,A5,A6,FUNCT_1:49;
+    then
+A11: sA<>sB by A10,A1,FUNCT_1:def 4;
+    (bs|alpha).A = bs.A & (bs|alpha).B = bs.B
+      by A2,ORDINAL1:10,FUNCT_1:49;
+    then
+A12: (bs|alpha).A = born sA & (bs|alpha).B = born sB
+    by Def20,A2,A3,ORDINAL1:10;
+    per cases;
+    suppose A=0;
+      then
+A13:  sA=0_No by A7;
+      then
+A14:  born sA =0 by SURREAL0:37;
+A15:  {} c= born sB;
+      born sB<>0 by A13,A11,SURREAL0:37;
+      hence thesis by A12,A14,ORDINAL1:11,A15,XBOOLE_0:def 8;
+    end;
+    suppose A<>0;
+      hence thesis by A12,A7,A9,A11;
+    end;
+  end;
+  hence thesis by ORDINAL2:def 12;
+end;
+
+registration
+  let r be non-zero Sequence of REAL;
+  let y be strictly_decreasing Surreal-Sequence;
+  cluster born Partial_Sums(r,y) -> increasing;
+  coherence
+  proof
+    set s = Partial_Sums(r,y);
+    dom s= dom (born s) by Def20;
+    then
+A1: (born s)|dom s = born s;
+    s,y,r simplest_up_to dom s & s|dom s is one-to-one by Def17;
+    hence thesis by A1,Th97;
+  end;
+end;
+
+theorem Th98:
+  for r be non-zero Sequence of REAL,
+      y be strictly_decreasing Surreal-Sequence,
+      s be uSurreal-Sequence, A be Ordinal st
+    A c= dom r & x in_meets_terms s,y,r,A & s,y,r simplest_up_to succ A
+  holds rng born (s|succ A) c= succ born_eq x
+proof
+  let r be non-zero Sequence of REAL,
+  y be strictly_decreasing Surreal-Sequence,
+  s be uSurreal-Sequence, A be Ordinal such that
+A1: A c= dom r &
+  x in_meets_terms s,y,r,A & s,y,r simplest_up_to succ A;
+  let o such that
+A2:o in rng born (s|succ A);
+  consider a be object such that
+A3: a in dom born (s|succ A) & (born (s|succ A)).a = o
+  by A2,FUNCT_1:def 3;
+  reconsider a as Ordinal by A3;
+A4:a in dom (s|succ A) by A3,Def20;
+  then a in dom s & a in succ A by RELAT_1:57;
+  then s.a in rng s by FUNCT_1:def 3;
+  then reconsider sa=s.a as Surreal by SURREAL0:def 16;
+  sa = (s|succ A).a by A4,FUNCT_1:47;
+  then
+A5: o = born sa by A3,A4,Def20;
+A6: a c= A by A4,ORDINAL1:22;
+  then
+A7: x in_meets_terms s,y,r,a by A1;
+  Unique_No x == x by SURREALO:def 10;
+  then
+A8: Unique_No x in_meets_terms s,y,r,a by A7,A1,A6,XBOOLE_1:1,Th81;
+A9: s,y,r simplest_on_position a by A1,A4;
+A10: born Unique_No x = born_eq Unique_No x = born_eq x
+  by SURREALO:33,48,def 10;
+  per cases;
+  suppose a=0;
+    then sa = 0_No by A9;
+    then born sa = 0 c= born_eq x by SURREAL0:37;
+    hence thesis by A5,ORDINAL1:22;
+  end;
+  suppose a<>0 & Unique_No x = sa;
+    hence thesis by A10,ORDINAL1:8,A5;
+  end;
+  suppose a<>0 & Unique_No x <> sa;
+    then born sa in born Unique_No x by A8,A9;
+    hence thesis by A5,A10,ORDINAL1:8;
+  end;
+end;
+
+theorem Th99:
+  for r be non-zero Sequence of REAL,
+    y be strictly_decreasing Surreal-Sequence
+  holds dom r/\dom y c= born Sum(r,y)
+proof
+  let r be non-zero Sequence of REAL,
+  y be strictly_decreasing Surreal-Sequence;
+  set s = Partial_Sums(r,y);
+A1:dom s = succ (dom r/\dom y) by Def17;
+  Sum(r,y) in_meets_terms s,y,r,(dom r/\dom y) & s,y,r simplest_up_to dom s
+  by Def17,Th89;
+  then
+A2:rng born (s|dom s) c= succ born_eq Sum(r,y) by XBOOLE_1:17,Th98,A1;
+A3: born_eq Sum(r,y) = born Sum(r,y) by SURREALO:48;
+  succ (dom r/\dom y) c= succ born Sum(r,y)
+  proof
+    let o be Ordinal;
+    assume
+A4: o in succ (dom r/\dom y);
+A5: o in dom s by A4,Def17;
+    then s.o in rng s by FUNCT_1:def 3;
+    then reconsider so=s.o as uSurreal by SURREALO:def 12;
+A6: dom (born s) = dom s by Def20;
+A7: born so = (born s).o by A5,Def20;
+    then
+A8: born so in rng born s by A6,A5,FUNCT_1:def 3;
+    o c= (born s).o by A5,A6,ORDINAL4:10;
+    hence thesis by A7,A8,A2,A3,ORDINAL1:12;
+  end;
+  then dom r/\dom y in succ born Sum(r,y) by ORDINAL1:21;
+  hence thesis by ORDINAL1:22;
+end;
+
+::$N Conway Normal Form:
+theorem Th100:
+  for x be Surreal ex r be non-zero Sequence of REAL,
+      y be strictly_decreasing uSurreal-Sequence st
+         dom r = dom y c= born_eq x & Sum(r,y) == x
+proof
+  let x be Surreal;
+  ex r be non-zero Sequence of REAL,
+    y be strictly_decreasing uSurreal-Sequence st dom r = dom y &
+      r,y,dom r name_like x & Sum(r,y) == x
+  proof
+    assume
+A1: for r be non-zero Sequence of REAL,
+    y be strictly_decreasing uSurreal-Sequence st dom r = dom y &
+    r,y,dom r name_like x holds not Sum(r,y) == x;
+    set b= card bool succ born_eq x;
+    consider r be non-zero Sequence of REAL,
+      y be strictly_decreasing uSurreal-Sequence such that
+A2: dom r = succ b = dom y &
+    r,y,succ b name_like x by A1,Th95;
+    set s = Partial_Sums(r,y);
+A3: dom s = succ (succ b/\succ b) by A2,Def17
+    .= succ succ b;
+    s,y,r simplest_up_to dom s by Def17;
+    then s,y,r simplest_up_to succ (succ b/\succ b) by A2,Def17;
+    then rng born (s|succ  succ b) c= succ born_eq x by A2,Th88,Th98;
+    then
+A4: card rng born s c= card succ born_eq x by A3,CARD_1:11;
+    born s is one-to-one by CARD_5:11;
+    then
+A5: card rng born s = card dom born s by CARD_1:5,WELLORD2:def 4
+    .= card succ succ b by A3,Def20;
+A6: card succ succ b in b by A4,A5,CARD_1:14,ORDINAL1:12;
+    b in succ succ b by ORDINAL1:6,8;
+    then b c= succ succ b by ORDINAL1:def 2;
+    then b= card b in b by A6,ORDINAL1:12,CARD_1:11;
+    hence thesis;
+  end;
+  then consider r be non-zero Sequence of REAL,
+  y be strictly_decreasing uSurreal-Sequence such that
+A7:dom r = dom y & r,y,dom r name_like x & Sum(r,y) == x;
+  take r,y;
+  born Sum(r,y) = born_eq Sum(r,y) = born_eq x by A7,SURREALO:33,48;
+  hence thesis by A7,Th99;
+end;
+
+theorem Th101:
+  for r be non-zero Sequence of REAL,
+      y be strictly_decreasing uSurreal-Sequence st dom r=dom y holds
+   r,y,dom r name_like Sum(r,y)
+proof
+  let r be non-zero Sequence of REAL,
+      y be strictly_decreasing uSurreal-Sequence such that
+A1: dom r=dom y;
+  thus dom r c= dom r = dom y by A1;
+  set P=Partial_Sums(r,y),s=Sum(r,y);
+  let beta be Ordinal such that
+A2:beta in dom r;
+  let Pb be Surreal such that
+A3: Pb = P.beta;
+A4: dom P = succ (dom r/\dom r) by A1,Def17;
+  y.beta in rng y by A1,A2,FUNCT_1:def 3;
+  then reconsider yb = y.beta as uSurreal by SURREALO:def 12;
+  P,y,r simplest_on_position dom r by A4,Def17,ORDINAL1:6;
+  then s in_meets_terms P,y,r,dom r by A1;
+  then
+A5: s is (Pb,yb,r.beta)_term by A2,A3;
+  then
+A6: not s +- Pb ==0_No & omega-y (s +- Pb) == yb
+  & omega-r (s + - Pb) = r.beta;
+  not s == Pb
+  proof
+    assume s == Pb;
+    then s +- Pb == Pb - Pb == 0_No by SURREALR:43,39;
+    hence thesis by A6,SURREALO:4;
+  end;
+  hence thesis by A5,SURREALO:50;
+end;
+
+theorem Th102:
+  for r1,r2 be non-zero Sequence of REAL,
+      y1,y2 be strictly_decreasing uSurreal-Sequence st
+         dom r1 = dom y1 & dom r2 = dom y2 &
+         Sum(r1,y1) == Sum(r2,y2)
+  holds r1=r2 & y1=y2
+proof
+   let r1,r2 be non-zero Sequence of REAL,
+       y1,y2 be strictly_decreasing uSurreal-Sequence such that
+A1:  dom r1 = dom y1 & dom r2 = dom y2 &
+   Sum(r1,y1) == Sum(r2,y2);
+A2:  Sum(r1,y1) = Sum(r2,y2) by A1,SURREALO:50;
+A3: r1,y1,dom r1 name_like Sum(r1,y1) by Th101,A1;
+A4: r2,y2,dom r2 name_like Sum(r2,y2) by Th101,A1;
+   per cases by ORDINAL1:14;
+   suppose
+A5:  dom r1 in dom r2;
+     then
+A6:  dom r1 c= dom r2 by ORDINAL1:def 2;
+     r2,y2,dom r1 name_like Sum(r2,y2) by A4,A6;
+     then
+A7:  r1|dom r1 = r2|dom r1 & y1|dom r1 = y2|dom r1 by A3,A2,Th87;
+     set s = Partial_Sums(r2,y2);
+     s.dom r1 = (s|succ dom r1).dom r1 by FUNCT_1:49,ORDINAL1:6
+     .= Partial_Sums(r2|dom r1,y2|dom r1).dom r1 by Th85
+     .= Sum(r1,y1) by A1,A7;
+     hence thesis by A1,A4,A5;
+   end;
+   suppose
+A8:  dom r1 = dom r2;
+     r2,y2,dom r1 name_like Sum(r2,y2) by Th101,A1,A8;
+     then r1= r1|dom r1 = r2|dom r1 =r2 & y1=y1|dom r1 = y2|dom r1 = y2
+     by A8,A3,A2,Th87;
+     hence thesis;
+   end;
+   suppose
+A9:  dom r2 in dom r1;
+     then
+A10: dom r2 c= dom r1 by ORDINAL1:def 2;
+     r1,y1,dom r2 name_like Sum(r1,y1) by A10,A3;
+     then
+A11: r1|dom r2 = r2|dom r2 & y1|dom r2 = y2|dom r2 by A4,A2,Th87;
+     set s = Partial_Sums(r1,y1);
+     s.dom r2 = (s|succ dom r2).dom r2 by ORDINAL1:6,FUNCT_1:49
+     .= Partial_Sums(r1|dom r2,y1|dom r2).dom r2 by Th85
+     .= Sum(r2,y2) by A1,A11;
+     hence thesis by A1,A3,A9;
+   end;
+end;
+
+theorem Th103:
+  for r be non-zero Sequence of REAL,
+      y be strictly_decreasing uSurreal-Sequence,
+      A be Ordinal st A c= dom r = dom y
+    for x,z be Surreal st r,y,A name_like x & x == z holds
+      r,y,A name_like z
+proof
+  let r be non-zero Sequence of REAL,
+      y be strictly_decreasing uSurreal-Sequence,
+      A be Ordinal such that A c= dom r=dom y;
+  let x,z be Surreal such that A2: r,y,A name_like x & x == z;
+  thus A c= dom r = dom y by A2;
+  let B be Ordinal such that A3: B in A;
+  let Pb be Surreal such that A4:Pb = Partial_Sums(r,y).B;
+  thus not z == Pb by A2,A3,A4,SURREALO:10;
+A5: x - Pb == z - Pb by A2,SURREALR:66;
+A6: not x == Pb & r.B = omega-r (x - Pb) & y.B = omega-y (x - Pb) by A2,A3,A4;
+  then not x -Pb == 0_No by SURREALR:45,46;
+  hence thesis by A5,A6,Th70;
+end;
+
+definition
+  let x be surreal number;
+  func name-ord x -> Ordinal means :Def21:
+    ex r be non-zero Sequence of REAL,
+       y be strictly_decreasing uSurreal-Sequence st
+         it = dom r = dom y & Sum(r,y) == x;
+  existence
+  proof
+    consider r be non-zero Sequence of REAL,
+             y be strictly_decreasing uSurreal-Sequence such that
+A1: dom r = dom y c= born_eq x & Sum(r,y) == x by Th100;
+    take dom y;
+    thus thesis by A1;
+  end;
+  uniqueness
+  proof
+    let A1,A2 be Ordinal;
+    given r1 be non-zero Sequence of REAL,
+          y1 be strictly_decreasing uSurreal-Sequence such that
+A2:   A1 = dom r1 = dom y1 & Sum(r1,y1) == x;
+    given r2 be non-zero Sequence of REAL,
+          y2 be strictly_decreasing uSurreal-Sequence such that
+A3:   A2 = dom r2 = dom y2 & Sum(r2,y2) == x;
+    Sum(r1,y1)==Sum(r2,y2) by A2,A3,SURREALO:10;
+    hence thesis by A2,A3,Th102;
+  end;
+end;
+
+theorem Th104:
+  for r be non-zero Sequence of REAL,
+      y be strictly_decreasing uSurreal-Sequence,
+      x be Surreal st dom r = dom y & Sum(r,y) == x
+  holds name-ord x = dom r
+proof
+  let r be non-zero Sequence of REAL,
+      y be strictly_decreasing uSurreal-Sequence,
+      x be Surreal such that
+A1: dom r = dom y & Sum(r,y) == x;
+  consider r1 be non-zero Sequence of REAL,
+           y1 be strictly_decreasing uSurreal-Sequence such that
+A2: name-ord x = dom r1 = dom y1 & Sum(r1,y1) == x by Def21;
+  Sum(r1,y1)==Sum(r,y) by A1,A2,SURREALO:10;
+  hence thesis by A1,A2,Th102;
+end;
+
+definition
+  let x be surreal number;
+  func name-r x -> non-zero Sequence of REAL means :Def22:
+    ex y be strictly_decreasing uSurreal-Sequence st
+         dom y = dom it & Sum(it,y)==x;
+  existence
+  proof
+    consider r be non-zero Sequence of REAL,
+             y be strictly_decreasing uSurreal-Sequence such that
+A1: dom r = dom y c= born_eq x & Sum(r,y) == x by Th100;
+    take r;
+    thus thesis by A1;
+  end;
+  uniqueness
+  proof
+     let r1,r2 be non-zero Sequence of REAL;
+     given y1 be strictly_decreasing uSurreal-Sequence such that
+A2:    dom y1 = dom r1 & Sum(r1,y1)==x;
+     given y2 be strictly_decreasing uSurreal-Sequence such that
+A3:    dom y2 = dom r2 & Sum(r2,y2)==x;
+     Sum(r1,y1)==Sum(r2,y2) by A2,A3,SURREALO:10;
+     hence thesis by A2,A3,Th102;
+   end;
+end;
+
+definition
+  let x be surreal number;
+  func name-y x -> strictly_decreasing uSurreal-Sequence means :Def23:
+       dom name-r x = dom it & Sum(name-r x,it)==x;
+  existence
+  proof
+    consider y be strictly_decreasing uSurreal-Sequence such that
+A1:   dom y = dom name-r x & Sum(name-r x,y)==x by Def22;
+    take y;
+    thus thesis by A1;
+  end;
+  uniqueness
+  proof
+    let y1,y2 be strictly_decreasing uSurreal-Sequence such that
+A2:   dom name-r x = dom y1 & Sum(name-r x,y1)==x and
+A3:   dom name-r x = dom y2 & Sum(name-r x,y2)==x;
+    Sum(name-r x,y1)==Sum(name-r x,y2) by A2,A3,SURREALO:10;
+    hence thesis by A2,A3,Th102;
+  end;
+end;
+
+theorem Th105:
+  dom name-r x = name-ord x = dom name-y x
+proof
+  dom name-r x = dom name-y x & Sum(name-r x,name-y x)==x by Def23;
+  hence thesis by Th104;
+end;
+
+theorem
+  name-r x, name-y x, name-ord x name_like x
+proof
+  name-ord x = dom name-r x by Th105;
+  then
+A2: name-r x, name-y x, name-ord x name_like Sum(name-r x, name-y x)
+   by Def23,Th101;
+ Sum(name-r x,name-y x)==x by Def23;
+  hence thesis by A2,Th103;
+end;

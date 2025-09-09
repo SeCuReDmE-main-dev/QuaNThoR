@@ -1,0 +1,782 @@
+:: Some Standard Examples of Vector Spaces
+::  by Christoph Schwarzweller and Agnieszka Rowi\'nska-Schwarzweller
+:: 
+:: Received December 24, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, SUBSET_1, RLVECT_1, XBOOLE_0, ALGSTR_0, BINOP_1, NAT_1,
+      FUNCT_1, ARYTM_3, RELAT_1, VECTSP_1, MESFUNC1, SUPINF_2, STRUCT_0,
+      TARSKI, FUNCOP_1, ARYTM_1, FINSEQ_1, MSSUBFAM, UNIALG_1, FINSEQ_2,
+      XXREAL_0, MOD_3, CARD_3, RLSUB_1, FINSET_1, CARD_1, PARTFUN1, UPROOTS,
+      RLVECT_3, RLVECT_5, FUNCSDOM, ZFMISC_1, FIELD_6, AFINSQ_1, VALUED_1,
+      FUNCT_2, RANKNULL, WELLORD1, RLVECT_2, NEWTON, ORDINAL4, VECTSP13,
+      ROBBINS1, RADIX_1, RING_3, REALSET1, ENS_1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, CARD_1, XCMPLX_0, DOMAIN_1,
+      ORDINAL1, FUNCOP_1, NUMBERS, RELAT_1, REALSET1, FUNCT_1, RELSET_1,
+      FINSET_1, ALGSTR_0, PARTFUN1, FUNCT_2, STRUCT_0, NEWTON, XXREAL_0,
+      FINSEQ_1, BINOP_1, FINSEQ_2, FINSEQ_7, GROUP_1, MOD_2, VECTSP_1,
+      VECTSP_4, VECTSP_6, VECTSP_7, RLVECT_1, MATRLIN, RANKNULL, VECTSP_9,
+      FVSUM_1;
+ constructors FVSUM_1, RELSET_1, RANKNULL, FINSEQ_7, NEWTON, VECTSP_9,
+      REALSET1, FIELD_4, WELLORD2;
+ registrations XBOOLE_0, RELAT_1, FUNCT_1, ORDINAL1, FUNCT_2, FINSET_1,
+      XREAL_0, FINSEQ_1, FINSEQ_2, STRUCT_0, VECTSP_1, FUNCOP_1, RELSET_1,
+      INT_1, NAT_1, CARD_1, VECTSP_7, NEWTON, VECTSP_9, EC_PF_1, RLVECT_1,
+      ALGSTR_1, FIELD_7, VECTSP11, ZMODUL06;
+ requirements NUMERALS, ARITHM, REAL, BOOLE, SUBSET;
+
+
+begin :: Preliminaries
+
+theorem :: VECTSP13:1
+for X,Y being non empty finite set st card Y = card X
+ex f being Function of X,Y st f is bijective;
+
+registration
+let L be non empty addLoopStr;
+let n be Nat;
+let u,v be n-element FinSequence of (the carrier of L);
+cluster u + v -> n-element;
+end;
+
+registration
+let M be non empty multMagma;
+let n be Nat;
+let u be n-element FinSequence of (the carrier of M);
+let a be Element of M;
+cluster a * u -> n-element;
+end;
+
+theorem :: VECTSP13:2
+for R be non empty Abelian addLoopStr, n be Nat
+for u,v being Tuple of n,(the carrier of R) holds u + v = v + u;
+
+theorem :: VECTSP13:3
+for R be non empty add-associative addLoopStr, n be Nat
+for u,v,w being Tuple of n,(the carrier of R) holds (u + v) + w = u + (v + w);
+
+registration
+let F be Field;
+cluster -> finite-dimensional for trivial VectSp of F;
+end;
+
+registration
+let F be Field;
+let V be non trivial VectSp of F;
+cluster non empty finite linearly-independent for Subset of V;
+end;
+
+registration
+let F be Field;
+let V be non trivial finite-dimensional VectSp of F;
+cluster -> non empty for Basis of V;
+end;
+
+begin :: On Linear Transformations
+
+definition
+let F be Field;
+let U,V be VectSp of F;
+let B be non empty Subset of U;
+let f being Function of B,V;
+redefine func rng f -> Subset of V;
+end;
+
+theorem :: VECTSP13:4
+for F being Field
+for U being VectSp of F
+for B being linearly-independent Subset of U
+for w being Element of U st w in B
+for l being Linear_Combination of B st Sum l = w
+holds Carrier l = { w } & l.w = 1.F;
+
+theorem :: VECTSP13:5
+for F being Field
+for U,V being VectSp of F
+for B being Subset of U
+for A being Subset of V
+for T being linear-transformation of U,V st T .: B c= A
+for l being Linear_Combination of B holds T.(Sum l) in Lin A;
+
+theorem :: VECTSP13:6
+for F being Field
+for U,V being VectSp of F
+for B being Basis of U
+for T1,T2 being linear-transformation of U,V
+st T1|B = T2|B holds T1 = T2;
+
+definition
+let F be Field;
+let U,V be VectSp of F;
+let B be non empty finite Subset of U;
+let l be Linear_Combination of B;
+let f be Function of B,V;
+let v be Element of V;
+func Expand(f,l,v) -> FinSequence of the carrier of F equals
+:: VECTSP13:def 1
+  l * (canFS f"{v});
+end;
+
+definition
+let F be Field;
+let U,V be VectSp of F;
+let B be non empty finite Subset of U;
+let l be Linear_Combination of B;
+let f be Function of B,V;
+func f (#) l -> Linear_Combination of (rng f) means
+:: VECTSP13:def 2
+  for v being Element of V holds it.v = Sum Expand(f,l,v);
+end;
+
+definition
+let F be Field;
+let U,V be VectSp of F;
+let B be non empty finite Subset of U;
+let f be Function of B,V;
+let l be Linear_Combination of (rng f);
+func l (#) f -> Linear_Combination of B means
+:: VECTSP13:def 3
+  for u being Element of U st u in B holds it.u = l.(f.u);
+end;
+
+theorem :: VECTSP13:7
+for F being Field
+for U,V being VectSp of F
+for B being non empty finite Subset of U
+for f being Function of B,V st f is one-to-one
+for l being Linear_Combination of B
+for v being Element of V st v in rng f holds (f (#) l).v = l.(f".v);
+
+theorem :: VECTSP13:8
+for F being Field
+for U,V being VectSp of F
+for B being non empty finite Subset of U
+for f being Function of B,V st f is one-to-one
+for l being Linear_Combination of B holds (f (#) l) (#) f = l;
+
+theorem :: VECTSP13:9
+for F being Field
+for U,V being VectSp of F
+for B being non empty finite Subset of U
+for f being Function of B,V st f is one-to-one
+for l being Linear_Combination of (rng f) holds f (#) (l (#) f) = l;
+
+theorem :: VECTSP13:10
+for F being Field
+for U,V being VectSp of F
+for B being non empty finite Subset of U
+for f being Function of B,V
+for l being Linear_Combination of B holds Carrier(f (#) l) c= f .: (Carrier l);
+
+theorem :: VECTSP13:11
+for F being Field
+for U,V being VectSp of F
+for B being non empty finite Subset of U
+for b being Element of B
+for f being Function of B,V
+for l being Linear_Combination of B st Carrier l = {b}
+holds Carrier(f (#) l) = {f.b} & Sum(f (#) l) = l.b * f.b;
+
+theorem :: VECTSP13:12
+for F being Field
+for U,V being VectSp of F
+for B being non empty finite Subset of U
+for f being Function of B,V
+for l1,l2,l3 being Linear_Combination of B
+st l3 = l1 + l2 holds (f (#) l3) = (f (#) l1) + (f (#) l2);
+
+theorem :: VECTSP13:13
+for F being Field
+for U,V being VectSp of F
+for B being non empty finite Subset of U
+for f being Function of B,V
+for l1,l2 being Linear_Combination of B
+for a being Element of F st l2 = a * l1 holds (f (#) l2) = a * (f (#) l1);
+
+theorem :: VECTSP13:14
+for F being Field
+for U,V being VectSp of F
+for B being non empty finite Subset of U
+for f being Function of B,V
+for l1,l2 being Linear_Combination of B
+st l2 = -l1 holds f (#) l2 = -(f (#) l1);
+
+theorem :: VECTSP13:15
+for F being Field
+for U,V being VectSp of F
+for B being non empty finite Subset of U
+for f being Function of B,V
+for l1,l2,l3 being Linear_Combination of B
+st l3 = l1 - l2 holds f (#) l3 = (f (#) l1) - (f (#) l2);
+
+theorem :: VECTSP13:16
+for F being Field
+for U,V being VectSp of F
+for B being non empty finite Subset of U st B is linearly-independent
+for w being Element of U st w in B
+for l being Linear_Combination of B st Sum l = w
+for f being Function of B,V holds Sum(f (#) l) = f.w;
+
+definition
+let F be Field;
+let U be finite-dimensional VectSp of F;
+let V be VectSp of F;
+let B be Basis of U;
+let f be Function of B,V;
+func canLinTrans f -> linear-transformation of U,V means
+:: VECTSP13:def 4
+  it|B = f;
+end;
+
+theorem :: VECTSP13:17
+for F being Field
+for U being non trivial finite-dimensional VectSp of F
+for V being VectSp of F
+for B being Basis of U
+for f being Function of B,V
+for l being Linear_Combination of B
+holds (canLinTrans f).(Sum l) = Sum(f (#) l);
+
+theorem :: VECTSP13:18
+for F being Field
+for U,V being finite-dimensional VectSp of F
+for B being Basis of U
+for f being Function of B,V
+for T being linear-transformation of U,V
+holds T = canLinTrans f iff
+      for u being Element of U st u in B holds T.u = f.u;
+
+theorem :: VECTSP13:19
+for F being Field
+for U,V being finite-dimensional VectSp of F
+for B being Basis of U
+for f being Function of B,V holds (canLinTrans f) .: B c= rng f;
+
+theorem :: VECTSP13:20
+for F being Field
+for U being non trivial finite-dimensional VectSp of F
+for V being finite-dimensional VectSp of F
+for B being Basis of U
+for f being Function of B,V
+for l2 being Linear_Combination of (rng f)
+ex l1 being Linear_Combination of B st (canLinTrans f).(Sum l1) = Sum l2;
+
+theorem :: VECTSP13:21
+for F being Field
+for U being non trivial finite-dimensional VectSp of F
+for V being finite-dimensional VectSp of F
+for B being Basis of U
+for f being Function of B,V holds im(canLinTrans f) = Lin(rng f);
+
+theorem :: VECTSP13:22
+for F being Field
+for U being non trivial finite-dimensional VectSp of F
+for V being finite-dimensional VectSp of F
+for B being Basis of U
+for f being Function of B,V
+holds canLinTrans f is one-to-one iff
+      (rng f is linearly-independent & f is one-to-one);
+
+begin :: The Vector space R^n
+
+definition
+let R be Ring;
+let n be Nat;
+func vector_add(n,R) -> BinOp of n-tuples_on (the carrier of R) means
+:: VECTSP13:def 5
+  for u,v being Tuple of n,(the carrier of R) holds it.(u,v) = u + v;
+func vector_mult(n,R) -> Function of
+      [: the carrier of R, n-tuples_on (the carrier of R) :],
+                                    n-tuples_on (the carrier of R) means
+:: VECTSP13:def 6
+  for a being Element of R
+  for u being Tuple of n,(the carrier of R) holds it.(a,u) = a * u;
+end;
+
+definition
+let R be Ring;
+let n be Nat;
+func R^*n -> strict ModuleStr over R means
+:: VECTSP13:def 7
+  the carrier of it = n-tuples_on (the carrier of R) &
+  the addF of it = vector_add(n,R) &
+  the ZeroF of it = n |-> (0.R) &
+  the lmult of it = vector_mult(n,R);
+end;
+
+registration
+let R be Ring;
+let n be Nat;
+cluster R^*n -> non empty;
+end;
+
+registration
+let R be Ring;
+let n be Nat;
+cluster R^*n -> Abelian add-associative right_zeroed right_complementable;
+end;
+
+registration
+let R be Ring;
+let n be Nat;
+cluster R^*n -> scalar-distributive scalar-associative vector-distributive;
+end;
+
+registration
+let R be commutative Ring;
+let n be Nat;
+cluster R^*n -> scalar-unital;
+end;
+
+definition
+let R be Ring;
+let n,i be Nat;
+func i_th_unit_vector(n,R) -> Element of n-tuples_on (the carrier of R) equals
+:: VECTSP13:def 8
+  Replace(n |-> 0.R, i, 1.R);
+end;
+
+theorem :: VECTSP13:23
+for R being Ring
+for n,i being Nat st 1 <= i & i <= n holds
+i_th_unit_vector(n,R).i = 1.R &
+for j being Nat st 1 <= j & j <= n & j <> i holds i_th_unit_vector(n,R).j = 0.R
+;
+
+theorem :: VECTSP13:24
+for R being non degenerated Ring, n,i,j being Nat
+st 1 <= i & i <= n & 1 <= j & j <= n
+holds i_th_unit_vector(n,R) = j_th_unit_vector(n,R) iff i = j;
+
+definition
+let R be Ring;
+let n be Nat;
+func Base(R,n) -> Subset of R^*n equals
+:: VECTSP13:def 9
+  { i_th_unit_vector(n,R) where i is Nat : 1 <= i & i <= n };
+end;
+
+registration
+let R be Ring;
+let n be Nat;
+cluster Base(R,n) -> finite;
+end;
+
+theorem :: VECTSP13:25
+for R being non degenerated Ring, n being Nat holds card Base(R,n) = n;
+
+theorem :: VECTSP13:26
+for R being non degenerated commutative Ring, n being Nat
+for l being Linear_Combination of Base(R,n)
+for v being Tuple of n,the carrier of R
+for i being Nat
+st v = Sum l & 1 <= i & i <= n holds v.i = l.(i_th_unit_vector(n,R));
+
+registration
+let R be non degenerated commutative Ring;
+let n be Nat;
+cluster Base(R,n) -> linearly-independent;
+end;
+
+theorem :: VECTSP13:27
+for R being non degenerated commutative Ring, n being Nat
+holds Lin Base(R,n) = R^*n;
+
+registration
+let R be non degenerated commutative Ring;
+let n be Nat;
+cluster Base(R,n) -> base;
+end;
+
+registration
+let F be Field;
+let n be Nat;
+cluster F^*n -> finite-dimensional;
+end;
+
+theorem :: VECTSP13:28
+for F being Field, n being Nat holds dim(F^*n) = n;
+
+definition
+let R be Ring;
+let U,V be VectSp of R;
+pred U,V are_isomorphic means
+:: VECTSP13:def 10
+  ex T being linear-transformation of U,V st T is bijective;
+end;
+
+theorem :: VECTSP13:29
+for F being Field
+for U,V being finite-dimensional VectSp of F
+holds U,V are_isomorphic iff dim U = dim V;
+
+theorem :: VECTSP13:30
+for F being Field
+for U being finite-dimensional VectSp of F holds U,F^*(dim U) are_isomorphic;
+
+theorem :: VECTSP13:31
+for R being finite Ring, n being Nat
+holds card(the carrier of R^*n) = card(the carrier of R) |^ n;
+
+registration
+let R be finite Ring;
+let n be Nat;
+cluster R^*n -> finite;
+end;
+
+begin :: The Vector Space of Maps into a Ring R
+
+definition
+let X be non empty set;
+let L be non empty addLoopStr;
+let f,g be Function of X,L;
+func f '+' g -> Function of X,L means
+:: VECTSP13:def 11
+  for x being Element of X holds it.x = f.x + g.x;
+end;
+
+definition
+let X be non empty set;
+let L be non empty Abelian addLoopStr;
+let f,g be Function of X,L;
+redefine func f '+' g;
+commutativity;
+end;
+
+definition
+let X be non empty set;
+let L be non empty addLoopStr;
+let f be Function of X,L;
+func '-' f -> Function of X,L means
+:: VECTSP13:def 12
+  for x being Element of X holds it.x = -f.x;
+end;
+
+definition
+let X be non empty set;
+let L be non empty multLoopStr;
+let f be Function of X,L;
+let a be Element of L;
+func a '*' f -> Function of X,L means
+:: VECTSP13:def 13
+  for x being Element of X holds it.x = a * f.x;
+end;
+
+registration
+let X be non empty set;
+let L be left_unital non empty multLoopStr;
+let f be Function of X,L;
+reduce (1.L) '*' f to f;
+end;
+
+theorem :: VECTSP13:32
+for X being non empty set
+for L being non empty add-associative addLoopStr
+for f,g,h being Function of X,L holds (f '+' g) '+' h = f '+' (g '+' h);
+
+theorem :: VECTSP13:33
+for X being non empty set
+for L being non empty
+            add-associative right_zeroed right_complementable addLoopStr
+for f being Function of X,L holds f '+' ('-' f) = X --> 0.L;
+
+theorem :: VECTSP13:34
+for X being non empty set
+for L being left-distributive non empty doubleLoopStr
+for a,b being Element of L
+for f being Function of X,L holds (a + b) '*' f = (a '*' f) '+' (b '*' f);
+
+theorem :: VECTSP13:35
+for X being non empty set
+for L being associative non empty multLoopStr
+for a,b being Element of L
+for f being Function of X,L holds (a * b) '*' f = a '*' (b '*' f);
+
+theorem :: VECTSP13:36
+for X being non empty set
+for L being right-distributive non empty doubleLoopStr
+for a being Element of L
+for f,g being Function of X,L holds a '*' (f '+' g) = (a '*' f) '+' (a '*' g);
+
+definition
+let X be non empty set;
+let L be non empty addLoopStr;
+func mapAdd(X,L) -> BinOp of Funcs(X,the carrier of L) means
+:: VECTSP13:def 14
+  for f,g being Function of X,L holds it.(f,g) = f '+' g;
+end;
+
+definition
+let X be non empty set;
+let L be non empty multLoopStr;
+func mapMult(X,L) ->
+       Function of [:the carrier of L,Funcs(X,the carrier of L):],
+                   Funcs(X,the carrier of L) means
+:: VECTSP13:def 15
+  for f being Function of X,L, a being Element of L holds it.(a,f) = a '*' f;
+end;
+
+definition
+let X be non empty set;
+let L be non empty doubleLoopStr;
+func Maps(X,L) -> strict ModuleStr over L means
+:: VECTSP13:def 16
+  the carrier of it = Funcs(X,the carrier of L) &
+  the addF of it = mapAdd(X,L) &
+  the ZeroF of it = (X --> 0.L) &
+  the lmult of it = mapMult(X,L);
+end;
+
+definition
+let X,L be non empty doubleLoopStr;
+func Maps(X,L) equals
+:: VECTSP13:def 17
+  Maps(the carrier of X,L);
+end;
+
+registration
+let X be non empty set;
+let L be non empty doubleLoopStr;
+cluster Maps(X,L) -> non empty;
+end;
+
+registration
+let X be non empty set;
+let L be non empty Abelian doubleLoopStr;
+cluster Maps(X,L) -> Abelian;
+end;
+
+registration
+let X be non empty set;
+let L be non empty add-associative doubleLoopStr;
+cluster Maps(X,L) -> add-associative;
+end;
+
+registration
+let X be non empty set;
+let L be non empty right_zeroed doubleLoopStr;
+cluster Maps(X,L) -> right_zeroed;
+end;
+
+registration
+let X be non empty set;
+let L be non empty
+          add-associative right_zeroed right_complementable doubleLoopStr;
+cluster Maps(X,L) -> right_complementable;
+end;
+
+registration
+let X be non empty set;
+let L be left-distributive non empty doubleLoopStr;
+cluster Maps(X,L) -> scalar-distributive;
+end;
+
+registration
+let X be non empty set;
+let L be associative non empty doubleLoopStr;
+cluster Maps(X,L) -> scalar-associative;
+end;
+
+registration
+let X be non empty set;
+let L be right-distributive non empty doubleLoopStr;
+cluster Maps(X,L) -> vector-distributive;
+end;
+
+registration
+let X be non empty set;
+let L be left_unital non empty doubleLoopStr;
+cluster Maps(X,L) -> scalar-unital;
+end;
+
+begin :: The Vector Space of Linear Transformations
+
+definition
+let X be non empty set;
+let R be non empty 1-sorted;
+let L be non empty ModuleStr over R;
+let f be Function of X,L;
+let a be Element of R;
+func a '*' f -> Function of X,L means
+:: VECTSP13:def 18
+  for x being Element of X holds it.x = a * f.x;
+end;
+
+registration
+let X be non empty set;
+let R be non empty Ring;
+let L be scalar-unital non empty ModuleStr over R;
+let f be Function of X,L;
+reduce (1.R) '*' f to f;
+end;
+
+theorem :: VECTSP13:37
+for X being non empty set
+for R being Ring
+for L being scalar-distributive non empty ModuleStr over R
+for a,b being Element of R
+for f being Function of X,L holds (a + b) '*' f = (a '*' f) '+' (b '*' f);
+
+theorem :: VECTSP13:38
+for X being non empty set
+for R being Ring
+for L being scalar-associative non empty ModuleStr over R
+for a,b being Element of R
+for f being Function of X,L holds (a * b) '*' f = a '*' (b '*' f);
+
+theorem :: VECTSP13:39
+for X being non empty set
+for R being Ring
+for L being vector-distributive non empty ModuleStr over R
+for a,b being Element of R
+for f,g being Function of X,L holds a '*' (f '+' g) = (a '*' f) '+' (a '*' g);
+
+definition
+let X be non empty set;
+let R be non empty addLoopStr;
+let L be non empty ModuleStr over R;
+func mapAdd(X,L) -> BinOp of Funcs(X,the carrier of L) means
+:: VECTSP13:def 19
+  for f,g being Function of X,L holds it.(f,g) = f '+' g;
+end;
+
+definition
+let X be non empty set;
+let R be non empty multLoopStr;
+let L be non empty ModuleStr over R;
+func mapMult(X,L) ->
+       Function of [:the carrier of R,Funcs(X,the carrier of L):],
+                   Funcs(X,the carrier of L) means
+:: VECTSP13:def 20
+  for f being Function of X,L, a being Element of R holds it.(a,f) = a '*' f;
+end;
+
+definition
+let X be non empty set;
+let R be non empty doubleLoopStr;
+let L be non empty ModuleStr over R;
+func Maps(X,L) -> strict ModuleStr over R means
+:: VECTSP13:def 21
+  the carrier of it = Funcs(X,the carrier of L) &
+  the addF of it = mapAdd(X,L) &
+  the ZeroF of it = (X --> 0.L) &
+  the lmult of it = mapMult(X,L);
+end;
+
+definition
+let R be non empty doubleLoopStr;
+let L1,L2 be non empty ModuleStr over R;
+func Maps(L1,L2) equals
+:: VECTSP13:def 22
+  Maps(the carrier of L1,L2);
+end;
+
+registration
+let X be non empty set;
+let R be non empty doubleLoopStr;
+let L be non empty ModuleStr over R;
+cluster Maps(X,L) -> non empty;
+end;
+
+registration
+let X be non empty set;
+let R be Ring;
+let L be non empty Abelian ModuleStr over R;
+cluster Maps(X,L) -> Abelian;
+end;
+
+registration
+let X be non empty set;
+let R be Ring;
+let L be non empty add-associative ModuleStr over R;
+cluster Maps(X,L) -> add-associative;
+end;
+
+registration
+let X be non empty set;
+let R be Ring;
+let L be non empty right_zeroed ModuleStr over R;
+cluster Maps(X,L) -> right_zeroed;
+end;
+
+registration
+let X be non empty set;
+let R be Ring;
+let L be add-associative right_zeroed right_complementable
+                                                non empty ModuleStr over R;
+cluster Maps(X,L) -> right_complementable;
+end;
+
+registration
+let X be non empty set;
+let R be Ring;
+let L be scalar-distributive non empty ModuleStr over R;
+cluster Maps(X,L) -> scalar-distributive;
+end;
+
+registration
+let X be non empty set;
+let R be Ring;
+let L be scalar-associative non empty ModuleStr over R;
+cluster Maps(X,L) -> scalar-associative;
+end;
+
+registration
+let X be non empty set;
+let R be Ring;
+let L be vector-distributive non empty ModuleStr over R;
+cluster Maps(X,L) -> vector-distributive;
+end;
+
+registration
+let X be non empty set;
+let R be Ring;
+let L be scalar-unital non empty ModuleStr over R;
+cluster Maps(X,L) -> scalar-unital;
+end;
+
+definition
+let R be Ring;
+let U,V be VectSp of R;
+redefine func Maps(U,V) -> VectSp of R;
+end;
+
+theorem :: VECTSP13:40
+for R being commutative Ring
+for U,V being VectSp of R
+for f,g being linear-transformation of U,V
+holds f '+' g is linear-transformation of U,V;
+
+theorem :: VECTSP13:41
+for R being commutative Ring
+for U,V being VectSp of R
+for f being linear-transformation of U,V
+for a being Element of R
+holds a '*' f is linear-transformation of U,V;
+
+definition
+let F be Field;
+let U,V be VectSp of F;
+func LinTrans(U,V) -> strict Subspace of Maps(U,V) means
+:: VECTSP13:def 23
+  the carrier of it = the set of all f where f is linear-transformation of U,V;
+end;
+
+definition
+let F be Field;
+let V be VectSp of F;
+func End(V) -> Subspace of Maps(V,V) equals
+:: VECTSP13:def 24
+  LinTrans(V,V);
+end;
+

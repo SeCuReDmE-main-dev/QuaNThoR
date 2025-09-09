@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<ReductionRegistrations>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="RELAT_1"/>
+<ArticleID name="XBOOLE_0"/>
+<ArticleID name="ZFMISC_1"/>
+<ArticleID name="SUBSET_1"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="ORDINAL1"/>
+<ArticleID name="NUMBERS"/>
+<ArticleID name="XCMPLX_0"/>
+</Signature>
+<Reduction aid="XCMPLX_0" nr="1">
+<Typ kind="M" nr="1">
+<Cluster>
+<Adjective nr="19"/>
+</Cluster>
+</Typ>
+<Func kind="K" nr="29">
+<LocusVar nr="1"/>
+<Func kind="K" nr="41"/>
+</Func>
+<LocusVar nr="1"/>
+</Reduction>
+<Reduction aid="XCMPLX_0" nr="2">
+<Typ kind="M" nr="1">
+<Cluster>
+<Adjective nr="19"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster>
+<Adjective nr="19"/>
+</Cluster>
+</Typ>
+<Func kind="K" nr="29">
+<Func kind="K" nr="33">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+</Func>
+<Func kind="K" nr="17">
+<Func kind="K" nr="41"/>
+<Func kind="K" nr="41"/>
+</Func>
+</Func>
+<Func kind="K" nr="33">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+</Func>
+</Reduction>
+</ReductionRegistrations>

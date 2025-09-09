@@ -1,0 +1,5011 @@
+:: Extensions of Orderings
+::  by Christoph Schwarzweller
+::
+:: Received December 18, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ARYTM_3, ARYTM_1, FUNCT_1, RELAT_1, VECTSP_1, TARSKI, STRUCT_0,
+      SUBSET_1, SUPINF_2, PYTHTRIP, XXREAL_0, FUNCSDOM, REWRITE2, NUMBERS,
+      RAT_1, FINSEQ_1, MESFUNC1, XCMPLX_0, ABIAN, ALGSTR_0, QC_LANG1, IDEAL_1,
+      CARD_3, ZFMISC_1, VECTSP_2, BINOP_2, CAT_1, COMPLEX1, XBOOLE_0, SQUARE_1,
+      RING_3, NEWTON, ORDINAL4, ALGSTR_4, FUNCT_2, INTERVA1, EC_PF_1, REALSET1,
+      GLIB_000, GROUP_1, INT_1, YELLOW_8, RLVECT_2, RLVECT_3, GAUSSINT,
+      HURWITZ, NAT_1, C0SP1, POLYNOM2, CARD_1, PARTFUN1, AFINSQ_1, EQREL_1,
+      RLVECT_5, RING_2, FIELD_3, FIELD_4, FIELD_6, FIELD_7, FIELD_9, RLVECT_1,
+      REALALG1, FDIFF_1, REALALG2, REALALG3, POLYNOM1, POLYNOM3, FUNCT_8,
+      POLYNOM5, FOMODEL1, INT_2, RATFUNC1, ALGNUM_1;
+ notations TARSKI, ZFMISC_1, XBOOLE_0, SUBSET_1, DOMAIN_1, RELAT_1, REALSET1,
+      FUNCT_1, FINSEQ_1, ALGSEQ_1, BINOP_2, RELSET_1, PARTFUN1, ORDINAL1,
+      FUNCT_2, BINOP_1, SETFAM_1, EQREL_1, SQUARE_1, XREAL_0, XCMPLX_0,
+      XXREAL_0, NAT_1, INT_1, INT_2, RAT_1, ABIAN, NUMBERS, STRUCT_0, BINOM,
+      ALGSTR_0, GROUP_1, GROUP_2, RLVECT_1, VECTSP_1, VECTSP_2, VECTSP_6,
+      VECTSP_7, MATRLIN, POLYNOM1, POLYNOM3, POLYNOM4, POLYNOM5, HURWITZ,
+      RATFUNC1, C0SP1, GAUSSINT, IDEAL_1, RING_2, RING_3, RING_4, EC_PF_1,
+      ALGNUM_1, O_RING_1, FIELD_1, FIELD_3, FIELD_4, FIELD_5, FIELD_6, FIELD_7,
+      FIELD_9, REALALG1, REALALG2;
+ constructors BINOM, REALSET1, BINOP_2, NAT_D, RATFUNC1, GCD_1, FVSUM_1,
+      SQUARE_1, ALGSEQ_1, POLYNOM4, ABIAN, VECTSP_9, ALGNUM_1, REALALG2,
+      FIELD_9, FIELD_14;
+ registrations ORDINAL1, XXREAL_0, XREAL_0, VECTSP_1, STRUCT_0, MEMBERED,
+      RLVECT_1, INT_1, VECTSP_2, NAT_1, INT_2, INT_3, XCMPLX_0, REALSET1,
+      RAT_1, ALGSTR_1, SUBSET_1, RELAT_1, ABIAN, FUNCOP_1, CARD_1, FINSET_1,
+      POLYNOM3, POLYNOM5, RATFUNC1, FINSEQ_1, REALALG1, REALALG2, GAUSSINT,
+      FIELD_2, FIELD_4, FIELD_5, FIELD_6, FIELD_7, FIELD_9, RING_2, RING_3,
+      RING_4, RING_5, FIELD_14;
+ requirements NUMERALS, SUBSET, BOOLE, REAL, ARITHM;
+ equalities BINOP_1, REALSET1, XCMPLX_0, STRUCT_0, ALGSTR_0, VECTSP_1, INT_3,
+      POLYNOM3, XBOOLE_0, GROUP_2, SQUARE_1, O_RING_1, IDEAL_1, REALALG1,
+      FIELD_6;
+ expansions STRUCT_0, XBOOLE_0, TARSKI, O_RING_1, IDEAL_1, FIELD_7, REALALG1;
+ theorems GROUP_1, VECTSP_1, TARSKI, BINOM, FUNCT_1, RLVECT_1, RATFUNC1,
+      XBOOLE_0, NAT_1, XREAL_1, FINSEQ_1, IDEAL_1, GAUSSINT, XREAL_0, INT_1,
+      VECTSP_2, REALALG1, REALALG2, EC_PF_1, INT_2, IRRAT_1, SQUARE_1, UPROOTS,
+      PARTFUN1, STRUCT_0, POLYNOM2, ZFMISC_1, FIELD_4, BINOP_2, RING_5,
+      POLYNOM1, VECTSP_6, VECTSP_7, FIELD_5, FIELD_6, FIELD_7, FIELD_9,
+      EQREL_1, ENUMSET1, C0SP1, HURWITZ, POLYNOM3, POLYNOM5, FIELD_8, POLYNOM4,
+      RING_4, ABIAN, RING_3, XBOOLE_1, FINSEQ_2, FUNCT_2, FIELD_14, ALGNUM_1,
+      NIVEN, NORMSP_1, XXREAL_0, FIELD_13, ALGSEQ_1;
+ schemes NAT_1, FUNCT_2, FINSEQ_1;
+
+begin :: Preliminaries
+
+scheme 3SeqDEx{D() -> non empty set, A() -> Nat,
+               P[object,object], Q[object,object], R[object,object]}:
+  ex p,q,r being FinSequence of D()
+  st dom p = Seg A() & dom q = Seg A() & dom r = Seg A() &
+     for k being Nat st k in Seg A() holds P[k,p.k] &
+     for k being Nat st k in Seg A() holds Q[k,q.k] &
+     for k being Nat st k in Seg A() holds R[k,r.k]
+provided
+A1: for k being Nat st k in Seg A() ex x being Element of D() st P[k,x] and
+A2: for k being Nat st k in Seg A() ex x being Element of D() st Q[k,x] and
+A3: for k being Nat st k in Seg A() ex x being Element of D() st R[k,x]
+proof
+consider p being FinSequence of D() such that A4: dom p = Seg A() &
+    for k being Nat st k in Seg A() holds P[k,p.k]  from FINSEQ_1:sch 5(A1);
+consider q being FinSequence of D() such that A5: dom q = Seg A() &
+    for k being Nat st k in Seg A() holds Q[k,q.k]  from FINSEQ_1:sch 5(A2);
+consider r being FinSequence of D() such that A6: dom r = Seg A() &
+    for k being Nat st k in Seg A() holds R[k,r.k]  from FINSEQ_1:sch 5(A3);
+take p,q,r;
+thus thesis by A4,A5,A6;
+end;
+
+theorem lempart0:
+for L being add-associative right_zeroed right_complementable
+   non empty addLoopStr holds -{0.L} = {0.L}
+proof
+let L be add-associative right_zeroed right_complementable
+         non empty addLoopStr;
+A: -{0.L} c= {0.L}
+   proof
+   now let o be object;
+     assume o in -{0.L}; then
+     consider x being Element of L such that
+     B: o = -x & x in {0.L};
+     x = 0.L by B,TARSKI:def 1;
+     hence o in {0.L} by B;
+     end;
+   hence thesis;
+   end;
+{0.L} c= -{0.L}
+   proof
+   now let o be object;
+     assume B: o in {0.L}; then
+     reconsider x = o as Element of L;
+     C: x = 0.L by B,TARSKI:def 1;
+     -x in -{0.L} by B;
+     hence o in -{0.L} by C;
+     end;
+   hence thesis;
+   end;
+hence thesis by A;
+end;
+
+definition
+let R be Ring;
+func 2.R -> Element of R equals
+  1.R + 1.R;
+coherence;
+end;
+
+registration
+cluster 2-characteristic for Field;
+existence
+proof
+reconsider e = 2 as prime Nat by INT_2:28;
+set F = Z/e;
+take F;
+thus thesis;
+end;
+end;
+
+registration
+let R be 2-characteristic Ring;
+cluster 2.R -> zero;
+coherence
+proof
+A: Char R = 2 by RING_3:def 6;
+then R is non degenerated by REALALG2:23;
+then 0.R = 2 '*' 1.R by A,REALALG2:24 .= 1.R + 1.R by RING_5:2;
+hence thesis;
+end;
+end;
+
+registration
+let R be non 2-characteristic non degenerated Ring;
+cluster 2.R -> non zero;
+coherence
+proof
+now assume 2.R = 0.R;
+  then 0.R = 2 '*' 1.R by RING_5:2;
+  then Char R = 2 by REALALG2:24;
+  hence contradiction by RING_3:def 6;
+  end;
+hence thesis;
+end;
+end;
+
+registration
+cluster 2.F_Rat -> non square;
+coherence
+proof
+set F = F_Rat;
+H1: 2.F = ((the addF of F_Real) || (the carrier of F_Rat)).[1.F,1.F]
+          by GAUSSINT:13
+       .= addreal.(1,1) by GAUSSINT:13,FUNCT_1:49
+       .= 1 + 1 by BINOP_2:def 9;
+now assume 2.F is square; then
+  consider a being Element of F such that A1: a^2 = 2.F;
+  reconsider a as Rational;
+  a^2 = (sqrt 2)^2 by A1,H1,SQUARE_1:def 2;
+  then a = sqrt 2 or -a = sqrt 2 by SQUARE_1:40;
+  hence contradiction by INT_2:28,IRRAT_1:1;
+  end;
+hence thesis;
+end;
+cluster 2.F_Real -> square;
+coherence
+proof
+reconsider b = (sqrt 2) as Element of F_Real by XREAL_0:def 1;
+b^2 = (sqrt 2)^2;
+hence thesis by SQUARE_1:def 2;
+end;
+end;
+
+registration
+cluster preordered polynomial_disjoint for Field;
+existence
+proof
+take F_Real;
+thus thesis;
+end;
+end;
+
+registration
+cluster preordered -> non 2-characteristic for non degenerated Ring;
+coherence
+proof
+let R be non degenerated Ring;
+assume R is preordered;
+then Char R = 0 by REALALG1:28;
+hence thesis;
+end;
+end;
+
+theorem finex:
+for F being Field,
+    E being FieldExtension of F
+for f being FinSequence of E st
+for i being Nat st i in dom f holds f.i in F
+holds f is FinSequence of F & Sum f in F
+proof
+let F be Field, E be FieldExtension of F, f be FinSequence of E;
+assume AS: for i being Nat st i in dom f holds f.i in F;
+I1: F is Subring of E by FIELD_4:def 1;
+per cases;
+suppose len f = 0;
+  then A: f = <*>(the carrier of F);
+  then Sum f = Sum <*>(the carrier of F) by I1,FIELD_4:2
+            .= 0.F by RLVECT_1:43;
+  hence f is FinSequence of F & Sum f in F by A;
+  end;
+suppose len f > 0;
+  then f <> {};
+  then consider G being FinSequence, y being object such that
+  B2: f = G^<*y*> by FINSEQ_1:46;
+  rng G c= rng f by B2,FINSEQ_1:29; then
+  reconsider G as FinSequence of E by XBOOLE_1:1,FINSEQ_1:def 4;
+  C: dom G c= dom f by B2,FINSEQ_1:26;
+  D: now let i be Nat;
+     assume C0: i in dom G;
+     then G.i = f.i by B2,FINSEQ_1:def 7;
+     hence G.i in F by C,C0,AS;
+     end;
+  now let o be object;
+    assume o in rng G; then
+    consider u being object such that
+    D1: u in dom G & G.u = o by FUNCT_1:def 3;
+    reconsider u as Element of NAT by D1;
+    o in F by D,D1;
+    hence o in the carrier of F;
+    end;
+  then rng G c= the carrier of F;
+  then reconsider G as FinSequence of F by FINSEQ_1:def 4;
+  rng<*y*> = {y} by FINSEQ_1:39;
+  then G5: y in rng<*y*> by TARSKI:def 1;
+  rng<*y*> c= rng f by B2,FINSEQ_1:30;
+  then consider u being object such that
+  G6: u in dom f & f.u = y by G5,FUNCT_1:def 3;
+  reconsider u as Element of NAT by G6;
+  f.u in F by AS,G6; then
+  reconsider y as Element of F by G6;
+  B4: <*y*> is FinSequence of F & G is FinSequence of F & f=G^<*y*> by B2;
+  Sum f = Sum(G^<*y*>) by I1,FIELD_4:2,B2
+       .= Sum G + Sum <*y*> by RLVECT_1:41
+       .= Sum G + y by RLVECT_1:44;
+  hence f is FinSequence of F & Sum f in F by B4;
+  end;
+end;
+
+registration
+let F be Field;
+let a be sum_of_squares Element of F;
+let b be sum_of_squares non zero Element of F;
+cluster a * b" -> sum_of_squares;
+coherence
+proof
+I: b <> 0.F;
+a * b * (b")^2
+      = a * (b * (b" * b")) by GROUP_1:def 3
+     .= a * ((b * b") * b") by GROUP_1:def 3
+     .= a * (1.F * b") by I,VECTSP_1:def 10
+     .= a * b";
+hence thesis;
+end;
+end;
+
+registration
+let F be Field;
+let f be quadratic non empty FinSequence of F;
+cluster Sum f -> sum_of_squares;
+coherence
+proof
+now let i be Nat;
+  assume i in dom f;
+  then reconsider j = i as Element of dom f;
+  f.j is square by REALALG2:def 5;
+  hence ex a being Element of F st f.i = a^2;
+  end;
+hence thesis;
+end;
+end;
+
+ll: for R being ZeroStr holds <*>(the carrier of R) is trivial
+proof
+let R be ZeroStr; set f = <*>(the carrier of R);
+for i being object st i in dom f holds f.i = 0.R;
+hence thesis by REALALG2:def 4;
+end;
+
+registration
+let R be ZeroStr;
+cluster trivial for FinSequence of R;
+existence
+proof
+take <*>(the carrier of R);
+thus thesis by ll;
+end;
+end;
+
+registration
+let R be ZeroStr;
+cluster <*>(the carrier of R) -> trivial;
+coherence by ll;
+cluster empty -> trivial for FinSequence of R;
+coherence
+proof
+let f be FinSequence of R;
+assume f is empty;
+then f =<*>(the carrier of R);
+hence thesis;
+end;
+end;
+
+registration
+let R be ZeroStr;
+let f,g be trivial FinSequence of R;
+cluster f^g -> trivial;
+coherence
+proof
+now let i be object;
+  assume i in dom(f^g); then
+  per cases by FINSEQ_1:25;
+  suppose A: i in dom f;
+    then (f^g).i = f.i by FINSEQ_1:def 7;
+    hence (f^g).i = 0.R by A,REALALG2:def 4;
+    end;
+  suppose ex n being Nat st n in dom g & i = len f + n;
+    then consider n being Nat such that
+    A: n in dom g & i = len f + n;
+    (f^g).i = g.n by A,FINSEQ_1:def 7;
+    hence (f^g).i = 0.R by A,REALALG2:def 4;
+    end;
+  end;
+hence thesis by REALALG2:def 4;
+end;
+end;
+
+registration
+let R be non degenerated Ring;
+let f be non trivial FinSequence of R, g be FinSequence of R;
+cluster f^g -> non trivial;
+coherence
+proof
+consider i being object such that
+A: i in dom f & f.i <> 0.R by REALALG2:def 4;
+B: (f^g).i <> 0.R by A,FINSEQ_1:def 7;
+dom f c= dom(f^g) by FINSEQ_1:26;
+hence thesis by A,B,REALALG2:def 4;
+end;
+cluster g^f -> non trivial;
+coherence
+proof
+consider i being object such that
+A: i in dom f & f.i <> 0.R by REALALG2:def 4;
+reconsider n = i as Nat by A;
+B: len g + n in dom(g^f) by A,FINSEQ_1:28;
+(g^f).(len g + n) = f.n by A,FINSEQ_1:def 7;
+hence thesis by A,B,REALALG2:def 4;
+end;
+end;
+
+registration
+let R be Ring;
+let f be trivial FinSequence of R;
+cluster Sum f -> zero;
+coherence
+proof
+per cases;
+suppose f is empty; then
+f = <*>(the carrier of R);
+hence thesis by RLVECT_1:43;
+end;
+suppose f is non empty; then
+H: Seg 1 c= Seg (len f) by FINSEQ_1:20,FINSEQ_1:5;
+Seg 1 = {1} & 1 in {1} by FINSEQ_1:2,TARSKI:def 1; then
+1 in Seg(len f) by H; then
+A: 1 in dom f by FINSEQ_1:def 3; then
+B: f/.1 = f.1 by PARTFUN1:def 6;
+now let i be Element of NAT;
+  assume C: i in dom f & i <> 1;
+  then f/.i = f.i by PARTFUN1:def 6;
+  hence f/.i = 0.R by C,REALALG2:def 4;
+  end;
+then Sum f = f/.1 by A,POLYNOM2:3 .= 0.R by A,B,REALALG2:def 4;
+hence thesis;
+end;
+end;
+end;
+
+definition
+let E be Field, F be Subfield of E;
+let a be Element of F;
+func @(a,E) -> Element of E equals
+  a;
+coherence
+proof
+the carrier of F c= the carrier of E by EC_PF_1:def 1;
+hence thesis;
+end;
+end;
+
+definition
+let E be Field, F be Subfield of E;
+let a be Element of E;
+attr a is F-membered means
+  a in the carrier of F;
+end;
+
+registration
+let E be Field, F be Subfield of E;
+cluster F-membered for Element of E;
+existence
+proof
+take 1.E;
+F is Subring of E by FIELD_5:12; then
+1.E = 1.F by C0SP1:def 3;
+hence thesis;
+end;
+end;
+
+definition
+let E be Field, F be Subfield of E;
+let a be Element of E;
+assume AS:a is F-membered;
+func @(F,a) -> Element of F equals :defred:
+  a;
+coherence by AS;
+end;
+
+registration
+let E be Field, F be Subfield of E;
+let a be F-membered Element of E;
+reduce @(F,a) to a;
+reducibility by defred;
+end;
+
+registration
+let R be non degenerated Ring;
+cluster 1.R -> non zero;
+coherence;
+cluster -1.R -> non zero;
+coherence
+proof
+now assume -1.R is zero; then
+  --1.R is zero;
+  hence contradiction;
+  end;
+hence thesis;
+end;
+end;
+
+registration
+let R be preordered non degenerated Ring;
+let P be Preordering of R;
+let a,b be P-positive Element of R;
+cluster a + b -> P-positive;
+coherence
+proof
+A: P + P c= P by REALALG1:def 14;
+D: a in P \ {0.R} & b in P \ {0.R} by REALALG2:def 8; then
+C: a in P & b in P by XBOOLE_0:def 5; then
+B: a + b in P + P;
+now assume a + b = 0.R; then
+  a = -b by RLVECT_1:6; then
+  --b in -P by C; then
+  b in P /\ -P by C; then
+  b in {0.R} by REALALG1:def 7;
+  hence contradiction by D,XBOOLE_0:def 5;
+  end; then
+not a + b in {0.R} by TARSKI:def 1; then
+a + b in P \ {0.R} by A,B,XBOOLE_0:def 5;
+hence a + b is P-positive by REALALG2:def 8;
+end;
+end;
+
+registration
+let R be preordered domRing;
+let P be Preordering of R;
+let a,b be P-positive Element of R;
+cluster a * b -> P-positive;
+coherence
+proof
+A: P * P c= P by REALALG1:def 14;
+a in P \ {0.R} & b in P \ {0.R} by REALALG2:def 8; then
+a in P & b in P by XBOOLE_0:def 5; then
+B: a * b in P * P;
+now assume a * b = 0.R; then
+  per cases by VECTSP_2:def 1;
+  suppose a = 0.R;
+    hence contradiction;
+    end;
+  suppose b = 0.R;
+    hence contradiction;
+    end;
+  end; then
+not a * b in {0.R} by TARSKI:def 1; then
+a * b in P \ {0.R} by A,B,XBOOLE_0:def 5;
+hence a * b is P-positive by REALALG2:def 8;
+end;
+end;
+
+definition
+let R be Ring;
+let S be Subset of R;
+func S^+ -> Subset of R equals
+  S \ {0.R};
+coherence;
+func S^- -> Subset of R equals
+  -S \ {0.R};
+coherence;
+end;
+
+registration
+let R be preordered non degenerated Ring;
+let P be Preordering of R;
+cluster P^+ -> non empty;
+coherence
+proof
+1.R in P & not 1.R in {0.R} by REALALG1:25,TARSKI:def 1;
+hence thesis by XBOOLE_0:def 5;
+end;
+cluster P^- -> non empty;
+coherence
+proof
+1.R in P by REALALG1:25; then
+A: -1.R in -P;
+not -1.R in {0.R} by TARSKI:def 1;
+hence thesis by A,XBOOLE_0:def 5;
+end;
+end;
+
+registration
+let R be preordered non degenerated Ring;
+let P be Preordering of R;
+cluster (P^+) /\ (P^-) -> empty;
+coherence
+proof
+now let o be object;
+  assume o in (P^+) /\ (P^-);
+  then H: o in (P^+) & o in (P^-) by XBOOLE_0:def 4;
+  then o in P & o in -P by XBOOLE_0:def 5;
+  then o in P /\ -P;
+  then o in {0.R} by REALALG1:def 14;
+  hence contradiction by H,XBOOLE_0:def 5;
+  end;
+hence thesis;
+end;
+end;
+
+registration
+let R be preordered non degenerated Ring;
+let P be Preordering of R;
+cluster P^+ -> add-closed;
+coherence
+proof
+set S = P \ {0.R};
+A: P + P c= P by REALALG1:def 14;
+now let s1,s2 be Element of R;
+  assume s1 in S & s2 in S; then C:
+  s1 in P & not s1 in {0.R} & s2 in P & not s2 in {0.R} by XBOOLE_0:def 5;
+  then B: s1 + s2 in P + P;
+  now assume s1 + s2 in {0.R};
+    then s1 + s2 = 0.R by TARSKI:def 1;
+    then s1 = -s2 by RLVECT_1:6;
+    then --s2 in -P by C;
+    then s2 in P /\ -P by C;
+    hence contradiction by C,REALALG1:def 7;
+    end;
+  hence s1 + s2 in S by A,B,XBOOLE_0:def 5;
+  end;
+hence thesis;
+end;
+end;
+
+registration
+let R be preordered domRing;
+let P be Preordering of R;
+cluster P^+ -> mult-closed;
+coherence
+proof
+set S = P \ {0.R};
+A: P * P c= P by REALALG1:def 14;
+now let s1,s2 be Element of R;
+  assume s1 in S & s2 in S; then C:
+  s1 in P & not s1 in {0.R} & s2 in P & not s2 in {0.R} by XBOOLE_0:def 5;
+  then B: s1 * s2 in P * P;
+  now assume s1 * s2 in {0.R};
+    then s1 * s2 = 0.R by TARSKI:def 1;
+    then s1 = 0.R or s2 = 0.R by VECTSP_2:def 1;
+    hence contradiction by C,TARSKI:def 1;
+    end;
+  hence s1 * s2 in S by A,B,XBOOLE_0:def 5;
+  end;
+hence thesis;
+end;
+end;
+
+theorem lemP:
+for R being preordered non degenerated Ring,
+    P being Preordering of R
+holds P + P^+ c= P^+ & P^+ + P c= P^+
+proof
+let R be preordered non degenerated Ring; let P be Preordering of R;
+set S = P \ {0.R};
+H: P + P c= P by REALALG1:def 14;
+now let o be object;
+   assume o in P + S; then
+   consider a,b being Element of R such that
+A: o = a + b & a in P & b in S;
+B: b in P & not b in {0.R} by A,XBOOLE_0:def 5; then
+C: a + b in P + P by A;
+   now assume a + b in {0.R};
+     then a + b = 0.R by TARSKI:def 1;
+     then a = -b by RLVECT_1:6;
+     then --b in -P by A;
+     then b in P /\ -P by B;
+     hence contradiction by B,REALALG1:def 7;
+     end;
+   hence o in S by C,A,H,XBOOLE_0:def 5;
+  end;
+hence P + P^+ c= P^+;
+now let o be object;
+   assume o in S + P; then
+   consider a,b being Element of R such that
+A: o = a + b & a in S & b in P;
+B: a in P & not a in {0.R} by A,XBOOLE_0:def 5; then
+C: a + b in P + P by A;
+   now assume a + b in {0.R};
+     then a + b = 0.R by TARSKI:def 1;
+     then b = -a by RLVECT_1:6;
+     then --a in -P by A;
+     then a in P /\ -P by B;
+     hence contradiction by B,REALALG1:def 7;
+     end;
+   hence o in S by C,A,H,XBOOLE_0:def 5;
+  end;
+hence P^+ + P c= P^+;
+end;
+
+theorem
+for R being preordered domRing,
+    P being Preordering of R
+holds P^- * (P^-) c= P^+ & P^+ * (P^-) c= P^- & P^- * (P^+) c= P^-
+proof
+let R be preordered domRing; let P be Preordering of R;
+now let o be object;
+   assume o in P^- * (P^-); then
+   consider a,b being Element of R such that
+A: o = a * b & a in P^- & b in P^-;
+B: a in -P & not a in {0.R} &
+   b in -P & not b in {0.R} by A,XBOOLE_0:def 5; then
+C: a <> 0.R & b <> 0.R by TARSKI:def 1;
+D: (-P) * (-P) c= P & o in (-P) * (-P) by A,B,REALALG2:17;
+   now assume a * b in {0.R};
+     then a * b = 0.R by TARSKI:def 1;
+     hence contradiction by C,VECTSP_2:def 1;
+     end;
+   hence o in P^+ by D,A,XBOOLE_0:def 5;
+  end;
+hence P^- * (P^-) c= P^+;
+now let o be object;
+   assume o in P^+ * (P^-); then
+   consider a,b being Element of R such that
+A: o = a * b & a in P^+ & b in P^-;
+B: a in P & not a in {0.R} &
+   b in -P & not b in {0.R} by A,XBOOLE_0:def 5; then
+C: a <> 0.R & b <> 0.R by TARSKI:def 1;
+D: P * (-P) c= -P & o in P * (-P) by A,B,REALALG2:18;
+   now assume a * b in {0.R};
+     then a * b = 0.R by TARSKI:def 1;
+     hence contradiction by C,VECTSP_2:def 1;
+     end;
+   hence o in P^- by D,A,XBOOLE_0:def 5;
+  end;
+hence P^+ * (P^-) c= P^-;
+now let o be object;
+   assume o in P^- * (P^+); then
+   consider a,b being Element of R such that
+A: o = a * b & a in P^- & b in P^+;
+B: a in -P & not a in {0.R} &
+   b in P & not b in {0.R} by A,XBOOLE_0:def 5; then
+C: a <> 0.R & b <> 0.R by TARSKI:def 1;
+D: (-P) * P c= -P & o in (-P) * P by A,B,REALALG2:18;
+   now assume a * b in {0.R};
+     then a * b = 0.R by TARSKI:def 1;
+     hence contradiction by C,VECTSP_2:def 1;
+     end;
+   hence o in P^- by D,A,XBOOLE_0:def 5;
+  end;
+hence P^- * (P^+) c= P^-;
+end;
+
+bla:
+for R being non degenerated Ring,
+    S being Subset of R st 0.R in S & (S^+ /\ (S^-) = {} or S^+ <> S^-)
+holds ({S^+, {0.R}, S^-} is a_partition of the carrier of R &
+       S^+ is add-closed mult-closed)
+implies S is positive_cone
+proof
+let R be non degenerated Ring, S be Subset of R;
+assume H: 0.R in S & (S^+ /\ (S^-) = {} or S^+ <> S^-);
+assume AS: {S^+, {0.R}, S^-} is a_partition of the carrier of R &
+           S^+ is add-closed mult-closed;
+   A1: S + S c= S
+       proof
+       now let o be object;
+       assume o in S + S; then
+         consider a,b being Element of R such that
+         B: o = a + b & a in S & b in S;
+         per cases;
+         suppose a = 0.R or b = 0.R;
+           hence o in S by B;
+           end;
+         suppose a <> 0.R & b <> 0.R; then
+           not a in {0.R} & not b in {0.R} by TARSKI:def 1; then
+           a in S^+ & b in S^+ by B,XBOOLE_0:def 5; then
+           o in S^+ by B,AS;
+           hence o in S by XBOOLE_0:def 5;
+           end;
+         end;
+       hence thesis;
+       end;
+   A2: S * S c= S
+       proof
+       now let o be object;
+       assume o in S * S; then
+         consider a,b being Element of R such that
+         B: o = a * b & a in S & b in S;
+         per cases;
+         suppose a = 0.R or b = 0.R;
+           hence o in S by B;
+           end;
+         suppose a <> 0.R & b <> 0.R; then
+           not a in {0.R} & not b in {0.R} by TARSKI:def 1; then
+           a in S^+ & b in S^+ by B,XBOOLE_0:def 5; then
+           o in S^+ by B,AS;
+           hence o in S by XBOOLE_0:def 5;
+           end;
+         end;
+       hence thesis;
+       end;
+   A3: S /\ (-S) = {0.R}
+       proof
+       B: now let o be object;
+          assume o in {0.R};
+          then o = 0.R & 0.R = -0.R by TARSKI:def 1;
+          then o in S & o in -S by H;
+          hence o in S /\ -S;
+          end;
+       now let o be object;
+         assume o in S /\ -S; then
+         C: o in S & o in -S by XBOOLE_0:def 4;
+         now assume o <> 0.R;
+           then not o in {0.R} by TARSKI:def 1;
+           then o in S^+ & o in S^- by C,XBOOLE_0:def 5;
+           then F: o in S^+ /\ (S^-);
+           then D: not S^+ misses (S^-);
+           per cases by H;
+           suppose S^+ /\ (S^-) = {};
+             hence contradiction by F;
+             end;
+           suppose E: S^+ <> S^-;
+             S^+ in {S^+, {0.R}, S^-} &
+             S^- in {S^+, {0.R}, S^-} by ENUMSET1:def 1;
+             hence contradiction by AS,D,E,EQREL_1:def 4;
+             end;
+           end;
+         hence o in {0.R} by TARSKI:def 1;
+         end;
+       hence thesis by B,TARSKI:2;
+       end;
+   S \/ (-S) = the carrier of R
+       proof
+       now let o be object;
+         assume B: o in the carrier of R;
+         union {S^+, {0.R}, S^-} = the carrier of R by AS,EQREL_1:def 4;
+         then consider u being set such that
+         C: o in u & u in {S^+, {0.R}, S^-} by B,TARSKI:def 4;
+         per cases by C,ENUMSET1:def 1;
+         suppose u = S^+;
+           then o in S by C,XBOOLE_0:def 5;
+           hence o in S \/ (-S) by XBOOLE_0:def 3;
+           end;
+         suppose u = {0.R};
+           then o in S by C,H,TARSKI:def 1;
+           hence o in S \/ (-S) by XBOOLE_0:def 3;
+           end;
+         suppose u = S^-;
+           then o in -S by C,XBOOLE_0:def 5;
+           hence o in S \/ (-S) by XBOOLE_0:def 3;
+           end;
+         end;
+       then the carrier of R c= S \/ (-S);
+       hence thesis;
+       end;
+hence S is positive_cone by A1,A2,A3;
+end;
+
+theorem
+for R being non degenerated domRing,
+    S being Subset of R
+holds S is positive_cone
+implies ({S^+, {0.R}, S^-} is a_partition of the carrier of R &
+         S^+ is add-closed mult-closed)
+proof
+let R1 be non degenerated domRing, S be Subset of R1;
+assume AS: S is positive_cone; then
+reconsider R = R1 as ordered domRing by REALALG1:def 17;
+reconsider P = S as Ordering of R by AS;
+set M = {S^+, {0.R1}, S^-};
+H: P \/ (-P) = the carrier of R & P /\ -P = {0.R} by REALALG1:def 15;
+   now let o be object;
+   assume o in the carrier of R; then
+   per cases by H,XBOOLE_0:def 3;
+   suppose o = 0.R;
+     then o in {0.R} & {0.R} in M by TARSKI:def 1,ENUMSET1:def 1;
+     hence o in union M by TARSKI:def 4;
+     end;
+   suppose o <> 0.R & o in P;
+     then not o in {0.R} & o in P by TARSKI:def 1;
+     then o in P^+ & P^+ in M by XBOOLE_0:def 5,ENUMSET1:def 1;
+     hence o in union M by TARSKI:def 4;
+     end;
+   suppose o <> 0.R & o in -P;
+     then not o in {0.R} & o in -P by TARSKI:def 1;
+     then o in P^- & P^- in M by XBOOLE_0:def 5,ENUMSET1:def 1;
+     hence o in union M by TARSKI:def 4;
+     end;
+   end; then
+   the carrier of R c= union M; then
+A: union M = the carrier of R;
+   now let A be Subset of the carrier of R;
+     assume B: A in M;
+     thus A <> {}
+       proof
+       per cases by B,ENUMSET1:def 1;
+       suppose A = {0.R};
+         hence thesis;
+         end;
+       suppose A = P^+;
+         hence thesis;
+         end;
+       suppose A = P^-;
+         hence thesis;
+         end;
+       end;
+     thus for B being Subset of the carrier of R st B in M
+          holds A = B or A misses B
+       proof
+       let B be Subset of the carrier of R;
+       assume C: B in M;
+       assume D: A <> B;
+       set x = the Element of A /\ B;
+       per cases by B,ENUMSET1:def 1;
+       suppose E: A = {0.R}; then
+         per cases by C,D,ENUMSET1:def 1;
+         suppose F: B = P^+;
+           now assume A /\ B <> {};
+             then x in {0.R} & x in B by E,XBOOLE_0:def 4;
+             hence contradiction by F,XBOOLE_0:def 5;
+             end;
+           hence A misses B;
+           end;
+         suppose F: B = P^-;
+           now assume A /\ B <> {};
+             then x in {0.R} & x in B by E,XBOOLE_0:def 4;
+             hence contradiction by F,XBOOLE_0:def 5;
+             end;
+           hence A misses B;
+           end;
+         end;
+       suppose E: A = P^+; then
+         per cases by C,D,ENUMSET1:def 1;
+         suppose F: B = {0.R};
+           now assume A /\ B <> {};
+             then x in {0.R} & x in A by F,XBOOLE_0:def 4;
+             hence contradiction by E,XBOOLE_0:def 5;
+             end;
+           hence A misses B;
+           end;
+         suppose B = P^-;
+           hence A misses B by E;
+           end;
+         end;
+       suppose E: A = P^-; then
+         per cases by C,D,ENUMSET1:def 1;
+         suppose F: B = {0.R};
+           now assume A /\ B <> {};
+             then x in {0.R} & x in A by F,XBOOLE_0:def 4;
+             hence contradiction by E,XBOOLE_0:def 5;
+             end;
+           hence A misses B;
+           end;
+         suppose B = P^+;
+           hence A misses B by E;
+           end;
+         end;
+       end;
+     end;
+hence M is a_partition of the carrier of R1 by A,EQREL_1:def 4;
+for a,b being Element of R st a in P^+ & b in P^+ holds a + b in P^+
+  by IDEAL_1:def 1;
+hence S^+ is add-closed mult-closed;
+end;
+
+theorem
+for R being non degenerated Ring,
+    S being Subset of R
+holds ({S, {0.R}, -S} is a_partition of the carrier of R &
+       S is add-closed mult-closed)
+implies S \/ {0.R} is positive_cone
+proof
+let R be non degenerated Ring, S be Subset of R;
+assume AS: ({S, {0.R}, -S} is a_partition of the carrier of R &
+           S is add-closed mult-closed);
+set T = S \/ {0.R};
+J: now assume S = -S; then
+    J1: {S, {0.R}} = {S, -S, {0.R}} by ENUMSET1:30
+                  .= {S, {0.R}, -S} by ENUMSET1:57;
+    J2: S in {S, {0.R}} & {0.R} in {S, {0.R}} by TARSKI:def 2;
+    union {S, {0.R}} = the carrier of R by AS,J1,EQREL_1:def 4; then
+    J3: S \/ {0.R} = the carrier of R by ZFMISC_1:75;
+    not 1.R in {0.R} & not -1.R in {0.R} by TARSKI:def 1; then
+    1.R in S & -1.R in S by J3,XBOOLE_0:def 3; then
+    1.R + -1.R in S by AS; then
+    0.R in S & 0.R in {0.R} by RLVECT_1:5,TARSKI:def 1; then
+    0.R in S /\ {0.R}; then
+    not S misses {0.R}; then
+    S = {0.R} by AS,J1,J2,EQREL_1:def 4; then
+    {S, {0.R}} = {{0.R}} by ENUMSET1:29; then
+    union {{0.R}} = the carrier of R by AS,J1,EQREL_1:def 4;
+    hence contradiction by ZFMISC_1:25;
+    end;
+I1: now assume AS1: S = {0.R};
+    then -S = {0.R} by lempart0;
+    then {S, {0.R}, -S} = {{0.R}} by AS1,ENUMSET1:36;
+    then union {{0.R}} = the carrier of R by AS,EQREL_1:def 4;
+    hence contradiction by ZFMISC_1:25;
+    end;
+    S in {S, {0.R}, -S} & {0.R} in {S, {0.R}, -S} by ENUMSET1:def 1;
+    then S misses {0.R} by I1,AS,EQREL_1:def 4; then
+K0: S \ {0.R} = S by XBOOLE_1:83;
+I2: now assume AS2: -S = {0.R};
+    then --S = -{0.R};
+    then S = {0.R} by lempart0;
+    then {S, {0.R}, -S} = {{0.R}} by AS2,ENUMSET1:36;
+    then union {{0.R}} = the carrier of R by AS,EQREL_1:def 4;
+    hence contradiction by ZFMISC_1:25;
+    end;
+    -S in {S, {0.R}, -S} & {0.R} in {S, {0.R}, -S} by ENUMSET1:def 1;
+    then (-S) misses {0.R} by I2,AS,EQREL_1:def 4; then
+K1: (-S) \ {0.R} = -S by XBOOLE_1:83;
+H1: T^+ = S by K0,XBOOLE_1:40;
+H2: T^- = ( (-S) \/ (-{0.R}) ) \ {0.R} by REALALG1:16
+       .= ( (-S) \/ {0.R} ) \ {0.R} by lempart0
+       .= -S by K1,XBOOLE_1:40;
+   0.R in {0.R} by TARSKI:def 1; then
+A: 0.R in T by XBOOLE_0:def 3;
+T^+ /\ (T^-) = {}
+   proof
+   S in {S, {0.R}, -S} & -S in {S, {0.R}, -S} by ENUMSET1:def 1;
+   then S misses (-S) by J,AS,EQREL_1:def 4;
+   hence T^+ /\ (T^-) = {} by H2,K0,XBOOLE_1:40;
+   end;
+hence T is positive_cone by H1,H2,AS,A,bla;
+end;
+
+theorem finP:
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F
+for f being FinSequence of E st
+for i being Nat st i in dom f holds f.i in P holds Sum f in P
+proof
+let F be ordered Field, E be FieldExtension of F, P be Ordering of F,
+    f be FinSequence of E;
+assume AS: for i being Nat st i in dom f holds f.i in P;
+I1: F is Subring of E by FIELD_4:def 1;
+defpred P[Nat] means
+   for f being FinSequence of E st len f = $1 &
+   for i being Nat st i in dom f holds f.i in P holds Sum f in P;
+IA: P[0]
+    proof
+    now let f be FinSequence of E;
+    assume len f = 0 &
+           for i being Nat st i in dom f holds f.i in P;
+    then f = <*>(the carrier of F);
+    then Sum f = Sum <*>(the carrier of F) by I1,FIELD_4:2
+              .= 0.F by RLVECT_1:43;
+    hence Sum f in P by REALALG1:25;
+    end;
+    hence thesis;
+    end;
+IS: now let k be Nat;
+    assume IV: P[k];
+    now let f be FinSequence of E;
+    assume AS: len f = k+1 &
+               for i being Nat st i in dom f holds f.i in P;
+    then f <> {};
+    then consider G being FinSequence, y being object such that
+    B2: f = G^<*y*> by FINSEQ_1:46;
+    rng G c= rng f by B2,FINSEQ_1:29; then
+    reconsider G as FinSequence of E by XBOOLE_1:1,FINSEQ_1:def 4;
+    B10: len f = len G + len<*y*> by B2,FINSEQ_1:22
+              .= len G + 1 by FINSEQ_1:39;
+    C: dom G c= dom f by B2,FINSEQ_1:26;
+    D: now let i be Nat;
+       assume C0: i in dom G;
+       then G.i = f.i by B2,FINSEQ_1:def 7;
+       hence G.i in P by C,C0,AS;
+       end;
+    E: now let o be object;
+       assume o in rng G; then
+       consider u being object such that
+       D1: u in dom G & G.u = o by FUNCT_1:def 3;
+       reconsider u as Element of NAT by D1;
+       thus o in P by D,D1;
+       end;
+    rng<*y*> = {y} by FINSEQ_1:39;
+    then G5: y in rng<*y*> by TARSKI:def 1;
+    rng<*y*> c= rng f by B2,FINSEQ_1:30;
+    then consider u being object such that
+    G6: u in dom f & f.u = y by G5,FUNCT_1:def 3;
+    reconsider u as Element of NAT by G6;
+    G7: f.u in P by AS,G6; then
+    reconsider y1 = y as Element of F by G6;
+    the carrier of F c= the carrier of E by I1,C0SP1:def 3; then
+    reconsider y as Element of E by G6,G7;
+    now let o be object;
+      assume o in rng G;
+      then o in P by E;
+      hence o in the carrier of F;
+      end;
+    then rng G c= the carrier of F; then
+    reconsider G1 = G as FinSequence of F by FINSEQ_1:def 4;
+    B6: Sum G = Sum G1 by I1,FIELD_4:2; then
+    B5: P is add-closed & Sum G1 in P & y1 in P by G6,D,IV,B10,AS;
+    Sum f = Sum G + Sum <*y*> by B2,RLVECT_1:41
+         .= Sum G + y by RLVECT_1:44
+         .= Sum G1 + y1 by I1,B6,FIELD_6:15;
+    hence Sum f in P by B5;
+    end;
+    hence P[k+1];
+    end;
+I: for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+consider n being Nat such that H: len f = n;
+thus thesis by AS,I,H;
+end;
+
+theorem lemPP:
+for F being ordered Field,
+    P being Ordering of F
+for E being Field st E == F holds
+E is ordered & ex Q being Subset of E st Q = P & Q is positive_cone
+proof
+let F be ordered Field, P be Ordering of F, E be Field;
+assume AS: E == F; then
+A: E is Subring of F by FIELD_5:12;
+hence E is ordered;
+reconsider K = E as ordered Field by A;
+P /\ (the carrier of K) is Ordering of K by A,REALALG1:34;
+hence thesis by AS,XBOOLE_1:28;
+end;
+
+registration
+let F be ordered Field;
+cluster ordered for FieldExtension of F;
+existence
+proof
+reconsider E = F as FieldExtension of F by FIELD_4:6;
+take E;
+thus thesis;
+end;
+end;
+
+
+begin :: Some Properties of Polynomials
+
+definition
+let F be Field;
+let g be non empty FinSequence of the carrier of Polynom-Ring F;
+let i be Element of dom g;
+redefine func g.i -> Element of the carrier of Polynom-Ring F;
+coherence
+proof
+g.i in rng g &
+rng g c= the carrier of Polynom-Ring F by FUNCT_1:3;
+hence thesis;
+end;
+end;
+
+theorem lem23a:
+for F being Field
+for p,q being Polynomial of F st LC p + LC q <> 0.F
+holds deg(p + q) = max(deg p, deg q)
+proof
+let F be Field, p1,q1 be Polynomial of F;
+assume AS: LC p1 + LC q1 <> 0.F;
+per cases;
+suppose p1 <> 0_.(F) & q1 <> 0_.(F); then
+  reconsider p = p1, q = q1 as non zero Polynomial of F by UPROOTS:def 5;
+  per cases;
+  suppose A: deg p = deg q;
+    (p + q).(deg p) = (p.(deg p)) + (q.(deg p)) by NORMSP_1:def 2
+                   .= (LC p) + (q.(deg q)) by A,FIELD_6:2
+                   .= LC p + LC q by FIELD_6:2; then
+    len(p+q) >= deg p + 1 by AS,ALGSEQ_1:8,INT_1:7; then
+    len(p+q) - 1 >= deg p + 1 - 1 by XREAL_1:9; then
+    B: deg(p + q) >= deg p by HURWITZ:def 2;
+    deg(p + q) <= max(deg p,deg q) by HURWITZ:22;
+    hence thesis by A,B,XXREAL_0:1;
+    end;
+  suppose deg p <> deg q;
+    hence thesis by HURWITZ:21;
+    end;
+  end;
+suppose A: p1 = 0_.(F); then
+  C: deg p1 = -1 by HURWITZ:20;
+  len q1 - 1 >= 0 - 1 by XREAL_1:9; then
+  deg q1 >= deg p1 by C,HURWITZ:def 2;
+  hence thesis by A,XXREAL_0:def 10;
+  end;
+suppose A: q1 = 0_.(F); then
+  C: deg q1 = -1 by HURWITZ:20;
+  len p1 - 1 >= 0 - 1 by XREAL_1:9; then
+  deg p1 >= deg q1 by C,HURWITZ:def 2;
+  hence thesis by A,XXREAL_0:def 10;
+  end;
+end;
+
+theorem lem23d:
+for F being Field
+for p,q being Polynomial of F
+holds (deg p > deg q implies LC(p + q) = LC p) &
+      (deg p < deg q implies LC(p + q) = LC q) &
+      ((deg p = deg q & LC p + LC q <> 0.F) implies LC(p + q) = LC p + LC q)
+proof
+let F be Field, p,q be Polynomial of F;
+per cases;
+suppose p <> 0_.(F) & q <> 0_.(F); then
+reconsider p,q as non zero Polynomial of F by UPROOTS:def 5;
+  A: now assume A1: deg p > deg q; then
+     deg p > len q - 1 by HURWITZ:def 2; then
+     deg p >= len q - 1 + 1 by INT_1:7; then
+     A2: q.(deg p) = 0.F by ALGSEQ_1:8;
+     A3: (p + q).(deg p) = p.(deg p) + q.(deg p) by NORMSP_1:def 2
+                        .= LC p by A2,FIELD_6:2; then
+     p + q <> 0_.(F); then
+     A4: p + q is non zero by UPROOTS:def 5;
+     deg(p + q) = deg p by A1,NIVEN:42;
+     hence LC(p + q) = LC p by A3,A4,FIELD_6:2;
+     end;
+  B: now assume A1: deg q > deg p; then
+     deg q > len p - 1 by HURWITZ:def 2; then
+     deg q >= len p - 1 + 1 by INT_1:7; then
+     A2: p.(deg q) = 0.F by ALGSEQ_1:8;
+     A3: (p + q).(deg q) = p.(deg q) + q.(deg q) by NORMSP_1:def 2
+                        .= LC q by A2,FIELD_6:2; then
+     p + q <> 0_.(F); then
+     A4: p + q is non zero by UPROOTS:def 5;
+     deg(p + q) = deg q by A1,NIVEN:42;
+     hence LC(p + q) = LC q by A3,A4,FIELD_6:2;
+     end;
+  now assume A1: deg p = deg q & LC p + LC q <> 0.F; then
+    A2: deg(p + q) = max(deg p, deg p) by lem23a
+                  .= deg p; then
+    p + q <> 0_.(F) by HURWITZ:20; then
+    p + q is non zero by UPROOTS:def 5;
+    hence LC(p + q) = (p + q).(deg q) by A1,A2,FIELD_6:2
+             .= p.(deg q) + q.(deg q) by NORMSP_1:def 2
+             .= LC p + q.(deg q) by A1,FIELD_6:2
+             .= LC p + LC q by FIELD_6:2;
+    end;
+  hence thesis by A,B;
+  end;
+suppose A: p = 0_.(F) & q <> 0_.(F); then
+  reconsider q as non zero Polynomial of F by UPROOTS:def 5;
+  deg p = -1 & deg q >= 0 by A,HURWITZ:20;
+  hence thesis by A;
+  end;
+suppose A: q = 0_.(F) & p <> 0_.(F); then
+  reconsider p as non zero Polynomial of F by UPROOTS:def 5;
+  deg q = -1 & deg p >= 0 by A,HURWITZ:20;
+  hence thesis by A;
+  end;
+suppose A: q = 0_.(F) & p = 0_.(F);
+  len 0_.(F) = 0 by POLYNOM4:3; then
+  len(0_.(F)) - 1 < 0; then
+  C: len(0_.(F)) -' 1 = 0 by XREAL_0:def 2;
+  LC(p + q) = (0_.(F)).(len(0_.(F))-'1) by A,RATFUNC1:def 6
+           .= 0.F by C;
+  hence thesis by A;
+  end;
+end;
+
+theorem lemdeg:
+for F being Field
+for p being Element of the carrier of Polynom-Ring F
+holds deg(NormPolynomial p) = deg p
+proof
+let F be Field, p be Element of the carrier of Polynom-Ring F;
+per cases;
+suppose p = 0_.(F);
+  hence thesis by RING_4:22;
+  end;
+suppose p <> 0_.(F); then
+  len NormPolynomial(p) = len p by POLYNOM4:5,POLYNOM5:57;
+  hence deg NormPolynomial(p) = len p - 1 by HURWITZ:def 2
+                             .= deg p by HURWITZ:def 2;
+  end;
+end;
+
+theorem lem22:
+for F being Field
+for p being non constant Element of the carrier of Polynom-Ring F
+ex q being non constant monic Element of the carrier of Polynom-Ring F
+st q divides p & q is irreducible
+proof
+let F be Field, p be non constant Element of the carrier of Polynom-Ring F;
+defpred Q[Nat] means
+  for p be non constant Element of the carrier of Polynom-Ring F
+  st deg p = $1
+  ex q being non constant monic Element of the carrier of Polynom-Ring F
+  st q divides p & q is irreducible;
+IS: now let k be Nat;
+    assume AS1: for n being Nat st n < k holds Q[n];
+      now let p be non constant Element of the carrier of Polynom-Ring F;
+        assume AS3: deg p = k;
+        per cases;
+        suppose AS4: p is irreducible;
+          set q = NormPolynomial p;
+          p *' 1_.(F) = p; then
+          A: q divides p by RING_4:25,RING_4:1;
+             q is irreducible by AS4,RING_4:28;
+          hence ex q being non constant monic
+                              Element of the carrier of Polynom-Ring F
+                st q divides p & q is irreducible by A;
+          end;
+        suppose AS4: p is non irreducible;
+          p <> 0_.(F); then
+          consider q being Element of the carrier of Polynom-Ring F such that
+          A: q divides p & 1 <= deg q & deg q < deg p by AS4,RING_4:41;
+          reconsider m = deg q as Element of NAT by A,INT_1:3;
+          H: Q[m] by AS1,A,AS3;
+          q is non constant by A,RING_4:def 4; then
+          consider r being non constant monic
+                           Element of the carrier of Polynom-Ring F such that
+          B: r divides q & r is irreducible by H;
+          consider s being Polynomial of F such that
+          C: q *' s = p by A,RING_4:1;
+          consider t being Polynomial of F such that
+          D: r *' t = q by B,RING_4:1;
+          r *' (s *' t) = p by C,D,POLYNOM3:33;
+          hence ex q being non constant monic
+                              Element of the carrier of Polynom-Ring F
+              st q divides p & q is irreducible by B,RING_4:1;
+          end;
+        end;
+      hence Q[k];
+      end;
+I: for k being Nat holds Q[k] from NAT_1:sch 4(IS);
+reconsider n = deg p as Element of NAT;
+Q[n] by I;
+hence thesis;
+end;
+
+theorem lem21:
+for F being Field
+for p being Element of the carrier of Polynom-Ring F
+st deg p is odd
+ex q being non constant monic Element of the carrier of Polynom-Ring F
+st q divides p & q is irreducible & deg q is odd
+proof
+let F be Field, p1 be Element of the carrier of Polynom-Ring F;
+assume AS: deg p1 is odd;
+per cases;
+suppose p1 is zero; then
+  A: (X-(1.F)) *' 0_.(F) = p1 by UPROOTS:def 5;
+  deg(X-(1.F)) = 2 * 0 + 1 by FIELD_5:def 1;
+  hence thesis by A,RING_4:1;
+  end;
+suppose p1 is non zero; then
+reconsider p = p1 as non zero Element of the carrier of Polynom-Ring F;
+defpred Q[Nat] means
+  for p be non zero Element of the carrier of Polynom-Ring F
+  st deg p = 2 * ($1) + 1
+  ex q being non constant monic Element of the carrier of Polynom-Ring F
+  st q divides p & q is irreducible & deg q is odd;
+IS: now let k be Nat;
+    assume AS1: for n being Nat st n < k holds Q[n];
+    per cases;
+    suppose AS2: k = 0;
+      now let p be non zero Element of the carrier of Polynom-Ring F;
+        set q = NormPolynomial p;
+        p *' 1_.(F) = p; then
+        A: q divides p by RING_4:25,RING_4:1;
+        C: 1 = 2 * 0 + 1;
+        assume deg p = 2 * 0 + 1; then
+        B: deg q = 1 by lemdeg; then
+        q is linear by FIELD_5:def 1;
+        hence ex q being non constant monic
+                              Element of the carrier of Polynom-Ring F
+              st q divides p & q is irreducible & deg q is odd by A,B,C;
+      end;
+      hence Q[k] by AS2;
+      end;
+    suppose k > 0;
+      now let p be non zero Element of the carrier of Polynom-Ring F;
+        assume AS3: deg p = 2 * k + 1; then
+        p is non constant by RING_4:def 4; then
+        consider q being non constant monic
+                     Element of the carrier of Polynom-Ring F such that
+        A: q divides p & q is irreducible by lem22;
+        per cases;
+        suppose deg q is odd;
+          hence ex q being non constant monic
+                              Element of the carrier of Polynom-Ring F
+                st q divides p & q is irreducible & deg q is odd by A;
+          end;
+        suppose B: deg q is even;
+          consider r being Polynomial of F such that
+          C: q *' r = p by A,RING_4:1;
+          q <> 0_.(F) & r <> 0_.(F) by C; then
+          I: deg q + deg r = deg p by C,HURWITZ:23; then
+          deg r is odd by AS3,B; then
+          consider i being Integer such that
+          E: deg r = 2 * i + 1 by ABIAN:1;
+          now assume E2: i < 0;
+            r is non zero by C;
+            hence contradiction by E,E2,INT_1:7;
+            end; then
+          reconsider i as Element of NAT by INT_1:3;
+          reconsider r as Element of the carrier of Polynom-Ring F
+            by POLYNOM3:def 10;
+          reconsider r as non zero Element of the carrier of Polynom-Ring F
+            by C;
+          deg r <= deg p & deg r <> deg p
+                 by C,I,RING_4:def 4,RING_4:1,RING_5:13; then
+          2 * i + 1 < 2 * k + 1 by AS3,E,XXREAL_0:1; then
+          2 * i + 1 - 1 < 2 * k + 1 - 1 by XREAL_1:9; then
+          2 * i - 2 * k < 2 * k - 2 * k by XREAL_1:9; then
+          2 * (i - k) < 0; then
+          i - k < 0; then
+          i - k + k < 0 + k by XREAL_1:6; then
+          consider s being non constant monic
+                       Element of the carrier of Polynom-Ring F such that
+          F: s divides r & s is irreducible & deg s is odd by E,AS1;
+          consider t being Polynomial of F such that
+          H: s *' t = r by F,RING_4:1;
+          s *' (t *' q) = p by H,C,POLYNOM3:33;
+          hence ex q being non constant monic
+                              Element of the carrier of Polynom-Ring F
+                st q divides p & q is irreducible & deg q is odd by F,RING_4:1;
+          end;
+        end;
+      hence Q[k];
+      end;
+    end;
+I: for k being Nat holds Q[k] from NAT_1:sch 4(IS);
+consider i being Integer such that H: deg p = 2 * i + 1 by AS,ABIAN:1;
+i >= 0 by H,INT_1:7; then
+reconsider i as Element of NAT by INT_1:3;
+deg p = 2 * i + 1 by H;
+hence thesis by I;
+end;
+end;
+
+theorem lem24:
+for F being Field
+for f being FinSequence of the carrier of Polynom-Ring F
+for p being non zero Polynomial of F st p = Sum f
+for g being FinSequence of F
+for n being Nat
+st for i being Element of dom f, q being Polynomial of F
+   st q = f.i holds deg q <= n
+holds deg p <= n
+proof
+let F be Field, f be FinSequence of the carrier of Polynom-Ring F;
+let p be non zero Polynomial of F;
+assume AS1: p = Sum f;
+let g be FinSequence of F, n be Nat;
+assume AS2: for i being Element of dom f, q being Polynomial of F
+            st q = f.i holds deg q <= n;
+defpred P[Nat] means
+  for f being FinSequence of the carrier of Polynom-Ring F
+  for p being Polynomial of F st len f = $1 & p = Sum f
+  for g being FinSequence of F
+  for n being Nat
+  st for i being Element of dom f, q being Polynomial of F
+     st q = f.i holds deg q <= n
+  holds deg p <= n;
+IA: P[1]
+    proof
+    now let f be FinSequence of the carrier of Polynom-Ring F,
+            p be Polynomial of F;
+      assume A1: len f = 1 & p = Sum f;
+      let g be FinSequence of F, n be Nat;
+      assume A2: for i being Element of dom f, q being Polynomial of F
+         st q = f.i holds deg q <= n;
+      A3: f = <*f.1*> by A1,FINSEQ_1:40; then
+      dom f = Seg 1 by FINSEQ_1:38; then
+      A4: 1 in dom f by FINSEQ_1:2,TARSKI:def 1; then
+      A5: f.1 in rng f by FUNCT_1:3; then
+      reconsider q = f.1 as Polynomial of F by A1,A3,RLVECT_1:44;
+      thus deg p <= n by A5,A4,A2,A1,A3,RLVECT_1:44;
+      end;
+    hence thesis;
+    end;
+IS: now let k be Nat;
+    assume AS1: k >= 1;
+    assume AS2: P[k];
+    now let f be FinSequence of the carrier of Polynom-Ring F,
+            p be Polynomial of F;
+      assume A1: len f = k + 1 & p = Sum f;
+      let g be FinSequence of F, n be Nat;
+      assume A2: for i being Element of dom f, q being Polynomial of F
+         st q = f.i holds deg q <= n;
+      f <> {} by A1; then
+      consider G being FinSequence, y being object such that
+      A3: f = G^<*y*> by FINSEQ_1:46;
+      rng G c= rng f by A3,FINSEQ_1:29; then
+      reconsider G as FinSequence of the carrier of Polynom-Ring F
+           by XBOOLE_1:1,FINSEQ_1:def 4;
+      A4: len f = len G + len<*y*> by A3,FINSEQ_1:22
+               .= len G + 1 by FINSEQ_1:39; then
+      reconsider G as non empty FinSequence of the carrier of Polynom-Ring F
+          by AS1,A1;
+      reconsider r = Sum G as Polynomial of F by POLYNOM3:def 10;
+      now let i be Element of dom G, q be Polynomial of F;
+        assume B1: q = G.i;
+        B2: i in dom G & dom G c= dom f by A3,FINSEQ_1:26;
+        G.i = f.i by A3,FINSEQ_1:def 7;
+        hence deg q <= n by B1,B2,A2;
+        end; then
+      A5: deg r <= n by A1,A4,AS2;
+      rng<*y*> = {y} by FINSEQ_1:39; then
+      A6: y in rng<*y*> by TARSKI:def 1;
+      rng<*y*> c= rng f by A3,FINSEQ_1:30; then
+      consider u being object such that
+      A7: u in dom f & f.u = y by A6,FUNCT_1:def 3;
+      reconsider u as Element of NAT by A7;
+      f.u in rng f & rng f c= the carrier of Polynom-Ring F
+         by A7,FUNCT_1:3; then
+      reconsider y as Element of the carrier of Polynom-Ring F by A7;
+      reconsider s = y as Polynomial of F;
+      A8: Sum <*y*> = s by RLVECT_1:44;
+      dom f = Seg(len G + 1) & 1 <= len G + 1
+               by A4,FINSEQ_1:def 3,NAT_1:11; then
+      A9: len G + 1 in dom f by FINSEQ_1:1;
+      f.(len G + 1) = y by A3,FINSEQ_1:42; then
+      A10: deg s <= n by A2,A9;
+      p = Sum G + Sum <*y*> by A1,A3,RLVECT_1:41
+       .= r + s by A8,POLYNOM3:def 10; then
+      A11: deg p <= max(deg r, deg s) by HURWITZ:22;
+      max(deg r, deg s) <= n by A5,A10,XXREAL_0:28;
+      hence deg p <= n by A11,XXREAL_0:2;
+      end;
+    hence P[k+1];
+    end;
+I: for k being Nat st k >= 1 holds P[k] from NAT_1:sch 8(IA,IS);
+now assume f = {};
+  then f = <*>(the carrier of Polynom-Ring F);
+  then Sum f = 0.(Polynom-Ring F) & p <> 0_.(F) by RLVECT_1:43;
+  hence contradiction by AS1,POLYNOM3:def 10;
+  end;
+then len f >= 0 + 1 by INT_1:7;
+hence thesis by I,AS1,AS2;
+end;
+
+theorem lem23:
+for F being ordered Field,
+    P being Ordering of F
+for f being FinSequence of the carrier of Polynom-Ring F
+for p being non zero Polynomial of F
+st p = Sum f &
+   for i being Element of dom f, q being Polynomial of F
+   st q = f.i holds deg q is even & LC q in P
+holds deg p is even
+proof
+let F be ordered Field, P be Ordering of F;
+let f be FinSequence of the carrier of Polynom-Ring F;
+let p be non zero Polynomial of F;
+assume AS: p = Sum f &
+           for i being Element of dom f, q being Polynomial of F
+           st q = f.i holds deg q is even & LC q in P;
+defpred P[Nat] means
+  for f being FinSequence of the carrier of Polynom-Ring F
+  for p being non zero Polynomial of F
+  st p = Sum f & len f = $1 &
+     for i being Element of dom f, q being Polynomial of F
+     st q = f.i holds deg q is even & LC q in P
+  holds deg p is even & LC p in P;
+IA: P[1]
+    proof
+    now let f be FinSequence of the carrier of Polynom-Ring F;
+      let p be non zero Polynomial of F;
+      assume A0: p = Sum f & len f = 1 &
+        for i being Element of dom f, q being Polynomial of F
+        st q = f.i holds deg q is even & LC q in P; then
+      A1: f = <* f.1 *> by FINSEQ_1:40; then
+      dom f = { 1 } by FINSEQ_1:38,FINSEQ_1:2; then
+      reconsider e = 1 as Element of dom f by TARSKI:def 1;
+      A2: f.e in rng f & rng f c= the carrier of Polynom-Ring F
+          by A1,FUNCT_1:3; then
+      reconsider q = f.e as Polynomial of F by POLYNOM3:def 10;
+      deg q is even & LC q in P by A0;
+      hence deg p is even & LC p in P by A0,A1,A2,RLVECT_1:44;
+      end;
+    hence thesis;
+    end;
+IS: now let k be Nat;
+    assume AS1: k >= 1;
+    assume AS2: P[k];
+    now let f be FinSequence of the carrier of Polynom-Ring F;
+      let p be non zero Polynomial of F;
+      assume AS3: p = Sum f & len f = k + 1 &
+        for i being Element of dom f, q being Polynomial of F
+        st q = f.i holds deg q is even & LC q in P; then
+      f<> {}; then
+      consider G being FinSequence, y being object such that
+      A1: f = G^<*y*> by FINSEQ_1:46;
+      rng G c= rng f by A1,FINSEQ_1:29; then
+      reconsider G as FinSequence of the carrier of Polynom-Ring F
+           by XBOOLE_1:1,FINSEQ_1:def 4;
+      A5: rng f c= the carrier of Polynom-Ring F;
+      A6: rng<*y*> c= rng f by A1,FINSEQ_1:30;
+      rng<*y*> = {y} & y in {y} by FINSEQ_1:38,TARSKI:def 1; then
+      reconsider y as Element of the carrier of Polynom-Ring F by A5,A6;
+      A3: len f = len G + len<*y*> by A1,FINSEQ_1:22
+               .= len G + 1 by FINSEQ_1:39; then
+      reconsider G as non empty FinSequence of the carrier of Polynom-Ring F
+           by AS3,AS1;
+      A4: Sum f = Sum G + Sum<*y*> by A1,RLVECT_1:41;
+      reconsider qG = Sum G, qy = y as Polynomial of F by POLYNOM3:def 10;
+      A7: deg qy is even & LC qy in P
+          proof
+          dom <*y*> = Seg 1 by FINSEQ_1:38; then
+          1 in dom <*y*> by FINSEQ_1:3; then
+          C: f.(len G + 1) = <*y*>.1 by A1,FINSEQ_1:def 7 .= y;
+          1 <=len G + 1 & dom f = Seg(len G + 1) by NAT_1:11,A3,FINSEQ_1:def 3;
+          then len G + 1 in dom f by FINSEQ_1:1;
+          hence thesis by C,AS3;
+          end;
+      per cases;
+      suppose qG is non zero; then
+        reconsider qG as non zero Polynomial of F;
+        C0: now let i be Element of dom G, q be Polynomial of F;
+            assume B1: q = G.i;
+            dom G c= dom f & i in dom G by A1,FINSEQ_1:26; then
+            f.i = G.i & i in dom f by A1,FINSEQ_1:def 7;
+            hence deg q is even & LC q in P by B1,AS3;
+            end; then
+        C1: deg qG is even & LC qG in P by A3,AS2,AS3;
+            not LC qG in {0.F} by TARSKI:def 1; then
+            C3: LC qG in P^+ by C1,XBOOLE_0:def 5;
+        C9: LC qG + LC qy in P^+ + P & P^+ + P c= P^+ by C3,A7,lemP;
+            not LC qG + LC qy in {0.F} by C9,XBOOLE_0:def 5; then
+        C2: LC qG + LC qy <> 0.F by TARSKI:def 1; then
+        C3: deg(qG + qy) = max(deg qG, deg qy) by lem23a;
+        C4: p = Sum G + y by AS3,A4,RLVECT_1:44
+             .= qG + qy by POLYNOM3:def 10;
+        thus deg p is even
+           proof
+           per cases by C3,XXREAL_0:16;
+           suppose deg(qG + qy) = deg qG;
+             hence thesis by C4,C0,A3,AS2,AS3;
+             end;
+           suppose deg(qG + qy) = deg qy;
+             hence thesis by C4,A7;
+             end;
+           end;
+        LC(qG + qy) in P
+          proof
+          per cases by XXREAL_0:1;
+          suppose deg qG > deg qy;
+            hence thesis by C1,lem23d;
+            end;
+          suppose deg qG < deg qy;
+            hence thesis by A7,lem23d;
+            end;
+          suppose deg qG = deg qy;
+            then LC(qG + qy) = LC qG + LC qy by C2,lem23d;
+            hence thesis by C9,XBOOLE_0:def 5;
+            end;
+          end;
+        hence LC p in P by C4;
+        end;
+      suppose qG is zero; then
+        qG = 0_.(F) by UPROOTS:def 5 .= 0.(Polynom-Ring F) by POLYNOM3:def 10;
+        hence deg p is even & LC p in P by A7,A4,AS3,RLVECT_1:44;
+        end;
+      end;
+   hence P[k+1];
+   end;
+I: for k being Nat st k >= 1 holds P[k] from NAT_1:sch 8(IA,IS);
+p <> 0_.(F); then
+p <> 0.(Polynom-Ring F) by POLYNOM3:def 10; then
+f <> <*>(the carrier of Polynom-Ring F) by AS,RLVECT_1:43; then
+len f >= 0 + 1 by INT_1:7;
+hence deg p is even by AS,I;
+end;
+
+theorem lem20:
+for F being Field,
+    E being FieldExtension of F
+for p being Polynomial of F
+for a being Element of F,
+    x,b being Element of E st b = a
+holds Ext_eval(a*p,x) = b * Ext_eval(p,x)
+proof
+let F be Field, E be FieldExtension of F, p be Polynomial of F;
+let a be Element of F, x,b being Element of E;
+assume AS: b = a;
+reconsider p1 = p as Element of the carrier of Polynom-Ring F
+    by POLYNOM3:def 10;
+the carrier of Polynom-Ring F c= the carrier of Polynom-Ring E
+    by FIELD_4:10; then
+reconsider q1 = p1 as Element of the carrier of Polynom-Ring E;
+H1: a * p1 is Element of the carrier of Polynom-Ring F
+    by POLYNOM3:def 10;
+H2: b * q1 is Element of the carrier of Polynom-Ring E
+    by POLYNOM3:def 10;
+Ext_eval(a*p1,x) = eval(b*q1,x) by H1,H2,FIELD_4:26,AS,FIELD_13:13
+                .= b * eval(q1,x) by POLYNOM5:30
+                .= b * Ext_eval(p1,x) by FIELD_4:26;
+hence thesis;
+end;
+
+theorem lem:   :: Ext_eval(Sum p_i,a) = Sum Ext_eval(p_i,a)
+for F being Field,
+    E being FieldExtension of F
+for f being FinSequence of the carrier of Polynom-Ring F
+for p being Polynomial of F st p = Sum f
+for a being Element of E,
+    g being FinSequence of E
+st len g = len f &
+   for i being Element of dom f, q being Polynomial of F
+   st q = f.i holds g.i = Ext_eval(q,a)
+holds Ext_eval(p,a) = Sum g
+proof
+let F be Field, E be FieldExtension of F;
+let f be FinSequence of the carrier of Polynom-Ring F;
+let p be Polynomial of F;
+assume AS1: p = Sum f;
+let a be Element of E, g be FinSequence of E;
+assume AS2: len g = len f &
+   for i being Element of dom f, q being Polynomial of F
+   st q = f.i holds g.i = Ext_eval(q,a);
+defpred P[Nat] means
+  for f being FinSequence of the carrier of Polynom-Ring F
+  for p being Polynomial of F st p = Sum f & len f = $1
+  for a being Element of E, g being FinSequence of E
+  st len g = len f &
+     for i being Element of dom f, q being Polynomial of F
+     st q = f.i holds g.i = Ext_eval(q,a)
+     holds Ext_eval(p,a) = Sum g;
+I0: P[0]
+    proof
+    now let f be FinSequence of the carrier of Polynom-Ring F;
+      let p being Polynomial of F;
+      assume A1: p = Sum f & len f = 0;
+      let a be Element of E, g be FinSequence of E;
+      assume A2: len g = len f &
+        for i being Element of dom f, q being Polynomial of F
+        st q = f.i holds g.i = Ext_eval(q,a);
+      A3: f = <*>(the carrier of Polynom-Ring F) &
+          g = <*>(the carrier of E) by A1,A2; then
+      Sum f = 0.(Polynom-Ring F) by RLVECT_1:43;
+      hence Ext_eval(p,a) = Ext_eval(0_.(F),a) by A1,POLYNOM3:def 10
+                         .= 0.E by ALGNUM_1:13
+                         .= Sum g by A3,RLVECT_1:43;
+      end;
+    hence thesis;
+    end;
+I1: P[1]
+    proof
+    now let f be FinSequence of the carrier of Polynom-Ring F;
+      let p being Polynomial of F;
+      assume A1: p = Sum f & len f = 1;
+      let a be Element of E, g be FinSequence of E;
+      assume A2: len g = len f &
+        for i being Element of dom f, q being Polynomial of F
+        st q = f.i holds g.i = Ext_eval(q,a); then
+      A3: f = <*f.1*> & g = <*g.1*> by A1,FINSEQ_1:40; then
+          dom f = { 1 } & dom g = { 1 } by FINSEQ_1:38,FINSEQ_1:2; then
+      A4: 1 in dom f & 1 in dom g by TARSKI:def 1; then
+          f.1 in rng f & rng f c= the carrier of Polynom-Ring F
+          by FUNCT_1:3; then
+      g.1 = Ext_eval(p,a) by A4,A2,A1,A3,RLVECT_1:44;
+      hence Sum g = Ext_eval(p,a) by A3,RLVECT_1:44;
+      end;
+    hence thesis;
+    end;
+I2: now let k be Nat;
+    assume IV: P[k];
+    now let f be FinSequence of the carrier of Polynom-Ring F;
+      let p being Polynomial of F;
+      assume AS1: p = Sum f & len f = k + 1;
+      let a be Element of E, g be FinSequence of E;
+      assume AS2: len g = len f &
+        for i being Element of dom f, q being Polynomial of F
+        st q = f.i holds g.i = Ext_eval(q,a);
+      f <> {} by AS1; then
+      consider G1 being FinSequence, y being object such that
+      A1: f = G1^<*y*> by FINSEQ_1:46;
+      rng G1 c= rng f by A1,FINSEQ_1:29; then
+      reconsider G1 as FinSequence of the carrier of Polynom-Ring F
+           by XBOOLE_1:1,FINSEQ_1:def 4;
+      A2: rng f c= the carrier of Polynom-Ring F;
+      A3: rng<*y*> c= rng f by A1,FINSEQ_1:30;
+      rng<*y*> = {y} & y in {y} by FINSEQ_1:38,TARSKI:def 1; then
+      reconsider y as Element of the carrier of Polynom-Ring F by A2,A3;
+      A4: len f = len G1 + len<*y*> by A1,FINSEQ_1:22
+               .= len G1 + 1 by FINSEQ_1:39;
+      g <> {} by AS1,AS2; then
+      consider G2 being FinSequence, z being object such that
+      A5: g = G2^<*z*> by FINSEQ_1:46;
+      rng G2 c= rng g by A5,FINSEQ_1:29; then
+      reconsider G2 as FinSequence of the carrier of E
+           by XBOOLE_1:1,FINSEQ_1:def 4;
+      A6: rng g c= the carrier of E;
+      A7: rng<*z*> c= rng g by A5,FINSEQ_1:30;
+      rng<*z*> = {z} & z in {z} by FINSEQ_1:38,TARSKI:def 1; then
+      reconsider z as Element of the carrier of E by A6,A7;
+      A8: len f = len G2 + len<*z*> by AS2,A5,FINSEQ_1:22
+               .= len G2 + 1 by FINSEQ_1:39;
+      per cases;
+      suppose G1 is non empty; then
+        reconsider G1 as non empty
+                         FinSequence of the carrier of Polynom-Ring F;
+        reconsider p1 = Sum G1, p2 = y as Polynomial of F
+                                                   by POLYNOM3:def 10;
+        B0: p1 + p2 = (Sum G1) + y by POLYNOM3:def 10
+                   .= Sum G1 + Sum <*y*> by RLVECT_1:44
+                   .= p by AS1,A1,RLVECT_1:41;
+        now let i be Element of dom G1, q being Polynomial of F;
+            assume C0: q = G1.i;
+            dom G1 c= dom f by A1,FINSEQ_1:26; then
+            q = f.i & i in dom f by C0,A1,FINSEQ_1:def 7; then
+            C1: g.i = Ext_eval(q,a) by AS2;
+            dom G1 = Seg(len G2) by A8,A4,FINSEQ_1:def 3
+                  .= dom G2 by FINSEQ_1:def 3;
+            hence G2.i = Ext_eval(q,a) by A5,C1,FINSEQ_1:def 7;
+            end; then
+        B1: Ext_eval(p1,a) = Sum G2 by A8,AS1,A4,IV;
+        B2: Ext_eval(p2,a) = Sum <*z*>
+            proof
+            dom <*y*> = Seg 1 & dom <*z*> = Seg 1 by FINSEQ_1:38; then
+            B3: 1 in dom <*y*> & 1 in dom <*z*> by FINSEQ_1:3; then
+            B4: f.(len G1 + 1) = <*y*>.1 by A1,FINSEQ_1:def 7
+                              .= p2;
+            dom f = Seg(len G1 + 1) by A4,FINSEQ_1:def 3; then
+            len G1 + 1 in dom f by FINSEQ_1:3;
+            hence Ext_eval(p2,a) = g.(len G1 + 1) by B4,AS2
+                          .= <*z*>.1 by A5,A8,A4,B3,FINSEQ_1:def 7
+                          .= z
+                          .= Sum <*z*> by RLVECT_1:44;
+            end;
+        H: F is Subring of E by FIELD_4:def 1;
+        thus Sum g = Sum G2 + Sum <*z*> by A5,RLVECT_1:41
+                  .= Ext_eval(p,a) by H,B0,B1,B2,ALGNUM_1:15;
+        end;
+      suppose G1 is empty;
+        then len f = 0 + 1 by A4;
+        hence Ext_eval(p,a) = Sum g by AS1,AS2,I1;
+        end;
+      end;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(I0,I2);
+hence thesis by AS1,AS2;
+end;
+
+
+begin :: More on the fields F(a)
+
+theorem lemBas00:
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E
+for b being Element of F st b = a^2 holds Ext_eval(X^2-b,a) = 0.E
+proof
+let F be Field, E be FieldExtension of F, a be Element of E;
+let b be Element of F;
+assume D: b = a^2;
+A: X^2-b = <%-b,0.F,1.F%> by FIELD_9:def 7;
+F is Subring of E by FIELD_4:def 1; then
+C: 0.F = 0.E & 1.F = 1.E & -b = -(a^2) by D,C0SP1:def 3,FIELD_6:17;
+X^2-b = <%-(a^2),0.E,1.E%> by A,C,FIELD_9:23 .= X^2-a^2 by FIELD_9:def 7;
+hence Ext_eval(X^2-b,a) = eval(X^2-a^2,a) by FIELD_4:26
+                      .= 0.E by FIELD_9:70;
+end;
+
+theorem lemBas0:
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E st a^2 in F holds a is F-algebraic
+proof
+let F be Field, E be FieldExtension of F, a be Element of E;
+assume a^2 in F; then
+reconsider b = a^2 as Element of F;
+Ext_eval(X^2-b,a) = 0.E by lemBas00;
+hence thesis by FIELD_6:43;
+end;
+
+theorem lemBas01:
+for F being Field,
+    E being FieldExtension of F
+for a being F-algebraic Element of E holds
+not a in F iff
+for p being non zero Polynomial of F st Ext_eval(p,a) = 0.E holds deg p >= 2
+proof
+let F be Field, E be FieldExtension of F, a be F-algebraic Element of E;
+H2: F is Subfield of E by FIELD_4:7; then
+H3: the carrier of F c= the carrier of E & 1.E = 1.F & 0.E = 0.F
+    by EC_PF_1:def 1;
+Z: now assume AS: not a in F;
+   now let p be non zero Polynomial of F;
+     assume A: Ext_eval(p,a) = 0.E;
+     reconsider q = p as Element of the carrier of Polynom-Ring F
+           by POLYNOM3:def 10;
+     now assume deg p < 2; then
+       per cases by NAT_1:23;
+       suppose deg p = 1; then
+         consider x,z being Element of F such that
+         A1: x <> 0.F & p = x * rpoly(1,z) by HURWITZ:28;
+         reconsider xE = x, zE = z as Element of E by H3;
+         A2: p is Element of the carrier of Polynom-Ring F by POLYNOM3:def 10;
+         the carrier of Polynom-Ring F c= the carrier of Polynom-Ring E
+           by FIELD_4:10;
+         then reconsider pE = p as Element of the carrier of Polynom-Ring E
+            by A2;
+         A4: x|F = xE|E & rpoly(1,zE) = rpoly(1,z) by FIELD_4:21,FIELD_6:23;
+         A3: xE * rpoly(1,zE) = (xE|E) *' rpoly(1,zE) by FIELD_8:2
+                             .= (x|F) *' rpoly(1,z) by A4,FIELD_4:17
+                             .= x * rpoly(1,z) by FIELD_8:2;
+         A4: xE <> 0.E by A1,H2,EC_PF_1:def 1;
+         0.E = eval(pE,a) by A,A2,FIELD_4:26
+            .= xE * eval(rpoly(1,zE),a) by A1,A3,POLYNOM5:30;
+         then 0.E = eval(rpoly(1,zE),a) by A4,VECTSP_2:def 1
+                 .= a - zE by HURWITZ:29;
+         then a = z by RLVECT_1:21;
+         hence contradiction by AS;
+         end;
+       suppose deg p = 0; then
+         consider b being Element of F such that
+         A1: q = b|F by RING_4:def 4,RING_4:20;
+         A2: b <> 0.F by A1;
+         reconsider bE = b as Element of E by H3;
+         A3: bE|E = q &
+             bE|E is Element of the carrier of Polynom-Ring E
+             by A1,FIELD_6:23,POLYNOM3:def 10;
+         A4: deg(bE|E) = 0 by A2,H3,RING_4:21;
+         0.E = eval(bE|E,a) by A,A3,FIELD_4:26;
+         hence contradiction by A4,RATFUNC1:8;
+         end;
+       end;
+     hence deg p >= 2;
+     end;
+   hence for p being non zero Polynomial of F
+                         st Ext_eval(p,a) = 0.E holds deg p >= 2;
+   end;
+now assume a in F;
+  then reconsider b = a as Element of F;
+  thus ex p being non zero Polynomial of F st Ext_eval(p,a) = 0.E & deg p < 2
+    proof
+    take p = X-b;
+    I: rpoly(1,a) is Element of the carrier of Polynom-Ring E &
+       rpoly(1,b) is Element of the carrier of Polynom-Ring F
+       by POLYNOM3:def 10;
+    thus Ext_eval(p,a)
+       = Ext_eval(rpoly(1,b),a) by FIELD_9:def 2
+      .= eval(rpoly(1,a),a) by FIELD_4:21,I,FIELD_4:26
+      .= a - a by HURWITZ:29
+      .= 0.E by RLVECT_1:5;
+    deg p = deg rpoly(1,b) by FIELD_9:def 2 .= 1 by HURWITZ:27;
+    hence deg p < 2;
+    end;
+  end;
+hence thesis by Z;
+end;
+
+theorem lemBas1:
+for F being Field,
+    E being FieldExtension of F
+for a being F-algebraic Element of E st not a in F
+for b being Element of F st b = a^2 holds MinPoly(a,F) = X^2-b
+proof
+let F be Field, E be FieldExtension of F,a be F-algebraic Element of E;
+assume AS1: not a in F;
+let b be Element of F;
+assume AS2: b = a^2;
+set p = X^2-b;
+B: p is monic & deg p = 2 by FIELD_9:def 4;
+C: Ext_eval(X^2-b,a) = 0.E by AS2,lemBas00;
+for q being non zero Polynomial of F
+  st Ext_eval(q,a) = 0.E holds deg p <= deg q by B,AS1,lemBas01;
+hence thesis by C,FIELD_6:51;
+end;
+
+theorem ThBas:
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E st not a in F & a^2 in F
+holds {1.E,a} is Basis of VecSp(FAdj(F,{a}),F) & deg(FAdj(F,{a}),F) = 2
+proof
+let F be Field, E be FieldExtension of F;
+let a be Element of E;
+assume AS: not a in F & a^2 in F;
+reconsider a1 = a as F-algebraic Element of E by AS,lemBas0;
+reconsider b = a^2 as Element of F by AS;
+B: deg MinPoly(a1,F) = deg(X^2-b) by AS,lemBas1 .= 2 by FIELD_9:def 4;
+Base a1 = {1.E,a}
+   proof
+   C: now let o be object;
+      assume o in Base a1; then
+      consider n being Element of NAT such that
+      D1: o = a1|^n & n < 2 by B;
+      per cases by D1,NAT_1:23;
+      suppose n = 0;
+        then o = 1_E by D1,BINOM:8;
+        hence o in {1.E,a} by TARSKI:def 2;
+        end;
+      suppose n = 1;
+        then o = a by D1,BINOM:8;
+        hence o in {1.E,a} by TARSKI:def 2;
+        end;
+      end;
+   now let o be object;
+     assume o in {1.E,a}; then
+     per cases by TARSKI:def 2;
+     suppose o = 1.E;
+       then o = 1_E .= a1|^0 by BINOM:8;
+       hence o in Base a1 by B;
+       end;
+     suppose o = a;
+       then o = a1|^1 by BINOM:8;
+       hence o in Base a1 by B;
+       end;
+     end;
+   hence thesis by C,TARSKI:2;
+   end;
+hence {1.E,a} is Basis of VecSp(FAdj(F,{a}),F) by FIELD_6:65;
+thus thesis by B,FIELD_6:67;
+end;
+
+theorem lemma:
+for F being Field,
+    E being FieldExtension of F
+for a being F-algebraic Element of E,
+    b being Element of E holds
+b in the carrier of FAdj(F,{a}) iff
+ex p being Polynomial of F st deg p < deg MinPoly(a,F) & b = Ext_eval(p,a)
+proof
+let F be Field, E be FieldExtension of F;
+let a be F-algebraic Element of E, b be Element of E;
+H: E is (Polynom-Ring F)-homomorphic;
+A: now assume ex p being Polynomial of F
+              st deg p < deg MinPoly(a,F) & b = Ext_eval(p,a); then
+   b in the set of all Ext_eval(p,a) where p is Polynomial of F;
+   then b in the carrier of RAdj(F,{a}) by H,FIELD_6:45;
+   hence b in the carrier of FAdj(F,{a}) by H,FIELD_6:56;
+   end;
+now assume b in the carrier of FAdj(F,{a});
+   then b in the carrier of RAdj(F,{a}) by H,FIELD_6:56;
+   then b in the set of all Ext_eval(p,a) where p is Polynomial of F
+      by H,FIELD_6:45;
+   then consider q being Polynomial of F such that
+   E: b = Ext_eval(q,a);
+   set ma = MinPoly(a,F), r = q mod ma;
+   B: F is Subring of E by FIELD_4:def 1;
+   C: q = (q div ma) *' ma + r by RING_4:4;
+   D: deg r < deg ma by FIELD_5:16;
+   Ext_eval(q,a)
+     = Ext_eval((q div ma) *' ma,a) + Ext_eval(r,a) by C,B,ALGNUM_1:15
+    .= (Ext_eval(q div ma,a) * Ext_eval(ma,a)) + Ext_eval(r,a) by B,ALGNUM_1:20
+    .= (Ext_eval(q div ma,a) * 0.E) + Ext_eval(r,a) by FIELD_6:52
+    .= Ext_eval(r,a);
+   hence ex p being Polynomial of F
+                    st deg p < deg MinPoly(a,F) & b = Ext_eval(p,a) by D,E;
+   end;
+hence thesis by A;
+end;
+
+theorem XYZb:
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E st a^2 in F
+for b being Element of FAdj(F,{a})
+ex c1,c2 being Element of FAdj(F,{a})
+st c1 in F & c2 in F & b = c1 + @(FAdj(F,{a}),a) * c2
+proof
+let F be Field, E be FieldExtension of F;
+let a be Element of E;
+assume AS: a^2 in F;
+let b be Element of FAdj(F,{a});
+A2: 0.E = 0.FAdj(F,{a}) & 1.E = 1.FAdj(F,{a}) by FIELD_6:def 6;
+A9: {a} is Subset of FAdj(F,{a}) & a in {a} by TARSKI:def 1,FIELD_6:35;
+per cases;
+suppose a in F;
+  then {a} c= the carrier of F by TARSKI:def 1;
+  then A1: FAdj(F,{a}) == F by FIELD_7:3;
+  take b,0.FAdj(F,{a});
+  thus thesis by A1;
+  end;
+suppose A0: not a in F;
+  set K = FAdj(F,{a}), aK = @(FAdj(F,{a}),a);
+  reconsider 1V = 1.E, aV = a, bV = b as Element of VecSp(K,F)
+      by A9,A2,FIELD_4:def 6;
+  {1.E,a} is Basis of VecSp(K,F) by A0,AS,ThBas; then
+  Lin({1V,aV}) = the ModuleStr of VecSp(K,F) by VECTSP_7:def 3; then
+  bV in Lin({1V,aV}); then
+  consider l being Linear_Combination of {1V,aV} such that
+  A1: bV = Sum l by VECTSP_7:7;
+  H: F is Subfield of K & F is Subfield of E by FIELD_4:7; then
+  1.E = 1.F & 1.F = 1.K by EC_PF_1:def 1; then
+  A3: 1V <> aV by A0;
+  {a} is Subset of FAdj(F,{a}) &a in {a} by TARSKI:def 1,FIELD_6:35; then
+  J: a is FAdj(F,{a})-membered;
+  the carrier of F c= the carrier of K by H,EC_PF_1:def 1; then
+  reconsider b1 = l.1V, b2 = l.aV as Element of K;
+  take b1,b2;
+  A7: [l.1V,1V] in [:the carrier of F,the carrier of FAdj(F,{a}):]
+      by A2,ZFMISC_1:def 2;
+  A8: (the addF of E)||(the carrier of K) = the addF of K &
+      (the multF of E)||(the carrier of K) = the multF of K by EC_PF_1:def 1;
+  A4: (the lmult of VecSp(FAdj(F,{a}),F)).(l.1V,1V)
+    = ((the multF of FAdj(F,{a}))|
+             [:the carrier of F,the carrier of FAdj(F,{a}):]).(b1,1.E)
+      by FIELD_4:def 6
+   .= (the multF of FAdj(F,{a})).(b1,1.E) by A7,FUNCT_1:49
+   .= ((the multF of E)||carrierFA({a})).(b1,1.E) by FIELD_6:def 6
+   .= ((the multF of E)||the carrier of FAdj(F,{a})).(b1,1.E) by FIELD_6:def 6
+   .= b1 * 1.FAdj(F,{a}) by A8,EC_PF_1:def 1;
+  A7: [l.aV,a] in [:the carrier of F,the carrier of FAdj(F,{a}):]
+      by A9,ZFMISC_1:def 2;
+  A6: (the lmult of VecSp(FAdj(F,{a}),F)).(l.aV,aV)
+    = ((the multF of FAdj(F,{a}))|
+             [:the carrier of F,the carrier of FAdj(F,{a}):]).(b2,a)
+      by FIELD_4:def 6
+   .= b2 * aK by J,A7,FUNCT_1:49;
+  bV = l.1V * 1V + l.aV * aV by A1,A3,VECTSP_6:18
+    .= b1 + aK * b2 by A4,A6,FIELD_4:def 6;
+  hence thesis;
+  end;
+end;
+
+theorem XYZc:
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E st not a in F & a^2 in F
+for c1,c2,d1,d2 being Element of FAdj(F,{a})
+st c1 in F & c2 in F & d1 in F & d2 in F &
+   c1 + @(FAdj(F,{a}),a) * c2 = d1 + @(FAdj(F,{a}),a) * d2
+holds c1 = d1 & c2 = d2
+proof
+let F be Field, E be FieldExtension of F, a be Element of E;
+assume AS1: not a in F & a^2 in F;
+let c1,c2,d1,d2 be Element of FAdj(F,{a});
+assume AS2: c1 in F & c2 in F & d1 in F & d2 in F &
+            c1 + @(FAdj(F,{a}),a) * c2 = d1 + @(FAdj(F,{a}),a) * d2;
+set K = FAdj(F,{a}), V = VecSp(K,F), j = @(K,a);
+A1: 0.K = (c1 + j * c2) - (d1 + j * d2) by AS2,RLVECT_1:15
+       .= (c1 + j * c2) + (-d1 + -(j * d2)) by RLVECT_1:31
+       .= (c1 + j * c2) + (-d1 + (j * (-d2))) by VECTSP_1:8
+       .= j * c2 + (c1 + (-d1 + (j * (-d2)))) by RLVECT_1:def 3
+       .= j * c2 + ((c1 + -d1) + (j * (-d2))) by RLVECT_1:def 3
+       .= (j * c2 + (j * (-d2))) + (c1 + -d1) by RLVECT_1:def 3
+       .= (c1 - d1) + j * (c2 - d2)  by VECTSP_1:def 2;
+reconsider 1V = 1.K, jV = j as Element of V by FIELD_4:def 6;
+reconsider c1F = c1, c2F = c2, d1F = d1, d2F = d2 as Element of F by AS2;
+I0: F is Subring of K & F is Subring of E by FIELD_4:def 1; then
+    -d1 = -d1F & -d2 = -d2F by FIELD_6:17; then
+I1: c1 - d1 = c1F - d1F & c2 - d2 = c2F - d2F by I0,FIELD_6:15;
+defpred P[object,object] means
+         ($1 = 1.K & $2 = c1 - d1) or ($1 = j & $2 = c2 - d2) or
+         ($1 <> 1.K & $1 <> j & $2 = 0.F);
+  A: for x being object st x in the carrier of V
+     ex y being object st y in the carrier of F & P[x,y]
+     proof
+     let x be object;
+     assume x in the carrier of V;
+     per cases;
+     suppose x = 1.K;
+        hence ex y being object st y in the carrier of F & P[x,y] by I1;
+        end;
+     suppose x = j;
+       hence ex y being object st y in the carrier of F & P[x,y] by I1;
+       end;
+     suppose x <> 1.K & x <> j;
+       hence ex y being object st y in the carrier of F & P[x,y];
+       end;
+     end;
+consider l being Function of the carrier of V,the carrier of F such that
+L: for x being object st x in the carrier of V holds P[x,l.x]
+   from FUNCT_2:sch 1(A);
+reconsider l as Element of Funcs(the carrier of V, the carrier of F)
+   by FUNCT_2:8;
+for v being Element of V st not v in {1V,jV} holds l.v = 0.F
+      proof
+      let v being Element of V;
+      assume not v in {1V,jV};
+      then v <> 1.K & v <> j by TARSKI:def 2;
+      hence l.v = 0.F by L;
+      end;
+then reconsider l as Linear_Combination of V by VECTSP_6:def 1;
+now let o be object;
+  assume o in Carrier l;
+  then consider v being Element of V such that
+  A1: o = v & l.v <> 0.F by VECTSP_6:1;
+  (v = 1.K & l.v = c1 - d1) or (v = j & l.v = c2 - d2) by L,A1;
+  hence o in {1V,jV} by A1,TARSKI:def 2;
+  end;
+then Carrier(l) c= {1V,jV};
+then reconsider l as Linear_Combination of {1V,jV} by VECTSP_6:def 4;
+a in {a} & {a} is Subset of K by TARSKI:def 1,FIELD_6:35; then
+I8: a is K-membered;
+I9: 1.K = 1.F by I0,C0SP1:def 3 .= 1.E by I0,C0SP1:def 3;
+    1.K = 1.F by I0,C0SP1:def 3; then
+I3: 1.K <> j by I8,AS1;
+I2: {1V,jV} is linearly-independent by I8,I9,AS1,ThBas;
+    I8: [c1-d1,1.K] in [:the carrier of F,the carrier of K:]
+        by I1,ZFMISC_1:def 2;
+I6: l.1V * 1V
+       = ((the multF of K)|[:the carrier of F,the carrier of K:]).(l.1V,1.K)
+         by FIELD_4:def 6
+      .= ((the multF of K)|[:the carrier of F,the carrier of K:]).(c1-d1,1.K)
+         by I3,L
+      .= (c1 - d1) * 1.K by I8,FUNCT_1:49;
+    I8: [c2-d2,j] in [:the carrier of F,the carrier of K:]
+        by I1,ZFMISC_1:def 2;
+I7: l.jV * jV
+       = ((the multF of K)|[:the carrier of F,the carrier of K:]).(l.jV,j)
+         by FIELD_4:def 6
+      .= ((the multF of K)|[:the carrier of F,the carrier of K:]).(c2-d2,j)
+         by I3,L
+      .= (c2 - d2) * j by I8,FUNCT_1:49
+      .= j * (c2 - d2);
+    l.1V * 1V + l.jV * jV
+        = (the addF of K).(l.1V*1V,l.jV*jV) by FIELD_4:def 6
+       .= 0.V by A1,I6,I7,FIELD_4:def 6; then
+I5: l.1V = 0.F & l.jV = 0.F by I2,I3,VECTSP_7:6;
+    l.1V = c1 - d1 by I3,L; then
+    c1 - d1 = 0.K by I5,I0,C0SP1:def 3;
+hence c1 = d1 by RLVECT_1:21;
+    l.jV = c2 - d2 by I3,L; then
+    c2 - d2 = 0.K by I5,I0,C0SP1:def 3;
+hence c2 = d2 by RLVECT_1:21;
+end;
+
+mainX:
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E st a^2 in F & not a in F
+for f being quadratic non empty FinSequence of FAdj(F,{a})
+ex g1,g2,g3 being non empty FinSequence of FAdj(F,{a})
+st g1 is quadratic non empty FinSequence of F &
+   g2 is quadratic non empty FinSequence of F &
+   g3 is non empty FinSequence of F &
+   Sum f = Sum g1 + @(FAdj(F,{a}),a)^2 * Sum g2 + @(FAdj(F,{a}),a) * Sum g3
+proof
+let F be Field, E be FieldExtension of F;
+let a be Element of E;
+assume AS: a^2 in F & not a in F;
+let f be quadratic non empty FinSequence of FAdj(F,{a});
+set K = FAdj(F,{a});
+    {a} is Subset of K & a in {a} by TARSKI:def 1,FIELD_6:35; then
+    a is K-membered; then
+reconsider a as K-membered Element of E;
+ex g1,g2,g3 being non empty FinSequence of K st
+  dom g1 = dom f & dom g2 = dom f & dom g3 = dom f &
+  for i being Nat st i in dom f for x,y being Element of F
+    st f.i = (@(x,K) + @(K,a) * @(y,K))^2
+    holds g1.i = x^2 & g2.i = y^2 & g3.i = 2 '*' x * y
+  proof
+  defpred P[object,object] means for x,y being Element of F
+     st f.($1) = (@(x,K) + @(K,a) * @(y,K))^2 holds $2 = x^2;
+  defpred Q[object,object] means for x,y being Element of F
+     st f.($1) = (@(x,K) + @(K,a) * @(y,K))^2 holds $2 = y^2;
+  defpred R[object,object] means for x,y being Element of F
+     st f.($1) = (@(x,K) + @(K,a) * @(y,K))^2 holds $2 = 2 '*' x * y;
+  H0: F is Subring of K by FIELD_4:def 1;
+  A1: now let k be Nat;
+      assume k in Seg(len f); then
+      reconsider i = k as Element of dom f by FINSEQ_1:def 3;
+      f.i is square by REALALG2:def 5; then
+      consider z being Element of K such that B2: f.i = z^2;
+      consider c1,c2 being Element of K such that
+      B1: c1 in F & c2 in F & z = c1 + @(K,a) * c2 by AS,XYZb;
+      reconsider d1 = c1, d2 = c2 as Element of F by B1;
+      thus ex x being Element of the carrier of K st P[k,x]
+        proof
+        take c1^2;
+        thus P[k,c1^2]
+          proof
+          now let x,y be Element of F;
+            assume A2: f.k = (@(x,K) + @(K,a) * @(y,K))^2;
+            A3: c1 = @(d1,K) & c2 = @(d2,K) by FIELD_7:def 4; then
+            per cases by A2,B2,B1,REALALG2:10;
+            suppose B3: @(d1,K) + @(K,a) * @(d2,K) = @(x,K) + @(K,a) * @(y,K);
+              @(d1,K) = d1 & @(d2,K) = d2 &
+                       @(x,K) = x & @(y,K) = y by FIELD_7:def 4; then
+              @(d1,K) in F & @(d2,K) in F & @(x,K) in F & @(y,K) in F; then
+              @(d1,K) = @(x,K) by AS,B3,XYZc .= x by FIELD_7:def 4;
+              hence c1^2 = x^2 by A3,H0,FIELD_6:16;
+              end;
+            suppose @(d1,K) + @(K,a) * @(d2,K)
+                            = -(@(x,K) + @(K,a) * @(y,K)); then
+              B3: @(d1,K) + @(K,a) * @(d2,K)
+                = -@(x,K) + -(@(K,a) * @(y,K)) by RLVECT_1:31
+               .= (-@(x,K)) + @(K,a) * (-@(y,K)) by VECTSP_1:8;
+              B4: @(d1,K) = d1 & @(d2,K) = d2 & -@(x,K) = -x & -@(y,K) = -y
+                  by FIELD_7:def 4,H0,FIELD_6:17; then
+              @(d1,K) in F & @(d2,K) in F & -@(x,K) in F & -@(y,K) in F; then
+              @(d1,K) = -x by B4,AS,B3,XYZc;
+              hence c1^2 = (-x)*(-x) by A3,H0,FIELD_6:16 .= x^2 by VECTSP_1:10;
+              end;
+            end;
+          hence thesis;
+          end;
+        end;
+      end;
+  A2: now let k be Nat;
+      assume k in Seg(len f); then
+      reconsider i = k as Element of dom f by FINSEQ_1:def 3;
+      f.i is square by REALALG2:def 5; then
+      consider z being Element of K such that B2: f.i = z^2;
+      consider c1,c2 being Element of K such that
+      B1: c1 in F & c2 in F & z = c1 + @(K,a) * c2 by AS,XYZb;
+      reconsider d1 = c1, d2 = c2 as Element of F by B1;
+      thus ex x being Element of the carrier of K st Q[k,x]
+        proof
+        take c2^2;
+        thus Q[k,c2^2]
+          proof
+          now let x,y be Element of F;
+            assume A2: f.k = (@(x,K) + @(K,a) * @(y,K))^2;
+            A3: c1 = @(d1,K) & c2 = @(d2,K) by FIELD_7:def 4; then
+            per cases by A2,B1,B2,REALALG2:10;
+            suppose B3: @(d1,K) + @(K,a) * @(d2,K) = @(x,K) + @(K,a) * @(y,K);
+              @(d1,K) = d1 & @(d2,K) = d2 &
+                       @(x,K) = x & @(y,K) = y by FIELD_7:def 4; then
+              @(d1,K) in F & @(d2,K) in F & @(x,K) in F & @(y,K) in F; then
+              @(d2,K) = @(y,K) by AS,B3,XYZc .= y by FIELD_7:def 4;
+              hence c2^2 = y^2 by A3,H0,FIELD_6:16;
+              end;
+            suppose @(d1,K) + @(K,a) * @(d2,K)
+                            = -(@(x,K) + @(K,a) * @(y,K)); then
+              B3: @(d1,K) + @(K,a) * @(d2,K)
+                = -@(x,K) + -(@(K,a) * @(y,K)) by RLVECT_1:31
+               .= (-@(x,K)) + @(K,a) * (-@(y,K)) by VECTSP_1:8;
+              B4: @(d1,K) = d1 & @(d2,K) = d2 & -@(x,K) = -x & -@(y,K) = -y
+                  by FIELD_7:def 4,H0,FIELD_6:17; then
+              @(d1,K) in F & @(d2,K) in F & -@(x,K) in F & -@(y,K) in F; then
+              @(d2,K) = -y by B4,AS,B3,XYZc;
+              hence c2^2 = (-y)*(-y) by A3,H0,FIELD_6:16 .= y^2 by VECTSP_1:10;
+              end;
+            end;
+          hence thesis;
+          end;
+        end;
+      end;
+  A3: now let k be Nat;
+      assume k in Seg(len f); then
+      reconsider i = k as Element of dom f by FINSEQ_1:def 3;
+      f.i is square by REALALG2:def 5; then
+      consider z being Element of K such that B2: f.i = z^2;
+      consider c1,c2 being Element of K such that
+      B1: c1 in F & c2 in F & z = c1 + @(K,a) * c2 by AS,XYZb;
+      reconsider d1 = c1, d2 = c2 as Element of F by B1;
+      thus ex x being Element of the carrier of K st R[k,x]
+        proof
+        take 2 '*' c1 * c2;
+        thus R[k,2 '*' c1 * c2]
+          proof
+          now let x,y be Element of F;
+            assume A2: f.k = (@(x,K) + @(K,a) * @(y,K))^2;
+            A3: c1 = @(d1,K) & c2 = @(d2,K) by FIELD_7:def 4; then
+            per cases by A2,B1,B2,REALALG2:10;
+            suppose B3: @(d1,K) + @(K,a) * @(d2,K) = @(x,K) + @(K,a) * @(y,K);
+              @(d1,K) = d1 & @(d2,K) = d2 &
+                       @(x,K) = x & @(y,K) = y by FIELD_7:def 4; then
+              B4: @(d1,K) in F & @(d2,K) in F & @(x,K) in F & @(y,K) in F; then
+              B5: @(d1,K) = @(x,K) by AS,B3,XYZc .= x by FIELD_7:def 4;
+              B6: @(d2,K) = @(y,K) by AS,B3,B4,XYZc .= y by FIELD_7:def 4;
+              2 '*' c1 = 2 '*' x by A3,B5,FIELD_9:7;
+              hence 2 '*' c1 * c2 = 2 '*' x * y by B6,A3,H0,FIELD_6:16;
+              end;
+            suppose @(d1,K) + @(K,a) * @(d2,K)
+                            = -(@(x,K) + @(K,a) * @(y,K)); then
+              B3: @(d1,K) + @(K,a) * @(d2,K)
+                = -@(x,K) + -(@(K,a) * @(y,K)) by RLVECT_1:31
+               .= (-@(x,K)) + @(K,a) * (-@(y,K)) by VECTSP_1:8;
+              B4: @(d1,K) = d1 & @(d2,K) = d2 & -@(x,K) = -x & -@(y,K) = -y
+                  by FIELD_7:def 4,H0,FIELD_6:17; then
+              B5: @(d1,K) in F & @(d2,K) in F & -@(x,K) in F & -@(y,K) in F;
+              then B6: @(d1,K) = -x by B4,AS,B3,XYZc;
+              B7: @(d2,K) = -y by B4,AS,B3,B5,XYZc;
+              2 '*' c1 = 2 '*' (-x) by B4,B6,FIELD_9:7; then
+              (2 '*' c1) * c2 = (2 '*' (-x)) * (-y) by B4,B7,H0,FIELD_6:16
+                             .= 2 '*' ((-x) * (-y)) by REALALG2:5
+                             .= 2 '*' (x * y) by VECTSP_1:10;
+              hence 2 '*' c1 * c2 = 2 '*' x * y by REALALG2:5;
+              end;
+            end;
+          hence thesis;
+          end;
+        end;
+      end;
+  consider g1,g2,g3 being FinSequence of the carrier of K such that
+  A4: dom g1 = Seg(len f) & dom g2 = Seg(len f) & dom g3 = Seg(len f) &
+     for k being Nat st k in Seg(len f) holds P[k,g1.k] &
+     for k being Nat st k in Seg(len f) holds Q[k,g2.k] &
+     for k being Nat st k in Seg(len f) holds R[k,g3.k]
+   from 3SeqDEx(A1,A2,A3);
+  reconsider g1,g2,g3 as non empty FinSequence of K by A4;
+  take g1,g2,g3;
+  thus dom g1 = dom f & dom g2 = dom f & dom g3 = dom f by A4,FINSEQ_1:def 3;
+  now let k be Nat;
+    assume C: k in dom f; then
+    reconsider i = k as Element of dom f;
+    set z = the Element of K;
+    consider c1,c2 being Element of K such that
+    B1: c1 in F & c2 in F & z = c1 + @(K,a) * c2 by AS,XYZb;
+    reconsider d1 = c1, d2 = c2 as Element of F by B1;
+    thus for x,y being Element of F
+      st f.k = (@(x,K) + @(K,a) * @(y,K))^2
+      holds g1.k = x^2 & g2.k = y^2 & g3.k = 2 '*' x * y
+      proof
+      let x,y be Element of F;
+      assume B5: f.k = (@(x,K) + @(K,a) * @(y,K))^2;
+      B6: Seg(len f) = dom f by FINSEQ_1:def 3;
+      hence g1.k = x^2 by C,A4,B5;
+      thus g2.k = y^2 by B6,B5,C,A4;
+      thus g3.k = 2 '*' x * y by B6,B5,C,A4;
+      end;
+    end;
+  hence thesis;
+  end;
+then consider g1,g2,g3 being non empty FinSequence of K such that
+A: dom g1 = dom f & dom g2 = dom f & dom g3 = dom f &
+   for i being Nat st i in dom f for x,y being Element of F
+     st f.i = (@(x,K) + @(K,a) * @(y,K))^2
+     holds g1.i = x^2 & g2.i = y^2 & g3.i = 2 '*' x * y;
+   A0: now let k be Nat;
+       assume k in dom g1; then
+       reconsider i = k as Element of dom f by A;
+       f.i is square by REALALG2:def 5; then
+       consider z being Element of K such that B2: f.i = z^2;
+       consider c1,c2 being Element of K such that
+       B1: c1 in F & c2 in F & z = c1 + @(K,a) * c2 by AS,XYZb;
+       reconsider d1 = c1, d2 = c2 as Element of F by B1;
+       c1 = @(d1,K) & c2 = @(d2,K) by FIELD_7:def 4; then
+       g1.i = d1^2 by A,B1,B2;
+       hence g1.k in F;
+       end;
+   A1: now let k be Nat;
+       assume k in dom g1; then
+       reconsider i = k as Element of dom f by A;
+       f.i is square by REALALG2:def 5; then
+       consider z being Element of K such that B2: f.i = z^2;
+       consider c1,c2 being Element of K such that
+       B1: c1 in F & c2 in F & z = c1 + @(K,a) * c2 by AS,XYZb;
+       reconsider d1 = c1, d2 = c2 as Element of F by B1;
+       c1 = @(d1,K) & c2 = @(d2,K) by FIELD_7:def 4; then
+       g2.i = d2^2 by A,B1,B2;
+       hence g2.k in F;
+       end;
+   now let k be Nat;
+       assume k in dom g3; then
+       reconsider i = k as Element of dom f by A;
+       f.i is square by REALALG2:def 5; then
+       consider z being Element of K such that B2: f.i = z^2;
+       consider c1,c2 being Element of K such that
+       B1: c1 in F & c2 in F & z = c1 + @(K,a) * c2 by AS,XYZb;
+       reconsider d1 = c1, d2 = c2 as Element of F by B1;
+       c1 = @(d1,K) & c2 = @(d2,K) by FIELD_7:def 4; then
+       g3.i = 2 '*' d1 * d2 by A,B1,B2;
+       hence g3.k in F;
+       end; then
+reconsider d1=g1,d2=g2,d3=g3 as non empty FinSequence of F by A,A1,A0,finex;
+   A2: now let k be Element of dom d1;
+       reconsider i = k as Element of dom f by A;
+       f.i is square by REALALG2:def 5; then
+       consider z being Element of K such that B2: f.i = z^2;
+       consider c1,c2 being Element of K such that
+       B1: c1 in F & c2 in F & z = c1 + @(K,a) * c2 by AS,XYZb;
+       reconsider x = c1, y = c2 as Element of F by B1;
+       B3: c1 = @(x,K) & c2 = @(y,K) by FIELD_7:def 4;
+       g1.i = x^2 by A,B1,B2,B3;
+       hence d1.k is square;
+       end;
+   now let k be Element of dom d2;
+       reconsider i = k as Element of dom f by A;
+       f.i is square by REALALG2:def 5; then
+       consider z being Element of K such that B2: f.i = z^2;
+       consider c1,c2 being Element of K such that
+       B1: c1 in F & c2 in F & z = c1 + @(K,a) * c2 by AS,XYZb;
+       reconsider x = c1, y = c2 as Element of F by B1;
+       B3: c1 = @(x,K) & c2 = @(y,K) by FIELD_7:def 4;
+       g2.i = y^2 by A,B1,B2,B3;
+       hence d2.k is square;
+       end; then
+reconsider d1,d2 as quadratic non empty FinSequence of F by A2,REALALG2:def 5;
+   A3: dom(g1 + @(K,a)^2 * g2) = dom(g3) &
+       dom(g1 + @(K,a)^2 * g2) = dom(@(K,a) * g3) &
+       dom(g1) = dom(@(K,a)^2 * g2) &
+       dom f = dom(g1 + @(K,a)^2 * g2 + @(K,a) * g3)
+       proof
+       thus dom(g1 + @(K,a)^2 * g2) = dom g3 by A,BINOM:def 1;
+       hence dom(g1 + @(K,a)^2 * g2) = dom(@(K,a) * g3) by POLYNOM1:def 1;
+       thus dom(g1) = dom(@(K,a)^2 * g2) by POLYNOM1:def 1,A;
+       dom(g1 + @(K,a)^2 * g2) = dom g3 by A,BINOM:def 1;
+       hence dom f = dom(g1 + @(K,a)^2 * g2 + @(K,a) * g3) by A,BINOM:def 1;
+       end;
+   A4: g1 + @(K,a)^2 * g2 + @(K,a) * g3 = f
+       proof
+       set p = g1 + @(K,a)^2 * g2 + @(K,a) * g3;
+       A5: dom p = Seg(len p) & dom f = Seg(len f) by FINSEQ_1:def 3;
+       now let j be Nat;
+         assume A6: j in dom p; then
+         C: j in Seg(len(g1 + @(K,a)^2 * g2)) by A,A3,FINSEQ_1:def 3;
+         j in Seg(len p) by A6,FINSEQ_1:def 3; then
+         A7: 1 <= j & j <= len p & j <= len(g1+@(K,a)^2*g2) by C,FINSEQ_1:1;
+       reconsider i = j as Element of dom f by A6,A3;
+       f.i is square by REALALG2:def 5; then
+       consider z being Element of K such that B2: f.i = z^2;
+       consider c1,c2 being Element of K such that
+       B1: c1 in F & c2 in F & z = c1 + @(K,a) * c2 by AS,XYZb;
+       reconsider x = c1, y = c2 as Element of F by B1;
+       B3: c1 = @(x,K) & c2 = @(y,K) by FIELD_7:def 4; then
+       A9: g1.j = x^2 & g2.j = y^2 & g3.j = 2 '*' x * y by B1,B2,A;
+         A10: g1.j = @(x,K)^2 & g2.j = @(y,K)^2 & g3.j = 2 '*' @(x,K) * @(y,K)
+              proof
+              A11: F is Subring of K by FIELD_4:def 1;
+              @(x,K) = x by FIELD_7:def 4;
+              hence g1.j = @(x,K)^2 by A9,A11,FIELD_6:16;
+              A13: @(y,K) = y by FIELD_7:def 4;
+              hence g2.j = @(y,K)^2 by A9,A11,FIELD_6:16;
+              2 '*' @(x,K) = 2 '*' x by FIELD_7:def 4,FIELD_9:7;
+              hence g3.j = 2 '*' @(x,K) * @(y,K) by A13,A11,A9,FIELD_6:16;
+              end;
+         thus p.j  = p/.j by A6,PARTFUN1:def 6
+         .= (g1 + @(K,a)^2 * g2)/.j + (@(K,a) * g3)/.j by A7,BINOM:def 1
+         .= (g1 + @(K,a)^2 * g2)/.j + @(K,a)*(g3/.j) by A6,A3,A,POLYNOM1:def 1
+         .= (g1/.j + (@(K,a)^2 * g2)/.j) + @(K,a) * (g3/.j)
+             by A7,BINOM:def 1
+         .= (g1/.j + @(K,a)^2 * (g2/.j)) + @(K,a) * (g3/.j)
+             by A6,A3,A,POLYNOM1:def 1
+         .= (@(x,K)^2 + @(K,a)^2 * (g2/.j)) + @(K,a) * (g3/.j)
+             by A10,A6,A3,A,PARTFUN1:def 6
+         .= (@(x,K)^2 + @(K,a)^2 * @(y,K)^2) + @(K,a) * (g3/.j)
+             by A10,A6,A3,A,PARTFUN1:def 6
+         .= (@(x,K)^2 + @(K,a)^2 * @(y,K)^2) + @(K,a) * (2 '*' @(x,K) * @(y,K))
+             by A10,A6,A3,A,PARTFUN1:def 6
+         .= @(x,K)^2 + (@(K,a) * (2 '*' @(x,K) * @(y,K)) + @(K,a)^2 * @(y,K)^2)
+            by RLVECT_1:def 3
+         .= @(x,K)^2 + (@(K,a) * (2 '*' @(x,K) * @(y,K)) + (@(K,a) * @(y,K))^2)
+            by FIELD_9:2
+         .= @(x,K)^2 + (2 '*' @(x,K) * (@(y,K) * @(K,a)) + (@(K,a) * @(y,K))^2)
+            by GROUP_1:def 3
+         .= @(x,K)^2 + 2 '*' @(x,K) * (@(K,a) * @(y,K)) + (@(K,a) * @(y,K))^2
+            by RLVECT_1:def 3
+         .= f.j by B1,B2,B3,REALALG2:7;
+         end;
+       hence thesis by A5,A3,FINSEQ_1:6,FINSEQ_2:9;
+       end;
+take g1,g2,g3;
+g1 = d1 & g2 = d2 & g3 = d3;
+hence g1 is quadratic non empty FinSequence of F &
+      g2 is quadratic non empty FinSequence of F &
+      g3 is non empty FinSequence of F;
+Sum f = Sum(g1 + @(K,a)^2 * g2) + Sum(@(K,a) * g3) by A3,A4,BINOM:7
+     .= Sum(g1 + @(K,a)^2 * g2) + @(K,a) * Sum g3 by BINOM:4
+     .= Sum(g1) + Sum(@(K,a)^2 * g2) + @(K,a) * Sum g3 by A3,BINOM:7
+     .= Sum(g1) + @(K,a)^2 * Sum(g2) + @(K,a) * Sum g3 by BINOM:4;
+hence thesis;
+end;
+
+theorem mainY:
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E, b being Element of F
+for f being quadratic non empty FinSequence of FAdj(F,{a})
+st not a in F & a^2 = b
+ex g1,g2 being quadratic non empty FinSequence of F,
+   g3 being non empty FinSequence of F
+st Sum f =
+ @(Sum g1 + b * Sum g2,FAdj(F,{a})) + @(FAdj(F,{a}),a) * @(Sum g3,FAdj(F,{a}))
+proof
+let F be Field, E be FieldExtension of F, a be Element of E, b be Element of F;
+let f be quadratic non empty FinSequence of FAdj(F,{a});
+assume AS: not a in F & a^2 = b; then
+not a in F & a^2 in F; then
+consider g1,g2,g3 being non empty FinSequence of FAdj(F,{a}) such that
+A: g1 is quadratic non empty FinSequence of F &
+   g2 is quadratic non empty FinSequence of F &
+   g3 is non empty FinSequence of F &
+   Sum f = Sum g1 + @(FAdj(F,{a}),a)^2 * Sum g2 + @(FAdj(F,{a}),a) * Sum g3
+   by mainX;
+reconsider h1 = g1, h2 = g2 as quadratic non empty FinSequence of F by A;
+reconsider h3 = g3 as non empty FinSequence of F by A;
+set K = FAdj(F,{a});
+    {a} is Subset of K & a in {a} by TARSKI:def 1,FIELD_6:35; then
+    a is K-membered; then
+reconsider a as K-membered Element of E;
+take h1,h2,h3;
+H: K is Subring of E by FIELD_5:12;
+   F is Subfield of K by FIELD_4:7; then
+I: F is Subring of K by FIELD_5:12; then
+B: Sum g1 = Sum h1 & Sum g2 = Sum h2 & Sum g3 = Sum h3 by FIELD_4:2;
+D: @(K,a) * @(K,a) = b by AS,H,FIELD_6:16;
+F: @(K,a) * Sum g3 = @(K,a) * @(Sum h3,K) by B,FIELD_7:def 4;
+   @(K,a)^2 * Sum g2 = b * Sum h2 by B,D,I,FIELD_6:16; then
+Sum g1 + @(K,a)^2 * Sum g2 = Sum h1 + b * Sum h2 by B,I,FIELD_6:15;
+hence thesis by F,A,FIELD_7:def 4;
+end;
+
+theorem maina:
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E, b being Element of F
+for f being quadratic non empty FinSequence of FAdj(F,{a})
+st not a in F & a^2 = b & Sum f in F
+ex g1,g2 being quadratic non empty FinSequence of F
+st Sum f = Sum g1 + b * Sum g2
+proof
+let F be Field, E be FieldExtension of F;
+let a be Element of E, b be Element of F;
+let f be quadratic non empty FinSequence of FAdj(F,{a});
+assume AS: not a in F & a^2 = b & Sum f in F; then
+AS1: not a in F & a^2 in F;
+set K = FAdj(F,{a});
+H0: F is Subring of K & K is Subring of E & F is Subring of E
+    by FIELD_4:def 1,FIELD_5:12;
+    {a} is Subset of K & a in {a} by TARSKI:def 1,FIELD_6:35; then
+    a is K-membered; then
+reconsider a as K-membered Element of E;
+reconsider Sf = Sum f as Element of F by AS;
+consider g1,g2 being quadratic non empty FinSequence of F,
+         g3 being non empty FinSequence of F such that
+A: Sum f = @(Sum g1 + b * Sum g2,K) + @(K,a) * @(Sum g3,K) by AS,mainY;
+B: Sum f = @(Sf,K) + @(K,a) * 0.K by FIELD_7:def 4;
+@(Sum g1 + b * Sum g2,K) = Sum f
+   proof
+   D: @(Sf,K) = Sf & 0.K = 0.F & Sum g1 + b * Sum g2 = @(Sum g1 + b * Sum g2,K)
+      & @(Sum g3,K) = Sum g3 by H0,C0SP1:def 3,FIELD_7:def 4; then
+   @(Sum g1 + b * Sum g2,K) in F & Sum g3 in F & @(Sf,K) in F & 0.K in F;
+   hence thesis by B,D,AS1,A,XYZc;
+   end;
+hence thesis by FIELD_7:def 4;
+end;
+
+
+begin :: Extensions of orderings
+
+definition
+let F be ordered Field,
+    E be Field;
+let P be Ordering of F;
+pred P extends_to E means
+  ex O being Subset of E st P c= O & O is positive_cone;
+end;
+
+notation
+let F be ordered Field,
+    E be Field;
+let P be Ordering of F;
+antonym P not_extends_to E for P extends_to E;
+end;
+
+definition
+let F be ordered Field,
+    E be ordered FieldExtension of F;
+let P be Ordering of F, O be Ordering of E;
+pred O extends P means
+  O /\ (the carrier of F) = P;
+end;
+
+l12:
+for F being ordered Field,
+    E being ordered FieldExtension of F
+for P being Ordering of F, O be Ordering of E
+st (for a being Element of F holds a in P iff a in O) holds O extends P
+proof
+let F be ordered Field, E be ordered FieldExtension of F;
+let P be Ordering of F, O be Ordering of E;
+assume AS: for a being Element of F holds a in P iff a in O;
+A: now let a be object;
+   assume a in P;
+   then a in O & a in the carrier of F by AS;
+   hence a in O /\ (the carrier of F) by XBOOLE_0:def 4;
+   end;
+now let a be object;
+   assume a in O /\ (the carrier of F);
+   then a in O & a in the carrier of F by XBOOLE_0:def 4;
+   hence a in P by AS;
+   end;
+hence thesis by A,TARSKI:2;
+end;
+
+theorem
+for F being ordered Field,
+    E being ordered FieldExtension of F
+for P being Ordering of F, O be Ordering of E
+holds O extends P iff
+      for a being Element of F holds a in P iff a in O by XBOOLE_0:def 4,l12;
+
+theorem l13:
+for F being ordered Field,
+    E being ordered FieldExtension of F
+for P being Ordering of F, O be Ordering of E
+holds O extends P iff P c= O
+proof
+let F be ordered Field, E be ordered FieldExtension of F;
+let P be Ordering of F, O be Ordering of E;
+H1: P \/ (-P) = the carrier of F by REALALG1:def 8;
+H2: O /\ (-O) = {0.E} by REALALG1:def 7;
+I1: F is Subfield of E & F is Subring of E by FIELD_4:def 1,FIELD_4:7; then
+I2: the carrier of F c= the carrier of E & 0.F = 0.E by EC_PF_1:def 1;
+now assume AS: P c= O;
+  now let a be Element of F;
+     reconsider b = a as Element of E by I2;
+     I3: -b = -a by I1,FIELD_6:17;
+     assume B0: a in O;
+     now assume B1: not a in P;
+       then a in -P by H1,XBOOLE_0:def 3;
+       then -a in --P;
+       then --b in -O by AS,I3;
+       then b in O /\ (-O) by B0;
+       then b = 0.F by I2,H2,TARSKI:def 1;
+       hence contradiction by B1,REALALG1:25;
+       end;
+     hence a in P;
+     end;
+  hence for a being Element of F holds a in P iff a in O by AS;
+  end;
+hence thesis by XBOOLE_0:def 4,l12;
+end;
+
+definition
+let R be ordered Ring;
+let P be Ordering of R;
+let a be Element of R;
+func signum(P,a) -> Integer equals :defsgn:
+  1 if a in P \ {0.R},
+  0 if a = 0.R
+  otherwise -1;
+coherence;
+consistency
+proof
+let i be Integer;
+now assume a in P \ {0.R} & a = 0.R;
+  then not a in {0.R} & a = 0.R by XBOOLE_0:def 5;
+  hence i = 1 iff i = 0 by TARSKI:def 1;
+  end;
+hence thesis;
+end;
+end;
+
+definition
+let R be ordered Ring;
+let P be Ordering of R;
+func signum P -> Function of the carrier of R,INT means :sgnF:
+  for a being Element of R holds it.a = signum(P,a);
+existence
+  proof
+  defpred P[object,object] means
+    ex a being Element of R st a = $1 & $2 = signum(P,a);
+  A: now let x be object;
+     assume x in the carrier of R; then
+     reconsider a = x as Element of R;
+     thus ex y being object st y in INT & P[x,y]
+       proof
+       take y = signum(P,a);
+       thus thesis by INT_1:def 2;
+       end;
+     end;
+  consider f being Function of the carrier of R,INT such that
+  B: for x being object st x in the carrier of R holds P[x,f.x]
+     from FUNCT_2:sch 1(A);
+  take f;
+  now let a be Element of R;
+    consider b being Element of R such that
+    C: b = a & f.a = signum(P,b) by B;
+    thus f.a = signum(P,a) by C;
+    end;
+  hence thesis;
+  end;
+uniqueness
+  proof
+  now let f1,f2 be Function of the carrier of R,INT;
+    assume A:
+    for a being Element of R holds f1.a = signum(P,a) &
+    for a being Element of R holds f2.a = signum(P,a);
+    now let x be object;
+      assume x in the carrier of R; then
+      reconsider a= x as Element of R;
+      thus f1.x = signum(P,a) by A .= f2.x by A;
+      end;
+    hence f1 = f2 by FUNCT_2:12;
+    end;
+  hence thesis;
+  end;
+end;
+
+theorem
+for R being ordered domRing,
+    P being Ordering of R
+for a being Element of R holds a = signum(P,a) '*' abs(P,a)
+proof
+let R be ordered domRing, P be Ordering of R, a be Element of R;
+H: P \/ -P = the carrier of R by REALALG1:def 15;
+per cases;
+suppose A: a in P \ {0.R}; then
+  B: a in P by XBOOLE_0:def 5;
+  thus signum(P,a) '*' abs(P,a)
+     = 1 '*' abs(P,a) by A,defsgn
+    .= 1 '*' a by B,REALALG2:def 11
+    .= a by RING_3:60;
+  end;
+suppose A: a = 0.R;
+  hence signum(P,a) '*' abs(P,a)
+      = 0 '*' abs(P,a) by defsgn
+     .= a by A,RING_3:59;
+  end;
+suppose A: not a in P \ {0.R} & a <> 0.R; then
+  not a in P or a in {0.R} by XBOOLE_0:def 5; then
+  a in -P by A,H,XBOOLE_0:def 3,TARSKI:def 1; then
+  -a in --P; then
+  B: a <=P, 0.R;
+  thus signum(P,a) '*' abs(P,a)
+     = (-1) '*' abs(P,a) by A,defsgn
+    .= (-1) '*' (-a) by B,REALALG2:70
+    .= -(-a) by RING_3:61
+    .= a;
+  end;
+end;
+
+theorem
+for F being ordered Field,
+    E being ordered FieldExtension of F
+for P being Ordering of F,
+    O being Ordering of E
+holds O extends P iff (signum O)|(the carrier of F) = signum P
+proof
+let F be ordered Field, E be ordered FieldExtension of F,
+    P be Ordering of F, O be Ordering of E;
+set sP = signum P, sO = signum O;
+H: F is Subfield of E &
+   P \/ -P = the carrier of F by REALALG1:def 15,FIELD_4:7; then
+I: the carrier of F c= the carrier of E by EC_PF_1:def 1;
+C: dom sO /\ (the carrier of F)
+     = (the carrier of E) /\ (the carrier of F) by FUNCT_2:def 1
+    .= the carrier of F by I,XBOOLE_1:28
+    .= dom sP by FUNCT_2:def 1;
+A: now assume B: O extends P;
+   now let x be object;
+     assume x in dom sP; then
+     reconsider a = x as Element of F by FUNCT_2:def 1;
+     reconsider b = a as Element of E by I;
+     per cases;
+     suppose E: x in P \ {0.F}; then
+       a in P & not a in {0.F} by XBOOLE_0:def 5; then
+       a in O & not a in {0.E} by B,H,XBOOLE_0:def 4,EC_PF_1:def 1;
+       then F: x in O \ {0.E} by XBOOLE_0:def 5;
+       thus sO.x = signum(O,b) by sgnF
+                .= 1 by F,defsgn
+                .= signum(P,a) by E,defsgn
+                .= sP.x by sgnF;
+       end;
+     suppose E: x = 0.F; then
+       F: x = 0.E by H,EC_PF_1:def 1;
+       thus sO.x = signum(O,b) by sgnF
+                .= 0 by F,defsgn
+                .= signum(P,a) by E,defsgn
+                .= sP.x by sgnF;
+       end;
+     suppose E: not x in P \ {0.F} & x <> 0.F; then
+       not a in P or a in {0.F} by XBOOLE_0:def 5; then
+       not a in O by B,XBOOLE_0:def 4,E,TARSKI:def 1; then
+       F: not x in O \ {0.E} & x <> 0.E by H,E,EC_PF_1:def 1,XBOOLE_0:def 5;
+       thus sO.x = signum(O,b) by sgnF
+                .= -1 by F,defsgn
+                .= signum(P,a) by E,defsgn
+                .= sP.x by sgnF;
+       end;
+     end;
+   hence (signum O)|(the carrier of F) = signum P by C,FUNCT_1:46;
+   end;
+now assume A: (signum O)|(the carrier of F) = signum P;
+  now let x be object;
+    assume B: x in P;
+    per cases;
+    suppose x <> 0.F; then
+      not x in {0.F} by TARSKI:def 1; then
+      D: x in P \ {0.F} by B,XBOOLE_0:def 5;
+      reconsider a = x as Element of F by B;
+      reconsider b = a as Element of E by I;
+      E: dom sP = the carrier of F by FUNCT_2:def 1;
+      signum(O,b) = sO.b by sgnF
+          .= sP.a by C,E,A,FUNCT_1:48
+          .= signum(P,a) by sgnF
+          .= 1 by D,defsgn;
+      then b in O \ {0.E} by defsgn;
+      hence x in O by XBOOLE_0:def 5;
+      end;
+    suppose x = 0.F;
+      then x = 0.E by H,EC_PF_1:def 1;
+      hence x in O by REALALG1:25;
+      end;
+    end;
+  then P c= O;
+  hence O extends P by l13;
+  end;
+hence thesis by A;
+end;
+
+definition
+let F be ordered Field,
+    E be FieldExtension of F;
+let P be Ordering of F;
+let f be FinSequence of E;
+attr f is P-quadratic means :dq:
+  for i being Element of NAT st i in dom f
+  ex a being non zero Element of E,
+     b being Element of E st a in P & f.i = a * b^2;
+end;
+
+registration
+let F be ordered Field,
+    E be FieldExtension of F;
+let P be Ordering of F;
+cluster P-quadratic non empty for FinSequence of E;
+existence
+proof
+reconsider f = <*1.E*> as non empty FinSequence of E;
+take f;
+F is Subfield of E by FIELD_4:7; then
+A: 1.E = 1.F by EC_PF_1:def 1;
+B: dom f = { 1 } by FINSEQ_1:2,FINSEQ_1:38;
+now let i be Element of dom f;
+  C: i = 1 by B,TARSKI:def 1;
+  1.E * (1.E)^2 = f.i by C;
+  hence ex a being non zero Element of E,
+           b being Element of E st a in P & f.i = a * b^2 by A,REALALG1:25;
+  end;
+hence thesis;
+end;
+end;
+
+registration
+let F be ordered Field, P be Ordering of F,
+    E be FieldExtension of F;
+let f,g be P-quadratic FinSequence of E;
+cluster f^g -> P-quadratic for FinSequence of E;
+coherence
+proof
+per cases;
+suppose f is empty & g is empty;
+  hence thesis by FINSEQ_1:34;
+  end;
+suppose L: f is non empty or g is non empty;
+now let i be Element of dom(f^g);
+  per cases by L,FINSEQ_1:25;
+  suppose B: i in dom f;
+    then (f^g).i = f.i & f is P-quadratic by FINSEQ_1:def 7;
+    hence ex a being non zero Element of E,
+             b being Element of E st a in P & (f^g).i = a * b^2 by B;
+    end;
+  suppose ex n being Nat st n in dom g & i = len f + n; then
+    consider n being Nat such that
+    A: n in dom g & i = len f + n;
+    (f^g).i = g.n & g is P-quadratic by A,FINSEQ_1:def 7;
+    hence ex a being non zero Element of E,
+             b being Element of E st a in P & (f^g).i = a * b^2 by A;
+    end;
+  end;
+hence thesis;
+end;
+end;
+end;
+
+theorem XYZbS3a:
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F
+for f being P-quadratic FinSequence of E
+for g1,g2 being FinSequence of E
+st f = g1^g2 holds g1 is P-quadratic & g2 is P-quadratic
+proof
+let F be ordered Field, E be FieldExtension of F, P be Ordering of F;
+let f be P-quadratic FinSequence of E;
+let g1,g2 be FinSequence of E;
+assume AS: f = g1^g2;
+now let i be Nat;
+  assume F0: i in dom g1;
+  then F1: g1.i = f.i by AS,FINSEQ_1:def 7;
+  dom g1 c= dom f by AS,FINSEQ_1:26;
+  hence ex a being non zero Element of E,
+        b being Element of E st a in P & g1.i = a * b^2 by F1,F0,dq;
+  end;
+hence g1 is P-quadratic;
+now let i be Nat;
+  assume F0: i in dom g2;
+  then F1: g2.i = f.(len g1 + i) by AS,FINSEQ_1:def 7;
+  len g1 + i in dom f by F0,AS,FINSEQ_1:28;
+  hence ex a being non zero Element of E,
+        b being Element of E st a in P & g2.i = a * b^2 by F1,dq;
+  end;
+hence g2 is P-quadratic;
+end;
+
+definition
+let F be ordered Field,
+    E be FieldExtension of F;
+let P be Ordering of F;
+func P-Quadratic_Sums E -> non empty Subset of E equals
+  the set of all Sum f where f is P-quadratic FinSequence of E;
+coherence
+proof
+set f = <*1.E*>;
+F is Subfield of E by FIELD_4:7; then
+A: 1.E = 1.F by EC_PF_1:def 1;
+B:dom f = { 1 } by FINSEQ_1:2,FINSEQ_1:38;
+now let i be Element of dom f;
+  i = 1 by B,TARSKI:def 1; then
+  1.E * (1.E)^2 = f.i;
+  hence ex a being non zero Element of E,
+           b being Element of E st a in P & f.i = a * b^2 by A,REALALG1:25;
+  end; then
+f is P-quadratic; then
+C: Sum f in the set of all Sum f where f is P-quadratic FinSequence of E;
+now let o be object;
+  assume o in the set of all Sum f where f is P-quadratic FinSequence of E;
+  then consider f being P-quadratic FinSequence of E such that
+  D: o = Sum f;
+  thus o in the carrier of E by D;
+  end;
+then the set of all Sum f where f is P-quadratic FinSequence of E
+     c= the carrier of E;
+hence thesis by C;
+end;
+end;
+
+notation
+let F be ordered Field,
+    E be FieldExtension of F;
+let P be Ordering of F;
+synonym QS(E,P) for P-Quadratic_Sums E;
+end;
+
+S1:
+for F be ordered Field, P be Ordering of F, E be FieldExtension of F
+for f,g be P-quadratic FinSequence of E st len f = 1 &
+   Sum f in QS(E,P) & Sum g in QS(E,P) holds (Sum f) * (Sum g) in QS(E,P)
+proof
+let F be ordered Field, P be Ordering of F, E be FieldExtension of F;
+let f,g be P-quadratic FinSequence of E;
+assume AS: len f = 1 & Sum f in QS(E,P) & Sum g in QS(E,P);
+H0: f = <*f.1*> by AS,FINSEQ_1:40; then
+    dom f = {1} by FINSEQ_1:2,FINSEQ_1:38; then
+H1: 1 in dom f by TARSKI:def 1;
+    rng f c= the carrier of E; then
+reconsider u = f.1 as Element of E by H1,FUNCT_1:3;
+consider ua being non zero Element of E, ub being Element of E such that
+H2: ua in P & u = ua * ub^2 by H1,dq;
+I: F is Subfield of E by FIELD_4:7;
+
+defpred P[Nat] means
+  for g being P-quadratic FinSequence of E
+  st len g = $1 & Sum g in QS(E,P) holds (Sum f) * (Sum g) in QS(E,P);
+
+now let g be P-quadratic FinSequence of E;
+  assume len g = 0 & Sum g in QS(E,P);
+  then g = <*>(the carrier of E);
+  then B: Sum g = 0.E by RLVECT_1:43;
+  reconsider h = <*0.E*> as non empty FinSequence of E;
+  thus (Sum f) * (Sum g) in QS(E,P) by B;
+  end; then
+IA: P[0];
+
+IS: now let k be Nat;
+    assume IV: P[k];
+    now let g be P-quadratic FinSequence of E;
+      assume B0: len g = k+1 & Sum g in QS(E,P);
+      then g <> {};
+      then consider h being FinSequence, x being object such that
+      B1: g = h^<*x*> by FINSEQ_1:46;
+      per cases;
+
+      suppose h is empty; then
+      B3: g = <*x*> by B1,FINSEQ_1:34; then
+      dom g = {1} by FINSEQ_1:2,FINSEQ_1:38; then
+      B2: 1 in dom g by TARSKI:def 1;
+      B5: g.1 = x by B3;
+      rng g c= the carrier of E; then
+      reconsider x as Element of E by B5,B2,FUNCT_1:3;
+      consider xa being non zero Element of E, xb being Element of E such that
+      B4: xa in P & x = xa * xb^2 by B2,dq,B5;
+      reconsider r = <* u*x *> as non empty FinSequence of E;
+      B5: ua * xa in P
+          proof
+          reconsider z1 = ua, z2 = xa as Element of F by H2,B4;
+          C2: [z1,z2] in [:the carrier of F,the carrier of F:];
+          z1 * z2 = ((the multF of E) || the carrier of F).(z1,z2)
+                    by I,EC_PF_1:def 1
+                 .= ua * xa by C2,FUNCT_1:49;
+          hence thesis by H2,B4,REALALG1:def 5;
+          end;
+      B6: Sum r = u * x by RLVECT_1:44
+               .= (Sum f) * x by H0,RLVECT_1:44
+               .= (Sum f) * (Sum g) by B3,RLVECT_1:44;
+      B9: dom r = {1} by FINSEQ_1:2,FINSEQ_1:38;
+      B8: r.1 = (ua * ub^2) * (xa * xb^2) by B4,H2
+             .= ua * (ub^2 * (xa * xb^2)) by GROUP_1:def 3
+             .= ua * ((ub^2 * xb^2) * xa) by GROUP_1:def 3
+             .= (ua * xa) * (ub^2 * xb^2) by GROUP_1:def 3
+             .= (ua * xa) * (ub * xb)^2 by FIELD_9:2;
+      r is P-quadratic
+        proof
+        now let i be Element of NAT;
+          assume AS: i in dom r;
+          thus ex c being non zero Element of E,
+                b being Element of E st c in P & r.i = c * b^2
+            proof
+            r.i = (ua * xa) * (ub * xb)^2 by AS,B8,B9,TARSKI:def 1;
+            hence thesis by B5;
+            end;
+          end;
+        hence thesis;
+        end;
+      hence (Sum f) * (Sum g) in QS(E,P) by B6;
+      end;
+
+      suppose h is non empty; then
+      reconsider h as non empty FinSequence of E by B1,FINSEQ_1:36;
+      reconsider r = <*x*> as non empty FinSequence of E by B1,FINSEQ_1:36;
+      len r = 1 by FINSEQ_1:39;
+      then B2: len g = len h + 1 by B1,FINSEQ_1:22;
+      reconsider g1 = g as P-quadratic non empty FinSequence of E by B0;
+      g1 = h^r by B1; then
+      reconsider h,r as P-quadratic non empty FinSequence of E by XYZbS3a;
+      Sum h in QS(E,P); then
+      (Sum f) * (Sum h) in QS(E,P) by B0,B2,IV; then
+      consider fh being P-quadratic FinSequence of E such that
+      B3: Sum fh = (Sum f) * (Sum h);
+      (Sum f) * (Sum r) in QS(E,P)
+         proof
+         dom r = {1} by FINSEQ_1:2,FINSEQ_1:38; then
+         B2: 1 in dom r by TARSKI:def 1;
+         B5: r.1 = x;
+         rng r c= the carrier of E; then
+         reconsider x as Element of E by B5,B2,FUNCT_1:3;
+         len r = 1 by FINSEQ_1:39; then
+         E0: len g = len h + 1 by B1,FINSEQ_1:22;
+         E2: dom g = Seg(k+1) by B0,FINSEQ_1:def 3;
+         E5: x = g.(k+1) by E0,B0,B1,FINSEQ_1:42;
+         consider xa being non zero Element of E,
+                  xb being Element of E such that
+         C1: xa in P & x = xa * xb^2 by E5,dq,E2,FINSEQ_1:4;
+         reconsider l = <* u*x *> as non empty FinSequence of E;
+         C2: ua * xa in P
+             proof
+             reconsider z1 = ua, z2 = xa as Element of F by H2,C1;
+             D2: [z1,z2] in [:the carrier of F,the carrier of F:];
+             z1 * z2 = ((the multF of E) || the carrier of F).(z1,z2)
+                       by I,EC_PF_1:def 1
+                    .= ua * xa by D2,FUNCT_1:49;
+             hence thesis by H2,C1,REALALG1:def 5;
+             end;
+         B6: Sum l = u * x by RLVECT_1:44
+                  .= (Sum f) * x by H0,RLVECT_1:44
+                  .= (Sum f) * (Sum r) by RLVECT_1:44;
+         B9: dom l = {1} by FINSEQ_1:2,FINSEQ_1:38;
+         B8: l.1 = (ua * ub^2) * (xa * xb^2) by C1,H2
+                .= ua * (ub^2 * (xa * xb^2)) by GROUP_1:def 3
+                .= ua * ((ub^2 * xb^2) * xa) by GROUP_1:def 3
+                .= (ua * xa) * (ub^2 * xb^2) by GROUP_1:def 3
+                .= (ua * xa) * (ub * xb)^2 by FIELD_9:2;
+         l is P-quadratic
+           proof
+           now let i be Element of NAT;
+             assume AS: i in dom l;
+             thus ex c being non zero Element of E,
+                     b being Element of E st c in P & l.i = c * b^2
+               proof
+               l.i = (ua * xa) * (ub * xb)^2 by AS,B8,B9,TARSKI:def 1;
+               hence thesis by C2;
+               end;
+             end;
+           hence thesis;
+           end;
+         hence (Sum f) * (Sum r) in QS(E,P) by B6;
+         end; then
+      consider fr being P-quadratic FinSequence of E such that
+      B4: Sum fr = (Sum f) * (Sum r);
+
+      (Sum f) * (Sum g)
+         = (Sum f) * (Sum h + Sum r) by B1,RLVECT_1:41
+        .= Sum fh + Sum fr by B3,B4,VECTSP_1:def 3
+        .= Sum( fh^fr ) by RLVECT_1:41;
+      hence (Sum f) * (Sum g) in QS(E,P);
+      end;
+      end;
+    hence P[k+1];
+    end;
+
+I: for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+consider n being Nat such that H: len g = n;
+thus thesis by AS,I,H;
+end;
+
+S0:
+for F be ordered Field, P be Ordering of F, E be FieldExtension of F
+for f,g be P-quadratic FinSequence of E
+st Sum f in QS(E,P) & Sum g in QS(E,P) holds (Sum f) * (Sum g) in QS(E,P)
+proof
+let F be ordered Field, P be Ordering of F, E be FieldExtension of F;
+let f,g be P-quadratic FinSequence of E;
+assume AS: Sum f in QS(E,P) & Sum g in QS(E,P);
+defpred P[Nat] means
+  for f,g being P-quadratic FinSequence of E st len f = $1 &
+  Sum f in QS(E,P) & Sum g in QS(E,P) holds (Sum f) * (Sum g) in QS(E,P);
+now let f,g be P-quadratic FinSequence of E;
+  assume len f = 0 & Sum g in QS(E,P);
+  then f = <*>(the carrier of E);
+  then Sum f = 0.E by RLVECT_1:43;
+  hence (Sum f) * (Sum g) in QS(E,P);
+  end; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    now let f,g be P-quadratic FinSequence of E;
+      assume B0: len f = k+1 & Sum f in QS(E,P) & Sum g in QS(E,P);
+      then reconsider f1 = f as P-quadratic non empty FinSequence of E;
+      consider h being FinSequence, x being object such that
+      B1: f1 = h^<*x*> by FINSEQ_1:46;
+      per cases;
+      suppose h is empty; then
+      f = <*x*> by B1,FINSEQ_1:34;
+      hence (Sum f) * (Sum g) in QS(E,P) by B0,S1,FINSEQ_1:40;
+      end;
+      suppose h is non empty; then
+      reconsider h as non empty FinSequence of E by B1,FINSEQ_1:36;
+      reconsider r = <*x*> as non empty FinSequence of E by B1,FINSEQ_1:36;
+      f1 = h^r by B1; then
+      reconsider h,r as P-quadratic FinSequence of E by XYZbS3a;
+      len r = 1 by FINSEQ_1:39;
+      then B2: len f = len h + 1 by B1,FINSEQ_1:22;
+      Sum h in QS(E,P); then
+      (Sum h) * (Sum g) in QS(E,P) by B0,B2,IV; then
+      consider hg being P-quadratic FinSequence of E such that
+      B3: Sum hg = (Sum h) * (Sum g);
+      (Sum r) in QS(E,P) & len r = 1 by FINSEQ_1:39; then
+      (Sum r) * (Sum g) in QS(E,P) by B0,S1; then
+      consider rg being P-quadratic FinSequence of E such that
+      B4: Sum rg = (Sum r) * (Sum g);
+      (Sum f) * (Sum g)
+         = (Sum h + Sum r) * (Sum g) by B1,RLVECT_1:41
+        .= Sum hg + Sum rg by B3,B4,VECTSP_1:def 2
+        .= Sum( hg^rg ) by RLVECT_1:41;
+      hence (Sum f) * (Sum g) in QS(E,P);
+      end;
+      end;
+    hence P[k+1];
+    end;
+I: for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+consider n being Nat such that H: len f = n;
+thus thesis by AS,I,H;
+end;
+
+registration
+let F be ordered Field,
+    E be FieldExtension of F;
+let P be Ordering of F;
+cluster QS(E,P) -> add-closed mult-closed with_sums_of_squares;
+coherence
+proof
+set T = QS(E,P);
+I: F is Subfield of E by FIELD_4:7;
+now let x,y be Element of E;
+  assume AS: x in T & y in T; then
+  consider f being P-quadratic FinSequence of E such that
+  A: Sum f = x;
+  consider g being P-quadratic FinSequence of E such that
+  B: Sum g = y by AS;
+  Sum(f^g) = x + y by A,B,RLVECT_1:41;
+  hence x + y in T;
+  end;
+hence QS(E,P) is add-closed;
+now let x,y be Element of E;
+  assume AS: x in T & y in T; then
+  consider f being P-quadratic FinSequence of E such that
+  A: Sum f = x;
+  consider g being P-quadratic FinSequence of E such that
+  B: Sum g = y by AS;
+  thus x * y in T by AS,A,B,S0;
+  end;
+hence QS(E,P) is mult-closed;
+now let o be object;
+  assume o in QS E; then
+  consider a being Element of E such that
+  A: o = a & a is sum_of_squares;
+  consider f being FinSequence of E such that
+  B: Sum f = a & for i being Nat st i in dom f
+                 ex x being Element of E st f.i = x^2 by A;
+  f is P-quadratic
+      proof
+      now let i be Element of NAT;
+        assume AS: i in dom f;
+        D: 1.F = 1.E by I,EC_PF_1:def 1;
+        thus ex c being non zero Element of E,
+              b being Element of E st c in P & f.i = c * b^2
+          proof
+          consider x being Element of E such that
+          E: f.i = x^2 by AS,B;
+          f.i = 1.E * x^2 by E;
+          hence thesis by D,REALALG1:25;
+          end;
+        end;
+      hence thesis;
+      end;
+    hence o in QS(E,P) by A,B;
+  end;
+then QS E c= QS(E,P);
+hence thesis;
+end;
+end;
+
+theorem lemmaA:
+for F being ordered Field,
+    P being Ordering of F
+for E being FieldExtension of F,
+    a being non zero Element of E
+holds a in QS(E,P)
+iff ex f being P-quadratic non empty FinSequence of E
+    st Sum f = a &
+       for i being Element of NAT st i in dom f holds f.i <> 0.E
+proof
+let F be ordered Field, P be Ordering of F;
+let E be FieldExtension of F, a be non zero Element of E;
+now assume A: a in QS(E,P);
+consider g being P-quadratic FinSequence of E such that
+B: Sum g = a by A;
+Z: g is non empty by B;
+defpred P[Nat] means
+    for g being P-quadratic non empty FinSequence of E
+    st len g = $1 & Sum g <> 0.E
+    ex f being P-quadratic non empty FinSequence of E
+    st Sum f = Sum g &
+       for i being Element of NAT st i in dom f holds f.i <> 0.E;
+IA: P[1]
+      proof
+      now let g be P-quadratic non empty FinSequence of E;
+        assume A1: len g = 1 & Sum g <> 0.E;
+        set y = g.1;
+        A2: g = <*y*> by A1,FINSEQ_1:40;
+        rng<*y*> = {y} by FINSEQ_1:39; then
+        y in rng<*y*> by TARSKI:def 1; then
+        consider u being object such that
+        A6: u in dom g & g.u = y by A2,FUNCT_1:def 3;
+        reconsider u as Element of NAT by A6;
+        g.u in rng g & rng g c= the carrier of E by A6,FUNCT_1:3; then
+        reconsider y as Element of the carrier of E by A6;
+        now let i be Element of NAT;
+          assume H: i in dom g;
+          dom g = Seg 1 by A2,FINSEQ_1:38;
+          then i = 1 by H,FINSEQ_1:2,TARSKI:def 1;
+          hence g.i <> 0.E by A1,A2,RLVECT_1:44;
+          end;
+        hence ex f being P-quadratic non empty FinSequence of E
+          st Sum f = Sum g &
+          for i being Element of NAT st i in dom f holds f.i <> 0.E;
+        end;
+      hence P[1];
+      end;
+IS: now let k be Nat;
+      assume A: k >= 1;
+      assume IV: P[k];
+      now let f be P-quadratic non empty FinSequence of E;
+      assume A1: len f = k + 1 & Sum f <> 0.E;
+      consider G being FinSequence, y being object such that
+      A3: f = G^<*y*> by FINSEQ_1:46;
+      A4: len f = len G + len<*y*> by A3,FINSEQ_1:22
+               .= len G + 1 by FINSEQ_1:39;
+      rng G c= rng f by A3,FINSEQ_1:29; then
+      reconsider G as non empty FinSequence of E
+                         by A,A1,A4,XBOOLE_1:1,FINSEQ_1:def 4;
+      rng<*y*> = {y} by FINSEQ_1:39; then
+      A6: y in rng<*y*> by TARSKI:def 1;
+      rng<*y*> c= rng f by A3,FINSEQ_1:30; then
+      consider u being object such that
+      A7: u in dom f & f.u = y by A6,FUNCT_1:def 3;
+      reconsider u as Element of NAT by A7;
+      f.u in rng f & rng f c= the carrier of E by A7,FUNCT_1:3; then
+      reconsider y as Element of the carrier of E by A7;
+      reconsider g1 = <*y*> as FinSequence of E;
+      f = G ^ g1 by A3; then
+      reconsider G,g1 as P-quadratic non empty FinSequence of E by XYZbS3a;
+      per cases;
+      suppose Sum G = 0.E; then
+        I: 0.E + Sum g1 = Sum f by A3,RLVECT_1:41;
+        now let i be Element of NAT;
+          assume H: i in dom g1;
+          dom g1 = Seg 1 by FINSEQ_1:38;
+          then J: i = 1 by H,FINSEQ_1:2,TARSKI:def 1;
+          thus g1.i <> 0.E by J,I,A1,RLVECT_1:44;
+          end;
+        hence ex g being P-quadratic non empty FinSequence of E
+        st Sum f = Sum g &
+           for i being Element of NAT st i in dom g holds g.i <> 0.E by I;
+        end;
+      suppose Sum G <> 0.E; then
+      consider G1 being P-quadratic non empty FinSequence of E such that
+      B: Sum G1 = Sum G &
+         for i being Element of NAT st i in dom G1 holds G1.i<>0.E by A1,A4,IV;
+      C: Sum f = Sum G + Sum <*y*> by A3,RLVECT_1:41
+              .= Sum G + y by RLVECT_1:44;
+      per cases;
+      suppose y = 0.E;
+        hence ex g being P-quadratic non empty FinSequence of E
+        st Sum f = Sum g &
+           for i being Element of NAT st i in dom g holds g.i <> 0.E by B,C;
+        end;
+      suppose D1: y <> 0.E;
+        set g = G1 ^ g1;
+        D2: Sum g = Sum G1 + Sum <*y*> by RLVECT_1:41
+                 .= Sum f by B,C,RLVECT_1:44;
+        now let i be Element of NAT;
+          assume D3: i in dom g;
+          D4: dom g = Seg(len g) by FINSEQ_1:def 3;
+          len g = len G1 + len g1 by FINSEQ_1:22
+               .= len G1 + 1 by FINSEQ_1:39; then
+          D6: 1 <= i & i <= len G1 + 1 by D3,D4,FINSEQ_1:1;
+          per cases;
+          suppose D6: i in dom G1; then
+            g.i = G1.i by FINSEQ_1:def 7;
+            hence g.i <> 0.E by B,D6;
+            end;
+          suppose D7: not i in dom G1;
+            D8: now assume i <> len G1 + 1;
+                then i < len G1 + 1 by D6,XXREAL_0:1;
+                then i + 1 - 1 <= len G1 + 1 - 1 by INT_1:7; then
+                i in Seg(len G1) by D6,FINSEQ_1:1;
+                hence contradiction by D7,FINSEQ_1:def 3;
+                end;
+            dom g1 = Seg 1 by FINSEQ_1:38; then
+            1 in dom g1 by FINSEQ_1:3; then
+            g.i = g1.1 by D8,FINSEQ_1:def 7 .= y;
+            hence g.i <> 0.E by D1;
+            end;
+          end;
+        hence ex g being P-quadratic non empty FinSequence of E
+        st Sum f = Sum g &
+           for i being Element of NAT st i in dom g holds g.i <> 0.E by D2;
+        end;
+      end;
+      end;
+      hence P[k+1];
+      end;
+I: for k being Nat st k >= 1 holds P[k] from NAT_1:sch 8(IA,IS);
+  consider n being Nat such that H: len g = n;
+  n >= 0 + 1 by Z,H,INT_1:7;
+  hence ex f being P-quadratic non empty FinSequence of E
+    st Sum f = a &
+    for i being Element of NAT st i in dom f holds f.i <> 0.E by Z,H,I,B;
+  end;
+hence thesis;
+end;
+
+theorem lemoe1:
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F holds P c= QS(E,P)
+proof
+let F be ordered Field, E be FieldExtension of F;
+let P be Ordering of F;
+I: F is Subfield of E by FIELD_4:7; then
+H: the carrier of F c= the carrier of E by EC_PF_1:def 1;
+now let o be object;
+  assume AS: o in P;
+  then reconsider a = o as Element of E by H;
+  reconsider f = <*a*> as non empty FinSequence of E;
+  A: Sum f = a by RLVECT_1:44;
+  f is P-quadratic
+    proof
+    now let i be Element of NAT;
+      assume B: i in dom f;
+      dom f = {1} by FINSEQ_1:2,FINSEQ_1:38; then
+      C: i = 1 by B,TARSKI:def 1;
+      D: 1.F = 1.E by I,EC_PF_1:def 1;
+      thus ex c being non zero Element of E,
+              b being Element of E st c in P & f.i = c * b^2
+        proof
+        per cases;
+        suppose a = 0.E;
+          then 1.E * (0.E)^2 = f.i by C;
+          hence thesis by D,REALALG1:25;
+          end;
+        suppose a <> 0.E;
+          then a is non zero & a * (1.E)^2 = f.i by C;
+          hence thesis by AS;
+          end;
+        end;
+      end;
+    hence thesis;
+    end;
+  hence o in QS(E,P) by A;
+  end;
+hence thesis;
+end;
+
+theorem lemoe3:
+for F being ordered Field,
+    E being ordered FieldExtension of F
+for P being Ordering of F, O being Ordering of E
+st O extends P holds QS(E,P) c= O
+proof
+let F be ordered Field, E be ordered FieldExtension of F;
+let P be Ordering of F, O be Ordering of E;
+assume O extends P; then
+AS: P c= O by l13;
+defpred P[Nat] means
+  for f being P-quadratic FinSequence of E
+  st len f = $1 holds Sum f in O;
+I: F is Subfield of E by FIELD_4:7;
+now let f be P-quadratic FinSequence of E;
+  assume len f = 0; then
+  f = <*>(the carrier of E); then
+  Sum f = 0.E by RLVECT_1:43 .= 0.F by I,EC_PF_1:def 1;
+  hence Sum f in O by AS,REALALG1:25;
+  end; then
+I0: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    now let f be P-quadratic FinSequence of E;
+      assume B0: len f = k+1;
+      then f <> {};
+      then consider h being FinSequence, x being object such that
+      B1: f = h^<*x*> by FINSEQ_1:46;
+      reconsider f1 = f as P-quadratic non empty FinSequence of E by B0;
+      per cases;
+      suppose h is empty; then
+      B0: f = <*x*> by B1,FINSEQ_1:34; then
+      dom f = {1} by FINSEQ_1:2,FINSEQ_1:38; then
+      B2: 1 in dom f by TARSKI:def 1; then
+      B5: f.1 in rng f & f.1 = x by B0,FUNCT_1:3; then
+      reconsider x as Element of E;
+      consider a being non zero Element of E,
+               b being Element of E such that
+      B3: a in P & f.1 = a * b^2 by B2,dq;
+      B4: Sum f = x by B0,RLVECT_1:44;
+      a in O & b^2 in O by B3,AS,REALALG1:23;
+      hence Sum f in O by B3,B4,B5,REALALG1:def 5;
+      end;
+      suppose h is non empty; then
+      reconsider h as non empty FinSequence of E by B1,FINSEQ_1:36;
+      reconsider r = <*x*> as non empty FinSequence of E by B1,FINSEQ_1:36;
+      len r = 1 by FINSEQ_1:39;
+      then B2: len f = len h + 1 by B1,FINSEQ_1:22;
+      dom r = {1} by FINSEQ_1:2,FINSEQ_1:38; then
+      1 in dom r by TARSKI:def 1; then
+      r.1 in rng r & r.1 = x by FUNCT_1:3; then
+      reconsider x as Element of E;
+      f1 = h^r by B1; then
+      reconsider h,r as P-quadratic FinSequence of E by XYZbS3a;
+      B3: Sum r in O
+          proof
+          dom r = {1} by FINSEQ_1:2,FINSEQ_1:38; then
+          1 in dom r by TARSKI:def 1; then
+          consider a being non zero Element of E,
+                   b being Element of E such that
+          B3: a in P & r.1 = a * b^2 by dq;
+          B4: Sum r = x by RLVECT_1:44;
+          a in O & b^2 in O by B3,AS,REALALG1:23;
+          hence thesis by B3,B4,REALALG1:def 5;
+          end;
+      Sum h in O by IV,B0,B2; then
+      Sum r + Sum h in O by B3,IDEAL_1:def 1;
+      hence Sum f in O by B1,RLVECT_1:41;
+      end;
+      end;
+    hence P[k+1];
+    end;
+I: for k being Nat holds P[k] from NAT_1:sch 2(I0,IS);
+now let o be object;
+  assume o in QS(E,P); then
+  consider f being P-quadratic FinSequence of E such that
+  A: Sum f = o;
+  consider n being Nat such that H: len f = n;
+  thus o in O by H,A,I;
+  end;
+hence thesis;
+end;
+
+theorem lemoe2:
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F
+holds QS(E,P) is prepositive_cone iff not -1.E in QS(E,P)
+proof
+let F be ordered Field, E be FieldExtension of F;
+let P be Ordering of F;
+set T = QS(E,P);
+A: now assume AS: QS(E,P) is prepositive_cone;
+   then reconsider E1 = E as preordered Field by REALALG1:def 16;
+   reconsider O = QS(E,P) as Preordering of E1 by AS;
+   not -1.E in O by REALALG1:26;
+   hence not -1.E in QS(E,P);
+   end;
+now assume AS: not -1.E in QS(E,P);
+   QS E c= T & SQ E c= QS E by REALALG1:def 13,REALALG1:18;
+   then A: SQ E c= T;
+   T * T c= T
+     proof
+     now let o be object;
+       assume o in T * T;
+       then consider a,b being Element of E such that
+       C: o = a * b & a in T & b in T;
+       thus o in T by C,REALALG1:def 5;
+       end;
+     hence thesis;
+     end;
+   then T is negative-disjoint by A,AS,REALALG1:21;
+   hence QS(E,P) is prepositive_cone;
+   end;
+hence thesis by A;
+end;
+
+theorem lemoe4:
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F
+holds P extends_to E iff QS(E,P) is prepositive_cone
+proof
+let F be ordered Field, E be FieldExtension of F, P be Ordering of F;
+A: now assume P extends_to E; then
+   consider O being Subset of E such that
+   B0: P c= O & O is positive_cone;
+   reconsider E1 = E as ordered FieldExtension of F by B0,REALALG1:def 17;
+   reconsider O as Ordering of E1 by B0;
+   B1: QS(E,P) c= O by B0,l13,lemoe3;
+   not -1.E in O by REALALG1:26;
+   hence QS(E,P) is prepositive_cone by B1,lemoe2;
+   end;
+now assume B0: QS(E,P) is prepositive_cone; then
+   reconsider E1 = E as preordered Field by REALALG1:def 16;
+   reconsider Pr = QS(E,P) as Preordering of E1 by B0;
+   consider O being Ordering of E1 such that
+   B1: Pr c= O by REALALG2:31;
+   P c= Pr by lemoe1; then
+   P c= O by B1;
+   hence P extends_to E;
+   end;
+hence thesis by A;
+end;
+
+lemB3:
+for F being ordered Field, E being ordered FieldExtension of F
+for P being Ordering of F, O being Ordering of E st O extends P
+for f being P-quadratic non empty FinSequence of E
+st f is non trivial holds Sum f in O \ {0.E}
+proof
+let F be ordered Field, E be ordered FieldExtension of F;
+let P be Ordering of F, O be Ordering of E;
+assume AS1: O extends P;
+let f be P-quadratic non empty FinSequence of E;
+assume AS2: f is non trivial;
+H1: QS(E,P) c= O by AS1,lemoe3;
+H2: O + O^+ c= O^+ & O^+ + O c= O^+ by lemP;
+
+defpred P[Nat] means
+  for f being P-quadratic non empty FinSequence of E
+  st f is non trivial & len f = $1 holds Sum f in O \ {0.E};
+
+A: now let f be P-quadratic non empty FinSequence of E;
+   assume A0: f is non trivial & len f = 1;
+   then A1: f = <*f.1*> by FINSEQ_1:40;
+   then A2: dom f = {1} by FINSEQ_1:2,FINSEQ_1:38;
+   then 1 in dom f by TARSKI:def 1;
+   then A3: f.1 in rng f by FUNCT_1:3;
+   A5: Sum f in QS(E,P);
+   now assume f.1 = 0.E; then
+     for i being object st i in dom f holds f.i = 0.E by A2,TARSKI:def 1;
+     hence contradiction by A0,REALALG2:def 4;
+     end;
+   then Sum f <> 0.E by A1,A3,RLVECT_1:44;
+   then not Sum f in {0.E} by TARSKI:def 1;
+   hence Sum f in O \ {0.E} by A5,H1,XBOOLE_0:def 5;
+   end; then
+IA: P[1];
+
+IS: now let k be Nat;
+    assume k >= 1;
+    assume AS2: P[k];
+    now let f be P-quadratic non empty FinSequence of E;
+      assume AS3: f is non trivial & len f = k + 1;
+      consider h being FinSequence, x being object such that
+      B1: f = h^<*x*> by FINSEQ_1:46;
+      reconsider h as FinSequence of E by B1,FINSEQ_1:36;
+      reconsider r = <*x*> as non empty FinSequence of E by B1,FINSEQ_1:36;
+      f = h^r by B1; then
+      reconsider h,r as P-quadratic FinSequence of E by XYZbS3a;
+      len r = 1 by FINSEQ_1:39;
+      then B2: len f = len h + 1 by B1,FINSEQ_1:22;
+      per cases;
+      suppose C0: h is trivial; then
+        Sum h = 0.E by STRUCT_0:def 12; then
+        C1: Sum h in O by REALALG1:25;
+        r is non trivial & len r = 1 by C0,B1,AS3,FINSEQ_1:40; then
+        Sum r in O \ {0.E} by A; then
+        C2: Sum h + Sum r in O + (O \ {0.E}) by C1;
+        Sum f = Sum h + Sum r by B1,RLVECT_1:41;
+        hence Sum f in O \ {0.E} by C2,H2;
+        end;
+      suppose C0: h is non trivial;
+        then h is non empty;
+        then C1: Sum h in O \ {0.E} by B2,C0,AS2,AS3;
+        Sum r in QS(E,P); then
+        C2: Sum h + Sum r in (O \ {0.E}) + O by H1,C1;
+        Sum f = Sum h + Sum r by B1,RLVECT_1:41;
+        hence Sum f in O \ {0.E} by C2,H2;
+        end;
+      end;
+    hence P[k+1];
+    end;
+I: for k being Nat st k >= 1 holds P[k] from NAT_1:sch 8(IA,IS);
+len f + 1 > 0 + 1 by XREAL_1:6; then
+len f >= 1 by NAT_1:13;
+hence thesis by AS2,I;
+end;
+
+theorem
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F
+holds P extends_to E iff
+      for f being P-quadratic non empty FinSequence of E
+      st Sum f = 0.E holds f is trivial
+proof
+let F be ordered Field, E be FieldExtension of F, P be Ordering of F;
+Z: now assume P extends_to E; then
+   consider O being Subset of E such that
+   B0: P c= O & O is positive_cone;
+   reconsider E1 = E as ordered FieldExtension of F by B0,REALALG1:def 17;
+   reconsider O as Ordering of E1 by B0;
+   now let f be P-quadratic non empty FinSequence of E;
+     assume C0: Sum f = 0.E & f is non trivial;
+     then Sum f in O \ {0.E} by B0,l13,lemB3;
+     then Sum f in O & not Sum f in {0.E} by XBOOLE_0:def 5;
+     hence contradiction by C0,TARSKI:def 1;
+     end;
+   hence for f being P-quadratic non empty FinSequence of E
+         st Sum f = 0.E holds f is trivial;
+   end;
+set g = <*1.E*>;
+F is Subfield of E by FIELD_4:7; then
+A: 1.E = 1.F by EC_PF_1:def 1;
+B: dom g = { 1 } by FINSEQ_1:2,FINSEQ_1:38;
+now let i be Element of NAT;
+  assume i in dom g; then
+  C: i = 1 by B,TARSKI:def 1;
+  1.E * (1.E)^2 = g.i by C;
+  hence ex a being non zero Element of E,
+           b being Element of E st a in P & g.i = a * b^2 by A,REALALG1:25;
+  end; then
+reconsider g as P-quadratic non empty FinSequence of E by dq;
+now assume AS: for f being P-quadratic non empty FinSequence of E
+   st Sum f = 0.E holds f is trivial;
+   now assume -1.E in QS(E,P); then
+     consider h being P-quadratic FinSequence of E such that
+     C: Sum h = -1.E;
+     Sum(g^h) = Sum g + Sum h by RLVECT_1:41
+             .= 1.E + -1.E by C,RLVECT_1:44
+             .= 0.E by RLVECT_1:5;
+     hence contradiction by AS;
+     end;
+   hence P extends_to E by lemoe2,lemoe4;
+   end;
+hence thesis by Z;
+end;
+
+theorem XYZbS3:
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F
+for a being Element of E st a^2 in F
+for f being P-quadratic non empty FinSequence of FAdj(F,{a})
+ex g1,g2 being non empty FinSequence of FAdj(F,{a})
+st Sum f = Sum g1 + @(FAdj(F,{a}),a) * (2 '*' Sum g2) &
+   (for i being Element of NAT st i in dom g1
+        ex b being non zero Element of FAdj(F,{a}),
+           c1,c2 being Element of FAdj(F,{a})
+        st b in P & c1 in F & c2 in F &
+           g1.i = b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2)) &
+   (for i being Element of NAT st i in dom g2
+        ex b being non zero Element of FAdj(F,{a}),
+           c1,c2 being Element of FAdj(F,{a})
+        st b in P & c1 in F & c2 in F & g2.i = b * c1 * c2)
+proof
+let F be ordered Field, E be FieldExtension of F;
+let P be Ordering of F, a being Element of E;
+assume AA: a^2 in F;
+let f be P-quadratic non empty FinSequence of FAdj(F,{a});
+set K = FAdj(F,{a});
+
+defpred P[Nat] means
+for f being P-quadratic non empty FinSequence of FAdj(F,{a})
+st len f = $1
+ex g1,g2 being non empty FinSequence of FAdj(F,{a})
+st Sum f = Sum g1 + @(FAdj(F,{a}),a) * (2 '*' Sum g2) &
+   (for i being Element of NAT st i in dom g1
+        ex b being non zero Element of FAdj(F,{a}),
+           c1,c2 being Element of FAdj(F,{a})
+        st b in P & c1 in F & c2 in F &
+           g1.i = b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2)) &
+   (for i being Element of NAT st i in dom g2
+        ex b being non zero Element of FAdj(F,{a}),
+           c1,c2 being Element of FAdj(F,{a})
+        st b in P & c1 in F & c2 in F & g2.i = b * c1 * c2);
+
+II: now let f be P-quadratic non empty FinSequence of FAdj(F,{a});
+    assume len f = 1; then
+    H: f = <* f.1 *> by FINSEQ_1:40; then
+    dom f = { 1 } by FINSEQ_1:38,FINSEQ_1:2; then
+    1 in dom f by TARSKI:def 1; then
+    consider d being non zero Element of K, b being Element of K such that
+    A: d in P & f.1 = d * b^2 by dq;
+    consider c1,c2 being Element of K such that
+    B: c1 in F & c2 in F & b = c1 + @(K,a) * c2 by AA,XYZb;
+    b^2 = c1^2 + 2'*'c1 * (@(K,a) * c2) + (@(FAdj(F,{a}),a) * c2)^2
+          by B,REALALG2:7
+       .= c1^2 + 2'*'c1 * (@(K,a) * c2) + (@(FAdj(F,{a}),a)^2 * c2^2)
+          by FIELD_9:2
+       .= c1^2 + (c2^2 * @(K,a)^2) + 2'*'c1 * (@(K,a) * c2) by RLVECT_1:def 3
+       .= (c1^2 + c2^2 * @(K,a)^2) + 2'*'(c1 * (c2 * @(K,a))) by REALALG2:5
+       .= (c1^2 + c2^2 * @(K,a)^2) + 2'*'((c1 * c2) * @(K,a)) by GROUP_1:def 3
+       .= (c1^2 + c2^2 * @(K,a)^2) + 2 '*' @(K,a) * (c1 *c2) by REALALG2:5;
+    then
+    E: d * b^2
+       = d * (c1^2 + c2^2 * @(K,a)^2) + d * (2 '*' @(K,a) * (c1 *c2))
+         by VECTSP_1:def 2
+      .= d * (c1^2 + c2^2 * @(K,a)^2) + (d * (c1 *c2)) * (2 '*' @(K,a))
+         by GROUP_1:def 3
+      .= d * (c1^2 + c2^2 * @(K,a)^2) + (2 '*' @(K,a)) * (d * c1 * c2)
+         by GROUP_1:def 3;
+
+    set g1 = <* d * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2) *>,
+        g2 = <* d * c1 * c2 *>;
+    C: Sum f
+          = d * (c1^2 + c2^2 * @(K,a)^2) + (2 '*' @(K,a)) * (d * c1 * c2)
+            by H,A,E,RLVECT_1:44
+         .= Sum g1 + (2 '*' @(K,a)) * (d * c1 * c2) by RLVECT_1:44
+         .= Sum g1 + (2 '*' @(K,a)) * Sum g2 by RLVECT_1:44
+         .= Sum g1 + 2 '*' (@(K,a) * Sum g2) by REALALG2:5
+         .= Sum g1 + @(K,a) * (2 '*' Sum g2) by REALALG2:5;
+    D: now let i be Element of NAT;
+       assume D1: i in dom g1;
+       dom g1 = { 1 } by FINSEQ_1:38,FINSEQ_1:2; then
+       i = 1 by D1,TARSKI:def 1;
+       hence ex b being non zero Element of FAdj(F,{a}),
+                c1,c2 being Element of FAdj(F,{a})
+          st b in P & c1 in F & c2 in F &
+          g1.i = b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2) by A,B;
+       end;
+    now let i be Element of NAT;
+      assume D1: i in dom g2;
+      dom g2 = { 1 } by FINSEQ_1:38,FINSEQ_1:2; then
+      i = 1 by D1,TARSKI:def 1;
+      hence ex b being non zero Element of FAdj(F,{a}),
+            c1,c2 being Element of FAdj(F,{a})
+      st b in P & c1 in F & c2 in F & g2.i = b * c1 * c2 by A,B;
+      end;
+    hence ex g1,g2 being non empty FinSequence of FAdj(F,{a})
+       st Sum f = Sum g1 + @(FAdj(F,{a}),a) * (2 '*' Sum g2) &
+          (for i being Element of NAT st i in dom g1
+          ex b being non zero Element of FAdj(F,{a}),
+             c1,c2 being Element of FAdj(F,{a})
+          st b in P & c1 in F & c2 in F &
+             g1.i = b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2)) &
+         (for i being Element of NAT st i in dom g2
+          ex b being non zero Element of FAdj(F,{a}),
+             c1,c2 being Element of FAdj(F,{a})
+          st b in P & c1 in F & c2 in F & g2.i = b * c1 * c2) by C,D;
+      end; then
+IA: P[1];
+IS: now let k be non zero Nat;
+    assume IV: P[k];
+    now let f be P-quadratic non empty FinSequence of FAdj(F,{a});
+      assume AS: len f = k + 1;
+      consider G being FinSequence, y being object such that
+      A1: f = G^<*y*> by FINSEQ_1:46;
+      rng G c= rng f by A1,FINSEQ_1:29; then
+      reconsider G as FinSequence of K by XBOOLE_1:1,FINSEQ_1:def 4;
+      A5: rng f c= the carrier of K;
+      A6: rng<*y*> c= rng f by A1,FINSEQ_1:30;
+      rng<*y*> = {y} & y in {y} by FINSEQ_1:38,TARSKI:def 1; then
+      reconsider y as Element of K by A5,A6;
+      A3: len f = len G + len<*y*> by A1,FINSEQ_1:22
+               .= len G + 1 by FINSEQ_1:39;
+      per cases;
+
+      suppose G is empty;
+      then f = <*y*> by A1,FINSEQ_1:34;
+      then len f = 1 by FINSEQ_1:40;
+      hence ex g1,g2 being non empty FinSequence of FAdj(F,{a})
+         st Sum f = Sum g1 + @(FAdj(F,{a}),a) * (2 '*' Sum g2) &
+         (for i being Element of NAT st i in dom g1
+          ex b being non zero Element of FAdj(F,{a}),
+             c1,c2 being Element of FAdj(F,{a})
+          st b in P & c1 in F & c2 in F &
+             g1.i = b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2)) &
+         (for i being Element of NAT st i in dom g2
+          ex b being non zero Element of FAdj(F,{a}),
+             c1,c2 being Element of FAdj(F,{a})
+          st b in P & c1 in F & c2 in F & g2.i = b * c1 * c2) by II;
+      end;
+
+      suppose A5: G is non empty;
+      <*y*> is FinSequence of K & f = G^<*y*> by A1; then
+      B: G is P-quadratic & <*y*> is P-quadratic by XYZbS3a; then
+      consider h1,h2 being non empty FinSequence of K such that
+      C: Sum G = Sum h1 + @(K,a) * (2 '*' Sum h2) &
+        (for i being Element of NAT st i in dom h1
+         ex b being non zero Element of K, c1,c2 being Element of K
+         st b in P & c1 in F & c2 in F &
+            h1.i = b * (c1^2 + c2^2 * @(K,a)^2)) &
+        (for i being Element of NAT st i in dom h2
+         ex b being non zero Element of K, c1,c2 being Element of K
+         st b in P & c1 in F & c2 in F & h2.i = b * c1 * c2) by A5,AS,A3,IV;
+
+      len <*y*> = 1 by FINSEQ_1:40; then
+      consider y1,y2 being non empty FinSequence of K such that
+      D: Sum <*y*> = Sum y1 + @(K,a) * (2 '*' Sum y2) &
+        (for i being Element of NAT st i in dom y1
+         ex b being non zero Element of K, c1,c2 being Element of K
+         st b in P & c1 in F & c2 in F &
+            y1.i = b * (c1^2 + c2^2 * @(K,a)^2)) &
+        (for i being Element of NAT st i in dom y2
+         ex b being non zero Element of K, c1,c2 being Element of K
+         st b in P & c1 in F & c2 in F & y2.i = b * c1 * c2) by B,II;
+
+      set g1 = h1^y1, g2 = h2^y2;
+      E: Sum g1 + @(K,a) * (2 '*' Sum g2)
+       = (Sum h1 + Sum y1) + @(K,a) * (2 '*' Sum g2) by RLVECT_1:41
+      .= (Sum h1 + Sum y1) + @(K,a) * (2 '*' (Sum h2 + Sum y2)) by RLVECT_1:41
+      .= (Sum h1 + Sum y1) + 2 '*' ((Sum h2 + Sum y2) * @(K,a)) by REALALG2:5
+      .= (Sum h1 + Sum y1) + 2 '*' (Sum h2 * @(K,a) + Sum y2 * @(K,a))
+         by VECTSP_1:def 3
+      .= (Sum h1 + Sum y1) + ((Sum h2 * @(K,a) + Sum y2 * @(K,a)) +
+                              (Sum h2 * @(K,a) + Sum y2 * @(K,a))) by RING_5:2
+      .= (Sum h1 + Sum y1) + (Sum h2 * @(K,a) + (Sum y2 * @(K,a) +
+                              (Sum h2 * @(K,a) + Sum y2 * @(K,a))))
+         by RLVECT_1:def 3
+      .= (Sum h1 + Sum y1) + (Sum h2 * @(K,a) + ((Sum y2 * @(K,a) +
+                              Sum y2 * @(K,a)) + Sum h2 * @(K,a)))
+         by RLVECT_1:def 3
+      .= (Sum h1 + Sum y1) + ((Sum h2 * @(K,a) + Sum h2 * @(K,a)) +
+                              (Sum y2 * @(K,a) + Sum y2 * @(K,a)))
+         by RLVECT_1:def 3
+      .= (Sum h1 + Sum y1) + ((2 '*' (Sum h2 * @(K,a))) +
+                              (Sum y2 * @(K,a) + Sum y2 * @(K,a))) by RING_5:2
+      .= (Sum h1 + Sum y1) + ((2 '*' Sum h2 * @(K,a)) +
+                              (Sum y2 * @(K,a) + Sum y2 * @(K,a)))
+         by REALALG2:5
+      .= (Sum h1 + Sum y1) + ((2'*'Sum h2 * @(K,a)) + 2'*'(Sum y2 * @(K,a)))
+         by RING_5:2
+      .= (Sum h1 + Sum y1) + (2 '*' Sum h2 * @(K,a) + 2 '*' Sum y2 * @(K,a))
+         by REALALG2:5
+      .= ((Sum h1 + Sum y1) + 2 '*' Sum h2 * @(K,a)) + 2 '*' Sum y2 * @(K,a)
+         by RLVECT_1:def 3
+      .= (Sum y1 + (Sum h1 + 2 '*' Sum h2 * @(K,a))) + 2 '*' Sum y2 * @(K,a)
+         by RLVECT_1:def 3
+      .= (Sum h1 + 2 '*' Sum h2 * @(K,a)) + (Sum y1 + 2 '*' Sum y2 * @(K,a))
+         by RLVECT_1:def 3
+      .= Sum f by C,D,A1,RLVECT_1:41;
+
+      F: now let i be Element of NAT;
+         assume i in dom g1; then
+         per cases by FINSEQ_1:25;
+         suppose F1: i in dom h1;
+           then g1.i = h1.i by FINSEQ_1:def 7;
+           hence ex b being non zero Element of FAdj(F,{a}),
+                    c1,c2 being Element of FAdj(F,{a})
+                 st b in P & c1 in F & c2 in F &
+                    g1.i = b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2) by F1,C;
+           end;
+         suppose ex n being Nat st n in dom y1 & i = len h1 + n; then
+           consider n being Nat such that F1: n in dom y1 & i = len h1 + n;
+           ex b being non zero Element of FAdj(F,{a}),
+              c1,c2 being Element of FAdj(F,{a})
+              st b in P & c1 in F & c2 in F &
+                 y1.n = b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2) by F1,D;
+           hence ex b being non zero Element of FAdj(F,{a}),
+                    c1,c2 being Element of FAdj(F,{a})
+                 st b in P & c1 in F & c2 in F &
+                    g1.i = b * (c1^2 + c2^2 * @(K,a)^2) by F1,FINSEQ_1:def 7;
+           end;
+         end;
+
+        now let i be Element of NAT;
+         assume i in dom g2; then
+         per cases by FINSEQ_1:25;
+         suppose F1: i in dom h2;
+           then g2.i = h2.i by FINSEQ_1:def 7;
+           hence ex b being non zero Element of FAdj(F,{a}),
+                    c1,c2 being Element of FAdj(F,{a})
+                 st b in P & c1 in F & c2 in F & g2.i = b * c1 * c2 by F1,C;
+           end;
+         suppose ex n being Nat st n in dom y2 & i = len h2 + n; then
+           consider n being Nat such that F1: n in dom y2 & i = len h2 + n;
+           ex b being non zero Element of FAdj(F,{a}),
+              c1,c2 being Element of FAdj(F,{a})
+              st b in P & c1 in F & c2 in F & y2.n = b * c1 * c2 by F1,D;
+           hence ex b being non zero Element of FAdj(F,{a}),
+                    c1,c2 being Element of FAdj(F,{a})
+                 st b in P & c1 in F & c2 in F & g2.i = b * c1 * c2
+              by F1,FINSEQ_1:def 7;
+           end;
+         end;
+
+      hence ex g1,g2 being non empty FinSequence of FAdj(F,{a})
+         st Sum f = Sum g1 + @(FAdj(F,{a}),a) * (2 '*' Sum g2) &
+         (for i being Element of NAT st i in dom g1
+          ex b being non zero Element of FAdj(F,{a}),
+             c1,c2 being Element of FAdj(F,{a})
+          st b in P & c1 in F & c2 in F &
+             g1.i = b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2)) &
+         (for i being Element of NAT st i in dom g2
+          ex b being non zero Element of FAdj(F,{a}),
+             c1,c2 being Element of FAdj(F,{a})
+          st b in P & c1 in F & c2 in F & g2.i = b * c1 * c2) by E,F;
+      end;
+      end;
+    hence P[k+1];
+    end;
+I: for k being non zero Nat holds P[k] from NAT_1:sch 10(IA,IS);
+consider n being Nat such that H: n = len f;
+thus thesis by H,I;
+end;
+
+theorem oext1:
+for F being ordered Field,
+    E being FieldExtension of F
+for a being Element of E st a^2 in F
+for P being Ordering of F holds P extends_to FAdj(F,{a}) iff a^2 in P
+proof
+let F be ordered Field, E be FieldExtension of F;
+let a be Element of E;
+assume AS: a^2 in F;
+let P be Ordering of F;
+Z: now assume P extends_to FAdj(F,{a}); then
+   consider O being Subset of FAdj(F,{a}) such that
+   A: P c= O & O is positive_cone;
+   reconsider K = FAdj(F,{a}) as ordered FieldExtension of F
+                                                    by A,REALALG1:def 17;
+   reconsider O as Ordering of K by A;
+   {a} is Subset of FAdj(F,{a}) & a in {a} by TARSKI:def 1,FIELD_6:35; then
+   reconsider a1 = a as Element of K;
+   H: [a1,a1] in [:the carrier of K,the carrier of K:];
+   B: a1^2 in O by REALALG1:23;
+   C: a1^2 = ((the multF of E)||(the carrier of K)).(a1,a1) by EC_PF_1:def 1
+          .= a^2 by H,FUNCT_1:49;
+   O extends P by A,l13;
+   hence a^2 in P by AS,C,B,XBOOLE_0:def 4;
+   end;
+now assume GG: a^2 in P;
+  per cases;
+  suppose a in F;
+    then {a} c= the carrier of F by TARSKI:def 1;
+    then A1: FAdj(F,{a}) == F by FIELD_7:3; then
+    reconsider K = FAdj(F,{a}) as ordered Field by lemPP;
+    consider Q being Subset of K such that
+    A2: Q = P & Q is positive_cone by A1,lemPP;
+    thus P extends_to FAdj(F,{a}) by A2;
+    end;
+  suppose AS1: not a in F;
+  set K = FAdj(F,{a});
+  Y0: F is Subfield of K & F is Subring of K & K is Subring of E
+      by FIELD_4:7,FIELD_4:def 1,FIELD_5:12; then
+  Y1: 0.K = 0.F & 1.K = 1.F by EC_PF_1:def 1; then
+  Y2: -1.K = -1.F by Y0,FIELD_6:17;
+  now assume -1.K in QS(K,P); then
+    consider f being P-quadratic FinSequence of K such that
+    A: -1.K = Sum f;
+    Z: f is non empty by A;
+    consider g1,g2 being non empty FinSequence of FAdj(F,{a}) such that
+    D: Sum f = Sum g1 + @(FAdj(F,{a}),a) * (2 '*' Sum g2) &
+       (for i being Element of NAT st i in dom g1
+           ex b being non zero Element of FAdj(F,{a}),
+              c1,c2 being Element of FAdj(F,{a})
+           st b in P & c1 in F & c2 in F &
+              g1.i = b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2)) &
+       (for i being Element of NAT st i in dom g2
+           ex b being non zero Element of FAdj(F,{a}),
+              c1,c2 being Element of FAdj(F,{a})
+           st b in P & c1 in F & c2 in F & g2.i = b*c1*c2) by Z,AS,XYZbS3;
+    F: -1.K = -1.K + @(FAdj(F,{a}),a) * 0.K;
+    G: -1.K in F & 0.K in F by Y1,Y2;
+    now let i be Nat;
+        assume i in dom g1; then
+        consider b being non zero Element of FAdj(F,{a}),
+                 c1,c2 being Element of FAdj(F,{a}) such that
+        K3: b in P & c1 in F & c2 in F &
+            g1.i = b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2) by D;
+        {a} is Subset of FAdj(F,{a}) &a in {a} by TARSKI:def 1,FIELD_6:35; then
+        a is FAdj(F,{a})-membered; then
+        K6: @(FAdj(F,{a}),a) * @(FAdj(F,{a}),a) = a^2 by Y0,FIELD_6:16;
+        reconsider a3 = a^2, b3 = b, c3 = c1, c4 = c2 as Element of F by AS,K3;
+        b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2) = b3 * (c3^2 + c4^2 * a3)
+          proof
+          c1 * c1 = c3^2 by Y0,FIELD_6:16; then
+          K4: b * c1^2 = b3 * c3^2 by Y0,FIELD_6:16;
+          c2 * c2 = c4^2 by Y0,FIELD_6:16; then
+          b * c2^2 = b3 * c4^2 by Y0,FIELD_6:16; then
+          K5: b * c2^2 * @(FAdj(F,{a}),a)^2 = b3 * c4^2 * a3
+              by Y0,K6,FIELD_6:16;
+          thus b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2)
+           = b * c1^2 + b * (c2^2 * @(FAdj(F,{a}),a)^2) by VECTSP_1:def 2
+          .= b * c1^2 + b * c2^2 * @(FAdj(F,{a}),a)^2 by GROUP_1:def 3
+          .= ((the addF of K)||(the carrier of F)).[b3 * c3^2,b3 * c4^2 * a3]
+             by K4,K5,FUNCT_1:49
+          .= b3 * c3^2 + b3 * c4^2 * a3 by Y0,C0SP1:def 3
+          .= b3 * c3^2 + b3 * (c4^2 * a3) by GROUP_1:def 3
+          .= b3 * (c3^2 + c4^2 * a3) by VECTSP_1:def 2;
+          end;
+        hence g1.i in F by K3;
+        end; then
+    H: Sum g1 in F by finex;
+    now let i be Nat;
+        assume i in dom g2; then
+        consider b being non zero Element of FAdj(F,{a}),
+                 c1,c2 being Element of FAdj(F,{a}) such that
+        K3: b in P & c1 in F & c2 in F & g2.i = b*c1*c2 by D;
+        reconsider b3 = b, c3 = c1, c4 = c2 as Element of F by K3;
+        b * c1 = b3 * c3 by Y0,FIELD_6:16;
+        then b * c1 * c2 = b3 * c3 * c4 by Y0,FIELD_6:16;
+        hence g2.i in F by K3;
+        end;
+    then g2 is FinSequence of F & Sum g2 in F by finex;
+    then reconsider Sg2 = Sum g2 as Element of the carrier of F;
+    2 '*' Sum g2 = 2 '*' Sg2 by FIELD_9:7;
+    then 2 '*' Sum g2 in F; then
+    I: -1.F = Sum g1 by Y2,AS,AS1,D,A,F,G,H,XYZc;
+    for i being Nat st i in dom g1 holds g1.i in P
+      proof
+      let i be Nat;
+      assume i in dom g1; then
+      consider b being non zero Element of FAdj(F,{a}),
+               c1,c2 being Element of FAdj(F,{a}) such that
+      K3: b in P & c1 in F & c2 in F &
+          g1.i = b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2) by D;
+      {a} is Subset of FAdj(F,{a}) &a in {a} by TARSKI:def 1,FIELD_6:35; then
+      a is FAdj(F,{a})-membered; then
+      K6: @(FAdj(F,{a}),a) * @(FAdj(F,{a}),a) = a^2 by Y0,FIELD_6:16;
+      reconsider a3 = a^2, b3 = b, c3 = c1, c4 = c2 as Element of F by AS,K3;
+      K7: b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2) = b3*(c3^2+c4^2*a3)
+          proof
+          K7: c1 * c1 = c3^2 by Y0,FIELD_6:16;
+          c2 * c2 = c4^2 by Y0,FIELD_6:16; then
+          K5: c2^2 * @(FAdj(F,{a}),a)^2 = c4^2 * a3 by Y0,K6,FIELD_6:16;
+          c1^2 + c2^2 * @(FAdj(F,{a}),a)^2
+           = ((the addF of K)||(the carrier of F)).[c3^2,c4^2 * a3]
+             by K5,K7,FUNCT_1:49
+          .= c3^2 + c4^2 * a3 by Y0,C0SP1:def 3;
+          hence b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2)
+           = ((the multF of K)||(the carrier of F)).[b3,c3^2+c4^2 * a3]
+             by FUNCT_1:49
+          .= b3 * (c3^2 + c4^2 * a3) by Y0,C0SP1:def 3;
+          end;
+      K8: P is add-closed mult-closed;
+      KK: c3^2 in P by REALALG1:23;
+      c4^2 in P by REALALG1:23; then
+      c4^2 * a3 in P by GG,K8; then
+      c3^2 + c4^2 * a3 in P by KK,K8;
+      hence g1.i in P by K8,K7,K3;
+      end;
+    hence contradiction by I,finP,REALALG1:26;
+    end;
+  hence P extends_to FAdj(F,{a}) by lemoe2,lemoe4;
+  end;
+  end;
+hence thesis by Z;
+end;
+
+theorem oext2:
+for F being ordered polynomial_disjoint Field,
+    P being Ordering of F
+for a being non square Element of F
+holds P extends_to FAdj(F,{sqrt a}) iff a in P
+proof
+let F be ordered polynomial_disjoint Field, P be Ordering of F;
+let a be non square Element of F;
+set b = sqrt a;
+H: b^2 = a by FIELD_9:53; then
+b^2 in F;
+hence thesis by H,oext1;
+end;
+
+theorem
+Positives(F_Rat) extends_to FAdj(F_Rat,{sqrt 2.F_Rat})
+proof
+2.F_Rat = 2 '*' 1.F_Rat by RING_5:2;
+hence thesis by REALALG2:19,oext2;
+end;
+
+theorem
+Positives(F_Rat) not_extends_to FAdj(F_Rat,{sqrt -1.F_Rat})
+by REALALG1:26,oext2;
+
+theorem
+for F being ordered Field,
+    P being Ordering of F
+for E being FieldExtension of F
+for a being Element of F,
+    b,c being Element of E st b^2 = a & c^2 = -a
+holds P extends_to FAdj(F,{b}) or P extends_to FAdj(F,{c})
+proof
+let F be ordered Field, P be Ordering of F;
+let E be FieldExtension of F, a be Element of F, b,c be Element of E;
+assume AS: b^2 = a & c^2 = -a;
+H: P \/ (-P) = the carrier of F  by REALALG1:def 15;
+I: b^2 in F & c^2 in F by AS;
+assume not P extends_to FAdj(F,{b}); then
+  not b^2 in P by I,oext1; then
+  a in -P by AS,H,XBOOLE_0:def 3; then
+  c^2 in --P by AS;
+  hence P extends_to FAdj(F,{c}) by I,oext1;
+end;
+
+theorem
+for F being ordered polynomial_disjoint Field,
+    P being Ordering of F
+for a,b being non square Element of F st b = -a
+holds P extends_to FAdj(F,{sqrt a}) or P extends_to FAdj(F,{sqrt b})
+proof
+let F be ordered polynomial_disjoint Field, P be Ordering of F;
+let a,b be non square Element of F;
+H: P \/ -P = the carrier of F by REALALG1:def 15;
+assume A: b = -a;
+per cases;
+suppose a in P;
+  hence thesis by oext2;
+  end;
+suppose not a in P;
+  then a in -P by H,XBOOLE_0:def 3;
+  then -a in --P;
+  hence thesis by A,oext2;
+  end;
+end;
+
+theorem FF1:
+for F being formally_real Field,
+    E being FieldExtension of F
+for a being Element of F,
+    b being Element of E
+st b^2 = a & a in QS F holds FAdj(F,{b}) is formally_real
+proof
+let F be formally_real Field, E be FieldExtension of F;
+let a be Element of F, b be Element of E;
+assume A: b^2 = a & a in QS F; then
+I: b^2 in F;
+set P = the Ordering of F;
+assume B: not FAdj(F,{b}) is formally_real;
+C: now assume P extends_to FAdj(F,{b});
+   then consider O being Subset of FAdj(F,{b}) such that
+   D: P c= O & O is positive_cone;
+   FAdj(F,{b}) is ordered by D;
+   hence contradiction by B;
+   end;
+QS F c= P by REALALG1:24;
+hence thesis by A,C,I,oext1;
+end;
+
+theorem FF2:
+for F being formally_real Field,
+    E being FieldExtension of F
+for a being Element of F,
+    b being Element of E
+st b^2 = a & FAdj(F,{b}) is non formally_real holds -a in QS F
+proof
+let F be formally_real Field, E be FieldExtension of F;
+let a be Element of F, b be Element of E;
+set P = the Ordering of F;
+assume A: b^2 = a & FAdj(F,{b}) is non formally_real;
+per cases;
+suppose a is square;
+  then consider c being Element of F such that B: c^2 = a;
+  b = c or b = -c by A,B,FIELD_9:8;
+  then b in the carrier of F;
+  then {b} c= the carrier of F by TARSKI:def 1;
+  then FAdj(F,{b}) == F by FIELD_7:3;
+  then FAdj(F,{b}) is ordered by lemPP;
+  hence thesis by A;
+  end;
+suppose B0: a is non square;
+  B1: now assume b in F; then
+      reconsider c = b as Element of F;
+      F is Subring of E by FIELD_4:def 1; then
+      c^2 = a by A,FIELD_6:16;
+      hence contradiction by B0;
+      end;
+  -1.FAdj(F,{b}) in QS FAdj(F,{b}) by A,REALALG2:def 3; then
+  consider c being Element of FAdj(F,{b}) such that
+  B2: c = -1.FAdj(F,{b}) & c is sum_of_squares;
+  consider f being FinSequence of FAdj(F,{b}) such that
+  B3: Sum f = c & for i being Nat st i in dom f
+      ex d being Element of FAdj(F,{b}) st f.i = d^2 by B2;
+  H1: F is Subring of E & F is Subring of FAdj(F,{b}) by FIELD_4:def 1; then
+  H2: 1.F = 1.FAdj(F,{b}) by C0SP1:def 3;
+  per cases;
+  suppose f is empty;
+    hence thesis by B2,B3;
+    end;
+  suppose f is non empty; then
+    reconsider f as non empty FinSequence of FAdj(F,{b});
+    for i being Element of dom f holds f.i is square by B3; then
+    reconsider f as quadratic non empty FinSequence of FAdj(F,{b})
+      by REALALG2:def 5;
+    Sum f = -1.F by B2,B3,H1,H2,FIELD_6:17; then
+    Sum f in F; then
+    consider g1,g2 being quadratic non empty FinSequence of F such that
+    B4: Sum f = Sum g1 + a * Sum g2 by A,B1,maina;
+    B5: now assume Sum g2 is zero;
+        then Sum g1 = -1.F by B4,B3,B2,H1,H2,FIELD_6:17;
+        then -1.F in QS F & QS F c= P by REALALG1:24;
+        hence contradiction by REALALG1:26;
+        end;
+        Sum f = -1.F by B2,B3,H1,H2,FIELD_6:17; then
+        -1.F - a * Sum g2
+             = Sum g1 + (a * Sum g2 - a * Sum g2) by B4,RLVECT_1:28
+            .= Sum g1 + 0.F by RLVECT_1:15; then
+        1.F + Sum g1
+             = (1.F + -1.F) - a * Sum g2 by RLVECT_1:def 3
+            .= 0.F - a * Sum g2 by RLVECT_1:5
+            .= (-a) * Sum g2 by VECTSP_1:9; then
+     (1.F + Sum g1) * (Sum g2)"
+             = (-a) * (Sum g2 * (Sum g2)") by GROUP_1:def 3
+            .= (-a) * 1.F by B5,VECTSP_1:def 10;
+    hence thesis by B5;
+    end;
+  end;
+end;
+
+theorem
+for F being ordered polynomial_disjoint Field
+for a being non square Element of F
+st a in QS F holds FAdj(F,{sqrt a}) is formally_real
+proof
+let F be ordered polynomial_disjoint Field, a be non square Element of F;
+assume A: a in QS F;
+(sqrt a)^2 = a by FIELD_9:53;
+hence thesis by A,FF1;
+end;
+
+theorem
+for F being ordered polynomial_disjoint Field
+for a being non square Element of F
+st FAdj(F,{sqrt a}) is non formally_real holds -a in QS F
+proof
+let F be ordered polynomial_disjoint Field, a be non square Element of F;
+assume A: FAdj(F,{sqrt a}) is non formally_real;
+(sqrt a)^2 = a by FIELD_9:53;
+hence thesis by A,FF2;
+end;
+
+theorem main:
+for F being ordered Field,
+    P being Ordering of F
+for E being FieldExtension of F st deg(E,F) is odd Nat holds P extends_to E
+proof
+let F be ordered Field, P be Ordering of F,
+    E1 be FieldExtension of F;
+assume AS: deg(E1,F) is odd Nat;
+defpred Q[Nat] means
+  for E being FieldExtension of F
+  st deg(E,F) = 2 * ($1) + 1 holds P extends_to E;
+IS: now let k be Nat;
+    assume AS1: for n being Nat st n < k holds Q[n];
+    per cases;
+    suppose AS2: k = 0;
+      now let E be FieldExtension of F;
+        assume deg(E,F) = 2 * 0 + 1;
+        then E == F by FIELD_7:8;
+        then ex Q being Subset of E st Q = P & Q is positive_cone by lemPP;
+        hence P extends_to E;
+        end;
+      hence Q[k] by AS2;
+      end;
+    suppose AS2: k > 0;
+      now let E1 be FieldExtension of F;
+        assume AS3: deg(E1,F) = 2 * k + 1; then
+        VecSp(E1,F) is finite-dimensional by FIELD_4:def 7; then
+        reconsider E = E1 as F-finite FieldExtension of F by FIELD_4:def 8;
+        consider a being Element of E such that
+        A0: E == FAdj(F,{a}) by FIELD_14:def 7;
+        A1: deg MinPoly(a,F) = deg(FAdj(F,{a}),F) by FIELD_6:67
+                            .= deg(E,F) by A0,FIELD_7:5;
+
+        now assume -1.E in QS(E,P); then
+          consider f being P-quadratic non empty FinSequence of E such that
+          A: -1.E = Sum f & for i being Element of NAT
+                                      st i in dom f holds f.i <> 0.E by lemmaA;
+          ex fc, fd being non empty FinSequence of E st
+            len fc = len f & len fd = len f &
+            for i being Element of dom fc
+            ex j being Element of dom fd st j = i &
+            fc.i in P & fc.i <> 0.E & f.i = fc.i * ((fd.j) * (fd.j))
+             proof
+             defpred Q[Nat] means
+               for f being P-quadratic non empty FinSequence of E
+               st len f = $1
+               ex fc, fd being non empty FinSequence of E st
+               len fc = len f & len fd = len f &
+               for i being Element of dom fc
+               ex j being Element of dom fd st j = i &
+               fc.i in P & fc.i <> 0.E & f.i = fc.i * ((fd.j) * (fd.j));
+             IA: Q[1]
+                 proof
+                 now let f be P-quadratic non empty FinSequence of E;
+                   assume B0: len f = 1; then
+                   f = <*f.1*> by FINSEQ_1:40; then
+                   dom f = Seg 1 by FINSEQ_1:38; then
+                   consider a being non zero Element of E,
+                            b being Element of E such that
+                   B1: a in P & f.1 = a * b^2 by FINSEQ_1:3,dq;
+                   reconsider fc = <*a*>, fd = <*b*>
+                                            as non empty FinSequence of E;
+                   B2: len fc = 1 & len fd = 1 by FINSEQ_1:40;
+                   B3: now let i be Element of dom fc;
+                       B5: dom fc = Seg 1 by FINSEQ_1:38; then
+                       B4: i = 1 by FINSEQ_1:2,TARSKI:def 1;
+                       dom fd = Seg 1 by FINSEQ_1:38; then
+                       reconsider j = 1 as Element of dom fd
+                          by FINSEQ_1:2,TARSKI:def 1;
+                      thus ex j being Element of dom fd st j = i &
+                       fc.i in P & fc.i<>0.E & f.i = fc.i*((fd.j)*(fd.j))
+                         proof
+                         take j;
+                         thus j = i by B5,FINSEQ_1:2,TARSKI:def 1;
+                         thus fc.i in P by B4,B1;
+                         thus fc.i <> 0.E by B4;
+                         thus fc.i * ((fd.j) * (fd.j))
+                             = a * ((fd.j)*(fd.j)) by B4
+                            .= a * (b*(fd.j))
+                            .= f.i by B4,B1;
+                         end;
+                     end;
+                   thus ex fc, fd being non empty FinSequence of E st
+                     len fc = len f & len fd = len f &
+                     for i being Element of dom fc
+                     ex j being Element of dom fd st j = i & fc.i in P &
+                       fc.i <> 0.E & f.i = fc.i * ((fd.j) * (fd.j))
+                      by B0,B2,B3;
+                   end;
+                 hence thesis;
+                 end;
+             IS: now let k be Nat;
+                 assume IV1: k >= 1;
+                 assume IV: Q[k];
+    now let f be P-quadratic non empty FinSequence of E;
+    assume AS: len f = k+1;
+    consider G being FinSequence, y being object such that
+    B2: f = G^<*y*> by FINSEQ_1:46;
+    rng G c= rng f by B2,FINSEQ_1:29; then
+    reconsider G as FinSequence of E by XBOOLE_1:1,FINSEQ_1:def 4;
+    B10: len f = len G + len<*y*> by B2,FINSEQ_1:22
+              .= len G + 1 by FINSEQ_1:39;
+    reconsider G as non empty FinSequence of E by B10,AS,IV1;
+    reconsider r = <*y*> as non empty FinSequence of E by B2,FINSEQ_1:36;
+    f = G^r by B2; then
+    reconsider G,r as P-quadratic non empty FinSequence of E by XYZbS3a;
+    consider Gfc, Gfd being non empty FinSequence of E such that
+       II:  len Gfc = len G & len Gfd = len G &
+            for i being Element of dom Gfc
+            ex j being Element of dom Gfd st j = i &
+            Gfc.i in P & Gfc.i <> 0.E & G.i = Gfc.i*((Gfd.j)*(Gfd.j))
+       by AS,B10,IV;
+    rng<*y*> = {y} by FINSEQ_1:39;
+    then G5: y in rng<*y*> by TARSKI:def 1;
+    rng<*y*> c= rng f by B2,FINSEQ_1:30;
+    then consider u being object such that
+    G6: u in dom f & f.u = y by G5,FUNCT_1:def 3;
+    reconsider u as Element of NAT by G6;
+    f.u in rng f & rng f c= the carrier of E by G6,FUNCT_1:3;
+    then reconsider y as Element of E by G6;
+    consider yc being non zero Element of E,
+             yd being Element of E such that
+    G7: yc in P & f.u = yc * yd^2 by G6,dq;
+    set fc = Gfc ^ <* yc *>, fd = Gfd ^ <* yd *>;
+    D1: len fc = len Gfc + len <* yc *> by FINSEQ_1:22
+              .= len f by II,B10,FINSEQ_1:39;
+    D2: len fd = len Gfd + len <* yd *> by FINSEQ_1:22
+              .= len f by II,B10,FINSEQ_1:39;
+    D3: now let i be Element of dom fc;
+        dom fc = Seg(len fd) by D2,D1,FINSEQ_1:def 3; then
+        reconsider jj = i as Element of dom fd by FINSEQ_1:def 3;
+        per cases;
+        suppose E: i in dom Gfc; then
+          reconsider i1 = i as Element of dom Gfc;
+          consider j being Element of dom Gfd such that
+          F: j = i1 & Gfc.i1 in P & Gfc.i1 <> 0.E &
+             G.i1 = Gfc.i1 * ((Gfd.j)*(Gfd.j)) by II;
+          thus ex j being Element of dom fd st j = i &
+             fc.i in P & fc.i <> 0.E & f.i = fc.i * ((fd.j)*(fd.j))
+            proof
+            take jj;
+            thus jj = i;
+            G: fc.i = Gfc.i by E,FINSEQ_1:def 7;
+            H: fd.jj = Gfd.j by F,FINSEQ_1:def 7;
+            thus fc.i in P by F,FINSEQ_1:def 7;
+            thus fc.i <> 0.E by F,FINSEQ_1:def 7;
+            dom G = Seg(len Gfc) by II,FINSEQ_1:def 3; then
+            i in dom G by E,FINSEQ_1:def 3;
+            hence f.i = fc.i*((fd.jj)*(fd.jj)) by G,H,F,B2,FINSEQ_1:def 7;
+            end;
+          end;
+        suppose E: not i in dom Gfc;
+          E1: dom Gfc = Seg(len G) by II,FINSEQ_1:def 3;
+          dom fc = Seg(len f) by D1,FINSEQ_1:def 3; then
+          E5: 1 <= i & i <= len f by FINSEQ_1:1;
+          E2: now assume i <> len G + 1;
+              then i < len G + 1 by E5,B10,XXREAL_0:1;
+              then i + 1-1 <= len G + 1-1 by INT_1:7;
+              hence contradiction by E1,E5,E,FINSEQ_1:1;
+              end;
+          dom <*y*> = Seg 1 by FINSEQ_1:38; then
+          1 in dom <*y*> by FINSEQ_1:3; then
+          E3: f.i = <*y*>.1 by B2,E2,FINSEQ_1:def 7
+                 .= yc * yd^2 by G7,G6;
+          dom <*yc*> = Seg 1 by FINSEQ_1:38; then
+          1 in dom <*yc*> by FINSEQ_1:3; then
+          E6: fc.i = <*yc*>.1 by II,E2,FINSEQ_1:def 7
+                  .= yc;
+          dom <*yd*> = Seg 1 by FINSEQ_1:38; then
+          1 in dom <*yd*> by FINSEQ_1:3; then
+          E7: fd.i = <*yd*>.1 by II,E2,FINSEQ_1:def 7
+                  .= yd;
+          thus ex j being Element of dom fd st j = i &
+          fc.i in P & fc.i <> 0.E & f.i = fc.i * ((fd.j) * (fd.j))
+            proof
+            take jj;
+            thus jj = i;
+            thus fc.i in P by E6,G7;
+            thus fc.i <> 0.E by E6;
+            thus f.i = fc.i * ((fd.jj)*(fd.jj)) by E3,E6,E7;
+            end;
+          end;
+        end;
+    thus ex fc, fd being non empty FinSequence of E st
+            len fc = len f & len fd = len f &
+            for i being Element of dom fc
+            ex j being Element of dom fd st j = i &
+            fc.i in P & fc.i <> 0.E & f.i = fc.i * ((fd.j) * (fd.j))
+      by D1,D2,D3;
+end;
+                 hence Q[k+1];
+                 end;
+             I: for k being Nat st k >= 1 holds Q[k] from NAT_1:sch 8(IA,IS);
+             len f >= 0 + 1 by INT_1:7;
+             hence thesis by I;
+             end; then
+          consider fc, fd being non empty FinSequence of E such that
+          U: len fc = len f & len fd = len f &
+             for i being Element of dom fc
+             ex j being Element of dom fd st j = i &
+             fc.i in P & fc.i <> 0.E & f.i = fc.i * ((fd.j) * (fd.j));
+          ex g1 being non empty FinSequence of the carrier of Polynom-Ring F
+          st len g1 = len f &
+             for i being Element of dom g1
+             holds g1.i is non zero & deg(g1.i) < deg MinPoly(a,F) &
+                   fd.i = Ext_eval(g1.i,a)
+              proof
+              defpred Q[Nat,object] means
+                ex q being Polynomial of F st q = $2 & q is non zero &
+                    deg q < deg MinPoly(a,F) & fd.($1) = Ext_eval(q,a);
+              N: now let k be Nat;
+                 assume k in Seg(len f); then
+                 reconsider jd = k as Element of dom fd by U,FINSEQ_1:def 3;
+                 thus
+                 ex x being Element of the carrier of Polynom-Ring F st Q[k,x]
+                   proof
+                   fd.jd in the carrier of FAdj(F,{a}) by A0; then
+                   reconsider b = fd.k as Element of E;
+                   consider q being Polynomial of F such that
+                   N1: deg q < deg MinPoly(a,F) & b = Ext_eval(q,a)
+                       by A0,lemma;
+                   N2: now assume q is zero; then
+                       q = 0_.(F) by UPROOTS:def 5; then
+                       N3: b = 0.E by N1,ALGNUM_1:13;
+                       dom fc = Seg(len fd) by U,FINSEQ_1:def 3; then
+                       reconsider jc = jd as Element of dom fc
+                                                         by FINSEQ_1:def 3;
+                       dom fc = Seg(len f) by U,FINSEQ_1:def 3; then
+                       reconsider i = jc as Element of dom f
+                                                         by FINSEQ_1:def 3;
+                       consider j being Element of dom fd such that
+                       N4: j = jc & fc.jc in P & fc.jc <> 0.E &
+                       f.jc = fc.jc * ((fd.j) * (fd.j)) by U;
+                       f.i = 0.E by N3,N4;
+                       hence contradiction by A;
+                       end;
+                   take q;
+                   thus thesis by N1,N2,POLYNOM3:def 10;
+                   end;
+                  end;
+              consider p being FinSequence of the carrier of Polynom-Ring F
+              such that
+              M: dom p = Seg(len f) &
+                 for k being Nat st k in Seg(len f) holds Q[k,p.k]
+                 from FINSEQ_1:sch 5(N);
+              reconsider p as non empty
+                     FinSequence of the carrier of Polynom-Ring F by M;
+              take p;
+              now let i be Element of dom p;
+                reconsider k = i as Nat;
+                Q[k,p.k] by M;
+                hence p.i is non zero & deg(p.i) < deg MinPoly(a,F) &
+                   fd.i = Ext_eval(p.i,a);
+                end;
+              hence thesis by M,FINSEQ_1:def 3;
+              end; then
+          consider g1 being
+              non empty FinSequence of the carrier of Polynom-Ring F such that
+          B: len g1 = len f &
+             for i being Element of dom g1
+             holds g1.i is non zero & deg(g1.i) < deg MinPoly(a,F) &
+                   fd.i = Ext_eval(g1.i,a);
+          ex g2 being non empty FinSequence of the carrier of Polynom-Ring F
+          st len g2 = len g1 & for i being Element of dom g1
+             ex j being Element of dom fc st j = i &
+             g2.i = @(F,fc.j) * ((g1.i)*'(g1.i))
+              proof
+              defpred Q[Nat,object] means
+                ex j being Element of dom g1 st j = $1 &
+                ex jc being Element of dom fc
+                           st jc = j & $2 = @(F,fc.jc) * ((g1.j)*'(g1.j));
+              N: now let k be Nat;
+                 assume N1: k in Seg(len g1); then
+                 reconsider j = k as Element of dom g1 by FINSEQ_1:def 3;
+                 reconsider jc = j as Element of dom fc
+                      by B,U,N1,FINSEQ_1:def 3;
+                 thus
+                 ex x being Element of the carrier of Polynom-Ring F st Q[k,x]
+                   proof
+                   take x = @(F,fc.jc) * ((g1.j)*'(g1.j));
+                   thus thesis by POLYNOM3:def 10;
+                   end;
+                  end;
+              consider p being FinSequence of the carrier of Polynom-Ring F
+              such that
+              M: dom p = Seg(len g1) &
+                 for k being Nat st k in Seg(len g1) holds Q[k,p.k]
+                 from FINSEQ_1:sch 5(N);
+              reconsider p as
+                  non empty FinSequence of the carrier of Polynom-Ring F by M;
+              take p;
+              now let i be Element of dom g1;
+                reconsider k = i as Nat;
+                k in dom g1;
+                then k in Seg(len g1) by FINSEQ_1:def 3;
+                then Q[k,p.k] by M;
+                hence ex j being Element of dom fc
+                      st j = i & p.i = @(F,fc.j) * ((g1.i)*'(g1.i));
+                end;
+              hence thesis by M,FINSEQ_1:def 3;
+              end; then
+          consider g2 being
+              non empty FinSequence of the carrier of Polynom-Ring F such that
+          C: len g2 = len g1 &
+             for i being Element of dom g1
+             ex j being Element of dom fc st j = i &
+             g2.i = @(F,fc.j) * ((g1.i)*'(g1.i));
+          ex g3 being non empty FinSequence of the carrier of E
+          st len g3 = len g2 &
+             for i being Element of dom g2 holds g3.i = Ext_eval(g2.i,a)
+              proof
+              defpred Q[Nat,object] means ex j being Element of dom g2
+                st j = $1 & $2 = Ext_eval(g2.j,a);
+              N: now let k be Nat;
+                 assume k in Seg(len g2); then
+                 reconsider j = k as Element of dom g2 by FINSEQ_1:def 3;
+                 thus ex x being Element of E st Q[k,x]
+                   proof
+                   take Ext_eval(g2.j,a);
+                   thus thesis;
+                   end;
+                  end;
+              consider p being FinSequence of E such that
+              M: dom p = Seg(len g2) &
+                 for k being Nat st k in Seg(len g2) holds Q[k,p.k]
+                 from FINSEQ_1:sch 5(N);
+              reconsider p as non empty FinSequence of E by M;
+              take p;
+              now let i be Element of dom g2;
+                reconsider k = i as Nat;
+                k in dom g2;
+                then k in Seg(len g2) by FINSEQ_1:def 3;
+                then Q[k,p.k] by M;
+                hence p.i = Ext_eval(g2.i,a);
+                end;
+              hence thesis by M,FINSEQ_1:def 3;
+              end; then
+          consider g3 being non empty FinSequence of the carrier of E such that
+          D: len g3 = len g2 &
+             for i being Element of dom g2 holds g3.i = Ext_eval(g2.i,a);
+          I0: dom f = dom g1 & dom g1 = dom g2 & dom g2 = dom g3 &
+              dom f = dom fc & dom f = dom fd
+              proof
+              dom f = Seg(len g1) by B,FINSEQ_1:def 3;
+              hence dom f = dom g1 by FINSEQ_1:def 3;
+              dom g2 = Seg(len g1) by C,FINSEQ_1:def 3;
+              hence dom g2 = dom g1 by FINSEQ_1:def 3;
+              dom g2 = Seg(len g3) by D,FINSEQ_1:def 3;
+              hence dom g2 = dom g3 by FINSEQ_1:def 3;
+              dom fc = Seg(len f) by U,FINSEQ_1:def 3;
+              hence dom fc = dom f by FINSEQ_1:def 3;
+              dom fd = Seg(len f) by U,FINSEQ_1:def 3;
+              hence dom fd = dom f by FINSEQ_1:def 3;
+              end;
+
+          reconsider q = Sum g2 as Polynomial of F by POLYNOM3:def 10;
+          set p = 1_.(F) + q;
+          H0: F is Subring of E by FIELD_4:def 1;
+          H1: p is Element of the carrier of Polynom-Ring F by POLYNOM3:def 10;
+          H2: g3 = f
+              proof
+              now let j3 be Nat;
+                assume j3 in dom g3; then
+                reconsider j1 = j3 as Element of dom g1 by I0;
+                reconsider jc = j1 as Element of dom fc by I0;
+                consider jd being Element of dom fd such that
+                H3: jd = jc & fc.jc in P & fc.jc <> 0.E &
+                    f.jc = fc.jc * ((fd.jd) * (fd.jd)) by U;
+
+                consider j2 being Element of dom fc such that
+                H5: j2 = j1 & g2.j1 = @(F,fc.j2) * ((g1.j1)*'(g1.j1)) by C;
+                H6: fc.jc is F-membered by H3;
+                thus g3.j3
+                   = Ext_eval(@(F,fc.jc) * ((g1.j1)*'(g1.j1)),a) by I0,D,H5
+                  .= fc.jc * Ext_eval((g1.j1)*'(g1.j1),a) by H6,lem20
+                  .= fc.jc * (Ext_eval((g1.j1),a) * Ext_eval((g1.j1),a))
+                      by H0,ALGNUM_1:20
+                  .= fc.jc * (fd.jd * Ext_eval((g1.j1),a)) by H3,B
+                  .= f.j3 by H3,B;
+                end;
+              hence thesis by B,C,D,FINSEQ_2:9;
+              end;
+             now assume q is zero; then
+              I1: len g3 = len g2 & q = 0_.(F) by D,UPROOTS:def 5;
+              for i being Element of dom g2, r being Polynomial of F
+                st r = g2.i holds g3.i = Ext_eval(r,a) by D; then
+              Sum f = Ext_eval(q,a) by H2,D,lem
+                   .= 0.E by I1,ALGNUM_1:13;
+              hence contradiction by A;
+              end; then
+          reconsider q = Sum g2 as non zero Polynomial of F;
+          Ext_eval(p,a) = 0.E
+             proof
+             for i being Element of dom g2, r being Polynomial of F
+                st r = g2.i holds g3.i = Ext_eval(r,a) by D; then
+             Ext_eval(q,a) = -1.E by A,H2,D,lem;
+             hence Ext_eval(p,a)
+                 = Ext_eval(1_.(F),a) + -1.E by H0,ALGNUM_1:15
+                .= 1.E + -1.E by H0,ALGNUM_1:14
+                .= 0.E by RLVECT_1:5;
+             end; then
+          consider h being Polynomial of F such that
+          F: MinPoly(a,F) *' h = p by H1,FIELD_6:53,RING_4:1;
+
+          ex h1 being non constant monic
+                            Element of the carrier of Polynom-Ring F st
+          h1 divides h & h1 is irreducible &
+          deg h1 is odd & deg h1 < 2 * k + 1
+            proof
+            per cases;
+            suppose F1: h <> 0_.(F);
+              reconsider h as Element of the carrier of Polynom-Ring F
+                 by POLYNOM3:def 10;
+              G1: h is non zero & MinPoly(a,F) is non zero by F1,UPROOTS:def 5;
+              F2: deg MinPoly(a,F) + deg h = deg p by F,F1,HURWITZ:23; then
+              G2: deg p >= 2 * k + 1 by A1,AS3,G1,NAT_1:11;
+              reconsider p as non zero Polynomial of F by G1,F;
+              F4: deg q is even
+                  proof
+                  now let j2 be Element of dom g2, r being Polynomial of F;
+                    assume O1: r = g2.j2;
+                    reconsider j1 = j2 as Element of dom g1 by I0;
+                    consider jc being Element of dom fc such that
+                    O2: jc = j1 & g2.j1 = @(F,fc.jc) * ((g1.j1)*'(g1.j1)) by C;
+                    consider jd being Element of dom fd such that
+                    O3: jd = jc & fc.jc in P & fc.jc <> 0.E &
+                        f.jc = fc.jc * ((fd.jd) * (fd.jd)) by U;
+                    O4: g1.j1 <> 0_.(F) by B;
+                    reconsider r1 = g1.j1 as Polynomial of F;
+                    O8: fc.jc is F-membered by O3; then
+                    O7: @(F,fc.jc) is non zero by O3,H0,C0SP1:def 3; then
+                    deg r = deg(r1 *' r1) by O2,O1,RING_5:4
+                         .= deg r1 + deg r1 by O4,HURWITZ:23
+                         .= 2 * deg(g1.j1);
+                    hence deg r is even;
+                    O5: LC r = @(F,fc.jc) * LC(r1 *' r1) by O1,O2,RING_5:5
+                            .= @(F,fc.jc) * (LC r1 * LC r1) by NIVEN:46;
+                    r1 is non zero by B; then
+                    (LC r1)^2 in P & not (LC r1)^2 in {0.F}
+                         by REALALG1:23,TARSKI:def 1; then
+                    O6: (LC r1)^2 in P^+ by XBOOLE_0:def 5;
+                    @(F,fc.jc) = fc.jc & not @(F,fc.jc) in {0.F}
+                         by O7,O8,TARSKI:def 1; then
+                    @(F,fc.jc) in P^+ by O3,XBOOLE_0:def 5; then
+                    LC r in P^+ by O5,O6,REALALG1:def 5;
+                    hence LC r in P by XBOOLE_0:def 5;
+                    end;
+                  hence deg q is even by lem23;
+                  end;
+              F5: deg p = deg q
+                  proof
+                  now assume deg q = deg 1_.(F); then
+                      deg p <= max(deg(1_.(F)),deg(1_.(F))) by HURWITZ:22;
+                      hence contradiction by G2,RATFUNC1:def 2;
+                      end; then
+                  I2: deg p = max(deg(1_.(F)),deg q) by HURWITZ:21; then
+                  max(deg(1_.(F)),deg q) <> deg(1_.(F))
+                                 by F2,A1,G1,RATFUNC1:def 2;
+                  hence thesis by I2,XXREAL_0:16;
+                  end; then
+              deg h is odd by A1,AS3,F2,F4; then
+              consider h1 being non constant monic
+                    Element of the carrier of Polynom-Ring F such that
+              F8: h1 divides h & h1 is irreducible & deg h1 is odd by lem21;
+              deg p <= 2 * (2 * k + 1) - 2
+                  proof
+                  0 + 1 <= k by AS2,INT_1:7; then
+                  2 * 1 <= 2 * k by XREAL_1:64; then
+                  2 + 1 <= 2 * k + 1 by XREAL_1:6; then
+                  2 * 3 <= 2 * (2 * k + 1) by XREAL_1:64; then
+                  6 - 2 <= 2 * (2 * k + 1) - 2 by XREAL_1:9; then
+                  I: 2 * (2*k+1)-2 is Element of NAT by INT_1:3,XXREAL_0:2;
+                  now let j2 be Element of dom g2, r be Polynomial of F;
+                    assume O1: r = g2.j2;
+                    reconsider j1 = j2 as Element of dom g1 by I0;
+                    consider jc being Element of dom fc such that
+                    O2: jc = j1 & g2.j1 = @(F,fc.jc) * ((g1.j1)*'(g1.j1)) by C;
+                    consider jd being Element of dom fd such that
+                    O3: jd = jc & fc.jc in P & fc.jc <> 0.E &
+                        f.jc = fc.jc * ((fd.jd) * (fd.jd)) by U;
+                    O4: g1.j1 <> 0_.(F) by B;
+                    reconsider r1 = g1.j1 as Polynomial of F;
+                    fc.jc is F-membered by O3; then
+                    O6: @(F,fc.jc) is non zero by O3,H0,C0SP1:def 3;
+                    deg(g1.j1) < 2 * k + 1 by B,AS3,A1; then
+                    I3: deg(g1.j1) + 1-1 <= 2*k + 1-1 by INT_1:7;
+                    I5: deg r = deg(r1*'r1) by O6,O1,O2,RING_5:4
+                             .= deg r1 + deg r1 by O4,HURWITZ:23;
+                    deg r1 + deg r1 <= 2 * k + 2 * k by I3,XREAL_1:7;
+                    hence deg r <= 2 * (2 * k + 1) - 2 by I5;
+                    end;
+                  hence thesis by F5,I,lem24;
+                  end; then
+              F9: deg p - (2 * k + 1) <= 2 * (2 * k + 1) - 2 - (2 * k + 1)
+                     by XREAL_1:6;
+                  deg h1 <= deg h by F8,G1,RING_5:13; then
+                  deg h1 <= (2 * k + 1) - 2 by F9,F2,A1,AS3,XXREAL_0:2; then
+                  deg h1 + 0 < (2 * k + 1) - 2 + 2 by XREAL_1:8;
+              hence thesis by F8;
+              end;
+            suppose h = 0_.(F); then
+              (X-(1.F)) *' 0_.(F) = h; then
+              A: (X-(1.F)) divides h by RING_4:1;
+              deg(X-(1.F)) = 2 * 0 + 1 by FIELD_5:def 1;
+              hence thesis by A,AS2,XREAL_1:6;
+              end;
+            end; then
+
+          consider h1 being
+              non constant monic Element of the carrier of Polynom-Ring F
+          such that
+          H: h1 divides h & h1 is irreducible & deg h1 is odd &
+             deg h1 < 2 * k + 1;
+          consider E2 being FieldExtension of F such that
+          J: h1 is_with_roots_in E2 by FIELD_5:30;
+          consider b being Element of E2 such that
+          J1: b is_a_root_of h1,E2 by J,FIELD_4:def 3;
+          K: Ext_eval(h1,b) = 0.E2 by J1,FIELD_4:def 2; then
+          reconsider b as F-algebraic Element of E2 by FIELD_6:43;
+          I3: F is Subring of E2 by FIELD_4:def 1;
+          I4: FAdj(F,{b}) is Subring of E2 by FIELD_5:12; then
+              1.FAdj(F,{b}) = 1.E2 by C0SP1:def 3; then
+          I5: -1.FAdj(F,{b}) = -1.E2 by I4,FIELD_6:17;
+
+          L: P extends_to FAdj(F,{b})
+             proof
+             consider m being Integer such that
+             I1: deg h1 = 2 * m + 1 by H,ABIAN:1;
+             m >= 0 by I1,INT_1:7; then
+             reconsider m as Element of NAT by INT_1:3;
+             I2: m < k
+                 proof
+                 2 * m + 1 - 1 < 2 * k + 1 - 1 by H,I1,XREAL_1:9; then
+                 2 * m - 2 * k < 2 * k - 2 * k by XREAL_1:9; then
+                 2 * (m - k) < 0; then
+                 m - k < 0; then
+                 m - k + k < 0 + k by XREAL_1:6;
+                 hence m < k;
+                end;
+             h1 = MinPoly(b,F) by H,K,FIELD_6:52; then
+             deg(FAdj(F,{b}),F) = deg h1 by FIELD_6:67;
+             hence thesis by I1,I2,AS1;
+             end;
+          M: Ext_eval(q,b) = -1.E2
+             proof
+             N: Ext_eval(h,b) = 0.E2
+                proof
+                consider r being Polynomial of F such that
+                N1: h = h1 *' r by H,RING_4:1;
+                thus Ext_eval(h,b)
+                   = Ext_eval(h1,b) * Ext_eval(r,b) by N1,I3,ALGNUM_1:20
+                  .= 0.E2 by K;
+                end;
+             0.E2 = Ext_eval(MinPoly(a,F),b) * Ext_eval(h,b) by N
+                 .= Ext_eval(p,b) by F,I3,ALGNUM_1:20
+                 .= Ext_eval(1_.(F),b) + Ext_eval(q,b) by I3,ALGNUM_1:15
+                 .= 1.E2 + Ext_eval(q,b) by I3,ALGNUM_1:14;
+             then 1.E2 + Ext_eval(q,b) - 1.E2 = -1.E2;
+             hence -1.E2
+                      = (1.E2  + -1.E2) + Ext_eval(q,b) by RLVECT_1:def 3
+                     .= 0.E2 + Ext_eval(q,b)  by RLVECT_1:5
+                     .= Ext_eval(q,b);
+             end;
+
+          ex g4 being non empty FinSequence of E2
+          st len g4 = len g2 &
+             for i being Element of dom g2 holds g4.i = Ext_eval(g2.i,b)
+            proof
+            defpred Q[Nat,object] means  ex j being Element of dom g2
+               st j = $1 & $2 = Ext_eval(g2.j,b);
+            N: now let k be Nat;
+               assume k in Seg(len g2); then
+               reconsider j = k as Element of dom g2 by FINSEQ_1:def 3;
+               thus ex x being Element of E2 st Q[k,x]
+                 proof
+                 take Ext_eval(g2.j,b);
+                 thus thesis;
+                 end;
+               end;
+            consider p being FinSequence of E2 such that
+            M: dom p = Seg(len g2) &
+               for k being Nat st k in Seg(len g2) holds Q[k,p.k]
+               from FINSEQ_1:sch 5(N);
+            reconsider p as non empty FinSequence of E2 by M;
+            take p;
+            now let i be Element of dom g2;
+              reconsider k = i as Nat;
+              k in dom g2;
+              then k in Seg(len g2) by FINSEQ_1:def 3;
+              then Q[k,p.k] by M;
+              hence p.i = Ext_eval(g2.i,b);
+              end;
+            hence thesis by M,FINSEQ_1:def 3;
+            end; then
+          consider g4 being non empty FinSequence of E2 such that
+          N: len g4 = len g2 &
+             for i being Element of dom g2 holds g4.i = Ext_eval(g2.i,b);
+          I9: dom g4 = dom g2
+              proof
+              dom g4 = Seg(len g2) by N,FINSEQ_1:def 3;
+              hence dom g4 = dom g2 by FINSEQ_1:def 3;
+              end;
+          P: rng g4 c= the carrier of FAdj(F,{b})
+             proof
+             now let j4 be object;
+               assume j4 in rng g4; then
+               consider i being object such that
+               P1: i in dom g4 & g4.i = j4 by FUNCT_1:def 3;
+               reconsider j1 = i as Element of dom g1 by P1,I0,I9;
+               consider jc being Element of dom fc such that
+               O2: jc = j1 & g2.j1 = @(F,fc.jc) * ((g1.j1)*'(g1.j1)) by C;
+               consider jd being Element of dom fd such that
+               O3: jd = jc & fc.jc in P & fc.jc <> 0.E &
+                   f.jc = fc.jc * ((fd.jd) * (fd.jd)) by U;
+               set c = fc.jc, d = fd.jd;
+               reconsider c as F-membered Element of E by O3,FIELD_7:def 5;
+               F is Subfield of E2 by FIELD_4:7; then
+               the carrier of F c= the carrier of E2 by EC_PF_1:def 1; then
+               reconsider c1 = c as Element of E2 by O3;
+               reconsider c1 as F-membered Element of E2 by O3,FIELD_7:def 5;
+               P5: F is Subfield of FAdj(F,{b}) by FIELD_6:36; then
+               the carrier of F c= the carrier of FAdj(F,{b}) & c1 in F
+                  by O3,EC_PF_1:def 1; then
+               reconsider c2 = c1 as Element of FAdj(F,{b});
+               F is Subfield of E by FIELD_4:7; then
+               0.E = 0.F & 0.F = 0.FAdj(F,{b}) & c <> 0.E
+                  by O3,P5,EC_PF_1:def 1;
+               then reconsider c2 as non zero Element of FAdj(F,{b})
+                 by STRUCT_0:def 12;
+               b in {b} &
+               {b} is Subset of FAdj(F,{b}) by TARSKI:def 1,FIELD_6:35;
+               then reconsider b1 = b as Element of FAdj(F,{b});
+               reconsider r = g1.j1 as Polynomial of F;
+               P4: g4.i = Ext_eval(@(F,c) * (r*'r),b) by P1,I9,O2,N
+                    .= c1 * Ext_eval(r*'r,b) by lem20
+                    .= c1 * (Ext_eval(r,b) * Ext_eval(r,b)) by I3,ALGNUM_1:20;
+               E2 is FAdj(F,{b})-extending by I4,FIELD_4:def 1; then
+               Ext_eval(r,b) = Ext_eval(r,b1) by FIELD_6:11; then
+               Ext_eval(r,b) * Ext_eval(r,b) = Ext_eval(r,b1) * Ext_eval(r,b1)
+                  by I4,FIELD_6:16; then
+               c2 * Ext_eval(r,b1)^2 = c1 * Ext_eval(r,b)^2 by I4,FIELD_6:16;
+               hence j4 in the carrier of FAdj(F,{b}) by P1,P4;
+               end;
+             hence thesis;
+             end;
+          reconsider g5 = g4 as non empty FinSequence of FAdj(F,{b})
+            by P,FINSEQ_1:def 4;
+          now let i be Element of NAT;
+            assume P1: i in dom g4; then
+            reconsider j1 = i as Element of dom g1 by I0,I9;
+            consider jc being Element of dom fc such that
+            O2: jc = j1 & g2.j1 = @(F,fc.jc) * ((g1.j1)*'(g1.j1)) by C;
+            consider jd being Element of dom fd such that
+            O3: jd = jc & fc.jc in P & fc.jc <> 0.E &
+                f.jc = fc.jc * ((fd.jd) * (fd.jd)) by U;
+            set c = fc.jc, d = fd.jd;
+            reconsider c as F-membered Element of E by O3,FIELD_7:def 5;
+            F is Subfield of E2 by FIELD_4:7; then
+            the carrier of F c= the carrier of E2 by EC_PF_1:def 1; then
+            reconsider c1 = c as Element of E2 by O3;
+            reconsider c1 as F-membered Element of E2 by O3,FIELD_7:def 5;
+            P5: F is Subfield of FAdj(F,{b}) by FIELD_6:36; then
+            the carrier of F c= the carrier of FAdj(F,{b}) & c1 in F
+               by O3,EC_PF_1:def 1; then
+            reconsider c2 = c1 as Element of FAdj(F,{b});
+            F is Subfield of E by FIELD_4:7; then
+            0.E = 0.F & 0.F = 0.FAdj(F,{b}) & c <> 0.E by O3,P5,EC_PF_1:def 1;
+            then reconsider c2 as non zero Element of FAdj(F,{b})
+              by STRUCT_0:def 12;
+            b in {b} & {b} is Subset of FAdj(F,{b}) by TARSKI:def 1,FIELD_6:35;
+            then reconsider b1 = b as Element of FAdj(F,{b});
+            reconsider r = g1.j1 as Polynomial of F;
+            P4: g4.i = Ext_eval(@(F,c) * (r*'r),b) by P1,I9,O2,N
+                 .= c1 * Ext_eval(r*'r,b) by lem20
+                 .= c1 * (Ext_eval(r,b) * Ext_eval(r,b)) by I3,ALGNUM_1:20;
+            E2 is FAdj(F,{b})-extending by I4,FIELD_4:def 1; then
+            Ext_eval(r,b) = Ext_eval(r,b1) by FIELD_6:11; then
+            Ext_eval(r,b) * Ext_eval(r,b) = Ext_eval(r,b1) * Ext_eval(r,b1)
+               by I4,FIELD_6:16; then
+            c2 * Ext_eval(r,b1)^2 = c1 * Ext_eval(r,b)^2 by I4,FIELD_6:16;
+            hence ex c being non zero Element of FAdj(F,{b}),
+                     d being Element of FAdj(F,{b}) st c in P & g4.i = c * d^2
+              by P4,O3;
+            end; then
+          reconsider g5 as P-quadratic non empty FinSequence of FAdj(F,{b})
+            by dq;
+          for i being Element of dom g2, r being Polynomial of F
+            st r = g2.i holds g4.i = Ext_eval(r,b) by N; then
+          -1.FAdj(F,{b}) = Sum g4 by M,I5,N,lem
+                        .= Sum g5 by I4,FIELD_4:2;
+          then -1.FAdj(F,{b}) in QS(FAdj(F,{b}),P);
+          hence contradiction by L,lemoe2,lemoe4;
+          end;
+        hence P extends_to E1 by lemoe2,lemoe4;
+        end;
+      hence Q[k];
+      end;
+    end;
+I: for k being Nat holds Q[k] from NAT_1:sch 4(IS);
+reconsider n = deg(E1,F) as odd Nat by AS;
+consider k being Integer such that H: n = 2 * k + 1 by ABIAN:1;
+now assume k < 0;
+  then k <= -1 by INT_1:8;
+  then 2 * k <= 2 * (-1) by XREAL_1:64;
+  then 2 * k < -2 + 1 by XREAL_1:39;
+  then 2 * k + 1 < -1 + 1 by XREAL_1:6;
+  hence contradiction by H;
+  end; then
+k in NAT by INT_1:3; then
+reconsider k as Nat;
+deg(E1,F) = 2 * k + 1 by H;
+hence thesis by I;
+end;
+
+theorem
+for F being ordered Field,
+    P being Ordering of F
+for p being irreducible Element of the carrier of Polynom-Ring F
+for E being FieldExtension of F,
+    a being Element of E
+st deg p is odd & a is_a_root_of p,E holds P extends_to FAdj(F,{a})
+proof
+let F be ordered Field, P being Ordering of F,
+    p be irreducible Element of the carrier of Polynom-Ring F;
+let E be FieldExtension of F, a be Element of E;
+H: deg NormPolynomial p = deg p by lemdeg;
+assume AS: deg p is odd & a is_a_root_of p,E;
+then A: Ext_eval(p,a) = 0.E by FIELD_4:def 2;
+then reconsider a as F-algebraic Element of E by FIELD_6:43;
+MinPoly(a,F) = NormPolynomial p by A,FIELD_8:15;
+then deg(FAdj(F,{a}),F) = deg(NormPolynomial p) by FIELD_6:67;
+hence thesis by AS,H,main;
+end;

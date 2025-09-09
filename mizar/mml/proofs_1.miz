@@ -1,0 +1,2038 @@
+:: Fundamentals of Finitary Proofs
+::  by Taneli Huuskonen
+::
+:: Received December 24, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, SUBSET_1, XBOOLE_0, FINSEQ_1, XXREAL_0, TARSKI, ARYTM_3,
+      ORDINAL1, ORDINAL4, FUNCT_1, RELAT_1, NAT_1, ZFMISC_1, FOMODEL1, CARD_1,
+      FOMODEL2, FOMODEL4, FINSET_1, FINSUB_1, CQC_THE1, EQREL_1, BINOP_1,
+      AOFA_L00, ALGSPEC1, ABCMIZ_0, LANG1, MSAFREE5, SETFAM_1, QC_LANG1,
+      PROOFS_1, STRUCT_0;
+ notations TARSKI, XBOOLE_0, SUBSET_1, FUNCT_1, NUMBERS, FINSEQ_1, ZFMISC_1,
+      FUNCT_2, BINOP_1, XXREAL_0, XCMPLX_0, FINSET_1, EQREL_1, FINSUB_1,
+      SETFAM_1, ORDINAL1, RELAT_1, STRUCT_0;
+ constructors POLNOT_1, XREAL_0, EQREL_1, FINSUB_1, STRUCT_0, RELSET_1;
+ registrations ORDINAL1, FINSEQ_1, NAT_1, XREAL_0, FINSET_1, SUBSET_1, RELAT_1,
+      STRUCT_0, ZFMISC_1, XBOOLE_0;
+ requirements NUMERALS, SUBSET, BOOLE, REAL;
+ definitions TARSKI, XBOOLE_0;
+ expansions TARSKI, XBOOLE_0, STRUCT_0;
+ theorems TARSKI, FUNCT_1, NAT_1, FINSEQ_1, XBOOLE_0, XREAL_1, XXREAL_0,
+      ORDINAL1, XBOOLE_1, EQREL_1, RELAT_1, SUBSET_1, PL_AXIOM, ZFMISC_1,
+      ORDERS_1, XTUPLE_0, FINSUB_1, FINSEQ_3;
+ schemes FUNCT_2, FINSET_1, BINOP_1, NAT_1;
+
+begin
+
+reserve i, j, k, l, m, n for Nat,
+  a, b, c, t, u for object,
+  X, Y, Z for set,
+  D, D1, D2, Fml for non empty set;
+reserve p, q, r, s for FinSequence;
+
+::
+::       The Construction of a Proof
+::
+
+definition
+  let R be Relation;
+  attr R is finitary means  :Def1:
+  for a st a in dom R holds a is finite set;
+end;
+
+registration
+  cluster empty -> finitary for Relation;
+  coherence;
+
+  cluster finitary for Relation;
+  existence by XBOOLE_0:def 2;
+end;
+
+notation
+  synonym Formula for object;
+end;
+
+definition
+  mode Rule is finitary Relation;
+  mode Formula-finset is finite set;
+  mode Formula-sequence is FinSequence;
+end;
+
+definition
+  let Fml be set;
+  mode Rule of Fml -> Rule means   :Def2:
+  dom it c= Fin Fml & rng it c= Fml;
+  existence
+  proof
+    reconsider R = {} as Rule;
+    take R;
+    thus thesis;
+  end;
+end;
+
+definition
+  let Fml be non empty set;
+  mode Formula of Fml -> Formula means   :Def3:
+  it in Fml;
+  existence
+  proof
+    take the Element of Fml;
+    thus thesis;
+  end;
+end;
+
+definition
+  let Fml be set;
+  mode Formula-finset of Fml -> Formula-finset means  :Def4:
+  it c= Fml;
+  existence by XBOOLE_1:2;
+
+  mode Formula-sequence of Fml -> Formula-sequence means  :Def5:
+  it is FinSequence of Fml;
+  existence
+  proof
+    take <*>Fml;
+    thus thesis;
+  end;
+end;
+
+ reserve R, R1, R2 for Rule;
+ reserve A, A1, A2 for non empty set;
+ reserve B, B1, B2 for set;
+ reserve P, P1, P2 for Formula-sequence;
+ reserve S, S1, S2 for Formula-finset;
+
+definition
+  let P;
+  redefine func rng P -> Formula-finset;
+  coherence;
+end;
+
+definition
+  let Fml;
+  let B1, B2 be Subset of Fml;
+  redefine func B1 \/ B2 -> Subset of Fml;
+  coherence by XBOOLE_1:8;
+end;
+
+definition
+  let S1, S2;
+  redefine func S1 \/ S2 -> Formula-finset;
+  coherence;
+end;
+
+definition
+  let Fml;
+  let S1, S2 be Formula-finset of Fml;
+  redefine func S1 \/ S2 -> Formula-finset of Fml;
+  coherence
+  proof
+    S1 c= Fml & S2 c= Fml by Def4;
+    hence thesis by Def4, XBOOLE_1:8;
+  end;
+end;
+
+definition
+  let R1, R2;
+  redefine func R1 \/ R2 -> Rule;
+  coherence
+  proof
+    set R = R1 \/ R2;
+    R is finitary
+    proof
+      let a;
+      assume a in dom R;
+      then a in (dom R1) \/ (dom R2) by XTUPLE_0:23;
+      then a in dom R1 or a in dom R2 by XBOOLE_0:def 3;
+      hence a is finite set by Def1;
+    end;
+    hence thesis;
+  end;
+end;
+
+definition
+  let Fml;
+  let R1, R2 be Rule of Fml;
+  redefine func R1 \/ R2 -> Rule of Fml;
+  coherence
+  proof
+    set R = R1 \/ R2;
+    A1: dom R = dom R1 \/ dom R2 & dom R1 c= Fin Fml & dom R2 c= Fin Fml
+      by Def2, XTUPLE_0:23;
+    rng R = rng R1 \/ rng R2 & rng R1 c= Fml & rng R2 c= Fml
+      by Def2, RELAT_1:12;
+    then rng R c= Fml by XBOOLE_1:8;
+    hence thesis by A1, Def2, XBOOLE_1:8;
+  end;
+end;
+
+definition
+  let B, R, P, n;
+  pred P, n is_a_correct_step_wrt B, R means
+    (P.n in B or ex Q being Formula-finset st
+      ([Q, P.n] in R & for t st t in Q ex k st k in dom P & k < n & P.k = t));
+end;
+
+definition
+  let B, R, P;
+  attr P is (B, R)-correct means
+    for k st k in dom P holds P, k is_a_correct_step_wrt B, R;
+end;
+
+registration
+  let B, R;
+  cluster non (B,R)-correct -> non empty for Formula-sequence;
+  coherence;
+
+  let Fml;
+  cluster (B,R)-correct for Formula-sequence of Fml;
+  existence
+  proof
+    reconsider P = <*>Fml as Formula-sequence of Fml by Def5;
+    take P;
+    thus thesis;
+  end;
+end;
+
+registration
+  let B, R;
+  cluster (B,R)-correct for Formula-sequence;
+  existence
+  proof
+    take <*>(the non empty set);
+    thus thesis;
+  end;
+end;
+
+theorem Th40:
+  for A, R for a being Element of A holds <*a*> is (A, R)-correct
+proof
+  let A, R;
+  let a be Element of A;
+  set P = <*a*>;
+  let k;
+  assume k in dom P;
+  then P.k in rng P by FUNCT_1:3;
+  then P.k in {a} by FINSEQ_1:38;
+  then P.k = a by TARSKI:def 1;
+  hence <*a*>, k is_a_correct_step_wrt A, R;
+end;
+
+registration
+  let A, R;
+  cluster non empty (A, R)-correct for Formula-sequence;
+  existence
+  proof
+    set P = <*the Element of A*>;
+    take P;
+    thus P is non empty;
+    thus P is (A, R)-correct by Th40;
+  end;
+end;
+
+definition
+  let B, R, S;
+  attr S is (B, R)-derivable means
+    ex P st S = rng P & P is (B, R)-correct;
+end;
+
+Lm40:
+  for p, q, k, m st k in dom p & m in dom q & m < k holds m in dom p
+proof
+  let p, q, k, m;
+  assume that
+    A1: k in dom p and
+    A2: m in dom q and
+    A3: m < k;
+  A4: dom p = Seg len p by FINSEQ_1:def 3;
+  A5: dom q = Seg len q by FINSEQ_1:def 3;
+  A6: 1 <= m by A2, A5, FINSEQ_1:1;
+  k <= len p by A1, A4, FINSEQ_1:1;
+  then m <= len p by A3, XXREAL_0:2;
+  hence thesis by A4, A6, FINSEQ_1:1;
+end;
+
+Lm41:
+  for B, R, P, P1, P2, n st n in dom P & P^P1, n is_a_correct_step_wrt B, R
+      holds P^P2, n is_a_correct_step_wrt B, R
+proof
+  let B, R, P, P1, P2, n;
+  assume that
+    A1: n in dom P and
+    A2: P^P1, n is_a_correct_step_wrt B, R;
+  A3: P.n = (P^P2).n by A1, FINSEQ_1:def 7;
+  P.n = (P^P1).n by A1, FINSEQ_1:def 7;
+  then per cases by A2;
+    suppose P.n in B;
+    hence thesis by A1, FINSEQ_1:def 7;
+    end;
+    suppose ex Q being Formula-finset st
+      ([Q, P.n] in R
+          & for t st t in Q ex m st m in dom (P^P1) & m < n & (P^P1).m = t);
+    then consider Q being Formula-finset such that
+      A10: [Q, P.n] in R and
+      A11: for t st t in Q ex m st m in dom (P^P1) & m < n & (P^P1).m = t;
+    A13: for t st t in Q ex m st m in dom (P^P2) & m < n & (P^P2).m = t
+      proof
+      let t;
+      assume t in Q;
+      then consider m such that
+          A14: m in dom (P^P1) and
+          A15: m < n and
+          A16: (P^P1).m = t by A11;
+      take m;
+      A20: m in dom P by A1, A14, A15, Lm40;
+      dom P c= dom (P^P2) by FINSEQ_1:26;
+      hence m in dom (P^P2) by A1, A14, A15, Lm40;
+      thus m < n by A15;
+      thus (P^P2).m = P.m by A20, FINSEQ_1:def 7
+          .= t by A16, A20, FINSEQ_1:def 7;
+      end;
+    thus thesis by A3, A10, A13;
+    end;
+end;
+
+theorem
+  for B, R, P, P1, P2 st P is (B, R)-correct & P = P1^P2 holds
+      P1 is (B, R)-correct
+proof
+  let B, R, P, P1, P2;
+  assume that
+    A1: P is (B, R)-correct and
+    A2: P = P1^P2;
+  let k;
+  assume A3: k in dom P1;
+  dom P1 c= dom P by A2, FINSEQ_1:26;
+  then P1^<*>{}, k is_a_correct_step_wrt B, R by A1, A2, A3, Lm41;
+  hence P1, k is_a_correct_step_wrt B, R by FINSEQ_1:34;
+end;
+
+theorem Th42:
+  for B, R, P1, P2 st P1 is (B, R)-correct & P2 is (B, R)-correct holds
+      P1^P2 is (B, R)-correct
+proof
+  let B, R, P1, P2;
+  assume that
+    A1: P1 is (B, R)-correct and
+    A2: P2 is (B, R)-correct;
+  let k;
+  assume A3: k in dom (P1^P2);
+  per cases;
+    suppose A5: k in dom P1;
+    then P1, k is_a_correct_step_wrt B, R by A1;
+    then P1^<*>{}, k is_a_correct_step_wrt B, R by FINSEQ_1:34;
+    hence P1^P2, k is_a_correct_step_wrt B, R by A5, Lm41;
+    end;
+    suppose (P1^P2).k in B;
+    hence thesis;
+    end;
+    suppose that A10: not k in dom P1 and A11: not (P1^P2).k in B;
+    consider j such that A12: j in dom P2 and A13: k = (len P1) + j
+        by A3, A10, FINSEQ_1:25;
+    A15: P2, j is_a_correct_step_wrt B, R by A2, A12;
+    A16: (P1^P2).k = P2.j by A12, A13, FINSEQ_1:def 7;
+    then consider Q being Formula-finset such that
+        A20: [Q, P2.j] in R and
+        A21: for t st t in Q ex i being Nat
+            st i in dom P2 & i < j & P2.i = t by A11, A15;
+    for t st t in Q ex u being Nat
+        st u in dom (P1^P2) & u < k & (P1^P2).u = t
+      proof
+      let t;
+      assume t in Q;
+      then consider i being Nat such that
+        A25: i in dom P2 and
+        A26: i < j and
+        A27: P2.i = t by A21;
+      take u = len P1 + i;
+      A30: 1 <= i & i <= len P2 by A25, FINSEQ_3:25;
+      thus u in dom (P1^P2) by A25, FINSEQ_1:28;
+      thus u < k by A13, A26, XREAL_1:6;
+      thus (P1^P2).u = t by A27, A30, FINSEQ_1:65;
+    end;
+    hence thesis by A16, A20;
+  end;
+end;
+
+theorem Th43:
+  for B, R, S1, S2 st S1 is (B, R)-derivable & S2 is (B, R)-derivable holds
+      S1 \/ S2 is (B, R)-derivable
+proof
+  let B, R, S1, S2;
+  assume S1 is (B, R)-derivable & S2 is (B, R)-derivable; then
+  consider P1, P2 such that
+    A3: P1 is (B, R)-correct and
+    A4: S1 = rng P1 and
+    A5: P2 is (B, R)-correct and
+    A6: S2 = rng P2;
+    set P = P1^P2;
+    reconsider S = rng P as Formula-finset;
+    S = S1 \/ S2 by A4, A6, FINSEQ_1:31;
+    hence thesis by A3, A5, Th42;
+end;
+
+Lm44:
+  for B, B1, R, R1, P, k st B c= B1 & R c= R1
+        & P, k is_a_correct_step_wrt B, R holds
+      P, k is_a_correct_step_wrt B1, R1;
+
+theorem Th44:
+  for B, B1, R, R1, P st B c= B1 & R c= R1 & P is (B, R)-correct holds
+      P is (B1, R1)-correct by Lm44;
+
+definition
+  let B, a;
+  attr a is B-axiomatic means
+  a in B;
+  let R;
+  pred B, R |- a means
+  ex P st a in rng P & P is (B, R)-correct;
+end;
+
+definition
+  let B,R,a;
+  attr a is (B,R)-provable means
+  B,R |- a;
+end;
+
+definition
+  let B, B1;
+  attr B1 is B-extending means  :Def11:
+  B c= B1;
+end;
+
+definition
+  let R, R1;
+  attr R1 is R-extending means  :Def12:
+  R c= R1;
+end;
+
+registration
+  let B;
+  cluster B-extending for set;
+  existence
+  proof
+    take B;
+    thus thesis;
+  end;
+end;
+
+registration
+  let R;
+  cluster R-extending for Rule;
+  existence
+  proof
+    take R;
+    thus thesis;
+  end;
+end;
+
+definition
+  let B;
+  mode Extension of B is B-extending set;
+end;
+
+registration
+  let Fml;
+  let B be Subset of Fml;
+  cluster B-extending for Subset of Fml;
+  existence
+  proof
+    take B;
+    thus thesis;
+  end;
+end;
+
+definition
+  let Fml;
+  let B be Subset of Fml;
+  mode Extension of B is B-extending Subset of Fml;
+end;
+
+definition
+  let R;
+  mode Extension of R is R-extending Rule;
+end;
+
+definition
+  let Fml;
+  let B be Subset of Fml;
+  let t be Formula of Fml;
+  func B + t -> Extension of B equals
+  B \/ { t };
+  coherence
+  proof
+    A1: B \/ {t} is B-extending by XBOOLE_1:7;
+    t in Fml by Def3;
+    then {t} is Subset of Fml by SUBSET_1:41;
+    hence thesis by A1, XBOOLE_1:8;
+  end;
+end;
+
+theorem
+  for B, t, a holds a is (B \/ {t})-axiomatic iff a is B-axiomatic or a = t
+proof
+  let B, t, a;
+  set C = B \/ {t};
+  thus a is C-axiomatic implies a is B-axiomatic or a = t
+  proof
+    assume a is C-axiomatic;
+    then a in B or a in { t } by XBOOLE_0:def 3;
+    hence thesis by TARSKI:def 1;
+  end;
+  assume a is B-axiomatic or a = t;
+  then a in B or a in { t } by TARSKI:def 1;
+  hence thesis by XBOOLE_0:def 3;
+end;
+
+ reserve C for Extension of B;
+ reserve E for Extension of R;
+
+registration
+  let B, C;
+  cluster C-extending -> B-extending for set;
+  coherence
+  proof
+    let B1;
+    A1: C is B-extending;
+    assume B1 is C-extending;
+    hence B1 is B-extending by A1, XBOOLE_1:1;
+  end;
+
+  cluster non C-axiomatic -> non B-axiomatic for object;
+  coherence
+  proof
+    let a;
+    assume A1: not a in C;
+    C is B-extending;
+    hence not a in B by A1;
+  end;
+end;
+
+registration
+  let R, E;
+  cluster E-extending -> R-extending for Rule;
+  coherence
+  proof
+    let R1;
+    A1: E is R-extending;
+    assume R1 is E-extending;
+    hence R1 is R-extending by A1, XBOOLE_1:1;
+  end;
+end;
+
+definition
+  let B, R, R1;
+  attr R1 is (B, R)-derivable means
+  for S, t st [S, t] in R1 holds B \/ S, R |- t;
+end;
+
+theorem Th45:
+  for B, R, t holds B, R |- t iff ex S st t in S & S is (B, R)-derivable
+proof
+  let B, R, t;
+  thus B, R |- t implies ex S st (t in S & S is (B, R)-derivable)
+  proof
+    assume B, R |- t;
+    then consider P such that A1: t in rng P and A2: P is (B, R)-correct;
+    take S = rng P;
+    thus t in S by A1;
+    thus S is (B, R)-derivable by A2;
+  end;
+  given S such that A10: t in S and A11: S is (B, R)-derivable;
+  consider P such that A12: S = rng P and A13: P is (B, R)-correct by A11;
+  thus thesis by A10, A12, A13;
+end;
+
+theorem Th46:
+  for B, R, a st a in B holds B, R |- a
+proof
+  let B, R, a;
+  assume A1: a in B;
+  then reconsider B as non empty set;
+  reconsider t = a as Element of B by A1;
+  set P = <*t*>;
+  take P;
+  rng P = {t} by FINSEQ_1:38;
+  hence thesis by TARSKI:def 1, Th40;
+end;
+
+registration
+  let B,R;
+  cluster non (B,R)-provable -> non B-axiomatic for object;
+  coherence by Th46;
+end;
+
+theorem Th47:
+  for B, R, S st for a st a in S holds B, R |- a
+      ex S1 st S c= S1 & S1 is (B, R)-derivable
+proof
+  let B, R, S;
+  assume A1: for a st a in S holds B, R |- a;
+  defpred X[ set ] means ex S1 st $1 c= S1 & S1 is (B, R)-derivable;
+  A2: S is finite;
+  A10: X[ {} ]
+  proof
+    set P = <*>{};
+    take rng P;
+    P is (B, R)-correct;
+    hence thesis;
+  end;
+  A20: for x, B1 being set st x in S & B1 c= S & X[ B1 ] holds X[ B1 \/ {x} ]
+  proof
+    let x, B1 be set;
+    assume that
+      A21: x in S and
+           B1 c= S and
+      A23: X[ B1 ];
+    reconsider t = x as Formula;
+    consider S1 such that
+      A24: t in S1 and
+      A25: S1 is (B, R)-derivable by A1, A21, Th45;
+    consider S2 such that
+      A26: B1 c= S2 and
+      A27: S2 is (B, R)-derivable by A23;
+    take S1 \/ S2;
+    {x} c= S1 by A24, TARSKI:def 1;
+    hence B1 \/ {x} c= S1 \/ S2 by A26, XBOOLE_1:13;
+    thus S1 \/ S2 is (B, R)-derivable by A25, A27, Th43;
+  end;
+  thus X[ S ] from FINSET_1:sch 2(A2, A10, A20);
+end;
+
+theorem Th48:
+  for B, B1, R, S st S is (B, R)-derivable & B /\ S c= B1
+      holds S is (B1, R)-derivable
+proof
+  let B, B1, R, S;
+  assume that A1: S is (B, R)-derivable and A2: B /\ S c= B1;
+  consider P such that A3: S = rng P and A4: P is (B,R)-correct by A1;
+  P is (B1, R)-correct
+  proof
+    let k;
+    assume A6: k in dom P;
+    then A7: P.k in S by A3, FUNCT_1:3;
+    P, k is_a_correct_step_wrt B, R by A4, A6;
+    then per cases;
+      suppose P.k in B;
+      then P.k in B /\ S by A7, XBOOLE_0:def 4;
+      hence thesis by A2;
+      end;
+      suppose ex Q being Formula-finset st
+        ([Q, P.k] in R
+            & for t st t in Q ex m st m in dom P & m < k & P.m = t);
+      then consider Q being Formula-finset such that
+        A10: [Q, P.k] in R and
+        A11: for t st t in Q ex m st m in dom P & m < k & P.m = t;
+      thus thesis by A10, A11;
+    end;
+  end;
+  hence thesis by A3;
+end;
+
+theorem Th49:
+  for B, R, t, S st (for a st a in S holds B, R |- a) & [S, t] in R
+      holds B, R |- t
+proof
+  let B, R, t, S;
+  assume that
+    A1: for a st a in S holds B, R |- a and
+    A2: [S, t] in R;
+  consider S1 such that
+    A3: S c= S1 and
+    A4: S1 is (B, R)-derivable by A1, Th47;
+  consider P1 such that
+    A5: S1 = rng P1 and
+    A6: P1 is (B, R)-correct by A4;
+  set P2 = P1^<*t*>;
+  take P2;
+  rng <*t*> = {t} by FINSEQ_1:38;
+  then t in rng <*t*> by TARSKI:def 1;
+  then t in rng P1 \/ rng <*t*> by XBOOLE_0:def 3;
+  hence t in rng P2 by FINSEQ_1:31;
+  let k;
+  assume k in dom P2;
+  then per cases by FINSEQ_1:25;
+    suppose A11: k in dom P1;
+    then P1, k is_a_correct_step_wrt B, R by A6;
+    then P1^<*>{}, k is_a_correct_step_wrt B, R by FINSEQ_1:34;
+    hence thesis by A11, Lm41;
+    end;
+    suppose ex i st i in dom <*t*> & k = len P1+i;
+    then consider i such that
+      A20: i in dom <*t*> and
+      A21: k = len P1+i;
+    P2.k = <*t*>.i by A20, A21, FINSEQ_1:def 7;
+    then P2.k in rng <*t*> by A20, FUNCT_1:3;
+    then P2.k in {t} by FINSEQ_1:38;
+    then A22: P2.k = t by TARSKI:def 1;
+    i in {1} by A20, FINSEQ_1:2, FINSEQ_1:def 8;
+    then A23: k = len P1+1 by A21, TARSKI:def 1;
+    for t st t in S ex m st m in dom P2 & m < k & P2.m = t
+      proof
+      let t;
+      assume t in S;
+      then consider a such that
+        A25: a in dom P1 and
+        A26: P1.a = t by A3, A5, FUNCT_1:def 3;
+      a in Seg len P1 by A25, FINSEQ_1:def 3;
+      then reconsider m = a as Nat;
+      take m;
+      dom P1 c= dom P2 by FINSEQ_1:26;
+      hence m in dom P2 by A25;
+      m in Seg len P1 by A25, FINSEQ_1:def 3;
+      then m <= len P1 by FINSEQ_1:1;
+      hence m < k by A23, NAT_1:13;
+      thus thesis by A25, A26, FINSEQ_1:def 7;
+      end;
+    hence thesis by A2, A22;
+    end;
+end;
+
+theorem Th51:
+  for B, R, a st B, R |- a holds a in B or ex S st [S, a] in R
+    & for b st b in S holds B, R |- b
+proof
+  let B, R, a;
+  assume that
+    A1: B, R |- a and
+    A2: not a in B;
+  consider P such that
+    A3: a in rng P and
+    A4: P is (B, R)-correct by A1;
+  consider c such that
+    A5: c in dom P and
+    A6: P.c = a by A3, FUNCT_1:def 3;
+  c in Seg len P by A5, FINSEQ_1:def 3;
+  then reconsider n = c as Nat;
+  P, n is_a_correct_step_wrt B, R by A4, A5;
+  then consider Q being Formula-finset such that
+    A10: [Q, P.n] in R and
+    A11: for t st t in Q ex k
+            st k in dom P & k < n & P.k = t by A2, A6;
+  take Q;
+  thus [Q, a] in R by A6, A10;
+  let u;
+  assume u in Q;
+  then consider k such that
+    A15: k in dom P and
+         k < n and
+    A17: P.k = u by A11;
+  u in rng P by A15, A17, FUNCT_1:3;
+  hence B, R |- u by A4;
+end;
+
+Lm52:
+  for B, R, P, m, n st P,m is_a_correct_step_wrt B,R & m <= n & P.m = P.n
+    holds P,n is_a_correct_step_wrt B,R
+proof
+  let B, R, P, m, n;
+  assume that
+    A3: P, m is_a_correct_step_wrt B, R and
+    A4: m <= n and
+    A5: P.m = P.n;
+    per cases by A3;
+    suppose P.m in B;
+      hence thesis by A5;
+    end;
+    suppose ex Q being Formula-finset st
+      ([Q,P.m] in R & for t st t in Q ex k st k in dom P & k < m & P.k = t);
+      then consider Q being Formula-finset such that
+        A10: [Q,P.m] in R and
+        A11: for t st t in Q ex k st k in dom P & k < m & P.k = t;
+      for t st t in Q ex k st k in dom P & k < n & P.k = t
+      proof
+        let t;
+        assume t in Q;
+        then consider k such that A15: k in dom P & k < m & P.k = t by A11;
+        take k;
+        thus thesis by A4, A15, XXREAL_0:2;
+      end;
+      hence thesis by A5, A10;
+    end;
+end;
+
+theorem Th52:
+  for B, R, S1, S2 st S1 is (B, R)-derivable & S2 is (S1, R)-derivable holds
+      S1 \/ S2 is (B, R)-derivable
+proof
+  let B, R, S1, S2;
+  assume S1 is (B, R)-derivable & S2 is (S1, R)-derivable; then
+  consider P1, P2 such that
+    A3: P1 is (B, R)-correct and
+    A4: S1 = rng P1 and
+    A5: P2 is (S1, R)-correct and
+    A6: S2 = rng P2;
+    set P = P1^P2;
+    A8: for k st k in dom P1 holds P, k is_a_correct_step_wrt B, R
+    proof
+      let k;
+      assume A9: k in dom P1;
+      then P1, k is_a_correct_step_wrt B, R by A3;
+      then P1^<*>{}, k is_a_correct_step_wrt B, R by FINSEQ_1:34;
+      hence thesis by A9, Lm41;
+    end;
+    A10: P is (B, R)-correct
+    proof
+      let k;
+      assume k in dom P;
+      then per cases by FINSEQ_1:25;
+        suppose k in dom P1;
+        hence thesis by A8;
+        end;
+        suppose ex i st i in dom P2 & k = len P1+i;
+        then consider i such that
+          A20: i in dom P2 and
+          A21: k = len P1+i;
+        P2,i is_a_correct_step_wrt S1,R by A5, A20;
+        then per cases;
+          suppose P2.i in S1;
+          then consider b such that A25: b in dom P1 and A26: P1.b = P2.i
+            by A4, FUNCT_1:def 3;
+          A27: b in Seg len P1 by A25, FINSEQ_1:def 3;
+          then reconsider n = b as Nat;
+          A28: n <= len P1 by A27, FINSEQ_1:1;
+          k >= len P1 by A21, NAT_1:11;
+          then A29: n <= k by A28, XXREAL_0:2;
+          P.n = P2.i by A25, A26, FINSEQ_1:def 7
+             .= P.k by A20, A21, FINSEQ_1:def 7;
+          hence thesis by A8, A25, A29, Lm52;
+          end;
+          suppose ex Q being Formula-finset st
+              ([Q,P2.i] in R
+            & for t st t in Q ex l st l in dom P2 & l < i & P2.l = t);
+          then consider Q being Formula-finset such that
+            A40: [Q,P2.i] in R and
+            A41: for t st t in Q ex l st l in dom P2 & l < i & P2.l = t;
+          A42: [Q,P.k] in R by A20, A21, A40, FINSEQ_1:def 7;
+          for t st t in Q ex n st n in dom P & n < k & P.n = t
+            proof
+            let t;
+            assume t in Q;
+            then consider l such that
+              A44: l in dom P2 and
+              A45: l < i and
+              A46: P2.l = t by A41;
+            take n = l + len P1;
+            thus n in dom P by A44, FINSEQ_1:28;
+            thus n < k by A21, A45, XREAL_1:6;
+            thus P.n = t by A44, A46, FINSEQ_1:def 7;
+            end;
+          hence thesis by A42;
+          end;
+        end;
+      end;
+    reconsider S = rng P as Formula-finset;
+    S = S1 \/ S2 by A4, A6, FINSEQ_1:31;
+    hence thesis by A10;
+end;
+
+theorem Th53:
+  for B, R, B1, a st B1, R |- a & for b st b in B1 holds B, R |- b
+    holds B, R |- a
+proof
+  let B, R, B1, a;
+  assume that
+    A1: B1, R |- a and
+    A2: for b st b in B1 holds B, R |- b;
+  consider S such that A3: a in S and A4: S is (B1, R)-derivable by A1, Th45;
+  set S1 = B1 /\ S;
+  for b st b in S1 holds b in B1 by XBOOLE_0:def 4;
+  then for b st b in S1 holds B, R |- b by A2;
+  then consider S2 such that
+    A7: S1 c= S2 and
+    A8: S2 is (B, R)-derivable by Th47;
+  S is (S2, R)-derivable by A4, A7, Th48;
+  then A10: S2 \/ S is (B, R)-derivable by A8, Th52;
+  a in S2 \/ S by A3, XBOOLE_0:def 3;
+  hence thesis by A10;
+end;
+
+theorem Th54:
+  for B, C, R, E, a st B, R |- a holds C, E |- a
+proof
+  let B,C,R,E,a;
+  C is B-extending & E is R-extending;
+  hence thesis by Th44;
+end;
+
+definition
+  let B, R, a;
+  redefine attr a is (B,R)-provable means
+  for C, E holds C,E |- a;
+  compatibility
+  proof
+    thus a is (B,R)-provable implies for C,E holds C,E |- a by Th54;
+    assume A10: for C,E holds C,E |- a;
+    B is B-extending & R is R-extending;
+    hence thesis by A10;
+  end;
+end;
+
+registration
+  let B,R,C;
+  cluster non (C,R)-provable -> non (B,R)-provable for object;
+  coherence;
+
+  let E;
+  cluster non (C,E)-provable -> non (B,R)-provable for object;
+  coherence;
+end;
+
+theorem
+  for B, R, R1, R2 holds R1 \/ R2 is (B,R)-derivable
+      iff R1 is (B,R)-derivable & R2 is (B,R)-derivable
+proof
+  let B, R, R1, R2;
+  thus R1 \/ R2 is (B,R)-derivable
+      implies R1 is (B,R)-derivable & R2 is (B,R)-derivable
+  proof
+    assume A1: R1 \/ R2 is (B,R)-derivable;
+    thus R1 is (B,R)-derivable
+      proof
+      let S, t;
+      assume [S, t] in R1;
+      then [S, t] in R1 \/ R2 by XBOOLE_0:def 3;
+      hence thesis by A1;
+      end;
+    let S, t;
+    assume [S, t] in R2;
+    then [S, t] in R1 \/ R2 by XBOOLE_0:def 3;
+    hence thesis by A1;
+    end;
+  assume that
+    A10: R1 is (B,R)-derivable and
+    A11: R2 is (B,R)-derivable;
+  let S, t;
+  assume [S, t] in R1 \/ R2;
+  then per cases by XBOOLE_0:def 3;
+    suppose [S, t] in R1;
+    hence thesis by A10;
+    end;
+    suppose [S, t] in R2;
+    hence thesis by A11;
+  end;
+end;
+
+Lm54:
+  for B, R, t st B, R |- t holds t in B \/ rng R
+proof
+  let B, R, t;
+  assume B, R |- t;
+  then consider P being (B,R)-correct Formula-sequence such that
+    A2: t in rng P;
+  set X = B \/ rng R;
+  consider b such that
+      A3: b in dom P and
+      A4: t = P.b by A2, FUNCT_1:def 3;
+  b in Seg len P by A3, FINSEQ_1:def 3;
+  then reconsider n = b as Nat;
+  P is (B,R)-correct;
+  then P, n is_a_correct_step_wrt B, R by A3;
+  then per cases;
+  suppose P.n in B;
+  hence thesis by A4, XBOOLE_0:def 3;
+  end;
+  suppose ex Q being Formula-finset st
+    ([Q,P.n] in R & for t st t in Q ex k st k in dom P & k < n & P.k = t);
+  then consider Q being Formula-finset such that
+    A5: [Q,P.n] in R and
+        for t st t in Q ex k st k in dom P & k < n & P.k = t;
+  P.n in rng R by A5, XTUPLE_0:def 13;
+  hence thesis by A4, XBOOLE_0:def 3;
+  end;
+end;
+
+Lm55:
+  for Fml for B being Subset of Fml, R being Rule of Fml,
+    P being (B,R)-correct Formula-sequence holds P is Formula-sequence of Fml
+proof
+  let Fml;
+  let B be Subset of Fml;
+  let R be Rule of Fml;
+  let P be (B,R)-correct Formula-sequence;
+  set X = B \/ rng R;
+  rng R c= Fml by Def2;
+  then A1: X c= Fml by XBOOLE_1:8;
+  rng P c= Fml
+  proof
+    let t;
+    assume t in rng P;
+    then B, R |- t;
+    hence t in Fml by A1, Lm54;
+  end;
+  then P is FinSequence of Fml by FINSEQ_1:def 4;
+  hence thesis by Def5;
+end;
+
+theorem Th57:
+  for Fml for B being Subset of Fml, R being Rule of Fml, a st B, R |- a
+    holds a in Fml
+proof
+  let Fml;
+  let B be Subset of Fml;
+  let R be Rule of Fml;
+  let a;
+  assume B, R |- a;
+  then consider P such that A1: a in rng P and A2: P is (B,R)-correct;
+  P is Formula-sequence of Fml by A2, Lm55;
+  then P is FinSequence of Fml by Def5;
+  then rng P c= Fml by FINSEQ_1:def 4;
+  hence thesis by A1;
+end;
+
+definition
+  struct (1-sorted) ProofSystem (# carrier -> set,
+    Axioms -> Subset of the carrier,
+     Rules -> Rule of the carrier #);
+end;
+
+definition
+  let P be ProofSystem;
+  mode Formula-finset of P is Formula-finset of the carrier of P;
+end;
+
+definition
+  let P be ProofSystem, a be object;
+  pred P |- a means
+    the Axioms of P, the Rules of P |- a;
+end;
+
+registration
+  cluster non empty for ProofSystem;
+  existence
+  proof
+    set X = {{}};
+    reconsider R = {} as Rule;
+    dom R c= Fin X & rng R c= X; then
+    reconsider R as Rule of X by Def2;
+    take ProofSystem (# X, [#]X, R #);
+    thus thesis;
+  end;
+end;
+
+ reserve P for non empty ProofSystem;
+ reserve B, B1, B2 for Subset of P;
+ reserve F for finite Subset of P;
+
+theorem
+  for P, a st P |- a holds a is Element of P by Th57;
+
+definition
+  let P, B;
+  pred P |- B means
+  for a st a in B holds P |- a;
+end;
+
+definition
+  let P, B1, B2;
+  redefine func B1 \/ B2 -> Subset of P;
+  coherence by XBOOLE_1:8;
+end;
+
+definition
+  let P;
+  attr P is consistent means
+  ex a st a in P & not P |- a;
+end;
+
+definition
+  let P, B;
+  func P \/ B -> non empty ProofSystem equals
+  ProofSystem (# the carrier of P, (the Axioms of P) \/ B, the Rules of P #);
+  coherence;
+end;
+
+registration
+  cluster consistent strict for non empty ProofSystem;
+  existence
+  proof
+    set a = the object;
+    reconsider X = { a } as non empty set;
+    reconsider B = {} as Subset of X by XBOOLE_1:2;
+    reconsider R = {} as Rule;
+    dom R c= Fin X & rng R c= X;
+    then reconsider R as Rule of X by Def2;
+    reconsider P = ProofSystem (# X, B, R #) as non empty ProofSystem;
+    take P;
+    thus P is consistent
+    proof
+      take a;
+      thus a in P by TARSKI:def 1;
+      not a in B & not ex S st [S,a] in R & (for b st b in S holds B,R |- b);
+      hence thesis by Th51;
+    end;
+    thus thesis;
+  end;
+end;
+
+registration
+  let P be strict ProofSystem;
+  let E be empty Subset of P;
+  reduce P \/ E to P;
+  reducibility;
+end;
+
+notation
+  let P;
+  antonym P is inconsistent for P is consistent;
+end;
+
+definition
+  let P, B;
+  attr B is consistent means
+  P \/ B is consistent;
+end;
+
+registration
+  let P be consistent non empty ProofSystem;
+  cluster consistent for Subset of P;
+  existence
+  proof
+    set A = the Axioms of P;
+    set R = the Rules of P;
+    take E = {}(the carrier of P);
+    P is consistent;
+    then consider a such that A1: a in P & not P |- a;
+    a in P \/ E & not P \/ E |- a by A1;
+    then P \/ E is consistent;
+    hence thesis;
+  end;
+end;
+
+notation
+  let P, B;
+  antonym B is inconsistent for B is consistent;
+end;
+
+registration
+  let P;
+  cluster inconsistent for Subset of P;
+  existence
+  proof
+    set A = the Axioms of P;
+    set O = the carrier of P;
+    O c= O;
+    then reconsider O as Subset of P;
+    take O;
+    for a st a in P \/ O holds P \/ O |- a
+    proof
+      let a;
+      assume a in P \/ O;
+      then a in A \/ O by XBOOLE_1:12;
+      hence thesis by Th46;
+    end;
+    then P \/ O is inconsistent;
+    hence O is inconsistent;
+  end;
+end;
+
+definition
+  let P;
+  attr P is paraconsistent means
+  for S being finite Subset of P holds S is consistent;
+end;
+
+registration
+  cluster paraconsistent -> consistent for non empty ProofSystem;
+  coherence
+  proof
+    let P;
+    reconsider S = {} as empty Subset of P by XBOOLE_1:2;
+    assume P is paraconsistent;
+    then S is consistent;
+    then P \/ S is consistent;
+    then consider a such that A1: a in P \/ S & not P \/ S |- a;
+    a in P & not P |- a by A1;
+    hence thesis;
+  end;
+
+  cluster consistent non paraconsistent for non empty ProofSystem;
+  existence
+  proof
+    set E = {}NAT;
+    set R = [: { {0} }, NAT :];
+    A1: dom R = {{0}} & rng R = NAT by RELAT_1:160;
+    then R is finitary;
+    then reconsider R as Rule;
+    0 in NAT by ORDINAL1:def 12;
+    then A2: {0} c= NAT by TARSKI:def 1;
+    then {0} in Fin NAT by FINSUB_1:def 5;
+    then dom R c= Fin NAT by A1, TARSKI:def 1;
+    then reconsider R as Rule of NAT by A1, Def2;
+    reconsider P = ProofSystem (# NAT, {}NAT, R #)
+      as non empty ProofSystem;
+    take P;
+    thus P is consistent
+    proof
+      take a = the Element of NAT;
+      thus a in P;
+      assume P |- a;
+      then E, R |- a;
+      then consider p being (E, R)-correct Formula-sequence such that
+        A10: a in rng p;
+      set k = len p;
+      p is non empty by A10;
+      then k >= 1 by FINSEQ_1:20;
+      then 1 in Seg k by FINSEQ_1:1;
+      then A11: 1 in dom p by FINSEQ_1:def 3;
+      p is (E,R)-correct;
+      then p, 1 is_a_correct_step_wrt E, R by A11;
+      then consider Q being Formula-finset such that
+        A12: [Q, p.1] in R and
+        A13: for t being Formula st t in Q
+              ex m st m in dom p & m < 1 & p.m = t;
+      Q in {{0}} by A12, ZFMISC_1:87;
+      then Q = {0} by TARSKI:def 1;
+      then 0 in Q by TARSKI:def 1;
+      then consider m such that
+          A15: m in dom p and A16: m < 1 and p.m = 0 by A13;
+      m in Seg k by A15, FINSEQ_1:def 3;
+      hence thesis by A16, FINSEQ_1:1;
+    end;
+    reconsider S = {0} as finite Subset of P by A2;
+    for a st a in P \/ S holds P \/ S |- a
+    proof
+      let a;
+      assume a in P \/ S;
+      then reconsider k = a as Element of NAT;
+      set p = <* 0, k *>;
+      len p = 2 by FINSEQ_1:44;
+      then A20: dom p = {1,2} by FINSEQ_1:2, FINSEQ_1:def 3;
+      then  2 in dom p & p.2 = k by  TARSKI:def 2;
+      then A22: k in rng p by FUNCT_1:3;
+      p is (S, R)-correct
+      proof
+        let m;
+        assume m in dom p;
+        then per cases by A20, TARSKI:def 2;
+          suppose m = 1;
+          then p.m = 0;
+          hence thesis by TARSKI:def 1;
+          end;
+          suppose A25: m = 2;
+          reconsider Q = {0} as Formula-finset;
+          Q in {{0}} by TARSKI:def 1;
+          then A26: [Q, k] in R by ZFMISC_1:87;
+          for t being Formula st t in Q ex n st n in dom p & n < m & p.n = t
+          proof
+            let t be Formula;
+            assume t in Q;
+            then A28: t = 0 by TARSKI:def 1;
+            take n = 1;
+            thus n in dom p by A20, TARSKI:def 2;
+            thus n < m by A25;
+            thus p.n = t by A28;
+          end;
+          hence thesis by  A25, A26;
+        end;
+      end;
+      then S, R |- k by A22;
+      hence thesis;
+    end;
+    then P \/ S is inconsistent;
+    then S is inconsistent;
+    hence thesis;
+  end;
+end;
+
+:: Consistency, contradictions, Lindenbaum
+
+definition
+  let P, B, B1;
+  attr B1 is B-omitting means
+  ex a st a in B & not P \/ B1 |- a;
+end;
+
+theorem Th56:
+  for P, B, B1 st B is inconsistent holds B1 is consistent iff B1 is B-omitting
+proof
+  let P, B, B1;
+  set A = the Axioms of P;
+  set R = the Rules of P;
+  assume B is inconsistent;
+  then A1: P \/ B is inconsistent;
+  thus B1 is consistent implies B1 is B-omitting
+  proof
+    assume B1 is consistent;
+    then P \/ B1 is consistent;
+    then consider a such that A2: a in P \/ B1 and A3: not P \/ B1 |- a;
+    a in P \/ B by A2;
+    then A5: P \/ B |- a by A1;
+    assume A7: B1 is non B-omitting;
+    for b st b in A \/ B holds A \/ B1, R |- b
+      proof
+      let b;
+      assume b in A \/ B;
+      then per cases by XBOOLE_0:def 3;
+        suppose b in A;
+        then b in A \/ B1 by XBOOLE_0:def 3;
+        hence thesis by Th46;
+        end;
+        suppose b in B;
+        then P \/ B1 |- b by A7;
+        hence thesis;
+        end;
+      end;
+    hence thesis by A3, A5, Th53;
+  end;
+  assume B1 is B-omitting;
+  then consider a such that A11: a in B and A12: not P \/ B1 |- a;
+  a in P \/ B1 by A11;
+  then P \/ B1 is consistent by A12;
+  hence thesis;
+end;
+
+registration
+  let P;
+  let B be inconsistent Subset of P;
+  cluster B-omitting -> consistent for Subset of P;
+  coherence by Th56;
+
+  cluster non B-omitting -> inconsistent for Subset of P;
+  coherence by Th56;
+end;
+
+registration
+  let P, B;
+  cluster non B-omitting for Subset of P;
+  existence
+  proof
+    set B1 = the carrier of P;
+    B1 c= B1;
+    then reconsider B1 as Subset of P;
+    take B1;
+    for a st a in B holds P \/ B1 |- a
+    proof
+      let a;
+      assume A1: a in B;
+      B1 = the Axioms of (P \/ B1) by XBOOLE_1:12;
+      hence thesis by A1, Th46;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem Th59:
+  for P, B, B1, B2 st B1 is B-omitting & B2 c= B1 holds B2 is B-omitting
+proof
+  let P, B, B1, B2;
+  set A = the Axioms of P;
+  set R = the Rules of P;
+  assume that A1: B1 is B-omitting and A2: B2 c= B1;
+  consider a such that A3: a in B and A4: not P \/ B1 |- a by A1;
+  take a;
+  A \/ B1 is Extension of A \/ B2 & R is Extension of R
+    by A2, Def11, Def12, XBOOLE_1:9;
+  hence thesis by A3, A4, Th54;
+end;
+
+definition
+  let P, B;
+  func Omit(P,B) -> Subset-Family of P equals
+  { B1 where B1 is Subset of P : B1 is B-omitting };
+  coherence
+  proof
+    set X = { B1 where B1 is Subset of P : B1 is B-omitting };
+    set O = the carrier of P;
+    X c= bool O
+    proof
+      let a;
+      assume a in X;
+      then consider B1 being Subset of P such that
+        A1: a = B1 and
+            B1 is B-omitting;
+      thus thesis by A1;
+    end;
+    hence thesis;
+  end;
+end;
+
+definition
+  let P, B;
+  redefine func Omit(P,B) means  :Def17:
+  for B1 holds B1 in it iff B1 is B-omitting;
+  compatibility
+  proof
+    let G be Subset-Family of P;
+    set Om = Omit(P,B);
+    for B1 holds B1 in Om iff B1 is B-omitting
+    proof
+      let B1;
+      thus B1 in Om implies B1 is B-omitting
+      proof
+        assume B1 in Om;
+        then consider B2 such that A5: B2 = B1 & B2 is B-omitting;
+        thus thesis by A5;
+      end;
+      thus thesis;
+    end;
+    hence G = Om implies (for B1 holds B1 in G iff B1 is B-omitting);
+    assume A10: for B1 holds B1 in G iff B1 is B-omitting;
+    thus G c= Om
+    proof
+      let a;
+      assume A11: a in G;
+      then reconsider B1 = a as Subset of P;
+      B1 is B-omitting by A10, A11;
+      hence thesis;
+    end;
+    let a;
+    assume a in Om;
+    then consider B1 such that A21: B1 = a & B1 is B-omitting;
+    thus thesis by A10, A21;
+  end;
+end;
+
+definition
+  let P, B, B1;
+  attr B1 is B-maximally-omitting means
+  B1 is B-omitting & for B2 st B1 c< B2 holds B2 is non B-omitting;
+end;
+
+registration
+  let P, B;
+  cluster B-maximally-omitting -> B-omitting for Subset of P;
+  coherence;
+end;
+
+definition
+  let X;
+  attr X is finite-character means  :Def20:
+  for a holds a in X iff
+    ex B being set st B = a & for S being finite Subset of B holds S in X;
+end;
+
+definition
+  let X;
+  redefine attr X is finite-character means
+  :Def20r:
+  for Y holds Y in X iff for S being finite Subset of Y holds S in X;
+  compatibility
+  proof
+    thus X is finite-character implies
+        for Y holds Y in X iff for S being finite Subset of Y holds S in X
+    proof
+      assume A1: X is finite-character;
+      let Y;
+      thus Y in X implies for S being finite Subset of Y holds S in X
+      proof
+        assume Y in X;
+        then consider B being set such that
+          A3: B = Y & for S being finite Subset of B holds S in X by A1;
+        thus thesis by  A3;
+      end;
+      thus thesis by A1;
+    end;
+    assume
+      A11: for Y holds Y in X iff for S being finite Subset of Y holds S in X;
+    let a;
+    thus a in X implies ex B being set st
+          B = a & for S being finite Subset of B holds S in X
+    proof
+      assume A12: a in X;
+      then reconsider B = a as set;
+      take B;
+      thus thesis by A11, A12;
+    end;
+    given B being set such that
+      A20: B = a & for S being finite Subset of B holds S in X;
+    thus a in X by A11, A20;
+  end;
+end;
+
+definition
+  let X;
+  let F be Subset-Family of X;
+  redefine attr F is finite-character means
+  for B being Subset of X holds
+    B in F iff for S being finite Subset of B holds S in F;
+  compatibility
+  proof
+    thus F is finite-character implies for B being Subset of X holds
+        B in F iff for S being finite Subset of B holds S in F;
+    assume A1: for B being Subset of X holds
+        B in F iff for S being finite Subset of B holds S in F;
+    let Y;
+    thus Y in F implies for S being finite Subset of Y holds S in F by A1;
+    assume A2: for S being finite Subset of Y holds S in F;
+    Y c= X
+    proof
+      assume not Y c= X;
+      then consider u being object such that A4: u in Y and A5: not u in X;
+      {u} c= Y by A4, TARSKI:def 1;
+      then reconsider S = {u} as finite Subset of Y;
+      S in F by A2;
+      then S c= X & u in S by TARSKI:def 1;
+      hence thesis by A5;
+    end;
+    hence Y in F by A1, A2;
+  end;
+end;
+
+registration
+  let X;
+  cluster non empty finite-character for Subset-Family of X;
+  existence
+  proof
+    reconsider F = bool X as Subset-Family of X;
+    take F;
+    thus F is non empty;
+    let B be Subset of X;
+    thus B in F implies for S being finite Subset of B holds S in F
+    proof
+      assume B in F;
+      let S be finite Subset of B;
+      S c= B & B c= X;
+      then S c= X;
+      hence S in F;
+    end;
+    assume for S being finite Subset of B holds S in F;
+    thus B in F;
+  end;
+end;
+
+registration
+  cluster empty -> finite-character for set;
+  coherence;
+
+  cluster non empty finite-character for set;
+  existence
+  proof
+    take the non empty finite-character Subset-Family of the set;
+    thus thesis;
+  end;
+end;
+
+:: Teichmuller-Tukey Lemma
+
+Lm58:
+  for X being non empty finite-character set holds {} in X
+proof
+  let X be non empty finite-character set;
+  consider a such that A1: a in X by XBOOLE_0:def 1;
+  consider B being set such that
+        B = a and
+    A3: for S being finite Subset of B holds S in X by A1, Def20;
+  {} c= B;
+  hence thesis by A3;
+end;
+
+Lm59:
+  for X being non empty finite-character set, C being c=-linear Subset of X
+    holds union C in X
+proof
+  let X be non empty finite-character set;
+  let C be c=-linear Subset of X;
+  set U = union C;
+  for B being finite Subset of U holds B in X
+  proof
+    let B be finite Subset of U;
+    per cases;
+      suppose C = {};
+      then B = {} by ZFMISC_1:2;
+      hence thesis by Lm58;
+      end;
+      suppose C <> {};
+      then consider Z being set such that A2: B c= Z & Z in C by PL_AXIOM:16;
+      thus thesis by A2, Def20r;
+    end;
+  end;
+  hence thesis by Def20r;
+end;
+
+theorem Th60:
+  for X being non empty finite-character set
+    ex Y being Element of X st for Z being Element of X holds not Y c< Z
+proof
+  let X be non empty finite-character set;
+  for C being set st C c= X & C is c=-linear
+      ex Y st Y in X & for Z st Z in C holds Z c= Y
+  proof
+    let C be set;
+    assume A2: C c= X & C is c=-linear;
+    take Y = union C;
+    thus thesis by A2, Lm59, ZFMISC_1:74;
+  end;
+  then consider Y such that
+      A5: Y in X and
+      A6: for Z st Z in X & Z <> Y holds not Y c= Z
+    by ORDERS_1:65;
+  reconsider Y as Element of X by A5;
+  take Y;
+  let Z be Element of X;
+  assume Y c< Z;
+  hence thesis by A6;
+end;
+
+registration
+  let P, F;
+  cluster Omit(P,F) -> finite-character;
+  coherence
+  proof
+    set A = the Axioms of P;
+    set Obj = the carrier of P;
+    set R = the Rules of P;
+    set O = Omit(P,F);
+    let B;
+    thus B in O implies for S being finite Subset of B holds S in O
+    proof
+      set PB = P \/ B;
+      assume B in O;
+      then A1: B is F-omitting by Def17;
+      let S be finite Subset of B;
+      S c= B & B c= Obj;
+      then S c= Obj;
+      then reconsider T = S as Subset of P;
+      T is F-omitting by A1, Th59;
+      hence thesis;
+    end;
+    assume A10: for S being finite Subset of B holds S in O;
+    assume not B in O;
+    then A11: B is non F-omitting;
+    for a st a in F holds A \/ B, R |- a
+    proof
+      let a;
+      assume a in F;
+      then P \/ B |- a by A11;
+      hence thesis;
+    end;
+    then consider S1 such that
+      A12: F c= S1 and
+      A13: S1 is (A \/ B, R)-derivable by Th47;
+    set S2 = B /\ S1;
+    (A \/ B) /\ S1 = (A /\ S1) \/ S2 & A /\ S1 c= A
+      by XBOOLE_1:17, XBOOLE_1:23;
+    then S1 is (A \/ S2, R)-derivable by A13, Th48, XBOOLE_1:9;
+    then for a st a in F holds A \/ S2, R |- a by A12;
+    then for a st a in F holds P \/ S2 |- a;
+    then S2 is non F-omitting;
+    then A15: not S2 in O by Def17;
+    S2 is finite Subset of B by XBOOLE_1:17;
+    hence contradiction by A10, A15;
+  end;
+end;
+
+theorem Th61:
+  for P, B, F st B is F-omitting ex B1 st B c= B1 & B1 is F-maximally-omitting
+proof
+  let P, B, F;
+  assume A1: B is F-omitting;
+  set A = the Axioms of P;
+  set R = the Rules of P;
+  set Q = P \/ B;
+  reconsider G = F as Subset of Q;
+  set Om = Omit(Q,G);
+  A2: for C1 being Subset of Q, B1 st B1 = C1 \/ B holds
+      (C1 in Om iff B1 is F-omitting)
+  proof
+    let C1 be Subset of Q;
+    let B1;
+    assume B1 = C1 \/ B;
+    then A3: the Axioms of (Q \/ C1) = A \/ B1 by XBOOLE_1:4;
+    thus C1 in Om implies B1 is F-omitting
+    proof
+      assume C1 in Om;
+      then C1 is G-omitting by Def17;
+      then consider a such that A4: a in G & not Q \/ C1 |- a;
+      thus thesis by A3, A4;
+    end;
+    assume B1 is F-omitting;
+    then consider a such that A6: a in F & not P \/ B1 |- a;
+    C1 is G-omitting by A3, A6;
+    hence thesis;
+  end;
+  A10: Om is non empty
+  proof
+    set E = {}(the carrier of Q);
+    B = E \/ B;
+    hence thesis by A1, A2;
+  end;
+  then consider Y being Element of Om such that
+    A11:  for Z being Element of Om holds not Y c< Z by Th60;
+  A12: Y in Om by A10;
+  then reconsider B1 = B \/ Y as Subset of P by XBOOLE_1:8;
+  take B1;
+  thus B c= B1 by XBOOLE_1:7;
+  thus B1 is F-omitting by A2, A12;
+  let B2;
+  reconsider C2 = B2 as Subset of Q;
+  assume A15: B1 c< B2;
+  assume A16: B2 is F-omitting;
+  B c< B2 by A15, XBOOLE_1:7, XBOOLE_1:59;
+  then B2 = B \/ C2 by XBOOLE_1:12;
+  then A18: C2 in Om by A2, A16;
+  Y c= B1 by XBOOLE_1:7;
+  hence thesis by A11, A15, A18, XBOOLE_1:59;
+end;
+
+definition
+  let P, B;
+  attr B is maximally-consistent means
+  B is consistent & for B1 st B c< B1 holds B1 is inconsistent;
+end;
+
+theorem
+  for P, B st P is consistent non paraconsistent & B is consistent
+      ex B1 st B c= B1 & B1 is maximally-consistent
+proof
+  let P, B;
+  assume A1: P is consistent non paraconsistent;
+  assume A2: B is consistent;
+  consider S being finite Subset of P such that A3: S is inconsistent by A1;
+  A5: for B1 holds B1 is consistent iff B1 is S-omitting by A3;
+  then consider B1 such that
+    A10: B c= B1 and
+    A11: B1 is S-maximally-omitting by A2, Th61;
+  take B1;
+  thus B c= B1 by A10;
+  thus thesis by A5, A11;
+end;
+
+scheme
+  UnOpCongr { X() -> non empty set, F(Element of X()) -> Element of X(),
+        E() -> Equivalence_Relation of X()}:
+  ex f being UnOp of Class E() st for x being Element of X() holds
+      f.(Class(E(), x)) = Class(E(), F(x))
+provided
+  A1: for x, y being Element of X() st [x,y] in E() holds [F(x),F(y)] in E()
+proof
+  defpred P[ object, object ] means ex y being Element of X() st
+      $1 = Class(E(), y) & $2 = Class(E(), F(y));
+  A2: for a st a in Class E() ex b st b in Class E() & P[a, b]
+  proof
+    let a;
+    assume a in Class E();
+    then consider c such that A5: c in X() and A6: a = Class(E(), c)
+        by EQREL_1:def 3;
+    reconsider y = c as Element of X() by A5;
+    take b = Class(E(), F(y));
+    thus b in Class E() by EQREL_1:def 3;
+    thus thesis by A6;
+  end;
+  consider f being Function of Class E(), Class E() such that
+    A10: for a st a in Class E() holds P[a, f.a]
+      from FUNCT_2:sch 1(A2);
+  take f;
+  let x be Element of X();
+  set u = Class(E(), x);
+  u in Class E() by EQREL_1:def 3;
+  then P[u, f.u] by A10;
+  then consider y being Element of X() such that
+    A11: Class(E(), x) = Class(E(), y) and
+    A12: f.(Class(E(), y)) = Class(E(), F(y));
+  y in Class(E(), x) by A11, EQREL_1:23;
+  then [x, y] in E() by EQREL_1:18;
+  then [F(x), F(y)] in E() by A1;
+  then F(y) in Class(E(), F(x)) by EQREL_1:18;
+  hence thesis by A11, A12, EQREL_1:23;
+end;
+
+scheme
+  BinOpCongr { X() -> non empty set,
+        F(Element of X(), Element of X()) -> Element of X(),
+        E() -> Equivalence_Relation of X()}:
+  ex f being BinOp of Class E() st for x, y being Element of X() holds
+      f.(Class(E(), x), Class(E(), y)) = Class(E(), F(x, y))
+provided
+  A1: for x1, x2, y1, y2 being Element of X()
+      st [x1,x2] in E() & [y1,y2] in E() holds [F(x1, y1),F(x2, y2)] in E()
+proof
+  defpred P[ object, object, object ] means ex x, y being Element of X() st
+      $1 = Class(E(), x) & $2 = Class(E(), y) & $3 = Class(E(), F(x,y));
+  A2: for a,b st a in Class E() & b in Class E()
+      ex c st c in Class E() & P[a, b, c]
+    proof
+    let a, b;
+    assume that A3: a in Class E() and A4: b in Class E();
+    consider a1 being object such that A5: a1 in X() and A6: a = Class(E(), a1)
+        by A3, EQREL_1:def 3;
+    consider b1 being object such that A7: b1 in X() and A8: b = Class(E(), b1)
+        by A4, EQREL_1:def 3;
+    reconsider a1, b1 as Element of X() by A5, A7;
+    take c = Class(E(), F(a1, b1));
+    thus c in Class E() by EQREL_1:def 3;
+    thus thesis by A6, A8;
+    end;
+  consider f being Function of [: Class E(), Class E() :], Class E() such that
+    A10: for a, b st a in Class E() & b in Class E() holds P[a, b, f.(a, b)]
+      from BINOP_1:sch 1(A2);
+  take f;
+  let x, y be Element of X();
+  set u = Class(E(), x);
+  set v = Class(E(), y);
+  u in Class E() & v in Class E() by EQREL_1:def 3;
+  then P[u, v, f.(u,v)] by A10;
+  then consider x1, y1 being Element of X() such that
+    A11: Class(E(), x) = Class(E(), x1) and
+    A12: Class(E(), y) = Class(E(), y1) and
+    A13: f.(Class(E(), x1), Class(E(), y1)) = Class(E(), F(x1, y1));
+  x1 in Class(E(), x) & y1 in Class(E(), y) by A11, A12, EQREL_1:23;
+  then [x, x1] in E() & [y, y1] in E() by EQREL_1:18;
+  then [F(x,y), F(x1,y1)] in E() by A1;
+  then F(x1,y1) in Class(E(), F(x,y)) by EQREL_1:18;
+  hence thesis by A11, A12, A13, EQREL_1:23;
+end;
+
+scheme
+  ProofInduction { B() -> set,
+        R() -> Rule,
+        S[object] } :
+  for a st B(), R() |- a holds S[a]
+provided
+  A1: for a st a in B() holds S[a] and
+  A2: for X, a st [X,a] in R() & for b st b in X holds S[b] holds S[a]
+proof
+  let a;
+  assume B(), R() |- a;
+  then consider P being Formula-sequence such that
+    A3: a in rng P and
+    A4: P is (B(), R())-correct;
+  defpred T[Nat] means $1 in dom P implies S[P.$1];
+  A10: for i st for j st j < i holds T[j] holds T[i]
+    proof
+    let i;
+    assume A11: for j st j < i holds T[j];
+    reconsider k = i as Element of NAT by ORDINAL1:def 12;
+    assume i in dom P;
+    then P,k is_a_correct_step_wrt B(), R() by A4;
+    then per cases;
+      suppose P.i in B();
+      hence thesis by A1;
+      end;
+      suppose ex Q being Formula-finset st
+        ([Q,P.i] in R() & for t being Formula st t in Q
+            ex k st k in dom P & k < i & P.k = t);
+      then consider Q being Formula-finset such that
+        A14: [Q,P.i] in R() and
+        A15: for t being Formula st t in Q ex k
+            st k in dom P & k < i & P.k = t;
+      for b st b in Q holds S[b]
+        proof
+        let b;
+        assume b in Q;
+        then consider k such that A17: k in dom P & k < i & P.k = b by A15;
+        thus thesis by A11, A17;
+        end;
+      hence S[P.i] by A2, A14;
+      end;
+    end;
+  A30: for i holds T[i] from NAT_1:sch 4(A10);
+  consider b such that A31: b in dom P and A32: P.b = a by A3, FUNCT_1:def 3;
+  b in Seg len P by A31, FINSEQ_1:def 3;
+  hence thesis by A30, A31, A32;
+end;
+
+definition
+  let R, X;
+  attr X is R-closed means   :Def28:
+  for Y, a st [Y,a] in R & Y c= X holds a in X;
+end;
+
+definition
+  let D, R;
+  mode Theorem of D, R means
+  D, R |- it;
+  existence
+  proof
+    take t = the Element of D;
+    t is D-axiomatic;
+    then t is (D, R)-provable;
+    hence thesis;
+  end;
+  sethood
+  proof
+    reconsider X = D \/ rng R as non empty set;
+    take X;
+    thus thesis by Lm54;
+  end;
+end;
+
+definition
+  let X, R;
+  func Theorems(X,R) -> set equals
+  { t where t is Element of X \/ rng R : X, R |- t };
+  coherence;
+end;
+
+definition
+  let X, R;
+  redefine func Theorems(X,R) means
+  :Def30r:
+  for a holds a in it iff X, R |- a;
+  compatibility
+  proof
+    let Y;
+    thus Y = Theorems(X,R) implies (for a holds a in Y iff X, R |- a)
+      proof
+      assume A1: Y = Theorems(X,R);
+      let a;
+      thus a in Y implies X, R |- a
+        proof
+        assume a in Y;
+        then consider t being Element of X \/ rng R such that
+          A2: a = t & X, R |- t by A1;
+        thus thesis by A2;
+        end;
+      assume A5: X, R |- a;
+      then a in X \/ rng R by Lm54;
+      hence thesis by A1, A5;
+    end;
+    assume A10: for a holds a in Y iff X, R |- a;
+    thus Y c= Theorems(X,R)
+    proof
+      let a;
+      assume a in Y;
+      then a in X \/ rng R & X, R |- a by A10, Lm54;
+      hence a in Theorems(X,R);
+    end;
+    let a;
+    assume a in Theorems(X,R);
+    then consider t being Element of X \/ rng R such that
+      A15: a = t & X, R |- t;
+    thus thesis by A10, A15;
+  end;
+end;
+
+registration
+  let X, R;
+  cluster Theorems(X,R) -> X-extending R-closed;
+  coherence
+  proof
+    set T = Theorems(X,R);
+    thus T is X-extending
+    proof
+      let a;
+      assume a in X;
+      then X,R |- a by Th46;
+      hence a in T by Def30r;
+    end;
+    let Y, a;
+    assume that A1: [Y,a] in R and A2: Y c= T;
+    Y in dom R by A1, XTUPLE_0:def 12;
+    then reconsider S = Y as Formula-finset by Def1;
+    for b st b in S holds X, R |- b
+    proof
+      let b;
+      assume b in S;
+      then b in T by A2;
+      then consider t being Element of X \/ rng R such that
+        A5: b = t & X, R |- t;
+      thus thesis by A5;
+    end; then
+    A6: X,R |- a by A1, Th49;
+    a in rng R by A1, XTUPLE_0:def 13;
+    then a in X \/ rng R by XBOOLE_0:def 3;
+    hence thesis by A6;
+  end;
+
+  cluster X-extending R-closed for set;
+  existence
+  proof
+    take Theorems(X,R);
+    thus thesis;
+  end;
+end;
+
+theorem Th65:
+  for X, R, a holds
+    X, R |- a iff for Y being R-closed X-extending set holds a in Y
+proof
+  let X, R, a;
+  thus X,R |- a implies for Y being R-closed X-extending set holds a in Y
+  proof
+    assume A1: X, R |- a;
+    let Y be R-closed X-extending set;
+    defpred S[object] means $1 in Y;
+    Y is X-extending;
+    then A2: for b st b in X holds S[b];
+    A3: for Z, b st [Z,b] in R & for c st c in Z holds S[c] holds S[b]
+    proof
+      let Z, b;
+      assume that
+        A5: [Z,b] in R and
+        A6: for c st c in Z holds S[c];
+      Z c= Y by A6;
+      hence thesis by A5, Def28;
+    end;
+    for b st X, R |- b holds S[b] from ProofInduction(A2, A3);
+    hence thesis by A1;
+  end;
+  assume for Y being R-closed X-extending set holds a in Y;
+  then a in Theorems(X,R);
+  hence thesis by Def30r;
+end;
+
+definition
+  let P;
+  func Theorems P -> Subset of P equals
+  Theorems(the Axioms of P, the Rules of P);
+  coherence
+  proof
+    set A = the Axioms of P;
+    set R = the Rules of P;
+    set T = Theorems(A,R);
+    T c= the carrier of P
+    proof
+      let a;
+      assume a in T;
+      then P |- a by Def30r;
+      hence thesis by Th57;
+    end;
+    hence thesis;
+  end;
+
+  let X;
+  attr X is P-closed means
+  X is (the Rules of P)-closed (the Axioms of P)-extending;
+end;
+
+registration
+  let P;
+  cluster Theorems P -> P-closed;
+  coherence;
+
+  cluster P-closed -> (the Rules of P)-closed (the Axioms of P)-extending
+    for set;
+  coherence;
+
+  cluster (the Rules of P)-closed (the Axioms of P)-extending -> P-closed
+    for set;
+  coherence;
+
+  cluster P-closed for Subset of P;
+  existence
+  proof
+    take Theorems P;
+    thus thesis;
+  end;
+
+  cluster P-closed for set;
+  existence
+  proof
+    take Theorems P;
+    thus thesis;
+  end;
+end;
+
+theorem
+  for P, a holds P |- a iff for X being P-closed set holds a in X
+proof
+  let P, a;
+  set A = the Axioms of P;
+  thus P |- a implies for X being P-closed set holds a in X by Th65;
+  assume for X being P-closed set holds a in X;
+  then a in Theorems P;
+  hence thesis by Def30r;
+end;

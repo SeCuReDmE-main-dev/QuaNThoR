@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xml" href="file://C:\Users\jeans\Desktop\QuaNThoR\mizar\miz.xml"?>
+<Notations aid="TEST" mizfiles="C:\Users\jeans\Desktop\QuaNThoR\mizar\">
+<Pattern kind="M" nr="1" aid="HIDDEN" formatnr="2" constrkind="M" constrnr="1" relnr="1">
+<ArgTypes/>
+<Visible/>
+</Pattern>
+<Pattern kind="M" nr="2" aid="HIDDEN" formatnr="3" constrkind="M" constrnr="2" relnr="2">
+<ArgTypes/>
+<Visible/>
+</Pattern>
+<Pattern kind="R" nr="1" aid="HIDDEN" formatnr="4" constrkind="R" constrnr="1" relnr="1">
+<ArgTypes>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+<Int x="2"/>
+</Visible>
+</Pattern>
+<Pattern kind="R" nr="2" aid="HIDDEN" formatnr="5" constrkind="R" constrnr="1" antonymic="true" relnr="2" redefnr="1">
+<ArgTypes>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+<Int x="2"/>
+</Visible>
+</Pattern>
+<Pattern kind="R" nr="3" aid="HIDDEN" formatnr="6" constrkind="R" constrnr="2" relnr="3">
+<ArgTypes>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster/>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+<Int x="2"/>
+</Visible>
+</Pattern>
+</Notations>

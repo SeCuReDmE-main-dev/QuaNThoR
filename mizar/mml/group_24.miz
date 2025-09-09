@@ -1,0 +1,4509 @@
+:: Semidirect Products of Groups
+::  by Alexander M. Nelson
+:: 
+:: Received May 27, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies TARSKI, BINOP_2, BINOP_1, XBOOLE_0, FUNCT_1, RELAT_1, ALGSTR_0,
+      FUNCOP_1, SUBSET_1, FUNCT_2, STRUCT_0, ZFMISC_1, CARD_1, CARD_3,
+      MONOID_0, GROUP_1, GROUP_2, FINSEQ_1, GROUP_6, MSSUBFAM, RLVECT_2,
+      PRE_TOPC, WELLORD1, AUTGROUP, ARYTM_1, ARYTM_3, GRAPH_1, FINSET_1,
+      GROUP_4, EQREL_1, NATTRA_1, NEWTON, REALSET1, ORDINAL1, NUMBERS, NAT_1,
+      XCMPLX_0, XXREAL_0, ABIAN, COUNTERS, MOD_4, EXCHSORT, INT_1, GROUP_5,
+      GR_CY_1, GROUP_24;
+ notations TARSKI, XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ZFMISC_1, REALSET1,
+      ORDINAL1, CARD_1, FINSET_1, CARD_3, FINSEQ_1, RELSET_1, PARTFUN1,
+      FUNCT_2, NUMBERS, XCMPLX_0, XXREAL_0, ABIAN, COUNTERS, INT_1, NAT_D,
+      STRUCT_0, ALGSTR_0, MONOID_0, GROUP_1, GR_CY_1, GROUP_2, GROUP_3,
+      GROUP_4, GROUP_5, GROUP_6, PRALG_1, BINOP_1, AUTGROUP, GROUP_7, GROUP_22;
+ constructors BINOP_2, REALSET1, ABIAN, COUNTERS, GROUP_4, GROUP_5, MONOID_0,
+      PRALG_1, RELSET_1, AUTGROUP, GROUP_7, NAT_D, GROUP_22;
+ registrations XBOOLE_0, RELAT_1, FUNCT_1, FINSEQ_1, STRUCT_0, GROUP_1,
+      GROUP_2, GROUP_3, MONOID_0, XREAL_0, ORDINAL1, INT_1, RELSET_1, FUNCT_2,
+      NAT_1, NUMBERS, XXREAL_0, CARD_1, ABIAN, NEWTON03, COUNTERS, FUNCOP_1,
+      GROUP_6, CARD_2, CARD_3, GROUP_7, GR_CY_1, GR_CY_2, TOPGRP_1, TOPALG_5,
+      MOD_4, FOMODEL0, AUTGROUP;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions GROUP_1;
+ equalities STRUCT_0, ALGSTR_0, AUTGROUP, ORDINAL1, GROUP_2;
+ expansions STRUCT_0, GROUP_1, TARSKI;
+ theorems PRALG_1, FUNCT_1, CARD_3, FUNCT_2, BINOP_1, TARSKI, COUNTERS,
+      GROUP_1, GROUP_2, GROUP_3, GROUP_4, GROUP_5, GROUP_6, FINSEQ_1, XBOOLE_0,
+      MONOID_0, PARTFUN1, AUTGROUP, GROUP_7, GR_CY_1, GR_CY_2, XXREAL_0,
+      ORDINAL3, ABIAN, NAT_1, NAT_2, XREAL_1, FINSET_1, NAT_D, GROUP_22,
+      CARD_2, GROUP_17, PEPIN, INT_1, CARD_1;
+ schemes BINOP_1, FUNCT_2, NAT_1, INT_1;
+
+begin :: Preliminaries
+
+theorem Th121:
+  for a,b being Nat st a < b & b <> 0
+  holds (2 * a) div b < 2
+proof
+  let a,b be Nat;
+  assume A1: a < b;
+  assume A2: b <> 0;
+  per cases;
+  suppose 2 * a < b;
+    then (2 * a) div b = 0 by NAT_D:27;
+    hence thesis;
+  end;
+  suppose 2 * a >= b;
+    then 2 * a - b >= b - b by XREAL_1:13;
+    then 2 * a - b >= 0;
+    then 2 * a - b in NAT by INT_1:3;
+    then reconsider ab=2 * a - b as Nat;
+    A4: b div b = (b * 1) div b
+               .= 1 by A2, NAT_D:18;
+    A5: b mod b = (b * 1) mod b
+               .= 0 by NAT_D:13;
+    2 * a < 2 * b by A1, XREAL_1:68;
+    then (2 * a) - b < (2 * b) - b by XREAL_1:9;
+    then A6: ab div b = 0 by NAT_D:27;
+    (2 * a) div b = (ab + b) div b
+    .= (ab div b) + (b div b) by A5, NAT_D:19
+    .= 1 by A4,A6;
+    hence thesis;
+  end;
+end;
+
+ reserve G, A for Group;
+ reserve phi for Homomorphism of A,AutGroup(G);
+
+LmAssoc:
+  for G being Group
+  for g1,g2,g3,g4,g5 being Element of G
+  holds (g1*(g2 * g3 * g4))*g5 = g1*g2*g3*g4*g5
+proof
+  let G be Group;
+  let g1,g2,g3,g4,g5 be Element of G;
+  thus (g1*(g2 * g3 * g4))*g5 = (g1*(g2*(g3*g4)))*g5 by GROUP_1:def 3
+                             .= ((g1*g2)*(g3*g4))*g5 by GROUP_1:def 3
+                             .= g1*g2*g3*g4*g5 by GROUP_1:def 3;
+end;
+
+theorem thUnitalMagmaIsGroupCond: ::: GROUP_1
+  for M being non empty unital multMagma
+  st (for h being Element of M ex g being Element of M st h * g = 1_M
+  & g * h = 1_M)
+  holds M is Group-like
+proof
+  let M be non empty unital multMagma;
+  assume A1: for h being Element of M
+  ex g being Element of M
+  st h * g = 1_M & g * h = 1_M;
+
+  ex e being Element of M st
+  for h being Element of M
+  holds (h * e = h & e * h = h & ex g being Element of M st
+  h * g = e & g * h = e)
+  proof
+    take e = 1_M;
+    let h be Element of M;
+    thus h * e = h by GROUP_1:def 4;
+    thus e * h = h by GROUP_1:def 4;
+    thus thesis by A1;
+  end;
+  hence M is Group-like;
+end;
+
+theorem Th1: :: TH1
+  for G being Group
+  for H being Subgroup of G
+  holds the multMagma of H is strict Subgroup of G
+proof
+  let G be Group;
+  let H be Subgroup of G;
+  set H0 = the multMagma of H;
+  (the carrier of H0 c= the carrier of G)
+  & (the multF of H0 = (the multF of G)||(the carrier of H0))
+    by GROUP_2:def 5;
+  hence the multMagma of H is strict Subgroup of G by GROUP_2:def 5;
+end;
+
+theorem Th2: :: TH2
+  for G being Group
+  for N being normal Subgroup of G
+  holds the multMagma of N is strict normal Subgroup of G
+proof
+  let G be Group;
+  let N be normal Subgroup of G;
+  reconsider N0 = the multMagma of N as strict Subgroup of G by Th1;
+
+  for g being Element of G holds N0 |^ g = N0
+  proof
+    let g be Element of G;
+    B2: N |^ g = the multMagma of N by GROUP_3:def 13;
+    carr N = carr N0; then
+    the carrier of (N0 |^ g) = (carr N) |^ g by GROUP_3:def 6
+                            .= the carrier of N0 by B2, GROUP_3:def 6;
+    hence N0 |^ g = N0 by GROUP_2:59;
+  end;
+  hence the multMagma of N is strict normal Subgroup of G
+    by GROUP_3:def 13;
+end;
+
+theorem :: TH3
+  for G being Group
+  for H being Subgroup of G
+  for N being normal Subgroup of G
+  st N is Subgroup of H
+  holds the multMagma of N = the multMagma of (H,N)`*`
+proof
+  let G be Group;
+  let H be Subgroup of G;
+  let N be normal Subgroup of G;
+  assume N is Subgroup of H;
+  then N is normal Subgroup of H by GROUP_6:8;
+  then reconsider N1=the multMagma of N as strict normal Subgroup of H
+    by Th2;
+  thus the multMagma of N = the multMagma of N1
+                         .= the multMagma of (H,N)`*` by GROUP_6:def 1;
+end;
+
+theorem ThCapLemma: :: TH4
+  for G being Group
+  for H1,H2,K being Subgroup of G
+  for K1,K2 being Subgroup of K
+  st the multMagma of H1 = the multMagma of K1
+  & the multMagma of H2 = the multMagma of K2
+  holds H1 /\ H2 = K1 /\ K2
+proof
+  let G be Group;
+  let H1,H2,K be Subgroup of G;
+  let K1,K2 be Subgroup of K;
+  assume Z1: the multMagma of H1 = the multMagma of K1;
+  assume Z2: the multMagma of H2 = the multMagma of K2;
+  Z3: K1 /\ K2 is Subgroup of G by GROUP_2:56;
+  Z4: for g being Element of G
+  st g in H1 /\ H2 holds g in K1 /\ K2
+  proof
+    let g be Element of G;
+    assume g in H1 /\ H2;
+    then g in H1 & g in H2 by GROUP_2:82;
+    then g in K1 & g in K2 by Z1,Z2;
+    hence g in K1 /\ K2 by GROUP_2:82;
+  end;
+
+  for g being Element of G
+  st g in K1 /\ K2 holds g in H1 /\ H2
+  proof
+    let g be Element of G;
+    assume g in K1 /\ K2;
+    then g in K1 & g in K2 by GROUP_2:82;
+    then g in H1 & g in H2 by Z1,Z2;
+    hence g in H1 /\ H2 by GROUP_2:82;
+  end;
+  hence H1 /\ H2 = K1 /\ K2 by Z3, Z4, GROUP_2:def 6;
+end;
+
+theorem ThProdLemma: :: TH5
+  for G being Group
+  for H1,H2,K being Subgroup of G
+  for K1,K2 being Subgroup of K
+  st the multMagma of H1 = the multMagma of K1
+  & the multMagma of H2 = the multMagma of K2
+  holds H1 * H2 = K1 * K2
+proof
+  let G be Group;
+  let H1,H2,K be Subgroup of G;
+  let K1,K2 be Subgroup of K;
+  assume A1: the multMagma of H1 = the multMagma of K1;
+  assume A2: the multMagma of H2 = the multMagma of K2;
+  A3: carr H1 = carr K1 by A1;
+  A4: carr H2 = carr K2 by A2;
+  for x being object
+  holds x in (carr H1) * (carr H2) iff x in (carr K1) * (carr K2)
+  proof
+    let x be object;
+    thus x in (carr H1) * (carr H2) implies x in (carr K1) * (carr K2)
+    proof
+      assume x in (carr H1) * (carr H2);
+      then consider h1,h2 being Element of G such that
+      B1: x = h1*h2 & h1 in carr H1 & h2 in carr H2;
+      reconsider k1=h1,k2=h2 as Element of K by A3,A4,B1;
+      k1*k2 = x by B1,GROUP_2:43;
+      hence x in (carr K1) * (carr K2) by A3, A4, B1;
+    end;
+
+    assume x in (carr K1) * (carr K2);
+    then consider k1,k2 being Element of K such that
+    B1: x = k1*k2 & k1 in carr K1 & k2 in carr K2;
+    reconsider h1=k1,h2=k2 as Element of G by GROUP_2:42;
+    h1 * h2 = x by B1,GROUP_2:43;
+    hence x in (carr H1) * (carr H2) by A3, A4, B1;
+  end;
+  then A5: (carr H1) * (carr H2) = (carr K1) * (carr K2) by TARSKI:2;
+
+  thus H1 * H2 = (carr H1) * (carr H2) by GROUP_4:def 8
+              .= K1 * K2 by A5,GROUP_4:def 8;
+end;
+
+theorem Th48:
+  for G being Group
+  for A being Subset of G st A = the carrier of G
+  holds gr A = the multMagma of G
+proof
+  let G be Group;
+  let A be Subset of G;
+  assume A = the carrier of G;
+  then the carrier of G c= the carrier of gr A by GROUP_4:def 4;
+  hence the multMagma of G = gr A by GROUP_2:61;
+end;
+
+theorem :: TH51
+  A, the multMagma of A are_isomorphic
+proof
+  set G = the multMagma of A;
+  ex f being Homomorphism of A,G st f is bijective
+  proof
+    reconsider f = id A as Function of A,G;
+    for a1,a2 being Element of A
+    holds f.(a1 * a2) = (f.a1) * (f.a2);
+
+    then reconsider f=id A as Homomorphism of A,G by GROUP_6:def 6;
+    take f;
+    thus thesis;
+  end;
+  hence A,G are_isomorphic by GROUP_6:def 11;
+end;
+
+theorem Th52:
+  for G being Group
+  for N being normal Subgroup of G
+  for g1,g2 being Element of G
+  st g1 * N = g2 * N
+  ex n being Element of G
+  st n in N & g1 = g2 * n
+proof
+  let G be Group;
+  let N be normal Subgroup of G;
+  let g1,g2 be Element of G;
+  assume A1: g1 * N = g2 * N;
+  consider n being Element of G such that
+  A2: n = (g2") * g1;
+  take n;
+  thus n in N by A1, A2, GROUP_2:114;
+  thus g2 * n = (g2 * (g2")) * g1 by A2, GROUP_1:def 3
+             .= (1_G) * g1 by GROUP_1:def 5
+             .= g1 by GROUP_1:def 4;
+end;
+
+Th61:
+  for G being Group
+  for H1,H2 being Subgroup of G
+  holds H1 * H2 c= the carrier of H1 "\/" H2
+proof
+  let G be Group;
+  let H1,H2 be Subgroup of G;
+  H1 "\/" H2 = gr (H1 * H2) by GROUP_4:50;
+  hence H1 * H2 c= the carrier of H1 "\/" H2 by GROUP_4:def 4;
+end;
+
+theorem Th62:
+  for G being Group
+  for H1,H2 being Subgroup of G
+  holds H1 * H2 c= the carrier of H1 "\/" H2
+  & H2 * H1 c= the carrier of H1 "\/" H2
+proof
+  let G be Group;
+  let H1,H2 be Subgroup of G;
+  thus H1 * H2 c= the carrier of H1 "\/" H2 by Th61;
+  H2 * H1 c= the carrier of H2 "\/" H1 by Th61;
+  hence H2 * H1 c= the carrier of H1 "\/" H2 by GROUP_4:56;
+end;
+
+theorem Th63:
+  for G being Group
+  for H1,H2 being Subgroup of G
+  st H1 * H2 = the carrier of (H1 "\/" H2)
+  holds H1 * H2 = H2 * H1
+proof
+  let G be Group;
+  let H1,H2 be Subgroup of G;
+  assume A1: H1 * H2 = the carrier of (H1 "\/" H2);
+
+  then A2: H2 * H1 c= H1 * H2 by Th62;
+  for x being Element of G st x in H1 * H2 holds x in H2 * H1
+  proof
+    let x be Element of G;
+    assume x in H1 * H2;
+    then x in H1 "\/" H2 by A1;
+    then x" in H1 "\/" H2 by GROUP_2:51;
+    then consider h1,h2 being Element of G such that
+    B2: x" = h1*h2 & h1 in H1 & h2 in H2 by A1, GROUP_5:4;
+    B3: x = (x")"
+         .= (h2") * (h1") by B2, GROUP_1:17;
+    h2" in H2 & h1" in H1 by B2,GROUP_2:51;
+    hence x in H2 * H1 by B3,GROUP_5:4;
+  end;
+
+  then H1 * H2 c= H2 * H1;
+  hence thesis by A2,XBOOLE_0:def 10;
+end;
+
+theorem ::: trivial: TH39
+  for G being Group
+  for H,K being Subgroup of G
+  for HK being Subgroup of K
+  st the multMagma of H = the multMagma of HK
+  holds carr H = carr HK;
+
+theorem Th40:
+  for G being Group
+  for H,K being Subgroup of G st H is Subgroup of K
+  for N being Subgroup of G
+  st N is normal Subgroup of K
+  holds N * H = H * N
+proof
+  let G be Group;
+  let H,K be Subgroup of G;
+  assume H is Subgroup of K;
+  then reconsider H0 = H as Subgroup of K;
+  let N be Subgroup of G;
+  assume N is normal Subgroup of K;
+  then reconsider N0 = N as normal Subgroup of K;
+  A1: the multMagma of N0 = the multMagma of N;
+  A2: the multMagma of H0 = the multMagma of H;
+  hence N * H = N0 * H0 by ThProdLemma,A1
+            .= H0 * N0 by GROUP_5:8
+            .= H * N by ThProdLemma,A1,A2;
+end;
+
+theorem Th41:
+  for G being Group
+  for H being Subgroup of G
+  for N being normal Subgroup of G
+  st N is Subgroup of H
+  holds the multMagma of N = the multMagma of (H,N)`*`
+proof
+  let G be Group;
+  let H be Subgroup of G;
+  let N be normal Subgroup of G;
+  assume N is Subgroup of H;
+  then N is normal Subgroup of H by GROUP_6:8;
+  then reconsider N1=the multMagma of N as strict normal Subgroup of H
+  by Th2;
+  thus the multMagma of N = the multMagma of N1
+                         .= the multMagma of (H,N)`*` by GROUP_6:def 1;
+end;
+
+theorem Th42:
+  for G being Group
+  for H1,N1,H2,N2 being Subgroup of G
+  st the multMagma of H1 = the multMagma of H2
+  & the multMagma of N1 = the multMagma of N2
+  holds H1 * N1 = H2 * N2 & H1 /\ N1 = H2 /\ N2
+proof
+  let G be Group;
+  let H1,N1,H2,N2 be Subgroup of G;
+  assume A1: the multMagma of H1 = the multMagma of H2;
+  assume A2: the multMagma of N1 = the multMagma of N2;
+  reconsider K=G as Subgroup of G by GROUP_2:54;
+  reconsider HK=the multMagma of H1,NK=the multMagma of N1 as Subgroup of K
+  by Th1;
+  thus H1 * N1 = HK * NK by ThProdLemma
+              .= H2 * N2 by A1,A2,ThProdLemma;
+  thus H1 /\ N1 = HK /\ NK by ThCapLemma
+               .= H2 /\ N2 by A1,A2,ThCapLemma;
+end;
+
+theorem Th8:
+  for G being Group
+  for H,K being strict Subgroup of G
+  st H <> K & K is Subgroup of H
+  ex g being Element of G
+  st g in H & not g in K
+proof
+  let G be Group;
+  let H,K be strict Subgroup of G;
+  assume A1: H <> K;
+  assume A2: K is Subgroup of H;
+  then not H is Subgroup of K by A1, GROUP_2:55;
+  then the carrier of K c= the carrier of H
+  & the carrier of H <> the carrier of K
+    by A2, GROUP_2:def 5, GROUP_2:57;
+  then consider x being object such that
+  A3: x in the carrier of H & not x in the carrier of K
+    by XBOOLE_0:6, XBOOLE_0:def 8;
+  x in H & not x in K by A3;
+  then x in G by GROUP_2:40;
+  then reconsider g = x as Element of G;
+  take g;
+  thus g in H & not g in K by A3;
+end;
+
+begin :: Automorphism Group results
+
+registration
+  let G, A be Group;
+  cluster product Carrier <*A,G*> -> non empty;
+  coherence;
+end;
+
+theorem Th6:
+  for G1,G2 being Group
+  for x being Element of product <*G1,G2*>
+  holds x.1 in G1 & x.2 in G2 & dom x = {1,2}
+proof
+  let G1,G2 be Group;
+  let x be Element of product (<*G1,G2*>);
+  A1: dom Carrier <*G1,G2*> = {1,2} by PARTFUN1:def 2;
+  x in the carrier of product (<*G1,G2*>);
+  then x in product Carrier <*G1,G2*> by GROUP_7:def 2;
+  then consider f being Function such that
+  A2: x = f
+      & dom f = dom Carrier <*G1,G2*>
+      & (for y being object st y in dom Carrier <*G1,G2*>
+         holds f.y in (Carrier <*G1,G2*>).y)
+  by CARD_3:def 5;
+
+  thus x.1 in G1
+  proof
+    B2: 1 in dom Carrier <*G1,G2*> by A1, TARSKI:def 2;
+    then ex R being 1-sorted st
+    (R = <*G1,G2*>.1 & (Carrier <*G1,G2*>).1 = the carrier of R)
+    by PRALG_1:def 15;
+    hence thesis by A2, B2;
+  end;
+
+  thus x.2 in G2
+  proof
+    B2: 2 in dom (Carrier <*G1,G2*>) by A1, TARSKI:def 2;
+    then ex R being 1-sorted st
+    (R = <*G1,G2*>.2 & (Carrier <*G1,G2*>).2 = the carrier of R)
+    by PRALG_1:def 15;
+    hence thesis by A2, B2;
+  end;
+  thus dom x = {1,2} by A2,PARTFUN1:def 2;
+end;
+
+Lm1:
+  for G1,G2 being Group
+  for x being Element of product Carrier <*G1,G2*>
+  holds x.1 in G1 & x.2 in G2 & dom x = {1,2}
+proof
+  let G1,G2 be Group;
+  let x be Element of product Carrier <*G1,G2*>;
+  x is Element of the carrier of product <*G1,G2*> by GROUP_7:def 2;
+  hence thesis by Th6;
+end;
+
+Lm2:
+  for A,G being Group
+  for a being Element of A, g being Element of G
+  holds <*a,g*> in product Carrier <*A,G*>
+proof
+  let A,G be Group;
+  let a be Element of A;
+  let g be Element of G;
+  <*a,g*> in the carrier of product <*A,G*>;
+  hence <*a,g*> in product Carrier <*A,G*> by GROUP_7:def 2;
+end;
+
+theorem Th7:
+  for G1,G2 being Group
+  for H1 being Subgroup of G1
+  for H2 being Subgroup of G2
+  for h1 being Element of G1 st h1 in H1
+  for h2 being Element of G2 st h2 in H2
+  holds <*h1,h2*> in product <*H1,H2*>
+proof
+  let G1,G2 be Group;
+  let H1 be Subgroup of G1;
+  let H2 be Subgroup of G2;
+  let h1 be Element of G1;
+  assume A1: h1 in H1;
+  let h2 be Element of G2;
+  assume A2: h2 in H2;
+  set H = <*H1,H2*>;
+  A3: dom Carrier H = {1,2} by PARTFUN1:def 2;
+  A4: for a being object st a in {1,2}
+      holds <*h1,h2*>.a in (Carrier <*H1,H2*>).a
+  proof
+    let a be object;
+    assume B1: a in {1,2};
+    then per cases by TARSKI:def 2;
+    suppose B2: a = 1;
+      then ex R being 1-sorted st R = H.1 &
+        (Carrier H).1 = the carrier of R
+      by B1, PRALG_1:def 15;
+      hence thesis by A1,B2;
+    end;
+    suppose B4: a = 2;
+      then ex R being 1-sorted st R = H.2 &
+        (Carrier H).2 = the carrier of R
+      by B1, PRALG_1:def 15;
+      hence thesis by A2,B4;
+    end;
+  end;
+  dom <*h1,h2*> = {1,2} by FINSEQ_1:2,89;
+  then <*h1,h2*> in product Carrier <*H1,H2*> by A3,A4,CARD_3:9;
+  hence <*h1,h2*> in product <*H1,H2*> by GROUP_7:def 2;
+end;
+
+begin :: Semidirect Products of Groups
+
+ reserve G, A for Group;
+ reserve phi for Homomorphism of A,AutGroup(G);
+
+Lm3:
+  for G1,G2 being Group
+  for phi being Homomorphism of G1,G2
+  for a being Element of G1
+  holds phi.a in G2;
+
+theorem Th15:
+  for g being Element of G
+  holds (phi . 1_A) . g = g
+proof
+  let g be Element of G;
+  (phi . 1_A) = 1_(AutGroup G) by GROUP_6:31
+             .= id the carrier of G by AUTGROUP:9;
+  hence (phi . 1_A) . g = g;
+end;
+
+theorem Th18:
+  for a1,a2 being Element of A
+  for g being Element of G
+  holds (phi.a1) . ((phi . a2) . g) = (phi . (a1 * a2)) . g
+proof
+  let a1,a2 be Element of A;
+  let g be Element of G;
+
+  reconsider phi1 = phi.a1,phi2=phi.a2 as Homomorphism of G,G
+    by AUTGROUP:def 1;
+  phi . (a1 * a2) = (phi.a1) * (phi.a2) by GROUP_6:def 6;
+  then (phi . (a1 * a2)) . g = ((phi1) * (phi2)).g by AUTGROUP:8
+                            .= (phi1) . ((phi2) . g) by FUNCT_2:15;
+  hence (phi.a1) . ((phi . a2) . g) = (phi . (a1 * a2)) . g;
+end;
+
+theorem Th19:
+  for a being Element of A
+  for g being Element of G
+  holds (phi.(a")) . ((phi.a) . g) = g
+  & (phi.a) . ((phi.(a")) . g) = g
+proof
+  let a be Element of A;
+  let g be Element of G;
+  thus (phi . (a")) . ((phi . a) . g) = (phi . (a" * a)) . g by Th18
+                                     .= (phi . 1_A) . g by GROUP_1:def 5
+                                     .= g by Th15;
+  thus (phi. a) . ((phi . (a")) . g) = (phi . (a * a")) . g by Th18
+                                    .= (phi . 1_A) . g by GROUP_1:def 5
+                                    .= g by Th15;
+end;
+
+definition
+  let G, A, phi;
+  func semidirect_product (G, A, phi) -> non empty strict multMagma means
+  :Def1:
+  the carrier of it = product Carrier <* G, A *> &
+  (for f, g being Element of product Carrier <* G, A *>
+   ex h being Function, a1 being Element of A, g2 being Element of G
+   st h = (the multF of it).(f, g) &
+      a1 = f.2 & g2 = g.1 &
+      h.1 = (the multF of G).(f.1, (phi.a1).g2) &
+      h.2 = (the multF of A).((f.2), (g.2)));
+  existence
+  proof
+    set U = product Carrier <* G, A *>;
+    defpred P[Element of U, Element of U, set] means
+    ex h being Function, a1 being Element of A, g2 being Element of G
+    st h = $3 & a1 = $1.2 & g2 = $2.1 &
+       h.1 = (the multF of G).($1.1, (phi.a1).g2) &
+       h.2 = (the multF of A).(($1.2), ($2.2));
+
+    A1: for x, y being Element of U ex z being Element of U st P[x,y,z]
+    proof
+      let x, y be Element of U;
+      y.1 in G by Lm1; then
+      reconsider g2 = y.1 as Element of G;
+      x.2 in A by Lm1; then
+      reconsider a1 = x.2 as Element of A;
+      set h = <* (the multF of G).(x.1,(phi.a1).g2),
+                 (the multF of A).(x.2, y.2)*>;
+      (phi.a1) is Homomorphism of G,G by AUTGROUP:def 1;
+      then (phi.a1).g2 in G &
+      x.2 in A & y.2 in A & x.1 in G by Lm1,Lm3; then
+      (the multF of G).(x.1,(phi.a1).g2) in G &
+        (the multF of A).(x.2, y.2) in A by BINOP_1:17;
+      then reconsider z = h as Element of product Carrier <*G,A*> by Lm2;
+      take z;
+      h = z & a1 = x.2 & g2 = y.1 &
+      h.1 = (the multF of G).(x.1, (phi.a1).g2) &
+      h.2 = (the multF of A).(x.2, y.2);
+      hence P[x, y, z];
+    end;
+
+    consider B being Function of [:U, U:],U such that
+A2: for a, b being Element of U holds P[a,b,B.(a,b)] from BINOP_1:sch 3(A1);
+
+    set M = multMagma(# product Carrier <*G,A*>, B #);
+    reconsider M as non empty strict multMagma;
+    take M;
+    thus thesis by A2;
+  end;
+  uniqueness
+  proof
+    let M1,M2 be non empty strict multMagma;
+    assume that
+    A1: the carrier of M1 = product Carrier <* G, A *> &
+        (for f, g being Element of product Carrier <* G, A *>
+         ex h being Function, a1 being Element of A, g2 being Element of G
+         st h = (the multF of M1).(f, g) &
+            a1 = f.2 & g2 = g.1 &
+            h.1 = (the multF of G).(f.1, (phi.a1). g2) &
+            h.2 = (the multF of A).((f.2), (g.2))) and
+    A2: the carrier of M2 = product Carrier <* G, A *> &
+        (for f, g being Element of product Carrier <* G, A *>
+         ex h being Function, a1 being Element of A, g2 being Element of G
+         st h = (the multF of M2).(f, g) &
+            a1 = f.2 & g2 = g.1 &
+            h.1 = (the multF of G).(f.1, (phi.a1). g2) &
+            h.2 = (the multF of A).((f.2), (g.2)));
+
+    for x,y being set st x in the carrier of M1 & y in the carrier of M1
+    holds (the multF of M1).(x, y) = (the multF of M2).(x, y)
+    proof
+      let x,y be set;
+      assume B1: x in the carrier of M1;
+      assume y in the carrier of M1; then
+      reconsider f = x, g = y as Element of product (Carrier <*G,A*>)
+        by A1,B1;
+      consider h1 being Function, a11 being Element of A,
+        g12 being Element of G such that
+      B3: h1 = (the multF of M1).(f, g) & a11 = f.2 & g12 = g.1
+          & h1.1 = (the multF of G).(f.1, (phi.a11). g12)
+          & h1.2 = (the multF of A).((f.2), (g.2)) by A1;
+      consider h2 being Function, a21 being Element of A,
+        g22 being Element of G such that
+      B4: h2 = (the multF of M2).(f, g) & a21 = f.2 & g22 = g.1
+          & h2.1 = (the multF of G).(f.1, (phi.a21). g22)
+          & h2.2 = (the multF of A).((f.2), (g.2)) by A2;
+      B5: dom h1 = {1,2} & dom h2 = {1,2}
+      proof
+        h1 in product (Carrier <*G,A*>) by A1, B3, BINOP_1:17;
+        then ex f1 being Function st h1 = f1 & dom f1 = dom Carrier <*G,A*>
+        & (for y1 being object st y1 in dom Carrier <*G,A*>
+        holds f1.y1 in (Carrier <*G,A*>).y1)
+        by CARD_3:def 5;
+        hence dom h1 = {1,2} by PARTFUN1:def 2;
+        h2 in product (Carrier <*G,A*>) by A2, B4, BINOP_1:17;
+        then ex f1 being Function st h2 = f1 & dom f1 = dom Carrier <*G,A*>
+        & (for y1 being object st y1 in dom Carrier <*G,A*>
+        holds f1.y1 in (Carrier <*G,A*>).y1)
+        by CARD_3:def 5;
+        hence dom h2 = {1,2} by PARTFUN1:def 2;
+      end;
+      for i being object st i in dom h1 holds h1.i = h2.i
+      proof
+        let i be object;
+        assume i in dom h1;
+        then per cases by B5, TARSKI:def 2;
+        suppose i = 1;
+          hence thesis by B3,B4;
+        end;
+        suppose i = 2;
+          hence thesis by B3,B4;
+        end;
+      end;
+      hence (the multF of M1).(x, y) = (the multF of M2).(x, y)
+        by B3, B4, B5, FUNCT_1:def 11;
+    end;
+    hence thesis by A1,A2,BINOP_1:1;
+  end;
+end;
+
+registration
+  let G, A, phi;
+  cluster semidirect_product (G, A, phi) -> constituted-Functions;
+  coherence
+  proof
+    the carrier of semidirect_product (G, A, phi) = product Carrier <*G,A*>
+      by Def1;
+    hence thesis by MONOID_0:80;
+  end;
+end;
+
+registration
+  let G, A, phi;
+  cluster -> FinSequence-like for Element of semidirect_product (G, A, phi);
+  coherence
+  proof
+    for b1 being Element of semidirect_product(G, A, phi)
+    holds b1 is FinSequence-like
+    proof
+      let b1 be Element of semidirect_product(G, A, phi);
+      b1 is Element of product (Carrier <*G,A*>) by Def1;
+      hence b1 is FinSequence-like;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem Th9:
+  the carrier of semidirect_product (G, A, phi) =
+    the carrier of product <*G,A*>
+proof
+  thus the carrier of semidirect_product (G,A,phi)
+   = product Carrier <*G,A*> by Def1
+  .= the carrier of product <*G,A*> by GROUP_7:def 2;
+end;
+
+theorem
+  for a being Element of A
+  for g being Element of G
+  holds <* g, a *> is Element of semidirect_product (G, A, phi) by Th9;
+
+theorem Th11:
+  for x being Element of semidirect_product (G, A, phi)
+  holds x.1 in G & x.2 in A & dom x = {1,2}
+proof
+  let x be Element of semidirect_product (G, A, phi);
+  x in the carrier of semidirect_product (G, A, phi);
+  then x in the carrier of product <*G,A*> by Th9;
+  hence thesis by Th6;
+end;
+
+theorem Th12:
+  for x being Element of semidirect_product (G, A, phi)
+  ex g being Element of G, a being Element of A
+  st x = <* g, a *>
+proof
+  let x be Element of semidirect_product (G, A, phi);
+
+  x.1 in G & x.2 in A by Th11;
+  then consider g being Element of G, a being Element of A such that
+  A1: g = x.1 & a = x.2;
+
+  take g, a;
+
+  dom x = {1,2} by Th11;
+  then len x = 2 by FINSEQ_1:2,def 3;
+  hence x = <* g, a *> by A1, FINSEQ_1:44;
+end;
+
+theorem Th14:
+  for x,y being Element of semidirect_product (G, A, phi)
+  for a1,a2 being Element of A
+  for g1,g2,g3 being Element of G
+  st x = <*g1,a1*> & y = <*g2,a2*> & g3 = (phi . a1).g2
+  holds x * y = <* g1 * g3, a1 * a2 *>
+proof
+  let x,y be Element of semidirect_product (G, A, phi);
+  let a1,a2 be Element of A;
+  let g1,g2,g3 be Element of G;
+  assume A1: x = <*g1,a1*>;
+  assume A2: y = <*g2,a2*>;
+  assume A3: g3 = ((phi . a1).g2);
+
+  x in product Carrier <* G, A*> & y in product Carrier <*G,A*>
+  proof
+    x in semidirect_product(G,A,phi);
+    hence x in product Carrier <*G,A*> by Def1;
+    y in semidirect_product(G,A,phi);
+    hence y in product Carrier <*G,A*> by Def1;
+  end;
+  then consider h being Function, aa1 being Element of A,
+  gg2 being Element of G such that
+  A4: h = x * y & aa1 = x.2 & gg2 = y.1
+      & h.1 = (the multF of G).(x.1, (phi.aa1).gg2)
+      & h.2 = (the multF of A).(x.2, y.2) by Def1;
+  A5: a1 = aa1 & g2 = gg2 by A1,A2,A4;
+
+  A6: h.2 = (the multF of A).(x.2, a2) by A2,A4
+         .= (the multF of A).(a1, a2) by A1;
+  A7: (x * y).1 = g1 * g3 by A1,A3,A4,A5;
+  dom (x * y) = {1,2} by Th11;
+  then len (x * y) = 2 by FINSEQ_1:2,def 3;
+  hence x * y = <* g1 * g3, a1 * a2 *> by A4,A6,A7,FINSEQ_1:44;
+end;
+
+theorem Th16:
+  for x,y being Element of semidirect_product (G, A, phi)
+  for a being Element of A
+  for g being Element of G
+  st x = <*g,1_A*> & y = <*1_G,a*>
+  holds x * y = <* g, a *>
+proof
+  let x,y be Element of semidirect_product (G, A, phi);
+  let a be Element of A;
+  let g be Element of G;
+  assume A1: x = <*g,1_A*>;
+  assume A2: y = <*1_G,a*>;
+  ((phi . (1_A)).(1_G)) = 1_G by Th15;
+  hence x * y = <* g * (1_G), (1_A) * a *> by A1,A2,Th14
+             .= <* g, (1_A)*a *> by GROUP_1:def 4
+             .= <* g, a *> by GROUP_1:def 4;
+end;
+
+Lm4:
+  for x,e being Element of semidirect_product (G, A, phi)
+  st e = <* 1_G, 1_A*>
+  holds x * e = x & e * x = x
+proof
+  let x,e be Element of semidirect_product (G, A, phi);
+  assume A1: e = <* 1_G, 1_A*>;
+  consider g being Element of G, a being Element of A such that
+  A2: x = <* g, a *> by Th12;
+  reconsider phi1 = phi.(1_A),phia=phi.a as Homomorphism of G,G
+    by AUTGROUP:def 1;
+  A3: (phi1 . g) * 1_G = g * 1_G by Th15
+                      .= g by GROUP_1:def 4;
+  thus x * e = <* g * ((phia) . 1_G), a * 1_A *> by A1,A2, Th14
+            .= <* g * ((phia) . 1_G), a *> by GROUP_1:def 4
+            .= <* g * 1_G, a *> by GROUP_6:31
+            .= x by A2, GROUP_1:def 4;
+  thus e * x = <* 1_G * (phi1 . g), 1_A * a *> by A1,A2,Th14
+            .= <* 1_G * (phi1 . g), a *> by GROUP_1:def 4
+            .= <* (1_G) * g, a *> by A3, GROUP_1:def 4
+            .= x by A2, GROUP_1:def 4;
+end;
+
+registration
+  let G, A, phi;
+  cluster semidirect_product (G, A, phi) -> unital;
+  correctness
+  proof
+    set S = semidirect_product (G, A, phi);
+    reconsider e = <* 1_G, 1_A*> as Element of S by Th9;
+    take e;
+    let x be Element of S;
+    consider g being Element of G, a being Element of A such that
+    A1: x = <* g, a *> by Th12;
+    reconsider phi1 = phi.(1_A),phia=phi.a as Homomorphism of G,G
+      by AUTGROUP:def 1;
+
+    A2: (phi1 . g) * 1_G = g * 1_G by Th15
+                        .= g by GROUP_1:def 4;
+    A3: (phia . (1_G)) = 1_G by GROUP_6:31;
+    thus x * e = <* g * ((phia) . 1_G), a * 1_A *> by A1, Th14
+              .= <* g * ((phia) . 1_G), a *> by GROUP_1:def 4
+              .= x by A1, A3, GROUP_1:def 4;
+    thus e * x = <* 1_G * (phi1 . g), 1_A * a *> by A1,Th14
+              .= <* 1_G * (phi1 . g), a *> by GROUP_1:def 4
+              .= <* (1_G) * (g), a *> by A2, GROUP_1:def 4
+              .= x by A1,GROUP_1:def 4;
+  end;
+end;
+
+theorem Th17:
+  1_(semidirect_product (G, A, phi)) = <* 1_G, 1_A *>
+proof
+  reconsider e = <* 1_G, 1_A *> as Element of semidirect_product (G, A, phi)
+  by Th9;
+  for x being Element of semidirect_product (G, A, phi)
+  holds x * e = x & e * x = x by Lm4;
+  hence thesis by GROUP_1:def 4;
+end;
+
+theorem Th20:
+  for x,y being Element of semidirect_product (G, A, phi)
+  for a being Element of A
+  for g being Element of G
+  st x = <* g, a *> & y = <* (phi.(a")).(g"), a" *>
+  holds x * y = 1_(semidirect_product (G, A, phi)) &
+    y * x = 1_(semidirect_product (G, A, phi))
+proof
+  let x,y be Element of semidirect_product (G, A, phi);
+  let a be Element of A;
+  let g be Element of G;
+  assume A1: x = <* g, a *>;
+  assume A2: y = <* (phi.(a")).(g"), a" *>;
+  reconsider phi1=phi.(a "),phi2=phi.a as Homomorphism of G,G
+    by AUTGROUP:def 1;
+  A3: (phi1 . (g")) * (phi1.g)
+   = phi1 . (g" * g) by GROUP_6:def 6
+  .= phi1 . 1_G by GROUP_1:def 5
+  .= 1_G by GROUP_6:31;
+  A4: (phi2 . (phi1.(g"))) = g" by Th19;
+
+  thus x * y = <* g * (phi2.(phi1.(g"))), a * (a") *> by A1,A2,Th14
+            .= <* 1_G, a * a" *> by A4,GROUP_1:def 5
+            .= <* 1_G, 1_A *> by GROUP_1:def 5
+            .= 1_(semidirect_product (G, A, phi)) by Th17;
+  thus y * x = <* phi1.(g") * (phi1.g), (a") * a *> by A1,A2,Th14
+            .= <* 1_G, 1_A *> by A3,GROUP_1:def 5
+            .= 1_(semidirect_product (G, A, phi)) by Th17;
+end;
+
+registration
+  let G, A be Group;
+  let phi be Homomorphism of A, AutGroup G;
+  cluster semidirect_product (G, A, phi) -> associative Group-like;
+  coherence
+  proof
+    set S=semidirect_product (G, A, phi);
+    thus for x, y, z being Element of semidirect_product (G, A, phi)
+    holds (x * y) * z = x * (y * z)
+    proof
+      let x, y, z be Element of semidirect_product (G, A, phi);
+      consider g1 being Element of G, a1 being Element of A such that
+      A1: x = <* g1, a1 *> by Th12;
+      consider g2 being Element of G, a2 being Element of A such that
+      A2: y = <* g2, a2 *> by Th12;
+      consider g3 being Element of G, a3 being Element of A such that
+      A3: z = <* g3, a3 *> by Th12;
+      reconsider phi1=phi.a1,phi2=phi.a2,phi12=phi.(a1 * a2) as
+      Homomorphism of G,G by AUTGROUP:def 1;
+      x * y = <* g1 * (phi1.g2), a1 * a2 *> by A1,A2,Th14;
+      then A5: (x * y) * z = <* (g1 * (phi1.g2)) * (phi12.g3),
+      (a1 * a2) * a3*> by A3,Th14;
+
+      y * z = <* g2 * (phi2.g3), a2 * a3 *> by A2,A3,Th14;
+      then A6: x * (y * z) = <* g1 * (phi1.(g2 * (phi2.g3))),
+      a1 * (a2 * a3) *> by A1,Th14;
+
+      A7: (a1 * a2) * a3 = a1 * (a2 * a3) by GROUP_1:def 3;
+
+      (phi1) . ((phi2).g3) = phi12 . g3 by Th18;
+      then (phi1.g2) * (phi12.g3)
+      = (phi1).(g2 * (phi2.g3)) by GROUP_6:def 6;
+      hence thesis by A5,A6,A7, GROUP_1:def 3;
+    end;
+    set S=semidirect_product (G, A, phi);
+    for h being Element of S ex g being Element of S st h * g = 1_S
+    & g * h = 1_S
+    proof
+      let h be Element of S;
+      consider g being Element of G, a being Element of A such that
+      B1: h = <* g, a *> by Th12;
+      reconsider phi1=phi.(a ") as Homomorphism of G,G by AUTGROUP:def 1;
+      reconsider y = <* phi1.(g"), a" *> as Element of S by Th9;
+      take y;
+      thus h * y = 1_S by B1,Th20;
+      thus y * h = 1_S by B1,Th20;
+    end;
+    hence thesis by thUnitalMagmaIsGroupCond;
+  end;
+end;
+
+theorem Th22:
+  for a being Element of A
+  for g being Element of G
+  for x being Element of semidirect_product (G, A, phi)
+  st x = <* g, a *>
+  holds x" = <* (phi.(a")).(g"), a" *>
+proof
+  set S = semidirect_product (G, A, phi);
+  let a be Element of A;
+  let g be Element of G;
+  let x be Element of semidirect_product (G, A, phi);
+  assume A1: x = <* g, a *>;
+  reconsider phi1=phi.(a ") as Homomorphism of G,G by AUTGROUP:def 1;
+  reconsider y = <* phi1.(g"), a" *> as Element of S by Th9;
+  x * y = 1_S & y * x = 1_S by A1, Th20;
+  hence thesis by GROUP_1:5;
+end;
+
+theorem Th23:
+  for g1,g2 being Element of G
+  for x,y,z being Element of semidirect_product (G, A, phi)
+  st x = <*g1,1_A*> & y = <*g2,1_A*> & z = <*(g1*g2),1_A*>
+  holds x * y = z
+proof
+  let g1,g2 be Element of G;
+  let x,y,z be Element of semidirect_product (G, A, phi);
+  assume A1: x = <*g1,1_A*>;
+  assume A2: y = <*g2,1_A*>;
+  assume A3: z = <*(g1*g2),1_A*>;
+  reconsider phi1 = phi.(1_A) as Homomorphism of G,G by AUTGROUP:def 1;
+  thus x * y = <* g1 * (phi1 . g2), (1_A) * (1_A) *> by A1,A2,Th14
+            .= <* g1 * (phi1 . g2), 1_A *> by GROUP_1:def 4
+            .= z by A3, Th15;
+end;
+
+theorem Th24:
+  for g being Element of G
+  for x being Element of semidirect_product (G, A, phi)
+  st x = <*g,1_A*>
+  holds x" = <* g", 1_A *>
+proof
+  let g be Element of G;
+  let x be Element of semidirect_product (G, A, phi);
+  assume A1: x = <*g,1_A*>;
+  reconsider phi1=phi.1_A,phi2=phi.((1_A) ") as Homomorphism of G,G
+    by AUTGROUP:def 1;
+  A2: phi.((1_A) ") = phi1 by GROUP_1:8;
+  thus x" = <* (phi.((1_A) ")).(g "), (1_A) " *> by A1, Th22
+         .= <* phi1.(g "), 1_A *> by A2,GROUP_1:8
+         .= <* g", 1_A *> by Th15;
+end;
+
+theorem Th25:
+  for x being Element of semidirect_product (G, A, phi)
+  for g being Element of G
+  st x = <*g,1_A*>
+  for i being Integer
+  holds x |^ i = <* (g |^ i), 1_A *>
+proof
+  let x be Element of semidirect_product (G, A, phi);
+  let g be Element of G;
+  assume A1: x = <*g,1_A*>;
+  defpred P[Integer] means x |^ $1 = <* (g |^ $1), 1_A *>;
+  A2: P[0]
+  proof
+    thus x |^ 0 = 1_(semidirect_product (G, A, phi)) by GROUP_1:25
+               .= <* 1_G, 1_A *> by Th17
+               .= <* (g |^ 0), 1_A *> by GROUP_1:25;
+  end;
+  A3: for i being Integer st P[i] holds P[i - 1] & P[i + 1]
+  proof
+    let i be Integer;
+    assume P[i];
+    then B1: x |^ i = <* (g |^ i), 1_A *>;
+    B2: x " = <* g ", 1_A *> by A1,Th24;
+    B3: <* (g |^ i) * (g "), 1_A *> is
+      Element of semidirect_product (G, A, phi) by Th9;
+    x |^ (i - 1) = (x |^ (i + (- 1)))
+                .= (x |^ i)*(x |^ (- 1)) by GROUP_1:33
+                .= (x |^ i)*(x ") by GROUP_1:32
+                .= <* ((g |^ i)*(g ")), 1_A *> by B1, B2, B3, Th23
+                .= <* ((g |^ i)*(g |^ (- 1))), 1_A *> by GROUP_1:32
+                .= <* (g |^ (i + (- 1))), 1_A *> by GROUP_1:33
+                .= <* (g |^ (i - 1)), 1_A *>;
+    hence P[i - 1];
+    B4: <* (g |^ i) * g, 1_A *> is Element of semidirect_product (G, A, phi)
+      by Th9;
+    x |^ (i + 1) = (x |^ i)*x by GROUP_1:34
+                .= <* ((g |^ i)*g), 1_A *> by A1, B1,B4,Th23
+                .= <* (g |^ (i + 1)), 1_A *> by GROUP_1:34;
+    hence P[i + 1];
+  end;
+  for i being Integer holds P[i] from INT_1:sch 4(A2,A3);
+  hence for i being Integer holds x |^ i = <* (g |^ i), 1_A *>;
+end;
+
+theorem Th26:
+  for a1,a2 being Element of A
+  for x,y,z being Element of semidirect_product (G, A, phi)
+  st x = <*1_G,a1*> & y = <*1_G,a2*> & z = <*1_G,(a1*a2)*>
+  holds x * y = z
+proof
+  let a1,a2 be Element of A;
+  let x,y,z be Element of semidirect_product (G, A, phi);
+  assume A1: x = <*1_G, a1*>;
+  assume A2: y = <*1_G, a2*>;
+  assume A3: z = <*1_G, (a1*a2)*>;
+  reconsider phi1 = phi.a1 as Homomorphism of G,G by AUTGROUP:def 1;
+  thus x * y = <* 1_G * (phi1.(1_G)), a1 * a2 *> by A1,A2,Th14
+            .= <* 1_G * (1_G), a1 * a2 *> by GROUP_6:31
+            .= z by A3,GROUP_1:def 4;
+end;
+
+theorem Th27:
+  for a being Element of A
+  for x being Element of semidirect_product (G, A, phi)
+  st x = <*1_G,a*>
+  holds x" = <* 1_G, a " *>
+proof
+  let a be Element of A;
+  let x be Element of semidirect_product (G, A, phi);
+  assume A1: x = <*1_G,a*>;
+  reconsider phi1=phi.(a ") as Homomorphism of G,G by AUTGROUP:def 1;
+  thus x" = <* (phi.(a ")).((1_G) "), a " *> by A1, Th22
+         .= <* phi1.(1_ G), a" *> by GROUP_1:8
+         .= <* 1_G, a" *> by GROUP_6:31;
+end;
+
+theorem Th28:
+  for i being Integer
+  for x being Element of semidirect_product (G, A, phi)
+  for a being Element of A
+  st x = <* 1_G, a*>
+  holds x |^ i = <* 1_G, (a |^ i) *>
+proof
+  let i be Integer;
+  let x be Element of semidirect_product (G, A, phi);
+  let a be Element of A;
+  assume A1: x = <* 1_G, a*>;
+  defpred P[Integer] means x |^ $1 = <* 1_G, (a |^ $1) *>;
+  A2: P[0]
+  proof
+    thus x |^ 0 = 1_(semidirect_product (G, A, phi)) by GROUP_1:25
+               .= <* 1_G, 1_A *> by Th17
+               .= <* 1_G, (a |^ 0) *> by GROUP_1:25;
+  end;
+  A3: for i being Integer st P[i] holds P[i - 1] & P[i + 1]
+  proof
+    let i be Integer;
+    assume B1: P[i];
+    B2: x " = <* 1_G, a " *> by A1, Th27;
+B3: <* 1_G, (a |^ i)*(a ") *> is
+      Element of semidirect_product (G, A, phi) by Th9;
+    x |^ (i - 1) = (x |^ (i + (- 1)))
+                .= (x |^ i)*(x |^ (- 1)) by GROUP_1:33
+                .= (x |^ i)*(x ") by GROUP_1:32
+                .= <* 1_G, ((a |^ i)*(a ")) *> by B1, B2, B3, Th26
+                .= <* 1_G, ((a |^ i)*(a |^ (- 1))) *> by GROUP_1:32
+                .= <* 1_G, (a |^ (i + (- 1))) *> by GROUP_1:33
+                .= <* 1_G, (a |^ (i - 1)) *>;
+    hence P[i - 1];
+B4: <* 1_G, (a |^ i)*a *> is Element of semidirect_product (G, A, phi) by Th9;
+    x |^ (i + 1) = (x |^ i)*x by GROUP_1:34
+                .= <* 1_G, ((a |^ i)*a) *> by A1, B1,B4,Th26
+                .= <* 1_G, (a |^ (i + 1)) *> by GROUP_1:34;
+    hence P[i + 1];
+  end;
+
+  for i being Integer holds P[i] from INT_1:sch 4(A2,A3);
+  hence x |^ i = <* 1_G, (a |^ i) *>;
+end;
+
+definition
+  let G, A, phi;
+  func incl1 (G, A, phi) -> Function of G, semidirect_product (G,A,phi) means
+  :Def2:
+  for g being Element of G holds it.g = <* g, 1_A *>;
+
+  existence
+  proof
+    defpred P[Element of G, Element of semidirect_product(G,A,phi)] means
+    $2 = <* $1, 1_A *>;
+
+    A1: for x being Element of G
+    ex y being Element of semidirect_product(G,A,phi) st P[x, y]
+    proof
+      let x be Element of G;
+      reconsider y = <*x,1_A*> as Element of semidirect_product(G,A,phi)
+      by Th9;
+      take y;
+      thus P[x, y];
+    end;
+    consider f being Function of G, semidirect_product(G, A, phi) such that
+    A2: for x being Element of G holds P[x, f.x]
+    from FUNCT_2:sch 3(A1);
+    take f;
+    thus thesis by A2;
+  end;
+  uniqueness
+  proof
+    for f1,f2 being Function of G, semidirect_product(G, A, phi)
+    st (for g being Element of G holds f1.g = <*g,1_A*>)
+     & (for g being Element of G holds f2.g = <*g,1_A*>)
+    holds f1 = f2
+    proof
+      let f1,f2 be Function of G, semidirect_product(G, A, phi);
+      assume A1: for g being Element of G holds f1.g = <*g,1_A*>;
+      assume A2: for g being Element of G holds f2.g = <*g,1_A*>;
+      for g being Element of G holds f1.g = f2.g
+      proof
+        let g be Element of G;
+        thus f1.g = <*g,1_A*> by A1
+                 .= f2.g by A2;
+      end;
+
+      hence f1 = f2 by FUNCT_2:def 8;
+    end;
+    hence thesis;
+  end;
+end;
+
+::$N Aschbacher~\cite{aschbacher2000finite}, Theorem (10.1.2)
+registration
+  let G, A, phi;
+  cluster incl1 (G, A, phi) -> multiplicative one-to-one;
+  coherence
+  proof
+    set f = incl1 (G, A, phi);
+    for g1,g2 being Element of G
+    holds f.(g1 * g2) = (f.g1)*(f.g2)
+    proof
+      let g1,g2 be Element of G;
+      f.g1 = <*g1,1_A*> & f.g2 = <*g2,1_A*>
+      & f.(g1 * g2) = <*g1*g2,1_A*> by Def2;
+      hence thesis by Th23;
+    end;
+    hence f is multiplicative by GROUP_6:def 6;
+    for g1,g2 being Element of G
+    st f.g1 = f.g2 holds g1 = g2
+    proof
+      let g1,g2 be Element of G;
+      assume A1: f.g1 = f.g2;
+      <*g1, 1_A*> = f.g1 by Def2
+                 .= <*g2,1_A*> by A1,Def2;
+      hence g1 = g2 by FINSEQ_1:77;
+    end;
+    hence f is one-to-one by GROUP_6:1;
+  end;
+end;
+
+definition
+  let G, A, phi;
+  func incl2 (G, A, phi) -> Function of A, semidirect_product (G,A,phi) means
+  :Def3:
+  for a being Element of A holds it.a = <* 1_G, a *>;
+  existence
+  proof
+    defpred P[Element of A, Element of semidirect_product(G,A,phi)] means
+    $2 = <* 1_G, $1 *>;
+
+    A1: for x being Element of A
+    ex y being Element of semidirect_product(G,A,phi)
+    st P[x, y]
+    proof
+      let x be Element of A;
+      reconsider y=<*1_G,x*> as Element of semidirect_product(G,A,phi)
+      by Th9;
+      take y;
+      thus P[x, y];
+    end;
+    consider f being Function of A, semidirect_product(G, A, phi) such that
+    A2: for x being Element of A holds P[x, f.x]
+    from FUNCT_2:sch 3(A1);
+    take f;
+    thus thesis by A2;
+  end;
+  uniqueness
+  proof
+    for f1,f2 being Function of A, semidirect_product(G, A, phi)
+    st (for a being Element of A holds f1.a = <*1_G,a*>)
+     & (for a being Element of A holds f2.a = <*1_G,a*>)
+    holds f1 = f2
+    proof
+      let f1,f2 be Function of A, semidirect_product(G, A, phi);
+      assume A1: for a being Element of A holds f1.a = <*1_G,a*>;
+      assume A2: for a being Element of A holds f2.a = <*1_G,a*>;
+      for a being Element of A holds f1.a = f2.a
+      proof
+        let a be Element of A;
+        thus f1.a = <*1_G,a*> by A1
+                 .= f2.a by A2;
+      end;
+
+      hence f1 = f2 by FUNCT_2:def 8;
+    end;
+    hence thesis;
+  end;
+end;
+
+::$N Aschbacher~\cite{aschbacher2000finite}, Theorem (10.1.2)
+registration
+  let G, A, phi;
+  cluster incl2 (G, A, phi) -> multiplicative one-to-one;
+  coherence
+  proof
+    set f = incl2 (G, A, phi);
+    for a1,a2 being Element of A
+    holds f.(a1 * a2) = (f.a1)*(f.a2)
+    proof
+      let a1,a2 be Element of A;
+      f.a1 = <*1_G,a1*> & f.a2 = <*1_G,a2*>
+      & f.(a1 * a2) = <*1_G,a1*a2*> by Def3;
+      hence thesis by Th26;
+    end;
+    hence f is multiplicative by GROUP_6:def 6;
+    for a1,a2 being Element of A
+    st f.a1 = f.a2 holds a1 = a2
+    proof
+      let a1,a2 be Element of A;
+      assume A1: f.a1 = f.a2;
+      <*1_G, a1*> = f.a1 by Def3
+                 .= <*1_G, a2*> by A1,Def3;
+      hence a1 = a2 by FINSEQ_1:77;
+    end;
+    hence f is one-to-one by GROUP_6:1;
+  end;
+end;
+
+::$N Aschbacher~\cite{aschbacher2000finite}, Theorem (10.1.3)
+theorem Th30:
+  Image (incl1 (G, A, phi)) is normal Subgroup of
+  semidirect_product (G, A, phi)
+proof
+  for x,g being Element of semidirect_product (G, A, phi)
+  st g is Element of Image incl1 (G, A, phi)
+  holds g |^ x in Image incl1 (G, A, phi)
+  proof
+    let x,g be Element of semidirect_product (G, A, phi);
+    assume g is Element of Image incl1 (G, A, phi); then
+    g in Image incl1 (G, A, phi);
+    then consider g0 being Element of G such that
+    A1: g = (incl1 (G, A, phi)).g0 by GROUP_6:45;
+    A2: g = <*g0,1_A*> by A1,Def2;
+    consider x1 being Element of G, x2 being Element of A such that
+    A3: x = <* x1, x2 *> by Th12;
+    reconsider phi2=phi.(x2 ") as Homomorphism of G,G by AUTGROUP:def 1;
+    x" = <* (phi2).(x1"),x2" *> by A3, Th22;
+    then (x") * g = <* ((phi2).(x1"))*((phi2).g0),
+                       (x2") * (1_A) *> by A2,Th14
+    .= <* ((phi2).(x1"))*((phi2).g0), (x2") *> by GROUP_1:def 4
+    .= <* (phi2).((x1") * g0), (x2") *> by GROUP_6:def 6;
+    then A4: ((x") * g) * x
+    = <* ((phi2).((x1")*g0)*((phi2).x1)), (x2") * x2 *> by A3,Th14
+    .= <* ((phi2).((x1")*g0)*((phi2).x1)), 1_A *>
+       by GROUP_1:def 5
+    .= <* ((phi2).(((x1") * g0) * x1)), 1_A *> by GROUP_6:def 6
+    .= <* (phi2).(g0 |^ x1), 1_A *> by GROUP_3:def 2;
+    g |^ x = ((x") * g) * x by GROUP_3:def 2
+    .= ((incl1 (G, A, phi)).((phi2).(g0 |^ x1))) by A4,Def2;
+    hence g |^ x in Image (incl1 (G, A, phi)) by GROUP_6:45;
+  end;
+  hence thesis by AUTGROUP:1;
+end;
+
+registration
+  let A, G, phi;
+  cluster Image (incl1 (G, A, phi)) -> normal;
+  correctness by Th30;
+end;
+
+theorem :: TH31
+  Image (incl2 (G, A, phi)) /\ Image (incl1 (G, A, phi))
+  = (1).(semidirect_product(G,A,phi))
+proof
+  set ImA = Image (incl2 (G, A, phi)), ImG = Image (incl1 (G, A, phi));
+  set S = semidirect_product(G,A,phi);
+  for x being object st x in the carrier of (ImA /\ ImG)
+  holds x in {1_S}
+  proof
+    let x be object;
+    assume x in the carrier of (ImA /\ ImG);
+    then x in ImA /\ ImG;
+    then B1: x in ImA & x in ImG by GROUP_2:82;
+    then consider g being Element of G such that
+    B2: x = (incl1 (G, A, phi)).g by GROUP_6:45;
+    consider a being Element of A such that
+    B3: x = (incl2 (G, A, phi)).a by B1, GROUP_6:45;
+    <*1_G, a*> = x by B3,Def3
+              .= <*g,1_A*> by B2,Def2;
+    then a = 1_A & 1_G = g by FINSEQ_1:77;
+    then x = <*1_G,1_A*> by B2,Def2
+          .= 1_S by Th17;
+    hence x in {1_S} by TARSKI:def 1;
+  end;
+  then the carrier of (ImA /\ ImG) c= {1_S};
+  then the carrier of (ImA /\ ImG) c= the carrier of (1).S by GROUP_2:def 7;
+  then A1: ImA /\ ImG is Subgroup of (1).S by GROUP_2:57;
+  (1).S is Subgroup of ImA /\ ImG by GROUP_2:65;
+  hence thesis by A1, GROUP_2:55;
+end;
+
+theorem Th32:
+  for x being Element of semidirect_product(G,A,phi)
+  ex g being Element of G,a being Element of A
+  st ((incl1(G,A,phi)).g) * ((incl2(G,A,phi)).a) = x
+proof
+  let x be Element of semidirect_product(G, A, phi);
+  consider g being Element of G, a being Element of A such that
+  A1: x = <*g,a*> by Th12;
+  take g,a;
+  reconsider phi1=phi.(1_A) as Homomorphism of G,G by AUTGROUP:def 1;
+  ((incl1(G,A,phi)).g) = <*g,1_A*> & ((incl2(G,A,phi)).a) = <*1_G,a*>
+    by Def2,Def3;
+  hence ((incl1(G,A,phi)).g) * ((incl2(G,A,phi)).a)
+  = <* g * (phi1.(1_G)), (1_A) * a *> by Th14
+  .= <* g * (1_G), (1_A) * a *> by Th15
+  .= <* g * (1_G), a *> by GROUP_1:def 4
+  .= x by A1, GROUP_1:def 4;
+end;
+
+theorem Th33:
+  (Image incl1(G,A,phi)) * (Image incl2(G,A,phi))
+  = the carrier of semidirect_product(G,A,phi)
+proof
+  for x being Element of semidirect_product (G, A, phi)
+  holds x in (Image incl1(G,A,phi)) * (Image incl2(G,A,phi))
+  proof
+    let x be Element of semidirect_product (G, A, phi);
+
+    consider g being Element of G, a being Element of A such that
+    B1: ((incl1(G,A,phi)).g) * ((incl2(G,A,phi)).a) = x
+      by Th32;
+    ((incl1(G,A,phi)).g) in Image(incl1(G,A,phi)) &
+    ((incl2(G,A,phi)).a) in Image(incl2(G,A,phi)) by GROUP_6:45;
+    hence x in (Image incl1(G,A,phi)) * (Image incl2(G,A,phi))
+      by B1, GROUP_5:4;
+  end;
+  then the carrier of (semidirect_product(G,A,phi))
+    c= (Image incl1(G,A,phi)) * (Image incl2(G,A,phi));
+  hence thesis by XBOOLE_0:def 10;
+end;
+
+theorem :: TH34
+  Image (incl1 (G, A, phi)) "\/" Image (incl2 (G, A, phi))
+  = (semidirect_product(G,A,phi))
+proof
+  set S = semidirect_product(G,A,phi);
+  set U = (Image incl1(G,A,phi)) * (Image incl2(G,A,phi));
+  U c= the carrier of gr U by GROUP_4:def 4; then
+  the carrier of S c= the carrier of (gr U) by Th33;
+  then S = gr U by GROUP_2:61;
+  hence thesis by GROUP_4:50;
+end;
+
+::$N Aschbacher~\cite{aschbacher2000finite}, Theorem (10.1.3)
+theorem :: TH35
+  G, Image (incl1 (G, A, phi)) are_isomorphic by GROUP_6:68;
+
+:: Note there is a sign error in Aschbacher's book, due to different
+:: notational conventions with function composition being written
+:: backwards (as is the style in finite group theory).
+::
+::$N Aschbacher~\cite{aschbacher2000finite}, Theorem (10.1.4)
+theorem Th36:
+  for a being Element of A
+  for g being Element of G
+  holds ((incl1(G,A,phi)).g) |^ ((incl2(G,A,phi)).a)
+  = <*(phi.(a")).g,1_A *>
+proof
+  let a be Element of A;
+  let g be Element of G;
+  set xg = (incl1(G,A,phi)).g;
+  set xa = (incl2(G,A,phi)).a;
+  reconsider phi1=phi.(a") as Homomorphism of G,G by AUTGROUP:def 1;
+  A1: xa = <* 1_G,a *> by Def3;
+  then A2: xa" = <* (phi1.((1_G)")), a" *> by Th22
+              .= <* (phi1.(1_G)), a" *> by GROUP_1:8
+              .= <* 1_G, a" *> by GROUP_6:31;
+  xg = <*g, 1_A*> by Def2; then
+  (xa") * xg = <* (1_G) * (phi1.g), (a") * (1_A) *> by A2,Th14
+            .= <* (1_G) * (phi1.g), (a") *> by GROUP_1:def 4
+            .= <* (phi1.g), a" *> by GROUP_1:def 4;
+  then ((xa")*xg)*xa = <* (phi1.g)*(phi1.(1_G)), (a")*a *>
+  by A1, Th14
+                    .= <* (phi1.g) * (1_G), (a")*a *> by GROUP_6:31
+                    .= <* (phi1.g), (a")*a *> by GROUP_1:def 4
+                    .= <* (phi1.g), 1_A *> by GROUP_1:def 5;
+  hence thesis by GROUP_3:def 2;
+end;
+
+theorem :: TH37
+  for a being Element of A
+  for g being Element of G
+  holds ((incl1(G,A,phi)).g) |^ ((incl2(G,A,phi)).(a "))
+  = <* (phi.a).g, 1_A *>
+proof
+  let a be Element of A;
+  let g be Element of G;
+  thus ((incl1(G,A,phi)).g) |^ ((incl2(G,A,phi)).(a "))
+   = <* (phi.((a ")")).g, 1_A *> by Th36
+  .= <* (phi.a).g, 1_A *>;
+end;
+
+theorem Th38:
+  semidirect_product (G, A, 1:(A, AutGroup G)) = product <*G, A*>
+proof
+  set S = semidirect_product (G, A, 1:(A, AutGroup G));
+  A1: the carrier of S = the carrier of product <*G,A*> by Th9;
+  set B1 = the multF of S;
+  set B2 = the multF of product <*G, A*>;
+  set U = product Carrier <*G,A*>;
+
+  A2: B1 is BinOp of U & B2 is BinOp of U
+  proof
+    the carrier of S = product Carrier<*G,A*> &
+    B1 is BinOp of the carrier of S by Def1;
+    hence B1 is BinOp of U;
+
+    the carrier of product <*G,A*> = product Carrier <*G,A*> &
+    the multF of product <*G,A*> is BinOp of the carrier of product <*G,A*>
+    by GROUP_7:def 2;
+    hence B2 is BinOp of U;
+  end;
+
+  for x,y being Element of product Carrier <*G,A*>
+  holds B1.(x,y) = B2.(x,y)
+  proof
+    let x,y be Element of product Carrier <*G,A*>;
+    x is Element of S by Def1;
+    then consider g1 being Element of G, a1 being Element of A such that
+    A4: x = <*g1,a1*> by Th12;
+    y is Element of S by Def1;
+    then consider g2 being Element of G, a2 being Element of A such that
+    A5: y = <*g2,a2*> by Th12;
+    1:(A, AutGroup G) = A --> (1_(AutGroup G)) by GROUP_6:def 7;
+    then (1:(A, AutGroup G)).a1 = id the carrier of G by AUTGROUP:9;
+    then A6: (((1:(A, AutGroup G)) . a1) . g2) = g2;
+    reconsider x0=x,y0=y as Element of S by Def1;
+    A8: x0 * y0 = <* g1 * g2, a1 * a2 *> by A4, A5, A6, Th14;
+
+    B2.(x,y) = <*g1,a1*> * <*g2, a2*> by A4,A5
+            .= <* g1 * g2,a1 * a2 *> by GROUP_7:29;
+    hence B1.(x,y) = B2.(x,y) by A8;
+  end;
+  hence thesis by A1, A2, BINOP_1:2;
+end;
+
+begin :: Complementary Subgroups
+
+definition
+  let G,H,N be Group;
+  pred H,N are_complements_in G means
+  ex H1 being strict Subgroup of G st
+  ex N1 being strict normal Subgroup of G
+  st H1 = the multMagma of H
+   & N1 = the multMagma of N
+   & H1 * N1 = the carrier of G
+   & H1 /\ N1 = (1).G;
+end;
+
+definition
+  let G be Group;
+  let H,N be Subgroup of G;
+  redefine pred H,N are_complements_in G means
+  N is normal & H * N = the carrier of G & H /\ N = (1).G;
+  compatibility
+  proof
+    thus H,N are_complements_in G
+    implies (N is normal & H*N = the carrier of G & H/\N = (1).G)
+    proof
+      assume H,N are_complements_in G;
+      then consider H1 being strict Subgroup of G,
+      N1 being strict normal Subgroup of G such that
+      A1: H1 = the multMagma of H
+      & N1 = the multMagma of N
+      & H1 * N1 = the carrier of G
+      & H1 /\ N1 = (1).G;
+      for g being Element of G
+      holds N |^ g = the multMagma of N
+      proof
+        let g be Element of G;
+        B1: carr N1 = carr N by A1;
+        the carrier of N |^ g = (carr N) |^ g by GROUP_3:def 6
+        .= the carrier of (N1 |^ g) by B1,GROUP_3:def 6
+        .= the carrier of N1 by GROUP_3:def 13
+        .= the carrier of N by B1;
+        hence N |^ g = the multMagma of N by GROUP_2:59;
+      end;
+      hence N is normal by GROUP_3:def 13;
+      thus H * N = the carrier of G by A1,Th42;
+      thus H /\ N = (1).G by A1,Th42;
+    end;
+    assume A1: N is normal;
+    assume A2: H * N = the carrier of G;
+    assume A3: H /\ N = (1).G;
+
+    ex H1 being strict Subgroup of G st
+    ex N1 being strict normal Subgroup of G
+    st H1 = the multMagma of H
+    & N1 = the multMagma of N
+    & H1 * N1 = the carrier of G
+    & H1 /\ N1 = (1).G
+    proof
+      reconsider H1=the multMagma of H as strict Subgroup of G by Th1;
+      take H1;
+      reconsider N1=the multMagma of N as strict normal Subgroup of G
+        by A1,Th2;
+      take N1;
+      thus H1 = the multMagma of H;
+      thus N1 = the multMagma of N;
+      thus H1 * N1 = the carrier of G by A2,Th42;
+      thus H1 /\ N1 = (1).G by A3,Th42;
+    end;
+    hence H,N are_complements_in G;
+  end;
+end;
+
+theorem Th43:
+  for G being Group
+  for H,K being Subgroup of G st H is Subgroup of K
+  for N being Subgroup of G st N is normal Subgroup of K
+  holds H,N are_complements_in K
+  iff (N * H = the carrier of K & H /\ N = (1).K)
+proof
+  let G be Group;
+  let H,K be Subgroup of G;
+  assume H is Subgroup of K;
+  then reconsider H1=the multMagma of H as strict Subgroup of K
+  by Th1;
+  let N be Subgroup of G;
+  assume N is normal Subgroup of K;
+  then reconsider N1=the multMagma of N as strict normal Subgroup of K
+  by Th2;
+  A1: N * H = N1 * H1 by ThProdLemma;
+  hence H,N are_complements_in K implies
+    ((N * H = the carrier of K) & (H /\ N = (1).K))
+      by ThCapLemma, GROUP_5:8;
+
+  assume A2: N * H = the carrier of K;
+  assume H /\ N = (1).K;
+  then H1, N1 are_complements_in K by A1, A2, ThCapLemma, GROUP_5:8;
+  hence H,N are_complements_in K;
+end;
+
+theorem :: TH44
+  for G being Group
+  for H,K being Subgroup of G st H is Subgroup of K
+  for N being Subgroup of G st N is normal Subgroup of K
+  holds H,N are_complements_in K
+  iff (H * N = the carrier of K & H /\ N = (1).K)
+proof
+  let G be Group;
+  let H,K be Subgroup of G;
+  assume A1: H is Subgroup of K;
+  let N be Subgroup of G;
+  assume A2: N is normal Subgroup of K;
+  then N*H=H*N by A1,Th40;
+  hence thesis by A1,A2,Th43;
+end;
+
+theorem Th45:
+  for G being Group
+  for H,K being Subgroup of G st H is Subgroup of K
+  for N being normal Subgroup of G st N is Subgroup of K
+  holds H,((K,N)`*`) are_complements_in K
+  iff (N * H = the carrier of K & H /\ N = (1).K)
+proof
+  let G be Group;
+  let H,K be Subgroup of G;
+  assume A1: H is Subgroup of K;
+  then reconsider H1=the multMagma of H as strict Subgroup of K by Th1;
+  let N be normal Subgroup of G;
+  assume N is Subgroup of K;
+  then A2: N is normal Subgroup of K by GROUP_6:8;
+  then the multMagma of (K,N)`*` = the multMagma of N by Th41;
+  then H1,((K,N)`*`) are_complements_in K iff H,N are_complements_in K;
+  hence thesis by A1,A2,Th43;
+end;
+
+theorem Th46:
+  for G being Group
+  for H,K being Subgroup of G st H is Subgroup of K
+  for N being normal Subgroup of G st N is Subgroup of K
+  holds H,N are_complements_in K
+  iff H,((K,N)`*`) are_complements_in K
+proof
+  let G be Group;
+  let H,K be Subgroup of G;
+  assume A1: H is Subgroup of K;
+  let N be normal Subgroup of G;
+  assume A2: N is Subgroup of K;
+  then A3: N is normal Subgroup of K by GROUP_6:8;
+  hereby
+    assume H,N are_complements_in K;
+    then N * H = the carrier of K & H /\ N = (1).K by A1,A3,Th43;
+    hence H,((K,N)`*`) are_complements_in K by A1,A2,Th45;
+  end;
+  assume H,((K,N)`*`) are_complements_in K;
+  then N * H = the carrier of K & H /\ N = (1).K by A1,A2,Th45;
+  hence H,N are_complements_in K by A1,A3,Th43;
+end;
+
+theorem :: TH47
+  for G being Group
+  for K being Subgroup of G
+  for H being Subgroup of K
+  for N being normal Subgroup of G st N is Subgroup of K
+  holds H,N are_complements_in K
+  iff H,((K,N)`*`) are_complements_in K by Th46;
+
+theorem Th49:
+  for G being Group
+  for H being Subgroup of G
+  for N being normal Subgroup of G
+  holds H,N are_complements_in G
+  iff (H "\/" N = the multMagma of G & H /\ N = (1).G)
+proof
+  let G be Group;
+  let H be Subgroup of G;
+  let N be normal Subgroup of G;
+  the carrier of G c= the carrier of G; then
+  reconsider A = the carrier of G as Subset of G;
+  thus H,N are_complements_in G implies
+    H "\/" N = the multMagma of G & H /\ N = (1).G
+  proof
+    assume A1: H,N are_complements_in G;
+    then H "\/" N = gr (A) by GROUP_4:50;
+    hence H "\/" N = the multMagma of G by Th48;
+    thus H /\ N = (1).G by A1;
+  end;
+  assume A1: H "\/" N = the multMagma of G;
+  A2: H * N = carr(H) * N by GROUP_4:43
+           .= N * carr(H) by GROUP_3:120
+           .= N * H by GROUP_4:43;
+  assume H /\ N = (1).G;
+  hence H,N are_complements_in G by A1, A2, GROUP_4:51;
+end;
+
+::$N Universal Property of Quotient Groups
+theorem UniversalPropertyQuotientGroups:  :: TH53
+  for G1,G2 being Group
+  for N being normal Subgroup of G1
+  for f being Homomorphism of G1,G2
+  st N is Subgroup of Ker f
+  ex fBar being Homomorphism of G1./.N,G2
+  st f = fBar * (nat_hom N)
+proof
+  let G1,G2 be Group;
+  let N be normal Subgroup of G1;
+  let f be Homomorphism of G1,G2;
+  assume A1: N is Subgroup of Ker f;
+
+  defpred P[Element of G1./.N, Element of G2] means
+  ex g being Element of G1 st $1 = g*N & $2 = f.g;
+
+  A2: for x being Element of G1./.N
+  ex y being Element of G2 st P[x,y]
+  proof
+    let x be Element of G1./.N;
+    x in G1./.N; then
+    consider g1 being Element of G1 such that
+    B1: x = g1 * N & x = N * g1 by GROUP_6:23;
+    consider y being Element of G2 such that
+    B2: y = f.g1;
+    take y;
+    thus P[x,y] by B1,B2;
+  end;
+
+  consider fBar being Function of G1./.N,G2 such that
+  A3: for x being Element of G1./.N holds P[x, fBar.x]
+  from FUNCT_2:sch 3(A2);
+
+  for x1,x2 being Element of G1./.N
+  holds fBar.(x1 * x2) = (fBar.x1) * (fBar.x2)
+  proof
+    let x1,x2 be Element of G1./.N;
+    consider g12 being Element of G1 such that
+    B1: x1 * x2 = g12*N & fBar.(x1 * x2) = f.g12
+    by A3;
+    consider g1 being Element of G1 such that
+    B2: x1 = g1*N & fBar.x1 = f.g1 by A3;
+    consider g2 being Element of G1 such that
+    B3: x2 = g2*N & fBar.x2 = f.g2 by A3;
+
+    B4: (nat_hom N).g1 = x1 & (nat_hom N).g2 = x2 by B2,B3,GROUP_6:def 8;
+
+    (g1 * g2) * N = (nat_hom N).(g1 * g2) by GROUP_6:def 8
+                 .= g12 * N by B1, B4, GROUP_6:def 6;
+    then consider n being Element of G1 such that
+    B5: n in N & g12 = (g1 * g2) * n by Th52;
+    f.g12 = (f.(g1 * g2)) * (f.n) by B5, GROUP_6:def 6
+         .= (f.(g1 * g2)) * (1_G2) by A1, B5, GROUP_2:40, GROUP_6:41
+         .= f.(g1 * g2) by GROUP_1:def 4
+         .= (f.g1) * (f.g2) by GROUP_6:def 6;
+    hence fBar.(x1 * x2) = (fBar.x1) * (fBar.x2) by B1,B2,B3;
+  end;
+
+  then reconsider fBar as Homomorphism of G1./.N,G2 by GROUP_6:def 6;
+  take fBar;
+
+  for g being Element of G1
+  holds f.g = (fBar * (nat_hom N)).g
+  proof
+    let g be Element of G1;
+    consider g1 being Element of G1 such that
+    B1: (nat_hom N).g = g1 * N & fBar.((nat_hom N).g) = f.g1
+    by A3;
+    g * N = g1 * N by B1, GROUP_6:def 8;
+    then consider n being Element of G1 such that
+    B2: n in N & g = g1 * n by Th52;
+    f.g = (f.g1) * (f.n) by B2, GROUP_6:def 6
+       .= (f.g1) * (1_G2) by A1, B2, GROUP_2:40, GROUP_6:41
+       .= f.g1 by GROUP_1:def 4
+       .= (fBar * (nat_hom N)).g by B1, FUNCT_2:15;
+    hence f.g = (fBar * (nat_hom N)).g;
+  end;
+
+  hence f = fBar * (nat_hom N) by FUNCT_2:def 8;
+end;
+
+theorem :: TH54
+  for G1,G2 being Group
+  for N1 being normal Subgroup of G1
+  for N2 being normal Subgroup of G2
+  for phi being Homomorphism of G1,G2
+  st phi is bijective & phi .: the carrier of N1 = the carrier of N2
+  holds G1./.N1, G2./.N2 are_isomorphic
+proof
+  let G1,G2 be Group;
+  let N1 be normal Subgroup of G1;
+  let N2 be normal Subgroup of G2;
+  let phi be Homomorphism of G1,G2;
+  assume A1: phi is bijective;
+  assume A2: phi .: the carrier of N1 = the carrier of N2;
+  for g being Element of G1
+  st g in N1
+  holds g in Ker ((nat_hom N2) * phi)
+  proof
+    let g be Element of G1;
+    assume g in N1;
+    then B1: phi.g in N2 by A2, FUNCT_2:35;
+    then (nat_hom N2).(phi.g) = (phi.g) * N2 & 1_(G2./.N2) = carr N2
+    & phi.g in carr N2 by GROUP_6:24, GROUP_6:def 8;
+    then (nat_hom N2).(phi.g) = 1_(G2./.N2) by B1, GROUP_2:113;
+    then ((nat_hom N2) * phi).g = 1_(G2./.N2) by FUNCT_2:15;
+    hence g in Ker ((nat_hom N2) * phi) by GROUP_6:41;
+  end;
+  then N1 is Subgroup of Ker ((nat_hom N2) * phi) by GROUP_2:58;
+  then consider phiBar being Homomorphism of G1./.N1,G2./.N2 such that
+  A3: ((nat_hom N2) * phi) = phiBar * (nat_hom N1)
+    by UniversalPropertyQuotientGroups;
+
+  for y being Element of G2./.N2
+  ex x being Element of G1./.N1
+  st phiBar.x = y
+  proof
+    let y be Element of G2./.N2;
+    consider g2 being Element of G2 such that
+    B1: y = g2 * N2 & y = N2 * g2 by GROUP_6:21;
+    B2: phi" is Homomorphism of G2,G1 by A1, GROUP_6:62;
+    then (phi").g2 in G1 by FUNCT_2:5;
+    then (nat_hom N1).((phi").g2) in G1./.N1 by FUNCT_2:5;
+    then consider x being Element of G1./.N1 such that
+    B3: x = (nat_hom N1).((phi").g2);
+    take x;
+    B4: phi is one-to-one & rng phi = the carrier of G2 by A1, FUNCT_2:def 3;
+
+    g2 in G2;
+    then g2 in dom (phi") by B2, FUNCT_2:def 1; then
+    B5: (phi.((phi").g2)) = (phi * (phi")).g2 by FUNCT_1:13
+                         .= (id the carrier of G2).g2 by B4,FUNCT_2:29
+                         .= g2;
+    thus phiBar.x = (phiBar * (nat_hom N1)).((phi").g2) by B2, B3, FUNCT_2:5,15
+                 .= (nat_hom N2).(phi.((phi").g2)) by A3, B2, FUNCT_2:5,15
+                 .= y by B1, B5, GROUP_6:def 8;
+  end;
+  then A4: phiBar is onto by GROUP_6:58;
+
+  for a,b being Element of G1./.N1 st phiBar.a = phiBar.b
+  holds a = b
+  proof
+    let a,b be Element of G1./.N1;
+    assume B1: phiBar.a = phiBar.b;
+    consider x1 being Element of G1 such that
+    B2: a = x1 * N1 & a = N1 * x1 by GROUP_6:21;
+    consider x2 being Element of G1 such that
+    B3: b = x2 * N1 & b = N1 * x2 by GROUP_6:21;
+    B4: phiBar.a = phiBar.((nat_hom N1).x1) by B2,GROUP_6:def 8
+                .= ((nat_hom N2) * phi).x1 by A3,FUNCT_2:15
+                .= (nat_hom N2).(phi.x1) by FUNCT_2:15;
+    phiBar.b = phiBar.((nat_hom N1).x2) by B3, GROUP_6:def 8
+            .= (phiBar * (nat_hom N1)).x2 by FUNCT_2:15
+            .= (nat_hom N2).(phi.x2) by A3, FUNCT_2:15;
+    then (phi.x1) * N2 = (nat_hom N2).(phi.x2) by B1,B4,GROUP_6:def 8
+                      .= (phi.x2) * N2 by GROUP_6:def 8;
+    then consider n being Element of G2 such that
+    B5: n in N2 & phi.x1 = (phi.x2) * n
+    by Th52;
+    consider n1 being object such that
+    B6: n1 in the carrier of G1 & n1 in the carrier of N1 & n = phi.n1
+    by A2, B5, FUNCT_2:64;
+    reconsider n1 as Element of G1 by B6;
+    phi.x1 = phi.(x2 * n1) by B5, B6, GROUP_6:def 6;
+    then (x2") * x1 = (x2") * (x2 * n1) by A1, GROUP_6:1
+                   .= ((x2") * x2) * n1 by GROUP_1:def 3
+                   .= (1_G1) * n1 by GROUP_1:def 5
+                   .= n1 by GROUP_1:def 4;
+    then (x2") * x1 in N1 by B6;
+    hence a = b by B2, B3, GROUP_2:114;
+  end;
+  then phiBar is one-to-one by GROUP_6:1;
+  hence G1./.N1, G2./.N2 are_isomorphic by A4, GROUP_6:def 11;
+end;
+
+theorem Th55:
+  for G being Group
+  for H being Subgroup of G
+  for N being normal Subgroup of G
+  st H,N are_complements_in G
+  ex phi being Homomorphism of H, G./.N
+  st (for h being Element of H
+      for g being Element of G st g = h
+      holds phi.h = g*N) & phi is bijective
+proof
+  let G be Group;
+  let H be Subgroup of G;
+  let N be normal Subgroup of G;
+  assume H,N are_complements_in G;
+  then A2: H * N = the carrier of G & H /\ N = (1).G;
+
+  defpred P[Element of H, Element of G./.N] means
+  ex g being Element of G st g = $1 & $2 = g*N;
+
+  A3: for x being Element of H
+  ex y being Element of G./.N
+  st P[x,y]
+  proof
+    let x be Element of H;
+    reconsider g=x as Element of G by GROUP_2:42;
+    take y = (nat_hom N).g;
+    y = g*N by GROUP_6:def 8;
+    hence P[x,y];
+  end;
+
+  consider phi being Function of H,G./.N such that
+  A4: for x being Element of H holds P[x, phi.x]
+  from FUNCT_2:sch 3(A3);
+
+  A5: for h being Element of H
+      for g being Element of G st g = h
+      holds phi.h = g*N
+  proof
+    let h be Element of H;
+    let g be Element of G;
+    assume B1: g = h;
+    P[h, phi.h] by A4;
+    hence phi.h = g*N by B1;
+  end;
+
+  for a,b being Element of H
+  holds phi.(a * b) = (phi.a) * (phi.b)
+  proof
+    let a,b be Element of H;
+    reconsider g1=a,g2=b as Element of G by GROUP_2:42;
+    B1: phi.a = g1 * N by A5
+             .= (nat_hom N).g1 by GROUP_6:def 8;
+    B2: phi.b = g2 * N by A5
+             .= (nat_hom N).g2 by GROUP_6:def 8;
+    a * b = g1 * g2 by GROUP_2:43; then
+    phi.(a * b) = (g1 * g2) * N by A5
+               .= (nat_hom N).(g1 * g2) by GROUP_6:def 8;
+    hence phi.(a * b) = (phi.a) * (phi.b) by B1,B2,GROUP_6:def 6;
+  end;
+  then reconsider phi as Homomorphism of H,G./.N by GROUP_6:def 6;
+  take phi;
+  thus for h being Element of H
+       for g being Element of G st g = h
+       holds phi.h = g*N by A5;
+
+  for y being Element of G./.N
+  ex x being Element of H
+  st phi.x = y
+  proof
+    let y be Element of G./.N;
+    y in G./.N; then
+    consider g being Element of G such that
+    Z1: y = g*N & y = N*g by GROUP_6:23;
+    consider h,n being Element of G such that
+    Z2: g = h * n & h in H & n in N by A2, GROUP_5:4;
+    reconsider x=h as Element of H by Z2;
+    take x;
+    g * N = h * (n * N) by Z2,GROUP_2:105
+         .= h * N by Z2,GROUP_2:113;
+    hence phi.x = y by A5,Z1;
+  end;
+
+  then A3: phi is onto by GROUP_6:58;
+
+  for a,b being Element of H st phi.a = phi.b
+  holds a = b
+  proof
+    let a,b be Element of H;
+    assume Z1: phi.a = phi.b;
+    reconsider ga=a, gb=b as Element of G by GROUP_2:42;
+    ga*N = phi.a by A5
+        .= gb*N by Z1,A5;
+    then Z2: (gb")*ga in N by GROUP_2:114;
+    gb in H; then
+    gb" in H & ga in H by GROUP_2:51;
+    then (gb")*ga in H by GROUP_2:50;
+    then (gb")*ga = 1_G by A2,Z2,GROUP_2:82,GROUP_5:1;
+    then ga = gb * 1_G by GROUP_1:13
+           .= gb by GROUP_1:def 4;
+    hence a = b;
+  end;
+
+  then phi is one-to-one by GROUP_6:1;
+  hence phi is bijective by A3;
+end;
+
+theorem Th56:
+  for G being Group
+  for H being Subgroup of G
+  for N being normal Subgroup of G
+  st H,N are_complements_in G
+  holds G ./. N, H are_isomorphic
+proof
+  let G be Group;
+  let H be Subgroup of G;
+  let N be normal Subgroup of G;
+  assume H,N are_complements_in G;
+  then ex phi being Homomorphism of H,G./.N
+  st (for h being Element of H
+      for g being Element of G st g = h
+      holds phi.h = g*N) & phi is bijective by Th55;
+  hence G ./. N, H are_isomorphic by GROUP_6:def 11;
+end;
+
+theorem :: TH57
+  for G being Group
+  for H1, H2 being Subgroup of G
+  for N being normal Subgroup of G
+  st H1,N are_complements_in G & H2,N are_complements_in G
+  holds H1,H2 are_isomorphic
+proof
+  let G be Group;
+  let H1, H2 be Subgroup of G;
+  let N be normal Subgroup of G;
+  assume H1,N are_complements_in G; then
+  A3: G ./. N, H1 are_isomorphic by Th56;
+  assume H2,N are_complements_in G; then
+  G ./. N, H2 are_isomorphic by Th56;
+  hence H1,H2 are_isomorphic by A3,GROUP_6:67;
+end;
+
+::$N Bourbaki~\cite[I \S6.1]{BourbakiAlgI}, Corollary to Proposition 4
+theorem Th58:
+  for G being Group
+  for H,K being Subgroup of G
+  for phi being Function of product <*H,K*>,G
+  st (for h,k being Element of G st h in H & k in K
+      holds phi.(<*h,k*>) = h*k)
+  holds phi is one-to-one iff H /\ K = (1).G
+proof
+  let G be Group;
+  let H,K be Subgroup of G;
+  let phi be Function of product <*H,K*>,G;
+  assume A1: for h,k being Element of G st h in H & k in K
+  holds phi.(<*h,k*>) = h*k;
+  A2: 1_G in H & 1_G in K by GROUP_2:46;
+
+  thus phi is one-to-one implies H /\ K = (1).G
+  proof
+    assume B1: phi is one-to-one;
+    B2: for h1,h2,k1,k2 being Element of G
+    st h1 in H & h2 in H & k1 in K & k2 in K
+       & phi.(<*h1,k1*>) = phi.(<*h2,k2*>)
+    holds <*h1,k1*> = <*h2,k2*>
+    proof
+      let h1,h2,k1,k2 be Element of G;
+      assume Z1: h1 in H;
+      assume Z2: h2 in H;
+      assume Z3: k1 in K;
+      assume Z4: k2 in K;
+      assume Z5: phi.(<*h1,k1*>) = phi.(<*h2,k2*>);
+      <*h1,k1*> in product <*H,K*> by Z1,Z3,Th7;
+      then reconsider x1 = <*h1,k1*> as Element of product <*H,K*>;
+      <*h2,k2*> in product <*H,K*> by Z2,Z4,Th7;
+      then reconsider x2 = <*h2,k2*> as Element of product <*H,K*>;
+      phi.x1 = phi.x2 by Z5;
+      hence <*h1,k1*> = <*h2,k2*> by B1, GROUP_6:1;
+    end;
+
+    H /\ K = (1).G
+    proof
+      assume Z1: H /\ K <> (1).G;
+      (1).G is Subgroup of H /\ K by GROUP_2:65;
+      then consider h1 being Element of G such that
+      Z2: h1 in H /\ K & not h1 in (1).G by Z1,Th8;
+      Z3: h1 <> 1_G by Z2, GROUP_5:1;
+      h1 in H & h1 in K by Z2, GROUP_2:82; then
+      Z4: h1 in H & h1" in K by GROUP_2:51;
+      then phi.(<*h1,h1"*>) = h1 * (h1") by A1
+                           .= 1_G by GROUP_1:def 5
+                           .= (1_G) * (1_G) by GROUP_1:def 4
+                           .= phi.(<*1_G, 1_G*>) by A1,A2;
+      then <*h1, h1"*> = <*1_G,1_G*> by A2, B2, Z4;
+      hence contradiction by Z3, FINSEQ_1:77;
+    end;
+    hence H /\ K = (1).G;
+  end;
+  thus H /\ K = (1).G implies phi is one-to-one
+  proof
+    assume B1: H /\ K = (1).G;
+    for x,y being Element of product <*H,K*>
+    st phi.x = phi.y
+    holds x = y
+    proof
+      let x,y be Element of product <*H,K*>;
+      assume B2: phi.x = phi.y;
+      x.1 in H & x.2 in K & dom x = {1,2} by Th6;
+      then x.1 in H & x.1 in G & x.2 in K & x.2 in G & dom x = {1,2}
+        by GROUP_2:41;
+      then consider h1,k1 being Element of G such that
+      B3: x.1 = h1 & x.2 = k1 & h1 in H & k1 in K;
+      dom x = {1,2} by Th6;
+      then len x = 2 by FINSEQ_1:2,def 3;
+      then B4: x.1 = h1 & x.2 = k1 & h1 in H & k1 in K & x = <*h1,k1*>
+      by B3,FINSEQ_1:44;
+      y.1 in H & y.2 in K & dom y = {1,2} by Th6;
+      then y.1 in G & y.1 in H & y.2 in G & y.2 in K & dom y = {1,2}
+        by GROUP_2:41;
+      then consider h2,k2 being Element of G such that
+      B5: y.1 = h2 & y.2 = k2 & h2 in H & k2 in K;
+      dom y = {1,2} by Th6;
+      then len y = 2 by FINSEQ_1:2,def 3;
+      then B6: y.1 = h2 & y.2 = k2 & h2 in H & k2 in K & y = <*h2,k2*>
+      by B5,FINSEQ_1:44;
+      h1*k1 = phi.x by A1,B4
+           .= h2*k2 by A1,B2,B6;
+      then (h2") * (h1 * k1) = ((h2") * h2) * k2 by GROUP_1:def 3
+                            .= (1_G) * k2 by GROUP_1:def 5
+                            .= k2 by GROUP_1:def 4;
+      then B7: k2 * (k1") = (((h2") * h1) * k1) * (k1") by GROUP_1:def 3
+                         .= ((h2") * h1) * (k1 * (k1")) by GROUP_1:def 3
+                         .= ((h2") * h1) * 1_G by GROUP_1:def 5
+                         .= (h2") * h1 by GROUP_1:def 4;
+      k2 in K & k1" in K by B4,B6, GROUP_2:51;
+      then B8: k2 * (k1") in K by GROUP_2:50;
+      h1 in H & h2" in H by B4,B6, GROUP_2:51;
+      then B9: (h2") * h1 in H by GROUP_2:50;
+      (h2") * h1 = 1_G by B1,B7,B8,B9,GROUP_2:82,GROUP_5:1;
+      then B10: h1 = (h2")" by GROUP_1:12
+                  .= h2;
+      k2 * (k1") = 1_G by B1,B7,B8,B9,GROUP_2:82,GROUP_5:1;
+      then k2 = (k1")" by GROUP_1:12
+             .= k1;
+      hence x = y by B4,B6,B10;
+    end;
+
+    hence phi is one-to-one by GROUP_6:1;
+  end;
+end;
+
+theorem Th59:
+  for G being Group
+  for H,K being Subgroup of G
+  ex phi being Function of product Carrier <*H,K*>,G
+  st (for h,k being Element of G st h in H & k in K
+      holds phi.(<*h,k*>) = h*k)
+  & (phi is one-to-one iff H /\ K = (1).G)
+proof
+  let G be Group;
+  let H,K be Subgroup of G;
+  defpred P[Element of product Carrier <*H,K*>, Element of G] means
+  ex h,k being Element of G st h in H & k in K & $1 = <*h,k*> & $2 = h*k;
+
+  A1: for x being Element of product Carrier <*H,K*>
+  ex y being Element of G
+  st P[x, y]
+  proof
+    let x be Element of product Carrier <*H,K*>;
+    x in product Carrier <*H,K*>;
+    then x in the carrier of product <*H,K*> by GROUP_7:def 2;
+    then B1: x.1 in H & x.2 in K & dom x = {1,2} by Th6;
+    then x.1 in H & x.1 in G & x.2 in K & x.2 in G by GROUP_2:40;
+    then consider h,k being Element of G such that
+    B2: h = x.1 & k = x.2 & h in H & k in K;
+    len x = 2 by B1,FINSEQ_1:2,def 3;
+    then B3: x = <*h, k*> by B2, FINSEQ_1:44;
+    take y = h*k;
+    thus P[x, y] by B2,B3;
+  end;
+
+  consider phi being Function of product Carrier <*H,K*>,G such that
+  A2: for x being Element of product Carrier <*H,K*> holds P[x, phi.x]
+  from FUNCT_2:sch 3(A1);
+  take phi;
+
+  A3: for h,k being Element of G st h in H & k in K
+  holds phi.(<*h,k*>) = h*k
+  proof
+    let h,k be Element of G;
+    assume B1: h in H;
+    assume k in K; then
+
+    <*h,k*> in product <*H,K*> by B1,Th7; then
+    reconsider x=<*h,k*> as Element of product Carrier <*H,K*>
+    by GROUP_7:def 2;
+    consider h1,k1 being Element of G such that
+    B3: h1 in H & k1 in K & x = <*h1,k1*> & phi.x = h1*k1
+    by A2;
+    h1 = h & k1 = k by B3,FINSEQ_1:77;
+    hence phi.(<*h,k*>) = h*k by B3;
+  end;
+
+  hence for h,k being Element of G st h in H & k in K
+  holds phi.(<*h,k*>) = h*k;
+
+  the carrier of product <*H,K*> = product Carrier <*H,K*> by GROUP_7:def 2;
+  hence phi is one-to-one iff H /\ K = (1).G by A3,Th58;
+end;
+
+theorem Th60:
+  for G being Group
+  for H being Subgroup of G
+  for N being strict normal Subgroup of G
+  for phi being Homomorphism of H,AutGroup N
+  ex psi being Function of semidirect_product (N,H,phi),G
+  st (for n,h being Element of G st n in N & h in H
+      holds psi.(<*n,h*>) = n*h)
+  & (psi is one-to-one iff N /\ H = (1).G)
+proof
+  let G be Group;
+  let H be Subgroup of G;
+  let N be strict normal Subgroup of G;
+  let phi be Homomorphism of H, AutGroup N;
+  A1: for f being Function of product Carrier <*N,H*>,G
+  holds f is Function of semidirect_product (N,H,phi), G
+  proof
+    let f be Function of product Carrier <*N,H*>,G;
+    the carrier of semidirect_product (N,H,phi) = product Carrier <*N,H*>
+    by Def1;
+    hence f is Function of semidirect_product (N,H,phi), G;
+  end;
+  consider psi being Function of product Carrier <*N,H*>,G such that
+  A2: (for n,h being Element of G st n in N & h in H holds psi.(<*n,h*>)=n*h)
+  & (psi is one-to-one iff N /\ H = (1).G) by Th59;
+  reconsider psi as Function of semidirect_product (N,H,phi), G by A1;
+  take psi;
+  thus thesis by A2;
+end;
+
+theorem Th64:
+  for G being Group
+  for H being Subgroup of G
+  for N being normal Subgroup of G
+  st H,N are_complements_in G
+  holds H * N = the carrier of G & N * H = the carrier of G
+proof
+  let G be Group;
+  let H be Subgroup of G;
+  let N be normal Subgroup of G;
+  assume A1: H,N are_complements_in G;
+  then H "\/" N = the multMagma of G by Th49;
+  hence thesis by A1, Th63;
+end;
+
+::$N Aschbacher~\cite{aschbacher2000finite}, Theorem 10.2
+theorem :: TH65
+  for G being Group
+  for N being strict normal Subgroup of G
+  for H being Subgroup of G
+  st H,N are_complements_in G
+  for alpha being Homomorphism of H,AutGroup N
+  st (for h,n being Element of G st h in H & n in N
+      for a being Homomorphism of N,N st a = alpha.h
+      holds a.n = n |^ (h"))
+  ex beta being Homomorphism of semidirect_product(N,H,alpha), G
+  st (for gh,gn being Element of G
+      for h being Element of H
+      for n being Element of N st gh = h & gn = n
+      holds beta.(<*n,h*>) = gn*gh)
+   & beta is bijective
+proof
+  let G be Group;
+  let N be strict normal Subgroup of G;
+  let H be Subgroup of G;
+  assume A1: H,N are_complements_in G;
+  let alpha be Homomorphism of H,AutGroup N;
+  assume A2: for h,n being Element of G st h in H & n in N
+  for a being Homomorphism of N,N st a=alpha.h
+  holds a.n = n |^ (h");
+  set S = semidirect_product(N,H,alpha);
+  consider beta being Function of S, G such that
+  A3: (for n,h being Element of G st n in N & h in H
+       holds beta.(<*n,h*>) = n*h)
+  & (beta is one-to-one iff N /\ H = (1).G) by Th60;
+
+  for x,y being Element of S
+  holds beta.(x * y) = (beta.x) * (beta.y)
+  proof
+    let x,y be Element of S;
+    consider n1 being Element of N, a1 being Element of H such that
+    B1: x = <*n1,a1*> by Th12;
+    reconsider ga1=a1,gn1=n1 as Element of G by GROUP_2:42;
+    consider n2 being Element of N, a2 being Element of H such that
+    B2: y = <*n2,a2*> by Th12;
+    reconsider ga2=a2,gn2=n2 as Element of G by GROUP_2:42;
+    B6: ga1 in H & gn1 in N & ga2 in H & gn2 in N;
+    alpha.ga1 in AutGroup N by FUNCT_2:5;
+    then reconsider alphaga1=alpha.ga1 as Homomorphism of N,N
+      by AUTGROUP:def 1;
+    B7: gn2 |^ (ga1") = (((ga1")")*gn2) * (ga1") by GROUP_3:def 2
+                     .= (ga1 * gn2) * (ga1");
+    beta.x = gn1*ga1 & beta.y = gn2*ga2 by A3,B2,B1,B6;
+    then B5: (beta.x) * (beta.y) = gn1 * ga1 * gn2 * ga2 by GROUP_1:def 3
+    .= gn1 * ga1 * gn2 * (1_G) * ga2 by GROUP_1:def 4
+    .= gn1 * ga1 * gn2 * ((ga1") * ga1) * ga2 by GROUP_1:def 5
+    .= gn1 * ga1 * gn2 * (ga1") * ga1 * ga2 by GROUP_1:def 3
+    .= gn1 * (ga1 * gn2) * (ga1") * ga1 * ga2 by GROUP_1:def 3
+    .= gn1 * (gn2 |^ (ga1")) * ga1 * ga2 by B7, GROUP_1:def 3;
+    B4: (alphaga1 . gn2) = gn2 |^ (ga1") & gn2 |^ (ga1") in N
+      by A2,B6,AUTGROUP:1;
+    then B10: ga1 * ga2 in H & gn1 * (gn2 |^ (ga1")) in N by B6, GROUP_2:50;
+    reconsider alphaa1=alpha.a1 as Homomorphism of N,N by AUTGROUP:def 1;
+
+    B11: n1 * ((alphaa1).n2) = (the multF of G).(gn1, (alphaga1).gn2)
+    proof
+      (alphaa1).n2 = (alphaga1).gn2;
+      then (alphaga1).gn2 in N;
+      then (alphaga1).gn2 in G by GROUP_2:40;
+      then reconsider y = (alphaga1).gn2 as Element of G;
+      reconsider x = (alphaa1).n2 as Element of N;
+      gn1 * y = (the multF of G).(gn1, (alphaga1).gn2);
+      hence thesis by GROUP_2:43;
+    end;
+    x * y = <*n1 * ((alphaa1).n2), a1*a2 *> by B1,B2,Th14
+         .= <* gn1 * (gn2 |^ (ga1")), ga1*ga2 *> by B4, B11, GROUP_2:43;
+    then beta.(x * y) = (gn1 * (gn2 |^ (ga1"))) * (ga1 * ga2) by A3,B10
+                     .= (beta.x) * (beta.y) by B5, GROUP_1:def 3;
+    hence beta.(x * y) = (beta.x) * (beta.y);
+  end;
+
+  then reconsider beta as Homomorphism of S, G by GROUP_6:def 6;
+  take beta;
+
+  thus for gh,gn being Element of G
+  for h being Element of H
+  for n being Element of N st gh = h & gn = n
+  holds beta.(<*n,h*>) = gn*gh
+  proof
+    let gh,gn be Element of G;
+    let h be Element of H;
+    let n be Element of N;
+    assume B1: gh = h & gn = n;
+    then gh in H & gn in N;
+    hence beta.(<*n,h*>) = gn*gh by B1,A3;
+  end;
+
+  for y being Element of G
+  ex x being Element of S
+  st beta.x = y
+  proof
+    let y be Element of G;
+    y in the carrier of G;
+    then y in N * H by A1,Th64;
+    then consider n,h being Element of G such that
+    B1: y = n * h & n in N & h in H by GROUP_5:4;
+    reconsider h1=h as Element of H by B1;
+    reconsider n1=n as Element of N by B1;
+    reconsider x = <*n1,h1*> as Element of S by Th9;
+    take x;
+    thus beta.x = y by B1,A3;
+  end;
+
+  then beta is onto by GROUP_6:58;
+  hence thesis by A1, A3;
+end;
+
+:: Bourbaki, General Topology, Chapter 3, section 2, p.240, Proposition 27
+::$N Universal Property of Semidirect Products (Bourbaki~\cite[III \S2.10]{bourbaki2013general} Proposition 27)
+theorem :: TH66
+  for H,G being Group
+  for N being strict Group
+  for f being Homomorphism of N,G
+  for g being Homomorphism of H,G
+  for phi being Homomorphism of H,AutGroup N
+  st (for n being Element of N
+      for h being Element of H
+      holds f.((phi.h).n) = (g.h) * (f.n) * (g.(h")))
+  ex k being Homomorphism of semidirect_product(N,H,phi), G
+  st f = k * (incl1 (N, H, phi)) & g = k * (incl2 (N, H, phi))
+proof
+  let H,G be Group;
+  let N be strict Group;
+  let f be Homomorphism of N,G;
+  let g be Homomorphism of H,G;
+  let phi be Homomorphism of H,AutGroup N;
+  assume A1: for n being Element of N
+             for h being Element of H
+             holds f.((phi.h).n) = (g.h) * (f.n) * (g.(h"));
+  set S = semidirect_product(N,H,phi);
+  defpred P[Element of S, Element of G] means
+  for n being Element of N,h being Element of H st
+    $1 = <*n,h*> holds $2 = (f.n)*(g.h);
+
+  A2: for x being Element of S
+  ex y being Element of G
+  st P[x,y]
+  proof
+    let x be Element of S;
+    consider n being Element of N, h being Element of H such that
+    B1: x = <*n,h*> by Th12;
+    take y = (f.n) * (g.h);
+    for n1 being Element of N,h1 being Element of H st x = <*n1,h1*>
+    holds y = (f.n1)*(g.h1)
+    proof
+      let n1 be Element of N;
+      let h1 be Element of H;
+      assume x = <*n1,h1*>;
+      then n=n1 & h=h1 by B1,FINSEQ_1:77;
+      hence y = (f.n1)*(g.h1);
+    end;
+    hence P[x,y];
+  end;
+
+  consider k being Function of S, G such that
+  A3: for x being Element of S holds P[x,k.x]
+  from FUNCT_2:sch 3(A2);
+
+  for x1,x2 being Element of S
+  holds k.(x1 * x2) = (k.x1) * (k.x2)
+  proof
+    let x1,x2 be Element of S;
+    consider n1 being Element of N, h1 being Element of H such that
+    B1: x1 = <*n1,h1*> by Th12;
+    consider n2 being Element of N, h2 being Element of H such that
+    B2: x2 = <*n2,h2*> by Th12;
+    reconsider phi1=phi.h1 as Homomorphism of N,N by AUTGROUP:def 1;
+    x1 * x2 = <* n1 * (phi1.n2), h1 * h2*> by B1,B2,Th14;
+    hence k.(x1 * x2) = (f.(n1 * (phi1.n2))) * (g.(h1 * h2)) by A3
+    .= ((f.n1)*(f.(phi1.n2))) * (g.(h1 * h2)) by GROUP_6:def 6
+    .= (f.n1)*((g.h1) * (f.n2) * (g.(h1")))*(g.(h1 * h2)) by A1
+    .= (f.n1)*(g.h1)*(f.n2)*(g.(h1"))*(g.(h1 * h2)) by LmAssoc
+    .= ((f.n1)*(g.h1)*(f.n2)*(g.(h1")))*((g.h1)*(g.h2)) by GROUP_6:def 6
+    .= ((f.n1)*(g.h1)*(f.n2)*(g.(h1")))*(g.h1)*(g.h2) by GROUP_1:def 3
+    .= (f.n1)*(g.h1)*(f.n2)*((g.(h1"))*(g.h1))*(g.h2) by GROUP_1:def 3
+    .= (f.n1)*(g.h1)*(f.n2)*(g.((h1")*h1))*(g.h2) by GROUP_6:def 6
+    .= (f.n1)*(g.h1)*(f.n2)*(g.(1_H))*(g.h2) by GROUP_1:def 5
+    .= (f.n1)*(g.h1)*(f.n2)*(1_G)*(g.h2) by GROUP_6:31
+    .= (f.n1)*(g.h1)*(f.n2)*(g.h2) by GROUP_1:def 4
+    .= (k.x1)*(f.n2)*(g.h2) by A3,B1
+    .= (k.x1)*((f.n2)*(g.h2)) by GROUP_1:def 3
+    .= (k.x1)*(k.x2) by A3, B2;
+  end;
+  then reconsider k as Homomorphism of S,G by GROUP_6:def 6;
+
+  take k;
+
+  A4: for n being Element of N
+  for h being Element of H
+  holds k.(<*n,h*>)=(f.n)*(g.h)
+  proof
+    let n be Element of N;
+    let h be Element of H;
+    reconsider x=<*n,h*> as Element of S by Th9;
+    P[x,k.x] by A3;
+    hence k.(<*n,h*>)=(f.n)*(g.h);
+  end;
+
+  for n being Element of N
+  holds f.n = (k * (incl1 (N, H, phi))).n
+  proof
+    let n be Element of N;
+    thus (k * (incl1 (N, H, phi))).n = k.((incl1 (N, H, phi)).n) by FUNCT_2:15
+    .= k.(<*n, 1_H*>) by Def2
+    .= (f.n)*(g.(1_H)) by A4
+    .= (f.n)*(1_G) by GROUP_6:31
+    .= f.n by GROUP_1:def 4;
+  end;
+  hence f = k * (incl1 (N, H, phi)) by FUNCT_2:63;
+
+  for h being Element of H
+  holds g.h = (k * (incl2 (N, H, phi))).h
+  proof
+    let h be Element of H;
+    thus (k * (incl2 (N, H, phi))).h = k.((incl2 (N, H, phi)).h) by FUNCT_2:15
+    .= k.(<*1_N,h*>) by Def3
+    .= (f.(1_N))*(g.h) by A4
+    .= (1_G)*(g.h) by GROUP_6:31
+    .= g.h by GROUP_1:def 4;
+  end;
+  hence g = k * (incl2 (N, H, phi)) by FUNCT_2:63;
+end;
+
+registration
+  let G be finite strict Group;
+  let A be finite Group;
+  let phi be Homomorphism of A,AutGroup(G);
+  cluster semidirect_product(G,A,phi) -> finite;
+  correctness
+  proof
+    Carrier <* G, A *> = <* the carrier of G, the carrier of A *>
+      by PRALG_1:18;
+    then A1: Carrier <* G, A *> is finite;
+    for x being set st x in rng Carrier <*G,A*> holds x is finite
+    proof
+      let x be set;
+      assume x in rng Carrier <*G,A*>;
+      then consider i being object such that
+      A2: i in dom Carrier <*G,A*> & x = (Carrier <*G,A*>).i
+      by FUNCT_1:def 3;
+      per cases by A2, TARSKI:def 2;
+      suppose i = 1;
+        then x = <* the carrier of G, the carrier of A *>.1 by A2, PRALG_1:18
+              .= the carrier of G;
+        hence x is finite;
+      end;
+      suppose i = 2;
+        then x = <* the carrier of G, the carrier of A *>.2 by A2, PRALG_1:18
+              .= the carrier of A;
+        hence x is finite;
+      end;
+    end;
+
+    then Carrier <* G, A *> is finite finite-yielding by A1, FINSET_1:def 2;
+    then product (Carrier <* G, A *>) is finite;
+    hence thesis by Def1;
+  end;
+end;
+
+reserve G1,G2 for Group;
+
+::: theorem :: TH67
+:::   Image (1:(G1,G2)) = (1).G2 by GROUP_6:47;
+
+theorem Th68:
+  G2 is trivial implies
+  for phi being Homomorphism of G1,G2
+  holds phi = 1:(G1,G2)
+proof
+  assume A1: G2 is trivial;
+  let phi be Homomorphism of G1,G2;
+  the multMagma of G2 = (1).G2 by A1,GROUP_22:6;
+  then A2: the carrier of G2 = {1_G2} by GROUP_2:def 7;
+  for g being Element of G1
+  holds phi.g = (1:(G1,G2)).g
+  proof
+    let g be Element of G1;
+    (G1 --> (1_G2)).g = 1_G2;
+    then A3: (1:(G1,G2)).g = 1_G2 by GROUP_6:def 7;
+    thus phi.g = 1_G2 by A2, TARSKI:def 1
+               .= (1:(G1,G2)).g by A3;
+  end;
+
+  hence thesis by FUNCT_2:def 8;
+end;
+
+theorem Th69:
+  Aut (1).G = {id (1).G}
+proof
+  for x being object st x in {id (1).G} holds x in Aut (1).G
+  proof
+    let x be object;
+    assume x in {id (1).G};
+    then x = id the carrier of (1).G by TARSKI:def 1;
+    then x is Element of Aut (1).G by AUTGROUP:3;
+    hence x in Aut (1).G;
+  end;
+  then A1: {id (1).G} c= Aut (1).G;
+  for x being object st x in Aut (1).G holds x in {id (1).G}
+  proof
+    let x be object;
+    assume x in Aut (1).G;
+    then reconsider phi=x as Homomorphism of (1).G,(1).G by AUTGROUP:def 1;
+    for g being Element of (1).G
+    holds (id (1).G).g = phi.g
+    proof
+      let g be Element of (1).G;
+      g in (1).G;
+      then g in {1_G} by GROUP_2:def 7;
+      then A2: g = 1_G by TARSKI:def 1;
+      hence phi.g = phi.(1_((1).G)) by GROUP_2:44
+                 .= 1_((1).G) by GROUP_6:31
+                 .= 1_G by GROUP_2:44
+                 .= (id (1).G).g by A2;
+    end;
+    then id (1).G = x by FUNCT_2:def 8;
+    hence x in {id (1).G} by TARSKI:def 1;
+  end;
+
+  then Aut (1).G c= {id (1).G};
+  hence Aut (1).G = {id (1).G} by A1, XBOOLE_0:def 10;
+end;
+
+theorem Th70:
+  G is strict trivial implies AutGroup G is trivial
+proof
+  assume G is strict trivial;
+  then A1: G = (1).G by GROUP_22:6;
+  Aut (1).G = {id (1).G} by Th69;
+  hence AutGroup G is trivial by A1;
+end;
+
+theorem :: TH71
+  G is strict trivial implies phi = 1:(A, AutGroup G)
+proof
+  assume G is strict trivial;
+  then AutGroup G is trivial by Th70;
+  hence phi = 1:(A, AutGroup G) by Th68;
+end;
+
+theorem Th72:
+  G1 is trivial implies product <*G1,G2*>, G2 are_isomorphic
+proof
+  assume A1: G1 is trivial;
+  ex f being Homomorphism of product <*G1,G2*>, G2 st f is bijective
+  proof
+    set I = {1,2};
+    reconsider i=2 as Element of I by TARSKI:def 2;
+    set F = <*G1,G2*>;
+    deffunc F1() = the carrier of product F;
+    deffunc F2() = the carrier of G2;
+
+    defpred P[Element of F1(), Element of F2()] means
+    $2 = $1.i;
+
+    AA1: for x being Element of F1()
+    ex y being Element of F2() st P[x,y]
+    proof
+      let x be Element of F1();
+      x.1 in G1 & x.2 in G2 & dom x = {1,2} by Th6;
+      then reconsider y=x.i as Element of G2;
+      take y;
+      thus P[x,y];
+    end;
+
+    consider f being Function of F1(),F2() such that
+    A2: for g being Element of F1() holds P[g,f.g]
+    from FUNCT_2:sch 3(AA1);
+
+    for a,b being Element of product F
+    holds f.(a * b) = (f.a) * (f.b)
+    proof
+      let a,b be Element of product F;
+      a.1 in G1 & a.2 in G2 & dom a = {1,2} by Th6;
+      then B1a: a.1 in G1 & a.2 in G2 & len a = 2 by FINSEQ_1:2,def 3;
+      then reconsider a1=a.1 as Element of G1;
+      reconsider a2=a.2 as Element of G2 by B1a;
+      B1: a = <* a1, a2 *> by B1a,FINSEQ_1:44;
+      b.1 in G1 & b.2 in G2 & dom b = {1,2} by Th6;
+      then B2a: b.1 in G1 & b.2 in G2 & len b = 2 by FINSEQ_1:2,def 3;
+      then reconsider b1=b.1 as Element of G1;
+      reconsider b2=b.2 as Element of G2 by B2a;
+      b = <* b1, b2 *> by B2a,FINSEQ_1:44;
+      hence f.(a * b) = f.(<* (a1) * (b1), (a2) * (b2) *>) by B1,GROUP_7:29
+                    .= <* (a1) * (b1), (a2) * (b2) *>.i by A2
+                    .= (f.a) * (b2) by A2
+                    .= (f.a) * (f.b) by A2;
+    end;
+
+    then reconsider f as Homomorphism of product F,G2
+    by GROUP_6:def 6;
+    take f;
+    for a,b being object
+    st a in F1() & b in F1() & f.a = f.b
+    holds a = b
+    proof
+      let a,b be object;
+      assume a in F1();
+      then reconsider aa=a as Element of product F;
+      assume b in F1();
+      then reconsider bb=b as Element of product F;
+      assume B2: f.a = f.b;
+
+      aa.1 in G1 & aa.2 in G2 & dom aa = {1,2} by Th6;
+      then B3: aa.1 in G1 & aa.2 in G2 & len aa = 2 by FINSEQ_1:2,def 3;
+      then reconsider a1=aa.1 as Element of G1;
+      reconsider a2=aa.2 as Element of G2 by B3;
+      B4: a = <* a1, a2 *> by B3,FINSEQ_1:44;
+      bb.1 in G1 & bb.2 in G2 & dom bb = {1,2} by Th6;
+      then B5: bb.1 in G1 & bb.2 in G2 & len bb = 2 by FINSEQ_1:2,def 3;
+      then reconsider b1=bb.1 as Element of G1;
+      reconsider b2=bb.2 as Element of G2 by B5;
+      B6: b = <* b1, b2 *> by B5,FINSEQ_1:44;
+      B7: a1 = 1_G1 & b1 = 1_G1 by A1;
+      B8: a2 = f.a & b2 = f.b by A2;
+      hence a = <* 1_G1, f.a *> by B4,B7
+            .= <* 1_G1, f.b *> by B2
+            .= <* b1, f.b *> by B7
+            .= <* b1, b2 *> by B8
+            .= b by B6;
+    end;
+
+    then A3: f is one-to-one by FUNCT_2:19;
+    for y being object st y in the carrier of G2
+    ex x being object st x in the carrier of product F & y = f.x
+    proof
+      let y be object;
+      assume y in the carrier of G2;
+      then reconsider yy=y as Element of G2;
+      reconsider x=<*1_G1,yy*> as Element of product F;
+      take x;
+      thus x in the carrier of product F;
+      thus y = <* 1_G1, yy *>.2
+            .= f.x by A2;
+    end;
+    then rng f = the carrier of G2 by FUNCT_2:10;
+    then f is onto by FUNCT_2:def 3;
+    hence thesis by A3;
+  end;
+  hence product <*G1,G2*>, G2 are_isomorphic by GROUP_6:def 11;
+end;
+
+theorem Th73:
+  G is strict trivial implies semidirect_product(G,A,phi), A are_isomorphic
+proof
+  assume A1: G is strict trivial;
+  then AutGroup G is trivial by Th70;
+  then phi = 1:(A,AutGroup G) by Th68;
+  then semidirect_product(G,A,phi) = product <*G,A*> by Th38;
+  hence semidirect_product(G,A,phi), A are_isomorphic by A1,Th72;
+end;
+
+theorem Th74:
+  for G, A being finite Group
+  for phi being Homomorphism of A,AutGroup(G)
+  holds card semidirect_product(G,A,phi) = (card G)*(card A)
+proof
+  let G, A be finite Group;
+  let phi be Homomorphism of A,AutGroup(G);
+  set UG = the carrier of G;
+  set UA = the carrier of A;
+  A1: Carrier <* G, A *> = <* UG, UA *> by PRALG_1:18;
+  card semidirect_product(G,A,phi) = card (product (Carrier <* G, A *>))
+    by Def1
+                                  .= card (product <* UG, UA *>) by A1
+                                  .= (card UG)*(card UA) by GROUP_17:2;
+  hence card semidirect_product(G,A,phi) = (card G)*(card A);
+end;
+
+begin :: Appendix 1: Results about Cyclic Groups
+
+registration
+  cluster infinite -> non trivial for Group;
+  coherence;
+  cluster trivial -> finite for Group;
+  coherence;
+end;
+
+theorem Th75:
+  for n being non zero Nat
+  holds the multF of INT.Group n = addint n
+proof
+  let n be non zero Nat;
+  thus the multF of INT.Group n =
+    the multF of (multMagma(# (Segm n),(addint n) #)) by GR_CY_1:def 5
+  .= addint n;
+end;
+
+theorem Th76:
+  for n being non zero Nat
+  holds the carrier of INT.Group n = Segm n
+proof
+  let n be non zero Nat;
+  thus the carrier of INT.Group n =
+    the carrier of multMagma(# Segm n, addint n #)
+    by GR_CY_1:def 5
+  .= Segm n;
+end;
+
+registration
+  cluster INT.Group 1 -> trivial;
+  correctness
+  proof
+    the carrier of INT.Group 1 = Segm 1 by Th76
+                              .= {0} by ORDINAL3:15;
+    hence thesis;
+  end;
+end;
+
+registration
+  let n be non zero Nat;
+  reduce card (INT.Group n) to n;
+  correctness
+  proof
+    thus card (INT.Group n) = card (Segm n) by Th76
+                           .= n;
+  end;
+end;
+
+Lm6:
+  for n being non zero even Nat
+  holds 1 in Segm n
+proof
+  let n be non zero even Nat;
+  consider k being Nat such that
+  A1: n = 2*k by ABIAN:def 2;
+  k <> 0 by A1;
+  then 1 <= k by NAT_1:25;
+  then A2: 2*1 <= 2*k by XREAL_1:64;
+  n > 1 or n = 0 or n = 1 by NAT_1:25;
+  hence 1 in Segm n by A1,A2,NAT_1:44;
+end;
+
+theorem Th77:
+  for G being Group
+  holds G is trivial iff (for x being Element of G holds x = 1_G)
+proof
+  let G be Group;
+  thus G is trivial implies for x being Element of G holds x = 1_G;
+  assume A2: for x being Element of G holds x = 1_G;
+  for x being object holds x in the carrier of G iff x in {1_G}
+  proof
+    let x be object;
+    hereby
+      assume x in the carrier of G;
+      then x = 1_G by A2;
+      hence x in {1_G} by TARSKI:def 1;
+    end;
+    assume x in {1_G};
+    hence x in the carrier of G;
+  end;
+  hence G is trivial by TARSKI:2;
+end;
+
+theorem Th78:
+  for G being Group
+  for H being Subgroup of G
+  holds H is trivial iff (for x being Element of G holds x in H iff x = 1_G)
+proof
+  let G be Group;
+  let H be Subgroup of G;
+  thus H is trivial implies (for x being Element of G holds x in H iff x = 1_G)
+  proof
+    assume H is trivial;
+    then consider h being object such that
+    A1: the carrier of H = {h} by GROUP_6:def 2;
+    1_H in {h} by A1;
+    then 1_H = h by TARSKI:def 1;
+    then A2: the carrier of H = {1_H} by A1;
+    let x be Element of G;
+    hereby
+      assume x in H;
+      then x in {1_H} by A2;
+      then x = 1_H by TARSKI:def 1;
+      hence x = 1_G by GROUP_2:44;
+    end;
+    assume x = 1_G;
+    then x = 1_H by GROUP_2:44;
+    hence x in H;
+  end;
+  assume A3: for x being Element of G holds x in H iff x = 1_G;
+  for x being object holds x in the carrier of H iff x = 1_G
+  proof
+    let x be object;
+    hereby
+      assume x in the carrier of H;
+      then A4: x in H;
+      then x in G by GROUP_2:40;
+      hence x = 1_G by A3, A4;
+    end;
+    assume x = 1_G;
+    then x in H by A3;
+    hence x in the carrier of H;
+  end;
+
+  then the carrier of H = {1_G} by TARSKI:def 1;
+  hence H is trivial;
+end;
+
+ThTrivialCriterion: :: TH79 ::: revise GROUP_6:11
+  for G being Group
+  holds G is trivial iff card G = 1 by GROUP_6:11;
+
+theorem ThTrivialCyclicGroupCriterion1: :: TH80
+  for n being non zero Nat
+  holds INT.Group n is trivial iff n = 1
+proof
+  let n be non zero Nat;
+  INT.Group n is trivial iff card (INT.Group n) = 1 by ThTrivialCriterion;
+  hence thesis;
+end;
+
+theorem ThTrivialCyclicGroupCriterion: :: TH81
+  for n being non zero Nat
+  holds INT.Group n is non trivial iff n > 1
+  by NAT_1:53,ThTrivialCyclicGroupCriterion1;
+
+registration
+  cluster non trivial cyclic strict infinite for Group;
+  existence
+  proof
+    take G = INT.Group;
+    thus thesis;
+  end;
+  cluster non trivial cyclic strict finite for Group;
+  existence
+  proof
+    take G = INT.Group 2;
+    thus thesis by ThTrivialCyclicGroupCriterion;
+  end;
+end;
+
+:: Now, the random results concerning INT.Group 2 in particular
+theorem Th82: :: TH82
+  for g being Element of INT.Group 2
+  st g = 1
+  holds g * g = 1_(INT.Group 2)
+proof
+  let g be Element of INT.Group 2;
+  assume A1: g = 1;
+  g in the carrier of INT.Group 2;
+  then A2: 1 in Segm 2 by A1,Th76;
+  thus g * g = (addint 2).(g,g) by Th75
+            .= (1 + 1) mod 2 by A1, A2, GR_CY_1:def 4
+            .= (2 * 1) mod 2
+            .= 0 by NAT_D:13
+            .= 1_(INT.Group 2) by GR_CY_1:14;
+end;
+
+theorem EltsOfINTGroup2: :: TH83
+  for x being object
+  holds x in INT.Group 2 iff (x = 0 or x = 1)
+proof
+  let x be object;
+  thus x in INT.Group 2 implies (x = 0 or x = 1)
+  proof
+    assume x in INT.Group 2;
+    then x in Segm 2 by Th76;
+    hence thesis by CARD_1:50,TARSKI:def 2;
+  end;
+  assume x = 0 or x = 1;
+  then x in Segm 2 by CARD_1:50, TARSKI:def 2;
+  hence x in INT.Group 2 by Th76;
+end;
+
+theorem ThMultTableINTGroup2: :: TH84
+  for x,y being Element of INT.Group 2
+  holds (x = 0 implies x*y = y)
+  & (y = 0 implies x*y = x)
+  & (x = 1 & y = 1 implies x*y = 1_(INT.Group 2))
+proof
+  let x,y be Element of INT.Group 2;
+  thus x = 0 implies x*y = y
+  proof
+    assume x = 0;
+    then x = 1_(INT.Group 2) by GR_CY_1:14;
+    hence x*y = y by GROUP_1:def 4;
+  end;
+  thus y = 0 implies x*y = x
+  proof
+    assume y = 0;
+    then y = 1_(INT.Group 2) by GR_CY_1:14;
+    hence x*y = x by GROUP_1:def 4;
+  end;
+  assume x = 1 & y = 1;
+  hence thesis by Th82;
+end;
+
+theorem :: TH85
+  for n,k being non zero Nat
+  for g being Element of INT.Group n
+  st g = k holds g " = (n - k) mod n
+proof
+  let n,k be non zero Nat;
+  let g be Element of INT.Group n;
+  assume A1: g = k;
+  A2: k in Segm n & (n - k) mod n in Segm n
+  proof
+    k in INT.Group n by A1;
+    hence k in Segm n by Th76;
+    B1: 0 <= (n - k) mod n by INT_1:57;
+    B2: (n - k) mod n < n by INT_1:58;
+    (n - k) mod n in NAT by B1, INT_1:3;
+    hence (n - k) mod n in Segm n by B2, NAT_1:44;
+  end;
+  then reconsider g2=(n - k) mod n as Element of INT.Group n by Th76;
+  A3: n - k in NAT
+  proof
+    k < n by A2, NAT_1:44;
+    then 0 < n - k by XREAL_1:50;
+    hence thesis by INT_1:3;
+  end;
+  g * g2 = (addint n).(k, (n-k) mod n) by A1, Th75
+        .= (k + ((n - k) mod n)) mod n by A2, GR_CY_1:def 4
+        .= (k + (n - k)) mod n by A3,NAT_D:23
+        .= 0 by INT_1:50
+        .= 1_(INT.Group n) by GR_CY_1:14;
+  then g" = g2 by GROUP_1:5;
+  hence g " = (n - k) mod n;
+end;
+
+theorem Th86:
+  for n being non zero Nat
+  for x being Element of INT.Group n
+  holds x" = x |^ (n - 1)
+proof
+  let n be non zero Nat;
+  let x be Element of INT.Group n;
+  set N = card (INT.Group n);
+  per cases by NAT_1:53;
+  suppose n = 1;
+    then A1: x = 1_(INT.Group n) by Th77;
+    hence x" = (1_(INT.Group n)) by GROUP_1:8
+            .= (1_(INT.Group n)) |^ (n - 1) by GROUP_1:31
+            .= x |^ (n - 1) by A1;
+  end;
+  suppose n > 1;
+    then A2: 1 mod N = 1 by PEPIN:5;
+    thus x" = (x |^ 1)" by GROUP_1:26
+           .= x |^ (N - (1 mod N)) by GR_CY_1:10
+           .= x |^ (n - 1) by A2;
+  end;
+end;
+
+theorem :: TH87
+  for G being finite Group
+  for x being Element of G
+  holds 0 < ord x & ord x <= card G
+proof
+  let G be finite Group;
+  let x be Element of G;
+  not x is being_of_order_0 by GR_CY_1:6;
+  then 0 <> ord x by GROUP_1:def 11;
+  hence 0 < ord x;
+  ord x divides card G by GR_CY_1:8;
+  hence ord x <= card G by NAT_D:7;
+end;
+
+theorem ThINTGroupOrd: :: TH88
+  for n being non zero Nat
+  for g,g1 being Element of INT.Group n st g1 = 1
+  ex k being Nat st g = g1 |^ k & g = k mod n
+proof
+  let n be non zero Nat;
+  let g,g1 be Element of INT.Group n;
+  assume A1: g1 = 1;
+  per cases by NAT_1:53;
+  suppose n = 1;
+    then INT.Group n is trivial;
+    then B1: g = 1_(INT.Group n);
+    take k = 0;
+    thus g = g1 |^ k by B1, GROUP_1:25;
+    thus g = 0 by B1, GR_CY_1:14
+          .= k mod n by NAT_D:26;
+  end;
+  suppose A3: n > 1;
+    g in the carrier of (INT.Group n);
+    then A4: g in Segm n by Th76;
+    reconsider k = g as Nat;
+    A5: k < n by A4,NAT_1:44;
+    defpred P[Nat] means $1 < n implies g1 |^ $1 = $1 mod n;
+    A6: P[0]
+    proof
+      0 < n implies g1 |^ 0 = 0 mod n
+      proof
+        assume 0 < n;
+        thus g1 |^ 0 = 1_(INT.Group n) by GROUP_1:25
+                    .= 0 by GR_CY_1:14
+                    .= 0 mod n by NAT_D:26;
+      end;
+
+      hence P[0];
+    end;
+
+    A7: for j being Nat st P[j] holds P[j + 1]
+    proof
+      let j be Nat;
+      assume B1: P[j];
+      assume B2: (j + 1) < n;
+      j < j + 1 by NAT_1:16;
+      then B3: j < n by B2, XXREAL_0:2;
+      then B4: j mod n = j by NAT_D:24;
+      1 in Segm n by A3, NAT_1:44;
+      then B5: 1 in Segm n & j in Segm n by B3, NAT_1:44;
+      g1 |^ (j + 1) = (g1 |^ j) * g1 by GROUP_1:34
+        .= (addint n).((j mod n), 1) by A1,B1,B3,Th75
+        .= (addint n).(j, 1) by B4
+        .= (j + 1) mod n by B5, GR_CY_1:def 4;
+      hence g1 |^ (j + 1) = (j + 1) mod n;
+    end;
+    A8: for j being Nat holds P[j] from NAT_1:sch 2(A6,A7);
+    take k;
+    A9: P[k] by A8;
+    hence g1 |^ k = k mod n by A5
+                 .= g by A5, NAT_D:24;
+    hence g = k mod n by A5, A9;
+  end;
+end;
+
+theorem :: TH89
+  for n being non zero Nat
+  for g,g1 being Element of INT.Group n st g1 = 1
+  ex k being Nat st k < n & g = g1 |^ k & g = k mod n
+proof
+  let n be non zero Nat;
+  let g,g1 be Element of INT.Group n;
+  assume g1 = 1;
+  then consider k1 being Nat such that
+  A1: g = g1 |^ k1 & g = k1 mod n by ThINTGroupOrd;
+  reconsider k = k1 mod n as Nat;
+  take k;
+  thus k < n by NAT_D:1;
+  consider t being Nat such that
+  A2: k1 = (n * t) + k & k < n by NAT_D:def 2;
+  thus g = g1 |^ k1 by A1
+        .= g1 |^ ((n * t) + k) by A2
+        .= (g1 |^ (n * t)) * (g1 |^ k) by GROUP_1:33
+        .= ((g1 |^ n) |^ t) * (g1 |^ k) by GROUP_1:35
+        .= ((g1 |^ (card (INT.Group n))) |^ t) * (g1 |^ k)
+        .= ((1_(INT.Group n)) |^ t) * (g1 |^ k) by GR_CY_1:9
+        .= (1_(INT.Group n)) * (g1 |^ k) by GROUP_1:31
+        .= g1 |^ k by GROUP_1:def 4;
+  k < n by NAT_D:1;
+  then k = k mod n by NAT_D:24;
+  hence g = k mod n by A1;
+end;
+
+theorem :: TH90
+  for G being Group
+  for g being Element of G
+  for i,j being Integer
+  st g |^ i = g |^ j
+  holds g |^ (- i) = g |^ (- j)
+proof
+  let G be Group;
+  let g be Element of G;
+  let i,j be Integer;
+  assume A1: g |^ i = g |^ j;
+  thus g |^ (- j) = (g |^ (- j)) * (1_G) by GROUP_1:def 4
+                 .= (g |^ (- j)) * (g |^ 0) by GROUP_1:25
+                 .= (g |^ (- j)) * (g |^ (i + (- i)))
+                 .= (g |^ (- j)) * ((g |^ i) * (g |^ (- i))) by GROUP_1:33
+                 .= ((g |^ (- j)) * (g |^ i)) * (g |^ (- i)) by GROUP_1:def 3
+                 .= ((g |^ (- j)) * (g |^ j)) * (g |^ (- i)) by A1
+                 .= (g |^ ((- j) + j)) * (g |^ (- i)) by GROUP_1:33
+                 .= (1_G) * (g |^ (- i)) by GROUP_1:25
+                 .= g |^ (- i) by GROUP_1:def 4;
+end;
+
+theorem LmINTGroupOrd3: :: TH91
+  for n being non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for i being Nat
+  holds g1 |^ i = i mod n
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  assume A1: g1 = 1;
+  defpred P[Nat] means
+  g1 |^ $1 = $1 mod n;
+  A2: P[0]
+  proof
+    thus g1 |^ 0 = 1_(INT.Group n) by GROUP_1:25
+                .= 0 by GR_CY_1:14
+                .= 0 mod n by NAT_D:26;
+  end;
+  A3: for i being Nat st P[i] holds P[i + 1]
+  proof
+    let i be Nat;
+    assume A4: P[i];
+    (i mod n) < n & (i mod n) in NAT by NAT_D:1;
+    then A5: (i mod n) in Segm n by NAT_1:44;
+    per cases by NAT_1:53;
+    suppose A6: n = 1;
+      then INT.Group n is trivial;
+      then A7: g1 |^ (i + 1) = 1_(INT.Group n)
+                            .= 0 by GR_CY_1:14;
+      ((i + 1) mod n) = ((i + 1) mod 1) by A6
+                     .= ((1*(i + 1)) mod 1)
+                     .= 0 by NAT_D:13;
+      hence thesis by A7;
+    end;
+    suppose n > 1;
+      then A7: 1 in Segm n by NAT_1:44;
+      g1 |^ (i + 1) = (g1 |^ i)*g1 by GROUP_1:34
+                   .= (addint n).(i mod n, 1) by A1,A4,Th75
+                   .= ((i mod n) + 1) mod n by A5,A7,GR_CY_1:def 4
+                   .= (i + 1) mod n by NAT_D:22;
+      hence P[i + 1];
+    end;
+  end;
+
+  for i being Nat holds P[i] from NAT_1:sch 2(A2,A3);
+  hence thesis;
+end;
+
+theorem ThINTGroupOrd3: :: TH92
+  for n being non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for i,j being Nat
+  holds g1 |^ i = g1 |^ j iff i mod n = j mod n
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  assume A1: g1 = 1;
+  let i,j be Nat;
+  thus g1 |^ i = g1 |^ j implies i mod n = j mod n
+  proof
+    assume A2: g1 |^ i = g1 |^ j;
+    thus i mod n = g1 |^ i by A1,LmINTGroupOrd3
+                .= g1 |^ j by A2
+                .= j mod n by A1,LmINTGroupOrd3;
+  end;
+  assume A3: i mod n = j mod n;
+  thus g1 |^ i = g1 |^ (n * (i div n) + (i mod n)) by NAT_D:2
+       .= (g1 |^ (n * (i div n))) * (g1 |^ (i mod n)) by GROUP_1:33
+       .= ((g1 |^ (card (INT.Group n))) |^ (i div n)) *
+            (g1 |^ (i mod n)) by GROUP_1:35
+       .= ((1_(INT.Group n)) |^ (i div n)) * (g1 |^ (i mod n))
+            by GR_CY_1:9
+       .= (1_(INT.Group n)) * (g1 |^ (i mod n)) by GROUP_1:31
+       .= ((1_(INT.Group n)) |^ (j div n)) * (g1 |^ (i mod n))
+            by GROUP_1:31
+       .= ((1_(INT.Group n)) |^ (j div n)) * (g1 |^ (j mod n)) by A3
+       .= ((g1 |^ (card (INT.Group n))) |^ (j div n)) *
+            (g1 |^ (j mod n)) by GR_CY_1:9
+       .= (g1 |^ (n * (j div n))) * (g1 |^ (j mod n)) by GROUP_1:35
+       .= g1 |^ (n * (j div n) + (j mod n)) by GROUP_1:33
+       .= g1 |^ j by NAT_D:2;
+end;
+
+begin :: Appendix 2: Dihedral groups
+
+theorem :: TH93
+  A is commutative implies inverse_op A is Automorphism of A;
+
+definition
+  let G be strict commutative Group;
+  func inversions G -> Function of (INT.Group 2), AutGroup G means
+    :DefInversions:
+  it.0 = id G & it.1 = inverse_op G;
+  existence
+  proof
+    defpred P[Element of INT.Group 2, Element of (AutGroup G)] means
+    (0 = $1 implies $2 = id G)
+    & (1 = $1 implies $2 = inverse_op G);
+
+    A1: for x being Element of INT.Group 2
+    ex y being Element of AutGroup G
+    st P[x, y]
+    proof
+      let x be Element of INT.Group 2;
+      x in INT.Group 2;
+      then x in Segm 2 by Th76;
+      then per cases by CARD_1:50, TARSKI:def 2;
+      suppose B1: x = 0;
+        reconsider y = id G as Element of AutGroup G by AUTGROUP:3;
+        take y;
+        thus P[x, y] by B1;
+      end;
+      suppose B2: x = 1;
+        reconsider y = inverse_op G as Element of AutGroup G by GROUP_22:25;
+        take y;
+        thus P[x, y] by B2;
+      end;
+    end;
+    consider f being Function of (INT.Group 2), (AutGroup G) such that
+    A2: for x being Element of INT.Group 2 holds P[x, f.x]
+    from FUNCT_2:sch 3(A1);
+    take f;
+    0 in INT.Group 2 by EltsOfINTGroup2;
+    hence f.0 = id G by A2;
+    2 = 2*1;
+    then 1 in Segm 2 by Lm6;
+    then 1 in the carrier of INT.Group 2 by Th76;
+    hence f.1 = inverse_op G by A2;
+  end;
+  uniqueness
+  proof
+    defpred P[ Function of (INT.Group 2), AutGroup G] means
+    ($1.0 = id G) & ($1.1 = inverse_op G);
+    let f1,f2 be Function of (INT.Group 2), AutGroup G;
+    assume A1: P[f1];
+    assume A2: P[f2];
+    for x being Element of INT.Group 2
+    holds f1.x = f2.x
+    proof
+      let x be Element of INT.Group 2;
+      x in the carrier of INT.Group 2;
+      then x in Segm 2 by Th76;
+      then x = 0 or x = 1 by CARD_1:50, TARSKI:def 2;
+      hence f1.x = f2.x by A1,A2;
+    end;
+    hence f1 = f2 by FUNCT_2:def 7;
+  end;
+end;
+
+theorem ThInverseOpGSquaresToIdentity: :: TH94
+  for G being Group
+  holds (inverse_op G) * (inverse_op G) = id G
+proof
+  let G be Group;
+  for x being Element of the carrier of G
+  holds ((inverse_op G) * (inverse_op G)).x = (id G).x
+  proof
+    let x be Element of the carrier of G;
+    thus ((inverse_op G) * (inverse_op G)).x
+     = (inverse_op G).((inverse_op G).x) by FUNCT_2:15
+    .= (inverse_op G).(x ") by GROUP_1:def 6
+    .= (x ") " by GROUP_1:def 6
+    .= (id G).x;
+  end;
+
+  hence (inverse_op G) * (inverse_op G) = id G by FUNCT_2:def 8;
+end;
+
+theorem ThCommutationEq: :: TH95
+  for G being strict commutative Group
+  for a,b being Element of INT.Group 2 st b = 0
+  holds ((inversions G).b) * ((inversions G).a) = (inversions G).a
+  & ((inversions G).a) * ((inversions G).b) = (inversions G).a
+proof
+  let G be strict commutative Group;
+  let a,b be Element of INT.Group 2;
+  assume b = 0;
+  then A1: ((inversions G).b) = id G by DefInversions;
+  a in INT.Group 2;
+  then per cases by EltsOfINTGroup2;
+  suppose a = 0;
+    then A2: ((inversions G).a) = id G by DefInversions;
+    thus ((inversions G).b) * ((inversions G).a)
+     = (id G) * (id G) by A1,A2,AUTGROUP:8
+    .= (inversions G).a by A2, FUNCT_2:17;
+    thus ((inversions G).a) * ((inversions G).b)
+     = (id G) * (id G) by A1,A2,AUTGROUP:8
+    .= (inversions G).a by A2, FUNCT_2:17;
+  end;
+  suppose a = 1;
+    then A3: ((inversions G).a) = inverse_op G by DefInversions;
+    hence ((inversions G).b) * ((inversions G).a)
+     = (id G) * (inverse_op G) by A1,AUTGROUP:8
+    .= (inversions G).a by A3, FUNCT_2:17;
+    thus ((inversions G).a) * ((inversions G).b)
+     = (inverse_op G) * (id G) by A1,A3,AUTGROUP:8
+    .= (inversions G).a by A3, FUNCT_2:17;
+  end;
+end;
+
+theorem ThCommutationEq2: :: TH96
+  for G being strict commutative Group
+  for a,b being Element of INT.Group 2 st a = 1 & b = 1
+  holds ((inversions G).b) * ((inversions G).a) = (inversions G).(a * b)
+proof
+  let G be strict commutative Group;
+  let a,b be Element of INT.Group 2;
+  assume A1: a = 1;
+  assume A2: b = 1; then
+  A3: a * b = 1_(INT.Group 2) by A1,ThMultTableINTGroup2
+           .= 0 by GR_CY_1:14;
+  ((inversions G).b) = inverse_op G & ((inversions G).a) = inverse_op G
+    by A1,A2,DefInversions;
+  hence ((inversions G).b) * ((inversions G).a)
+   = (inverse_op G) * (inverse_op G) by AUTGROUP:8
+  .= id G by ThInverseOpGSquaresToIdentity
+  .= (inversions G).(a * b) by A3, DefInversions;
+end;
+
+registration
+  let G be strict commutative Group;
+  cluster inversions G -> multiplicative;
+  coherence
+  proof
+    for a,b being Element of INT.Group 2
+    holds (inversions G).(a * b) = ((inversions G).a) * ((inversions G).b)
+    proof
+      let a,b be Element of INT.Group 2;
+      a in INT.Group 2 & b in INT.Group 2;
+      then per cases by EltsOfINTGroup2;
+      suppose A1: a = 0;
+        hence ((inversions G).a) * ((inversions G).b) = (inversions G).b
+          by ThCommutationEq
+        .= (inversions G).(a * b) by A1,ThMultTableINTGroup2;
+      end;
+      suppose A2: a = 1 & b = 0;
+        hence ((inversions G).a) * ((inversions G).b) = (inversions G).a
+          by ThCommutationEq
+        .= (inversions G).(a * b) by A2,ThMultTableINTGroup2;
+      end;
+      suppose a = 1 & b = 1;
+        hence thesis by ThCommutationEq2;
+      end;
+    end;
+    hence thesis by GROUP_6:def 6;
+  end;
+end;
+
+definition
+  let G be strict commutative Group;
+  redefine func inversions G -> Homomorphism of INT.Group 2, AutGroup G;
+  coherence;
+end;
+
+definition
+  let n be non zero ExtNat;
+  func Dihedral_group n -> strict Group means :DefDihedral:
+  (n = +infty implies it =
+    semidirect_product(INT.Group, INT.Group 2, inversions INT.Group))
+  & (n <> +infty implies
+     ex n1 being non zero Nat
+     st n = n1 & it = semidirect_product(INT.Group n1,
+                                         INT.Group 2,
+                                         inversions (INT.Group n1)));
+  existence
+  proof
+    per cases by COUNTERS:2;
+    suppose n is Nat;
+      then reconsider n1 = n as non zero Nat;
+      take G = semidirect_product(INT.Group n1,
+                                  INT.Group 2,
+                                  inversions (INT.Group n1));
+      thus thesis;
+    end;
+    suppose n = +infty;
+      hence thesis;
+    end;
+  end;
+  uniqueness;
+end;
+
+definition
+  let n be non zero Nat;
+  redefine func Dihedral_group n equals
+  semidirect_product(INT.Group n,
+                     INT.Group 2,
+                     inversions (INT.Group n));
+  compatibility by DefDihedral;
+end;
+
+theorem :: TH97
+  for n being non zero Nat
+  holds card (Dihedral_group n) = 2*n
+proof
+  let n be non zero Nat;
+  thus card (Dihedral_group n) = (card (INT.Group n))*(card (INT.Group 2))
+    by Th74
+                              .= 2*n;
+end;
+
+registration
+  let n be non zero Nat;
+  cluster Dihedral_group n -> finite;
+  coherence;
+end;
+
+definition
+  let n be non natural ExtNat;
+  redefine func Dihedral_group n equals
+  semidirect_product(INT.Group,
+                     INT.Group 2,
+                     inversions INT.Group);
+  compatibility
+  proof
+    n = +infty by COUNTERS:2;
+    hence thesis by DefDihedral;
+  end;
+end;
+
+theorem :: TH98
+  for g1 being Element of INT.Group
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group +infty
+  st x = <*g1,1_(INT.Group 2)*> & y = <* 1_(INT.Group), a2 *>
+  holds y*x = (x ")*y
+proof
+  let g1 be Element of INT.Group;
+  let a2 be Element of INT.Group 2;
+  assume A1: a2 = 1;
+  let x,y be Element of Dihedral_group +infty;
+  set a1 = 1_(INT.Group 2);
+  set g2 = 1_(INT.Group);
+  assume A2: x = <*g1,a1*>;
+  assume A3: y = <*g2,a2*>;
+  reconsider phi1 = ((inversions INT.Group) . a1),
+    phi2 = ((inversions INT.Group) . a2)
+  as Homomorphism of INT.Group, INT.Group by AUTGROUP:def 1;
+  A4: phi2 = inverse_op (INT.Group) by A1, DefInversions;
+  x" = <* g1 ", a1 *> by A2,Th24;
+  then A5: (x") * y = <* (g1 ") * (phi1 . g2), a1 * a2 *> by A3,Th14
+                   .= <* (g1 ") * g2, a1 * a2 *> by GROUP_6:31
+                   .= <* (g1 "), a1 * a2 *> by GROUP_1:def 4
+                   .= <* (g1 "), a2 *> by GROUP_1:def 4;
+  thus y * x = <* g2 * (phi2 . g1), a2 * a1 *> by A2,A3,Th14
+            .= <* phi2.g1, a2 * a1 *> by GROUP_1:def 4
+            .= <* phi2.g1, a2 *> by GROUP_1:def 4
+            .= <* g1 ", a2 *> by A4, GROUP_1:def 6
+            .= (x ")*y by A5;
+end;
+
+theorem Th99:
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  holds y*x = (x ")*y
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  let a2 be Element of INT.Group 2;
+  assume A1: a2 = 1;
+  let x,y be Element of Dihedral_group n;
+  set a1 = 1_(INT.Group 2);
+  set g2 = 1_(INT.Group n);
+  assume A2: x = <*g1,a1*>;
+  assume A3: y = <*g2,a2*>;
+  reconsider phi1 = ((inversions INT.Group n) . a1),
+    phi2 = ((inversions INT.Group n) . a2)
+  as Homomorphism of (INT.Group n), (INT.Group n) by AUTGROUP:def 1;
+  A4: phi2 = inverse_op (INT.Group n) by A1, DefInversions;
+  x" = <* g1 ", a1 *> by A2,Th24;
+  then A5: (x") * y = <* (g1 ") * (phi1 . g2), a1 * a2 *> by A3,Th14
+                   .= <* (g1 ") * g2, a1 * a2 *> by GROUP_6:31
+                   .= <* (g1 "), a1 * a2 *> by GROUP_1:def 4
+                   .= <* (g1 "), a2 *> by GROUP_1:def 4;
+  thus y * x = <* g2 * (phi2 . g1), a2 * a1 *> by A2,A3,Th14
+            .= <* phi2.g1, a2 * a1 *> by GROUP_1:def 4
+            .= <* phi2.g1, a2 *> by GROUP_1:def 4
+            .= <* g1 ", a2 *> by A4, GROUP_1:def 6
+            .= (x ")*y by A5;
+end;
+
+theorem Th100:
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  holds y*x = (x |^ (n - 1))*y
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  let a2 be Element of INT.Group 2;
+  assume A1: a2 = 1;
+  let x,y be Element of Dihedral_group n;
+  assume A2: x = <*g1,1_(INT.Group 2)*>;
+  assume A3: y = <*(1_(INT.Group n)),a2*>;
+  A5: x " = <* g1", 1_(INT.Group 2)*> by A2, Th24
+         .= <* g1 |^ (n - 1), 1_(INT.Group 2)*> by Th86
+         .= x |^ (n - 1) by A2, Th25;
+  thus y*x = (x ")*y by A1,A2,A3,Th99
+          .= (x |^ (n - 1))*y by A5;
+end;
+
+theorem Th101:
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for x being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*>
+  holds x |^ n = 1_(Dihedral_group n)
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  let x be Element of Dihedral_group n;
+  assume A1: x = <*g1,1_(INT.Group 2)*>;
+  A2: g1 |^ n = g1 |^ (card (INT.Group n))
+             .= 1_(INT.Group n) by GR_CY_1:9;
+  thus x |^ n = <*(g1|^n),1_(INT.Group 2)*> by A1, Th25
+             .= <* 1_(INT.Group n), 1_(INT.Group 2) *> by A2
+             .= 1_(Dihedral_group n) by Th17;
+end;
+
+theorem Th102:
+  for n being non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for x being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*>
+  for k being Nat st k <> 0 & k < n
+  holds x |^ k <> 1_(Dihedral_group n)
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  assume A0: g1 = 1;
+  let x be Element of Dihedral_group n;
+  assume A1: x = <*g1,1_(INT.Group 2)*>;
+  let k be Nat;
+  assume A2: k <> 0;
+  assume A3: k < n;
+  defpred P[Nat] means
+  ex g being Element of INT.Group n st g = $1 mod n & g = g1 |^ $1;
+  A4: P[0]
+  proof
+    take 1_(INT.Group n);
+    thus 1_(INT.Group n) = 0 by GR_CY_1:14
+                        .= 0 mod n by NAT_D:26;
+    thus 1_(INT.Group n) = g1 |^ 0 by GROUP_1:25;
+  end;
+  A5: for j being Nat st P[j] holds P[j + 1]
+  proof
+    let j be Nat;
+    assume B1: P[j];
+    per cases;
+    suppose B2: (j + 1) mod n = 0;
+      ex g being Element of INT.Group n st
+        g = (j + 1) mod n & g = g1 |^ (j + 1)
+      proof
+        take g = 1_(INT.Group n);
+        thus g = 0 by GR_CY_1:14
+              .= (j + 1) mod n by B2;
+        ex t being Nat st (j + 1 = n * t + 0 & 0 < n) by B2,NAT_D:def 2;
+
+        then consider t being Nat such that
+        B2a: j + 1 = n * t;
+        thus g1 |^ (j + 1) = g1 |^ (n * t) by B2a
+                          .= (g1 |^ t) |^ n by GROUP_1:35
+                          .= (g1 |^ t) |^ (card (INT.Group n))
+                          .= g by GR_CY_1:9;
+      end;
+      hence P[j + 1];
+    end;
+    suppose B3: (j + 1) mod n <> 0;
+      ex g being Element of INT.Group n st
+        g = (j + 1) mod n & g = g1 |^ (j + 1)
+      proof
+        consider g0 being Element of INT.Group n such that
+        B4: g0 = j mod n & g0 = g1 |^ j by B1;
+        take g = g0 * g1;
+
+        n <> 1
+        proof
+          assume B5: n = 1;
+          (j + 1) = (1 * (j + 1)) + 0;
+          then (j + 1) mod 1 = 0 by NAT_D:def 2;
+          hence contradiction by B3,B5;
+        end;
+        then n > 1 by NAT_1:53;
+        then B6: 1 in Segm n & (j mod n) in Segm n by NAT_1:44, NAT_D:1;
+
+        thus g = (addint n).(g0, g1) by Th75
+              .= (addint n).(j mod n, 1) by A0, B4
+              .= ((j mod n) + 1) mod n by B6, GR_CY_1:def 4
+              .= (j + 1) mod n by NAT_D:22;
+        thus g = (g1 |^ j) * g1 by B4
+              .= g1 |^ (j + 1) by GROUP_1:34;
+      end;
+
+      hence P[j + 1];
+    end;
+  end;
+  A6: for j being Nat holds P[j] from NAT_1:sch 2(A4, A5);
+  consider gk being Element of INT.Group n such that
+  A7: gk = k mod n & gk = g1 |^ k by A6;
+  k mod n = k by A3, NAT_D:24;
+  then gk <> 0 by A2, A7;
+  then gk <> 1_(INT.Group n) by GR_CY_1:14;
+  then A8: g1 |^ k <> 1_(INT.Group n) by A7;
+  x |^ k = <* (g1 |^ k), 1_(INT.Group 2) *> by A1, Th25;
+  then x |^ k <> <* 1_(INT.Group n), 1_(INT.Group 2) *>
+    by A8, FINSEQ_1:77;
+  hence x |^ k <> 1_(Dihedral_group n) by Th17;
+end;
+
+theorem Th103:
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for x being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*>
+  holds x" = x |^ (n - 1)
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  let x be Element of Dihedral_group n;
+  assume A1: x = <*g1,1_(INT.Group 2)*>;
+  A2: x * (x |^ (n - 1)) = x |^ (1 + (n - 1)) by GROUP_1:34
+                        .= 1_(Dihedral_group n) by A1,Th101;
+  (x |^ (n - 1)) * x = x |^ ((n - 1) + 1) by GROUP_1:34
+                    .= 1_(Dihedral_group n) by A1,Th101;
+  hence x" = x |^ (n - 1) by A2, GROUP_1:5;
+end;
+
+theorem :: TH104
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for x being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*>
+  for j being Nat
+  holds (x |^ j)" = x |^ (n - j)
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  let x be Element of Dihedral_group n;
+  assume A1: x = <*g1,1_(INT.Group 2)*>;
+  let j be Nat;
+  A2: (g1 |^ j) " = g1 |^ (n - j)
+  proof
+    (g1 |^ (n - j)) * (g1 |^ j) = g1 |^ ((n - j) + j) by GROUP_1:33
+                               .= g1 |^ (card (INT.Group n))
+                               .= 1_(INT.Group n) by GR_CY_1:9;
+    hence g1 |^ (n - j) = (g1 |^ j) " by GROUP_1:5;
+  end;
+  (x |^ j) = <* (g1 |^ j), 1_(INT.Group 2) *> by A1,Th25;
+  hence (x |^ j) " = <* g1 |^ (n - j), 1_(INT.Group 2) *> by A2, Th24
+                  .= (x |^ (n - j)) by A1, Th25;
+end;
+
+theorem Th105:
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  holds y*x = (x |^ (- 1))*y
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  let a2 be Element of INT.Group 2;
+  assume A1: a2 = 1;
+  let x,y be Element of Dihedral_group n;
+  assume A2: x = <*g1,1_(INT.Group 2)*>;
+  assume A3: y = <*(1_(INT.Group n)),a2*>;
+  x |^ (n - 1) = x " by A2,Th103;
+  then x |^ (n - 1) = x |^ (- 1) by GROUP_1:32;
+  hence y*x = (x |^ (- 1))*y by A1,A2,A3,Th100;
+end;
+
+theorem Th106:
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  for i being Nat
+  holds y*(x |^ i) = (x |^ (n - i))*y
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  let a2 be Element of INT.Group 2;
+  assume A1: a2 = 1;
+  let x,y be Element of Dihedral_group n;
+  assume A2: x = <*g1,1_(INT.Group 2)*>;
+  assume A3: y = <*(1_(INT.Group n)),a2*>;
+  defpred P[Nat] means y*(x |^ $1) = (x |^ (n - $1))*y;
+  A4: P[0]
+  proof
+    thus y * (x |^ 0) = y * 1_(Dihedral_group n) by GROUP_1:25
+                     .= y by GROUP_1:def 4
+                     .= (1_(Dihedral_group n))*y by GROUP_1:def 4
+                     .= (x |^ n)*y by A2,Th101
+                     .= (x |^ (n - 0))*y;
+  end;
+  A5: for k being Nat st P[k] holds P[k + 1]
+  proof
+    let k be Nat;
+    assume B1: P[k];
+    y * (x |^ (k + 1)) = y * ((x |^ k) * x) by GROUP_1:34
+                      .= (y * (x |^ k)) * x by GROUP_1:def 3
+                      .= ((x |^ (n - k)) * y) * x by B1
+                      .= (x |^ (n - k)) * (y * x) by GROUP_1:def 3
+                      .= (x |^ (n - k)) * ((x |^ (- 1)) * y) by A1,A2,A3,Th105
+                      .= ((x |^ (n - k)) * (x |^ (- 1))) * y by GROUP_1:def 3
+                      .= (x |^ ((n - k) + (- 1))) * y by GROUP_1:33
+                      .= (x |^ (n - (k + 1))) * y;
+    hence P[k + 1];
+  end;
+  for k being Nat holds P[k] from NAT_1:sch 2(A4, A5);
+  hence thesis;
+end;
+
+theorem Th107:
+  for n being non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  for z being Element of Dihedral_group n
+  ex k being Nat st z = (x |^ k)*y or z = x |^ k
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  assume A1: g1 = 1;
+  let a2 be Element of INT.Group 2;
+  assume A2: a2 = 1;
+  let x,y be Element of Dihedral_group n;
+  assume A3: x = <*g1,1_(INT.Group 2)*>;
+  assume A4: y = <*(1_(INT.Group n)),a2*>;
+  let z be Element of Dihedral_group n;
+  consider g being Element of INT.Group n, a being Element of INT.Group 2
+    such that
+  A6: z = <* g, a *> by Th12;
+  consider k being Nat such that
+  A7: g = g1 |^ k & g = k mod n by A1, ThINTGroupOrd;
+  take k;
+  assume A8: z <> (x |^ k)*y;
+  A9: x |^ k = <* g1 |^ k, 1_(INT.Group 2) *> by A3,Th25
+             .= <* g, 1_(INT.Group 2) *> by A7;
+
+  a in INT.Group 2;
+  then a = 0 or a = 1 by EltsOfINTGroup2;
+  then per cases;
+  suppose A10: a = 0;
+    x |^ k = <* g, 1_(INT.Group 2) *> by A9
+          .= z by A6, A10, GR_CY_1:14;
+    hence thesis;
+  end;
+  suppose a = 1;
+    then a = a2 by A2;
+    then (x |^ k) * y = z by A4,A6,A9,Th16;
+    then contradiction by A8;
+    hence thesis;
+  end;
+end;
+
+theorem Th108:
+  for n being non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  for z being Element of Dihedral_group n
+  ex k being Nat st k < n & (z = (x |^ k)*y or z = x |^ k)
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  assume A1: g1 = 1;
+  let a2 be Element of INT.Group 2;
+  assume A2: a2 = 1;
+  let x,y be Element of Dihedral_group n;
+  assume A3: x = <*g1,1_(INT.Group 2)*>;
+  assume A4: y = <*(1_(INT.Group n)),a2*>;
+  let z be Element of Dihedral_group n;
+  consider k being Nat such that
+  A5: z = (x |^ k)*y or z = x |^ k by A1,A2,A3,A4,Th107;
+  reconsider k1 = k mod n as Nat;
+  take k1;
+  thus k1 < n by NAT_D:1;
+  assume A6: not z = (x |^ k1)*y;
+  k1 mod n = k mod n by NAT_D:65;
+  then A7: g1 |^ k1 = g1 |^ k by A1, ThINTGroupOrd3;
+  A8: x |^ k1 = <* g1 |^ k1, 1_(INT.Group 2) *> by A3, Th25
+             .= <* g1 |^ k, 1_(INT.Group 2) *> by A7
+             .= x |^ k by A3, Th25; then
+  not z = (x |^ k)*y by A6;
+  hence x |^ k1 = z by A8, A5;
+end;
+
+theorem Th109:
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  for i,j being Nat
+  holds ((x |^ i)*y) * (x |^ j) = (x |^ (n + i - j))*y
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  let a2 be Element of INT.Group 2;
+  assume A1: a2 = 1;
+  let x,y be Element of Dihedral_group n;
+  assume A2: x = <*g1,1_(INT.Group 2)*>;
+  assume A3: y = <*(1_(INT.Group n)),a2*>;
+  let i,j be Nat;
+  thus ((x |^ i)*y) * (x |^ j) = (x |^ i) * (y * (x |^ j)) by GROUP_1:def 3
+                              .= (x |^ i)* ((x |^ (n - j))*y) by A1,A2,A3,Th106
+                              .= ((x |^ i) * (x |^ (n - j)))*y by GROUP_1:def 3
+                              .= (x |^ (i + (n - j)))*y by GROUP_1:33
+                              .= (x |^ (n + i - j))*y;
+end;
+
+theorem :: TH110
+  for n being non zero Nat
+  for a2 being Element of INT.Group 2
+  for y being Element of Dihedral_group n
+  st y = <*(1_(INT.Group n)),a2*>
+  holds y*y = 1_(Dihedral_group n)
+proof
+  let n be non zero Nat;
+  let a2 be Element of INT.Group 2;
+  let y be Element of Dihedral_group n;
+  assume A1: y = <*(1_(INT.Group n)),a2*>;
+  A2: a2 |^ 2 = a2 |^ (card (INT.Group 2))
+             .= 1_(INT.Group 2) by GR_CY_1:9;
+  thus y*y = y |^ 2 by GROUP_1:27
+          .= <* 1_(INT.Group n), (a2 |^ 2) *> by A1,Th28
+          .= <* 1_(INT.Group n), 1_(INT.Group 2) *> by A2
+          .= 1_(Dihedral_group n) by Th17;
+end;
+
+theorem ThD1Commutative: :: TH111
+  Dihedral_group 1, INT.Group 2 are_isomorphic
+  & Dihedral_group 1 is commutative
+proof
+  thus Dihedral_group 1, INT.Group 2 are_isomorphic by Th73;
+  hence Dihedral_group 1 is commutative by GROUP_6:77;
+end;
+
+theorem :: TH112
+  Dihedral_group 2 is commutative
+proof
+  1 in INT.Group 2 by EltsOfINTGroup2;
+  then reconsider g1 = 1, a2 = 1 as Element of INT.Group 2;
+  reconsider x = <*g1,1_(INT.Group 2)*>, y = <*(1_(INT.Group 2)),a2*>
+  as Element of Dihedral_group 2 by Th9;
+  A1: for k being Nat st k < 2 holds (x |^ k) * y = y * (x |^ k)
+  proof
+    let k be Nat;
+    assume k < 2;
+    then k = 0 or k = 1 by NAT_1:23;
+    then per cases;
+    suppose B1: k = 0;
+      hence (x |^ k) * y = (1_(Dihedral_group 2)) * y by GROUP_1:25
+                       .= y by GROUP_1:def 4
+                       .= y * (1_(Dihedral_group 2)) by GROUP_1:def 4
+                       .= y * (x |^ 0) by GROUP_1:25
+                       .= y * (x |^ k) by B1;
+    end;
+    suppose B2: k = 1;
+      thus y * (x |^ k) = (x |^ (2 - k)) * y by Th106
+                       .= (x |^ k) * y by B2;
+    end;
+  end;
+  A2: for k1, k2 being Nat
+  holds (x |^ k1) * (x |^ k2) = (x |^ k2) * (x |^ k1)
+  proof
+    let k1, k2 be Nat;
+    thus (x |^ k1) * (x |^ k2) = x |^ (k1 + k2) by GROUP_1:33
+                              .= (x |^ k2) * (x |^ k1) by GROUP_1:33;
+  end;
+
+  for z1,z2 being Element of Dihedral_group 2
+  holds z1 * z2 = z2 * z1
+  proof
+    let z1,z2 be Element of Dihedral_group 2;
+    consider k1 being Nat such that
+    A3: k1 < 2 & (z1 = (x |^ k1)*y or z1 = x |^ k1)
+      by Th108;
+    consider k2 being Nat such that
+    A4: k2 < 2 & (z2 = (x |^ k2)*y or z2 = x |^ k2)
+      by Th108;
+    per cases by A3;
+    suppose A5: z1 = (x |^ k1)*y;
+      per cases by A4;
+      suppose A6: z2 = (x |^ k2)*y;
+        hence z1 * z2 = ((x |^ k1)*y) * ((x |^ k2)*y) by A5
+        .= (y * (x |^ k1)) * ((x |^ k2)*y) by A1,A3
+        .= y * ((x |^ k1) * ((x |^ k2)*y)) by GROUP_1:def 3
+        .= y * (((x |^ k1) * (x |^ k2))*y) by GROUP_1:def 3
+        .= y * (((x |^ k2) * (x |^ k1))*y) by A2
+        .= y * ((x |^ k2) * ((x |^ k1)*y)) by GROUP_1:def 3
+        .= (y * (x |^ k2)) * ((x |^ k1)*y) by GROUP_1:def 3
+        .= ((x |^ k2) * y) * ((x |^ k1)*y) by A1,A4
+        .= z2 * z1 by A5, A6;
+      end;
+      suppose A9: z2 = x |^ k2;
+        hence z1 * z2 = ((x |^ k1)*y) * (x |^ k2) by A5
+        .= (x |^ k1) * (y * (x |^ k2)) by GROUP_1:def 3
+        .= (x |^ k1) * ((x |^ k2) * y) by A1,A4
+        .= ((x |^ k1) * (x |^ k2)) * y by GROUP_1:def 3
+        .= ((x |^ k2) * (x |^ k1)) * y by A2
+        .= (x |^ k2) * ((x |^ k1) * y) by GROUP_1:def 3
+        .= z2 * z1 by A5,A9;
+      end;
+    end;
+    suppose A10: z1 = (x |^ k1);
+      per cases by A4;
+      suppose A11: z2 = (x |^ k2)*y;
+        hence z1 * z2 = (x |^ k1) * ((x |^ k2) * y) by A10
+        .= ((x |^ k1) * (x |^ k2)) * y by GROUP_1:def 3
+        .= ((x |^ k2) * (x |^ k1)) * y by A2
+        .= (x |^ k2) * ((x |^ k1) * y) by GROUP_1:def 3
+        .= (x |^ k2) * (y * (x |^ k1)) by A1,A3
+        .= ((x |^ k2) * y) * (x |^ k1) by GROUP_1:def 3
+        .= z2 * z1 by A10, A11;
+      end;
+      suppose A12: z2 = x |^ k2;
+        hence z1 * z2 = (x |^ k1) * (x |^ k2) by A10
+        .= (x |^ k2) * (x |^ k1) by A2
+        .= z2 * z1 by A10, A12;
+      end;
+    end;
+  end;
+  hence thesis;
+end;
+
+theorem :: TH113
+  for n being non zero Nat
+  st n > 2
+  holds Dihedral_group n is non commutative
+proof
+  let n be non zero Nat;
+  assume A1: n > 2;
+  then 1 < n by XXREAL_0:2;
+  then 1 in Segm n by NAT_1:44;
+  then 1 in the carrier of INT.Group n by Th76;
+  then reconsider g1=1 as Element of INT.Group n;
+  1 in INT.Group 2 by EltsOfINTGroup2;
+  then reconsider a2 = 1 as Element of INT.Group 2;
+  reconsider x = <* g1, 1_(INT.Group 2) *>,
+             y = <* 1_(INT.Group n), a2 *>
+    as Element of Dihedral_group n by Th9;
+  y * x <> x * y
+  proof
+    (x |^ (n - 1)) <> x
+    proof
+      assume (x |^ (n - 1)) = x;
+      then B1: x * x = x |^ ((n - 1) + 1) by GROUP_1:34
+                    .= 1_(Dihedral_group n) by Th101;
+      (x |^ 2) <> 1_(Dihedral_group n) by A1, Th102;
+      then x * x <> 1_(Dihedral_group n) by GROUP_1:27;
+      hence contradiction by B1;
+    end;
+
+    then (x |^ (n - 1)) <> x;
+    then A3: (x |^ (n - 1)) * y <> x * y by GROUP_1:6;
+    y * x = (x |^ (n - 1)) * y by Th100;
+    hence y * x <> x * y by A3;
+  end;
+  hence Dihedral_group n is non commutative;
+end;
+
+theorem Th114:
+  for n being non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y,z being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  holds z in center Dihedral_group n
+  iff (y*z = z*y & for i being Nat holds (x |^ i)*z = z*(x |^ i))
+proof
+  let n be non zero Nat;
+  let g1 be Element of INT.Group n;
+  assume A1: g1 = 1;
+  let a2 be Element of INT.Group 2;
+  assume A2: a2 = 1;
+  let x,y,z be Element of Dihedral_group n;
+  assume A3: x = <*g1,1_(INT.Group 2)*>;
+  assume A4: y = <*(1_(INT.Group n)),a2*>;
+  thus z in center Dihedral_group n implies
+    (y * z = z * y & for i being Nat holds (x |^ i)*z = z*(x |^ i))
+      by GROUP_5:77;
+  assume A6: y*z = z*y;
+  assume A7: for i being Nat holds (x |^ i)*z = z*(x |^ i);
+  for g being Element of Dihedral_group n
+  holds z * g = g * z
+  proof
+    let g be Element of Dihedral_group n;
+    consider k being Nat such that
+    B1: g = (x |^ k)*y or g = x |^ k by A1,A2,A3,A4,Th107;
+    per cases by B1;
+    suppose B2: g = (x |^ k)*y;
+      hence z * g = (z * (x |^ k)) * y by GROUP_1:def 3
+                .= ((x |^ k) * z) * y by A7
+                .= (x |^ k) * (z * y) by GROUP_1:def 3
+                .= (x |^ k) * (y * z) by A6
+                .= ((x |^ k) * y) * z by GROUP_1:def 3
+                .= g * z by B2;
+    end;
+    suppose B3: g = x |^ k;
+      hence z * g = (x |^ k) * z by A7
+                .= g * z by B3;
+    end;
+  end;
+  hence z in center Dihedral_group n by GROUP_5:77;
+end;
+
+theorem :: TH115
+  for n being non zero Nat
+  for z being Element of Dihedral_group n
+  holds z in center Dihedral_group n
+  iff (for g1 being Element of INT.Group n st g1 = 1
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  holds (y*z = z*y & for i being Nat holds (x |^ i)*z = z*(x |^ i)))
+proof
+  let n be non zero Nat;
+  let z be Element of Dihedral_group n;
+  thus z in center Dihedral_group n implies
+  (for g1 being Element of INT.Group n st g1 = 1
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  holds (y*z = z*y & for i being Nat holds (x |^ i)*z = z*(x |^ i)))
+    by GROUP_5:77;
+  assume A1: (for g1 being Element of INT.Group n st g1 = 1
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  holds (y*z = z*y & for i being Nat holds (x |^ i)*z = z*(x |^ i)));
+  for g being Element of Dihedral_group n
+  holds z * g = g * z
+  proof
+    let g be Element of Dihedral_group n;
+    per cases by NAT_1:53;
+    suppose n = 1;
+      then Dihedral_group n is commutative by ThD1Commutative;
+      hence z * g = g * z;
+    end;
+    suppose n > 1;
+      then 1 in Segm n by NAT_1:44;
+      then 1 in the carrier of INT.Group n by Th76;
+      then reconsider g1=1 as Element of INT.Group n;
+      1 in INT.Group 2 by EltsOfINTGroup2;
+      then reconsider a2 = 1 as Element of INT.Group 2;
+      reconsider x = <* g1, 1_(INT.Group 2) *>, y = <* 1_(INT.Group n), a2 *>
+        as Element of Dihedral_group n by Th9;
+
+      consider k being Nat such that
+      B1: g = (x |^ k) * y or g = x |^ k by Th107;
+      per cases by B1;
+      suppose B2: g = (x |^ k) * y;
+        hence z * g = (z * (x |^ k)) * y by GROUP_1:def 3
+                  .= ((x |^ k) * z) * y by A1
+                  .= (x |^ k) * (z * y) by GROUP_1:def 3
+                  .= (x |^ k) * (y * z) by A1
+                  .= ((x |^ k) * y) * z by GROUP_1:def 3
+                  .= g * z by B2;
+      end;
+      suppose B3: g = x |^ k;
+        g1 = 1 & a2 = 1 &
+          x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>;
+        then B4: for i being Nat holds (x |^ i)*z = z*(x |^ i) by A1;
+        thus z * g = z * (x |^ k) by B3
+                  .= (x |^ k) * z by B4
+                  .= g * z by B3;
+      end;
+    end;
+  end;
+
+  hence z in center Dihedral_group n by GROUP_5:77;
+end;
+
+theorem :: TH116
+  center Dihedral_group 1 = Dihedral_group 1
+    by ThD1Commutative, GROUP_5:82;
+
+theorem Th117:
+  for n being odd non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for x being Element of Dihedral_group n st x = <*g1,1_(INT.Group 2)*>
+  for i being Nat st i < n
+  holds (i = 0 or x |^ i <> x |^ (n - i))
+proof
+  let n be odd non zero Nat;
+  let g1 be Element of INT.Group n;
+  assume A1: g1 = 1;
+  let x be Element of Dihedral_group n;
+  assume A2: x = <*g1,1_(INT.Group 2)*>;
+  let i be Nat;
+  assume A3: i < n;
+  assume A4: i <> 0;
+  A5: for j being Nat holds g1 |^ j = j mod n by A1,LmINTGroupOrd3;
+
+  g1 |^ i <> g1 |^ (n - i)
+  proof
+    assume B1: g1 |^ i = g1 |^ (n - i);
+    B2: g1 |^ i = i mod n by A5
+               .= i by A3, NAT_D:24;
+    B3: 0 < n - i & n - i < n
+    proof
+      i - i < n - i by A3, XREAL_1:9;
+      hence 0 < n - i;
+      i > 0 by A4;
+      hence n - i < n by XREAL_1:44;
+    end;
+    then n - i in NAT by INT_1:3;
+    then g1 |^ (n - i) = (n - i) mod n by A5
+                      .= n - i by B3, NAT_D:24;
+    then i = n - i by B1,B2;
+    then 2*i = n + 0;
+    then n is even;
+    hence contradiction;
+  end;
+  then g1 |^ i <> g1 |^ (n - i);
+  then <* (g1 |^ i), 1_(INT.Group 2) *> <>
+    <* (g1 |^ (n - i)), 1_(INT.Group 2) *> by FINSEQ_1:77;
+  then x |^ i <> <* (g1 |^ (n - i)), 1_(INT.Group 2) *> by A2, Th25;
+  hence x |^ i <> x |^ (n - i) by A2,Th25;
+end;
+
+theorem :: TH118
+  for n being odd Nat st n > 1
+  holds center Dihedral_group n is trivial
+proof
+  let n be odd Nat;
+  assume A1: n > 1;
+  for z being Element of Dihedral_group n
+  holds z = 1_(Dihedral_group n)
+  iff z in center (Dihedral_group n)
+  proof
+    let z be Element of Dihedral_group n;
+    thus z = 1_(Dihedral_group n) implies
+      z in center (Dihedral_group n) by GROUP_2:46;
+    assume A2: z in center (Dihedral_group n);
+    1 in Segm n by A1, NAT_1:44;
+    then 1 in the carrier of INT.Group n by Th76;
+    then reconsider g1=1 as Element of INT.Group n;
+    1 in INT.Group 2 by EltsOfINTGroup2;
+    then reconsider a2 = 1 as Element of INT.Group 2;
+    reconsider x = <* g1, 1_(INT.Group 2) *>, y = <* 1_(INT.Group n), a2 *>
+      as Element of Dihedral_group n by Th9;
+    consider j being Nat such that
+    A4: z = (x |^ j) * y or z = x |^ j by Th107;
+    A6: n > 2
+    proof
+      n mod 2 = 1 by NAT_2:22;
+      then consider n0 being Nat such that
+      B1: n = (2*n0) + 1 & 1 < 2 by NAT_D:def 2;
+      1 < (2*n0) + 1 by A1, B1;
+      then 0 + 1 < (2*n0) + 1;
+      then 0 < n0;
+      then 1 <= n0 by NAT_1:25;
+      then 2*1 <= 2*n0 by XREAL_1:64;
+      then 2 + 1 <= (2*n0) + 1 by XREAL_1:6;
+      then 3 <= n & 2 < 3 by B1;
+      hence n > 2 by XXREAL_0:2;
+    end;
+    per cases by A4;
+    suppose A7: z = (x |^ j) * y;
+      (x |^ 1)*z <> z * (x |^ 1)
+      proof
+        assume B1: (x |^ 1)*z = z * (x |^ 1);
+        B2: x |^ 2 = 1_(Dihedral_group n)
+        proof
+          B3: z * (x |^ 1) = (x |^ (n + j - 1)) * y by A7, Th109;
+          (x |^ 1) * z = (x |^ 1) * ((x |^ j) * y) by A7
+                          .= ((x |^ 1) * (x |^ j)) * y by GROUP_1:def 3
+                          .= (x |^ (1 + j)) * y by GROUP_1:33;
+          then (x |^ (n + j - 1)) * y = (x |^ (1 + j)) * y by B1,B3;
+          then B4: x |^ (n + j - 1) = x |^ (1 + j) by GROUP_1:6;
+          x |^ (n + j - 1) = x |^ (n + (j - 1))
+                          .= (x |^ n) * (x |^ (j - 1)) by GROUP_1:33
+                          .= (1_(Dihedral_group n)) * (x |^ (j - 1)) by Th101
+                          .= x |^ (j - 1) by GROUP_1:def 4
+                          .= x |^ (j + (- 1))
+                          .= (x |^ j) * (x |^ (- 1)) by GROUP_1:33;
+          then (x |^ j) * (x |^ (- 1)) = x |^ (1 + j) by B4
+                                      .= (x |^ j) * (x |^ 1) by GROUP_1:33;
+          then x |^ (- 1) = x |^ 1 by GROUP_1:6
+                         .= x by GROUP_1:26;
+          then x " = x by GROUP_1:32;
+          hence x |^ 2 = 1_(Dihedral_group n) by GROUP_1:29;
+        end;
+        :: But B2 contradicts "n > 1 is odd", here's the scratchwork...
+        n > 2 & a2 = 1 by A6;
+        then x |^ 2 <> 1_(Dihedral_group n) by Th102;
+        hence contradiction by B2;
+      end;
+      hence thesis by A2, GROUP_5:77;
+    end;
+    suppose A8: z = x |^ j;
+      set k1 = j div n;
+      A9: j = n * k1 + (j mod n) & (j mod n) < n by NAT_D:1,2;
+      reconsider j1 = j mod n as Nat;
+
+      A10: z = x |^ j by A8
+            .= x |^ ((n * k1) + (j mod n)) by A9
+            .= (x |^ (n * k1)) * (x |^ (j mod n)) by GROUP_1:33
+            .= ((x |^ n) |^ k1) * (x |^ (j mod n)) by GROUP_1:35
+            .= ((1_(Dihedral_group n)) |^ k1) * (x |^ (j mod n)) by Th101
+            .= (1_(Dihedral_group n)) * (x |^ (j mod n)) by GROUP_1:31
+            .= (x |^ j1) by GROUP_1:def 4;
+      A11: x |^ j1 = x |^ (n - j1)
+      proof
+        B1: y * z = y * (x |^ j1) by A10
+                 .= (x |^ (n - j1)) * y by Th106;
+        (x |^ j1) * y = z * y by A10
+                     .= y * z by A2, GROUP_5:77
+                     .= (x |^ (n - j1)) * y by B1;
+        hence thesis by GROUP_1:6;
+      end;
+      per cases;
+      suppose j1 = 0;
+        then z = x |^ 0 by A10
+              .= 1_(Dihedral_group n) by GROUP_1:25;
+        hence thesis;
+      end;
+      suppose j1 <> 0;
+        then contradiction by A9, A11, Th117;
+        hence thesis;
+      end;
+    end;
+  end;
+
+  hence center Dihedral_group n is trivial by Th78;
+end;
+
+theorem :: TH119
+  for n being even non zero Nat
+  for k being Nat st n = 2*k
+  for g1 being Element of INT.Group n st g1 = 1
+  for x being Element of Dihedral_group n st x = <* g1, 1_(INT.Group 2) *>
+  holds (x |^ k) |^ 2 = 1_(Dihedral_group n)
+proof
+  let n be even non zero Nat;
+  let k be Nat;
+  assume A1: n = 2*k;
+  let g1 be Element of INT.Group n;
+  assume A2: g1 = 1;
+  let x be Element of Dihedral_group n;
+  assume A3: x = <* g1, 1_(INT.Group 2) *>;
+  A4: (g1 |^ n) = n mod n by A2, LmINTGroupOrd3
+               .= 0 by NAT_D:25
+               .= 1_(INT.Group n) by GR_CY_1:14;
+  A5: x |^ n = <* (g1 |^ n), 1_(INT.Group 2) *> by A3, Th25
+            .= <* 1_(INT.Group n), 1_(INT.Group 2) *> by A4
+            .= 1_(Dihedral_group n) by Th17;
+  thus (x |^ k) |^ 2 = x |^ (k * 2) by GROUP_1:35
+                    .= x |^ n by A1
+                    .= 1_(Dihedral_group n) by A5;
+end;
+
+theorem Th120:
+  for n being even non zero Nat
+  for k being Nat st n = 2*k
+  for g1 being Element of INT.Group n st g1 = 1
+  for x being Element of Dihedral_group n st x = <* g1, 1_(INT.Group 2) *>
+  holds (x |^ k in center Dihedral_group n)
+proof
+  let n be even non zero Nat;
+  let k be Nat;
+  assume A1: n = 2*k;
+  let g1 be Element of INT.Group n;
+  assume A2: g1 = 1;
+  let x be Element of Dihedral_group n;
+  assume A3: x = <* g1, 1_(INT.Group 2) *>;
+  1 in INT.Group 2 by EltsOfINTGroup2;
+  then reconsider a2=1 as Element of INT.Group 2;
+  reconsider y = <* 1_(INT.Group n), a2 *>
+    as Element of Dihedral_group n by Th9;
+  set z = x |^ k;
+  A4: y * z = (x |^ (n - k))*y by A3,Th106
+           .= (x |^ ((2*k) - k)) * y by A1
+           .= z * y;
+  for i being Nat holds (x |^ i)*z = z*(x |^ i)
+  proof
+    let i be Nat;
+    thus (x |^ i)*z = x |^ (i + k) by GROUP_1:33
+                   .= (x |^ k)*(x |^ i) by GROUP_1:33
+                   .= z*(x |^ i);
+  end;
+  hence z in center Dihedral_group n by A2,A3,A4,Th114;
+end;
+
+theorem Th122:
+  for n being even non zero Nat
+  for k being Nat st n = 2*k & n > 2
+  for g1 being Element of INT.Group n st g1 = 1
+  for x being Element of Dihedral_group n st x = <* g1, 1_(INT.Group 2) *>
+  holds (for g being Element of Dihedral_group n holds
+  g in center Dihedral_group n iff g = 1_(Dihedral_group n) or g = x |^ k )
+proof
+  let n be even non zero Nat;
+  let k be Nat;
+  assume A1: n = 2*k;
+  assume A2: n > 2;
+  let g1 be Element of INT.Group n;
+  assume A3: g1 = 1;
+  let x be Element of Dihedral_group n;
+  assume A4: x = <* g1, 1_(INT.Group 2) *>;
+  1 in INT.Group 2 by EltsOfINTGroup2;
+  then reconsider a2=1 as Element of INT.Group 2;
+  reconsider y = <* 1_(INT.Group n), a2 *> as Element of Dihedral_group n
+  by Th9;
+
+  let g be Element of Dihedral_group n;
+  thus g in center Dihedral_group n implies
+    g = 1_(Dihedral_group n) or g = x |^ k
+  proof
+    assume A5: g in center Dihedral_group n;
+    assume A6: not g = 1_(Dihedral_group n);
+    consider j being Nat such that
+    A7: j < n and
+    A8: g = (x |^ j) * y or g = x |^ j by A3, A4, Th108;
+    per cases by A8;
+    suppose A9: g = (x |^ j) * y;
+      A10: x |^ 2 = 1_(Dihedral_group n)
+      proof
+        B1: g * x = ((x |^ j) * y) * x by A9
+                 .= ((x |^ j) * y) * (x |^ 1) by GROUP_1:26
+                 .= (x |^ (n + j - 1)) * y by A4,Th109
+                 .= (x |^ (j + (n - 1))) * y
+                 .= ((x |^ j) * (x |^ (n - 1))) * y by GROUP_1:33;
+        B2: x * g = x * ((x |^ j) * y) by A9
+                 .= (x |^ 1) * ((x |^ j) * y) by GROUP_1:26
+                 .= ((x |^ 1) * (x |^ j)) * y by GROUP_1:def 3
+                 .= (x |^ (1 + j)) * y by GROUP_1:33
+                 .= ((x |^ j) * x) * y by GROUP_1:34;
+        x * g = g * x by A5, GROUP_5:77
+             .= ((x |^ j) * (x |^ (n - 1))) * y by B1;
+        then ((x |^ j) * x) * y = ((x |^ j) * (x |^ (n - 1))) * y by B2;
+        then (x |^ j) * x = (x |^ j) * (x |^ (n - 1)) by GROUP_1:6;
+        then x = (x |^ (n - 1)) by GROUP_1:6;
+        then x * x = (x |^ ((n - 1) + 1)) by GROUP_1:34
+                  .= 1_(Dihedral_group n) by A4, Th101;
+        hence thesis by GROUP_1:27;
+      end;
+      x |^ 2 <> 1_(Dihedral_group n) by A2,A3,A4,Th102;
+      then contradiction by A10;
+      hence g = x |^ k;
+    end;
+    suppose A12: g = x |^ j;
+      A13: g |^ 2 = 1_(Dihedral_group n)
+      proof
+        B1: y * g = y * (x |^ j) by A12
+                 .= (x |^ (n - j)) * y by A4,Th106;
+        B2: g * y = (x |^ j) * y by A12;
+        y * g = g * y by A5, GROUP_5:77
+             .= (x |^ j) * y by B2;
+        then (x |^ (n - j)) * y = (x |^ j) * y by B1;
+        then x |^ j = (x |^ (n - j)) by GROUP_1:6
+                   .= x |^ (n + (- j))
+                   .= (x |^ n) * (x |^ (- j)) by GROUP_1:33
+                   .= (1_(Dihedral_group n)) * (x |^ (- j)) by A4, Th101
+                   .= x |^ (- j) by GROUP_1:def 4;
+        then (x |^ j) * (x |^ j) = x |^ ((- j) + j) by GROUP_1:33
+                                .= 1_(Dihedral_group n) by GROUP_1:25;
+        hence 1_(Dihedral_group n) = (x |^ j) |^ 2 by GROUP_1:27
+                                  .= g |^ 2 by A12;
+      end;
+
+      g1 |^ (2 * j) = g1 |^ 0
+      proof
+        g |^ 2 = (x |^ j) |^ 2 by A12
+              .= x |^ (j * 2) by GROUP_1:35
+              .= <* g1 |^ (2 * j), (1_(INT.Group 2)) *> by A4,Th25;
+        then <* g1 |^ (2 * j), (1_(INT.Group 2)) *>
+         = 1_(Dihedral_group n) by A13
+        .= <* 1_(INT.Group n), 1_(INT.Group 2) *> by Th17;
+        hence g1 |^ (2 * j) = 1_(INT.Group n) by FINSEQ_1:77
+                           .= g1 |^ 0 by GROUP_1:25;
+      end;
+      then (2 * j) mod n = 0 mod n by A3,ThINTGroupOrd3
+                        .= 0 by NAT_D:26;
+      then A14: (2 * j) = (n * ((2 * j) div n)) + 0 by NAT_D:2;
+      (2 * j) div n = 0 or (2 * j) div n = 1 by A7,Th121,NAT_1:23;
+      then per cases;
+      suppose (2 * j) div n = 0;
+        then 2 * j = n * 0 + 0 by A14
+                  .= 0;
+        then A15: j = 0;
+        g = x |^ j by A12
+         .= x |^ 0 by A15
+         .= 1_(Dihedral_group n) by GROUP_1:25;
+        then contradiction by A6;
+        hence thesis;
+      end;
+      suppose (2 * j) div n = 1;
+        then 2 * j = n * 1 + 0 by A14
+                  .= 2 * k by A1;
+        hence g = x |^ k by A12;
+      end;
+    end;
+  end;
+  assume g = 1_(Dihedral_group n) or g = x |^ k;
+  then per cases;
+  suppose g = 1_(Dihedral_group n);
+    hence thesis by GROUP_2:46;
+  end;
+  suppose g = x |^ k;
+    hence g in center Dihedral_group n by A1,A3,A4,Th120;
+  end;
+end;
+
+theorem :: TH123
+  for n being even non zero Nat st n > 2 holds
+    INT.Group 2, center Dihedral_group n are_isomorphic
+proof
+  let n be even non zero Nat;
+  assume A1: n > 2;
+  consider k being Nat such that
+  A2: n = 2*k by ABIAN:def 2;
+  2 < k*2 by A1, A2;
+  then 2*(1/2) < (2*k)*(1/2) by XREAL_1:68;
+  then A3: 1 < k;
+  1 < 2 & 2 < n by A1;
+  then 1 < n by XXREAL_0:2;
+  then 1 in Segm n by NAT_1:44;
+  then 1 in INT.Group n by Th76;
+  then reconsider g1 = 1 as Element of INT.Group n;
+  reconsider x = <* g1, 1_(INT.Group 2) *> as Element of Dihedral_group n
+    by Th9;
+  for z being object
+  holds z in the carrier of center Dihedral_group n
+  iff z in {1_(Dihedral_group n), x |^ k}
+  proof
+    let z be object;
+    B1: g1 = 1 & x = <* g1, 1_(INT.Group 2) *>;
+    hereby
+      assume z in the carrier of center Dihedral_group n;
+      then B2: z in center Dihedral_group n;
+      then z in Dihedral_group n by GROUP_2:40;
+      then reconsider z1=z as Element of Dihedral_group n;
+      z1 in center Dihedral_group n by B2;
+      then z1 = 1_(Dihedral_group n) or z1 = x |^ k by A1, A2, Th122;
+      hence z in {1_(Dihedral_group n), x |^ k} by TARSKI:def 2;
+    end;
+    assume B3: z in {1_(Dihedral_group n), x |^ k};
+    then z = 1_(Dihedral_group n) or z = x |^ k by TARSKI:def 2;
+    then reconsider z1=z as Element of Dihedral_group n;
+    z1 = 1_(Dihedral_group n) or z1 = x |^ k by B3, TARSKI:def 2;
+    then z1 in center Dihedral_group n by A1, A2, B1, Th122;
+    hence z in the carrier of center Dihedral_group n;
+  end;
+  then the carrier of center Dihedral_group n c= {1_(Dihedral_group n), x |^ k}
+  & {1_(Dihedral_group n), x |^ k} c= the carrier of center Dihedral_group n;
+
+  then
+  A4: the carrier of center Dihedral_group n = {1_(Dihedral_group n), x |^ k}
+  by XBOOLE_0:def 10;
+  A5: card (center Dihedral_group n) = 2
+  proof
+    0 < k by A3;
+    then k < k + k by XREAL_1:29;
+    then k < n & k <> 0 by A2;
+    then x |^ k <> 1_(Dihedral_group n) by Th102;
+    then card {1_(Dihedral_group n), x |^ k} = 2 by CARD_2:57;
+    hence thesis by A4;
+  end;
+  card (INT.Group 2) = 2;
+  hence INT.Group 2, center Dihedral_group n are_isomorphic by A5, GR_CY_2:19;
+end;
+
+:: In the end, it turns out the real semidirect product was the
+:: friends we made along the way

@@ -1,0 +1,721 @@
+<?xml version="1.0"?>
+<Definientia>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="XBOOLE_0"/>
+<ArticleID name="ZFMISC_1"/>
+<ArticleID name="SUBSET_1"/>
+<ArticleID name="RELAT_1"/>
+<ArticleID name="XTUPLE_0"/>
+<ArticleID name="FUNCT_1"/>
+<ArticleID name="PARTFUN1"/>
+<ArticleID name="MCART_1"/>
+<ArticleID name="FUNCT_2"/>
+<ArticleID name="ORDINAL1"/>
+<ArticleID name="XCMPLX_0"/>
+<ArticleID name="NUMBERS"/>
+<ArticleID name="XREAL_0"/>
+<ArticleID name="COMPLEX1"/>
+<ArticleID name="INT_1"/>
+<ArticleID name="INT_2"/>
+<ArticleID name="NAT_D"/>
+<ArticleID name="XXREAL_0"/>
+<ArticleID name="MEMBERED"/>
+<ArticleID name="FINSUB_1"/>
+<ArticleID name="FINSET_1"/>
+<ArticleID name="CARD_1"/>
+<ArticleID name="FINSEQ_1"/>
+<ArticleID name="BINOP_1"/>
+<ArticleID name="NAT_1"/>
+<ArticleID name="VALUED_0"/>
+<ArticleID name="RAT_1"/>
+<ArticleID name="VALUED_1"/>
+<ArticleID name="RELAT_2"/>
+<ArticleID name="FUNCOP_1"/>
+<ArticleID name="FUNCT_7"/>
+<ArticleID name="ABIAN"/>
+<ArticleID name="SETFAM_1"/>
+<ArticleID name="EQREL_1"/>
+<ArticleID name="FINSEQ_2"/>
+<ArticleID name="FINSEQ_3"/>
+<ArticleID name="STRUCT_0"/>
+<ArticleID name="LATTICES"/>
+<ArticleID name="ALGSTR_0"/>
+<ArticleID name="GROUP_1"/>
+<ArticleID name="GROUP_2"/>
+<ArticleID name="GROUP_3"/>
+<ArticleID name="GROUP_4"/>
+<ArticleID name="RLVECT_1"/>
+<ArticleID name="VECTSP_1"/>
+<ArticleID name="CARD_3"/>
+<ArticleID name="WELLORD1"/>
+<ArticleID name="PBOOLE"/>
+<ArticleID name="PRE_POLY"/>
+<ArticleID name="POLYNOM1"/>
+<ArticleID name="NORMSP_0"/>
+<ArticleID name="NORMSP_1"/>
+<ArticleID name="VECTSP_2"/>
+<ArticleID name="BINOM"/>
+<ArticleID name="POLYNOM3"/>
+<ArticleID name="UPROOTS"/>
+<ArticleID name="INT_3"/>
+<ArticleID name="GAUSSINT"/>
+<ArticleID name="POLYNOM5"/>
+<ArticleID name="RING_4"/>
+<ArticleID name="E_TRANS1"/>
+<ArticleID name="E_TRANS2"/>
+</Signature>
+<Definiens constrkind="K" constrnr="235" aid="E_TRANS2" defnr="1">
+<Typ kind="M" nr="3">
+<Cluster>
+<Adjective nr="12"/>
+<Adjective nr="18">
+<Func kind="K" nr="88"/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Adjective>
+<Adjective nr="215">
+<Func kind="K" nr="502"/>
+</Adjective>
+</Cluster>
+<Func kind="K" nr="10">
+<Func kind="K" nr="11">
+<Func kind="K" nr="88"/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+</Func>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster>
+<Adjective nr="12"/>
+<Adjective nr="18">
+<Func kind="K" nr="88"/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Adjective>
+</Cluster>
+<Func kind="K" nr="10">
+<Func kind="K" nr="11">
+<Func kind="K" nr="88"/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+</Func>
+</Typ>
+<Essentials>
+<Int x="1"/>
+<Int x="2"/>
+</Essentials>
+<DefMeaning kind="m">
+<For>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+</Cluster>
+</Typ>
+<Pred kind="R" nr="1">
+<Func kind="K" nr="175">
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+<LocusVar nr="2"/>
+<Var nr="1"/>
+</Func>
+<Func kind="K" nr="503">
+<Func kind="K" nr="175">
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+<LocusVar nr="1"/>
+<Var nr="1"/>
+</Func>
+</Func>
+</Pred>
+</For>
+</DefMeaning>
+</Definiens>
+<Definiens constrkind="K" constrnr="560" aid="E_TRANS2" defnr="2">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="492">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+</Typ>
+<Essentials>
+<Int x="1"/>
+<Int x="2"/>
+</Essentials>
+<DefMeaning kind="e">
+<Func kind="K" nr="531">
+<Func kind="K" nr="502"/>
+<Func kind="K" nr="323">
+<Func kind="K" nr="94">
+<LocusVar nr="1"/>
+</Func>
+<Func kind="K" nr="502"/>
+</Func>
+<Func kind="K" nr="319">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+</DefMeaning>
+</Definiens>
+<Definiens constrkind="K" constrnr="561" aid="E_TRANS2" defnr="3">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="28" value="false"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="7">
+<Cluster/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="492">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+</Typ>
+<Essentials>
+<Int x="1"/>
+<Int x="2"/>
+<Int x="3"/>
+</Essentials>
+<DefMeaning kind="m">
+<And>
+<Pred kind="R" nr="1">
+<Func kind="K" nr="146">
+<LocusVar nr="3"/>
+</Func>
+<LocusVar nr="2"/>
+</Pred>
+<For>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+</Cluster>
+</Typ>
+<Not>
+<And>
+<Pred kind="R" nr="4">
+<Var nr="1"/>
+<Func kind="K" nr="147">
+<LocusVar nr="3"/>
+</Func>
+</Pred>
+<Not>
+<Pred kind="R" nr="1">
+<Func kind="K" nr="48">
+<LocusVar nr="3"/>
+<Var nr="1"/>
+</Func>
+<Func kind="K" nr="475">
+<Func kind="K" nr="492">
+<Func kind="K" nr="502"/>
+</Func>
+<Func kind="K" nr="560">
+<Var nr="1"/>
+</Func>
+<LocusVar nr="1"/>
+</Func>
+</Pred>
+</Not>
+</And>
+</Not>
+</For>
+</And>
+</DefMeaning>
+</Definiens>
+<Definiens constrkind="K" constrnr="562" aid="E_TRANS2" defnr="4">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="35"/>
+<Adjective nr="93" value="false"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="37"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="7">
+<Cluster/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="492">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+</Typ>
+<Essentials>
+<Int x="1"/>
+<Int x="2"/>
+<Int x="3"/>
+</Essentials>
+<DefMeaning kind="e">
+<Func kind="K" nr="151">
+<Func kind="U" nr="1">
+<Func kind="K" nr="492">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+<Func kind="K" nr="561">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+</Func>
+<Func kind="K" nr="155">
+<Func kind="U" nr="1">
+<Func kind="K" nr="492">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+<Func kind="K" nr="475">
+<Func kind="K" nr="492">
+<Func kind="K" nr="502"/>
+</Func>
+<Func kind="K" nr="560">
+<Func kind="K" nr="102"/>
+</Func>
+<Func kind="K" nr="128">
+<LocusVar nr="1"/>
+<Num nr="1"/>
+</Func>
+</Func>
+</Func>
+</Func>
+</DefMeaning>
+</Definiens>
+<Definiens constrkind="K" constrnr="563" aid="E_TRANS2" defnr="5">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="35"/>
+<Adjective nr="93" value="false"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="37"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="492">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+</Typ>
+<Essentials>
+<Int x="1"/>
+<Int x="2"/>
+<Int x="3"/>
+</Essentials>
+<DefMeaning kind="e">
+<Func kind="K" nr="382">
+<Func kind="K" nr="492">
+<Func kind="K" nr="502"/>
+</Func>
+<Func kind="K" nr="562">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+</Func>
+</Func>
+</DefMeaning>
+</Definiens>
+<Definiens constrkind="K" constrnr="564" aid="E_TRANS2" defnr="6">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="37"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="35"/>
+<Adjective nr="93" value="false"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster>
+<Adjective nr="12"/>
+<Adjective nr="18">
+<Func kind="K" nr="88"/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Adjective>
+<Adjective nr="215">
+<Func kind="K" nr="502"/>
+</Adjective>
+<Adjective nr="228">
+<Func kind="K" nr="502"/>
+</Adjective>
+</Cluster>
+<Func kind="K" nr="10">
+<Func kind="K" nr="11">
+<Func kind="K" nr="88"/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+</Func>
+</Typ>
+<Typ kind="M" nr="7">
+<Cluster/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="396"/>
+</Func>
+</Typ>
+<Essentials>
+<Int x="1"/>
+<Int x="2"/>
+<Int x="3"/>
+<Int x="4"/>
+</Essentials>
+<DefMeaning kind="m">
+<And>
+<Pred kind="R" nr="1">
+<Func kind="K" nr="146">
+<LocusVar nr="4"/>
+</Func>
+<LocusVar nr="1"/>
+</Pred>
+<For>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+</Cluster>
+</Typ>
+<Not>
+<And>
+<Pred kind="R" nr="4">
+<Var nr="1"/>
+<Func kind="K" nr="147">
+<LocusVar nr="4"/>
+</Func>
+</Pred>
+<Not>
+<Pred kind="R" nr="1">
+<Func kind="K" nr="48">
+<LocusVar nr="4"/>
+<Var nr="1"/>
+</Func>
+<Func kind="K" nr="93">
+<Func kind="K" nr="175">
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+<LocusVar nr="3"/>
+<Var nr="1"/>
+</Func>
+<Func kind="K" nr="48">
+<Func kind="K" nr="557">
+<Func kind="K" nr="563">
+<LocusVar nr="2"/>
+<LocusVar nr="1"/>
+</Func>
+</Func>
+<Func kind="K" nr="323">
+<Var nr="1"/>
+<Func kind="K" nr="396"/>
+</Func>
+</Func>
+</Func>
+</Pred>
+</Not>
+</And>
+</Not>
+</For>
+</And>
+</DefMeaning>
+</Definiens>
+<Definiens constrkind="K" constrnr="565" aid="E_TRANS2" defnr="7">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="37"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="35"/>
+<Adjective nr="93" value="false"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster>
+<Adjective nr="12"/>
+<Adjective nr="18">
+<Func kind="K" nr="88"/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Adjective>
+<Adjective nr="215">
+<Func kind="K" nr="502"/>
+</Adjective>
+<Adjective nr="228">
+<Func kind="K" nr="502"/>
+</Adjective>
+</Cluster>
+<Func kind="K" nr="10">
+<Func kind="K" nr="11">
+<Func kind="K" nr="88"/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+</Func>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster>
+<Adjective nr="108" value="false">
+<Func kind="K" nr="396"/>
+</Adjective>
+</Cluster>
+<Func kind="U" nr="1">
+<Func kind="K" nr="396"/>
+</Func>
+</Typ>
+<Typ kind="M" nr="7">
+<Cluster/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="396"/>
+</Func>
+</Typ>
+<Essentials>
+<Int x="1"/>
+<Int x="2"/>
+<Int x="3"/>
+<Int x="4"/>
+<Int x="5"/>
+</Essentials>
+<DefMeaning kind="m">
+<And>
+<Pred kind="R" nr="1">
+<Func kind="K" nr="146">
+<LocusVar nr="5"/>
+</Func>
+<LocusVar nr="1"/>
+</Pred>
+<For>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+</Cluster>
+</Typ>
+<Not>
+<And>
+<Pred kind="R" nr="4">
+<Var nr="1"/>
+<Func kind="K" nr="147">
+<LocusVar nr="5"/>
+</Func>
+</Pred>
+<Not>
+<Pred kind="R" nr="1">
+<Func kind="K" nr="48">
+<LocusVar nr="5"/>
+<Var nr="1"/>
+</Func>
+<Func kind="K" nr="94">
+<Func kind="K" nr="93">
+<Func kind="K" nr="175">
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+<LocusVar nr="3"/>
+<Var nr="1"/>
+</Func>
+<Func kind="K" nr="93">
+<Func kind="K" nr="176">
+<Func kind="U" nr="1">
+<Func kind="K" nr="396"/>
+</Func>
+<Func kind="K" nr="346">
+<Func kind="K" nr="396"/>
+</Func>
+<LocusVar nr="4"/>
+<Var nr="1"/>
+</Func>
+<Func kind="K" nr="48">
+<Func kind="K" nr="557">
+<Func kind="K" nr="563">
+<LocusVar nr="2"/>
+<LocusVar nr="1"/>
+</Func>
+</Func>
+<Func kind="K" nr="102"/>
+</Func>
+</Func>
+</Func>
+</Func>
+</Pred>
+</Not>
+</And>
+</Not>
+</For>
+</And>
+</DefMeaning>
+</Definiens>
+<Definiens constrkind="K" constrnr="566" aid="E_TRANS2" defnr="8">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="37"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="35"/>
+<Adjective nr="93" value="false"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster>
+<Adjective nr="12"/>
+<Adjective nr="18">
+<Func kind="K" nr="88"/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Adjective>
+<Adjective nr="215">
+<Func kind="K" nr="502"/>
+</Adjective>
+<Adjective nr="228">
+<Func kind="K" nr="502"/>
+</Adjective>
+</Cluster>
+<Func kind="K" nr="10">
+<Func kind="K" nr="11">
+<Func kind="K" nr="88"/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+</Func>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster>
+<Adjective nr="108" value="false">
+<Func kind="K" nr="396"/>
+</Adjective>
+</Cluster>
+<Func kind="U" nr="1">
+<Func kind="K" nr="396"/>
+</Func>
+</Typ>
+<Typ kind="M" nr="7">
+<Cluster/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="396"/>
+</Func>
+</Typ>
+<Essentials>
+<Int x="1"/>
+<Int x="2"/>
+<Int x="3"/>
+<Int x="4"/>
+<Int x="5"/>
+</Essentials>
+<DefMeaning kind="e">
+<Func kind="K" nr="474">
+<Func kind="K" nr="396"/>
+<Func kind="K" nr="564">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+</Func>
+<Func kind="K" nr="565">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+</Func>
+</Func>
+</DefMeaning>
+</Definiens>
+<Definiens constrkind="K" constrnr="567" aid="E_TRANS2" defnr="9">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="37"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="27"/>
+<Adjective nr="35"/>
+<Adjective nr="93" value="false"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster>
+<Adjective nr="12"/>
+<Adjective nr="18">
+<Func kind="K" nr="88"/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Adjective>
+<Adjective nr="215">
+<Func kind="K" nr="502"/>
+</Adjective>
+<Adjective nr="228">
+<Func kind="K" nr="502"/>
+</Adjective>
+</Cluster>
+<Func kind="K" nr="10">
+<Func kind="K" nr="11">
+<Func kind="K" nr="88"/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Func>
+</Func>
+</Typ>
+<Typ kind="M" nr="7">
+<Cluster/>
+<Func kind="U" nr="1">
+<Func kind="K" nr="502"/>
+</Func>
+</Typ>
+<Essentials>
+<Int x="1"/>
+<Int x="2"/>
+<Int x="3"/>
+<Int x="4"/>
+</Essentials>
+<DefMeaning kind="e">
+<Func kind="K" nr="564">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+</Func>
+</DefMeaning>
+</Definiens>
+</Definientia>

@@ -1,0 +1,365 @@
+:: Formal Proof of Transcendence of the Number $e$. {P}art {I}
+::  by Yasushige Watase
+::
+:: Received November 17, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ARYTM_3, VECTSP_1, TARSKI, NAT_1, MESFUNC1, VECTSP_2, STRUCT_0,
+      SUBSET_1, SUPINF_2, POLYNOM1, POLYNOM3, HURWITZ, FINSEQ_1, ALGSEQ_1,
+      FUNCT_1, RELAT_1, CARD_1, XBOOLE_0, NUMBERS, MSSUBFAM, CARD_3, AFINSQ_1,
+      PARTFUN1, XXREAL_0, XCMPLX_0, ORDINAL4, NEWTON, ARYTM_1, FUNCOP_1, INT_1,
+      INT_2, RINGDER1, FUNCT_7, REAL_1, REALSET1, RAT_1, INT_3, FOMODEL1,
+      C0SP1, FIELD_4, CARD_FIL, GROUP_4, IDEAL_1, GROUP_1, RING_3, POLYNOM5,
+      FINSEQ_3, POLYFORM, LTLAXIO1, CALCUL_2, FIELD_1, FUNCT_4, CAT_1,
+      ORDINAL2, UPROOTS, PARTFUN3, FDIFF_1, MSAFREE2, SIN_COS, VALUED_0,
+      VALUED_1, QC_LANG1, FCONT_1, XXREAL_1, ALGNUM_1, GAUSSINT, RATFUNC1,
+      FINSET_1, DIOPHAN2, POLYNOM4, PREPOWER, POLYNOM2, YELLOW_8, IRRAT_1,
+      RING_2, GCD_1, E_TRANS1, RLVECT_1, ALGSTR_0, LATTICES;
+ notations TARSKI, XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, RELSET_1,
+      PARTFUN1, FUNCT_2, FUNCOP_1, FINSET_1, NUMBERS, XCMPLX_0, XXREAL_0,
+      XREAL_0, NAT_1, INT_1, RAT_1, VALUED_0, NAT_D, FINSEQ_1, VALUED_1,
+      RFUNCT_1, RVSUM_1, NEWTON, RCOMP_1, FCONT_1, FDIFF_1, FUNCT_7, SIN_COS,
+      IRRAT_1, TAYLOR_1, PARTFUN3, WSIERP_1, STRUCT_0, GROUP_1, VECTSP_1,
+      VECTSP_2, GROUP_4, POLYNOM1, ALGSEQ_1, GCD_1, BINOM, POLYNOM3, POLYNOM4,
+      RLVECT_1, POLYNOM5, UPROOTS, INT_3, RING_1, C0SP1, HURWITZ, IDEAL_1,
+      VECTSP11, RATFUNC1, GAUSSINT, RING_2, RING_3, RING_4, ALGNUM_1, POLYDIFF,
+      DIOPHAN2, FIELD_1, FIELD_4, RINGDER1, BASEL_2;
+ constructors RELSET_1, REALSET1, NAT_D, BINOP_2, FINSEQOP, NEWTON, RCOMP_1,
+      FCONT_1, WSIERP_1, FUNCT_7, LIMFUNC1, SIN_COS, TAYLOR_1, PARTFUN3,
+      GROUP_4, ALGSEQ_1, GCD_1, BINOM, POLYNOM4, VECTSP11, RATFUNC1, RING_3,
+      ALGNUM_1, POLYDIFF, DIOPHAN2, FIELD_4, RINGDER1, BASEL_2;
+ registrations XXREAL_0, XREAL_0, CARD_1, ORDINAL1, RELSET_1, FUNCT_1, NAT_1,
+      INT_1, POLYDIFF, FINSEQ_1, STRUCT_0, RLVECT_1, VECTSP_1, ALGSTR_1,
+      RING_3, RING_4, RING_5, POLYNOM3, POLYNOM4, POLYNOM5, RATFUNC1, FUNCOP_1,
+      RELAT_1, FDIFF_1, FUNCT_2, RINGDER1, GAUSSINT, INT_3, RAT_1, NEWTON04,
+      XCMPLX_0, VALUED_1, MEMBERED, FINSET_1, VALUED_0, NEWTON, RCOMP_1,
+      RVSUM_4, NUMBERS, RVSUM_3, NIVEN, RING_2, BORSUK_5, SIN_COS, FIELD_14,
+      FIELD_4, XBOOLE_0;
+ requirements NUMERALS, SUBSET, BOOLE, REAL, ARITHM;
+
+
+begin :: Preliminaries
+
+ reserve n,k for Nat;
+ reserve L for comRing;
+ reserve R for domRing;
+ reserve x0 for positive Real;
+
+definition
+  func exp_R1 -> Function of REAL,REAL equals
+:: E_TRANS1:def 1
+  exp_R^;
+end;
+
+registration
+  cluster exp_R1 -> differentiable for Function of REAL,REAL;
+end;
+
+registration
+  cluster exp_R -> differentiable for Function of REAL,REAL;
+end;
+
+theorem :: E_TRANS1:1
+  for n,m be Nat,b be Element of R holds
+    (n*m)*b = n*(m*b);
+
+theorem :: E_TRANS1:2
+  for F,G be FinSequence of F_Real
+  st len F = len G & (for i being Nat st i in dom F holds F.i <= G.i) holds
+  Sum F <= Sum G;
+
+::$N Generalization of ZMATRLIN:42 ::: TODO
+theorem :: E_TRANS1:3
+  for I be Ideal of L
+  for F be FinSequence of L
+    st for i being Nat st i in dom F holds F.i in I holds Sum F in I;
+
+theorem :: E_TRANS1:4 :::
+  for a be Element of L, p be non empty FinSequence of the carrier of L
+    st (for j be Nat st j in dom p holds a divides p/.j)
+    holds a divides Sum p;
+
+definition ::: Newton symbol
+  let k,j be Nat;
+  func eta(k,j) -> Element of NAT equals
+:: E_TRANS1:def 2
+  k! / ((k-'j)!);
+end;
+
+theorem :: E_TRANS1:5
+  for k,j be Nat st j <= k holds (j!)*(k choose j) = eta(k,j);
+
+registration
+  let R be (INT.Ring)-extending comRing;
+  let i be Integer;
+  reduce In(i,R) to i;
+end;
+
+theorem :: E_TRANS1:6
+  for n be Nat,
+      f be Element of the carrier of Polynom-Ring F_Rat holds
+    n*f = In(n,F_Rat)*f;
+
+theorem :: E_TRANS1:7
+  for n be Nat, f,g be Element of L st
+    f divides g holds f divides n*g;
+
+registration
+  cluster INT -valued for FinSequence of F_Rat;
+end;
+
+registration
+  cluster 0_.F_Rat -> INT -valued;
+end;
+
+registration
+  cluster 1_.F_Rat -> INT -valued;
+end;
+
+registration
+  cluster monic INT -valued for Polynomial of F_Rat;
+end;
+
+theorem :: E_TRANS1:8
+  for f be Element of the carrier of Polynom-Ring R holds
+    rng f = f.:(Support f) \/ {0.R};
+
+definition
+  let f be Element of the carrier of Polynom-Ring F_Rat;
+  func denomi-set(f) -> non empty finite Subset of NAT equals
+:: E_TRANS1:def 3
+  TRANQN.:(rng f);
+end;
+
+definition
+  let f be Element of the carrier of Polynom-Ring F_Rat;
+  func denomi-seq(f) -> non empty FinSequence of NAT equals
+:: E_TRANS1:def 4
+  canFS denomi-set(f);
+end;
+
+theorem :: E_TRANS1:9
+  for f be Element of the carrier of Polynom-Ring F_Rat holds
+    Product denomi-seq(f) is non zero;
+
+theorem :: E_TRANS1:10
+  for f be Element of the carrier of Polynom-Ring F_Rat, i be Nat
+    holds
+    denominator (f.i) in denomi-set(f) & ex z be Integer st
+    z*(denominator (f.i)) = Product(denomi-seq(f));
+
+theorem :: E_TRANS1:11
+  for K,L be Field, w be Element of L st K is Subring of L &
+    w is_integral_over K holds Ann_Poly(w,K) is maximal;
+
+theorem :: E_TRANS1:12
+  for f be Element of Polynom-Ring F_Rat, n be non zero Nat
+    st f is irreducible holds n*f is irreducible;
+
+theorem :: E_TRANS1:13
+  for x be Element of F_Real st x is irrational holds
+  for g be non zero Polynomial of F_Rat st Ext_eval(g,x) = 0 holds deg g >= 2;
+
+begin :: Some Properties of Algebraic Numbers
+
+theorem :: E_TRANS1:14
+  for g be Polynomial of F_Rat st deg g >= 2 & @g is irreducible holds
+    g.0 <> 0.F_Rat;
+
+begin :: Construction Polynomial Transformation 'F'.
+
+theorem :: E_TRANS1:15
+  for L be non degenerated domRing, n be non zero Nat,
+    a be non zero Element of L st Char L = 0 holds n*a <> 0.L;
+
+theorem :: E_TRANS1:16
+  for R be comRing
+  for f be Element of the carrier of Polynom-Ring R holds
+  for i be Nat st i >= 1 & i is_at_least_length_of f & f.(i-1) <> 0.R holds
+    len f = i;
+
+theorem :: E_TRANS1:17
+  for R be domRing
+  for f be Element of the carrier of Polynom-Ring R st len f > 1 & Char R = 0
+    holds len ((Der1 R).f) = (len f)-1;
+
+theorem :: E_TRANS1:18
+  for L be domRing, D be Derivation of L holds
+  for f be Element of the carrier of L, j,n be Nat
+    holds (D|^n).(j*f) = j*((D|^n).f);
+
+theorem :: E_TRANS1:19
+  for k be Nat, f be Element of the carrier of Polynom-Ring INT.Ring
+    st ((Der1(INT.Ring))|^1).(f|^1) = 1.Polynom-Ring INT.Ring holds
+    for j be Nat st 1 <= j <= k holds
+    ((Der1(INT.Ring))|^j).(f|^k) = (eta(k,j))*(f|^(k-'j));
+
+theorem :: E_TRANS1:20
+  for k be Nat,f be Element of the carrier of Polynom-Ring INT.Ring
+    st ((Der1(INT.Ring))|^1).(f|^1) = 1.Polynom-Ring INT.Ring holds
+     ((Der1(INT.Ring))|^k).(f|^k) = (k!)*(1.Polynom-Ring INT.Ring);
+
+theorem :: E_TRANS1:21
+  for j be Nat st j > k holds
+  for f be Element of the carrier of Polynom-Ring INT.Ring
+    st ((Der1(INT.Ring))|^1).(f|^1) = 1.Polynom-Ring INT.Ring holds
+     ((Der1(INT.Ring))|^j).(f|^k) = 0.Polynom-Ring INT.Ring;
+
+theorem :: E_TRANS1:22
+  for R be domRing
+  for f be Element of the carrier of Polynom-Ring R, k be Nat holds
+  for i be Nat holds (((Der1 R)|^k).f).i = (eta(i+k,k))*(f.(i+k));
+
+theorem :: E_TRANS1:23
+  for h be Function of R,R, s be FinSequence of the carrier of R
+   st h is additive holds h.(Sum s) = Sum(h*s);
+
+theorem :: E_TRANS1:24
+  for R be domRing
+  for f be Element of the carrier of Polynom-Ring R, j be Nat
+  st len f > j & Char R = 0
+  holds len (((Der1(R))|^j).f) = (len f)-j;
+
+definition
+  let p be Element of the carrier of Polynom-Ring INT.Ring;
+  func ^p -> Element of the carrier of Polynom-Ring F_Real equals
+:: E_TRANS1:def 5
+  p;
+end;
+
+definition
+  let F be FinSequence of the carrier of Polynom-Ring INT.Ring;
+  func ^F -> FinSequence of the carrier of Polynom-Ring F_Real means
+:: E_TRANS1:def 6
+  dom it = dom F & for i be Nat st i in dom F holds it.i = ^(F/.i);
+ end;
+
+definition
+  let L be comRing,
+      F be FinSequence of the carrier of Polynom-Ring L,
+      x be Element of L;
+  func eval(F,x) -> FinSequence of the carrier of L means
+:: E_TRANS1:def 7
+  dom it = dom F & for i be Nat st i in dom F holds it.i = eval(~(F/.i),x);
+ end;
+
+theorem :: E_TRANS1:25
+  for N0 be Nat
+  for L being comRing,
+    F be FinSequence of the carrier of Polynom-Ring L, x be Element of L
+    st len F = N0+1 holds
+    eval(F,x) = (eval(F|N0,x))^<*eval(~(F/.(len F)),x)*>;
+
+theorem :: E_TRANS1:26
+  for L being comRing,
+      F be FinSequence of the carrier of Polynom-Ring L,
+      x be Element of L holds
+    eval(~Sum F,x) = Sum eval(F,x);
+
+theorem :: E_TRANS1:27
+  for p,q being Element of the carrier of Polynom-Ring INT.Ring
+   holds ^(p + q) = ^p + ^q & ^(p * q) = (^p) * (^q);
+
+definition
+  let f be Element of the carrier of Polynom-Ring (INT.Ring);
+  func 'G'(f) -> FinSequence of the carrier of Polynom-Ring (INT.Ring)
+  means
+:: E_TRANS1:def 8
+  len it = len f & for i be Nat st i in dom it holds
+  it.i = ((Der1(INT.Ring))|^(i-'1)).f;
+end;
+
+theorem :: E_TRANS1:28
+   for F be FinSequence of the carrier of Polynom-Ring INT.Ring,
+   x be Element of INT.Ring, x1 be Element of F_Real st x = x1 holds
+   eval(^F,x1) = eval(F,x);
+
+theorem :: E_TRANS1:29
+  for F be FinSequence of the carrier of Polynom-Ring INT.Ring holds
+    Sum ^F = ^(Sum F);
+
+theorem :: E_TRANS1:30
+  for x0 be Element of INT.Ring, x be Element of F_Real,
+  F be FinSequence of the carrier of Polynom-Ring INT.Ring st x = x0 holds
+  (Eval(~^(Sum F))).x = Sum eval(F,x0);
+
+::$INSERT The Definition below corresponds to the Transformation (1) in \cite{HURWITZ:1893}
+definition
+  let f be Element of the carrier of Polynom-Ring INT.Ring;
+  func 'F'(f) -> Function of REAL,REAL equals
+:: E_TRANS1:def 9
+  Eval ~^(Sum 'G'(f));
+end;
+
+begin :: Construct the equation (2) in \cite{HURWITZ:1893}.
+
+theorem :: E_TRANS1:31
+::: adjust POLYDIFF:61 to derivation
+   for p be Element of the carrier of Polynom-Ring F_Real holds
+   (Eval(~p))`| = Eval(~((Der1(F_Real)).p));
+
+definition
+  let f be Element of the carrier of Polynom-Ring INT.Ring;
+  func Phi(f) -> Function of REAL,REAL equals
+:: E_TRANS1:def 10
+  (exp_R1)(#)('F'(f));
+end;
+
+registration
+  let f be Element of the carrier of Polynom-Ring INT.Ring;
+  cluster 'F'(f) -> differentiable for Function of REAL,REAL;
+end;
+
+theorem :: E_TRANS1:32
+  for f be Element of the carrier of Polynom-Ring INT.Ring holds
+    ((exp_R1)(#)('F'(f)))|[.0,x0.] is continuous;
+
+theorem :: E_TRANS1:33
+  for f be Element of the carrier of Polynom-Ring INT.Ring holds
+    (exp_R1)(#)('F'(f)) is_differentiable_on ].0,x0.[;
+
+::$N The following theorem corresponds to the equation (2) in \cite{HURWITZ:1893}.
+theorem :: E_TRANS1:34
+  for f be Element of the carrier of Polynom-Ring INT.Ring,
+    x0 be positive Real st len f > 0 holds
+    ex s be Real st 0 < s & s < 1 &
+    ('F'(f)).x0 - (exp_R.x0)*(('F'(f)).0)
+    = -x0*(exp_R.(x0*(1-s)))*(Eval(~(^f))).(s*x0);
+
+:::  Prepare calculation of the following Function
+:::  f_0(p,x) = \frac{1}{(p-1)!}x^{p-1}(1-x)^{p}(2-x)^{p}\cdots (n-x)^{p}
+
+::$N Ring Extended version of FIELD_13:13.
+theorem :: E_TRANS1:35
+   for F being domRing, E being RingExtension of F
+   for p being Polynomial of F for q being Polynomial of E
+   for a being Element of F, b being Element of E
+   st p = q & a = b holds a * p = b * q;
+
+::$N Ring Extension version of REALALG3:16.
+theorem :: E_TRANS1:36
+   for F being domRing, E being domRingExtension of F
+   for p being Polynomial of F
+   for a being Element of F, x,b being Element of E st b = a
+   holds Ext_eval(a*p,x) = b * Ext_eval(p,x);
+
+theorem :: E_TRANS1:37
+  for L being non degenerated comRing,
+    F be non empty FinSequence of the carrier of Polynom-Ring L,
+    x be Element of L
+    holds eval(~(Product F),x) = Product eval(F,x);
+
+theorem :: E_TRANS1:38
+  for F be non empty FinSequence of the carrier of Polynom-Ring INT.Ring,
+      x be Element of F_Real
+    holds eval(~(^(Product F)),x) = Product eval(^F,x);

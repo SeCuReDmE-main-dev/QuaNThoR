@@ -1,0 +1,365 @@
+:: Elementary Number Theory Problems. Part {XIII}
+::  by Artur Korni{\l}owicz and Rafa{\l} Ziobro
+:: 
+:: Received June 18, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, NAT_1, RELAT_1, FUNCT_1, XXREAL_0, ARYTM_3, XCMPLX_0,
+      CARD_1, INT_1, NEWTON, INT_2, ARYTM_1, SUBSET_1, XBOOLE_0, TARSKI, ABIAN,
+      REAL_1, VALUED_0, CARD_3, FINSEQ_1, NUMBER02, ORDINAL1, SQUARE_1,
+      ORDINAL4, ORDINAL2, PARTFUN3, COMPLEX1, RAT_1, POWER, FUNCT_7, NUMBER10,
+      NUMBER13;
+ notations TARSKI, XBOOLE_0, SUBSET_1, DOMAIN_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      RELAT_1, FUNCT_1, VALUED_0, XREAL_0, RAT_1, INT_1, INT_2, NAT_D,
+      XXREAL_0, SQUARE_1, FINSEQ_1, PARTFUN3, RVSUM_1, NEWTON, POWER, WSIERP_1,
+      ABIAN, NUMBER02, NUMBER10;
+ constructors NAT_D, RELSET_1, ABIAN, PEPIN, NUMBER02, PYTHTRIP, MOEBIUS1,
+      PARTFUN3, NEWTON03, POWER, DOMAIN_1, WSIERP_1, NUMBER10;
+ registrations ORDINAL1, NUMBERS, XCMPLX_0, XXREAL_0, XREAL_0, NAT_1, INT_1,
+      VALUED_0, CARD_1, NEWTON, NEWTON02, NEWTON03, ABIAN, NAT_6, JORDAN1D,
+      FINSEQ_1, RVSUM_1, FUNCT_1, RELAT_1, NUMBER02, PYTHTRIP, FINSEQ_9, RAT_1,
+      SQUARE_1, POWER, NUMBER08, RVSUM_4, NEWTON04, COMPLEX3, NEWTON05;
+ requirements REAL, NUMERALS, BOOLE, SUBSET, ARITHM;
+
+
+begin
+
+reserve a,b,c,k,m,n for Nat;
+reserve i,j for Integer;
+reserve p for Prime;
+
+theorem :: NUMBER13:1
+  n < 3 implies n = 0 or n = 1 or n = 2;
+
+theorem :: NUMBER13:2
+  n < 4 implies n = 0 or n = 1 or n = 2 or n = 3;
+
+theorem :: NUMBER13:3
+  n < 5 implies n = 0 or n = 1 or n = 2 or n = 3 or n = 4;
+
+registration
+  cluster 1/2 -> non integer;
+end;
+
+registration
+  cluster non natural for Rational;
+end;
+
+registration
+  cluster non integer for Rational;
+end;
+
+theorem :: NUMBER13:4
+  j <> 0 & i / j is integer implies j divides i;
+
+registration
+  let q be non integer Rational;
+  cluster q^2 -> non integer;
+end;
+
+theorem :: NUMBER13:5
+  a/b*c is natural & b <> 0 & a,b are_coprime implies
+   ex d being Nat st c = b*d;
+
+begin :: Problem 41
+
+:: Problem 41 a
+theorem :: NUMBER13:6
+  for k being Integer holds 2*k+1, 9*k+4 are_coprime;
+
+:: Problem 41 b
+theorem :: NUMBER13:7
+  for k being Integer holds (2*k - 1) gcd (9*k + 4) = (k + 8) gcd 17;
+
+begin :: Problem 92
+
+theorem :: NUMBER13:8
+  m > 1 & n > 1 & m,n are_coprime implies
+  ex p,q being Prime st p divides m & not p divides n &
+   q divides n & not q divides m & p <> q;
+
+definition
+  let k;
+  func primesFinS(k) -> FinSequence of NAT means
+:: NUMBER13:def 1
+  len it = k &
+  for i being Nat st i < k holds it.(i+1) = primenumber i;
+end;
+
+registration
+  cluster primesFinS 0 -> empty;
+end;
+
+theorem :: NUMBER13:9
+  primesFinS 1 = <*2*>;
+
+theorem :: NUMBER13:10
+  primesFinS 2 = <*2,3*>;
+
+theorem :: NUMBER13:11
+  primesFinS 3 = <*2,3,5*>;
+
+theorem :: NUMBER13:12
+  p < primenumber(k) iff primeindex p < k;
+
+theorem :: NUMBER13:13
+  primeindex p < k implies 1+primeindex p in dom primesFinS k;
+
+theorem :: NUMBER13:14
+  primeindex p < k implies (primesFinS k).(1+primeindex p) = p;
+
+theorem :: NUMBER13:15
+  p < primenumber(k) implies p in rng primesFinS k;
+
+theorem :: NUMBER13:16
+  p,Product primesFinS k are_coprime implies primenumber(k) <= p;
+
+registration
+  let k;
+  cluster primesFinS k -> positive-yielding;
+end;
+
+registration
+  let k;
+  cluster primesFinS k -> increasing;
+end;
+
+definition
+  let R be ext-real-valued Relation;
+  attr R is with_values_greater_or_equal_one means
+:: NUMBER13:def 2
+  for r being ExtReal st r in rng R holds r >= 1;
+end;
+
+registration
+  cluster <* 1 *> -> with_values_greater_or_equal_one;
+end;
+
+registration
+  cluster with_values_greater_or_equal_one for natural-valued FinSequence;
+end;
+
+definition
+  let f be ext-real-valued Function;
+  redefine attr f is with_values_greater_or_equal_one means
+:: NUMBER13:def 3
+  for x being object st x in dom f holds f.x >= 1;
+end;
+
+definition
+  let f be ext-real-valued FinSequence;
+  redefine attr f is with_values_greater_or_equal_one means
+:: NUMBER13:def 4
+  for n being Nat st 1 <= n <= len f holds f.n >= 1;
+end;
+
+registration
+  cluster empty -> with_values_greater_or_equal_one
+          for ext-real-valued Relation;
+end;
+
+registration
+  cluster with_values_greater_or_equal_one -> positive-yielding
+          for ext-real-valued Relation;
+end;
+
+theorem :: NUMBER13:17
+  m <= n implies (primesFinS n) | m = primesFinS m;
+
+theorem :: NUMBER13:18
+  for P,R being ext-real-valued Relation
+  st rng P c= rng R & R is with_values_greater_or_equal_one
+  holds P is with_values_greater_or_equal_one;
+
+theorem :: NUMBER13:19
+  for f,g being ext-real-valued FinSequence
+  st f^g is with_values_greater_or_equal_one
+  holds
+  f is with_values_greater_or_equal_one &
+  g is with_values_greater_or_equal_one;
+
+theorem :: NUMBER13:20
+  for r being ExtReal holds
+  <* r *> is with_values_greater_or_equal_one implies r >= 1;
+
+theorem :: NUMBER13:21
+  for f being with_values_greater_or_equal_one real-valued FinSequence
+  holds Product f >= 1;
+
+theorem :: NUMBER13:22
+  for f being with_values_greater_or_equal_one real-valued FinSequence
+  holds Product(f|n) <= Product f;
+
+registration
+  let k;
+  cluster primesFinS k -> with_values_greater_or_equal_one;
+end;
+
+:: Problem 92
+theorem :: NUMBER13:23
+  3 <= k implies primenumber(k) + primenumber(k+1) <= Product primesFinS k;
+
+begin :: Problem 121
+
+definition
+  let k, n be Nat;
+  pred n satisfies_Sierpinski_problem_121_for k means
+:: NUMBER13:def 5
+  k * 2|^(2|^n) + 1 is composite &
+  for m being positive Nat st m < n holds k * 2|^(2|^m) + 1 is non composite;
+end;
+
+:: Problem 121 a
+theorem :: NUMBER13:24
+  5 satisfies_Sierpinski_problem_121_for 1;
+
+:: Problem 121 b
+theorem :: NUMBER13:25
+  1 satisfies_Sierpinski_problem_121_for 2;
+
+:: Problem 121 c
+theorem :: NUMBER13:26
+  2 satisfies_Sierpinski_problem_121_for 3;
+
+:: Problem 121 d
+theorem :: NUMBER13:27
+  2 satisfies_Sierpinski_problem_121_for 4;
+
+:: Problem 121 e
+theorem :: NUMBER13:28
+  1 satisfies_Sierpinski_problem_121_for 5;
+
+:: Problem 121 f
+theorem :: NUMBER13:29
+  1 satisfies_Sierpinski_problem_121_for 6;
+
+:: Problem 121 g
+theorem :: NUMBER13:30
+  3 satisfies_Sierpinski_problem_121_for 7;
+
+:: Problem 121 h
+theorem :: NUMBER13:31
+  1 satisfies_Sierpinski_problem_121_for 8;
+
+:: Problem 121 i
+theorem :: NUMBER13:32
+  2 satisfies_Sierpinski_problem_121_for 9;
+
+:: Problem 121 j
+theorem :: NUMBER13:33
+  2 satisfies_Sierpinski_problem_121_for 10;
+
+begin
+
+theorem :: NUMBER13:34
+  for n being positive Nat holds 3 divides (3*a+2) * 2|^(2|^n) + 1;
+
+theorem :: NUMBER13:35
+  for n being positive Nat holds 2 * 2|^(2|^n) + 1 is composite;
+
+theorem :: NUMBER13:36
+  for n being positive Nat holds 5 * 2|^(2|^n) + 1 is composite;
+
+theorem :: NUMBER13:37
+  for n being positive Nat holds 8 * 2|^(2|^n) + 1 is composite;
+
+:: Problem 122
+theorem :: NUMBER13:38
+  for k being positive Nat holds
+  k <= 10 & (for n being positive Nat holds k * 2|^(2|^n) + 1 is composite)
+  iff k in { 2,5,8 };
+
+begin :: Problem 123
+
+theorem :: NUMBER13:39
+  2|^(2|^(n+1)) + 2|^(2|^n) + 1 >= 7;
+
+theorem :: NUMBER13:40
+  n > 0 implies 2|^(2|^(n+1)) + 2|^(2|^n) + 1 >= 21;
+
+theorem :: NUMBER13:41
+  n > 1 implies 2|^(2|^(n+1)) + 2|^(2|^n) + 1 >= 273;
+
+theorem :: NUMBER13:42
+  (m is even or m = 2*n) implies 2|^m mod 3 = 1;
+
+theorem :: NUMBER13:43
+  (m is odd or m = 2*n+1) implies 2|^m mod 3 = 2;
+
+theorem :: NUMBER13:44
+  for n being non zero Nat holds 3 divides 2|^(2|^(n+1)) + 2|^(2|^n) + 1;
+
+theorem :: NUMBER13:45
+  7 divides 2|^(2|^(n+1)) + 2|^(2|^n) + 1;
+
+registration
+  let n be non zero Nat;
+  cluster 1/3 * (2|^(2|^(n+1)) + 2|^(2|^n) + 1) -> natural;
+end;
+
+:: Problem 123
+theorem :: NUMBER13:46
+  for n being non zero Nat holds
+  n > 1 implies 1/3 * (2|^(2|^(n+1)) + 2|^(2|^n) + 1) is composite;
+
+begin
+
+:: Problem 172
+theorem :: NUMBER13:47
+  for n,x,y,z being positive Nat holds
+  n|^x + n|^y = n|^z iff n = 2 & y = x & z = x+1;
+
+begin :: Problem 182
+
+theorem :: NUMBER13:48
+  for a, b, c being Real st c > 1 & c to_power a = c to_power b holds a = b;
+
+theorem :: NUMBER13:49
+  for n,x,y,z,t being positive Nat st x <= y <= z holds
+  n|^x + n|^y + n|^z = n|^t iff
+  n = 2 & y = x & z = x+1 & t = x+2 or
+  n = 3 & y = x & z = x & t = x+1;
+
+:: Problem 182
+theorem :: NUMBER13:50
+  for n,x,y,z,t being positive Nat holds
+  n|^x + n|^y + n|^z = n|^t iff
+  n = 2 & y = x & z = x+1 & t = x+2 or
+  n = 2 & y = x+1 & z = x & t = x+2 or
+  n = 2 & z = y & x = y+1 & t = y+2 or
+  n = 3 & y = x & z = x & t = x+1;
+
+begin :: Problem 183
+
+:: Problem 183
+theorem :: NUMBER13:51
+  for x,y,z,t being positive Nat holds 4|^x + 4|^y + 4|^z <> 4|^t;
+
+begin
+
+:: Problem 191
+theorem :: NUMBER13:52
+  for x,y,z,t being non zero Integer holds
+  x^2 + 5*y^2 <> z^2 or 5*x^2 + y^2 <> t^2;
+
+begin
+
+:: Problem 192
+theorem :: NUMBER13:53
+  for x,y,z,t being non zero Integer holds
+  x^2 + 6*y^2 <> z^2 or 6*x^2 + y^2 <> t^2;
+
+:: Problem 192 a
+theorem :: NUMBER13:54
+  3^2 + 7*1^2 = 4^2 & 7*3^2 + 1^2 = 8^2;
+

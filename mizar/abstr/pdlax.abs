@@ -1,0 +1,263 @@
+:: Classical Isoperimetric Theorem
+::  by Kazuhisa Nakasho and Yasunari Shidama
+:: 
+:: Received December 14, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, PARTFUN1, SUBSET_1, FUNCT_1, RELAT_1,
+      XXREAL_2, COMPLEX1, ARYTM_1, XXREAL_0, SEQ_4, ARYTM_3, REAL_1, FDIFF_1,
+      RCOMP_1, TARSKI, VALUED_1, CARD_1, INTEGRA5, INTEGRA1, XXREAL_1,
+      SQUARE_1, ORDINAL2, FUNCOP_1, FCONT_1, REALSET1, SIN_COS, SEQ_1, SEQ_2,
+      NAT_1, INTEGRA7, FUNCT_7, FUNCT_2, LIMFUNC3, JGRAPH_2;
+ notations TARSKI, XBOOLE_0, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0, XREAL_0,
+      XXREAL_0, XXREAL_2, COMPLEX1, FUNCT_1, RELAT_1, FUNCOP_1, RELSET_1,
+      FUNCT_2, RCOMP_1, VALUED_1, SEQ_1, PARTFUN1, RFUNCT_1, SEQ_2, SEQ_4,
+      SQUARE_1, FCONT_1, FDIFF_1, LIMFUNC3, RVSUM_1, SIN_COS, INTEGRA5,
+      INTEGRA7;
+ constructors REAL_1, FDIFF_1, PARTFUN2, RFUNCT_1, INTEGRA2, COMSEQ_2, FCONT_1,
+      INTEGRA5, SIN_COS, SQUARE_1, RVSUM_1, SEQ_4, RELSET_1, SEQ_2, COMPLEX1,
+      LIMFUNC3, INTEGRA7;
+ registrations XREAL_0, RELSET_1, INTEGRA1, RCOMP_1, VALUED_0, MEMBERED,
+      XXREAL_0, XBOOLE_0, NUMBERS, VALUED_1, FUNCT_2, XXREAL_2, SEQ_2,
+      SQUARE_1, RELAT_1, NAT_1, FCONT_1, SIN_COS, ORDINAL1, BORSUK_5, XCMPLX_0;
+ requirements NUMERALS, BOOLE, SUBSET, REAL, ARITHM;
+
+
+begin :: Foundations of Continuity and Integration
+
+ reserve a,b,r for Real;
+ reserve A for non empty set;
+ reserve X,x for set;
+ reserve f,g,F,G for PartFunc of REAL,REAL;
+ reserve n for Element of NAT;
+
+theorem :: PDLAX:1
+  for a,b,C be Real,
+      u be PartFunc of REAL,REAL
+  st a < b
+   & ['a,b'] c= dom u & u is continuous
+   & (for t be Real st t in ].a,b.[ holds u.t = C)
+  holds
+    for t be Real st t in ['a,b'] holds u.t = C;
+
+theorem :: PDLAX:2
+  for a,b,c,d be Real,
+      f be PartFunc of REAL,REAL
+  st a <= b & c <= d
+   & [.a,b.] c= dom f
+   & c in [.a,b.] & d in [.a,b.]
+   & f | ['a,b'] is continuous
+   & for t be Real st t in [.c,d.] holds 0 <= f.t
+  holds 0 <= integral(f,c,d);
+
+theorem :: PDLAX:3
+  for a,b,c,d be Real,
+      f,g be PartFunc of REAL,REAL
+  st a <= b & c <= d
+   & [.a,b.] c= dom f & [.a,b.] c= dom g & c in [.a,b.] & d in [.a,b.]
+   & f | ['a,b'] is continuous & g | ['a,b'] is continuous
+   & for t be Real st t in [.c,d.] holds f.t <= g.t
+  holds integral(f,c,d) <= integral(g,c,d);
+
+theorem :: PDLAX:4
+  for a,b,c,d,e be Real,
+      f be PartFunc of REAL,REAL
+  st a <= b & c <= d & c in [.a,b.] & d in [.a,b.]
+   & [.a,b.] c= dom f & f | ['a,b'] is continuous
+   & for t be Real st t in [.c,d.] holds e <= f.t
+  holds e*(d-c) <= integral(f,c,d);
+
+theorem :: PDLAX:5
+  for a,b,c,d,e be Real,
+      f be PartFunc of REAL,REAL
+  st 0 < e
+   & a <= b & c < d & c in [.a,b.] & d in [.a,b.]
+   & [.a,b.] c= dom f & f | ['a,b'] is continuous
+   & ( for t be Real st t in [.a,b.] holds 0 <= f.t )
+   & ( for t be Real st t in [.c,d.] holds e <= f.t )
+  holds 0 < e*(d-c) <= integral(f,a,b);
+
+theorem :: PDLAX:6
+  for a,b be Real,
+      f be PartFunc of REAL,REAL
+  st a <= b
+   & [.a,b.] c= dom f & f | ['a,b'] is continuous
+   & ( for t be Real st t in [.a,b.] holds 0 <= f.t )
+   & ex t0 be Real st t0 in ].a,b.[ & 0 < f.t0
+  holds
+    ex d,c,e be Real
+    st 0 < e & c < d & c in [.a,b.] & d in [.a,b.]
+     & 0 < e*(d-c) <= integral(f,a,b);
+
+theorem :: PDLAX:7
+  for f be PartFunc of REAL,REAL,
+      a,b be Real
+  st a < b & ['a,b'] c= dom f
+   & f | ['a,b'] is continuous
+  holds
+  ex I be Real_Sequence
+  st ( for n be Nat holds I.n = integral(f,a+1/(n+1),b-1/(n+1)) )
+   & I is convergent
+   & lim I = integral(f,a,b);
+
+begin :: Differentiation Rules and Properties
+
+theorem :: PDLAX:8
+  for Z be open Subset of REAL holds
+    sin is_differentiable_on Z & sin`|Z = cos|Z
+  & cos is_differentiable_on Z & cos`|Z = -sin|Z;
+
+theorem :: PDLAX:9
+  for f be PartFunc of REAL,REAL
+  holds f + f = 2(#)f;
+
+theorem :: PDLAX:10
+  for f be PartFunc of REAL,REAL,
+      Z be Subset of REAL,
+      x be Real
+  st Z is open & x in Z & Z c= dom f
+  holds
+    f|Z is_differentiable_in x
+      iff
+    f is_differentiable_in x;
+
+theorem :: PDLAX:11
+  for f be PartFunc of REAL,REAL,
+      Z be Subset of REAL,
+      x be Real
+   st Z is open & x in Z & Z c= dom f
+    & f is_differentiable_in x
+  holds diff(f,x) = diff(f|Z,x);
+
+theorem :: PDLAX:12
+  for f be PartFunc of REAL,REAL,
+      X,Z be Subset of REAL
+   st Z is open & Z c= X
+    & f is_differentiable_on X
+  holds
+    f`| Z = (f`| X) | Z;
+
+theorem :: PDLAX:13
+  for a,b be Real,
+      u be PartFunc of REAL,REAL
+  st a < b
+   & u is_differentiable_on ].a,b.[
+   & dom u = ['a,b'] & u is continuous
+   & ( for t be Real st t in ].a,b.[ holds (u`| ].a,b.[).t = 0 )
+  holds
+    ex C be Real
+    st for t be Real st t in ['a,b'] holds u.t = C;
+
+begin
+
+theorem :: PDLAX:14
+  for x,y be PartFunc of REAL,REAL,
+      Z   be open Subset of REAL
+   st x is differentiable
+    & y is differentiable
+    & ['0,PI'] c= Z & Z c= dom x & Z c= dom y
+    & y`| Z is continuous
+    & x`| Z is continuous
+    & ( for t be Real st t in Z holds
+        ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1 )
+    & y.0 = 0 & y.PI = 0
+  holds
+    ex u be PartFunc of REAL,REAL,
+       F be Real_Sequence
+    st u is_differentiable_on ].0,PI.[
+     & u`| ].0,PI.[ is continuous
+     & dom u = ['0,PI']
+     & u is continuous
+     & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+     & ( for t be Real st t in ].0,PI.[
+         holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t )
+     & ( for n be Nat
+         holds F.n = integral(AffineMap(0,1) -
+              (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                             1/(n+1), PI - 1/(n+1)) )
+     & F is convergent
+     & integral(y(#)(x`|Z),0,PI)
+       <= 1/2 * integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+     & y(#)y + (x`|Z)(#)(x`|Z)
+       = y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z)
+     & integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+       = integral(y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z),0,PI)
+     & integral(y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z),0,PI) = lim F;
+
+begin
+
+theorem :: PDLAX:15
+  for x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL
+   st x is differentiable
+    & y is differentiable
+    & ['0,PI'] c= Z & Z c= dom x & Z c= dom y
+    & x`|Z is continuous
+    & y`|Z is continuous
+    & (for t be Real st t in Z
+       holds ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1)
+    & y.0 = 0 & y.PI = 0
+  holds
+    integral(y(#)(x`|Z),0,PI) <= 1/2 * PI
+  & (integral(y(#)(x`|Z),0,PI) = 1/2 * PI
+        iff
+     ((for t be Real st t in [.0,PI.]
+       holds y.t = sin.t & x.t = -cos.t + cos.0 + x.0)
+          or
+      (for t be Real st t in [.0,PI.]
+       holds y.t = -sin.t & x.t = cos.t - cos.0 + x.0)));
+
+theorem :: PDLAX:16
+  for x,y be PartFunc of REAL,REAL
+   st x is differentiable
+    & y is differentiable
+    & ['0,PI'] c= dom x & ['0,PI'] c= dom y
+    & x`|dom(x) is continuous
+    & y`|dom(y) is continuous
+    & (for t be Real st t in dom x /\ dom y
+       holds diff(x,t)^2 + diff(y,t)^2 = 1)
+    & y.0 = 0 & y.PI = 0
+   holds
+      integral(y(#)(x`|(dom x)),0,PI) <= 1/2 * PI
+    & (integral(y(#)(x`|(dom x)),0,PI) = 1/2 * PI
+          iff
+       ((for t be Real st t in [.0,PI.]
+         holds y.t = sin.t & x.t = -cos.t + cos.0 + x.0)
+               or
+        (for t be Real st t in [.0,PI.]
+         holds y.t = -sin.t & x.t = cos.t - cos.0 + x.0)));
+
+theorem :: PDLAX:17
+  for x,y be PartFunc of REAL,REAL,
+      L be Real
+   st 0 < L
+    & x is differentiable
+    & y is differentiable
+    & [.0,PI.] c= dom x & [.0,PI.] c= dom y
+    & x`|dom(x) is continuous
+    & y`|dom(y) is continuous
+    & (for t be Real st t in dom x /\ dom y
+       holds diff(x,t)^2 + diff(y,t)^2 = L/PI)
+    & y.0 = 0 & y.PI = 0
+  holds
+    integral(y(#)(x`|dom(x)),0,PI) <= 1/2 * L
+  & (integral(y(#)(x`|dom(x)),0,PI) = 1/2 * L
+        iff
+     ((for t be Real st t in [.0,PI.]
+       holds y.t = sin.t / sqrt(PI/L)
+           & x.t = - cos.t / sqrt(PI/L) + cos.0 / sqrt(PI/L) + x.0)
+               or
+      (for t be Real st t in [.0,PI.]
+       holds y.t = - sin.t / sqrt(PI/L)
+           & x.t = cos.t / sqrt(PI/L) - cos.0 /sqrt(PI/L) + x.0)));
+

@@ -1,0 +1,1631 @@
+:: Formalization of Orthogonal Complements of Normed Spaces
+::  by Hiroyuki Okazaki
+:: 
+:: Received November 28, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies DUALSP06, NUMBERS, SUBSET_1, FUNCT_1, FINSEQ_1, NAT_1, RELAT_1,
+      XBOOLE_0, XXREAL_2, XXREAL_0, SEQ_4, CARD_1, REAL_1, ARYTM_3, ARYTM_1,
+      CARD_3, SEQ_2, ORDINAL2, HAHNBAN, COMPLEX1, STRUCT_0, PARTFUN1, TARSKI,
+      DUALSP01, PRE_TOPC, REALSET1, NORMSP_1, FCONT_1, ZFMISC_1, RLVECT_1,
+      LOPBAN_1, ALGSTR_0, SUPINF_2, ASYMPT_1, RVSUM_1, PROB_2, RLSUB_1,
+      RUSUB_5, RLVECT_3, RLVECT_2, VALUED_1, SEQ_1, METRIC_1, MEMBERED,
+      NORMSP_0, RELAT_2;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, FUNCT_1, ORDINAL1, RELSET_1,
+      PARTFUN1, FUNCT_2, BINOP_1, REALSET1, NUMBERS, XCMPLX_0, XXREAL_0,
+      XREAL_0, MEMBERED, COMPLEX1, XXREAL_2, FINSEQ_1, VALUED_1, SEQ_1, SEQ_2,
+      SEQ_4, STRUCT_0, ALGSTR_0, PRE_TOPC, RLVECT_1, RLSUB_1, RLVECT_2,
+      RLVECT_3, NORMSP_0, NORMSP_1, HAHNBAN, DUALSP01;
+ constructors REAL_1, MONOID_0, SEQ_4, NAT_D, SEQ_2, REALSET1, RSSPACE,
+      TOPMETR, COMSEQ_2, DUALSP01, SEQ_1, RLVECT_2, RLVECT_3;
+ registrations NUMBERS, XREAL_0, SEQ_2, FUNCT_2, NAT_1, MEMBERED, ORDINAL1,
+      VALUED_0, VALUED_1, RELSET_1, CARD_1, STRUCT_0, ABSVALUE, NORMSP_1,
+      DUALSP01, XXREAL_2, RLSUB_1, XBOOLE_0, RLVECT_1, XCMPLX_0, FUNCOP_1,
+      SEQ_4, NORMSP_0, XXREAL_0;
+ requirements REAL, NUMERALS, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XXREAL_2;
+ equalities NORMSP_0, STRUCT_0, FINSEQ_1, DUALSP01, RLSUB_1, ALGSTR_0, SEQ_1;
+ expansions RLSUB_1, FUNCT_1, TARSKI, NORMSP_0, NORMSP_1;
+ theorems XXREAL_0, RELAT_1, XREAL_1, SEQ_4, SEQ_2, FINSEQ_1, FUNCT_1, FUNCT_2,
+      VALUED_1, TARSKI, COMPLEX1, HAHNBAN, SEQ_1, NORMSP_1, ABSVALUE, DUALSP01,
+      NAT_1, RLVECT_1, RLSUB_1, XREAL_0, STRUCT_0, RLVECT_3, RLVECT_4,
+      XCMPLX_0, RLVECT_2, PARTFUN1, NORMSP_0, ALGSTR_0, XXREAL_2;
+ schemes SEQ_1, FUNCT_2, FINSEQ_2, NAT_1, DOMAIN_1;
+
+begin ::
+
+Lm1:
+for a,b be Real st 0 < a &
+  for e be Real st 0 < e holds (a + e)" * a <= b
+    holds 1 <= b
+  proof
+    let a,b be Real;
+    assume A1: 0 < a &
+    for e be Real st 0 < e holds (a + e)"*a <= b;
+    set B = seq_const b;
+    A2P: B.1 = b;
+    deffunc F1(Nat) = 1/($1+1);
+    consider E being Real_Sequence such that
+A3: for n being Nat holds E . n = F1(n) from SEQ_1:sch 1;
+A4: E is convergent & lim E = 0 by A3,SEQ_4:31;
+    set A = seq_const a;
+    A.1 = a; then
+A5: A is convergent & lim A = a by SEQ_4:25;
+A6: A + E is convergent & lim (A+E) = a + 0 by A4,A5,SEQ_2:6;
+    for n being Nat holds (A+E) . n <> 0
+    proof
+      let n be Nat;
+A7:   A.n = a by SEQ_1:57;
+      (A+E).n = A.n + E.n by SEQ_1:7
+             .= a + 1/(n+1) by A7,A3;
+      hence (A+E).n <> 0 by A1;
+    end; then
+A9: (A + E)" is convergent
+       & lim ((A+E)") = a" by A6,A1,SEQ_2:21,22,SEQ_1:5;
+A11:lim ((A + E)"(#)A) = a"*a by A5,A9,SEQ_2:15
+                      .= 1 by A1,XCMPLX_0:def 7;
+    for n be Nat holds ((A + E)"(#)A).n <= B.n
+    proof
+      let n be Nat;
+A12:  ((A + E)"(#)A).n =(A + E)".n * A.n by SEQ_1:8
+         .= ((A + E).n)"*A.n by VALUED_1:10
+         .= (A.n + E.n)"*A.n by SEQ_1:7
+         .= (A.n + 1/(n+1))"*A.n by A3
+         .= (a + 1/(n+1))"*A.n by SEQ_1:57
+         .= (a + 1/(n+1))"*a by SEQ_1:57;
+       B.n = b by SEQ_1:57;
+       hence ((A + E)"(#)A).n <= B.n by A12,A1;
+     end; then
+     lim ((A + E)"(#)A) <= lim B by SEQ_2:18,A9;
+     hence 1 <= b by A11,A2P,SEQ_4:25;
+   end;
+
+definition
+  let V be RealNormSpace,
+      W be Subspace of V;
+  func RSubNormSpace(W) -> strict RealNormSpace means :Def1:
+    the RLSStruct of it = the RLSStruct of W &
+    the normF of it = (the normF of V) | (the carrier of it);
+  existence
+  proof
+    set N = (the normF of V) | the carrier of W;
+    dom (the normF of V) = the carrier of V
+      by FUNCT_2:def 1; then
+    the carrier of W c= dom (the normF of V)
+      by RLSUB_1:def 2; then
+    dom N = the carrier of W
+      & rng N c= REAL by RELAT_1:62; then
+    reconsider N as Function of the carrier of W,REAL
+      by FUNCT_2:2;
+    reconsider X = NORMSTR(# the carrier of W,
+      the ZeroF of W,
+      the addF of W,
+      the Mult of W,
+      N #) as non empty NORMSTR;
+A1: for a be Real,
+        v be Element of X,v1 be Element of W
+      st v=v1 holds a*v=a*v1
+    proof
+      let a be Real,
+          v be Element of X,v1 be Element of W;
+      assume A2: v=v1;
+      thus a*v = (the Mult of X). (a,v)
+        by RLVECT_1:def 1
+           .=a*v1 by RLVECT_1:def 1,A2;
+    end;
+A3: for v, w being Element of X holds v + w = w + v
+    proof
+      let v, w be Element of X;
+      reconsider v1=v,w1=w as Element of W;
+      thus v + w = v1+w1
+      .=w1+v1
+      .=w + v;
+    end;
+A4: for u,v,w being Element of X holds (u+v) + w = u+(v+w)
+    proof
+      let u,v,w be Element of X;
+      reconsider u1=u,v1=v,w1=w as Element of W;
+      thus (u + v) + w = u1+v1+w1
+      .=u1+(v1+w1) by RLVECT_1:def 3
+      .=u+(v+w);
+    end;
+A5: for v being Element of X holds v + (0.X) = v
+    proof
+      let v be Element of X;
+      reconsider v1=v as Element of W;
+      thus v + (0. X) = v1 + (0. W)
+      .=v;
+    end;
+A6: for a being Real
+    for v, w being VECTOR of X holds
+      a * (v + w) = (a * v) + (a * w)
+    proof
+      let a be Real,v, w be VECTOR of X;
+      reconsider v1=v,w1=w as VECTOR of W;
+      A7: a * w1 = a * w by A1;
+      thus a * (v + w) = a * (v1 + w1) by A1
+      .= (a * v1) + (a * w1) by RLVECT_1:def 5
+      .= (a * v) + (a * w) by A1,A7;
+    end;
+A8: for a, b being Real
+    for v being VECTOR of X holds
+      (a + b) * v = (a * v) + (b * v)
+    proof
+      let a,b be Real, v be VECTOR of X;
+      reconsider v1 = v as VECTOR of W;
+      A9:a * v1 = a * v & b * v1 = b * v by A1;
+      thus (a + b) * v = (a + b) * v1 by A1
+      .= (a * v1) + (b * v1) by RLVECT_1:def 6
+      .= (a * v) + (b * v) by A9;
+    end;
+A10:for a, b being Real
+    for v being VECTOR of X holds (a * b) * v = a * (b * v)
+    proof
+      let a,b be Real, v be VECTOR of X;
+      reconsider v1 = v as VECTOR of W;
+A11:  b * v1 = b * v by A1;
+      thus (a * b) * v
+      =(a * b) * v1 by A1
+      .= a *(b * v1) by RLVECT_1:def 7
+      .= a*(b * v) by A11,A1;
+    end;
+A13:for v being VECTOR of X holds 1 * v = v
+    proof
+      let v be VECTOR of X;
+      reconsider v1=v as VECTOR of W;
+      thus 1* v = 1*v1 by A1
+      .= v by RLVECT_1:def 8;
+    end;
+A14:for x being Element of X st ||.x.|| = 0 holds
+    x = 0. X
+    proof
+      let x be Element of X;
+      the carrier of W c=the carrier of V by RLSUB_1:def 2;
+      then reconsider x1= x as Element of V;
+      assume ||.x.|| = 0; then
+      ||.x1.|| = 0 by FUNCT_1:49; then
+      x1=0.V by NORMSP_0:def 5;
+      hence x = 0.W by RLSUB_1:def 2
+      .=0.X;
+    end;
+    0.X = 0.W
+    .= 0. V by RLSUB_1:11; then
+    A15: ||.(0. X).|| = ||.(0. V).|| by FUNCT_1:49
+    .= 0;
+
+A16:for x, y being Point of X
+    for a being Real holds
+    ||.(a * x).|| = |.a.| * ||.x.||
+    & ||.(x + y).|| <= ||.x.|| + ||.y.||
+    proof
+      let x, y be Point of X, a be Real;
+      reconsider x2= x,y2=y as Element of W;
+      the carrier of W c=the carrier of V by RLSUB_1:def 2; then
+      reconsider x1= x,y1=y as Element of V;
+      A17P: a * x = a*x2 by A1
+      .=a*x1 by RLSUB_1:14;
+      ||.a*x1.|| = |.a.|*||.x1.|| by NORMSP_1:def 1;
+      then
+      ||.a*x1.|| = |.a.|*||.x.|| by FUNCT_1:49;
+      hence ||.a*x.|| = |.a.|*||.x.|| by A17P,FUNCT_1:49;
+A18P: x+y = x2+y2
+       .=x1+y1 by RLSUB_1:13;
+      ||.x1+y1.|| <= ||.x1.||+||.y1.|| by NORMSP_1:def 1;
+      then
+      ||.x1+y1.|| <= ||.x.||+||.y1.|| by FUNCT_1:49;
+      then
+      ||.x1+y1.|| <= ||.x.||+||.y.|| by FUNCT_1:49;
+      hence ||.x+y.|| <= ||.x.||+||.y.|| by A18P,FUNCT_1:49;
+    end;
+
+A19:for x being Point of X holds x is right_complementable
+    proof
+      let x be Point of X;
+      reconsider x1=x as VECTOR of W;
+      consider y1 be Element of W such that
+      A20: x1+y1 = 0.W by ALGSTR_0:def 11,ALGSTR_0:def 16;
+      reconsider y=y1 as Element of X;
+      x+y =0.X by A20;
+      hence x is right_complementable by ALGSTR_0:def 11;
+    end;
+
+    X is non empty right_complementable Abelian
+    add-associative right_zeroed vector-distributive
+    scalar-distributive scalar-associative scalar-unital
+    discerning reflexive RealNormSpace-like
+    by A3,A4,A5,A6,A8,A10,A13,A14,A15,A16,A19,
+    RLVECT_1:def 2, RLVECT_1:def 3,
+    RLVECT_1:def 4, RLVECT_1:def 5,
+    RLVECT_1:def 6, RLVECT_1:def 7,
+    RLVECT_1:def 8, ALGSTR_0:def 16; then
+    reconsider X as strict RealNormSpace;
+    take X;
+    thus thesis;
+  end;
+  uniqueness;
+end;
+
+theorem Th1:
+  for V be RealNormSpace,
+      W be Subspace of V holds
+    RSubNormSpace(W) is SubRealNormSpace of V
+proof
+  let V be RealNormSpace,
+      W be Subspace of V;
+  set X = RSubNormSpace(W);
+  the RLSStruct of X = the RLSStruct of W &
+    the normF of X = (the normF of V) | (the carrier of X)
+      by Def1; then
+  the carrier of X = the carrier of W
+   & 0.X = 0. W
+   & the addF of X = the addF of W
+   & the Mult of X = the Mult of W; then
+  the carrier of X c= the carrier of V
+   & 0. X = 0. V
+   & the addF of X = (the addF of V) || the carrier of X
+   & the Mult of X = (the Mult of V) | [:REAL, the carrier of X:]
+   & the normF of X = (the normF of V) | the carrier of X
+     by RLSUB_1:def 2,Def1;
+  hence thesis by DUALSP01:def 16;
+end;
+
+definition
+  let V be RealNormSpace;
+  let x be Point of V;
+  let y be Point of DualSp V;
+  func x .|. y -> Real equals
+    y.x;
+  correctness;
+end;
+
+theorem Th2:
+  for V being RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V holds
+     |. x.|.y .| <= ||.y.|| * ||.x.||
+proof
+  let V be RealNormSpace;
+  let x be Point of V;
+  let y be Point of DualSp V;
+  reconsider y0=y as Lipschitzian linear-Functional of V
+    by DUALSP01:def 10;
+  |.y0.x.| <= ||.y.|| * ||.x.|| by DUALSP01:26;
+  hence thesis;
+end;
+
+definition
+  let V be RealNormSpace;
+  let x be Point of V;
+  let y be Point of DualSp V;
+  pred x,y are_orthogonal means
+    x .|. y = 0;
+end;
+
+theorem
+  for V be RealNormSpace,
+      x be Point of V,
+      y,z be Point of DualSp V holds
+    x .|. (y+z) = x .|. y + x .|. z by DUALSP01:29;
+
+theorem
+  for V be RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V,
+      a be Real holds
+    x .|. (a*y) = a * x .|. y by DUALSP01:30;
+
+theorem Th5:
+  for V being RealNormSpace,
+      x,y be Point of V,
+      z be Point of DualSp V holds
+    (x + y) .|. z = x .|. z + y .|. z
+proof
+  let V be RealNormSpace,
+      x,y be Point of V,
+      z be Point of DualSp V;
+  reconsider z1= z as linear-Functional of V by DUALSP01:def 10;
+  thus (x + y) .|. z =z1.(x+y)
+    .= x .|. z + y .|. z by HAHNBAN:def 2;
+end;
+
+theorem Th6:
+  for V being RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V,
+      a be Real holds
+    (a*x) .|. y = a* x .|. y
+proof
+  let V be RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V,
+      a be Real;
+  reconsider y1= y as linear-Functional of V by DUALSP01:def 10;
+  thus (a*x) .|. y =y1.(a*x)
+  .= a*x .|. y by HAHNBAN:def 3;
+end;
+
+theorem
+  for V being RealNormSpace,
+      x be Point of V,
+      y,z be Point of DualSp V,
+      a,b be Real holds
+    x .|. (a*y + b*z) = a * x .|. y + b * x .|. z
+proof
+  let V be RealNormSpace,
+      x be Point of V,
+      y,z be Point of DualSp V,
+      a,b be Real;
+  thus x .|. (a*y + b*z) = x .|. (a*y) + x .|. (b*z) by DUALSP01:29
+  .= a * x .|. y + x .|. (b*z) by DUALSP01:30
+  .= a * x .|. y + b * x .|. z by DUALSP01:30;
+end;
+
+theorem
+  for V being RealNormSpace,
+      y,z be Point of V,
+      x be Point of DualSp V,
+      a,b be Real holds
+    (a*y + b*z) .|. x = a * y .|. x + b * z .|. x
+proof
+  let V be RealNormSpace,
+      y,z be Point of V,
+      x be Point of DualSp V,
+      a,b be Real;
+  thus (a*y + b*z) .|. x = (a*y) .|. x + (b*z) .|. x by Th5
+  .=a * y .|. x + (b*z) .|. x by Th6
+  .=a * y .|. x + b * z .|. x by Th6;
+end;
+
+theorem Th9:
+  for V being RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V holds
+    x .|. (-y) = - x .|. y
+proof
+  let V be RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V;
+  thus x .|. (-y) = x .|. ((-1)*y) by RLVECT_1:16
+  .= (-1) * x .|. y by DUALSP01:30
+  .= - x .|. y;
+end;
+
+theorem Th10:
+  for V being RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V holds
+    (-x) .|. y = - x .|. y
+proof
+  let V be RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V;
+  thus (-x) .|. y = ((-1)*x) .|. y by RLVECT_1:16
+  .= (-1) * x .|. y by Th6
+  .= - x .|. y;
+end;
+
+theorem
+  for V being RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V holds
+    (-x) .|. (-y) = x .|. y
+proof
+  let V be RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V;
+  thus (-x) .|. (-y) =- x .|.(-y) by Th10
+  .= - - x .|. y by Th9
+  .= x .|. y;
+end;
+
+theorem Th12:
+  for V being RealNormSpace,
+      x be Point of V,
+      y,z be Point of DualSp V holds
+    x .|. (y-z) = x .|. y - x .|. z
+proof
+  let V be RealNormSpace,
+      x be Point of V,
+      y,z be Point of DualSp V;
+  thus x .|. (y-z)
+    =x .|. y + x .|. (-z) by DUALSP01:29
+    .=x .|. y + - x.|. z by Th9
+    .=x .|. y - x .|. z;
+end;
+
+theorem Th13:
+  for V being RealNormSpace,
+      y,z be Point of V,
+      x be Point of DualSp V holds
+   (y-z) .|. x = y .|. x - z .|. x
+proof
+  let V be RealNormSpace,
+      y,z be Point of V,
+      x be Point of DualSp V;
+  thus (y-z) .|. x = y.|.x + (-z) .|. x by Th5
+  .=y .|. x + - z.|. x by Th10
+  .=y .|. x - z .|. x;
+end;
+
+theorem Th14:
+  for V being RealNormSpace,
+      x be Point of V holds
+    x .|. 0.(DualSp V) = 0
+proof
+  let V be RealNormSpace,
+      x be Point of V;
+  thus x .|. 0.(DualSp V)
+  = x .|. ( 0 * ( 0.(DualSp V)))
+  .= 0* x .|.0.(DualSp V) by DUALSP01:30
+  .= 0;
+end;
+
+theorem Th15:
+  for V being RealNormSpace,
+      x be Point of DualSp V holds
+   0.V .|. x = 0
+proof
+  let V be RealNormSpace,
+      x be Point of DualSp V;
+  thus 0.V .|. x
+  = (0* (0.V)) .|. x
+  .= 0* 0.V .|. x by Th6
+  .= 0;
+end;
+
+definition
+  let V be RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V;
+  pred x,y are_parallel means
+    x .|. y = ||.x.|| * ||.y.||;
+end;
+
+definition
+  let V be RealNormSpace;
+  let W be Subspace of V;
+  func Ort_Comp W -> strict Subspace of DualSp V means :Def5:
+  the carrier of it = { v where v is VECTOR of DualSp V
+  : for w being VECTOR of V st w in W holds
+  w,v are_orthogonal };
+  existence
+  proof
+    defpred S1[ VECTOR of DualSp V]
+    means for w being VECTOR of V st w in W holds
+    w,$1 are_orthogonal;
+    reconsider A = { v where v is VECTOR of DualSp V : S1[v] }
+    as Subset of DualSp V from DOMAIN_1:sch 7;
+A1: for v, u being VECTOR of DualSp V st v in A & u in A holds
+    v + u in A
+    proof
+      let v, u be VECTOR of DualSp V;
+      assume that
+A2:   v in A and
+      A3: u in A;
+      for w being VECTOR of V st w in W holds
+      w,v + u are_orthogonal
+      proof
+        let w be VECTOR of V;
+        assume A4: w in W;
+        ex u9 being VECTOR of DualSp V st
+        u = u9 & for w being VECTOR of V st w in W holds
+        w,u9 are_orthogonal by A3; then
+A5P:    w,u are_orthogonal by A4;
+        ex v9 being VECTOR of DualSp V st
+        v = v9 & for w being VECTOR of V st w in W holds
+        w,v9 are_orthogonal by A2;
+        then w,v are_orthogonal by A4;
+        then w .|. (v + u) = 0 + 0 by A5P, DUALSP01:29;
+        hence w,v + u are_orthogonal;
+      end;
+      hence v + u in A;
+    end;
+    for w being VECTOR of V st w in W holds
+    w, 0. (DualSp V) are_orthogonal by Th14; then
+A6: 0. (DualSp V) in A;
+    for a being Real
+    for v being VECTOR of DualSp V st v in A holds
+    a * v in A
+    proof
+      let a be Real;
+      let v be VECTOR of DualSp V;
+      assume v in A; then
+A7:   ex v9 being VECTOR of DualSp V st
+      v = v9 & for w being VECTOR of V st w in W holds
+      w,v9 are_orthogonal;
+      for w being VECTOR of V st w in W holds
+      w,a * v are_orthogonal
+      proof
+        let w be VECTOR of V;
+        assume w in W; then
+A8:     w,v are_orthogonal by A7;
+        w .|. (a * v) = a * 0 by A8,DUALSP01:30;
+        hence w,a * v are_orthogonal;
+      end;
+      hence a * v in A;
+    end;
+    then A is linearly-closed by A1;
+    hence thesis by A6,RLSUB_1:35;
+  end;
+  uniqueness by RLSUB_1:30;
+end;
+
+definition
+  let V be RealNormSpace;
+  let W be Subspace of DualSp V;
+  func Ort_Comp W -> strict Subspace of V means :Def6:
+  the carrier of it = { v where v is VECTOR of V
+  : for w being VECTOR of DualSp V st w in W holds
+    v,w are_orthogonal };
+  existence
+  proof
+    defpred S1[VECTOR of V] means
+    for w being VECTOR of DualSp V st w in W holds
+      $1,w are_orthogonal;
+    reconsider A = { v where v is VECTOR of V : S1[v] }
+      as Subset of V from DOMAIN_1:sch 7;
+A1: for v, u being VECTOR of V st v in A & u in A holds
+    v + u in A
+    proof
+      let v, u be VECTOR of V;
+      assume that
+A2:   v in A and
+A3:   u in A;
+      for w being VECTOR of DualSp V st w in W holds
+      v + u,w are_orthogonal
+      proof
+        let w be VECTOR of DualSp V;
+        assume A4: w in W;
+        ex u9 being VECTOR of V st
+        u = u9 & for w being VECTOR of DualSp V st w in W holds
+        u9,w are_orthogonal by A3; then
+A5P:    u,w are_orthogonal by A4;
+        ex v9 being VECTOR of V st
+        v = v9 & for w being VECTOR of DualSp V st w in W holds
+        v9,w are_orthogonal by A2;
+        then v,w are_orthogonal by A4;
+        then (v + u) .|. w = 0 + 0 by A5P, Th5;
+        hence v + u,w are_orthogonal;
+      end;
+      hence v + u in A;
+    end;
+    for w being VECTOR of DualSp V st w in W holds
+    0.V,w are_orthogonal by Th15; then
+A6: 0.V in A;
+    for a being Real
+    for v being VECTOR of V st v in A holds
+    a * v in A
+    proof
+      let a be Real;
+      let v be VECTOR of V;
+      assume v in A; then
+      A7: ex v9 being VECTOR of V st
+      v = v9 & for w being VECTOR of DualSp V st w in W holds
+      v9,w are_orthogonal;
+      for w being VECTOR of DualSp V st w in W holds
+      a * v,w are_orthogonal
+      proof
+        let w be VECTOR of DualSp V;
+        assume w in W; then
+A8:     v,w are_orthogonal by A7;
+        (a * v) .|. w = a * 0 by A8,Th6;
+        hence a * v,w are_orthogonal;
+      end;
+      hence a * v in A;
+    end;
+    then A is linearly-closed by A1;
+    hence thesis by A6,RLSUB_1:35;
+  end;
+  uniqueness by RLSUB_1:30;
+end;
+
+begin
+
+theorem Th16:
+  for V being RealNormSpace,
+      M being Subspace of V,
+      v being VECTOR of DualSp V,
+      m being VECTOR of V
+    st v in Ort_Comp M & m in M holds m .|. v = 0
+proof
+  let V be RealNormSpace,
+      M be Subspace of V,
+      v be VECTOR of DualSp V,
+      m be VECTOR of V;
+   assume A1: v in Ort_Comp M & m in M;
+   the carrier of Ort_Comp M =
+   { v where v is VECTOR of DualSp V :
+   for w being VECTOR of V st w in M holds
+   w,v are_orthogonal } by Def5; then
+   v in { v where v is VECTOR of DualSp V :
+   for w being VECTOR of V st w in M holds
+   w,v are_orthogonal } by A1,STRUCT_0:def 5; then
+   ex v0 be VECTOR of DualSp V st v = v0 &
+   for w being VECTOR of V st w in M holds
+   w,v0 are_orthogonal; then
+   m,v are_orthogonal by A1;
+   hence m .|. v = 0;
+ end;
+
+theorem
+  for V being RealNormSpace,
+      M be Subspace of DualSp V,
+      v be VECTOR of V,
+      m being VECTOR of DualSp V
+   st v in Ort_Comp M & m in M
+     holds v .|. m = 0
+proof
+  let V be RealNormSpace,
+      M be Subspace of DualSp V,
+      v be VECTOR of V,
+      m be VECTOR of DualSp V;
+  assume A1: v in Ort_Comp M & m in M;
+  the carrier of Ort_Comp M =
+  { v where v is VECTOR of V :
+  for w being VECTOR of DualSp V st w in M holds
+  v,w are_orthogonal } by Def6; then
+  v in { v where v is VECTOR of V :
+  for w being VECTOR of DualSp V st w in M holds
+  v,w are_orthogonal } by A1,STRUCT_0:def 5; then
+  ex v0 be VECTOR of V st v = v0 &
+  for w being VECTOR of DualSp V st w in M holds
+  v0,w are_orthogonal; then
+  v,m are_orthogonal by A1;
+  hence v .|. m = 0;
+end;
+
+theorem Th18:
+  for X be RealNormSpace,
+      x be Point of X,
+      M be non empty Subspace of X holds
+  {||.x-m.|| where m is Point of X :m in M}
+     is non empty bounded_below real-membered set
+proof
+  let X be RealNormSpace,
+      x be Point of X,
+      M be non empty Subspace of X;
+  set B = {||.x-m.|| where m is Point of X :m in M};
+  0.X in M by RLSUB_1:17; then
+  A1P: ||.x-0.X.|| in B;
+  B c= REAL
+  proof let r be object;
+    assume r in B; then
+    ex m be Point of X st r= ||.x-m.|| & m in M;
+    hence r in REAL;
+  end; then
+  reconsider B as real-membered set;
+  B is bounded_below
+  proof
+    reconsider r0 = 0 as Real;
+    take r0;
+    let r be ExtReal;
+    assume r in B; then
+    ex m be Point of X st r= ||.x-m.|| & m in M;
+    hence r0 <= r;
+  end;
+  hence thesis by A1P;
+end;
+
+theorem Th19:
+  for X be RealNormSpace,
+      x be Point of X,
+      M be non empty Subspace of X holds
+   { x .|. y where y is Point of DualSp X :
+      y in Ort_Comp M & ||.y.|| <= 1 }
+      is non empty bounded_above real-membered set 
+proof
+  let X be RealNormSpace,
+      x be Point of X,
+      M be non empty Subspace of X;
+  set B = {x .|. y where y is Point of DualSp X :
+    y in Ort_Comp M & ||.y.|| <= 1};
+  set z = 0.(DualSp X);
+A1: z in Ort_Comp M by RLSUB_1:17;
+  ||.z.|| = 0; then
+A2P: x .|. z in B by A1;
+  B c= REAL
+  proof let r be object;
+    assume r in B; then
+    ex y be Point of DualSp X
+    st r = x .|. y & y in Ort_Comp M & ||.y.|| <= 1;
+    hence r in REAL;
+  end; then
+  reconsider B as real-membered set;
+  B is bounded_above
+  proof
+    reconsider r0 = ||.x.|| as Real;
+    take r0;
+    let r be ExtReal;
+    assume r in B; then
+    consider y be Point of DualSp X such that
+ A3: r = x .|. y & y in Ort_Comp M & ||.y.|| <= 1;
+    reconsider y0=y as Lipschitzian linear-Functional of X
+    by DUALSP01:def 10;
+ A4: |.y0.x.| <= ||.y.|| * ||.x.|| by DUALSP01:26;
+    ||.y.|| * ||.x.|| <=1*||.x.|| by A3,XREAL_1:64; then
+ A5: |.y0.x.| <= ||.x.|| by A4,XXREAL_0:2;
+    y0.x <= |.y0.x.| by ABSVALUE:4;
+    hence r <= r0 by A5,XXREAL_0:2,A3;
+  end;
+  hence thesis by A2P;
+end;
+
+theorem Th20:
+  for X be RealNormSpace,
+      x be Point of X,
+      M be non empty Subspace of X,
+      F,K be FinSequence of the carrier of X,
+      G be FinSequence of REAL
+  st len G = len F & len K = len F
+    &
+   ( for i be Nat st i in dom F holds F.i in x+M )
+    &
+   ( for i be Nat st i in dom K holds K.i = (G/.i)*(F/.i) )
+     holds
+    Sum K in
+      { a*x + m where a is Real,m is Point of X: m in M }
+proof
+  let X be RealNormSpace,
+      x be Point of X,
+      M be non empty Subspace of X;
+  defpred P[Nat] means
+  for F,K be FinSequence of the carrier of X,
+      G be FinSequence of REAL
+   st len F= $1 & len G = len F & len K = len F &
+  ( for i be Nat st i in dom F holds F.i in x+M ) &
+  ( for i be Nat st i in dom K holds K.i = (G/.i)*(F/.i) )
+  holds
+    Sum K in
+  { a*x + m where a is Real,m is Point of X: m in M };
+A1:P[0]
+  proof
+    let F,K be FinSequence of the carrier of X,
+        G be FinSequence of REAL;
+    assume A2: len F= 0 & len G = len F & len K = len F &
+    ( for i be Nat st i in dom F holds F.i in x+M ) &
+    ( for i be Nat st i in dom K
+      holds K.i = (G/.i)*(F/.i) );
+    K = <*> the carrier of X by A2; then
+A3: Sum K = 0.X by RLVECT_1:43;
+A4: 0.X in M by RLSUB_1:17;
+    0*x + 0.X = 0.X by RLVECT_1:10;
+    hence thesis by A3,A4;
+  end;
+A5:for k be Nat st P[k] holds P[k+1]
+  proof
+    let k be Nat;
+    assume A6:P[k];
+    let F,K be FinSequence of the carrier of X,
+        G be FinSequence of REAL;
+    assume A7: len F= k+1 & len G = len F & len K = len F &
+    ( for i be Nat st i in dom F holds F.i in x+M ) &
+    ( for i be Nat st i in dom K holds K.i = (G/.i)*(F/.i) );
+    reconsider F1=F|k,K1=K|k as FinSequence of the carrier of X;
+    reconsider G1=G|k as FinSequence of REAL;
+A8: len F1 = k & len K1 = k & len G1 = k
+      by FINSEQ_1:59,A7,NAT_1:11;
+A9: dom F = Seg (k+1) by A7,FINSEQ_1:def 3;
+A10:dom F1 = Seg len F1 by FINSEQ_1:def 3
+      .=Seg k by FINSEQ_1:59,A7,NAT_1:11;
+A11:dom K = Seg (k+1) by A7,FINSEQ_1:def 3;
+A12:dom K1 = Seg len K1 by FINSEQ_1:def 3
+      .= Seg k by FINSEQ_1:59,A7,NAT_1:11;
+A13:dom G = Seg (k+1) by A7,FINSEQ_1:def 3;
+A14:dom G1 = Seg len G1 by FINSEQ_1:def 3
+      .= Seg k by FINSEQ_1:59,A7,NAT_1:11;
+A15: for i be Nat st i in dom F1 holds F1.i in x+M
+    proof
+      let i be Nat;
+      assume A16P: i in dom F1; then
+A17:  1 <= i & i <= k by A10, FINSEQ_1:1;
+      k <=k+1 by NAT_1:11; then
+      i <= k+1 by A17,XXREAL_0:2; then
+A18P: i in Seg (k+1) by A17;
+      F1.i = F.i by A16P,A10,FUNCT_1:49;
+      hence F1.i in x+M by A18P,A9,A7;
+    end;
+A19: for i be Nat st i in dom K1
+       holds K1.i = (G1/.i)*(F1/.i)
+    proof
+      let i be Nat;
+      assume A20P:i in dom K1; then
+A22:  1 <= i <= k by A12,FINSEQ_1:1;
+      k <=k+1 by NAT_1:11; then
+      i <= k+1 by A22,XXREAL_0:2; then
+ A23: i in Seg (k+1) by A22; then
+ A24: K.i = (G/.i)*(F/.i) by A7,A11;
+ A25: G/.i = G.i by PARTFUN1:def 6,A23,A13
+         .= G1.i by FUNCT_1:49,A20P,A12
+         .= G1/.i by PARTFUN1:def 6,A20P,A12,A14;
+      F/.i = F.i by PARTFUN1:def 6,A23,A9
+      .= F1.i by FUNCT_1:49,A20P,A12
+      .= F1/.i by PARTFUN1:def 6,A20P,A12,A10;
+      hence thesis by A20P,A12,FUNCT_1:49,A24,A25;
+    end;
+    Sum K1 in
+    { a*x + m where a is Real,m is Point of X: m in M }
+      by A6,A8,A15,A19; then
+    consider a be Real,m1 be Point of X such that
+A26:Sum K1 = a*x + m1 & m1 in M;
+    F.(k+1) in x+M by A7,FINSEQ_1:4,A9; then
+    F/.(k+1) in x+M by FINSEQ_1:4,A9,PARTFUN1:def 6;
+    then consider m be Point of X such that
+A28: F/.(k+1) = x+ m & m in M;
+A30: K.(len K) = (G/.(k+1))*(F/.(k+1)) by A7,A11,FINSEQ_1:4;
+     set b = G/.(k+1);
+A31: K.(len K) = b*x + b*m by RLVECT_1:def 5,A30,A28;
+A32: b*m in M by A28, RLSUB_1:21;
+     dom K1 = Seg len K1 by FINSEQ_1:def 3
+        .=Seg k by FINSEQ_1:59,A7,NAT_1:11; then
+A33: Sum K = Sum K1 + (b*x + b*m)
+         by A7,A8,A31,RLVECT_1:38
+         .= a*x + m1 + b*x + b*m by RLVECT_1:def 3,A26
+         .= a*x + b*x + m1 + b*m by RLVECT_1:def 3
+         .= (a+b)*x + m1 + b*m by RLVECT_1:def 6
+         .= (a+b)*x + (m1 + b*m) by RLVECT_1:def 3;
+     m1 + b*m in M by A32,A26,RLSUB_1:20;
+     hence thesis by A33;
+   end;
+   for k be Nat holds P[k] from NAT_1:sch 2(A1,A5);
+   hence thesis;
+end;
+
+theorem Th21:
+  for V be RealNormSpace,
+      x be Point of V,
+      M be non empty Subspace of V
+      st not x in M holds
+  ex L be non empty bounded_below real-membered set,
+     U be non empty bounded_above real-membered set st
+    L = {||.x-m.|| where m is Point of V : m in M} &
+    U = { x .|. y where y is Point of DualSp V :
+    y in Ort_Comp M & ||.y.|| <= 1 }
+    & inf L = sup U & sup U in U
+    & ( 0 < inf L implies ex v be Point of DualSp V
+    st ||.v.|| = 1 & v in Ort_Comp M & x .|. v = inf L ) &
+    for m0 be Point of V
+    st m0 in M & ||.x-m0.|| = inf L holds
+    for v be Point of DualSp V st ||.v.|| = 1
+    & v in Ort_Comp M & x .|. v = inf L
+    holds x-m0,v are_parallel
+proof
+  let V be RealNormSpace,
+      x be Point of V,
+      M be non empty Subspace of V;
+   assume
+A1: not x in M;
+   reconsider L = {||.x-m.|| where m is Point of V :m in M}
+     as non empty bounded_below real-membered set by Th18;
+   reconsider U = { x .|. y where y is Point of DualSp V :
+     y in Ort_Comp M & ||.y.|| <= 1 } as
+     non empty bounded_above real-membered set by Th19;
+   take L,U;
+   thus L = {||.x-m.|| where m is Point of V :m in M};
+   thus U = { x .|. y where y is Point of DualSp V :
+   y in Ort_Comp M & ||.y.|| <= 1 };
+   set d = inf L;
+A2: d = lower_bound L;
+A3: now let e be Real;
+      assume 0 < e; then
+      consider r being Real such that
+A4:   r in L & r < d + e by A2,SEQ_4:def 2;
+      consider me be Point of V such that
+A5:   r = ||.x-me.|| & me in M by A4;
+      take me;
+      thus ||.x-me.|| < d + e & me in M by A4,A5;
+    end;
+A6: now let y be Point of DualSp V;
+      assume A7: y in Ort_Comp M & ||.y.|| <= 1;
+A8:   now let e0 be Real;
+        assume A9:0 < e0;
+        set e = e0/2;
+A10:    0 < e & e < e0 by A9,XREAL_1:216;
+        consider me be Point of V such that
+A11:    ||.x-me.|| < d + e & me in M by A3,A9;
+        me .|. y = 0 by A7,A11,Th16; then
+A12:    x .|. y = x.|.y - me.|.y
+          .=(x-me) .|. y by Th13;
+A13:    |.(x-me) .|. y .| <= ||.x-me.|| * ||.y.|| by Th2;
+        ||.x-me.|| * ||.y.|| <= (d + e) * 1
+          by XREAL_1:66,A7,A11; then
+A14:    |. x .|. y .| <= d + e by A12,A13, XXREAL_0:2;
+        x .|. y <= |. x .|. y .| by ABSVALUE:4; then
+A15:    x .|. y <= d + e by A14,XXREAL_0:2;
+        d + e < d + e0 by XREAL_1:8,A10;
+        hence x .|. y < d + e0 by A15,XXREAL_0:2;
+      end;
+      thus x .|. y <= d
+      proof
+        assume d < x .|. y; then
+        0 < x .|. y - d by XREAL_1:50; then
+        x .|. y < d + (x .|. y - d) by A8;
+        hence contradiction;
+      end;
+    end;
+A16:
+    for r be Real st r in U holds r <= d
+    proof
+      let r be Real;
+      assume r in U; then
+      consider y be Point of DualSp V such that
+A17:  r =x .|. y & y in Ort_Comp M & ||.y.|| <= 1;
+      thus r <=d by A6,A17;
+    end;
+    reconsider xM = x+M as Subset of (V qua RealLinearSpace);
+    reconsider LxM = Lin xM as Subspace of V;
+    set S = { a*x + m where a is Real,m is Point of V: m in M };
+A44P:
+    for z be object holds z in S iff z in the carrier of LxM
+    proof
+      let z be object;
+      hereby assume z in S; then
+        consider a be Real,m be Point of V such that
+        A18: z= a*x + m & m in M;
+        A19: x+2*m -(x+m) =x+2*m -x-m by RLVECT_1:27
+        .=2*m -m by RLVECT_4:1
+        .=2*m -1*m by RLVECT_1:def 8
+        .=(2-1)*m by RLVECT_1:35
+        .= m by RLVECT_1:def 8;
+        2*m in M by A18,RLSUB_1:21; then
+        x+2*m in xM; then
+        A20: x+2*m in LxM by RLVECT_3:15;
+        x+m in xM by A18; then
+        A21P:x+m in LxM by RLVECT_3:15;
+        per cases;
+        suppose a = 0; then
+          z =0.V + m by A18, RLVECT_1:10
+          .=m;
+          hence z in the carrier of LxM
+          by STRUCT_0:def 5,A21P,RLSUB_1:23,A20,A19;
+        end;
+        suppose A22:a <> 0;
+          A23: z= a*x + 1*m by A18,RLVECT_1:def 8
+          .=a*x +a*a"*m by A22,XCMPLX_0:def 7
+          .=a*x +a*(a"*m) by RLVECT_1:def 7
+          .=a*(x+a"*m) by RLVECT_1:def 5;
+          a"*m in M by A18,RLSUB_1:21; then
+          x+a"*m in xM; then
+          z in LxM by A23,RLSUB_1:21,RLVECT_3:15;
+          hence z in the carrier of LxM by STRUCT_0:def 5;
+        end;
+      end;
+      assume z in the carrier of LxM; then
+      consider l being Linear_Combination of xM such that
+      A24: z = Sum l by STRUCT_0:def 5,RLVECT_3:14;
+      consider F being FinSequence of V such that
+      A25:F is one-to-one & rng F = Carrier l
+      & Sum l = Sum (l (#) F) by RLVECT_2:def 8;
+      deffunc H1(set) = l . (F /. $1);
+      consider G being FinSequence of REAL such that
+      A26: len G = len F and
+      A27: for n being Nat st n in dom G holds
+      G . n = H1(n) from FINSEQ_2:sch 1;
+A31:  for i being Nat st i in dom G holds G /. i = l . (F /. i)
+      proof
+        let i be Nat;
+        assume A32: i in dom G;
+        hence G /. i = G.i by PARTFUN1:def 6
+        .= l . (F /. i) by A32,A27;
+      end;
+A33:  rng F c= xM by A25,RLVECT_2:def 6;
+A34:  for i be Nat st i in dom F holds F.i in xM
+      proof
+        let i be Nat;
+        assume i in dom F; then
+        F.i in rng F by FUNCT_1:def 3;
+        hence thesis by A33;
+      end;
+      deffunc H2(set) = (G/.$1)*(F/.$1);
+      consider K being FinSequence of the carrier of V such that
+A35:  len K = len F and
+A36:  for n being Nat st n in dom K holds
+      K . n = H2(n) from FINSEQ_2:sch 1;
+A40:  dom K = Seg len (l (#) F) by RLVECT_2:def 7,A35,FINSEQ_1:def 3
+      .=dom (l (#) F) by FINSEQ_1:def 3;
+A41:  dom G = Seg len (l (#) F) by RLVECT_2:def 7,FINSEQ_1:def 3,A26
+      .=dom (l (#) F) by FINSEQ_1:def 3;
+      for i be Nat st i in dom K holds K.i = (l (#) F).i
+      proof
+        let i be Nat;
+        assume A42: i in dom K;
+        hence K.i = (G/.i)*(F/.i) by A36
+        .=(l.(F/.i))*(F/.i) by A31,A40,A42,A41
+        .= (l (#) F).i by A42,A40,RLVECT_2:def 7;
+      end; then
+      K = l (#) F by A40;
+      hence z in S by A34,A35,A36,Th20,A24,A25,A26;
+    end;
+
+    reconsider LLxM = RSubNormSpace(LxM) as SubRealNormSpace of V by Th1;
+
+    A45:the RLSStruct of LLxM = the RLSStruct of LxM by Def1; then
+    A46: the carrier of LLxM
+    ={ a*x + m where a is Real,m is Point of V: m in M }
+    by A44P,TARSKI:2;
+    A47: for a1,a2 be Real, m1,m2 be Point of V
+    st m1 in M & m2 in M & a1*x+m1 =a2*x+m2
+    holds a1=a2 & m1=m2
+    proof
+      let a1,a2 be Real, m1,m2 be Point of V;
+      assume
+      A48: m1 in M & m2 in M & a1*x+m1 =a2*x+m2;
+      a1*x+m1 - (a2*x+m2)
+      = a1*x+m1 - a2*x- m2 by RLVECT_1:27
+      .= a1*x-a2*x+m1- m2 by RLVECT_1:def 3
+      .= (a1-a2)*x+m1- m2 by RLVECT_1:35; then
+      0.V + m2 =(a1-a2)*x+m1- m2 + m2 by RLVECT_1:15,A48;
+      then
+      A49: m2 =(a1-a2)*x+m1-(m2-m2) by RLVECT_1:29
+      .=(a1-a2)*x+m1- 0.V by RLVECT_1:15
+      .=(a1-a2)*x+m1; then
+      m2 -m1 = (a1-a2)*x by RLVECT_4:1; then
+      A50:(a1-a2)*x in M by A48, RLSUB_1:23;
+      thus a1=a2
+      proof
+        assume a1 <> a2; then
+        A51: a1-a2 <> 0;
+        (a1-a2)"*((a1-a2)*x) in M by A50,RLSUB_1:21; then
+        (a1-a2)"*(a1-a2)*x in M by RLVECT_1:def 7; then
+        1*x in M by A51,XCMPLX_0:def 7;
+        hence contradiction by A1,RLVECT_1:def 8;
+      end; then
+      m2 = 0.V + m1 by RLVECT_1:10,A49
+      .= m1;
+      hence thesis;
+    end;
+    defpred P1[ object, object ] means
+    ex m be Point of V, a be Real
+    st m in M & $1=a*x + m & $2 = a*d;
+    A52: for s being Element of the carrier of LLxM
+    ex y being Element of REAL st P1[s,y]
+    proof
+      let s be Element of the carrier of LLxM;
+      s in { a*x + m where a is Real,m is Point of V: m in M }
+      by A45,A44P; then
+      consider a be Real,m be Point of V such that
+      A53: s=a*x + m & m in M;
+      reconsider b= a*d as Element of REAL by XREAL_0:def 1;
+      take b;
+      thus thesis by A53;
+    end;
+    consider f being Function of the carrier of LLxM,REAL such that
+    A54:for x being Element of the carrier of LLxM holds P1[x,f . x]
+    from FUNCT_2:sch 3(A52);
+T60:
+    for s,t be Point of LLxM holds f.(s+t) =f.s+f.t
+    proof
+      let s,t be Point of LLxM;
+      reconsider s1=s,t1=t as Point of LxM by A45;
+      consider m1 be Point of V,a1 be Real such that
+      A56: m1 in M & s=a1*x + m1 & f.s =a1*d by A54;
+      consider m2 be Point of V,a2 be Real such that
+      A57: m2 in M & t=a2*x + m2 & f.t=a2*d by A54;
+      consider m3 be Point of V,a3 be Real such that
+  A58: m3 in M & s+t=a3*x + m3 & f.(s+t)=a3*d by A54;
+  A59: s+t =s1+t1 by A45
+        .= (a1*x + m1) +(a2*x + m2) by A56,A57,RLSUB_1:13
+        .= (a1*x + m1) +a2*x + m2 by RLVECT_1:def 3
+        .= a1*x + a2*x+m1+ m2 by RLVECT_1:def 3
+        .= (a1 + a2) *x+ m1+ m2 by RLVECT_1:def 6
+        .= (a1 + a2) *x+ (m1+ m2) by RLVECT_1:def 3;
+        m1+m2 in M by A56,A57,RLSUB_1:20;
+        hence f.(s+t) =(a1+a2)*d by A47,A59,A58
+        .=f.s+f.t by A56,A57;
+      end;
+      for s be Point of LLxM,r be Real holds f.(r*s) =r*f.s
+      proof
+        let s be Point of LLxM,r be Real;
+        reconsider s1=s as Point of LxM by A45;
+        consider m1 be Point of V,a1 be Real such that
+        A61:  m1 in M & s=a1*x + m1 & f.s =a1*d by A54;
+        consider m3 be Point of V,a3 be Real such that
+        A62:  m3 in M & r*s=a3*x + m3 & f.(r*s) =a3*d by A54;
+        A63:  r*s = (the Mult of LLxM).(r,s) by RLVECT_1:def 1
+        .=r*s1 by RLVECT_1:def 1,A45
+        .= r*(a1*x + m1) by A61,RLSUB_1:14
+        .=r*(a1*x) + r*m1 by RLVECT_1:def 5
+        .=(r*a1)*x + r*m1 by RLVECT_1:def 7;
+        r*m1 in M by A61,RLSUB_1:21;
+        hence f.(r*s) = (r*a1)*d by A47,A63,A62
+        .=r*f.s by A61;
+      end; then
+      reconsider f as linear-Functional of LLxM
+        by HAHNBAN:def 2,HAHNBAN:def 3,T60;
+A64:  0 <= d
+      proof
+        assume A65: d < 0; then
+        consider r being Real such that
+A66:    r in L & r < d + ((-d) /2) by SEQ_4:def 2,A2;
+        consider m be Point of V such that
+A67:    r= ||.x-m.|| & m in M by A66;
+        ||.x-m.|| < d/2 by A66,A67;
+        hence contradiction by A65;
+     end;
+
+    A68: the normF of LLxM
+    = ( the normF of V ) | the carrier of LLxM by DUALSP01:def 16;
+    A69:for s being VECTOR of LLxM holds |.f.s.| <= 1* ||.s.||
+    proof
+      let s be VECTOR of LLxM;
+      consider m be Point of V,a be Real such that
+A70:  m in M & s=a*x + m & f.s =a*d by A54;
+A71:  |.f.s.| = |.a.|*|.d.| by COMPLEX1:65,A70
+      .=|.a.|*d by A64,COMPLEX1:43;
+      per cases;
+      suppose a=0;
+        hence |.f.s.| <= 1*||.s.|| by A70;
+      end;
+      suppose A72: a <> 0;
+        s = a*x + 1*m by RLVECT_1:def 8,A70
+        .= a*x+(a*a")*m by A72,XCMPLX_0:def 7
+        .= a*x+ a*(a"*m) by RLVECT_1:def 7
+        .=a*(x-(-a"*m)) by RLVECT_1:def 5; then
+A73:    ||.s.|| =||.a*(x-(-a"*m)) .|| by A68,FUNCT_1:49
+        .= |.a.| * ||.x-(-a"*m).|| by NORMSP_1:def 1;
+        a"*m in M by A70, RLSUB_1:21; then
+        -a"*m in M by RLSUB_1:22; then
+        ||.x-(-a"*m).|| in L; then
+A74:    d <= ||.x-(-a"*m).|| by SEQ_4:def 2,A2;
+        0 <= |.a.| by COMPLEX1:46;
+        hence |.f.s.| <=1*||.s.|| by A71,A73,XREAL_1:64,A74;
+      end;
+    end; then
+    reconsider f as Lipschitzian linear-Functional of LLxM
+    by DUALSP01:def 9;
+    reconsider pf = f as Point of DualSp LLxM
+    by DUALSP01:def 10;
+    now let r be Real;
+      assume r in PreNorms f; then
+      consider t be VECTOR of LLxM such that
+A75:  r = |.f.t.| and
+A76:  ||.t.|| <= 1;
+      |.f.t.| <= 1 * ||.t.|| by A69;
+      hence r <= 1 by A75,A76,XXREAL_0:2;
+    end; then
+A78P: upper_bound PreNorms f <= 1 by SEQ_4:45; then
+A78: ||.pf.|| <= 1 by DUALSP01:24;
+    consider g being Lipschitzian linear-Functional of V,
+    pg being Point of DualSp V such that
+    A79: g = pg & g | ( the carrier of LLxM) = f
+    & ||.pg.|| = ||.pf.|| by DUALSP01:36;
+    A80: ||.pg.|| <= 1 by A78P,A79,DUALSP01:24;
+    A81: 1*x + 0.V =x by RLVECT_1:def 8;
+    0.V in M by RLSUB_1:17; then
+    A82: x in the carrier of LLxM by A46,A81;
+    A83: x .|. pg =f.x by A79,FUNCT_1:49,A82;
+    consider m be Point of V,a be Real such that
+    A84: m in M & x=a*x + m & f.x =a*d by A54,A82;
+    A85: 1*x + 0.V = a*x + m by A84,RLVECT_1:def 8;
+    0.V in M by RLSUB_1:17; then
+    A86P: a=1 by A47,A84,A85;
+    for m being VECTOR of V st m in M holds
+    m,pg are_orthogonal
+    proof
+      let m be VECTOR of V;
+      assume A87: m in M;
+      A88:0*x + m = 0.V + m by RLVECT_1:10
+      .= m; then
+      A89:m in the carrier of LLxM by A46,A87;
+      consider m1 be Point of V,a be Real such that
+      A91: m1 in M & m=a*x + m1
+      & f.m =a*d by A54,A89;
+      a=0 by A87,A88,A91,A47;
+      hence m,pg are_orthogonal by A91,A79,FUNCT_1:49,A89;
+    end; then
+    pg in { v where v is VECTOR of DualSp V
+    : for w being VECTOR of V st w in M holds
+    w,v are_orthogonal }; then
+    A92P:pg in the carrier of
+    Ort_Comp M by Def5; then
+    A92: pg in Ort_Comp M by STRUCT_0:def 5;
+    for s being Real st 0 < s holds
+    ex r being Real st r in U & d - s < r
+    proof
+      let s be Real;
+      assume A94: 0 < s;
+      take d;
+      thus d in U by A92,A86P,A80,A83,A84;
+      d-s < d - 0 by XREAL_1:15,A94;
+      hence thesis;
+    end; then
+    HP1: inf L = upper_bound U by A16,SEQ_4:def 1;
+    hence inf L = sup U;
+    thus sup U in U by A92,A86P,A80,A83,A84,HP1;
+    thus 0 < inf L implies
+    ex pg be Point of DualSp V st ||.pg.|| = 1
+    & pg in Ort_Comp M & x .|. pg = inf L
+    proof
+      assume
+      A95P:0 < inf L;
+      now let e be Real;
+        assume 0 < e; then
+        consider m be Point of V such that
+        A96: ||.x-m.|| < d + e & m in M by A3;
+        A97: x-m = 1*x -m by RLVECT_1:def 8;
+        -m in M by RLSUB_1:22,A96; then
+        x-m in the carrier of LLxM by A97,A46; then
+        reconsider xm=x-m as Point of LLxM;
+        consider m1 be Point of V,a be Real such that
+A98:    m1 in M & xm=a*x + m1 & f.xm =a*d by A54;
+        -m in M by A96,RLSUB_1:22; then
+A100P:  f.xm =1*d by A97,A98,A47
+            .=d;
+        x-m <> 0.V by RLVECT_1:21,A1,A96; then
+A101P:  ||.x-m.|| <> 0 by NORMSP_0:def 5; then
+A101:   ||.xm.|| <> 0 by A68,FUNCT_1:49;
+        set s = ||.xm.||"*xm;
+A102:   ||.s.|| =|.||.xm.||".|* ||.xm.|| by NORMSP_1:def 1
+               .= 1 by XCMPLX_0:def 7,A101;
+A103:   |.f.s.| =|.||.xm.||"* f.xm.| by HAHNBAN:def 3
+               .= ||.xm.||"* d by A100P,A64,COMPLEX1:43;
+A104:   ||.xm.|| < d + e by A96,A68,FUNCT_1:49;
+        0 < ||.xm.|| by A101P,A68,FUNCT_1:49; then
+        (d + e)" < ||.xm.|| " by A104,XREAL_1:88; then
+A106:   (d + e)"*d <= |.f.s.| by A103,XREAL_1:64,A64;
+        |.f.s.| in PreNorms f by A102; then
+        |.f.s.| <= upper_bound PreNorms f by SEQ_4:def 1; then
+        (d + e)"*d <= upper_bound PreNorms f by A106,XXREAL_0:2;
+        hence (d + e)"*d <= ||.pf.|| by DUALSP01:24;
+      end; then
+      1<= ||.pf.|| by Lm1,A95P; then
+      ||.pf.|| = 1 by A78,XXREAL_0:1;
+      hence ex pg be Point of DualSp V
+      st ||.pg.|| = 1 & pg in Ort_Comp M
+      & x .|. pg = inf L by A79,A86P,A92P,A83,A84,STRUCT_0:def 5;
+    end;
+    now let m0 be Point of V;
+      assume
+      A107: m0 in M & ||.x-m0.|| = inf L;
+      let pg be Point of DualSp V;
+      assume A108: ||.pg.|| = 1
+      & pg in Ort_Comp M & x .|. pg = inf L;
+      (x-m0) .|. pg = inf L - m0 .|. pg by A108,Th13
+      .= inf L - 0 by A107,Th16,A108
+      .= ||.x-m0.||*||.pg.|| by A107,A108;
+      hence x-m0,pg are_parallel;
+    end;
+    hence thesis;
+  end;
+
+theorem
+  for V be RealNormSpace,
+      x, m0 be Point of V,
+      M be non empty Subspace of V st not x in M & m0 in M
+    holds
+    ( for m be Point of V st m in M holds ||.x-m0.|| <= ||.x-m.|| )
+        iff
+     ex p be Point of DualSp V
+       st p in Ort_Comp M & p <> 0.(DualSp V) & x-m0,p are_parallel
+proof
+  let V be RealNormSpace,
+      x, m0 be Point of V,
+      M be non empty Subspace of V;
+  assume that
+A1: not x in M and
+A2: m0 in M;
+A3: ||.x-m0.|| <> 0 by NORMSP_1:6,A1,A2;
+  consider L be non empty bounded_below real-membered set,
+  U be non empty bounded_above real-membered set such that
+  A4: L = {||.x-m.|| where m is Point of V :m in M} and
+  U = { x .|. y where y is Point of DualSp V :
+  y in Ort_Comp M & ||.y.|| <= 1 } and
+  inf L = sup U & sup U in U and
+  A5:0 < inf L implies ex v be Point of DualSp V
+  st ||.v.|| = 1 & v in Ort_Comp M & x .|. v = inf L and
+  for m0 be Point of V
+  st m0 in M & ||.x-m0.|| = inf L holds
+  for v be Point of DualSp V st ||.v.|| = 1 & v in Ort_Comp M
+  & x .|. v = inf L holds x-m0,v are_parallel by A1,Th21;
+  hereby assume
+    A6: for m be Point of V st m in M
+    holds ||.x-m0.|| <= ||.x-m.||;
+    A7: for r be Real st r in L holds ||.x-m0.|| <= r
+    proof
+      let r be Real;
+      assume r in L; then
+      consider m be Point of V such that
+      A8: r =||.x-m.|| & m in M by A4;
+      thus ||.x-m0.|| <= r by A6,A8;
+    end;
+    for s being Real st 0 < s holds ex r being Real st
+    r in L & r < ||.x-m0.|| + s
+    proof
+      let s be Real;
+      assume A9: 0 < s;
+      take r=||.x-m0.||;
+      thus r in L by A4,A2;
+      ||.x-m0.|| + 0 < ||.x-m0.|| + s by XREAL_1:8,A9;
+      hence thesis;
+    end; then
+    A10P: ||.x-m0.|| = lower_bound L by A7,SEQ_4:def 2; then
+    consider v be Point of DualSp V such that
+    A11: ||.v.|| = 1 & v in Ort_Comp M
+    & x .|. v = inf L by A5,A3;
+    take v;
+    thus v in Ort_Comp M by A11;
+    thus v <> 0.(DualSp V) by A11;
+    (x-m0) .|. v = x .|. v - m0 .|. v by Th13
+    .= inf L - 0 by A11,A2,Th16
+    .= ||.x-m0.||*||.v.|| by A10P,A11;
+    hence x-m0,v are_parallel;
+  end;
+  given v be Point of DualSp V such that
+  A13: v in Ort_Comp M & v <> 0.(DualSp V) & x-m0,v are_parallel;
+  A14: ||.v.|| <> 0 by A13,NORMSP_0:def 5;
+  set p=(||.v.||")* v;
+  the carrier of Ort_Comp M =
+  { v where v is VECTOR of DualSp V :
+  for w being VECTOR of V st w in M holds
+  w,v are_orthogonal } by Def5; then
+  p in { v where v is VECTOR of DualSp V :
+  for w being VECTOR of V st w in M holds
+  w,v are_orthogonal }
+  by STRUCT_0:def 5,A13,RLSUB_1:21; then
+  A16P: ex v0 be VECTOR of DualSp V st p = v0 &
+  for w being VECTOR of V st w in M holds
+  w,v0 are_orthogonal;
+  A17: ||.p.|| = |.(||.v.||").|*||.v.|| by NORMSP_1:def 1
+  .= 1 by A14,XCMPLX_0:def 7;
+  A18P: (x-m0) .|.p = (||.v.||") * ((x-m0) .|.v) by DUALSP01:30
+  .= ||.x-m0.|| *( |. ||.v.||" .| *||.v.|| ) by A13
+  .= ||.x-m0.|| * ||.p.|| by NORMSP_1:def 1;
+  let m be Point of V;
+  assume A19: m in M;
+  A20: |. (x-m) .|. p .| <= ||.p.|| * ||.x-m.|| by Th2;
+  m,p are_orthogonal by A16P,A19; then
+  A23P: x .|. p =x .|. p - m .|. p
+  .= (x-m) .|. p by Th13;
+  A24: m0,p are_orthogonal by A16P,A2;
+  x .|. p = x .|. p - m0 .|. p by A24
+  .= ||.x-m0.|| by A17,A18P,Th13;
+  hence ||.x-m0.|| <= ||.x-m.|| by A23P,A17,A20;
+end;
+
+theorem Th23:
+  for X be RealNormSpace,
+      x be Point of DualSp X,
+      M be non empty Subspace of X holds
+  {||.x-m.|| where m is Point of DualSp X : m in Ort_Comp M}
+    is non empty bounded_below real-membered set
+proof
+  let X be RealNormSpace,
+      x be Point of DualSp X,
+      M be non empty Subspace of X;
+  set B = {||.x-m.|| where m is Point of DualSp X : m in Ort_Comp M};
+  0.(DualSp X) in Ort_Comp M by RLSUB_1:17; then
+A1P: ||.x-0.(DualSp X).|| in B;
+  B c= REAL
+  proof let r be object;
+    assume r in B; then
+    ex m be Point of DualSp X st r= ||.x-m.|| & m in Ort_Comp M;
+    hence r in REAL;
+  end; then
+  reconsider B as real-membered set;
+  B is bounded_below
+  proof
+    reconsider r0 = 0 as Real;
+    take r0;
+    let r be ExtReal;
+    assume r in B; then
+    ex m be Point of DualSp X st r= ||.x-m.|| & m in Ort_Comp M;
+    hence r0 <= r;
+  end;
+  hence thesis by A1P;
+end;
+
+theorem Th24:
+  for X be RealNormSpace,
+      x be Point of DualSp X,
+      M be non empty Subspace of X holds
+  { y .|. x where y is Point of X :
+     y in M & ||.y.|| <= 1 }
+     is non empty bounded_above real-membered set
+proof
+  let X be RealNormSpace,
+      x be Point of DualSp X,
+      M be non empty Subspace of X;
+  set B = {y .|. x where y is Point of X :
+     y in M & ||.y.|| <= 1};
+  set z = 0.X;
+A1: z in M by RLSUB_1:17;
+  ||.z.|| = 0; then
+A2P: z .|. x in B by A1;
+  B c= REAL
+  proof let r be object;
+    assume r in B; then
+    ex y be Point of X st r = y .|. x & y in M & ||.y.|| <= 1;
+    hence r in REAL;
+  end; then
+  reconsider B as real-membered set;
+  B is bounded_above
+  proof
+    reconsider r0 = ||.x.|| as Real;
+    take r0;
+    let r be ExtReal;
+    assume r in B; then
+    consider y be Point of X such that
+A3: r = y .|. x & y in M & ||.y.|| <= 1;
+    reconsider x0=x as Lipschitzian linear-Functional of X
+      by DUALSP01:def 10;
+A4: |.x0.y.| <= ||.x.|| * ||.y.|| by DUALSP01:26;
+    ||.x.|| * ||.y.|| <=||.x.||*1 by A3,XREAL_1:64; then
+A5: |.x0.y.| <= ||.x.|| by A4,XXREAL_0:2;
+    x0.y <= |.x0.y.| by ABSVALUE:4;
+    hence r <= r0 by A5,XXREAL_0:2,A3;
+  end;
+  hence thesis by A2P;
+end;
+
+theorem
+  for V be RealNormSpace,
+      x be Point of DualSp V,
+      M be non empty Subspace of V,
+      SM be SubRealNormSpace of V
+      st SM = RSubNormSpace(M) holds
+   ex L be non empty bounded_below real-membered set,
+      U be non empty bounded_above real-membered set st
+      L = {||.x-m.|| where m is Point of DualSp V :m in Ort_Comp M}
+      &
+      U = { y .|. x where y is Point of V :
+      y in M & ||.y.|| <= 1 } &
+      ex m0 be Point of DualSp V,
+      fx be Lipschitzian linear-Functional of V,
+      xM be Point of DualSp SM
+      st x=fx & xM = fx | (the carrier of SM)
+      & m0 in Ort_Comp M
+      & ||.x-m0.|| = inf L & inf L in L
+      & ||.x-m0.|| = ||.xM.|| & for y be Point of V
+      st ||.y.|| = 1 & y in M & fx.y = ||.x-m0.||
+      holds y,x-m0 are_parallel
+proof
+  let V be RealNormSpace,
+      x be Point of DualSp V,
+      M be non empty Subspace of V,
+      SM be SubRealNormSpace of V;
+   assume A1:SM = RSubNormSpace(M);
+   reconsider
+   L = {||.x-m.|| where m is Point of DualSp V :m in Ort_Comp M}
+   as non empty bounded_below real-membered set by Th23;
+   reconsider U = { y .|. x where y is Point of V :
+   y in M & ||.y.|| <= 1 }
+   as non empty bounded_above real-membered set by Th24;
+   take L,U;
+   thus
+   L = {||.x-m.|| where m is Point of DualSp V :m in Ort_Comp M}
+   &
+   U = { y .|. x where y is Point of V : y in M & ||.y.|| <= 1 };
+   A2:the RLSStruct of SM = the RLSStruct of M &
+   the normF of SM = (the normF of V) | (the carrier of SM) by Def1,A1;
+   reconsider fx = x as Lipschitzian linear-Functional of V by DUALSP01:def 10;
+   set fxM = fx | the carrier of SM;
+   dom fx = the carrier of V by FUNCT_2:def 1; then
+   the carrier of SM c= dom fx by RLSUB_1:def 2,A2; then
+   dom fxM = the carrier of SM
+   & rng fxM c= REAL by RELAT_1:62; then
+   reconsider fxM as Function of the carrier of SM,REAL by FUNCT_2:2;
+A6P:for s,t be Point of SM holds fxM.(s+t) = fxM.s+fxM.t
+   proof
+     let s,t be Point of SM;
+     reconsider s1=s,t1=t as Point of M by A2;
+     reconsider s2=s1,t2=t1 as Point of V by RLSUB_1:10;
+     A5P:fxM.s = fx.s1 & fxM.t = fx.t1 by FUNCT_1:49;
+     thus fxM.(s+t) = fx.(s1+t1) by FUNCT_1:49,A2
+     .=fx.(s2+t2) by RLSUB_1:13
+     .= fxM.s+fxM.t by A5P,HAHNBAN:def 2;
+   end;
+   for s be Point of SM,r be Real holds fxM.(r*s) =r*fxM.s
+   proof
+     let s be Point of SM,r be Real;
+     reconsider s1=s as Point of M by A2;
+     reconsider s2=s1 as Point of V by RLSUB_1:10;
+     A7:r*s2 =r*s1 by RLSUB_1:14;
+     A8: r*s = (the Mult of SM).(r,s) by RLVECT_1:def 1
+     .=r*s1 by RLVECT_1:def 1,A2;
+     thus fxM.(r*s) = fx.(r*s2) by A7,A8,FUNCT_1:49
+     .= r*fx.s2 by HAHNBAN:def 3
+     .= r*fxM.s by FUNCT_1:49;
+   end; then
+   reconsider fxM as linear-Functional of SM
+   by HAHNBAN:def 3,A6P,HAHNBAN:def 2;
+   for s being VECTOR of SM
+   holds |.fxM.s.| <= ||.x.||* ||.s.||
+   proof
+     let s be VECTOR of SM;
+     reconsider s1=s as Point of V by A2,RLSUB_1:10;
+     A10: fxM.s = fx.s1 by FUNCT_1:49;
+     ||.s.|| = ||.s1.|| by A2, FUNCT_1:49;
+     hence thesis by DUALSP01:26,A10;
+   end; then
+   reconsider fxM as Lipschitzian linear-Functional of SM
+   by DUALSP01:def 9;
+   reconsider xM =fxM as Point of DualSp SM by DUALSP01:def 10;
+
+A15:
+   now let m be Point of DualSp V;
+     assume A16:m in Ort_Comp M;
+     reconsider fxm=x-m as Lipschitzian linear-Functional of V
+     by DUALSP01:def 10;
+     PreNorms fxM c= PreNorms fxm
+     proof let r be object;
+       assume r in PreNorms fxM; then
+       consider t be VECTOR of SM such that
+       A17: r = |.fxM. t.| & ||.t.|| <= 1;
+       reconsider t1=t as Point of V by A2,RLSUB_1:10;
+       t1 in M by STRUCT_0:def 5,A2; then
+       A19: t1 .|.m = 0 by A16,Th16;
+       A20: fxm.t1 =t1.|.(x-m)
+       .=t1 .|. x -t1 .|. m by Th12
+       .=fxM.t by FUNCT_1:49,A19;
+       ||.t.|| = ||.t1.|| by A2, FUNCT_1:49;
+       hence r in PreNorms fxm by A17,A20;
+     end; then
+     A21:upper_bound PreNorms fxM
+     <= upper_bound PreNorms fxm by XXREAL_2:59;
+     ||.xM.|| = upper_bound PreNorms fxM by DUALSP01:24;
+     hence ||.xM.|| <= ||.x-m.|| by A21,DUALSP01:24;
+   end;
+
+   consider fy being Lipschitzian linear-Functional of V,
+            y being Point of DualSp V such that
+A23: fy = y & fy | ( the carrier of SM) = fxM
+    & ||.y.|| = ||.xM.|| by DUALSP01:36;
+    set m0=x-y;
+    reconsider fm0 = m0 as Lipschitzian linear-Functional of V
+      by DUALSP01:def 10;
+    for t be Point of V st t in M holds t,m0 are_orthogonal
+    proof
+      let t be Point of V;
+      assume A27P: t in M;
+      t .|. m0 = t .|. x- t .|. y by Th12
+      .=fx.t -fxM.t by A23,A27P,FUNCT_1:49,STRUCT_0:def 5,A2
+      .=fx.t -fx.t by A27P,FUNCT_1:49,STRUCT_0:def 5,A2
+      .=0;
+      hence t,m0 are_orthogonal;
+    end; then
+    m0 in { v where v is VECTOR of DualSp V
+    : for w being VECTOR of V st w in M
+    holds w,v are_orthogonal }; then
+    m0 in the carrier of Ort_Comp M by Def5; then
+    A29: m0 in Ort_Comp M by STRUCT_0:def 5;
+    A30P:x-m0 = y by RLVECT_4:1;
+    A32: for r be Real st r in L holds ||.xM.|| <= r
+    proof
+      let r be Real;
+      assume r in L; then
+      consider m be Point of DualSp V such that
+      A33: r =||.x-m.|| & m in Ort_Comp M;
+      thus ||.xM.|| <= r by A15,A33;
+    end;
+    for s being Real st 0 < s holds
+    ex r being Real st r in L & r < ||.xM.|| + s
+    proof
+      let s be Real;
+      assume A34: 0 < s;
+      take r=||.xM.||;
+      thus r in L by A29,A30P,A23;
+      ||.xM.|| + 0 < ||.xM.|| + s by XREAL_1:8,A34;
+      hence thesis;
+    end; then
+    A35P: ||.xM.|| = lower_bound L by A32,SEQ_4:def 2;
+    take m0,fx,xM;
+    thus x=fx & xM = fx | (the carrier of SM)
+    & m0 in Ort_Comp M
+    & ||.x-m0.|| = inf L & inf L in L
+    & ||.x-m0.|| = ||.xM.|| by A29,A30P,A35P,A23;
+    let y be Point of V;
+    assume A37: ||.y.|| = 1 & y in M & fx.y = ||.x-m0.||;
+    y .|. (x-m0) = y .|. x - y .|. m0 by Th12
+    .= ||.x-m0.|| - 0 by A29,A37,Th16
+    .= ||.x-m0.||*||.y.|| by A37;
+    hence y,x-m0 are_parallel;
+  end;

@@ -1,0 +1,2723 @@
+:: Ascoli-Arzela's Theorem (Metric Space Version)
+::  by Keiichi Miyajima and Hiroshi Yamazaki
+::
+:: Received November 28, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ASCOLI2, ASCOLI, STRUCT_0, NUMBERS, PRE_TOPC, ORDINAL2, PCOMPS_1,
+      MONOID_0, XXREAL_1, RELAT_2, SUBSET_1, RCOMP_1, RELAT_1, XBOOLE_0,
+      FUNCT_1, TARSKI, CARD_1, ARYTM_3, ARYTM_1, REAL_1, FUNCT_2, ZFMISC_1,
+      XXREAL_2, XXREAL_0, REWRITE1, NAT_1, SEQ_2, TMAP_1, PARTFUN1, C0SP2,
+      METRIC_1, SETFAM_1, FINSET_1, METRIC_6, SEQ_4, TBSP_1, TOPMETR4, BHSP_3,
+      UPROOTS, FINSEQ_1, FUNCT_7, FUNCOP_1, PSCOMP_1, COMPLEX1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, SETFAM_1, FUNCT_1, CARD_1,
+      ORDINAL1, RELSET_1, PARTFUN1, FUNCT_2, BINOP_1, FINSET_1, NUMBERS, NAT_1,
+      COMPLEX1, XCMPLX_0, XXREAL_0, XREAL_0, XXREAL_2, SEQ_2, SEQ_4, STRUCT_0,
+      MONOID_0, RCOMP_1, PCOMPS_1, TBSP_1, PRE_TOPC, COMPTS_1, TOPS_2,
+      METRIC_1, TMAP_1, TOPMETR, PSCOMP_1, LOPBAN_1, TOPMETR4, METRIC_6,
+      FINSEQ_1, ASCOLI;
+ constructors COMPLEX1, PCOMPS_1, TBSP_1, TOPMETR, SEQ_4, TMAP_1, TOPS_2,
+      TOPMETR4, C0SP3, RCOMP_1, METRIC_6, ASCOLI, SEQ_2, COMSEQ_2, MONOID_0,
+      PSCOMP_1;
+ registrations XBOOLE_0, SUBSET_1, STRUCT_0, PRE_TOPC, XREAL_0, NUMBERS,
+      ORDINAL1, MEMBERED, VALUED_0, COMPTS_1, XXREAL_0, FUNCT_2, XXREAL_2,
+      PSCOMP_1, TOPMETR, RELSET_1, WAYBEL_2, XCMPLX_0, TOPS_1, MONOID_0,
+      TBSP_1, PCOMPS_1, CARD_1, FINSEQ_1, FINSET_1, ASCOLI;
+ requirements NUMERALS, BOOLE, SUBSET, ARITHM, REAL;
+ definitions TBSP_1, TARSKI;
+ equalities STRUCT_0, PCOMPS_1, METRIC_1;
+ expansions TARSKI, STRUCT_0, XBOOLE_0, PRE_TOPC, TBSP_1, METRIC_1, PSCOMP_1,
+      XXREAL_2, SEQ_2, MEMBERED;
+ theorems FUNCT_1, PARTFUN1, ZFMISC_1, TARSKI, XBOOLE_1, RELAT_1, XREAL_0,
+      XXREAL_0, FUNCT_2, XREAL_1, TOPS_2, XBOOLE_0, COMPTS_1, PRE_TOPC, SEQ_4,
+      PARTFUN2, ORDINAL1, TOPMETR4, TMAP_1, TOPMETR, PCOMPS_1, SETFAM_1,
+      METRIC_1, METRIC_6, FINSEQ_1, BINOP_1, MONOID_0, ASCOLI, RCOMP_1,
+      COMPLEX1, TBSP_1, C0SP2, XXREAL_2;
+ schemes FUNCT_2, BINOP_1;
+
+begin :: Equicontinuousness and Equiboundedness of Continuous Functions
+
+theorem Th1:
+  for T be non empty MetrSpace,
+      A be Subset of T holds A c= Cl A
+proof
+  let T be non empty MetrSpace,
+      A be Subset of T;
+  consider Z being Subset of TopSpaceMetr T such that
+A1: Z = A & Cl A = Cl Z by ASCOLI:def 1;
+  thus thesis by A1,PRE_TOPC:18;
+end;
+
+theorem Th2:
+  for S be non empty TopSpace,
+      T be non empty MetrSpace,
+      f be Function of S,TopSpaceMetr(T),
+      x be Point of S holds
+  (  f is_continuous_at x
+    iff
+   for e be Real
+     st 0 < e
+       holds ex H being Subset of S st
+  ( H is open & x in H &
+  for y be Point of S
+     st y in H holds dist(In(f.x,T),In(f.y,T)) < e ) )
+proof
+  let S be non empty TopSpace, T be non empty MetrSpace,
+      f be Function of S,TopSpaceMetr(T),
+      x be Point of S;
+  hereby assume
+A1: f is_continuous_at x;
+    let e be Real;
+    assume A2: 0 < e;
+    reconsider V = Ball (In(f.x,T),e) as Subset of TopSpaceMetr(T);
+    dist(In(f.x,T),In(f.x,T)) = 0 by METRIC_1:1; then
+    In(f.x,T) in V by METRIC_1:11,A2; then
+    consider H being Subset of S such that
+A3: H is open & x in H & f .: H c= V by A1,TMAP_1:43,TOPMETR:14;
+    take H;
+    thus H is open by A3;
+    thus x in H by A3;
+    let y be Point of S;
+    assume y in H; then
+    f.y in f.:H by FUNCT_2:35;
+    hence dist(In(f.x,T),In(f.y,T)) < e by A3,METRIC_1:11;
+  end;
+  assume
+A4: for e be Real st 0 < e
+    holds ex H being Subset of S st
+      ( H is open & x in H & for y be Point of S
+         st y in H holds dist(In(f.x,T),In(f.y,T)) < e );
+    for G being Subset of TopSpaceMetr(T)
+      st G is open & f.x in G holds
+    ex H being Subset of S st
+      H is open & x in H & f .: H c= G
+    proof
+      let G be Subset of TopSpaceMetr(T);
+      assume G is open & f.x in G; then
+      consider r being Real such that
+A5:   r > 0 & Ball(In(f.x,T),r) c= G by TOPMETR:15;
+      consider H being Subset of S such that
+   A6: H is open & x in H &
+      for y be Point of S
+      st y in H holds dist(In(f.x,T),In(f.y,T)) < r
+          by A4,A5;
+      take H;
+      thus H is open by A6;
+      thus x in H by A6;
+      now let z be object;
+        assume z in f .: H; then
+        consider t being object such that
+A7:     t in dom f & t in H & z = f.t by FUNCT_1:def 6;
+        reconsider t as Point of S by A7;
+        dist(In(f.x,T),In(f.t,T)) < r by A7,A6;
+        hence z in G by A5,A7,METRIC_1:11;
+      end;
+      hence f .: H c= G;
+    end;
+    hence f is_continuous_at x by TMAP_1:43;
+  end;
+
+Lm1:
+for S,T be non empty MetrSpace,
+    f be Function of TopSpaceMetr(S),TopSpaceMetr(T)
+  st TopSpaceMetr(S) is compact holds
+  f is continuous iff
+   for e be Real st 0 < e holds ex d be Real
+    st 0 < d
+    & for x1,x2 be Point of S st dist(x1,x2) < d
+          holds dist(In(f/.x1,T),In(f/.x2,T)) < e
+  proof
+    let S,T be non empty MetrSpace,
+        f be Function of TopSpaceMetr(S),TopSpaceMetr(T);
+    assume A1: TopSpaceMetr(S) is compact;
+    set V = TopSpaceMetr(S);
+    hereby assume
+A2:   f is continuous;
+      let e be Real;
+      assume
+  A3: 0 < e;
+  A4: [#]TopSpaceMetr(S) is compact by A1,COMPTS_1:1;
+      defpred P[Element of S,Real] means 0 < $2 &
+      for x be Point of S st dist(x,$1) < $2
+         holds dist(In(f/.x,T),In(f/.$1,T)) < e/2;
+  A5: for x0 being Element of the carrier of S
+        ex d being Element of REAL st P[x0,d]
+      proof
+        let x0 be Element of the carrier of S;
+        reconsider xx0 = x0 as Point of V;
+        consider H being Subset of V such that
+  A6:   H is open & xx0 in H &
+        for y be Point of V
+          st y in H holds dist(In(f.xx0,T),In(f.y,T)) < e/2
+            by A3,Th2,A2,TMAP_1:50;
+        consider d being Real such that
+    A7: d > 0 & Ball (x0,d) c= H by PCOMPS_1:def 4,A6;
+        reconsider d as Element of REAL by XREAL_0:def 1;
+        take d;
+        for x be Point of S
+           st dist(x,x0) < d holds
+             dist(In(f/.x,T),In(f/.x0,T)) < e/2
+        proof
+          let x be Point of S;
+          assume dist(x,x0) < d; then
+      A8: x in Ball (x0,d) by METRIC_1:11;
+          reconsider y=x as Point of V;
+      A9: dist(In(f.xx0,T),In(f.y,T)) < e/2 by A6,A8,A7;
+          f.xx0 = f/.xx0 & f.y = f/.y;
+          hence dist(In(f/.x,T),In(f/.x0,T)) < e/2 by A9;
+        end;
+        hence thesis by A7;
+      end;
+      consider D being Function of the carrier of S,REAL such that
+ A10: for x0 being Element of the carrier of S
+        holds P[x0,D.x0] from FUNCT_2:sch 3(A5);
+      set CV = the set of all Ball (x0,(D.x0)/2)
+        where x0 is Element of S;
+      CV c= bool the carrier of TopSpaceMetr S
+      proof
+        let z be object;
+        assume z in CV; then
+        consider x0 be Point of S such that
+   A11: z = Ball (x0,(D.x0)/2);
+        thus z in bool the carrier of TopSpaceMetr S by A11;
+      end; then
+      reconsider CV as Subset-Family of TopSpaceMetr S;
+      for P being Subset of TopSpaceMetr S st P in CV holds P is open
+      proof
+        let P be Subset of TopSpaceMetr S;
+        assume P in CV; then
+        consider x0 be Point of S such that
+  A12:  P = Ball (x0,(D.x0)/2);
+        thus P is open by A12,PCOMPS_1:29;
+      end; then
+A13:  CV is open by TOPS_2:def 1;
+      the carrier of TopSpaceMetr S c= union CV
+      proof
+        let z be object;
+        assume z in the carrier of TopSpaceMetr S; then
+        reconsider x0=z as Point of S;
+    A14:Ball(x0,(D.x0)/2) in CV;
+        0 < (D.x0)/2 by A10,XREAL_1:215; then
+        dist(x0,x0) < (D.x0)/2 by METRIC_1:1; then
+        x0 in { y where y is Element of S : dist (x0,y) < (D.x0)/2 }; then
+        x0 in Ball(x0,(D.x0)/2) by METRIC_1:def 14;
+        hence z in union CV by TARSKI:def 4,A14;
+      end; then
+      consider G being Subset-Family of TopSpaceMetr S such that
+A15:  G c= CV & G is Cover of [#] (TopSpaceMetr S) & G is finite
+        by COMPTS_1:def 4,A4,A13,SETFAM_1:def 11;
+      defpred P1[object,object] means
+        ex x0 be Point of S st
+          $2 = x0 & $1 = Ball(x0,(D.x0)/2);
+A16:  for Z be object st Z in G
+        ex x0 be object st x0 in the carrier of S & P1[Z,x0]
+      proof
+        let Z be object;
+        assume Z in G; then
+        Z in CV by A15; then
+        consider x0 be Point of S such that
+   A17: Z = Ball(x0,(D.x0)/2);
+        take x0;
+        thus thesis by A17;
+      end;
+      consider H being Function of G,the carrier of S such that
+A18:  for Z being object st Z in G
+        holds P1[Z,H.Z] from FUNCT_2:sch 1(A16);
+A19:  for Z being object st Z in G holds Z = Ball(H/.Z,(D.(H.Z))/2)
+      proof
+        let Z be object;
+        assume A20: Z in G; then
+A21:    ex x0 be Point of S st H.Z = x0 & Z = Ball(x0,(D.x0)/2) by A18;
+        dom H = G by FUNCT_2:def 1;
+        hence Z = Ball(H/.Z,(D.(H.Z))/2) by A21,A20,PARTFUN1:def 6;
+      end;
+A22:  dom H = G by FUNCT_2:def 1;
+      reconsider D0 = D.: (rng H) as finite Subset of REAL by A15;
+A23:  dom D = the carrier of S by FUNCT_2:def 1;
+      G <> {}
+      proof
+        assume G = {}; then
+        the carrier of TopSpaceMetr S c= {} by ZFMISC_1:2,A15,SETFAM_1:def 11;
+        hence contradiction;
+      end; then
+      consider xx be object such that
+A24:  xx in G by XBOOLE_0:def 1;
+      rng H <> {} by A22,A24,FUNCT_1:3; then
+      consider xx be object such that
+A25:  xx in rng H by XBOOLE_0:def 1;
+      reconsider xx as Point of S by A25;
+      set d0 = lower_bound D0;
+A26:  for r be Real st r in D0 holds d0 <= r by SEQ_4:def 2;
+      d0 in D0 by SEQ_4:133,A25; then
+      consider xx being object such that
+ A27: xx in dom D & xx in rng H & d0 = D.xx by FUNCT_1:def 6;
+      reconsider xx as Point of S by A27;
+A28:  0 < d0 by A27,A10;
+      reconsider d = d0/2 as Real;
+      take d;
+      thus 0 < d by A28;
+      thus for x1,x2 be Point of S st dist(x1,x2) < d holds
+        dist(In(f/.x1,T),In(f/.x2,T)) < e
+      proof
+        let x1,x2 be Point of S;
+        assume A29: dist(x1,x2) < d;
+        x1 in union G by A15,SETFAM_1:def 11,TARSKI:def 3; then
+        consider X1 be set such that
+A30:    x1 in X1 & X1 in G by TARSKI:def 4;
+A31:    X1 = Ball(H/.X1,(D.(H.X1))/2) by A19,A30;
+A32:    (D.(H/.X1))/2 < D.(H/.X1) by A10,XREAL_1:216;
+        x1 in { y where y is Point of S : dist(H/.X1,y) < (D.(H.X1))/2 }
+          by A31,A30,METRIC_1:def 14; then
+A33:    ex y be Point of S st y=x1 & dist(H/.X1,y) < (D.(H.X1))/2; then
+        dist(x1,H/.X1) < (D.(H/.X1))/2 by A22,PARTFUN1:def 6,A30; then
+        dist(x1,H/.X1) < (D.(H/.X1)) by A32,XXREAL_0:2; then
+A34:    dist(In(f/.x1,T),In(f/.(H/.X1),T)) < e/2 by A10;
+A35:    H.X1 in rng H by A22,A30,FUNCT_1:3;
+        H/.X1 in dom D by A23; then
+        H.X1 in dom D by A22,A30,PARTFUN1:def 6; then
+        D.(H.X1) in D0 by FUNCT_1:def 6,A35; then
+        d0/2 <= (D.(H.X1))/2 by A26,XREAL_1:72; then
+A36:    dist(x1,x2) < (D.(H.X1))/2 by A29,XXREAL_0:2;
+A37:    dist(x2,H/.X1) <= dist(x1,x2)+ dist(H/.X1,x1) by METRIC_1:4;
+        dist(x1,x2)+ dist(H/.X1,x1) < (D.(H.X1))/2 +(D.(H.X1))/2
+          by A36,A33, XREAL_1:8; then
+    dist(x2,H/.X1) < D.(H.X1) by A37,XXREAL_0:2; then
+        dist(x2,H/.X1) < (D.(H/.X1)) by PARTFUN1:def 6,A22,A30; then
+A39:    dist(In(f/.(H/.X1),T),In(f/.x2,T)) < e/2 by A10;
+A40:    dist(In(f/.x1,T),In(f/.x2,T))
+          <= dist(In(f/.x1,T),In(f/.(H/.X1),T)) +
+        dist(In(f/.(H/.X1),T),In(f/.x2,T)) by METRIC_1:4;
+        dist(In(f/.x1,T),In(f/.(H/.X1),T)) +
+        dist(In(f/.(H/.X1),T),In(f/.x2,T))
+          < e/2 + e/2 by A39,A34,XREAL_1:8;
+        hence dist(In(f/.x1,T),In(f/.x2,T))< e by A40,XXREAL_0:2;
+      end;
+    end;
+    assume A41: for e be Real st 0 < e
+    holds ex d be Real st 0 < d
+    & for x1,x2 be Point of S st dist(x1,x2) < d holds
+          dist(In(f/.x1,T),In(f/.x2,T)) < e;
+    for x being Point of TopSpaceMetr(S) holds f is_continuous_at x
+    proof
+      let x be Point of TopSpaceMetr(S);
+      now let e be Real;
+        assume A42: 0 < e;
+        reconsider x0 = x as Point of S;
+        consider d be Real such that
+  A43:  0 < d & for x1,x2 be Point of S
+          st dist(x1,x2) < d holds dist(In(f/.x1,T),In(f/.x2,T))
+            < e by A42,A41;
+        reconsider H = Ball (x0,d) as Subset of TopSpaceMetr(S);
+        take H;
+        thus H is open by PCOMPS_1:29;
+        dist(x0,x0) < d by A43,METRIC_1:1;
+        hence x in H by METRIC_1:11;
+        thus for y be Point of TopSpaceMetr(S) st y in H holds
+          dist(In(f.x,T),In(f.y,T)) < e
+        proof
+          let y be Point of TopSpaceMetr(S);
+          assume y in H; then
+          y in { t where t is Point of S : dist(x0,t) < d }
+            by METRIC_1:def 14; then
+  A44:    ex t be Point of S st y=t & dist(x0,t) < d;
+          reconsider y0 = y as Point of S;
+          dom f = the carrier of S by FUNCT_2:def 1; then
+          f/.x0 = f.x0 & f/.y0 = f.y0 by PARTFUN1:def 6;
+          hence dist(In(f.x,T),In(f.y,T)) < e by A43,A44;
+        end;
+      end;
+      hence f is_continuous_at x by Th2;
+    end;
+    hence f is continuous by TMAP_1:50;
+  end;
+
+definition
+  let S,T be non empty MetrSpace;
+  let F be Subset of Funcs(the carrier of S,the carrier of T);
+  attr F is equibounded means
+   ex K be Subset of T st K is bounded
+      & for f be Function of the carrier of S,the carrier of T
+             st f in F holds
+            for x be Element of S holds f.x in K;
+end;
+
+definition
+  let S,T be non empty MetrSpace;
+  let F be Subset of Funcs(the carrier of S,the carrier of T);
+  let x0 be Point of S;
+  pred F is_equicontinuous_at x0 means
+  for e be Real st 0 < e
+   ex d be Real st 0 < d &
+    for f be Function of the carrier of S,the carrier of T
+             st f in F holds
+      for x be Point of S
+          st dist(x,x0) < d holds dist(f.x,f.x0) < e;
+end;
+
+definition
+  let S,T be non empty MetrSpace;
+  let F be Subset of Funcs(the carrier of S,the carrier of T);
+  attr F is equicontinuous means
+  for e be Real st 0 < e
+   ex d be Real st 0 < d &
+    for f be Function of the carrier of S,the carrier of T
+             st f in F holds
+      for x1,x2 be Point of S
+          st dist(x1,x2) < d holds dist(f.x1,f.x2) < e;
+end;
+
+Lm2:
+ for S,T be non empty MetrSpace,
+      F be Subset of Funcs(the carrier of S,the carrier of T)
+    st TopSpaceMetr(S) is compact
+       holds
+   F is equicontinuous
+      iff
+   for x be Point of S holds F is_equicontinuous_at x
+  proof
+    let S,T be non empty MetrSpace,
+        F be Subset of Funcs(the carrier of S,the carrier of T);
+    assume A1: TopSpaceMetr(S) is compact;
+    hereby assume A2: F is equicontinuous;
+      thus for x be Point of S holds F is_equicontinuous_at x
+      proof
+        let x0 be Point of S;
+        let e be Real;
+        assume 0 < e; then
+        consider d be Real such that
+  A3:   0 < d &
+        for f be Function of the carrier of S,the carrier of T st f in F
+        holds for x1,x2 be Point of S
+            st dist(x1,x2) < d holds dist(f.x1,f.x2)
+          < e by A2;
+        take d;
+        thus 0 < d by A3;
+        let f be Function of the carrier of S,the carrier of T;
+        assume A4: f in F;
+        let x be Point of S;
+        assume dist(x,x0) < d;
+        hence dist(f.x,f.x0) < e by A3,A4;
+      end;
+    end;
+    assume
+A5: for x be Point of S holds F is_equicontinuous_at x;
+    let e be Real;
+    assume
+ A6:0 < e;
+A7: [#]TopSpaceMetr(S) is compact by A1,COMPTS_1:1;
+    defpred P[Element of S,Real] means
+     0 < $2 &
+    for f be Function of the carrier of S,the carrier of T st f in F
+      holds for x be Point of S st dist(x,$1) < $2
+        holds dist(f.x,f.$1) < e/2;
+A8: for x0 being Element of the carrier of S
+      ex d being Element of REAL st P[x0,d]
+    proof
+      let x0 be Element of the carrier of S;
+      F is_equicontinuous_at x0 by A5; then
+      consider d be Real such that
+  A9: 0 < d &
+      for f be Function of the carrier of S,the carrier of T
+         st f in F holds
+      for x be Point of S
+          st dist(x,x0) < d holds dist(f.x,f.x0) < e/2 by A6;
+      reconsider d as Element of REAL by XREAL_0:def 1;
+      take d;
+      thus thesis by A9;
+    end;
+    consider D being Function of the carrier of S,REAL such that
+A10:for x0 being Element of the carrier of S
+       holds P[x0,D.x0] from FUNCT_2:sch 3(A8);
+    set CV = the set of all Ball (x0,(D.x0)/2)
+      where x0 is Element of S;
+    CV c= bool the carrier of TopSpaceMetr S
+    proof
+      let z be object;
+      assume z in CV; then
+      consider x0 be Point of S such that
+ A11: z = Ball (x0,(D.x0)/2);
+      thus z in bool the carrier of TopSpaceMetr S by A11;
+    end; then
+    reconsider CV as Subset-Family of TopSpaceMetr S;
+    for P being Subset of TopSpaceMetr S st P in CV holds P is open
+    proof
+      let P be Subset of TopSpaceMetr S;
+      assume P in CV; then
+      consider x0 be Point of S such that
+ A12: P = Ball (x0,(D.x0)/2);
+      thus P is open by A12,PCOMPS_1:29;
+    end; then
+A13:CV is open by TOPS_2:def 1;
+    the carrier of TopSpaceMetr S c= union CV
+    proof
+      let z be object;
+      assume z in the carrier of TopSpaceMetr S; then
+      reconsider x0 = z as Point of S;
+A14:  Ball(x0,(D.x0)/2) in CV;
+A15:  0 < (D.x0)/2 by A10,XREAL_1:215;
+      dist(x0,x0) < (D.x0)/2 by A15,METRIC_1:1; then
+      x0 in Ball(x0,(D.x0)/2) by METRIC_1:11;
+      hence z in union CV by TARSKI:def 4,A14;
+    end; then
+    consider G being Subset-Family of TopSpaceMetr S such that
+A16:G c= CV & G is Cover of [#] (TopSpaceMetr S) & G is finite
+      by COMPTS_1:def 4,A7,A13,SETFAM_1:def 11;
+    defpred P1[object,object] means
+      ex x0 be Point of S st $2 = x0 & $1 = Ball(x0,(D.x0)/2);
+A17:for Z be object st Z in G
+      ex x0 be object st x0 in the carrier of S & P1[Z,x0]
+    proof
+      let Z be object;
+      assume Z in G; then
+      Z in CV by A16; then
+      consider x0 be Point of S such that
+ A18: Z = Ball(x0,(D.x0)/2);
+      take x0;
+      thus thesis by A18;
+    end;
+    consider H being Function of G,the carrier of S such that
+A19:for Z being object st Z in G
+      holds P1[Z,H.Z] from FUNCT_2:sch 1(A17);
+A20:for Z being object st Z in G holds Z = Ball(H/.Z,(D.(H.Z))/2)
+    proof
+      let Z be object;
+      assume A21: Z in G; then
+A22:  ex x0 be Point of S st H.Z = x0 & Z = Ball(x0,(D.x0)/2) by A19;
+      dom H = G by FUNCT_2:def 1;
+      hence Z = Ball(H/.Z,(D.(H.Z))/2) by A22,A21,PARTFUN1:def 6;
+    end;
+A23:dom H = G by FUNCT_2:def 1;
+    reconsider D0 = D.: (rng H) as finite Subset of REAL by A16;
+A24:dom D = the carrier of S by FUNCT_2:def 1;
+    G <> {}
+    proof
+      assume G = {}; then
+      the carrier of TopSpaceMetr S c= {} by ZFMISC_1:2,A16,SETFAM_1:def 11;
+      hence contradiction;
+    end; then
+    consider xx be object such that
+A25:xx in G by XBOOLE_0:def 1;
+    rng H <> {} by A23,A25,FUNCT_1:3; then
+    consider xx be object such that
+A26:xx in rng H by XBOOLE_0:def 1;
+    reconsider xx as Point of S by A26;
+A27:D0 is bounded_below & lower_bound D0 in D0 by SEQ_4:133,A26;
+    set d0 = lower_bound D0;
+    consider xx being object such that
+A28:xx in dom D & xx in rng H & d0 = D.xx by FUNCT_1:def 6,A27;
+    reconsider xx as Point of S by A28;
+A29:0 < d0 by A28,A10;
+    take d = d0/2;
+    thus 0 < d by A29;
+    thus for f be Function of S,T st f in F
+      for x1,x2 be Point of S
+        st dist(x1,x2) < d holds dist(f.x1,f.x2) < e
+    proof
+      let f be Function of S,T;
+      assume A30: f in F;
+      let x1,x2 be Point of S;
+      assume A31: dist(x1,x2) < d;
+      x1 in union G by A16,SETFAM_1:def 11,TARSKI:def 3; then
+      consider X1 be set such that
+A32:  x1 in X1 & X1 in G by TARSKI:def 4;
+A33:  X1 = Ball(H/.X1,(D.(H.X1))/2) by A20,A32;
+A34:  (D.(H/.X1))/2 < D.(H/.X1) by A10,XREAL_1:216;
+      x1 in { y where y is Point of S : dist(H/.X1,y) < (D.(H.X1))/2 }
+        by A33,A32,METRIC_1:def 14; then
+A35:  ex y be Point of S st y=x1 & dist(H/.X1,y) < (D.(H.X1))/2; then
+        dist(x1,H/.X1) < (D.(H/.X1))/2 by A23,PARTFUN1:def 6,A32; then
+      dist(x1,H/.X1) < (D.(H/.X1)) by A34,XXREAL_0:2; then
+A36:  dist(f.x1,f.(H/.X1)) < e/2 by A10,A30;
+A37:  H.X1 in rng H by A23,A32,FUNCT_1:3;
+      H/.X1 in dom D by A24; then
+      H.X1 in dom D by A23,A32,PARTFUN1:def 6; then
+      D.(H.X1) in D0 by FUNCT_1:def 6,A37; then
+      d0 <= D.(H.X1) by SEQ_4:def 2; then
+      d0/2 <= (D.(H.X1))/2 by XREAL_1:72; then
+A38:  dist(x1,x2) < (D.(H.X1))/2 by A31,XXREAL_0:2;
+A39:  dist(x2,H/.X1) <= dist(x1,x2)+ dist(H/.X1,x1) by METRIC_1:4;
+      dist(x1,x2)+ dist(H/.X1,x1) < (D.(H.X1))/2 + (D.(H.X1))/2
+        by A38,A35,XREAL_1:8; then
+      dist(x2,H/.X1) < D.(H.X1) by A39,XXREAL_0:2; then
+      dist(x2,H/.X1) < (D.(H/.X1)) by PARTFUN1:def 6,A23,A32; then
+A40:  dist(f.x2,f.(H/.X1)) < e/2 by A10,A30;
+A41:  dist(f.x1,f.x2)
+        <= dist(f.x1,f.(H/.X1)) + dist(f.x2,f.(H/.X1)) by METRIC_1:4;
+      dist(f.x1,f.(H/.X1)) + dist(f.x2,f.(H/.X1))
+        < e/2 + e/2 by A40,A36,XREAL_1:8;
+      hence dist(f.x1,f.x2) < e by A41,XXREAL_0:2;
+    end;
+  end;
+
+begin :: Ascoli-Arzela's Theorem
+
+theorem Th3:
+  for Z be non empty MetrSpace,
+      F be non empty Subset of Z
+   st Z is complete holds Z | Cl(F) is complete
+  proof
+    let Z be non empty MetrSpace,
+        F be non empty Subset of Z;
+    assume A1: Z is complete;
+    set N = Z | Cl(F);
+A2: the carrier of N = Cl(F) by TOPMETR:def 2;
+    let S2 be sequence of N;
+    assume A3: S2 is Cauchy;
+A4: rng S2 c= Cl(F) by A2;
+    rng S2 c= the carrier of Z by A2,XBOOLE_1:1; then
+    reconsider S1 = S2 as sequence of Z by FUNCT_2:6;
+    for r being Real st r > 0 holds
+      ex k being Nat st
+    for n, m being Nat st n >= k & m >= k holds
+      dist(S1.n,S1.m) < r
+    proof
+      let r be Real;
+      assume r > 0; then
+      consider p being Nat such that
+A6:   for n, m being Nat st p <= n & p <= m holds
+        dist (S2.n,S2.m) < r by A3;
+      take p;
+      let n, m be Nat;
+      assume p <= n & p <= m; then
+      dist (S2.n,S2.m) < r by A6;
+      hence dist (S1.n,S1.m) < r by TOPMETR:def 1;
+    end; then
+a7: S1 is Cauchy; then
+A8: S1 is_convergent_in_metrspace_to lim S1 by A1,METRIC_6:12;
+    consider H be Subset of TopSpaceMetr Z such that
+A9: H = F & Cl F = Cl H by ASCOLI:def 1;
+    for n being Nat holds S1.n in Cl H
+    proof
+      let n be Nat;
+      S1.n in rng S1 by FUNCT_2:4,ORDINAL1:def 12;
+      hence S1.n in Cl H by A4,A9;
+    end; then
+    lim S1 in Cl(F) by TOPMETR4:6,A9,a7,A1; then
+    reconsider L = lim S1 as Point of N by TOPMETR:def 2;
+    reconsider L0 = L as Point of Z;
+    for r being Real st 0 < r holds
+    ex m being Nat st for n being Nat st m <= n holds
+      dist (S2.n,L) < r
+    proof
+      let r be Real;
+      assume 0 < r; then
+      consider m being Nat such that
+  A10:for n being Nat st m <= n holds
+      dist (S1.n,L0) < r by METRIC_6:def 2,A8;
+      take m;
+      let n be Nat;
+      assume m <= n; then
+      dist (S1.n,L0) < r by A10;
+      hence dist (S2.n,L) < r by TOPMETR:def 1;
+    end;
+    hence S2 is convergent;
+  end;
+
+theorem Th4:
+  for Z be non empty MetrSpace,
+      H be non empty Subset of Z
+    holds
+         Z | H is totally_bounded
+     iff Z | Cl(H) is totally_bounded
+  proof
+    let Z be non empty MetrSpace,
+        H be non empty Subset of Z;
+    consider D be Subset of TopSpaceMetr Z such that
+A1: D = H & Cl(H) = Cl D by ASCOLI:def 1;
+A2: H c= Cl(H) by A1,PRE_TOPC:18;
+A3: the carrier of (Z|H) = H by TOPMETR:def 2;
+A4: the carrier of (Z|Cl(H)) = Cl(H) by TOPMETR:def 2;
+    hereby assume A5: Z | H is totally_bounded;
+      for r being Real st r > 0 holds
+       ex L being Subset-Family of Z | Cl(H) st
+          L is finite & the carrier of Z | Cl(H) = union L
+      & for C being Subset of Z | Cl(H) st C in L holds
+         ex w being Element of Z | Cl(H) st C = Ball (w,r)
+      proof
+        let r be Real;
+        assume A6: r > 0; then
+        consider L0 being Subset-Family of Z | H such that
+   A7:  L0 is finite & the carrier of Z | H = union L0
+          & for C being Subset of Z | H st C in L0 holds
+        ex w being Element of Z | H st C = Ball (w,r/2) by A5;
+        defpred P1[object,object] means
+        ex w be Point of Z | H  st
+        $2 = w & $1 = Ball(w,r/2);
+A8:     for D be object st D in L0
+          ex w be object st w in the carrier of Z | H & P1[D,w]
+        proof
+          let D be object;
+          assume A9: D in L0; then
+          reconsider D0=D as Subset of Z|H;
+          consider w being Element of Z|H such that
+A10:      D0 = Ball (w,r/2) by A7,A9;
+          take w;
+          thus w in the carrier of Z|H & P1[D,w] by A10;
+        end;
+        consider U0 being Function of L0,the carrier of Z|H such that
+  A11:  for D being object st D in L0
+          holds P1[D,U0.D] from FUNCT_2:sch 1(A8);
+A12:    for D being object st D in L0 holds D = Ball(U0/.D,r/2)
+        proof
+          let D be object;
+          assume A13: D in L0; then
+A14:      ex x0 be Point of Z|H st U0.D = x0 & D = Ball(x0,r/2) by A11;
+          dom U0 = L0 by FUNCT_2:def 1;
+          hence D = Ball(U0/.D,r/2) by A14,A13,PARTFUN1:def 6;
+        end;
+        defpred P2[object,object] means
+        ex x be Point of (Z | Cl(H)) st $1 = x & $2 = Ball(x,r);
+A15:    for w be object st w in the carrier of (Z | H)
+         ex B be object st B in bool (the carrier of Z | Cl(H) ) & P2[w,B]
+        proof
+          let w be object;
+          assume w in the carrier of (Z | H); then
+          reconsider x=w as Point of (Z | Cl(H)) by A2,A3,TOPMETR:def 2;
+          Ball (x,r) in bool the carrier of (Z | Cl(H));
+          hence thesis;
+        end;
+        consider B being Function of the carrier of Z|H,
+        bool the carrier of Z|Cl(H) such that
+  A16:  for x being object
+           st x in the carrier of Z|H
+        holds P2[x,B.x] from FUNCT_2:sch 1(A15);
+A17:    dom U0 = L0 by FUNCT_2:def 1;
+        reconsider L = B.:rng U0 as Subset-Family of (Z|Cl(H));
+        take L;
+        thus L is finite by A7;
+        the carrier of Z | Cl(H) c= union L
+        proof
+          let z be object;
+          assume
+   A18:   z in the carrier of Z | Cl(H); then
+          consider seq being sequence of Z such that
+   A19:   (for n be Nat holds seq.n in H )
+            & seq is convergent & lim seq = z by A1,A4,TOPMETR4:5;
+          seq is_convergent_in_metrspace_to lim seq by A19,METRIC_6:12;
+            then
+          consider N be Nat such that
+  A20:    for n be Nat st
+            N<=n holds dist(seq.n,lim seq) < r/2 by METRIC_6:def 2,A6;
+  A21:    dist(seq.N,lim seq) < r/2 by A20;
+          seq.N in H by A19; then
+          consider D be set such that
+  A22:    seq.N in D & D in L0 by A7,A3,TARSKI:def 4;
+          reconsider y0 = seq.N as Point of (Z|H) by A19,A3;
+  A23:    D = Ball(U0/.D,r/2) by A12,A22;
+          y0 in { y where y is Point of (Z|H) : dist(U0/.D,y) < r/2 }
+            by METRIC_1:def 14,A22,A23; then
+  A24:    ex y be Point of (Z|H) st y0=y & dist(U0/.D,y) < r/2;
+          reconsider y01 = y0 as Point of Z;
+          reconsider u0d1 = U0/.D as Point of Z by TOPMETR:def 1,TARSKI:def 3;
+  A25:    dist(u0d1,y01) < r/2 by A24,TOPMETR:def 1;
+          U0/.D in H by A3; then
+          reconsider u0d = U0/.D as Point of Z;
+   A27:   dist(u0d,lim seq) <= dist(u0d,seq.N) + dist(seq.N,lim seq)
+             by METRIC_1:4;
+          dist(u0d,seq.N) + dist(seq.N,lim seq)
+            < r/2 + r/2 by XREAL_1:8,A25,A21; then
+  A28:    dist(u0d,lim seq) < r by A27,XXREAL_0:2;
+          reconsider w = U0/.D as Point of (Z|Cl(H)) by A2,A3,A4;
+          reconsider v = lim seq as Point of (Z|Cl(H)) by A19,A18;
+          dist(w,v) < r by A28,TOPMETR:def 1; then
+          v in { y where y is Point of (Z|Cl(H)) : dist(w,y) < r }; then
+ A29:     v in Ball(w,r) by METRIC_1:def 14;
+A30:      ex w being Point of Z|Cl(H) st U0/.D=w & B.(U0/.D) = Ball(w,r)
+            by A16;
+          U0/.D in rng U0 by PARTFUN2:2,A22,A17; then
+          Ball(w,r) in L by A30,FUNCT_2:35;
+          hence z in union L by A19,A29,TARSKI:def 4;
+        end;
+        hence the carrier of Z | Cl(H) = union L;
+        thus for C being Subset of Z | Cl(H) st C in L holds
+        ex w being Element of Z | Cl(H) st C = Ball (w,r)
+        proof
+          let C be Subset of Z | Cl(H);
+          assume C in L; then
+          consider x being Element of (Z|H) such that
+A31:      x in rng U0 & C=B.x by FUNCT_2:65;
+          ex w being Point of Z|Cl(H) st x=w & B.x = Ball(w,r) by A16;
+          hence thesis by A31;
+        end;
+      end;
+      hence Z | Cl(H) is totally_bounded;
+    end;
+    assume A32: Z | Cl(H) is totally_bounded;
+    thus Z | H is totally_bounded
+    proof
+      let r be Real;
+      assume r > 0;
+      then consider L0 being Subset-Family of Z | Cl(H) such that
+ A33: L0 is finite & the carrier of Z | Cl(H) = union L0 &
+      for C being Subset of Z | Cl(H) st C in L0 holds
+      ex w being Element of Z | Cl(H) st C = Ball (w,r/2) by A32;
+A34:  for x be object
+        st x in H holds ex B be Subset of Z | Cl(H)
+           st x in B & B in L0
+      proof
+        given x be object such that
+  A35:  x in H & not ex B be Subset of Z | Cl(H) st x in B & B in L0;
+        not x in union L0
+        proof
+          assume x in union L0; then
+          consider D be set such that
+    A36:  x in D & D in L0 by TARSKI:def 4;
+          thus contradiction by A36,A35;
+        end;
+        hence contradiction by A2,A35,A4,A33;
+      end;
+      set BL = {B where B is Subset of Z | Cl(H): B in L0 & H /\ B <> {}};
+      consider x be object such that
+ A37: x in H by XBOOLE_0:def 1;
+      consider B be Subset of Z | Cl(H) such that
+ A38: x in B & B in L0 by A34,A37;
+      B /\ H <> {} by A37,A38,XBOOLE_0:def 4; then
+  A39:B in BL by A38;
+      BL c= L0
+      proof
+        let x be object;
+        assume x in BL; then
+        ex B be Subset of Z | Cl(H) st B = x & B in L0 & H /\ B <> {};
+        hence x in L0;
+      end; then
+      reconsider BL as non empty finite set by A39,A33;
+      defpred P1[object,object] means
+        ex w be Point of Z | H,B be Subset of Z | Cl(H) st
+        B = $1 & w in B & B in L0 & $2 = Ball(w,r);
+A40:  for D be object st D in BL
+        ex w be object st w in bool the carrier of Z | H & P1[D,w]
+      proof
+        let D be object;
+        assume D in BL; then
+        consider B be Subset of Z | Cl(H) such that
+   A41: B = D & B in L0 & H /\ B <> {};
+        consider x be object such that
+   A42: x in H /\ B by XBOOLE_0:def 1,A41;
+   A43: x in H & x in B by XBOOLE_0:def 4,A42;
+        reconsider x as Point of (Z|H) by A3,XBOOLE_0:def 4,A42;
+        P1[D,Ball(x,r)] by A41,A43;
+        hence thesis;
+      end;
+      consider U0 being Function of BL,bool the carrier of Z|H such that
+ A44: for D being object st D in BL
+        holds P1[D,U0.D] from FUNCT_2:sch 1(A40);
+A45:  dom U0 = BL by FUNCT_2:def 1;
+      reconsider L = rng U0 as Subset-Family of (Z|H);
+      take L;
+      thus L is finite;
+      the carrier of Z | H c= union L
+      proof
+        let z be object;
+        assume A46: z in the carrier of Z | H; then
+        consider B be Subset of Z | Cl(H) such that
+   A47: z in B & B in L0 by A34,A3;
+        z in H /\ B by A46,A3,A47,XBOOLE_0:def 4; then
+   A48: B in BL by A47; then
+        consider w be Point of Z | H,D be Subset of Z | Cl(H) such that
+A49:    D = B & w in D & D in L0 &
+        U0.B = Ball(w,r) by A44;
+        consider y being Element of Z | Cl(H) such that
+A50:    D = Ball (y,r/2) by A49,A33;
+        reconsider x = z as Point of (Z | H) by A46;
+        reconsider x1=x,w1=w as Point of Z | Cl(H) by A47,A49;
+        reconsider x2=x1,w2=w1 as Point of Z by TOPMETR:def 1,TARSKI:def 3;
+        x1 in { s where s is Point of (Z|Cl(H)) : dist(y,s) < r/2 }
+          by METRIC_1:def 14,A47,A49,A50; then
+A51:    ex s be Point of (Z|Cl(H)) st x1=s & dist(y,s) < r/2;
+        w1 in { s where s is Point of (Z|Cl(H)) : dist(y,s) < r/2 }
+          by METRIC_1:def 14,A49,A50; then
+   A52: ex s be Point of (Z|Cl(H)) st w1=s & dist(y,s) < r/2;
+    A53:dist(w1,x1) <= dist(w1,y) + dist(y,x1) by METRIC_1:4;
+        dist(w1,y) + dist(y,x1) < r/2+r/2 by A52,A51,XREAL_1:8; then
+        dist(w1,x1) < r by A53,XXREAL_0:2; then
+        dist(w2,x2) < r by TOPMETR:def 1; then
+        dist(w,x) < r by TOPMETR:def 1; then
+        x in { s where s is Point of (Z|H) : dist(w,s) < r }; then
+   A54: z in U0.B by A49,METRIC_1:def 14;
+        U0.B in rng U0 by A48,A45,FUNCT_1:def 3;
+        hence z in union L by A54,TARSKI:def 4;
+      end;
+      hence the carrier of Z | H = union L;
+      let C be Subset of Z | H;
+      assume C in L; then
+      consider x being object such that
+A55:  x in dom U0 & C=U0.x by FUNCT_1:def 3;
+      ex w be Point of Z | H,B be Subset of Z | Cl(H) st
+      B = x & w in B & B in L0 & U0.x=Ball(w,r) by A44,A55;
+      hence thesis by A55;
+    end;
+  end;
+
+theorem Th5:
+  for Z be non empty MetrSpace,
+      H be non empty Subset of Z
+   st Z is complete & Z | H is totally_bounded
+      holds
+  Cl(H) is sequentially_compact & Z | Cl(H) is compact
+  proof
+    let Z be non empty MetrSpace,
+        H be non empty Subset of Z;
+    set K = Cl(H);
+    assume A1: Z is complete & Z | H is totally_bounded; then
+    Z | K is complete by Th3; then
+    K is sequentially_compact by TOPMETR4:17,A1,Th4;
+    hence thesis by TOPMETR4:14;
+  end;
+
+theorem
+  for Z be non empty MetrSpace,
+      H be non empty Subset of Z
+   st Z is complete holds
+  ( Z | H is totally_bounded iff Cl(H) is sequentially_compact) &
+  ( Z | H is totally_bounded iff Z | Cl(H) is compact)
+  proof
+    let Z be non empty MetrSpace,
+        H be non empty Subset of Z;
+    assume Z is complete; then
+    Z | Cl(H) is complete by Th3;
+    hence Z | H is totally_bounded
+      iff Cl(H) is sequentially_compact by TOPMETR4:17,Th4;
+    hence thesis by TOPMETR4:14;
+  end;
+
+definition
+  let S be non empty TopSpace;
+  let T be non empty MetrSpace;
+  func ContinuousFunctions (S,T) -> non empty set equals
+    { f where f is Function of S,TopSpaceMetr(T) : f is continuous};
+  coherence
+  proof
+    consider x be object such that
+A1: x in the carrier of T by XBOOLE_0:def 1;
+    reconsider x as Point of TopSpaceMetr(T) by A1;
+    reconsider f = S --> x as Function of S,TopSpaceMetr(T);
+    f in
+     {f where f is Function of S,TopSpaceMetr(T):f is continuous};
+    hence thesis;
+  end;
+end;
+
+theorem Th7:
+  for X being MetrSpace,
+      x, y, v,w being Element of X holds
+    |. dist(x,y) - dist(v,w) .| <= dist (x,v) + dist (y,w)
+proof
+  let X be MetrSpace,
+      x, z, v,w be Element of X;
+  dist (x,z)- dist (v,w) = dist (x,z) - dist (v,z)
+               + (dist (v,z) - dist (v,w)); then
+A1: |. dist (x,z) - dist (v,w).|
+        <= |.dist (x,z) - dist (v,z).|
+         + |.dist (v,z) - dist (v,w).| by COMPLEX1:56;
+A2: |.dist (x,z) - dist (v,z).| <= dist(x,v) by METRIC_6:1;
+   |.dist (v,z) - dist (v,w).| <= dist(z,w) by METRIC_6:1; then
+   |.dist (x,z) - dist (v,z).| + |.dist (v,z)- dist (v,w).|
+      <= dist(x,v) + dist(z,w) by XREAL_1:7,A2;
+  hence thesis by A1,XXREAL_0:2;
+end;
+
+theorem Th8:
+  for S be non empty TopSpace,
+      T be non empty MetrSpace,
+      f,g be Function of S,TopSpaceMetr(T)
+   st f is continuous & g is continuous holds
+   for Dist be RealMap of S st for x be Point of S
+        holds Dist.x = dist (In(f.x,T),In(g.x,T))
+   holds Dist is continuous
+  proof
+    let S be non empty TopSpace,
+        T be non empty MetrSpace,
+        f,g be Function of S,TopSpaceMetr(T);
+    assume that
+A1: f is continuous and
+A2: g is continuous;
+    let Dist be RealMap of S;
+    assume
+A3: for x be Point of S
+       holds Dist.x = dist (In(f.x,T),In(g.x,T));
+    now let x be Point of S;
+      let V be Subset of REAL;
+      assume Dist.x in V & V is open; then
+      consider e be Real such that
+  A5: 0 < e & ].Dist.x - e,Dist.x + e.[ c= V
+        by RCOMP_1:19;
+      f is_continuous_at x by A1, TMAP_1:50; then
+      consider F being Subset of S such that
+  A6: F is open & x in F &
+      for y be Point of S st y in F holds
+        dist(In(f.x,T),In(f.y,T)) < e/2 by Th2,A5;
+      consider G being Subset of S such that
+  A7: G is open & x in G & for y be Point of S
+        st y in G holds dist(In(g.x,T),In(g.y,T)) < e/2
+        by Th2,A5,A2,TMAP_1:50;
+      take W = F /\ G;
+      thus x in W by A6,A7,XBOOLE_0:def 4;
+      thus W is open by A6,A7;
+      thus Dist.:W c= V
+      proof let z be object;
+        assume z in Dist.:W; then
+        consider t being object such that
+    A8: t in dom Dist & t in W & z = Dist.t by FUNCT_1:def 6;
+        reconsider t as Point of S by A8;
+        t in F by A8,XBOOLE_0:def 4; then
+    A9: dist(In(f.x,T),In(f.t,T)) < e/2 by A6;
+        t in G by A8,XBOOLE_0:def 4; then
+   A10: dist(In(g.x,T),In(g.t,T)) < e/2 by A7;
+   A11: z = dist (In(f.t,T),In(g.t,T)) by A8,A3;
+        dist (In(f.t,T),In(g.t,T)) - Dist.x
+          = dist (In(f.t,T),In(g.t,T))
+          - dist(In(f.x,T),In(g.x,T)) by A3; then
+   A13: |. dist (In(f.t,T),In(g.t,T)) - Dist.x .|
+          <= dist (In(f.t,T),In(f.x,T))
+          + dist (In(g.t,T),In(g.x,T)) by Th7;
+        dist (In(f.t,T),In(f.x,T))
+          + dist (In(g.t,T),In(g.x,T))
+          < e/2 + e/2 by A9,A10,XREAL_1:8; then
+        |. dist (In(f.t,T),In(g.t,T))
+          - Dist.x .| < e by A13,XXREAL_0:2;
+        hence z in V by A5,A11,RCOMP_1:1;
+      end;
+    end;
+    hence thesis by C0SP2:1;
+  end;
+
+theorem Th9:
+  for S be non empty compact TopSpace,
+      T be non empty MetrSpace,
+      f,g be Function of S,TopSpaceMetr(T)
+   st f is continuous & g is continuous holds
+   for Dist be RealMap of S
+     st for x be Point of S
+        holds Dist.x = dist (In(f.x,T),In(g.x,T))
+   holds
+     rng Dist <> {} &
+     rng Dist is bounded_above bounded_below
+  proof
+    let S be non empty compact TopSpace,
+        T be non empty MetrSpace,
+        f,g be Function of S,TopSpaceMetr(T);
+    assume that
+A1: f is continuous and
+A2: g is continuous;
+    let Dist be RealMap of S;
+    assume
+A3: for x be Point of S
+       holds Dist.x = dist (In(f.x,T),In(g.x,T));
+    S is pseudocompact; then
+    Dist is bounded by A1,A2,A3,Th8; then
+A5: Dist is bounded_above & Dist is bounded_below;
+    thus rng Dist <> {} by FUNCT_2:112;
+    consider K being Real such that
+A6: for t being object st t in dom Dist holds
+      Dist.t < K by A5;
+    now let r be ExtReal;
+      assume r in rng Dist; then
+      consider t being Element of S such that
+  A7: r = Dist.t by FUNCT_2:113;
+      dom Dist = the carrier of S by FUNCT_2:def 1;
+      hence r <= K by A6,A7;
+    end; then
+    K is UpperBound of rng Dist by XXREAL_2:def 1;
+    hence rng Dist is bounded_above;
+    consider K being Real such that
+A8: for t being object st t in dom Dist holds
+      K < Dist.t by A5;
+    now let r be ExtReal;
+      assume r in rng Dist; then
+      consider t being Element of S such that
+  A9: r = Dist.t by FUNCT_2:113;
+      dom Dist = the carrier of S by FUNCT_2:def 1;
+      hence K <= r by A8,A9;
+    end; then
+    K is LowerBound of rng Dist by XXREAL_2:def 2;
+    hence rng Dist is bounded_below;
+  end;
+
+theorem Th10:
+  for S be non empty TopSpace,
+      T be non empty MetrSpace holds
+  ex F be Function of [:ContinuousFunctions (S,T),ContinuousFunctions (S,T):],
+    REAL st
+  for f,g be Function of S,TopSpaceMetr(T)
+    st f in ContinuousFunctions (S,T)
+      & g in ContinuousFunctions (S,T) holds
+  ex Dist be RealMap of S
+     st ( for x be Point of S
+        holds Dist.x = dist (In(f.x,T),In(g.x,T)) )
+      & F.(f,g) = upper_bound rng Dist
+  proof
+    let S be non empty TopSpace,
+        T be non empty MetrSpace;
+    set F1 = ContinuousFunctions (S,T);
+    defpred P[object, object, object] means
+      ex f,g be Function of S,TopSpaceMetr(T),
+         Dist be RealMap of S st
+      $1 = f & $2 = g &
+     ( for t be Point of S
+        holds Dist.t=dist (In(f.t,T),In(g.t,T)) )
+      & $3 = upper_bound rng Dist;
+A1: for x, y being object st x in F1 & y in F1 holds
+    ex z being object st z in REAL & P[x,y,z]
+    proof
+      let x, y be object;
+      assume A2: x in F1 & y in F1; then
+      consider f be Function of S,TopSpaceMetr(T) such that
+  A3: x=f & f is continuous;
+      consider g be Function of S,TopSpaceMetr(T) such that
+  A4: y=g & g is continuous by A2;
+      deffunc F3(object) = dist (In(f.$1,T),In(g.$1,T));
+  A5: for t being object st t in the carrier of S holds
+        F3(t) in REAL by XREAL_0:def 1;
+      consider Dist being Function of the carrier of S,REAL such that
+  A6: for t being object st t in the carrier of S holds
+         Dist.t = F3(t) from FUNCT_2:sch 2(A5);
+      reconsider Dist as RealMap of S;
+  A7: for t be Point of S
+        holds Dist.t=dist (In(f.t,T),In(g.t,T)) by A6;
+      take z = upper_bound rng Dist;
+      thus z in REAL by XREAL_0:def 1;
+      thus P[x,y,z] by A3,A4,A7;
+    end;
+    consider F being Function of [:F1,F1:],REAL such that
+A8: for x, y being object st x in F1 & y in F1 holds
+      P[x,y,F.(x,y)] from BINOP_1:sch 1(A1);
+    take F;
+    let f1,g1 be Function of S,TopSpaceMetr(T);
+    assume f1 in ContinuousFunctions (S,T)
+      & g1 in ContinuousFunctions (S,T); then
+    ex f,g be Function of S,TopSpaceMetr(T),
+      Dist be RealMap of S st f1 = f & g1 = g
+     & ( for x be Point of S
+        holds Dist.x=dist (In(f.x,T),In(g.x,T)) )
+      & F.(f1,g1) = upper_bound rng Dist by A8;
+    hence thesis;
+  end;
+
+definition
+  let S be non empty TopSpace,
+      T be non empty MetrSpace;
+  func dist_Func(S,T) -> Function of
+    [:ContinuousFunctions (S,T),ContinuousFunctions (S,T):],REAL means
+    :Def5:
+  for f,g be Function of S,TopSpaceMetr(T)
+    st f in ContinuousFunctions (S,T)
+     & g in ContinuousFunctions (S,T) holds
+  ex Dist be RealMap of S
+     st ( for x be Point of S
+        holds Dist.x = dist (In(f.x,T),In(g.x,T)) )
+      & it.(f,g) = upper_bound rng Dist;
+  existence by Th10;
+  uniqueness
+  proof
+    let F1,F2 be Function of
+    [:ContinuousFunctions (S,T),ContinuousFunctions (S,T):],REAL;
+    assume that
+A1: for f,g be Function of S,TopSpaceMetr(T)
+      st f in ContinuousFunctions (S,T)
+       & g in ContinuousFunctions (S,T) holds
+    ex Dist be RealMap of S
+       st ( for x be Point of S
+         holds Dist.x=dist (In(f.x,T),In(g.x,T)) )
+           & F1.(f,g) = upper_bound rng Dist and
+A2: for f,g be Function of S,TopSpaceMetr(T)
+      st f in ContinuousFunctions (S,T)
+       & g in ContinuousFunctions (S,T) holds
+    ex Dist be RealMap of S
+       st ( for x be Point of S
+        holds Dist.x=dist (In(f.x,T),In(g.x,T)) )
+      & F2.(f,g) = upper_bound rng Dist;
+    set H = ContinuousFunctions (S,T);
+    for x, y being set st x in H & y in H holds
+      F1.(x,y) = F2.(x,y)
+    proof
+      let x, y be set;
+      assume A3: x in H & y in H; then
+      consider f be Function of S,TopSpaceMetr(T) such that
+  A4: x=f & f is continuous;
+      consider g be Function of S,TopSpaceMetr(T) such that
+  A5: y=g & g is continuous by A3;
+      consider Dist1 be RealMap of S such that
+A6:   ( for x be Point of S
+        holds Dist1.x=dist (In(f.x,T),In(g.x,T)) )
+        & F1.(f,g) = upper_bound rng Dist1 by A1,A3,A4,A5;
+      consider Dist2 be RealMap of S such that
+A7:   ( for x be Point of S
+        holds Dist2.x=dist (In(f.x,T),In(g.x,T)) )
+      & F2.(f,g) = upper_bound rng Dist2 by A2,A3,A4,A5;
+      for t be Point of S holds Dist1.t = Dist2.t
+      proof
+        let t be Point of S;
+        thus Dist1.t=dist (In(f.t,T),In(g.t,T)) by A6
+        .= Dist2.t by A7;
+      end;
+      hence F1.(x,y) = F2.(x,y) by A4,A5,A6,A7,FUNCT_2:63;
+    end;
+    hence F1=F2 by BINOP_1:1;
+  end;
+end;
+
+definition
+  let S be non empty TopSpace,
+      T be non empty MetrSpace;
+  func MetricSpace_of_ContinuousFunctions(S,T) -> MetrStruct equals
+    MetrStruct(# ContinuousFunctions (S,T), dist_Func(S,T) #);
+  coherence;
+end;
+
+Lm3:
+  for S be non empty compact TopSpace,
+      T be non empty MetrSpace holds
+  MetricSpace_of_ContinuousFunctions(S,T) is Reflexive discerning
+    symmetric triangle
+  proof
+    let S be non empty compact TopSpace,
+        T be non empty MetrSpace;
+    set M = MetricSpace_of_ContinuousFunctions(S,T);
+    set A = ContinuousFunctions (S,T);
+    reconsider f = the distance of M as Function of [:A,A:],REAL;
+    for a being Element of A holds f.(a,a) = 0
+    proof
+      let a be Element of A;
+      a in A; then
+      consider x be Function of S,TopSpaceMetr(T) such that
+  A2: a=x & x is continuous;
+      consider Dist be RealMap of S such that
+ A3:  ( for t be Point of S
+        holds Dist.t=dist (In(x.t,T),In(x.t,T)) )
+      & f.(a,a) = upper_bound rng Dist by Def5,A2;
+      for s be object holds s in rng Dist iff s in {0}
+      proof
+        let s be object;
+        hereby assume s in rng Dist; then
+          consider t being Element of S such that
+          A4: s = Dist.t by FUNCT_2:113;
+          s = dist (In(x.t,T),In(x.t,T)) by A3,A4
+          .=0 by METRIC_1:1;
+          hence s in {0} by TARSKI:def 1;
+        end;
+        assume s in {0}; then
+        A5: s = 0 by TARSKI:def 1;
+        set t = the Point of S;
+        Dist.t=dist (In(x.t,T),In(x.t,T)) by A3
+        .= s by A5, METRIC_1:1;
+        hence s in rng Dist by FUNCT_2:112;
+      end; then
+      rng Dist = {0};
+      hence f.(a,a) = 0 by SEQ_4:9,A3;
+    end; then
+A6: f is Reflexive;
+    for a, b being Element of A st f.(a,b) = 0 holds a = b
+    proof
+      let a,b be Element of A;
+      assume A7: f.(a,b) = 0;
+      a in A; then
+      consider x be Function of S,TopSpaceMetr T such that
+      A8: a=x & x is continuous;
+      b in A; then
+      consider y be Function of S,TopSpaceMetr T such that
+  A9: b=y & y is continuous;
+      consider Dist be RealMap of S such that
+A10:  ( for t be Point of S
+        holds Dist.t=dist (In(x.t,T),In(y.t,T)) )
+      & f.(a,b) = upper_bound rng Dist by Def5,A8,A9;
+ A11: rng Dist <> {} & rng Dist is bounded_above
+      & rng Dist is bounded_below by A8,A9,A10,Th9;
+      now let t be Point of S;
+        A12: Dist.t=dist (In(x.t,T),In(y.t,T)) by A10;
+        A13: 0 <= dist (In(x.t,T),In(y.t,T)) by METRIC_1:5;
+        dist (In(x.t,T),In(y.t,T)) in rng Dist by FUNCT_2:112,A12; then
+        dist (In(x.t,T),In(y.t,T)) = 0 by A13,A7,A10,SEQ_4:def 1,A11;
+        hence x.t = y.t by METRIC_1:2;
+      end;
+      hence thesis by A8,A9,FUNCT_2:63;
+    end; then
+A14:f is discerning;
+    for a, b being Element of A holds f.(a,b) = f.(b,a)
+    proof
+      let a,b be Element of A;
+      a in A; then
+      consider x be Function of S,TopSpaceMetr(T) such that
+ A15: a = x & x is continuous;
+      b in A; then
+      consider y be Function of S,TopSpaceMetr(T) such that
+ A16: b = y & y is continuous;
+      consider Dist1 be RealMap of S such that
+A17:  ( for t be Point of S
+        holds Dist1.t=dist (In(x.t,T),In(y.t,T)) )
+      & f.(a,b) = upper_bound rng Dist1 by Def5,A15,A16;
+      consider Dist2 be RealMap of S such that
+A18:  ( for t be Point of S
+        holds Dist2.t=dist (In(y.t,T),In(x.t,T)) )
+      & f.(b,a) = upper_bound rng Dist2 by Def5,A15,A16;
+      for t be Point of S holds Dist1.t = Dist2.t
+      proof
+        let t be Point of S;
+        thus Dist1.t=dist (In(x.t,T),In(y.t,T)) by A17
+        .=dist (In(y.t,T),In(x.t,T))
+        .=Dist2.t by A18;
+      end;
+      hence thesis by A17,A18,FUNCT_2:63;
+    end; then
+A19:f is symmetric;
+    for a, b, c being Element of A holds
+      f.(a,c) <= (f.(a,b)) + (f.(b,c))
+    proof
+      let a,b,c be Element of A;
+      a in A; then
+      consider x be Function of S,TopSpaceMetr(T) such that
+ A20: a = x & x is continuous;
+      b in A; then
+      consider y be Function of S,TopSpaceMetr(T) such that
+ A21: b = y & y is continuous;
+      c in A; then
+      consider z be Function of S,TopSpaceMetr(T) such that
+ A22: c = z & z is continuous;
+      consider Dist1 be RealMap of S such that
+A23:  ( for t be Point of S
+        holds Dist1.t=dist (In(x.t,T),In(y.t,T)) )
+      & f.(a,b) = upper_bound rng Dist1 by Def5,A20,A21;
+      consider Dist2 be RealMap of S such that
+A24:  ( for t be Point of S
+        holds Dist2.t=dist (In(y.t,T),In(z.t,T)) )
+      & f.(b,c) = upper_bound rng Dist2 by Def5,A21,A22;
+       consider Dist3 be RealMap of S such that
+A25:  ( for t be Point of S
+        holds Dist3.t=dist (In(x.t,T),In(z.t,T)) )
+      & f.(a,c) = upper_bound rng Dist3 by Def5,A20,A22;
+A26:  rng Dist1 <> {} & rng Dist1 is bounded_above
+      & rng Dist1 is bounded_below by A20,A21,A23,Th9;
+A27:  rng Dist2 <> {} & rng Dist2 is bounded_above
+      & rng Dist2 is bounded_below by A21,A22,A24,Th9;
+ A28:  rng Dist3 <> {} & rng Dist3 is bounded_above
+      & rng Dist3 is bounded_below by A20,A22,A25,Th9;
+      now let r be Real;
+        assume r in rng Dist3; then
+        consider t being Element of S such that
+   A29: r = Dist3.t by FUNCT_2:113;
+   A30: Dist3.t=dist (In(x.t,T),In(z.t,T)) by A25;
+   A31: Dist1.t=dist (In(x.t,T),In(y.t,T)) by A23;
+        Dist2.t=dist (In(y.t,T),In(z.t,T)) by A24; then
+  A33:  Dist3.t <= Dist1.t + Dist2.t by A30,A31,METRIC_1:4;
+        Dist1.t in rng Dist1 by FUNCT_2:112; then
+   A34: Dist1.t <= f.(a,b) by A26,A23,SEQ_4:def 1;
+        Dist2.t in rng Dist2 by FUNCT_2:112; then
+        Dist2.t <= f.(b,c) by A27,A24,SEQ_4:def 1; then
+        Dist1.t + Dist2.t <= f.(a,b) + f.(b,c) by A34,XREAL_1:7;
+        hence r <= f.(a,b) + f.(b,c) by A29,A33,XXREAL_0:2;
+      end;
+      hence f.(a,c) <= f.(a,b) + f.(b,c) by A28,SEQ_4:45,A25;
+    end;
+    then f is triangle;
+    hence thesis by A6,A14,A19;
+  end;
+
+registration
+  let S be non empty compact TopSpace,
+      T be non empty MetrSpace;
+  cluster MetricSpace_of_ContinuousFunctions(S,T)
+     -> Reflexive discerning symmetric triangle;
+  coherence by Lm3;
+end;
+
+registration
+  let S be non empty TopSpace,
+      T be non empty MetrSpace;
+  cluster MetricSpace_of_ContinuousFunctions(S,T) ->
+    non empty strict;
+  coherence;
+end;
+
+registration
+  let S be non empty TopSpace,
+      T be non empty MetrSpace;
+  cluster ContinuousFunctions (S,T) -> non empty functional;
+  coherence
+  proof
+    now let x be object;
+      assume x in ContinuousFunctions (S,T);
+      then ex f be Function of S,TopSpaceMetr(T)
+      st x = f & f is continuous;
+      hence x is Function;
+    end;
+    hence thesis by FUNCT_1:def 13;
+  end;
+end;
+
+registration
+  let S be non empty compact TopSpace,
+      T be non empty MetrSpace;
+  cluster MetricSpace_of_ContinuousFunctions(S,T)
+    -> constituted-Functions;
+  coherence by MONOID_0:80;
+end;
+
+definition
+  let S be non empty compact TopSpace,
+      T be non empty MetrSpace;
+  let f be Element of MetricSpace_of_ContinuousFunctions(S,T);
+  let v be Point of S;
+  redefine func f.v -> Point of TopSpaceMetr(T);
+  coherence
+  proof
+    f in ContinuousFunctions (S,T); then
+    ex x be Function of S,TopSpaceMetr(T)
+    st f = x & x is continuous; then
+    reconsider g = f as Function of S,TopSpaceMetr(T);
+    g.v is Point of TopSpaceMetr(T);
+    hence thesis;
+  end;
+end;
+
+theorem Th11:
+  for S be non empty compact TopSpace,
+      T be non empty MetrSpace,
+      f,g be Point of MetricSpace_of_ContinuousFunctions(S,T)
+  holds
+  for t be Point of S
+    holds dist(In(f.t,T),In(g.t,T)) <= dist(f,g)
+  proof
+    let S be non empty compact TopSpace,
+        T be non empty MetrSpace,
+        a,b be Point of MetricSpace_of_ContinuousFunctions(S,T);
+    set M = MetricSpace_of_ContinuousFunctions(S,T);
+    set A = ContinuousFunctions (S,T);
+    reconsider f = the distance of M as Function of [:A,A:],REAL;
+    a in A; then
+    consider x be Function of S,TopSpaceMetr(T) such that
+A2: a=x & x is continuous;
+    b in A; then
+    consider y be Function of S,TopSpaceMetr(T) such that
+A3: b=y & y is continuous;
+    consider Dist1 be RealMap of S such that
+A4: ( for t be Point of S
+        holds Dist1.t=dist (In(x.t,T),In(y.t,T)) )
+      & f.(a,b) = upper_bound rng Dist1 by Def5,A2,A3;
+A5: rng Dist1 <> {}
+      & rng Dist1 is bounded_above
+      & rng Dist1 is bounded_below by A2,A3,A4,Th9;
+    let t be Point of S;
+A6: Dist1.t=dist (In(x.t,T),In(y.t,T)) by A4;
+    Dist1.t in rng Dist1 by FUNCT_2:112;
+    hence thesis by A6,A2,A3,A4,A5,SEQ_4:def 1;
+  end;
+
+theorem Th12:
+  for S be non empty compact TopSpace,
+     T be non empty MetrSpace,
+     f,g be Point of MetricSpace_of_ContinuousFunctions(S,T),
+     f1,g1 be Function of S,T,
+     e be Real st f = f1 & g = g1 &
+  for t be Point of S holds dist(f1.t,g1.t) <= e
+    holds dist(f,g) <= e
+  proof
+    let S be non empty compact TopSpace,
+        T be non empty MetrSpace,
+        a,b be Point of MetricSpace_of_ContinuousFunctions(S,T),
+        f1,g1 be Function of S,T,
+        e be Real;
+     assume A1: a=f1 & b=g1 &
+       for t be Point of S holds dist(f1.t,g1.t) <= e;
+     set M = MetricSpace_of_ContinuousFunctions(S,T);
+     set A = ContinuousFunctions (S,T);
+     reconsider f = the distance of M as Function of [:A,A:],REAL;
+     a in A; then
+     consider x be Function of S,TopSpaceMetr(T) such that
+ A3: a = x & x is continuous;
+     b in A; then
+     consider y be Function of S,TopSpaceMetr(T) such that
+ A4: b = y & y is continuous;
+     consider Dist1 be RealMap of S such that
+ A5: ( for t be Point of S
+        holds Dist1.t=dist (In(x.t,T),In(y.t,T)) )
+      & f.(a,b) = upper_bound rng Dist1 by Def5,A3,A4;
+A6:  rng Dist1 <> {}
+      & rng Dist1 is bounded_above
+      & rng Dist1 is bounded_below by A3,A4,A5,Th9;
+     now let r be Real;
+       assume r in rng Dist1; then
+       consider t being Element of S such that
+   A7: r = Dist1.t by FUNCT_2:113;
+       Dist1.t = dist (In(x.t,T),In(y.t,T)) by A5;
+       hence r <=e by A7,A1,A3,A4;
+     end;
+     hence dist(a,b) <= e by A6,SEQ_4:45,A5;
+   end;
+
+theorem Th13:
+  for S be non empty compact TopSpace,T be non empty MetrSpace
+      st T is complete holds
+    MetricSpace_of_ContinuousFunctions(S,T) is complete
+  proof
+    let S be non empty compact TopSpace,T be non empty MetrSpace;
+    assume A1: T is complete;
+    set MSC = MetricSpace_of_ContinuousFunctions(S,T);
+    set A = ContinuousFunctions (S,T);
+    now let v be sequence of MSC;
+      assume a2: v is Cauchy; then
+  A2: for r being Real st r > 0 holds
+      ex p being Nat st
+      for n, m being Nat st p <= n & p <= m holds dist (v.n,v.m) < r;
+      defpred P[set,set] means ex xseq be sequence of T st
+      for n be Nat holds xseq.n=In((v.n).$1,T) &
+      xseq is convergent & $2= lim xseq;
+  A3: for x be Element of S ex y be Element of T st P[x,y]
+      proof
+        let x be Element of S;
+        deffunc F(Nat) = In((v.$1).x,T);
+        consider xseq be sequence of T such that
+A4:     for n be Element of NAT holds xseq.n = F(n) from FUNCT_2:sch 4;
+A5:     for n be Nat holds xseq.n = F(n)
+        proof let n be Nat;
+          n in NAT by ORDINAL1:def 12;
+          hence thesis by A4;
+        end;
+        take lx = lim xseq;
+    A6: for m,k be Nat holds dist(xseq.m,xseq.k) <= dist(v.m,v.k)
+        proof
+          let m,k be Nat;
+          xseq.m = In((v.m).x,T) & xseq.k =In((v.k).x,T) by A5;
+          hence thesis by Th11;
+        end;
+        now
+          let e be Real such that
+    A7:   e > 0;
+          consider k be Nat such that
+A8:       for n, m be Nat st n >= k & m >= k holds
+          dist(v.n,v.m) < e by A7,a2;
+          take k;
+          let n,m be Nat;
+          assume n >=k & m >= k; then
+   A9:    dist(v.n,v.m) < e by A8;
+          dist(xseq.n,xseq.m) <= dist(v.n,v.m) by A6;
+          hence dist(xseq.n,xseq.m) < e by A9,XXREAL_0:2;
+        end;
+        then xseq is Cauchy;
+        hence thesis by A1,A5;
+      end;
+      consider tseq0 be Function of S,T such that
+A10:  for x be Element of S holds P[x,tseq0.x] from FUNCT_2:sch 3(A3);
+      reconsider tseq=tseq0 as Function of S,TopSpaceMetr(T);
+      for x being Point of S holds tseq is_continuous_at x
+      proof
+        let x be Point of S;
+        consider xseq be sequence of T such that
+ A11:   for n be Nat holds xseq.n=In((v.n).x,T) &
+        xseq is convergent & tseq0.x= lim xseq by A10;
+        now let e be Real;
+          assume A12: 0 < e;
+          consider N1 being Nat such that
+     A13: for n, m being Nat st N1 <= n & N1 <= m holds
+          dist (v.n,v.m) < e/4 by a2,A12;
+A14:      for n, m being Nat st N1 <= n & N1 <= m
+          for x be Point of S holds dist (In((v.n).x,T), In((v.m).x,T)) < e/4
+          proof
+            let n, m be Nat;
+            assume A15: N1 <= n & N1 <= m;
+            let x be Point of S;
+   A16:     dist (In((v.n).x,T), In((v.m).x,T)) <= dist(v.n,v.m) by Th11;
+            dist (v.n,v.m) < e/4 by A13,A15;
+            hence thesis by A16,XXREAL_0:2;
+          end;
+          consider N2 being Nat such that
+A17:      for m being Nat st m >= N2 holds
+          dist (xseq.m,tseq0.x) < e/4 by A11,A12,TBSP_1:def 3;
+          reconsider N3 = max(N1,N2) as Nat by XXREAL_0:16;
+A18:      N2 <= N3 & N1 <= N3 by XXREAL_0:25; then
+A19:      dist (xseq.N3,tseq0.x) < e/4 by A17;
+A20:      xseq.N3 = In((v.N3).x,T) by A11;
+          v.N3 in A; then
+          consider vN3 be Function of S,TopSpaceMetr(T) such that
+     A21: v.N3=vN3 & vN3 is continuous;
+          consider H being Subset of S such that
+A22:      H is open & x in H &
+          for y be Point of S st y in H holds
+          dist(In(vN3.x,T),In(vN3.y,T)) < e/4 by Th2,A12,TMAP_1:50,A21;
+          take H;
+          thus H is open & x in H by A22;
+          let y be Point of S;
+          assume y in H; then
+A23:      dist(In(vN3.x,T),In(vN3.y,T))< e/4 by A22;
+          consider yseq be sequence of T such that
+A24:      for n be Nat holds yseq.n=In((v.n).y,T) &
+          yseq is convergent & tseq0.y = lim yseq by A10;
+          consider N4 being Nat such that
+A25:      for m being Nat st m >= N4 holds
+          dist (yseq.m,tseq0.y) < e/4 by A24,A12,TBSP_1:def 3;
+          reconsider N5 = max(N3,N4) as Nat by XXREAL_0:16;
+a26:      N4 <= N5 & N3 <= N5 by XXREAL_0:25; then
+A26:      N1 <= N5 by A18,XXREAL_0:2;
+A27:      dist (yseq.N5,tseq0.y) < e/4 by a26,A25;
+A28:      dist (tseq0.x,tseq0.y) <=
+            dist (tseq0.x,yseq.N5)+ dist (yseq.N5,tseq0.y) by METRIC_1:4;
+A29:      dist (tseq0.x,yseq.N5)
+            <= dist (tseq0.x,xseq.N3)+ dist (xseq.N3,yseq.N5)
+              by METRIC_1:4;
+A30:      dist (xseq.N3,yseq.N5)
+            <= dist (xseq.N3,yseq.N3) + dist (yseq.N3,yseq.N5)
+              by METRIC_1:4;
+A31:      dist (In((v.N3).y,T), In((v.N5).y,T)) < e/4 by A14,A18,A26;
+          yseq.N3=In((v.N3).y,T) by A24; then
+A33:      dist (yseq.N3,yseq.N5) < e/4 by A24,A31;
+A34:      xseq.N3 = In((v.N3).x,T) by A20
+             .=In(vN3.x,T) by A21;
+          yseq.N3 = In((v.N3).y,T) by A24
+            .=In(vN3.y,T) by A21; then
+          dist (xseq.N3,yseq.N3) + dist (yseq.N3,yseq.N5)
+            < e/4 + e/4 by A23,A34,A33,XREAL_1:8; then
+          dist (xseq.N3,yseq.N5) < e/2 by A30,XXREAL_0:2; then
+          dist (tseq0.x,xseq.N3) + dist (xseq.N3,yseq.N5)
+            < e/4 + e/2 by A19,XREAL_1:8; then
+          dist (tseq0.x,yseq.N5) < e/4 + e/2 by A29,XXREAL_0:2;
+            then
+          dist (tseq0.x,yseq.N5) + dist (yseq.N5,tseq0.y)
+            < e/4 + e/2 + e/4 by A27,XREAL_1:8;
+          hence dist (In(tseq.x,T),In(tseq.y,T)) < e by A28,XXREAL_0:2;
+        end;
+        hence thesis by Th2;
+      end; then
+      tseq is continuous Function of S,TopSpaceMetr(T)
+        by TMAP_1:50; then
+      tseq in MSC;
+      then reconsider w = tseq as Point of MSC;
+      for e being Real st e > 0 holds ex N being Nat st
+      for m being Nat st N <= m holds dist (v.m,w) < e
+      proof
+        let e be Real;
+        assume A36: e > 0; then
+        consider N1 being Nat such that
+A37:    for n, m being Nat st N1 <= n & N1 <= m holds
+        dist (v.n,v.m) < e/4 by A2;
+A38:    for n, m being Nat st N1 <= n & N1 <= m
+        for x be Point of S
+          holds dist (In((v.n).x,T), In((v.m).x,T)) < e/4
+        proof
+          let n, m be Nat;
+          assume A39: N1 <= n & N1 <= m;
+          let x be Point of S;
+   A40:   dist (In((v.n).x,T), In((v.m).x,T))
+            <= dist(v.n,v.m) by Th11;
+          dist (v.n,v.m) < e/4 by A37,A39;
+          hence thesis by A40,XXREAL_0:2;
+        end;
+        take N1;
+        let m be Nat;
+        assume A41: N1 <= m;
+        v.m in A; then
+        consider vm be Function of S,TopSpaceMetr(T) such that
+   A42: v.m=vm & vm is continuous;
+        reconsider vm as Function of S,T;
+        for x be Point of S holds dist (vm.x,tseq0.x) <= e/2
+        proof
+          let x be Point of S;
+          consider xseq be sequence of T such that
+ A43:     for n be Nat holds xseq.n=In((v.n).x,T) &
+            xseq is convergent & tseq0.x= lim xseq by A10;
+          consider N2 being Nat such that
+A44:      for m being Nat st m >= N2 holds
+          dist (xseq.m,tseq0.x) < e/4 by A43,A36,TBSP_1:def 3;
+          reconsider N3 = max(N1,N2) as Nat by XXREAL_0:16;
+A45:      N2 <= N3 & N1 <= N3 by XXREAL_0:25; then
+A46:      dist (xseq.N3,tseq0.x) < e/4 by A44;
+A47:      dist (In((v.N3).x,T), In((v.m).x,T)) < e/4 by A41,A45,A38;
+A48:      xseq.N3=In((v.N3).x,T) by A43;
+A49:      dist (In((v.m).x,T),tseq0.x) <= dist (In((v.m).x,T),In((v.N3).x,T))
+            + dist (In((v.N3).x,T),tseq0.x) by METRIC_1:4;
+          dist (In((v.m).x,T),In((v.N3).x,T)) < e/4 by A47; then
+          dist (In((v.m).x,T),In((v.N3).x,T))
+            + dist (In((v.N3).x,T),tseq0.x) < e/4 + e/4
+              by A46,A48,XREAL_1:8;
+          hence dist (vm.x,tseq0.x) <= e/2 by A42,A49,XXREAL_0:2;
+        end; then
+   A51: dist (v.m,w) <= e/2 by Th12,A42;
+        e/2 < e by A36,XREAL_1:216;
+        hence dist (v.m,w) < e by A51,XXREAL_0:2;
+      end;
+      hence v is convergent;
+    end;
+    hence thesis;
+  end;
+
+theorem Th14:
+  for S be non empty compact TopSpace,T be non empty MetrSpace
+    st T is complete holds
+  for H be non empty Subset of
+      (MetricSpace_of_ContinuousFunctions(S,T)) holds
+      Cl(H) is sequentially_compact iff
+      (MetricSpace_of_ContinuousFunctions(S,T))
+   | H is totally_bounded
+  proof
+    let S be non empty compact TopSpace,
+        T be non empty MetrSpace;
+    assume A1: T is complete;
+    set Z = MetricSpace_of_ContinuousFunctions(S,T);
+    let H be non empty Subset of
+        MetricSpace_of_ContinuousFunctions(S,T);
+    Z is complete by A1,Th13; then
+    Z | Cl(H) is totally_bounded
+      iff Cl(H) is sequentially_compact by TOPMETR4:17,Th3;
+    hence thesis by Th4;
+  end;
+
+theorem Th15:
+  for M be non empty MetrSpace, S be non empty compact TopSpace,
+      T be non empty MetrSpace
+   st S = TopSpaceMetr(M) holds
+  for G be Subset of Funcs(the carrier of M, the carrier of T),
+      H be non empty Subset of
+    MetricSpace_of_ContinuousFunctions(S,T) st
+     G = H & (MetricSpace_of_ContinuousFunctions(S,T))
+       | H is totally_bounded holds
+   G is equicontinuous
+  proof
+    let M be non empty MetrSpace,S be non empty compact TopSpace,
+        T be non empty MetrSpace;
+    assume A1: S = TopSpaceMetr(M);
+    let G be Subset of Funcs(the carrier of M, the carrier of T),
+        H be non empty Subset of MetricSpace_of_ContinuousFunctions(S,T);
+    assume A2: G = H;
+    set Z = MetricSpace_of_ContinuousFunctions(S,T);
+    set MZH = Z | H;
+A3: the carrier of MZH = H by TOPMETR:def 2;
+    assume
+A4: Z | H is totally_bounded;
+    defpred P1[object,object] means
+      ex w be Point of MZH st $2 = w & $1 = Ball(w,1);
+    for e be Real st 0 < e
+      ex d be Real st 0 < d &
+      for f be Function of the carrier of M, the carrier of T
+             st f in G holds
+      for x1,x2 be Point of M
+          st dist(x1,x2) < d holds dist(f.x1,f.x2) < e
+    proof
+      let e be Real;
+      assume A10:0 < e; then
+      consider L being Subset-Family of MZH such that
+A11:  L is finite & the carrier of MZH = union L
+        & for C being Subset of MZH st C in L holds
+      ex w being Element of MZH st C = Ball (w,e/3) by A4;
+      defpred P1[object,object] means
+      ex w be Point of MZH st $2 = w & $1 = Ball(w,e/3);
+A12:  for D be object st D in L
+        ex w be object st w in the carrier of MZH & P1[D,w]
+      proof
+        let D be object;
+        assume A13: D in L; then
+        reconsider D0=D as Subset of MZH;
+        consider w being Element of MZH such that
+   A14: D0 = Ball (w,e/3) by A11,A13;
+        take w;
+        thus w in the carrier of MZH & P1[D,w] by A14;
+      end;
+      consider U being Function of L,the carrier of MZH such that
+ A15: for D being object st D in L
+        holds P1[D,U.D] from FUNCT_2:sch 1(A12);
+A16:  for D being object st D in L holds D = Ball(U/.D,e/3)
+      proof
+        let D be object;
+        assume A17: D in L; then
+A18:    ex x0 be Point of MZH st U.D = x0 & D = Ball(x0,e/3) by A15;
+        dom U = L by FUNCT_2:def 1;
+        hence D = Ball(U/.D,e/3) by A18,A17,PARTFUN1:def 6;
+      end;
+      defpred P1[Element of MZH,Real] means
+      ex f be Function of the carrier of S,the carrier of T
+       st $1=f & 0 < $2
+       & for x1,x2 be Point of M st dist(x1,x2) < $2
+        holds dist(f/.x1,f/.x2) < e/3;
+ A19: for x0 being Element of the carrier of MZH
+        ex d being Element of REAL st P1[x0,d]
+      proof
+        let x0 be Element of the carrier of MZH;
+        x0 in H by A3; then
+        x0 in Z; then
+   A20: ex f be Function of S, TopSpaceMetr T
+          st x0 = f & f is continuous; then
+        reconsider f=x0 as Function of the carrier of S,
+          the carrier of T;
+        consider d be Real such that
+   A21: 0 < d &
+        for x1,x2 be Point of M st dist(x1,x2) < d holds
+          dist(In(f/.x1,T),In(f/.x2,T)) < e/3 by A10,Lm1,A1,A20;
+        reconsider d0=d as Element of REAL by XREAL_0:def 1;
+        take d0;
+        now let x1,x2 be Point of M;
+          assume dist(x1,x2) < d; then
+          dist(In(f/.x1,T),In(f/.x2,T)) < e/3 by A21;
+          hence dist(f/.x1,f/.x2) < e/3;
+        end;
+        hence thesis by A21;
+      end;
+      consider NF being Function of the carrier of MZH,REAL such that
+A22:  for f being Element of the carrier of MZH
+        holds P1[f,NF.f] from FUNCT_2:sch 3(A19);
+A23:  dom U = L by FUNCT_2:def 1;
+      reconsider NFU = NF.:(rng U) as finite Subset of REAL by A11;
+      consider xx be object such that
+A24:  xx in L by XBOOLE_0:def 1,A11,ZFMISC_1:2;
+      rng U <> {} by A23,A24,FUNCT_1:3; then
+      consider xx be object such that
+A25:  xx in rng U by XBOOLE_0:def 1;
+      reconsider xx as Point of MZH by A25;
+A26:  NFU is bounded_below & lower_bound NFU in NFU by SEQ_4:133,A25;
+      set d = lower_bound NFU;
+      consider xx being object such that
+ A27: xx in dom NF & xx in rng U & d = NF.xx by FUNCT_1:def 6,A26;
+      reconsider xx as Point of MZH by A27;
+A28:  ex f be Function of S,T st xx=f & 0 < NF.xx
+         & for x1,x2 be Point of M st dist(x1,x2) < NF.xx
+        holds dist(f/.x1,f/.x2) < e/3 by A22;
+      take d;
+      thus 0 < d by A28,A27;
+      thus for f be Function of M,T st f in G holds
+      for x1,x2 be Point of M
+         st dist(x1,x2) < d holds dist(f.x1,f.x2) < e
+      proof
+        let f0 be Function of M, T;
+        assume f0 in G; then
+        consider C be set such that
+  A29:  f0 in C & C in L by A11,TARSKI:def 4,A3,A2;
+        reconsider f=f0 as Function of the carrier of S,the carrier of T by A1;
+        reconsider pf=f0 as Element of MZH by A29;
+A30:    pf in H by A3;
+        reconsider pg = U/.C as Element of MZH;
+A31:    C = Ball (pg,e/3) by A16,A29;
+A32:    pg in H by A3; then
+        pg in ContinuousFunctions(S,T); then
+        ex f be Function of the carrier of S, TopSpaceMetr T
+        st pg=f & f is continuous; then
+        reconsider g=pg as Function of S,TopSpaceMetr  T;
+        pf in { y where y is Point of MZH : dist(pg,y) < e/3 }
+          by METRIC_1:def 14,A29,A31; then
+A33:    ex y be Point of MZH st pf=y & dist(pg,y) < e/3;
+        reconsider ppf=pf,ppg=pg as Element of Z by A30,A32;
+        reconsider pppf=ppf,pppg=ppg as Point of Z;
+A35:    dist(pppg,pppf) < e/3 by A33,TOPMETR:def 1;
+A36:    C in dom U by FUNCT_2:def 1,A29;
+        U.C in rng U by FUNCT_1:3,A23,A29; then
+        pg in rng U by A36,PARTFUN1:def 6; then
+A37:    NF.pppg in NF.: (rng U) by FUNCT_2:35;
+        let x1,x2 be Element of M;
+        reconsider x10 = x1,x20 = x2 as Point of S by A1;
+        assume A38: dist(x1,x2) < d;
+        d <=NF.pg by A37,SEQ_4:def 2; then
+   A39: dist(x1,x2) < NF.pg by A38,XXREAL_0:2;
+        ex f be Function of S, T st pg=f & 0 < NF.pg
+           & for x1,x2 be Point of M st dist(x1,x2) < NF.pg
+        holds dist(f/.x1,f/.x2) < e/3 by A22; then
+A40:    dist(In(g/.x1,T),In(g/.x2,T)) < e/3 by A39;
+A41:    dist(In(g.x20,T),In(f.x20,T)) <= dist(pppg,pppf) by Th11;
+        f/.x20=f.x20 & g/.x20 =g.x20; then
+A42:    dist(In(g/.x2,T),In(f/.x2,T)) < e/3 by A41,XXREAL_0:2,A35;
+A43:    dist(In(f.x10,T),In(g.x10,T)) <= dist(pppf,pppg) by Th11;
+        f/.x10=f.x10 & g/.x10 = g.x10; then
+A44:    dist(In(f/.x1,T),In(g/.x1,T)) < e/3 by A43,XXREAL_0:2,A35;
+A45:    dist(f/.x1,f/.x2) <= dist(f/.x1,In(g/.x1,T))
+                     +dist(In(g/.x1,T),f/.x2 ) by METRIC_1:4;
+        dist(In(g/.x1,T),f/.x2 )
+          <=dist(In(g/.x1,T),In(g/.x2,T)) + dist(In(g/.x2,T),f/.x2 )
+            by METRIC_1:4; then
+        dist(f/.x1,In(g/.x1,T)) +dist(In(g/.x1,T),f/.x2 )
+          <= dist(f/.x1,In(g/.x1,T))
+          +(dist(In(g/.x1,T),In(g/.x2,T)) + dist(In(g/.x2,T),f/.x2 ))
+            by XREAL_1:7; then
+A46:    dist(f/.x1,f/.x2) <= dist(In(f/.x1,T),In(g/.x1,T))
+          + dist(In(g/.x1,T),In(g/.x2,T))
+            + dist(In(g/.x2,T),In(f/.x2,T)) by A45,XXREAL_0:2;
+        dist(In(g/.x1,T),In(g/.x2,T)) + dist(In(g/.x2,T),In(f/.x2,T))
+          < e/3 + e/3 by A40,A42,XREAL_1:8; then
+A47:    dist(In(f/.x1,T),In(g/.x1,T)) + ( dist(In(g/.x1,T),In(g/.x2,T))
+          + dist(In(g/.x2,T),In(f/.x2,T)))
+            < e/3 + (e/3+e/3) by A44,XREAL_1:8;
+        f/.x10=f.x10 & f/.x20 = f.x20;
+        hence dist(f0.x1,f0.x2) < e by A47,A46,XXREAL_0:2;
+      end;
+    end;
+    hence G is equicontinuous;
+  end;
+
+theorem Th16:
+  for M be non empty MetrSpace,S be non empty compact TopSpace,
+      T be non empty MetrSpace st S = TopSpaceMetr(M) holds
+  for G be Subset of Funcs(the carrier of M, the carrier of T),
+      H be non empty Subset of MetricSpace_of_ContinuousFunctions(S,T)
+  st G = H &
+  (MetricSpace_of_ContinuousFunctions(S,T)) | H is totally_bounded holds
+  ( for x be Point of S,
+      Hx be non empty Subset of T
+       st Hx = {f.x where f is Function of S,T :f in H }
+     holds T | Hx is totally_bounded )
+    & G is equicontinuous
+  proof
+    let M be non empty MetrSpace,S be non empty compact TopSpace,
+        T be non empty MetrSpace;
+    assume A1: S = TopSpaceMetr(M);
+    let G be Subset of Funcs(the carrier of M, the carrier of T),
+        H be non empty Subset of MetricSpace_of_ContinuousFunctions(S,T);
+    assume A2: G = H;
+    set Z = MetricSpace_of_ContinuousFunctions(S,T);
+    set MZH = Z | H;
+A3: the carrier of MZH = H by TOPMETR:def 2;
+    assume A4: Z | H is totally_bounded;
+    thus for x be Point of S, Hx be non empty Subset of T
+       st Hx = {f.x where f is Function of S,T :f in H }
+     holds T | Hx is totally_bounded
+    proof
+      let x be Point of S, Hx be non empty Subset of T;
+      assume A5:Hx = {f.x where f is Function of S,T :f in H };
+      set MTHx = T | Hx;
+      let e be Real;
+      assume 0 < e; then
+      consider L being Subset-Family of MZH such that
+A6:   L is finite & the carrier of MZH = union L
+        & for C being Subset of MZH st C in L holds
+          ex w being Element of MZH st C = Ball (w,e) by A4;
+      defpred P1[object,object] means
+       ex w be Point of MZH st $2 = w & $1 = Ball(w,e);
+A7:   for D be object st D in L
+        ex w be object st w in the carrier of MZH & P1[D,w]
+      proof
+        let D be object;
+        assume A8: D in L; then
+        reconsider D0=D as Subset of MZH;
+        consider w being Element of MZH such that A9: D0 = Ball (w,e) by A6,A8;
+        take w;
+        thus w in the carrier of MZH & P1[D,w] by A9;
+      end;
+      consider U being Function of L,the carrier of MZH such that
+ A10: for D being object st D in L holds P1[D,U.D] from FUNCT_2:sch 1(A7);
+A11:  for D being object st D in L holds D = Ball(U/.D,e)
+      proof
+        let D be object;
+        assume A12: D in L; then
+  A13:  ex x0 be Point of MZH st U.D = x0 & D =Ball(x0,e) by A10;
+        dom U = L by FUNCT_2:def 1;
+        hence D = Ball(U/.D,e) by A13,A12,PARTFUN1:def 6;
+      end;
+      defpred Q1[object,object] means
+      ex w be Function of S,T, p be Point of MTHx st
+        $1 = w & p = w.x & $2 = Ball(p,e);
+A14:  for f be object st f in (the carrier of MZH)
+       ex B be object st B in bool the carrier of MTHx & Q1[f,B]
+      proof
+        let f be object;
+        assume
+   A15: f in the carrier of MZH; then
+        f in Z by A3; then
+        ex g be Function of S, TopSpaceMetr T st f=g & g is continuous; then
+        reconsider g = f as Function of S,T;
+        g.x in Hx by A15,A5,A3; then
+        reconsider p=g.x as Point of MTHx by TOPMETR:def 2;
+        take B = Ball(p,e);
+        thus thesis;
+      end;
+      consider NF being Function of the carrier of MZH,
+      bool the carrier of MTHx such that
+ A16: for D being object
+         st D in the carrier of MZH holds Q1[D,NF.D] from FUNCT_2:sch 1(A14);
+A17:  dom U = L by FUNCT_2:def 1;
+      set Le = NF .: (rng U);
+      reconsider Le as Subset-Family of MTHx;
+      take Le;
+      thus Le is finite by A6;
+      for t be object holds t in the carrier of MTHx iff t in union Le
+      proof
+        let t0 be object;
+        hereby assume A18: t0 in the carrier of MTHx; then
+      A19:t0 in Hx by TOPMETR:def 2;
+          reconsider t = t0 as Point of MTHx by A18;
+          consider f be Function of S,T such that
+      A20:t=f.x & f in H by A5,A19;
+          consider K be set such that
+   A21:   f in K & K in L by TARSKI:def 4,A6,A3,A20;
+          U/.K = U.K by PARTFUN1:def 6,A21,A17; then
+   A22:   U/.K in rng U by FUNCT_1:def 3,A17,A21;
+          consider g be Function of S,T,
+                   p be Point of MTHx such that
+   A23:   (U/.K) = g & p = g.x & NF.(U/.K) = Ball(p,e) by A16;
+   A24:   f in Ball(U/.K,e) by A21,A11;
+          reconsider f0 = f as Point of MZH by A21;
+   A25:   dist(f0,U/.K) < e by A24,METRIC_1:11;
+          reconsider f1=f0 as Point of Z by TOPMETR:def 1,TARSKI:def 3;
+          reconsider g1=U/.K as Point of Z by TOPMETR:def 1,TARSKI:def 3;
+ A26:     dist(f1,g1) < e by A25,TOPMETR:def 1;
+          dist(In(f1.x,T),In(g1.x,T)) <= dist(f1,g1) by Th11; then
+A27:      dist(g/.x,f/.x) < e by A23,A26,XXREAL_0:2;
+A28:      NF.(U/.K) in Le by A22,FUNCT_2:35;
+          reconsider tt=t as Point of T by A20;
+          reconsider pp = p as Point of T by TOPMETR:def 1,TARSKI:def 3;
+          reconsider p1 = pp as Point of T;
+          dist(p,t) < e by A20,A23,A27,TOPMETR:def 1; then
+          f.x in { y where y is Point of MTHx : dist(p,y) < e } by A20; then
+          f.x in NF.(U/.K) by A23,METRIC_1:def 14;
+          hence t0 in union Le by TARSKI:def 4,A28,A20;
+        end;
+        assume t0 in union Le;
+        hence t0 in the carrier of MTHx;
+      end;
+      hence the carrier of MTHx = union Le by TARSKI:2;
+      let C be Subset of MTHx;
+      assume C in Le; then
+      consider t be object such that
+A29:  t in dom NF & t in rng U & C = NF.t by FUNCT_1:def 6;
+      consider w be Function of S,T,
+               p be Point of MTHx such that
+A30:  t = w & p= w.x & NF.t=Ball(p,e) by A29,A16;
+      take p;
+      thus C = Ball(p,e) by A30,A29;
+    end;
+    thus G is equicontinuous by Th15,A1,A2,A4;
+  end;
+
+theorem Th17:
+  for M be non empty MetrSpace,S be non empty compact TopSpace,
+      T be non empty MetrSpace,
+      G be Subset of Funcs(the carrier of M, the carrier of T),
+      H be non empty Subset of
+        MetricSpace_of_ContinuousFunctions(S,T)
+  st S = TopSpaceMetr(M) & T is complete & G = H holds
+  (MetricSpace_of_ContinuousFunctions(S,T))
+     | H is totally_bounded
+    iff
+    G is equicontinuous &
+    for x be Point of S,
+        Hx be non empty Subset of T
+    st Hx = { f.x where f is Function of S,T : f in H }
+       holds T | Cl(Hx) is compact
+  proof
+    let M be non empty MetrSpace, S be non empty compact TopSpace,
+        T be non empty MetrSpace;
+    let G be Subset of Funcs(the carrier of M, the carrier of T),
+        H be non empty Subset of MetricSpace_of_ContinuousFunctions(S,T);
+    assume A1: S = TopSpaceMetr(M) & T is complete;
+    assume A2: G = H;
+    set Z = MetricSpace_of_ContinuousFunctions(S,T);
+    set MZH = Z | H;
+A3: the carrier of MZH = H by TOPMETR:def 2;
+    hereby assume A4: Z | H is totally_bounded;
+      hence G is equicontinuous by Th16,A1,A2;
+      thus for x be Point of S, Hx be non empty Subset of T
+       st Hx = {f.x where f is Function of S,T :f in H } holds
+      T | Cl(Hx) is compact
+      proof
+        let x be Point of S, Hx be non empty Subset of T;
+        assume A5: Hx = {f.x where f is Function of S,T :f in H };
+        T | Hx is totally_bounded by Th16,A1,A2,A4,A5;
+        hence T | Cl(Hx) is compact by Th5,A1;
+      end;
+    end;
+    assume
+ A6:G is equicontinuous &
+    for x be Point of S, Hx be non empty Subset of T
+       st Hx = {f.x where f is Function of S,T :f in H }
+     holds (T) | Cl(Hx) is compact;
+    for e being Real st e > 0 holds
+     ex L being Subset-Family of MZH st
+       L is finite & the carrier of MZH = union L
+       & for C being Subset of MZH st C in L holds
+    ex w being Element of MZH st C = Ball (w,e)
+    proof
+      let e0 be Real;
+      assume
+ A7:  e0 > 0; then
+ A8:  0 < e0/2 & e0/2 < e0 by XREAL_1:216;
+      set e=e0/2;
+      consider d be Real such that
+  A9: 0 < d &
+        for f be Function of the carrier of M,the carrier of T
+             st f in G holds
+      for x1,x2 be Point of M
+          st dist(x1,x2) < d holds dist(f.x1,f.x2) < e/4 by A6,A7;
+      set BM = the set of all Ball (x0,d) where x0 is Element of M;
+      BM c= bool the carrier of S
+      proof
+        let z be object;
+        assume z in BM; then
+        consider x0 be Point of M such that
+  A10:  z = Ball (x0,d);
+        thus z in bool the carrier of S by A10,A1;
+      end; then
+      reconsider BM as Subset-Family of S;
+      for P being Subset of S st P in BM holds P is open
+      proof
+        let P be Subset of S;
+        assume P in BM; then
+        consider x0 be Point of M such that
+A11:    P = Ball (x0,d);
+        thus P is open by A1,A11,PCOMPS_1:29;
+      end; then
+ A12: BM is open by TOPS_2:def 1;
+      the carrier of S c= union BM
+      proof
+        let z be object;
+        assume z in the carrier of S; then
+        reconsider x0=z as Point of M by A1;
+    A13:Ball(x0,d) in BM;
+        dist(x0,x0) < d by A9,METRIC_1:1; then
+        x0 in { y where y is Element of M : dist (x0,y) < d }; then
+        x0 in Ball(x0,d) by METRIC_1:def 14;
+        hence z in union BM by TARSKI:def 4,A13;
+      end; then
+      BM is Cover of [#] S by SETFAM_1:def 11; then
+      consider BM0 being Subset-Family of S such that
+A14:  BM0 c= BM & BM0 is Cover of [#] S & BM0 is finite
+        by COMPTS_1:def 4,COMPTS_1:1,A12;
+      reconsider BM0 as finite set by A14;
+      defpred P1[object,object] means
+        ex w be Point of M st $2 = w & $1 =Ball(w,d);
+A15:  for D be object st D in BM
+         ex w be object st w in the carrier of M & P1[D,w]
+      proof
+        let D be object;
+        assume D in BM; then
+        consider w being Element of M such that
+A16:    D = Ball (w,d);
+        take w;
+        thus w in the carrier of M & P1[D,w] by A16;
+      end;
+      consider U being Function of BM,the carrier of M such that
+A17:  for D being object st D in BM
+        holds P1[D,U.D] from FUNCT_2:sch 1(A15);
+A18:  for D being object st D in BM holds D = Ball(U/.D,d)
+      proof
+        let D be object;
+        assume A19: D in BM; then
+A20:    ex x0 be Point of M st U.D = x0 & D = Ball(x0,d) by A17;
+        dom U = BM by FUNCT_2:def 1;
+        hence D = Ball(U/.D,d) by A20,A19,PARTFUN1:def 6;
+      end;
+      set CF = canFS BM0;
+A21:  len CF = card BM0 by FINSEQ_1:93;
+A22:  rng CF = BM0 by FUNCT_2:def 3;
+A23:  dom U = BM by FUNCT_2:def 1; then
+      reconsider PS = U*CF as FinSequence by A22,A14,FINSEQ_1:16;
+      rng PS c= rng U by RELAT_1:26; then
+      reconsider PS as FinSequence of the carrier of S
+        by FINSEQ_1:def 4,A1,XBOOLE_1:1;
+A24:  dom PS = dom CF by A22,A23,A14,RELAT_1:27
+           .= Seg card BM0 by A21,FINSEQ_1:def 3;
+A25:  dom CF = Seg len CF by FINSEQ_1:def 3
+           .= dom PS by A24,FINSEQ_1:93;
+A26:  for i be Nat st i in dom PS holds CF.i = Ball((U*CF)/.i,d)
+      proof
+        let i be Nat;
+        assume A27: i in dom PS; then
+  A28:  CF.i in rng CF by FUNCT_1:3,A25; then
+        U/.(CF.i) = U.(CF.i) by PARTFUN1:def 6,A23,A14
+           .=PS.i by FUNCT_1:12,A27
+           .=(U*CF)/.i by PARTFUN1:def 6,A27;
+        hence thesis by A28,A18,A14;
+      end;
+      union rng CF = union BM0 by FUNCT_2:def 3; then
+A29:  the carrier of S c=union rng CF by A14,SETFAM_1:def 11;
+A30:  BM0 <> {}
+      proof
+        assume BM0 = {}; then
+        [#]S c= {} by SETFAM_1:def 11,A14,ZFMISC_1:2;
+        hence contradiction;
+      end;
+      defpred Q1[object,object] means
+       ex x be Point of S,
+          NHx be non empty Subset of T,
+          CHx be non empty Subset of T st
+       $1 = x & NHx={f.x where f is Function of S,T :f in H } &
+       $2 = Cl NHx;
+A31:   for x be object st x in the carrier of S
+         ex B be object st
+           B in bool the carrier of T & Q1[x,B]
+       proof
+         let x be object;
+         assume x in the carrier of S; then
+         reconsider x0= x as Point of S;
+         set NHx = {f.x0 where f is Function of S,T : f in H };
+         consider f0 be object such that
+A32:     f0 in H by XBOOLE_0:def 1;
+         f0 in Z by A32; then
+         ex g be Function of the carrier of S,TopSpaceMetr T
+           st f0=g & g is continuous; then
+         reconsider g=f0 as Function of S,T;
+    A33: g.x0 in NHx by A32;
+         NHx c= the carrier of T
+         proof
+           let z be object;
+           assume z in NHx; then
+           consider f be Function of S,T such that
+      A34: z= f.x0 & f in H;
+           thus z in the carrier of T by A34;
+         end; then
+         reconsider NHx as non empty Subset of T by A33;
+         reconsider CHx = Cl NHx as non empty Subset of T;
+         CHx in bool the carrier of T;
+         hence thesis;
+       end;
+       consider ST being Function of
+       the carrier of S, bool the carrier of T such that
+  A35: for x being object
+         st x in the carrier of S
+        holds Q1[x,ST.x] from FUNCT_2:sch 1(A31);
+A36:   dom ST = the carrier of S by FUNCT_2:def 1;
+A37:   rng PS c= the carrier of S; then
+       reconsider STPS = ST*PS as FinSequence by A36,FINSEQ_1:16;
+       rng STPS c= rng ST by RELAT_1:26; then
+       reconsider STPS as FinSequence of bool the carrier of TopSpaceMetr T
+         by FINSEQ_1:def 4,XBOOLE_1:1;
+A38:   dom STPS = Seg card BM0 by A24,A36,A37,RELAT_1:27;
+A39:   for i be Nat st i in dom STPS holds
+         (ex NHx be non empty Subset of T,
+            CHx be non empty Subset of T
+         st NHx = {f.(PS/.i) where f is Function of S,T :f in H }
+       & STPS/.i = Cl(NHx) ) & STPS/.i is non empty
+       proof
+         let i be Nat;
+         assume
+  A40:   i in dom STPS; then
+  A41:   STPS/.i = STPS.i by PARTFUN1:def 6
+              .= ST.(PS.i) by FUNCT_1:12,A40;
+         consider x be Point of S,
+                  NHx be non empty Subset of T,
+                  CHx be non empty Subset of T such that
+   A42:  PS/.i = x &
+         NHx={f.x where f is Function of S,T :f in H } &
+         ST.(PS/.i) = Cl NHx by A35;
+   A43:  STPS/.i = Cl NHx by A42,A41,A38,A24,A40,PARTFUN1:def 6;
+         consider f0 be object such that
+   A44:  f0 in H by XBOOLE_0:def 1;
+         f0 in Z by A44; then
+         ex g be Function of S, TopSpaceMetr T st f0=g & g is continuous; then
+         reconsider g=f0 as Function of S,T;
+         thus thesis by A42,A43;
+       end;
+       for i be Nat st i in Seg len STPS holds STPS/.i is compact
+       proof
+         let i be Nat;
+         assume i in Seg len STPS; then
+         i in dom STPS by FINSEQ_1:def 3; then
+         consider NHx be non empty Subset of T,
+         CHx be non empty Subset of T such that
+A45:     NHx= {f.(PS/.i) where f is Function of S,T :f in H } &
+         STPS/.i = Cl NHx by A39;
+         reconsider Hx1 = NHx as non empty Subset of T;
+    A46: T | Cl(Hx1) is compact by A45,A6;
+         Cl Hx1 is sequentially_compact by TOPMETR4:14,A46;
+         hence thesis by A45,TOPMETR4:15;
+       end; then
+A47:   union rng STPS is compact by ASCOLI:2;
+       consider i0 be object such that
+  A48: i0 in dom STPS by A30,A38,XBOOLE_0:def 1;
+       reconsider i0 as Nat by A48;
+       STPS/.i0 = STPS.i0 by A48,PARTFUN1:def 6; then
+       STPS/.i0 c= union rng STPS by ZFMISC_1:74,A48,FUNCT_1:3; then
+       reconsider URSTPS = union rng STPS
+         as non empty Subset of T by A48,A39;
+       URSTPS is sequentially_compact by A47,TOPMETR4:15; then
+A49:   T | URSTPS is compact by TOPMETR4:14;
+       set MURSTPS = T | URSTPS;
+       set BM2 = the set of all
+         Ball (w,e/4) where w is Element of MURSTPS;
+       BM2 c= bool the carrier of MURSTPS
+       proof
+         let z be object;
+         assume z in BM2; then
+         consider x0 be Point of MURSTPS such that
+   A50:  z = Ball (x0,e/4);
+         thus z in bool the carrier of MURSTPS by A50;
+       end; then
+       reconsider BM2 as Subset-Family of MURSTPS;
+A51:   for P being set st P in BM2 holds
+         ex x0 be Point of MURSTPS st
+           ex r be Real st P = Ball(x0,r)
+       proof
+         let P be set;
+         assume P in BM2; then
+         consider x0 be Point of MURSTPS such that
+  A52:   P = Ball (x0,e/4);
+         take x0,e/4;
+         thus thesis by A52;
+       end;
+       the carrier of MURSTPS c= union BM2
+       proof
+         let z be object;
+         assume z in the carrier of MURSTPS; then
+         reconsider x0=z as Point of MURSTPS;
+     A53:Ball(x0,e/4) in BM2;
+         dist(x0,x0) = 0 by METRIC_1:1; then
+         x0 in { y where y is Element of MURSTPS : dist (x0,y) < e/4 }
+           by A7; then
+         x0 in Ball(x0,e/4) by METRIC_1:def 14;
+         hence z in union BM2 by TARSKI:def 4,A53;
+       end; then
+       BM2 is Cover of [#] MURSTPS by SETFAM_1:def 11; then
+       consider BM02 being Subset-Family of MURSTPS such that
+  A54: BM02 c= BM2 & BM02 is Cover of [#] MURSTPS & BM02 is finite
+         by A49,TOPMETR:16,A51,TOPMETR:def 4;
+       reconsider BM02 as finite set by A54;
+A55:   BM02 <> {}
+       proof
+         assume BM02 = {}; then
+         [#]MURSTPS c= {} by SETFAM_1:def 11,A54,ZFMISC_1:2;
+         hence contradiction;
+       end;
+       defpred P2[object,object] means ex w be Point of MURSTPS st $2 = w &
+         $1 = Ball(w,e/4);
+A56:   for D be object st D in BM2
+         ex w be object st w in the carrier of MURSTPS & P2[D,w]
+       proof
+         let D be object;
+         assume D in BM2; then
+         consider w being Element of MURSTPS such that
+    A57: D = Ball (w,e/4);
+         take w;
+         thus w in the carrier of MURSTPS & P2[D,w] by A57;
+       end;
+       consider U2 being Function of BM2,the carrier of MURSTPS such that
+  A58: for D being object st D in BM2 holds P2[D,U2.D] from FUNCT_2:sch 1(A56);
+A59:   for D being object st D in BM2 holds D = Ball(U2/.D,e/4)
+       proof
+         let D be object;
+         assume A60: D in BM2; then
+A61:     ex x0 be Point of MURSTPS st U2.D = x0 & D =Ball(x0,e/4) by A58;
+         dom U2 = BM2 by FUNCT_2:def 1;
+         hence D = Ball(U2/.D,e/4) by A61,A60,PARTFUN1:def 6;
+       end;
+       set CF2 = canFS BM02;
+A62:   len CF2 = card BM02 by FINSEQ_1:93;
+A63:   rng CF2 = BM02 by FUNCT_2:def 3;
+A64:   dom U2 = BM2 by FUNCT_2:def 1; then
+       reconsider PS2 = U2*CF2 as FinSequence by A63,A54,FINSEQ_1:16;
+       rng PS2 c= rng U2 by RELAT_1:26; then
+       reconsider PS2 as FinSequence of the carrier of MURSTPS
+         by FINSEQ_1:def 4,XBOOLE_1:1;
+A65:   dom PS2 = dom CF2 by A63,A64,A54,RELAT_1:27
+             .= Seg card BM02 by A62,FINSEQ_1:def 3;
+A66:   dom CF2 = Seg len CF2 by FINSEQ_1:def 3
+            .= dom PS2 by A65,FINSEQ_1:93;
+A67:   for i be Nat st i in dom PS2 holds CF2.i = Ball((U2*CF2)/.i,e/4)
+       proof
+         let i be Nat;
+         assume A68: i in dom PS2;
+     A69:CF2.i in rng CF2 by FUNCT_1:3,A66,A68; then
+         U2/.(CF2.i) = U2.(CF2.i) by PARTFUN1:def 6,A64,A54
+             .= PS2.i by FUNCT_1:12,A68
+             .= (U2*CF2)/.i by PARTFUN1:def 6,A68;
+         hence thesis by A69,A59,A54;
+       end;
+       union rng CF2 = union BM02 by FUNCT_2:def 3; then
+A70:   the carrier of MURSTPS c=union rng CF2 by A54,SETFAM_1:def 11;
+       defpred Q2[object,object] means
+         ex sigm be Function of Seg len PS,Seg len CF2 st
+         $1 = sigm & $2={ f where f is Function of S,T :f in MZH
+         & for i be Nat st i in Seg len PS
+           holds f.(PS/.i) in Ball( (U2*CF2)/.(sigm.i),e/4 ) };
+A71:   for x be object st x in Funcs(Seg len PS,Seg len CF2)
+         ex B be object st B in bool the carrier of MZH & Q2[x,B]
+       proof
+         let x be object;
+         assume x in Funcs(Seg len PS,Seg len CF2); then
+         reconsider sigm = x as Function of Seg len PS,Seg len CF2
+           by FUNCT_2:66;
+         set NHx = { f where f is Function of S,T : f in MZH
+           & for i be Nat st i in Seg len PS
+             holds f.(PS/.i) in Ball ((U2*CF2)/.(sigm.i),e/4) };
+         NHx c= the carrier of MZH
+         proof
+           let z be object;
+           assume z in NHx; then
+           ex f be Function of S,T st z=f & f in MZH
+           & for i be Nat st i in Seg len PS
+           holds f.(PS/.i) in Ball( (U2*CF2)/.(sigm.i),e/4 );
+           hence z in the carrier of MZH;
+         end;
+         hence thesis;
+       end;
+       consider BST being Function of
+       Funcs(Seg len PS,Seg len CF2),bool the carrier of MZH such that
+  A72: for x being object
+         st x in Funcs(Seg len PS,Seg len CF2)
+        holds Q2[x,BST.x] from FUNCT_2:sch 1(A71);
+  A73: for sigm be Function of Seg len PS,Seg len CF2 holds BST.sigm
+          = { f where f is Function of S,T :f in MZH
+         & for i be Nat st i in Seg len PS
+            holds f.(PS/.i) in Ball ((U2*CF2)/.(sigm.i),e/4 ) }
+       proof
+         let sigm be Function of Seg len PS,Seg len CF2;
+         sigm in Funcs(Seg len PS,Seg len CF2) by FUNCT_2:8,A55; then
+         ex sigm1 be Function of Seg len PS,Seg len CF2 st sigm = sigm1 &
+         BST.sigm={ f where f is Function of S,T :f in MZH
+         & for i be Nat st i in Seg len PS
+         holds f.(PS/.i) in Ball( (U2*CF2)/.(sigm1.i),e/4 ) } by A72;
+         hence thesis;
+       end;
+   A74:Funcs(Seg len PS,Seg len CF2) c= bool [:Seg len PS,Seg len CF2:]
+       proof
+         let x be object;
+         assume x in Funcs(Seg len PS,Seg len CF2); then
+         reconsider f = x as Function of Seg len PS,Seg len CF2 by FUNCT_2:66;
+         f in bool [:Seg len PS,Seg len CF2:];
+         hence x in bool [:Seg len PS,Seg len CF2:];
+       end;
+  A75: for sigm be Function of Seg len PS,Seg len CF2 holds
+       for f,g be Point of MZH
+         st f in BST.sigm & g in BST.sigm holds dist(f,g) < e0
+       proof
+         let sigm be Function of Seg len PS,Seg len CF2;
+         let f,g be Point of MZH;
+         assume A76:f in BST.sigm & g in BST.sigm;
+A77:     BST.sigm = { f where f is Function of S,T :f in MZH
+           & for i be Nat st i in Seg len PS
+         holds f.(PS/.i) in Ball( (U2*CF2)/.(sigm.i),e/4 ) } by A73; then
+A78:     ex f0 be Function of S,T st f=f0 & f0 in MZH
+           & for i be Nat st i in Seg len PS
+             holds f0.(PS/.i) in Ball( (U2*CF2)/.(sigm.i),e/4 ) by A76; then
+         reconsider f0=f as Function of S,T;
+         reconsider f1=f0 as Function of M,T by A1;
+A79:     ex f0 be Function of S,T st g=f0 & f0 in MZH
+           & for i be Nat st i in Seg len PS
+         holds f0.(PS/.i) in Ball( (U2*CF2)/.(sigm.i),e/4 ) by A76,A77; then
+         reconsider g0=g as Function of S,T;
+         reconsider g1=g0 as Function of M,T by A1;
+A80:     for x be Point of S holds dist(f0.x,g0.x) <= e
+         proof
+           let x be Point of S;
+           x in union rng CF by A29; then
+           consider D be set such that
+  A81:     x in D & D in rng CF by TARSKI:def 4;
+           consider i be object such that
+  A82:     i in dom CF & D=CF.i by A81,FUNCT_1:def 3;
+           reconsider i as Nat by A82;
+  A83:     x in Ball((U*CF)/.i,d) by A82,A81,A25,A26;
+  A84:     PS/.i = PS.i by A25,A82,PARTFUN1:def 6
+             .= (U*CF)/.i by A25,A82,PARTFUN1:def 6;
+           reconsider ym = (U*CF)/.i as Point of M;
+           reconsider ys = PS/.i as Point of S;
+           x in { z where z is Point of M : dist(ym,z) < d }
+             by METRIC_1:def 14,A83; then
+  A85:     ex z be Point of M st x=z & dist(ym,z) < d; then
+           reconsider xm = x as Point of M;
+  A86:     dist(f1.ym,f1.xm) < e/4 by A3,A9,A85,A2;
+  A87:     dist(g1.ym,g1.xm) < e/4 by A3,A9,A85,A2;
+           i in Seg len PS by A25,A82,FINSEQ_1:def 3; then
+           f0.ys in Ball((U2*CF2)/.(sigm.i),e/4) by A78; then
+           f0.ys in { y where y is Element of MURSTPS :
+             dist ((U2*CF2)/.(sigm.i),y) < e/4 } by METRIC_1:def 14; then
+     A88:  ex y be Element of MURSTPS st f0.ys = y
+             & dist ((U2*CF2)/.(sigm.i),y) < e/4; then
+           reconsider f0ys=f0.ys as Point of MURSTPS;
+           reconsider u2cf2n = (U2*CF2)/.(sigm.i) as
+             Point of T by TOPMETR:def 1,TARSKI:def 3;
+           reconsider f0ysm = f0ys as Point of T;
+  A90:     dist(u2cf2n,f1.ym) < e/4 by A84,A88,TOPMETR:def 1;
+           i in Seg len PS by A25,A82,FINSEQ_1:def 3; then
+           g0.ys in Ball( (U2*CF2)/.(sigm.i),e/4 ) by A79; then
+           g0.ys in { y where y is Element of MURSTPS :
+             dist ((U2*CF2)/.(sigm.i),y) < e/4 } by METRIC_1:def 14; then
+     A91:  ex y be Element of MURSTPS st g0.ys = y
+             & dist ((U2*CF2)/.(sigm.i),y) < e/4; then
+           reconsider g0ys=g0.ys as Point of MURSTPS;
+           reconsider g0ysm = g0ys as Point of T;
+           reconsider g0ysn=g0ysm as Point of T;
+  A93:     dist(u2cf2n,g1.ym) < e/4 by A84,A91,TOPMETR:def 1;
+A94:       dist(u2cf2n,f1.xm)
+             <= dist(u2cf2n,f1.ym) + dist(f1.ym,f1.xm) by METRIC_1:4;
+           dist(u2cf2n,f1.ym) + dist(f1.ym,f1.xm)
+             < e/4 + e/4 by A86,A90,XREAL_1:8; then
+A95:       dist(u2cf2n,f1.xm) < e/2 by XXREAL_0:2,A94;
+A96:       dist(u2cf2n,g1.xm)
+             <= dist(u2cf2n,g1.ym) + dist(g1.ym,g1.xm) by METRIC_1:4;
+           dist(u2cf2n,g1.ym) + dist(g1.ym,g1.xm)
+             < e/4 + e/4 by A87,A93,XREAL_1:8; then
+A97:       dist(u2cf2n,g1.xm) < e/2 by XXREAL_0:2,A96;
+A98:       dist(f1.xm,g1.xm) <= dist(u2cf2n,f1.xm) + dist(u2cf2n,g1.xm)
+             by METRIC_1:4;
+           dist(u2cf2n,f1.xm) + dist(u2cf2n, g1.xm)
+             < e/2 + e/2 by A95,A97,XREAL_1:8;
+           hence dist(f0.x,g0.x) <= e by XXREAL_0:2,A98;
+         end;
+         reconsider f1=f,g1=g as Point of Z by TOPMETR:def 1,TARSKI:def 3;
+         dist(f1,g1) <= e by A80,Th12; then
+         dist(f,g) <= e by TOPMETR:def 1;
+         hence dist(f,g) < e0 by A8,XXREAL_0:2;
+       end;
+  A99: for f be Point of MZH holds
+         ex sigm be Function of Seg len PS,Seg len CF2 st f in BST.sigm
+       proof
+         let f be Point of MZH;
+         f in H by A3; then
+         f in Z; then
+         ex g be Function of S, TopSpaceMetr T st f=g & g is continuous; then
+         reconsider g=f as Function of the carrier of S, the carrier of T;
+         defpred QQ[object,object] means
+         ex i,j be Nat st i=$1 & j=$2 &
+         g.(PS/.i) in Ball ((U2*CF2)/.j,e/4);
+A100:    for x be object st x in Seg len PS
+           ex y be object st y in Seg len CF2 & QQ[x,y]
+         proof
+           let x be object;
+           assume A101: x in Seg len PS; then
+           reconsider i = x as Nat;
+     A102: i in dom PS by A101,FINSEQ_1:def 3;
+           consider NHx be non empty Subset of T,
+           CHx be non empty Subset of T such that
+A103:      NHx = {f.(PS/.i) where f is Function of S,T :f in H }
+             & STPS/.i = Cl(NHx) by A39,A102,A24,A38;
+A104:      g.(PS/.i) in NHx by A103,A3;
+           NHx c= Cl NHx by Th1; then
+A105:      g.(PS/.i) in STPS/.i by A104,A103;
+A107:      g.(PS/.i) in STPS.i by A105,PARTFUN1:def 6,A102,A24,A38;
+           STPS.i in rng STPS by A102,A24,A38,FUNCT_1:3; then
+           g.(PS/.i) in URSTPS by A107,TARSKI:def 4; then
+           g.(PS/.i) in the carrier of MURSTPS by TOPMETR:def 2; then
+           consider V be set such that
+A108:      g.(PS/.i) in V & V in rng CF2 by A70,TARSKI:def 4;
+           consider j be object such that
+A109:      j in dom CF2 & V=CF2.j by A108,FUNCT_1:def 3;
+A110:      j in Seg card BM02 by A62,FINSEQ_1:def 3,A109;
+           reconsider j as Nat by A109;
+A111:      CF2.j = Ball((U2*CF2)/.j,e/4) by A67,A65,A110;
+           j in Seg len CF2 by FINSEQ_1:def 3,A109;
+           hence thesis by A108,A109,A111;
+         end;
+         consider sigm being Function of Seg len PS,Seg len CF2 such that
+  A112:  for x being object st x in Seg len PS
+           holds QQ[x,sigm.x] from FUNCT_2:sch 1(A100);
+  A113:  for i be Nat st i in Seg len PS
+           holds g.(PS/.i) in Ball( (U2*CF2)/.(sigm.i),e/4 )
+         proof
+           let i be Nat;
+           assume i in Seg len PS; then
+           ex i0,j0 be Nat st i0=i & j0=sigm.i &
+           g.(PS/.i0) in Ball ((U2*CF2)/.j0,e/4) by A112;
+           hence thesis;
+         end;
+  A114:  BST.sigm = { f where f is Function of S,T :f in MZH
+           & for i be Nat st i in Seg len PS
+         holds f.(PS/.i) in Ball( (U2*CF2)/.(sigm.i),e/4 ) } by A73;
+         take sigm;
+         g in MZH;
+         hence f in BST.sigm by A114,A113;
+       end;
+ A115: for sigm be Function of Seg len PS,Seg len CF2
+         holds ex f be Point of MZH st BST.sigm c= Ball (f,e0)
+       proof
+         let sigm be Function of Seg len PS,Seg len CF2;
+         per cases;
+         suppose A116: BST.sigm = {};
+           take f = the Point of MZH;
+           thus BST.sigm c= Ball (f,e0) by A116;
+         end;
+         suppose BST.sigm <> {}; then
+           consider f be object such that
+     A117: f in BST.sigm by XBOOLE_0:def 1;
+           sigm in Funcs(Seg len PS,Seg len CF2) by A55,FUNCT_2:8; then
+    A118: BST.sigm in bool the carrier of MZH by FUNCT_2:5; then
+          reconsider f as Point of MZH by A117;
+          take f;
+          let z be object;
+          assume A119:z in BST.sigm; then
+          reconsider g = z as Point of MZH by A118;
+          dist(f,g) < e0 by A117,A119,A75; then
+          g in { y where y is Point of MZH : dist(f,y) < e0 };
+          hence z in Ball (f,e0) by METRIC_1:def 14;
+        end;
+      end;
+      defpred PP[object,object] means
+        ex f be Point of MZH st BST.$1 c= Ball(f,e0) & $2 = Ball(f,e0);
+A120: for z be object st z in Funcs(Seg len PS,Seg len CF2)
+        ex f be object st f in bool (the carrier of MZH) & PP[z,f]
+      proof
+        let z be object;
+        assume z in Funcs(Seg len PS,Seg len CF2); then
+        reconsider sigm = z as Function of Seg len PS,Seg len CF2
+          by FUNCT_2:66;
+        ex f being Point of MZH st BST.sigm c= Ball (f,e0) by A115;
+        hence thesis;
+      end;
+      consider FF be Function of Funcs(Seg len PS,Seg len CF2),
+        bool the carrier of MZH such that
+A121: for z being object
+         st z in Funcs(Seg len PS,Seg len CF2)
+        holds PP[z,FF.z] from FUNCT_2:sch 1(A120);
+A122: dom FF = Funcs(Seg len PS,Seg len CF2) by FUNCT_2:def 1;
+      reconsider L = rng FF as finite set by A74;
+      reconsider L as Subset-Family of MZH;
+      take L;
+      thus L is finite;
+      the carrier of MZH c= union L
+      proof
+        let f be object;
+        assume f in the carrier of MZH; then
+        reconsider g = f as Point of MZH;
+        consider sigm be Function of Seg len PS,Seg len CF2 such that
+  A123: g in BST.sigm by A99;
+  A124: sigm in Funcs(Seg len PS,Seg len CF2) by A55,FUNCT_2:8; then
+        consider w be Point of MZH such that
+  A125: BST.sigm c= Ball(w,e0) & FF.sigm = Ball(w,e0) by A121;
+        FF.sigm in rng FF by FUNCT_1:3,A124,A122;
+        hence f in union L by TARSKI:def 4,A123,A125;
+      end;
+      hence the carrier of MZH = union L;
+      thus for C being Subset of MZH st C in L holds
+      ex w being Element of MZH st C = Ball (w,e0)
+      proof
+        let C be Subset of MZH;
+        assume C in L; then
+        consider x be object such that
+  A126: x in dom FF & C = FF.x by FUNCT_1:def 3;
+        consider w be Point of MZH such that
+  A127: BST.x c= Ball(w,e0) & FF.x = Ball(w,e0) by A121,A126;
+        take w;
+        thus C = Ball (w,e0) by A126,A127;
+      end;
+    end;
+    hence Z | H is totally_bounded;
+  end;
+
+theorem
+  for M be non empty MetrSpace,S be non empty compact TopSpace,
+      T be non empty MetrSpace,
+      G be Subset of Funcs(the carrier of M, the carrier of T),
+      H be non empty Subset of
+        (MetricSpace_of_ContinuousFunctions(S,T))
+  st S = TopSpaceMetr(M) & T is complete & G = H
+    holds
+      Cl(H) is sequentially_compact
+    iff
+      G is equicontinuous
+  &
+  for x be Point of S, Hx be non empty Subset of T
+       st Hx = { f.x where f is Function of S,T : f in H }
+     holds T | Cl(Hx) is compact
+  proof
+    let M be non empty MetrSpace,S be non empty compact TopSpace,
+        T be non empty MetrSpace;
+    let G be Subset of Funcs(the carrier of M, the carrier of T),
+        H be non empty Subset of MetricSpace_of_ContinuousFunctions(S,T);
+    assume A1: S = TopSpaceMetr(M) & T is complete;
+    assume A2: G = H;
+    set Z = MetricSpace_of_ContinuousFunctions(S,T);
+    Z | H is totally_bounded iff
+    Cl(H) is sequentially_compact by A1,Th14;
+    hence thesis by A1,A2,Th17;
+  end;
+
+theorem Th19:
+  for M be non empty MetrSpace,S be non empty compact TopSpace,
+      T be non empty MetrSpace,
+      F be non empty Subset of MetricSpace_of_ContinuousFunctions(S,T),
+    G be Subset of Funcs(the carrier of M, the carrier of T)
+  st S = TopSpaceMetr(M) & T is complete & G = F holds
+    MetricSpace_of_ContinuousFunctions(S,T) |  Cl(F) is compact
+    iff
+     G is equicontinuous
+    &
+     for x be Point of S,
+         Fx be non empty Subset of T
+      st Fx = { f.x where f is Function of S,T : f in F } holds
+        T | Cl(Fx) is compact
+  proof
+    let M be non empty MetrSpace,S be non empty compact TopSpace,
+        T be non empty MetrSpace;
+    let F be non empty Subset of MetricSpace_of_ContinuousFunctions(S,T),
+        G be Subset of Funcs(the carrier of M, the carrier of T);
+    assume A1: S = TopSpaceMetr(M) & T is complete;
+    assume A2: G = F;
+    set Z = MetricSpace_of_ContinuousFunctions(S,T);
+A3: Cl(F) is sequentially_compact iff
+      Z | F is totally_bounded by Th14,A1;
+    Cl(F) is sequentially_compact iff Z | Cl(F) is compact by TOPMETR4:14;
+    hence thesis by A1,A2,Th17,A3;
+  end;
+
+theorem
+  for M be non empty MetrSpace,S be non empty compact TopSpace,
+      T be non empty MetrSpace,
+      F be non empty Subset of
+         MetricSpace_of_ContinuousFunctions(S,T),
+       G be Subset of Funcs(the carrier of M, the carrier of T)
+    st S = TopSpaceMetr(M) & T is complete & G = F
+    holds
+    MetricSpace_of_ContinuousFunctions(S,T) | Cl(F) is compact
+  iff
+   ( for x be Point of M holds G is_equicontinuous_at x ) &
+   for x be Point of S,
+    Fx be non empty Subset of T
+       st Fx = {f.x where f is Function of S,T :f in F }
+     holds T | Cl(Fx) is compact
+  proof
+    let M be non empty MetrSpace,S be non empty compact TopSpace,
+        T be non empty MetrSpace;
+    let F be non empty Subset of MetricSpace_of_ContinuousFunctions(S,T),
+         G be Subset of Funcs(the carrier of M, the carrier of T);
+    assume A1: S = TopSpaceMetr(M) & T is complete;
+    assume G = F; then
+    MetricSpace_of_ContinuousFunctions(S,T) | Cl(F) is compact
+    iff G is equicontinuous &
+    for x be Point of S, Fx be non empty Subset of T
+    st Fx = {f.x where f is Function of S,T :f in F } holds
+    T | Cl(Fx) is compact by Th19,A1;
+    hence thesis by Lm2,A1;
+  end;
+
+theorem
+  for M be non empty MetrSpace, S be non empty compact TopSpace,
+      T be non empty MetrSpace,
+      U be compact Subset of TopSpaceMetr T,
+      F be non empty Subset of MetricSpace_of_ContinuousFunctions(S,T),
+      G be Subset of Funcs(the carrier of M, the carrier of T)
+    st S = TopSpaceMetr(M) & T is complete
+      & G = F & for f be Function st f in F holds rng f c= U holds
+  MetricSpace_of_ContinuousFunctions(S,T) | Cl(F) is compact iff
+    G is equicontinuous
+  proof
+    let M be non empty MetrSpace,S be non empty compact TopSpace,
+        T be non empty MetrSpace,U be compact Subset of TopSpaceMetr T;
+    let F be non empty Subset of MetricSpace_of_ContinuousFunctions(S,T),
+        G be Subset of Funcs(the carrier of M, the carrier of T);
+    assume that
+A1: S = TopSpaceMetr(M) and
+A2: T is complete;
+    assume
+A3: G = F & for f be Function st f in F holds rng f c= U;
+    set Z = MetricSpace_of_ContinuousFunctions(S,T);
+    Cl(F) is sequentially_compact iff Z | F is totally_bounded by Th14,A2; then
+    Z | F is totally_bounded iff Z | Cl(F) is compact by TOPMETR4:14;
+    hence Z | Cl(F) is compact implies G is equicontinuous by A1,Th15,A3;
+    assume
+A5: G is equicontinuous;
+    for x be Point of S, Fx be non empty Subset of T
+       st Fx = {f.x where f is Function of S,T :f in F } holds
+      T | Cl(Fx) is compact
+    proof
+      let x be Point of S, Fx be non empty Subset of T;
+      assume
+  A6: Fx = {f.x where f is Function of S,T :f in F };
+A7:   Fx c= U
+      proof
+        let y be object;
+        assume y in Fx; then
+        consider f be Function of S,T such that
+    A8: y=f.x & f in F by A6;
+    A9: f.x in rng f by FUNCT_2:4;
+        rng f c= U by A3,A8;
+        hence y in U by A8,A9;
+      end;
+      consider Gx be Subset of TopSpaceMetr T such that
+A10:  Fx = Gx & Cl(Fx) = Cl Gx by ASCOLI:def 1;
+      reconsider HClx=Cl(Gx) as non empty Subset of T by A10;
+A11:  TopSpaceMetr T is T_2 by PCOMPS_1:34;
+      Cl Gx c= Cl U by A7,A10,PRE_TOPC:19; then
+      Cl Gx c= U by A11,PRE_TOPC:22; then
+      Cl Gx is compact by COMPTS_1:9; then
+      HClx is sequentially_compact by TOPMETR4:15;
+      hence T | Cl Fx is compact by A10,TOPMETR4:14;
+    end;
+    hence thesis by Th19,A1,A2,A3,A5;
+  end;

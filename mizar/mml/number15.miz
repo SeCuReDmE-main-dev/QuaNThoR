@@ -1,0 +1,5137 @@
+:: Elementary Number Theory Problems. {P}art {XV } -- Diophantine Equations
+::  by Karol P\kak and Artur Korni{\l}owicz
+:: 
+:: Received November 8, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, NAT_1, RELAT_1, FUNCT_1, XXREAL_0, ARYTM_3, XCMPLX_0,
+      CARD_1, INT_1, NEWTON, ARYTM_1, SUBSET_1, XBOOLE_0, TARSKI, ORDINAL1,
+      FINSET_1, ABIAN, MEMBERED, MOEBIUS1, REAL_1, INT_2, PBOOLE, SQUARE_1,
+      ZFMISC_1, ORDINAL4, NAT_LAT, FINSEQ_1, INT_6, CARD_3, VALUED_0, PARTFUN3,
+      PRE_POLY, ORDINAL2, FUNCT_7, VALUED_1, FUNCT_2, NUMBER06, FINSEQ_2,
+      POWER, AFINSQ_1, PRGCOR_2, NUMBER10, COMPLFLD, STRUCT_0, PARTFUN1,
+      SETWISEO, BINOP_2, ALGSTR_0, PREPOWER, NEWTON04, NUMBER14, NUMBER15;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, XTUPLE_0, DOMAIN_1, ORDINAL1,
+      CARD_1, NUMBERS, XCMPLX_0, RELAT_1, FUNCT_1, RELSET_1, PARTFUN1, FUNCT_2,
+      PBOOLE, FINSET_1, MEMBERED, VALUED_0, VALUED_1, XREAL_0, INT_1, INT_2,
+      NAT_1, NAT_D, XXREAL_0, BINOP_2, SETWOP_2, SQUARE_1, AFINSQ_1, FINSEQ_1,
+      PARTFUN3, FINSEQ_2, RVSUM_1, PREPOWER, POWER, NEWTON, ABIAN, PRE_POLY,
+      NAT_3, NEWTON04, NAT_LAT, STRUCT_0, ALGSTR_0, GROUP_4, COMPLFLD,
+      MOEBIUS1, INT_6, NUMBER06, NUMBER10, NUMBER14;
+ constructors NAT_D, ABIAN, PEPIN, NAT_3, MOEBIUS1, WELLORD2, NEWTON03, POWER,
+      DOMAIN_1, EC_PF_2, NUMBER06, WSIERP_1, CALCUL_2, AFINSQ_1, NUMBER10,
+      COMPLFLD, BINOP_2, GROUP_4, FINSOP_1, PREPOWER, NEWTON04, RVSUM_2,
+      NUMBER14;
+ registrations ORDINAL1, RELSET_1, FINSET_1, NUMBERS, XCMPLX_0, XXREAL_0,
+      XREAL_0, NAT_1, INT_1, MEMBERED, VALUED_0, CARD_1, NEWTON, NEWTON02,
+      NEWTON03, ABIAN, NAT_6, JORDAN1D, WSIERP_1, NEWTON01, FINSEQ_1, RVSUM_1,
+      PRE_POLY, FUNCT_1, RELAT_1, XBOOLE_0, NAT_3, SUBSET_1, MOEBIUS1,
+      PYTHTRIP, VALUED_1, PARTFUN3, FINSEQ_9, RAMSEY_1, SQUARE_1, POWER,
+      NUMBER08, RVSUM_4, NUMBER09, NEWTON04, COMPLEX3, AFINSQ_1, FINSEQ_2,
+      FOMODEL0, COMPLFLD, INT_6, NAT_LAT, NUMBER03, EUCLID_9, NUMBER14,
+      AOFA_000, NUMBER06, NUMBER10;
+ requirements REAL, NUMERALS, BOOLE, SUBSET, ARITHM;
+ definitions RELAT_1, MEMBERED, TARSKI, XBOOLE_0, FUNCT_1, FINSEQ_1, FUNCT_2,
+      WELLORD2, VALUED_0, SEQM_3, PARTFUN3, RVSUM_3, EUCLID_7, NUMBER06;
+ equalities SQUARE_1, FINSEQ_1, FINSEQ_2, MOEBIUS1, INT_1, XCMPLX_0, ORDINAL1,
+      GROUP_4, VALUED_1;
+ expansions INT_1, INT_2, ABIAN, CARD_1, RELAT_1, NUMBER14;
+ theorems NEWTON, INT_1, INT_2, NAT_D, PEPIN, CARD_2, XREAL_1, XXREAL_0, NAT_1,
+      FUNCT_1, PARTFUN1, TARSKI, NAT_5, CARD_1, ABIAN, XCMPLX_1, NUMBER05,
+      XTUPLE_0, XBOOLE_0, NUMBER04, NEWTON05, COMPLSP2, BORSUK_7, PYTHTRIP,
+      RING_3, NUMBER10, WSIERP_1, POLYEQ_5, BINARI_4, TOPREAL6, INT_4, NAT_3,
+      INT_5, NUMBER07, NAT_6, FINSEQ_1, XPRIMES1, FINSEQ_5, INT_6, NUMBER02,
+      FINSEQ_3, ZFMISC_1, ORDINAL1, RELAT_1, FINSEQ_2, SUBSET_1, NEWTON01,
+      VALUED_0, FUNCT_2, PRE_POLY, RAT_1, RVSUM_1, ENUMSET1, VALUED_1,
+      AFINSQ_1, XREAL_0, RVSUM_2, VALUED_2, MATRIX15, MOEBIUS2, COMPLFLD,
+      POLYNOM2, XCMPLX_0, NAT_LAT, RADIX_2, PREPOWER, NEWTON04, PRSUBSET,
+      PARTFUN3, NUMBER14, NUMBER03, XBOOLE_1, NAT_4, NEWTON03, LIOUVIL2,
+      NUMBER12, MOEBIUS1;
+ schemes NAT_1, FINSEQ_1, FUNCT_2, CLASSES1, FUNCT_1, PBOOLE;
+
+begin :: Preliminaries
+
+Lm1: 2|^2 = 2*2 by NEWTON:81;
+Lm2: 3|^2 = 3*3 by NEWTON:81;
+Lm3: 1 mod 4 = 1 by NAT_D:24;
+
+reserve a,b,k,m,n,s for Nat;
+reserve c,c1,c2,c3 for Complex;
+reserve i,j,z for Integer;
+reserve p for Prime;
+reserve x for object;
+
+registration
+  let p be Prime;
+  reduce In(p,SetPrimes) to p;
+  reducibility
+  proof
+    p in SetPrimes by NEWTON:def 6;
+    hence thesis by SUBSET_1:def 8;
+  end;
+end;
+
+registration
+  let a,b,c,d be Integer;
+  reduce In([a,b,c,d],[:INT,INT,INT,INT:]) to [a,b,c,d];
+  reducibility
+  proof
+    [In(a,INT),In(b,INT),In(c,INT),In(d,INT)] in [:INT,INT,INT,INT:];
+    hence thesis;
+  end;
+end;
+
+registration
+  let n;
+  cluster positive-yielding natural-valued n-element for FinSequence;
+  existence
+  proof
+    take n|->1;
+    thus thesis;
+  end;
+end;
+
+registration
+  cluster non-empty natural-valued -> positive-yielding for Relation;
+  coherence
+  proof
+    let R be Relation such that
+A1: R is non-empty;
+    assume
+A2: R is natural-valued;
+    let r be Real;
+    thus thesis by A1,A2;
+  end;
+end;
+
+registration
+  let D be set;
+  let f be D-valued XFinSequence;
+  cluster XFS2FS(f) -> D-valued;
+  coherence;
+end;
+
+theorem Th1:
+  for f being XFinSequence st n in dom XFS2FS(f) holds n-1 in dom f
+  proof
+    let f be XFinSequence;
+    set g = XFS2FS(f);
+    assume
+A1: n in dom g;
+    then reconsider n as non zero Nat by FINSEQ_3:25;
+A2: len g = len f by AFINSQ_1:def 9;
+    n <= len g by A1,FINSEQ_3:25;
+    then n-1 < len f - 0 by A2,XREAL_1:8;
+    hence thesis by AFINSQ_1:86;
+  end;
+
+registration
+  let f be increasing ext-real-valued XFinSequence;
+  cluster XFS2FS(f) -> increasing;
+  coherence
+  proof
+    set g = XFS2FS(f);
+    let e1,e2 be ExtReal such that
+A1: e1 in dom g and
+A2: e2 in dom g and
+A3: e1 < e2;
+A4: 1 <= e1 by A1,FINSEQ_3:25;
+A5: 1 <= e2 by A2,FINSEQ_3:25;
+    reconsider e1, e2 as non zero Nat by A1,A2,FINSEQ_3:25;
+A6: len g = len f by AFINSQ_1:def 9;
+    e1 <= len g by A1,FINSEQ_3:25;
+    then
+A7: f.(e1-1) = g.e1 by A4,A6,AFINSQ_1:def 9;
+    e2 <= len g by A2,FINSEQ_3:25;
+    then
+A8: f.(e2-1) = g.e2 by A5,A6,AFINSQ_1:def 9;
+A9: e1-1 < e2-1 by A3,XREAL_1:8;
+    e1-1 in dom f & e2-1 in dom f by A1,A2,Th1;
+    hence thesis by A7,A8,A9,VALUED_0:def 13;
+  end;
+end;
+
+registration
+  let f be decreasing ext-real-valued XFinSequence;
+  cluster XFS2FS(f) -> decreasing;
+  coherence
+  proof
+    set g = XFS2FS(f);
+    let e1,e2 be ExtReal such that
+A1: e1 in dom g and
+A2: e2 in dom g and
+A3: e1 < e2;
+A4: 1 <= e1 by A1,FINSEQ_3:25;
+A5: 1 <= e2 by A2,FINSEQ_3:25;
+    reconsider e1, e2 as non zero Nat by A1,A2,FINSEQ_3:25;
+A6: len g = len f by AFINSQ_1:def 9;
+    e1 <= len g by A1,FINSEQ_3:25;
+    then
+A7: f.(e1-1) = g.e1 by A4,A6,AFINSQ_1:def 9;
+    e2 <= len g by A2,FINSEQ_3:25;
+    then
+A8: f.(e2-1) = g.e2 by A5,A6,AFINSQ_1:def 9;
+A9: e1-1 < e2-1 by A3,XREAL_1:8;
+    e1-1 in dom f & e2-1 in dom f by A1,A2,Th1;
+    hence thesis by A7,A8,A9,VALUED_0:def 14;
+  end;
+end;
+
+registration
+  let f be non-increasing ext-real-valued XFinSequence;
+  cluster XFS2FS(f) -> non-increasing;
+  coherence
+  proof
+    set g = XFS2FS(f);
+    let e1,e2 be ExtReal such that
+A1: e1 in dom g and
+A2: e2 in dom g and
+A3: e1 <= e2;
+A4: 1 <= e1 by A1,FINSEQ_3:25;
+A5: 1 <= e2 by A2,FINSEQ_3:25;
+    reconsider e1, e2 as non zero Nat by A1,A2,FINSEQ_3:25;
+A6: len g = len f by AFINSQ_1:def 9;
+    e1 <= len g by A1,FINSEQ_3:25;
+    then
+A7: f.(e1-1) = g.e1 by A4,A6,AFINSQ_1:def 9;
+    e2 <= len g by A2,FINSEQ_3:25;
+    then
+A8: f.(e2-1) = g.e2 by A5,A6,AFINSQ_1:def 9;
+    e1-1 in dom f & e2-1 in dom f by A1,A2,Th1;
+    hence thesis by A3,A7,A8,VALUED_0:def 16,XREAL_1:6;
+  end;
+end;
+
+registration
+  let f be non-decreasing ext-real-valued XFinSequence;
+  cluster XFS2FS(f) -> non-decreasing;
+  coherence
+  proof
+    set g = XFS2FS(f);
+    let e1,e2 be ExtReal such that
+A1: e1 in dom g and
+A2: e2 in dom g and
+A3: e1 <= e2;
+A4: 1 <= e1 by A1,FINSEQ_3:25;
+A5: 1 <= e2 by A2,FINSEQ_3:25;
+    reconsider e1, e2 as non zero Nat by A1,A2,FINSEQ_3:25;
+A6: len g = len f by AFINSQ_1:def 9;
+    e1 <= len g by A1,FINSEQ_3:25;
+    then
+A7: f.(e1-1) = g.e1 by A4,A6,AFINSQ_1:def 9;
+    e2 <= len g by A2,FINSEQ_3:25;
+    then
+A8: f.(e2-1) = g.e2 by A5,A6,AFINSQ_1:def 9;
+    e1-1 in dom f & e2-1 in dom f by A1,A2,Th1;
+    hence thesis by A3,A7,A8,VALUED_0:def 15,XREAL_1:6;
+  end;
+end;
+
+registration
+  let r be positive Real;
+  let f be positive-yielding real-valued Function;
+  cluster r(#)f -> positive-yielding;
+  coherence;
+end;
+
+registration
+  let r be positive Real;
+  let f be increasing real-valued Function;
+  cluster r(#)f -> increasing;
+  coherence
+  proof
+    set F = r(#)f;
+    let a,b be ExtReal such that
+A1: a in dom F & b in dom F;
+    assume a < b;
+    then
+A2: f.a < f.b by A1,VALUED_0:def 13;
+    F.a = r*f.a & F.b = r*f.b by VALUED_1:6;
+    hence thesis by A2,XREAL_1:68;
+  end;
+end;
+
+registration
+  let r be negative Real;
+  let f be increasing real-valued Function;
+  cluster r(#)f -> decreasing;
+  coherence
+  proof
+    set F = r(#)f;
+    let a,b be ExtReal such that
+A1: a in dom F & b in dom F;
+    assume a < b;
+    then
+A2: f.a < f.b by A1,VALUED_0:def 13;
+    F.a = r*f.a & F.b = r*f.b by VALUED_1:6;
+    hence thesis by A2,XREAL_1:69;
+  end;
+end;
+
+registration
+  let r be positive Real;
+  let f be decreasing real-valued Function;
+  cluster r(#)f -> decreasing;
+  coherence
+  proof
+    set F = r(#)f;
+    let a,b be ExtReal such that
+A1: a in dom F & b in dom F;
+    assume a < b;
+    then
+A2: f.a > f.b by A1,VALUED_0:def 14;
+    F.a = r*f.a & F.b = r*f.b by VALUED_1:6;
+    hence thesis by A2,XREAL_1:68;
+  end;
+end;
+
+registration
+  let r be negative Real;
+  let f be decreasing real-valued Function;
+  cluster r(#)f -> increasing;
+  coherence
+  proof
+    set F = r(#)f;
+    let a,b be ExtReal such that
+A1: a in dom F & b in dom F;
+    assume a < b;
+    then
+A2: f.a > f.b by A1,VALUED_0:def 14;
+    F.a = r*f.a & F.b = r*f.b by VALUED_1:6;
+    hence thesis by A2,XREAL_1:69;
+  end;
+end;
+
+registration
+  let r be positive Real;
+  let f be non-increasing real-valued Function;
+  cluster r(#)f -> non-increasing;
+  coherence
+  proof
+    set F = r(#)f;
+    let a,b be ExtReal such that
+A1: a in dom F & b in dom F;
+    assume a <= b;
+    then
+A2: f.a >= f.b by A1,VALUED_0:def 16;
+    F.a = r*f.a & F.b = r*f.b by VALUED_1:6;
+    hence thesis by A2,XREAL_1:64;
+  end;
+end;
+
+registration
+  let r be negative Real;
+  let f be non-increasing real-valued Function;
+  cluster r(#)f -> non-decreasing;
+  coherence
+  proof
+    set F = r(#)f;
+    let a,b be ExtReal such that
+A1: a in dom F & b in dom F;
+    assume a <= b;
+    then
+A2: f.a >= f.b by A1,VALUED_0:def 16;
+    F.a = r*f.a & F.b = r*f.b by VALUED_1:6;
+    hence thesis by A2,XREAL_1:65;
+  end;
+end;
+
+registration
+  let r be positive Real;
+  let f be non-decreasing real-valued Function;
+  cluster r(#)f -> non-decreasing;
+  coherence
+  proof
+    set F = r(#)f;
+    let a,b be ExtReal such that
+A1: a in dom F & b in dom F;
+    assume a <= b;
+    then
+A2: f.a <= f.b by A1,VALUED_0:def 15;
+    F.a = r*f.a & F.b = r*f.b by VALUED_1:6;
+    hence thesis by A2,XREAL_1:64;
+  end;
+end;
+
+registration
+  let r be negative Real;
+  let f be non-decreasing real-valued Function;
+  cluster r(#)f -> non-increasing;
+  coherence
+  proof
+    set F = r(#)f;
+    let a,b be ExtReal such that
+A1: a in dom F & b in dom F;
+    assume a <= b;
+    then
+A2: f.a <= f.b by A1,VALUED_0:def 15;
+    F.a = r*f.a & F.b = r*f.b by VALUED_1:6;
+    hence thesis by A2,XREAL_1:65;
+  end;
+end;
+
+theorem Th2:
+  for f being finite-support Function holds rng f c= rng(f|support f) \/ {0}
+  proof
+    let f be finite-support Function;
+    set g = f|support f;
+    let y be object;
+    assume y in rng f;
+    then consider x being object such that
+A1: x in dom f and
+A2: f.x = y by FUNCT_1:def 3;
+    per cases;
+    suppose f.x = 0;
+      then f.x in {0} by TARSKI:def 1;
+      hence thesis by A2,XBOOLE_0:def 3;
+    end;
+    suppose f.x <> 0;
+      then
+A3:   x in support f by PRE_POLY:def 7;
+      then
+A4:   f.x = g.x by FUNCT_1:49;
+      x in dom g by A1,A3,RELAT_1:57;
+      then g.x in rng g by FUNCT_1:def 3;
+      hence thesis by A2,A4,XBOOLE_0:def 3;
+    end;
+  end;
+
+registration
+  let f be finite-support Function;
+  cluster rng f -> finite;
+  coherence
+  proof
+    rng f c= rng(f|support f) \/ {0} by Th2;
+    hence thesis;
+  end;
+end;
+
+theorem Th3:
+  for f being complex-valued FinSequence
+  for g being FinSequence of F_Complex st f = g holds
+  Product f = Product g
+  proof
+    let f be complex-valued FinSequence;
+    let g be FinSequence of F_Complex;
+A1: ex F being FinSequence of COMPLEX st f = F & Product f = multcomplex $$ F
+    by RVSUM_1:def 13;
+    the multF of F_Complex = multcomplex by COMPLFLD:def 1;
+    hence thesis by A1,COMPLFLD:def 1;
+  end;
+
+theorem Th4:
+  for a being Complex, p,q being complex-valued FinSequence st
+  len p = len q &
+  ex i being Nat st i in dom p & q.i = a * p.i &
+  for j being Nat st j in dom p & i <> j holds q.j = p.j
+  holds Product q = a * Product p
+  proof
+    let a be Complex;
+    let p,q be complex-valued FinSequence such that
+A1: len p = len q;
+    given i being Nat such that
+A2: i in dom p and
+A3: q.i = a * p.i and
+A4: for j being Nat st j in dom p & i <> j holds q.j = p.j;
+    reconsider i as Element of NAT by ORDINAL1:def 12;
+A5: the carrier of F_Complex = COMPLEX by COMPLFLD:def 1;
+    then reconsider a1 = a as Element of F_Complex by XCMPLX_0:def 2;
+    reconsider p1 = p, q1 = q as FinSequence of F_Complex by A5,FINSEQ_1:107;
+A6: dom p1 = dom q1 by A1,FINSEQ_3:29;
+    then q1/.i = q.i & p1/.i = p.i by A2,PARTFUN1:def 6;
+    then
+A7: q1/.i = a1 * p1/.i by A3;
+    for j being Element of NAT st j in dom p1 & i <> j holds q1/.j = p1/.j
+    proof
+      let j be Element of NAT;
+      assume
+A8:   j in dom p1;
+      then q1/.j = q.j & p1/.j = p.j by A6,PARTFUN1:def 6;
+      hence thesis by A4,A8;
+    end;
+    then
+A9: Product q1 = a1 * Product p1 by A1,A2,A7,POLYNOM2:6;
+    Product p = Product p1 & Product q = Product q1 by Th3;
+    hence Product q = a * Product p by A9;
+  end;
+
+begin :: Problem 38
+
+theorem Th5:
+  n mod 4 = 0 or n mod 4 = 2 implies (n * m) mod 4 = 0 or (n * m) mod 4 = 2
+  proof
+    m = 2 * (m div 2) + (m mod 2) by NAT_D:2;
+    then m = 2 * (m div 2) + 0 or m = 2 * (m div 2) + 1 by NAT_D:12;
+    then
+A1: 2*m = 4 * (m div 2) + 0 or 2*m = 4 * (m div 2) + 2*1;
+    assume n mod 4 = 0 or n mod 4 = 2;
+    then (m * n) mod 4 = (m *0) mod 4 or (m * n) mod 4 = (m * 2) mod 4
+    by RADIX_2:3;
+    hence thesis by A1,NUMBER02:16;
+  end;
+
+theorem Th6:
+  n * m mod 4 = 1 implies n mod 4 = 1 or n mod 4 = 3
+proof
+  assume that
+A1: n * m mod 4 = 1 and
+A2: n mod 4 <> 1 & n mod 4 <> 3;
+    n mod (3+1) = 0 or ... or n mod (3+1) = 3 by NUMBER03:11;
+    hence thesis by A1,A2,Th5;
+  end;
+
+theorem Th7:
+  (n * m) mod 4 = 3 implies
+  (n mod 4 = 1 & m mod 4 = 3) or (n mod 4 = 3 & m mod 4 = 1)
+  proof
+    assume
+A1: (n * m) mod 4 = 3;
+A2: m mod (3+1) = 0 or ... or m mod (3+1) = 3 by NUMBER03:11;
+    n mod (3+1) = 0 or ... or n mod (3+1) = 3 by NUMBER03:11;
+    then per cases by A1,Th5;
+    suppose
+A3:   n mod (3+1) = 1;
+      m mod (3+1) = 3
+      proof
+        assume m mod (3+1) <> 3;
+        then (n*m) mod 4 = (1*n) mod 4 by A2,A1,Th5,RADIX_2:3;
+        hence thesis by A1,A3;
+      end;
+      hence thesis by A3;
+    end;
+    suppose
+A4:   n mod (3+1) = 3;
+      m mod (3+1) = 1
+      proof
+A5:     3*3 = 4*2+1;
+        assume m mod (3+1) <> 1;
+        then (n*m) mod 4 = (3*n) mod 4 by A2,A1,Th5,RADIX_2:3;
+        then (n*m) mod 4 = (3*3) mod 4 by A4,RADIX_2:3;
+        hence thesis by A1,A5,NUMBER02:16;
+      end;
+      hence thesis by A4;
+    end;
+  end;
+
+theorem Th8:
+  (n mod 4 = 1 & m mod 4 = 1) or (n mod 4 = 3 & m mod 4 = 3)
+  implies n * m mod 4 = 1
+  proof
+    assume (n mod 4 = 1 & m mod 4 = 1) or (n mod 4 = 3 & m mod 4 = 3);
+    then per cases;
+    suppose
+A1:   n mod 4 = 1 & m mod 4 = 1;
+      then n * m mod 4 = (1*m) mod 4 by RADIX_2:3;
+      hence thesis by A1;
+    end;
+    suppose n mod 4 = 3 & m mod 4 = 3;
+      then n * m mod 4 = (3*m) mod 4 &  (3*m) mod 4 = 3*3 mod 4 & 3*3 = 4*2+1
+      by RADIX_2:3;
+      hence thesis by NUMBER02:16;
+    end;
+  end;
+
+theorem Th9:
+  (n mod 4 = 1 & m mod 4 = 3) or (n mod 4 = 3 & m mod 4 = 1)
+  implies n * m mod 4 = 3
+  proof
+    assume (n mod 4 = 1 & m mod 4 = 3) or (n mod 4 = 3 & m mod 4 = 1);
+    then per cases;
+    suppose
+A1:   n mod 4 = 1 & m mod 4 = 3;
+      then n * m mod 4 = (1*m) mod 4 by RADIX_2:3;
+      hence thesis by A1;
+    end;
+    suppose
+A2:   n mod 4 = 3 & m mod 4 = 1;
+      then n * m mod 4 = (1*n) mod 4 by RADIX_2:3;
+      hence thesis by A2;
+    end;
+  end;
+
+Lm4:
+  n <> 1 & n divides 2|^k implies n mod 4 = 0 or n mod 4 = 2
+  proof
+    assume n<>1 & n divides 2|^k;
+    then consider k be Element of NAT such that
+A1: n = 2*k by INT_2:28,PEPIN:32;
+    k = 2 * (k div 2) + (k mod 2) by NAT_D:2;
+    then k = 2 * (k div 2) + 0 or k = 2 * (k div 2) + 1 by NAT_D:12;
+    then 2*k = 4 * (k div 2) + 0 or 2*k = 4 * (k div 2) + 2*1;
+    hence thesis by A1,NUMBER02:16;
+  end;
+
+theorem Th10:
+  p is prime & p mod 4 = 1 & n divides p|^k implies n mod 4 = 1
+  proof
+  assume
+A1: p is prime & p mod 4 = 1 & n divides p|^k;
+    then consider t be Element of NAT such that
+A2: n = p |^ t & t <= k by PEPIN:34;
+    defpred P[Nat] means (p |^ $1) mod 4 = 1;
+    p|^0 = 1 by NEWTON:4;
+    then
+A3: P[0] by PEPIN:5;
+A4: for i being Nat holds P[i] implies P[i+1]
+    proof
+      let i be Nat;
+      assume P[i];
+      then p * (p|^i) mod 4 =1 by A1,Th8;
+      hence thesis by NEWTON:6;
+    end;
+    for i being Nat holds P[i] from NAT_1:sch 2(A3,A4);
+    hence thesis by A2;
+  end;
+
+theorem Th11:
+  p mod 4 = 3 implies p|^(2*n) mod 4 = 1 & p|^(2*n+1) mod 4 = 3
+  proof
+  assume
+A1: p mod 4 = 3;
+    defpred P[Nat] means p|^(2*$1) mod 4 = 1 & p|^(2*$1+1) mod 4 = 3;
+    p|^(2*0) = 1 & p|^(2*0+1) = p by NEWTON:4;
+    then
+A2: P[0] by A1,PEPIN:5;
+A3: for i being Nat holds P[i] implies P[i+1]
+    proof
+      let i be Nat;
+      set i1 = i+1;
+      assume
+A4:   P[i];
+A5:   p|^(2*i1+1) = p *  p|^(2*i+1+1) & p|^(2*i+1+1) = p* p|^(2*i+1)
+      by NEWTON:6;
+      then p|^(2*i+1+1) mod 4 = 1 by A4,A1,Th8;
+      hence thesis by A5,A1,Th9;
+    end;
+    for i being Nat holds P[i] from NAT_1:sch 2(A2,A3);
+    hence thesis;
+  end;
+
+definition
+  let n,m,r be Integer;
+  func divisors(n,m,r) -> Subset of NAT equals
+  { k where k is Nat: k mod m = r & k divides n };
+  coherence
+  proof
+    set X = { k where k is Nat: k mod m = r & k divides n };
+    X c= NAT
+    proof
+      let x be object;
+      assume x in X;
+      then ex k st x=k & k mod m = r & k divides n;
+      hence thesis by ORDINAL1:def 12;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem Th12:
+  for n,m,r being Integer holds
+  k in divisors(n,m,r) iff k mod m = r & k divides n
+proof
+  let n,m,r be Integer;
+  hereby
+    assume k in divisors(n,m,r);
+    then ex i be Nat st k=i & i mod m = r & i divides n;
+    hence k mod m = r & k divides n;
+  end;
+  thus thesis;
+end;
+
+registration
+  let n be positive Nat;
+  let m,r be Integer;
+  cluster divisors(n,m,r) -> finite;
+  coherence
+  proof
+    divisors(n,m,r) c= Segm (n+1)
+    proof
+      let x be object;
+      assume
+A1:   x in divisors(n,m,r);
+      then reconsider x as Nat;
+      x <= n by A1,Th12,NAT_D:7;
+      then x < n+1 by NAT_1:13;
+      hence thesis by NAT_1:44;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem Th13:
+  for n,m,r,p being Integer holds
+  k in divisors(n,m,r) \/ divisors(n,m,p)
+   iff (k mod m = r or k mod m = p) & k divides n
+   proof
+     let n,m,r,p be Integer;
+     hereby
+       assume k in divisors(n,m,r)\/divisors(n,m,p);
+       then k in divisors(n,m,r) or k in divisors(n,m,p) by XBOOLE_0:def 3;
+       hence (k mod m = r or k mod m = p) & k divides n by Th12;
+     end;
+     assume (k mod m = r or k mod m = p) & k divides n;
+     then k in divisors(n,m,r) or k in divisors(n,m,p);
+     hence thesis by XBOOLE_0:def 3;
+   end;
+
+theorem Th14:
+  for n,m,r being Integer holds
+  k <> i implies divisors(n,m,k) misses divisors(n,m,i)
+  proof
+  let n,m,r be Integer;
+  assume
+A1: k<>i;
+    assume divisors(n,m,k) meets divisors(n,m,i);
+    then consider x be object such that
+A2: x in divisors(n,m,k) & x in divisors(n,m,i) by XBOOLE_0:3;
+    reconsider x as Nat by A2;
+    x mod m = k & x mod m=i by A2,Th12;
+    hence thesis by A1;
+  end;
+
+theorem Th15:
+  divisors(2|^n,4,3) = {} & divisors(2|^n,4,1) = {1}
+  proof
+    thus divisors(2|^n,4,3)={}
+    proof
+      assume divisors(2|^n,4,3) <> {};
+      then consider k be object such that
+A1:   k in divisors(2|^n,4,3) by XBOOLE_0:def 1;
+      reconsider k as Nat by A1;
+A2:   k mod 4 = 3 & k divides 2|^n by A1,Th12;
+      k <> 1 by A2,PEPIN:5;
+      hence thesis by A2,Lm4;
+    end;
+    1 mod 4 = 1 & 1 divides 2|^n by NAT_D:6,PEPIN:5;
+    then
+A3: 1 in divisors(2|^n,4,1);
+    divisors(2|^n,4,1) c= {1}
+    proof
+      let k be object;
+      assume
+A4:   k in divisors(2|^n,4,1) & not k in {1};
+      then reconsider k as Nat;
+A5:   k mod 4 = 1 & k divides 2|^n by A4,Th12;
+      k<>1 by A4,TARSKI:def 1;
+      hence thesis by A5,Lm4;
+    end;
+    hence thesis by A3,ZFMISC_1:33;
+  end;
+
+Lm5:
+  for X be finite set,X1 be set, p be Prime, i be Nat st
+     X = { k where k is Nat: k divides p|^i } &
+     X1 = { k where k is Nat: k divides p|^(i+1) }
+     holds not p|^(i+1) in X & X\/{p|^(i+1)}=X1
+   proof
+     let X be finite set,X1 be set, p be Prime, i be Nat such that
+A1:  X={ k where k is Nat: k divides p|^i } &
+     X1={ k where k is Nat: k divides p|^(i+1) };
+     set i1=i+1;
+     set P = {p|^i1};
+A2:  p|^i1 = p*p|^i by NEWTON:6;
+     p|^i1 in X1 by A1;
+     then
+A3:  P c= X1 by ZFMISC_1:31;
+     X c= X1
+     proof
+       let x be object;
+       assume x in X;
+       then consider k be Nat such that
+A4:    x=k & k divides p|^i by A1;
+       k divides p*p|^i by A4,INT_2:2;
+       hence thesis by A4,A2,A1;
+     end;
+     then
+A5:  X\/P c= X1 by A3,XBOOLE_1:8;
+A6:  X1 c= X\/P
+     proof
+       let x be object;
+       assume x in X1;
+       then consider k be Nat such that
+A7:    x=k & k divides p|^i1 by A1;
+       consider t be Element of NAT such that
+A8:    k = p |^ t & t <= i1 by A7,PEPIN:34;
+       per cases by A8,NAT_1:9;
+       suppose t <= i;
+         then p|^t divides p|^i by NEWTON:89;
+         then x in X by A7,A8,A1;
+         hence thesis by XBOOLE_0:def 3;
+       end;
+       suppose t=i+1;
+         then k in P by A8,TARSKI:def 1;
+         hence thesis by A7,XBOOLE_0:def 3;
+       end;
+     end;
+     not p|^i1 in X
+     proof
+       assume p|^i1 in X;
+       then consider k be Nat such that
+A9:    k = p|^i1 & k divides p|^i by A1;
+       consider t be Element of NAT such that
+A10:   p|^i1 = p |^ t & t <= i by A9,PEPIN:34;
+       p>1 by NAT_4:14;
+       then  i1 = t by A10,PEPIN:30;
+       hence thesis by A10,NAT_1:13;
+     end;
+     hence thesis by A6,A5,XBOOLE_0:def 10;
+   end;
+
+theorem Th16:
+  for p being Prime, n being Nat
+  holds card { k where k is Nat: k divides p|^n } = n + 1
+  proof
+    let p be Prime;
+    defpred P[Nat] means card { k where k is Nat: k divides p|^$1 } = $1 + 1;
+  set X = { k where k is Nat: k divides p|^0 };
+A1: p|^0 = 1 by NEWTON:4;
+  1 divides p|^0 by NAT_D:6;
+  then
+A2: 1 in X;
+  X c= {1}
+  proof
+    let x be object;
+    assume x in X;
+    then consider k be Nat such that
+A3: k=x & k divides p|^0;
+    k = 1 or k=-1 by A1,A3,INT_2:13;
+    hence thesis by A3,TARSKI:def 1;
+  end;
+  then X={1} by A2,ZFMISC_1:33;
+  then
+A4: P[0] by CARD_1:30;
+A5: for i being Nat holds P[i] implies P[i+1]
+    proof
+      let i be Nat;
+      assume
+A6:   P[i];
+      set i1=i+1;
+      set X1 = { k where k is Nat: k divides p|^i1 };
+      reconsider X = { k where k is Nat: k divides p|^i} as finite set by A6;
+A7:   X\/{p|^i1} = X1 by Lm5;
+      then not p|^i1 in X by Lm5;
+      hence thesis by A7,A6,CARD_2:41;
+    end;
+    for i being Nat holds P[i] from NAT_1:sch 2(A4,A5);
+    hence thesis;
+  end;
+
+theorem Th17:
+  for p being Prime, n being Nat st p mod 4 = 1 holds
+    card divisors(p|^n,4,1) = n+1 &
+    card divisors(p|^n,4,3) = 0
+  proof
+    let p be Prime,n such that
+A1: p mod 4 = 1;
+    set X={ k where k is Nat: k mod 4 = 1 & k divides p|^n };
+    set Y = { k where k is Nat: k divides p|^n };
+A2: divisors(p|^n,4,1) c= Y
+    proof
+      let x be object;
+      assume x in divisors(p|^n,4,1);
+      then ex k be Nat st x= k & k mod 4 = 1 & k divides p|^n;
+      hence thesis;
+    end;
+    Y c= divisors(p|^n,4,1)
+    proof
+      let x be object;
+      assume x in Y;
+      then consider k be Nat such that
+A3:   x= k & k divides p|^n;
+      k mod 4 =1 by Th10,A1,A3;
+      hence thesis by A3;
+    end;
+    then Y = divisors(p|^n,4,1) by A2,XBOOLE_0:def 10;
+    hence card divisors(p|^n,4,1) = n+1 by Th16;
+    assume card divisors(p|^n,4,3) <> 0;
+    then divisors(p|^n,4,3)<>{};
+    then consider x be object such that
+A4: x in divisors(p|^n,4,3) by XBOOLE_0:def 1;
+    ex k be Nat st x=k & k mod 4 = 3 & k divides p|^n by A4;
+    hence thesis by Th10,A1;
+  end;
+
+theorem Th18:
+  for p being Prime, m,n st p mod 4 = 3
+    holds
+    divisors(p|^n,4,1)\/divisors(p|^n,4,3) =
+      { k where k is Nat: k divides p|^n } &
+    (n = 2*m implies
+      card divisors(p|^n,4,1) = m+1 & card divisors(p|^n,4,3) = m) &
+    (n = 2*m+1 implies
+      card divisors(p|^n,4,1) = m+1 & card divisors(p|^n,4,3) = m+1)
+  proof
+    let p be Prime, m,n such that
+A1: p mod 4 = 3;
+    defpred P[Nat] means for m
+    holds
+    divisors(p|^$1,4,1)\/divisors(p|^$1,4,3) =
+          { k where k is Nat: k divides p|^$1 } &
+       ($1 = 2*m implies
+          card divisors(p|^$1,4,1) = m+1 & card divisors(p|^$1,4,3) = m) &
+       ($1 = 2*m+1 implies
+          card divisors(p|^$1,4,1) = m+1 & card divisors(p|^$1,4,3) = m+1);
+A2:P[0]
+   proof
+     let m be Nat;
+     set X1 = divisors(p|^0,4,1),X3 = divisors(p|^0,4,3);
+     set Y={ k where k is Nat: k divides p|^0 };
+A3:  p|^0 = 1 by NEWTON:4;
+     1 mod 4 = 1 by PEPIN:5;
+     then
+A4:  1 in X1 & 1 in Y by A3;
+     X1 c= {1}
+     proof
+       let x be object;
+       assume x in X1;
+       then consider k be Nat such that
+       A5:
+       k=x & k mod 4 = 1 & k divides p|^0;
+       k = 1 or k=-1 by A5,A3,INT_2:13;
+       hence thesis by A5,TARSKI:def 1;
+     end;
+     then
+A6:  X1={1} by A4,ZFMISC_1:33;
+A7:  Y c= {1}
+     proof
+       let x be object;
+       assume x in Y;
+       then consider k be Nat such that
+A8:    k=x & k divides p|^0;
+       k = 1 or k=-1 by A8,A3,INT_2:13;
+       hence thesis by A8,TARSKI:def 1;
+     end;
+     X3 = {}
+     proof
+       assume X3<>{};
+       then consider x be object such that
+A9:    x in X3 by XBOOLE_0:def 1;
+       consider k be Nat such that
+A10:   k=x & k mod 4 = 3 & k divides p|^0 by A9;
+       k = 1 or k=-1 by A10,A3,INT_2:13;
+       hence thesis by A10,PEPIN:5;
+     end;
+     hence thesis by CARD_1:30,A7,A4,ZFMISC_1:33,A6;
+   end;
+A11: for i being Nat holds P[i] implies P[i+1]
+   proof
+     let i be Nat;
+     assume
+A12: P[i];
+     set i1=i+1;
+     let m;
+     set X1 = divisors(p|^i1,4,1),X3 = divisors(p|^i1,4,3);
+     set X= { k where k is Nat: k divides p|^i1 },
+     Y= { k where k is Nat: k divides p|^i },
+     Y1 = divisors(p|^i,4,1),Y3 = divisors(p|^i,4,3);
+A13: X1 c= X
+     proof
+       let x be object;
+       assume x in X1;
+       then ex k be Nat st x=k & k mod 4 = 1 & k divides p|^i1;
+       hence thesis;
+     end;
+     X3 c= X
+     proof
+       let x be object;
+       assume x in X3;
+       then ex k be Nat st x=k & k mod 4 = 3 & k divides p|^i1 ;
+       hence thesis;
+     end;
+     then
+A14: X1 \/ X3 c= X by A13,XBOOLE_1:8;
+     X c= X1\/X3
+     proof
+       let x be object;
+       assume x in X;
+       then consider k be Nat such that
+A15:   x=k & k divides p|^i1;
+       consider m be Nat such that
+A16:   k = p|^m by A15,NEWTON03:36;
+       per cases;
+       suppose m is odd;
+         then consider k1 be Nat such that
+A17:     m=2*k1+1 by ABIAN:9;
+         (p|^m) mod 4 = 3 by A17,A1,Th11;
+         then k in X3 by A15,A16;
+         hence thesis by A15,XBOOLE_0:def 3;
+       end;
+       suppose m is even;
+         then consider k1 be Nat such that
+A18:     m=2*k1;
+         (p|^m) mod 4 = 1 by A18,A1,Th11;
+         then k in X1 by A15,A16;
+         hence thesis by A15,XBOOLE_0:def 3;
+       end;
+     end;
+     hence X = X1 \/ X3 by A14,XBOOLE_0:def 10;
+A19: p*p|^i= p|^i1 by NEWTON:6;
+     thus i1 = 2*m implies card X1 = m+1 & card X3 = m
+     proof
+       assume
+A20:   i1=2*m;
+       then m <>0;
+       then reconsider m1=m-1 as Nat;
+       i = 2*m1+1 & Y=Y by A20;
+       then
+A21:   card Y1 = m1+1 & card Y3 = m1+1 by A12;
+       reconsider Y as finite set by A12;
+       Y \/ {p|^i1} = X by Lm5;
+       then
+A22:   not p|^i1 in Y by Lm5;
+       p|^i1 mod 4 = 1 by A20,A1,Th11;
+       then
+A23:   p|^i1 in X1;
+       Y1 c= X1
+       proof
+         let x be object;
+         assume x in Y1;
+         then consider k be Nat such that
+A24:     x=k & k mod 4 = 1 & k divides p|^i;
+         k divides p|^i1 by A24,A19,INT_2:2;
+         hence thesis by A24;
+       end;
+       then
+A25:   {p|^i1} \/ Y1 c= X1 by A23,ZFMISC_1:137;
+       X1 c= {p|^i1} \/ Y1
+       proof
+         let x be object;
+         assume x in X1;
+         then consider k be Nat such that
+A26:     x=k & k mod 4 = 1 & k divides p|^i1;
+         consider t be Element of NAT such that
+A27:     k = p|^t & t <= i1 by A26,PEPIN:34;
+         assume not x in {p|^i1} \/ Y1;
+         then
+A28:     x <> p|^i1 & not x in Y1 by ZFMISC_1:136;
+         then t < i1 by A26,A27,XXREAL_0:1;
+         then t <= i by NAT_1:13;
+         then k divides p|^i by A27,NEWTON:89;
+         hence thesis by A26,A28;
+       end;
+       then
+A29:   {p|^i1} \/ Y1 = X1 by A25,XBOOLE_0:def 10;
+       not p|^i1 in Y1 by XBOOLE_0:def 3,A12,A22;
+       hence card X1 = m+1 by A21,A29,CARD_2:41;
+A30:   Y3 c= X3
+       proof
+         let x be object;
+         assume x in Y3;
+         then consider k be Nat such that
+A31:     x=k & k mod 4 = 3 & k divides p|^i;
+         k divides p|^i1 by A31,A19,INT_2:2;
+         hence thesis by A31;
+       end;
+       X3 c= Y3
+       proof
+         let x be object;
+         assume x in X3;
+         then consider k be Nat such that
+A32:     x=k & k mod 4 = 3 & k divides p|^i1;
+         consider t be Element of NAT such that
+A33:     k = p|^t & t <= i1 by A32,PEPIN:34;
+         t <> i1 by A20,A32,A33,A1,Th11;
+         then t < i1 by A33,XXREAL_0:1;
+         then t <= i by NAT_1:13;
+         then k divides p|^i by A33,NEWTON:89;
+         hence thesis by A32;
+       end;
+       hence thesis by A21,A30,XBOOLE_0:def 10;
+     end;
+     assume
+A34: i1=2*m+1;
+     then
+A35: card Y1 = m+1 & card Y3 = m by A12;
+     reconsider Y as finite set by A12;
+     Y \/ {p|^i1} = X by Lm5;
+     then
+A36: not p|^i1 in Y by Lm5;
+     p|^i1 mod 4 = 3 by A34,A1,Th11;
+     then
+A37: p|^i1 in X3;
+     Y3 c= X3
+     proof
+       let x be object;
+       assume x in Y3;
+       then consider k be Nat such that
+A38:   x=k & k mod 4 = 3 & k divides p|^i;
+       k divides p|^i1 by A38,A19,INT_2:2;
+       hence thesis by A38;
+     end;
+     then
+A39: {p|^i1} \/ Y3 c= X3 by A37,ZFMISC_1:137;
+     X3 c= {p|^i1} \/ Y3
+     proof
+       let x be object;
+       assume x in X3;
+       then consider k be Nat such that
+A40:   x=k & k mod 4 = 3 & k divides p|^i1;
+       consider t be Element of NAT such that
+A41:   k = p|^t & t <= i1 by A40,PEPIN:34;
+       assume not x in {p|^i1} \/ Y3;
+       then
+A42:   x <> p|^i1 & not x in Y3 by ZFMISC_1:136;
+       then t < i1 by A40,A41,XXREAL_0:1;
+       then t <= i by NAT_1:13;
+       then k divides p|^i by A41,NEWTON:89;
+       hence thesis by A40,A42;
+     end;
+     then
+A43: {p|^i1} \/ Y3 = X3 by A39,XBOOLE_0:def 10;
+A44: not p|^i1 in Y3 by XBOOLE_0:def 3,A12,A36;
+A45: Y1 c= X1
+     proof
+       let x be object;
+       assume x in Y1;
+       then consider k be Nat such that
+A46:   x=k & k mod 4 = 1 & k divides p|^i;
+       k divides p|^i1 by A46,A19,INT_2:2;
+       hence thesis by A46;
+     end;
+     X1 c= Y1
+     proof
+       let x be object;
+       assume x in X1;
+       then consider k be Nat such that
+A47:   x=k & k mod 4 = 1 & k divides p|^i1;
+       consider t be Element of NAT such that
+A48:   k = p|^t & t <= i1 by A47,PEPIN:34;
+       t <> i1 by A34,A47,A48,A1,Th11;
+       then t < i1 by A48,XXREAL_0:1;
+       then t <= i by NAT_1:13;
+       then k divides p|^i by A48,NEWTON:89;
+       hence thesis by A47;
+     end;
+     hence thesis by A35,A45,A44,A43,CARD_2:41,XBOOLE_0:def 10;
+   end;
+   for i being Nat holds P[i] from NAT_1:sch 2(A2,A11);
+   hence thesis;
+ end;
+
+theorem Th19:
+  p is prime implies p = 2 or p mod 4 = 1 or p mod 4 = 3
+  proof
+    assume that
+A1: p is prime and
+A2: p <> 2 & p mod 4 <> 1 & p mod 4 <> 3;
+    set D = p div 4;
+    p mod (3+1) = 0 or ... or p mod (3+1) = 3 by NUMBER03:11;
+    then per cases by A2;
+    suppose p mod 4 = 0;
+      then 4 divides p by PEPIN:6;
+      hence thesis by A1,INT_2:29;
+    end;
+    suppose p mod 4 = 2;
+      then p = 4*D+2 by INT_1:59;
+      then p = 2*(2*D+1);
+      then 2 divides p;
+      hence thesis by A2,A1;
+    end;
+  end;
+
+Lm6:
+  for p being Prime holds
+   card divisors(p|^n,4,1) >= card divisors(p|^n,4,3)
+   proof
+     let p be Prime;
+     per cases by Th19;
+     suppose p=2;
+       then divisors(p|^n,4,1) = {1} & divisors(p|^n,4,3) = {} by Th15;
+       hence thesis;
+     end;
+     suppose p mod 4 = 1;
+       hence thesis by Th17;
+     end;
+     suppose
+A1:    p mod 4 = 3;
+       per cases;
+       suppose n is odd;
+         then consider k1 be Nat such that
+A2:      n=2*k1 + 1 by ABIAN:9;
+         card divisors(p|^n,4,1) = k1+1 & card divisors(p|^n,4,3) = k1+1
+         by A2,A1,Th18;
+         hence thesis;
+       end;
+       suppose n is even;
+         then consider k1 be Nat such that
+A3:      n=2*k1;
+         card divisors(p|^n,4,1) = k1+1 & card divisors(p|^n,4,3) = k1
+         by A3,A1,Th18;
+         hence thesis by NAT_1:13;
+       end;
+     end;
+   end;
+
+theorem Th20:
+  n > 1 implies
+   ex p be Prime st p divides n &
+     for q be Prime st q divides n holds q <= p
+  proof
+    assume
+A1: n > 1;
+    defpred P[Nat] means $1 is prime & $1 divides n;
+A2: for k being Nat st P[k] holds k <= n by A1,NAT_D:7;
+    n>=1+1 by A1,NAT_1:13;
+    then ex p being Element of NAT st p is prime & p divides n by INT_2:31;
+    then
+A3: ex k being Nat st P[k];
+    consider k be Nat such that
+A4: P[k] & for n being Nat st P[n]
+    holds n <= k from NAT_1:sch 6(A2,A3);
+    reconsider k as Prime by A4;
+    take k;
+    thus thesis by A4;
+  end;
+
+theorem Th21:
+  n is positive & p is prime & p divides n implies
+    ex k,m be positive Nat st 0 < k & n = m * p|^k & m,p are_coprime
+proof
+  assume
+A1: n is positive & p is prime & p divides n;
+    then 1+1 <= p by NAT_1:13;
+    then consider up be positive Nat such that
+A2: n <= p|^up by LIOUVIL2:1;
+    defpred P[Nat] means  p|^$1 divides n;
+A3: for k being Nat st P[k] holds k <= up
+    proof
+      let k be Nat;
+      assume P[k];
+      then p|^k <= n by A1,NAT_D:7;
+      then p|^k <= p|^up by A2,XXREAL_0:2;
+      then p|^k < p|^up or p|^k = p|^up by XXREAL_0:1;
+      hence thesis by A1,PREPOWER:93, PEPIN:30;
+    end;
+    p=p|^1;
+    then
+A4: ex k being Nat st P[k] by A1;
+    consider k be Nat such that
+A5: P[k] & for n being Nat st P[n]
+    holds n <= k from NAT_1:sch 6(A3,A4);
+    consider m be Nat such that
+A6: n = (p|^k)*m by A5,NAT_D:def 3;
+    P[1] by A1;
+    then reconsider k,m as positive Nat by A5,A6,A1;
+    take k,m;
+    thus 0 < k & n = m * p|^k by A6;
+    assume not m,p are_coprime;
+    then m gcd p = p by PEPIN:2;
+    then p divides m by NAT_D:def 5;
+    then consider m1 be Nat such that
+A7: m = p*m1 by NAT_D:def 3;
+    p*(p|^k) = p |^(k+1) by NEWTON:6;
+    then n = m1*(p|^(k+1)) by A6,A7;
+    then p|^(k+1) divides n;
+    then k+1 <= k by A5;
+    hence thesis by NAT_1:13;
+  end;
+
+theorem :: Problem 38 a
+  for n being non zero Nat holds card divisors(n,4,3) <= card divisors(n,4,1)
+proof
+  defpred P[Nat] means
+  for n being non zero Nat st
+     for p be Prime st p divides n holds p <= $1 holds
+       card divisors(n,4,3) <= card divisors(n,4,1);
+A1:for k being Nat st
+    (for n being Nat st n<k holds P[n]) holds P[k]
+  proof
+    let i be Nat such that
+A2: for n being Nat st n<i holds P[n];
+    let n be non zero Nat such that
+A3: for p be Prime st p divides n holds p <= i;
+    per cases;
+    suppose
+A4:   n = 1;
+      2 is prime & 2|^0 =1 by NEWTON:4,INT_2:28;
+      hence thesis by A4,Lm6;
+    end;
+    suppose
+A5:   n <> 1;
+      n >=1+0 by NAT_1:9;
+      then n > 1 by A5,XXREAL_0:1;
+      then consider p be Prime such that
+A6:   p divides n and
+A7:   for q be Prime st q divides n holds q <= p by Th20;
+      consider k,m be positive Nat such that
+A8:   0 < k & n = m * p|^k & m,p are_coprime by A6,Th21;
+      m>=1 by NAT_1:14;
+      then per cases by XXREAL_0:1;
+      suppose m=1;
+        hence thesis by A8,Lm6;
+      end;
+      suppose m>1;
+        then consider q be Prime such that
+A9:     q divides m and
+A10:    for r be Prime st r divides m holds r <= q by Th20;
+A11:    p <= i by A3,A6;
+        q < p
+        proof
+A12:      q <= p by A7,A9,A8,INT_2:2;
+          assume q >= p;
+          then p divides 1*m by A9,A12,XXREAL_0:1;
+          then p divides 1 by A8,INT_2:25;
+          then p =1 or p=-1 by INT_2:13;
+          hence thesis by INT_2:def 4;
+        end;
+        then
+A13:    q < i by A11,XXREAL_0:2;
+        set  B1 = divisors(m,4,1), B3 = divisors(m,4,3);
+        set  C1 = divisors(p|^k,4,1), C3 = divisors(p|^k,4,3);
+        set  X1 = divisors(n,4,1), X3 = divisors(n,4,3);
+A14:    card B3 <= card B1 by A10,A13,A2;
+        defpred F[object,object] means
+        for x,y be Nat st $1 = [x,y] holds $2=x*y;
+A15:    for x being object st x in [:B1\/B3,C1\/C3:]
+        ex y being object st y in X1\/X3 & F[x,y]
+        proof
+          let x be object such that
+A16:      x in [:B1\/B3,C1\/C3:];
+          consider b,c be object such that
+A17:      b in B1\/B3 & c in C1\/C3 & x = [b,c] by A16,ZFMISC_1:def 2;
+          reconsider b,c as Nat by A17;
+          take bc = b*c;
+A18:      (b mod 4 = 1 or b mod 4 = 3) & b divides m by A17,Th13;
+          (c mod 4 = 1 or c mod 4 = 3) & c divides p|^k by A17,Th13;
+          then (b*c mod 4 = 1 or b*c mod 4 = 3) & b*c divides n
+          by A8,A18,NAT_3:1,Th8,Th9;
+          hence bc in X1\/X3 by Th13;
+          let i,j be Nat;
+          assume x = [i,j];
+          then i=b & j = c by A17,XTUPLE_0:1;
+          hence thesis;
+        end;
+        consider f be Function such that
+A19:    dom f = [:B1\/B3,C1\/C3:] & rng f c= X1\/X3 and
+A20:    for x being object st x in [:B1\/B3,C1\/C3:] holds F[x,f.x]
+        from FUNCT_1:sch 6(A15);
+A21:    X1\/X3 c= rng f
+        proof
+          let x be object;
+          assume
+A22:      x in X1\/X3;
+          then reconsider x as Nat;
+A23:      (x mod 4 = 1 or x mod 4 = 3) & x divides m*p|^k by A8,A22,Th13;
+          consider a,b be Nat such that
+A24:      a divides m & b divides p|^k & x = a*b
+          by A8,A22,Th13,NUMBER12:14;
+          (a mod 4 = 1 or a mod 4 = 3) & (b mod 4 = 1 or b mod 4 = 3)
+          by A23,A24,Th7,Th6;
+          then a in B1\/B3 & b in C1\/C3 by A24,Th13;
+          then A25:[a,b] in [:B1\/B3,C1\/C3:] by ZFMISC_1:def 2;
+          then f.[a,b] = x by A24,A20;
+          hence thesis by A25,A19,FUNCT_1:def 3;
+        end;
+        then
+A26:    rng f = X1\/X3 by A19,XBOOLE_0:def 10;
+A27:    f is one-to-one
+        proof
+          let x1,x2 be object such that
+A28:      x1 in dom f & x2 in dom f & f.x1 = f.x2;
+          consider b1,c1 be object such that
+A29:      b1 in B1\/B3 & c1 in C1\/C3 & x1 = [b1,c1]
+          by A19,A28,ZFMISC_1:def 2;
+          consider b2,c2 be object such that
+A30:      b2 in B1\/B3 & c2 in C1\/C3 & x2 = [b2,c2]
+          by A19,A28,ZFMISC_1:def 2;
+          reconsider b1,c1,b2,c2 as Nat by A29,A30;
+          consider t1 be Element of NAT such that
+A31:      c1 = p |^ t1 & t1 <= k by PEPIN:34,A29,Th13;
+          consider t2 be Element of NAT such that
+A32:      c2 = p |^ t2 & t2 <= k by A30,Th13,PEPIN:34;
+A33:      c1 in NatDivisors p|^k & c2 in NatDivisors p|^k
+          by A31,A32,A29,A30,Th13,MOEBIUS1:39;
+          (b1 mod 4 = 1 or b1 mod 4 = 3) & (b2 mod 4 = 1 or b2 mod 4 = 3)
+          by A29,A30,Th13;
+          then b1 <>0 & b2 <>0;
+          then
+A34:      b1 in NatDivisors m & b2 in NatDivisors m
+          by A29,A30,Th13,MOEBIUS1:39;
+A35:      m,p|^k are_coprime  by A8,WSIERP_1:10;
+          f.x1 = b1*c1 & f.x1 = b2*c2 by A28,A29,A30,A19,A20;
+          then b1 = b2 & c1 = c2 by A33,A34,A35,NAT_5:15;
+          hence thesis by A29,A30;
+        end;
+A36:    card ([:B1\/B3,C1\/C3:]) = card (B1\/B3) * card (C1\/C3)
+        by CARD_2:46;
+A37:    B1 misses B3 & C1 misses C3 & X1 misses X3 by Th14;
+A38:    card (B1\/B3) = card B1 + card B3 &
+        card (C1\/C3) = card C1 + card C3 &
+        card (X1\/X3) = card X1 + card X3 by Th14,CARD_2:40;
+A39:    f.:[:B1,C3:] c= X3
+        proof
+          let y be object;
+          assume y in f.:[:B1,C3:];
+          then consider x be object such that
+A40:      x in dom f & x in [:B1,C3:] & y = f.x by FUNCT_1:def 6;
+          consider b,c be object such that
+A41:      b in B1 & c in C3 & x =[b,c] by A40,ZFMISC_1:def 2;
+          reconsider b,c as Nat by A41;
+A42:      f.x = b*c by A19,A20,A40,A41;
+          b mod 4 = 1 & b divides m & c mod 4 = 3 & c divides p|^k by A41,Th12;
+          then b*c mod 4 = 3 & b*c divides n by A8,Th9,NAT_3:1;
+          hence thesis by A42,A40;
+        end;
+        f.:[:B3,C1:] c= X3
+        proof
+          let y be object;
+          assume y in f.:[:B3,C1:];
+          then consider x be object such that
+A43:      x in dom f & x in [:B3,C1:] & y = f.x by FUNCT_1:def 6;
+          consider b,c be object such that
+A44:      b in B3 & c in C1 & x =[b,c] by A43,ZFMISC_1:def 2;
+          reconsider b,c as Nat by A44;
+A45:      f.x = b*c by A19,A20,A43,A44;
+          b mod 4 = 3 & b divides m & c mod 4 = 1 & c divides p|^k by A44,Th12;
+          then b*c mod 4 = 3 & b*c divides n by A8,Th9,NAT_3:1;
+          hence thesis by A45,A43;
+        end;
+        then (f.:[:B1,C3:])\/f.:[:B3,C1:] c= X3 by A39,XBOOLE_1:8;
+        then
+A46:    f.:([:B1,C3:]\/[:B3,C1:]) c= X3 by  RELAT_1:120;
+        dom f = [:B1,C1:] \/ [:B1,C3:] \/ [:B3,C1:] \/ [:B3, C3:]
+        by A19,ZFMISC_1:98
+        .= [:B1,C1:] \/ ([:B1,C3:] \/ [:B3,C1:]) \/ [:B3, C3:] by XBOOLE_1:4
+        .= ([:B1,C1:] \/ [:B3, C3:]) \/ ([:B1,C3:] \/ [:B3,C1:]) by XBOOLE_1:4;
+        then
+A47:    [:B1,C3:]\/[:B3,C1:] c= dom f by XBOOLE_1:7;
+        X3 c= f.:([:B1,C3:]\/[:B3,C1:])
+        proof
+          let y be object;
+          assume
+A48:      y in X3;
+          then y in X1\/X3 by XBOOLE_0:def 3;
+          then consider x be object such that
+A49:      x in dom f & f.x = y by A21,FUNCT_1:def 3;
+          consider b,c be object such that
+A50:      b in B1\/B3 & c in C1\/C3 & x = [b,c] by A19,A49,ZFMISC_1:def 2;
+          reconsider b,c as Nat by A50;
+A51:      b divides m & c divides p|^k by A50,Th13;
+          b*c = y by A49,A50,A20,A19;
+          then b*c mod 4 = 3 by A48,Th12;
+          then (b mod 4 = 1 &  c mod 4 = 3) or (b mod 4 = 3 &  c mod 4 = 1)
+          by Th7;
+          then (b in B1 &  c in C3) or (b in B3 &  c in C1) by A51;
+          then [b,c] in [:B1,C3:] or [b,c] in [:B3,C1:] by ZFMISC_1:def 2;
+          then [b,c] in [:B1,C3:] \/ [:B3,C1:] by XBOOLE_0:def 3;
+          hence thesis by A49,A50,FUNCT_1:def 6;
+        end;
+        then X3 = f.:([:B1,C3:]\/[:B3,C1:]) by A46,XBOOLE_0:def 10;
+        then
+A52:    card X3 = card ([:B1,C3:]\/[:B3,C1:])
+        by A47,A27,CARD_1:33,CARD_1:5;
+        [:B1,C3:] misses [:B3,C1:] by A37,ZFMISC_1:104;
+        then
+A53:    card ([:B1,C3:]\/[:B3,C1:])=card [:B1,C3:]+card [:B3,C1:]
+        by CARD_2:40
+        .= (card B1 * card C3) + card [:B3,C1:] by CARD_2:46
+        .= (card B1 * card C3) + (card B3 * card C1) by CARD_2:46;
+A54:    card X1 + card X3 = (card B1 + card B3) * (card C1 + card C3)
+        by A19,A26,CARD_1:70,A27,A36,A38;
+        0 <= card B1 - card B3 & 0 <= card C1 - card C3
+        by A14,Lm6,XREAL_1:48;
+        then 0 <= (card B1 - card B3)*(card C1 - card C3);
+        then 0 <= (card B1 * card C1) + (card B3 * card C3) -
+        ((card B1 * card C3) + (card B3 * card C1));
+        hence thesis by A54,A52,A53,XREAL_1:49;
+      end;
+    end;
+  end;
+A55: for k being Nat holds P[k] from NAT_1:sch 4(A1);
+   let n be non zero Nat;
+   per cases;
+   suppose
+A56: n = 1;
+     2 is prime & 2|^0 = 1 by NEWTON:4,INT_2:28;
+     hence thesis by A56,Lm6;
+   end;
+   suppose
+A57: n<>1;
+     n >=1+0 by NAT_1:9;
+     then n > 1 by A57,XXREAL_0:1;
+     then ex p be Prime st p divides n &
+     for q be Prime st q divides n holds q <= p by Th20;
+     hence thesis by A55;
+   end;
+ end;
+
+Lm7:
+  ex k st 3|^(2*n) = 4*k+1
+  proof
+    defpred P[Nat] means ex k st 3|^(2*$1) = 4*k+1;
+    3|^(2*0) = 4*0+1 by NEWTON:4;
+    then
+A1: P[0];
+A2: for x being Nat st P[x] holds P[x+1]
+    proof
+      let x be Nat;
+      given k such that
+A3:   4*k+1 = 3|^(2*x);
+      take 9*k+2;
+      3|^(2*(x+1)) = 3|^(2*x+2)
+      .= 3|^(2*x)*(3|^2) by NEWTON:8;
+      hence thesis by A3,Lm2;
+    end;
+    for x being Nat holds P[x] from NAT_1:sch 2(A1,A2);
+    hence thesis;
+  end;
+
+theorem Th23:
+  m is even implies 3|^m mod 4 = 1
+  proof
+    assume m is even;
+    then consider n such that
+A1: m = 2*n;
+    ex k st 3|^(2*n) = 4*k+1 by Lm7;
+    then 3|^(2*n) mod 4 = 1 mod 4 by NAT_D:21;
+    hence thesis by A1,NAT_D:24;
+  end;
+
+ Lm8:
+  ex k st 3|^(2*n+1) = 4*k+3
+  proof
+    defpred P[Nat] means ex k st 3|^(2*$1+1) = 4*k+3;
+    3|^(2*0+1) = 4*0+3;
+    then
+A1: P[0];
+A2: for x being Nat st P[x] holds P[x+1]
+    proof
+      let x be Nat;
+      given k such that
+A3:   4*k+3 = 3|^(2*x+1);
+      take 9*k+6;
+      3|^(2*(x+1)+1) = 3|^(2*x+1+2)
+      .= 3|^(2*x+1)*3|^2 by NEWTON:8;
+      hence thesis by A3,Lm2;
+    end;
+    for x being Nat holds P[x] from NAT_1:sch 2(A1,A2);
+    hence thesis;
+  end;
+
+theorem Th24:
+  m is odd implies 3|^m mod 4 = 3
+  proof
+    assume m is odd;
+    then consider n such that
+A1: m = 2*n+1 by ABIAN:9;
+    ex k st 3|^(2*n+1) = 4*k+3 by Lm8;
+    then 3|^(2*n+1) mod 4 = 3 mod 4 by NAT_D:21;
+    hence thesis by A1,NAT_D:24;
+  end;
+
+theorem Th25:
+  for n being Nat holds
+  divisors(3|^(2*n+1),4,1) = { 3|^m: m is even & m <= 2*n+1 }
+  proof
+    let n be Nat;
+    set A = divisors(3|^(2*n+1),4,1);
+    set B = {3|^m: m is even & m <= 2*n+1};
+    thus A c= B
+    proof
+      let x be object;
+      assume x in A;
+      then consider k such that
+A1:   x = k and
+A2:   k mod 4 = 1 and
+A3:   k divides 3|^(2*n+1);
+      consider t being Element of NAT such that
+A4:   k = 3|^t and
+A5:   t <= 2*n+1 by A3,PEPIN:34,41;
+      t is even by A2,A4,Th24;
+      hence thesis by A1,A4,A5;
+    end;
+    let x be object;
+    assume x in B;
+    then consider m such that
+A6: x = 3|^m and
+A7: m is even and
+A8: m <= 2*n+1;
+A9: 3|^m mod 4 = 1 by A7,Th23;
+    3|^m divides 3|^(2*n+1) by A8,NEWTON:89;
+    hence thesis by A6,A9;
+  end;
+
+theorem Th26:
+  for n being Nat holds
+  divisors(3|^(2*n+1),4,3) = { 3|^m where m is Nat: m is odd & m <= 2*n+1 }
+  proof
+    let n be Nat;
+    set A = divisors(3|^(2*n+1),4,3);
+    set B = {3|^m where m is Nat: m is odd & m <= 2*n+1};
+    thus A c= B
+    proof
+      let x be object;
+      assume x in A;
+      then consider k such that
+A1:   x = k and
+A2:   k mod 4 = 3 and
+A3:   k divides 3|^(2*n+1);
+      consider t being Element of NAT such that
+A4:   k = 3|^t and
+A5:   t <= 2*n+1 by A3,PEPIN:34,41;
+      t is odd by A2,A4,Th23;
+      hence thesis by A1,A4,A5;
+    end;
+    let x be object;
+    assume x in B;
+    then consider m such that
+A6: x = 3|^m and
+A7: m is odd and
+A8: m <= 2*n+1;
+A9: 3|^m mod 4 = 3 by A7,Th24;
+    3|^m divides 3|^(2*n+1) by A8,NEWTON:89;
+    hence thesis by A6,A9;
+  end;
+
+theorem Th27:
+  card { 3|^m where m is Nat: m is even & m <= 2*n+1 } = n+1
+  proof
+    deffunc F(Nat) = 3|^$1;
+A1: F(0) = 1 by NEWTON:4;
+    deffunc A(Nat) = { F(m) where m is Nat: m is even & m <= 2*$1+1 };
+    defpred P[Nat] means card A($1) = $1+1;
+A2: P[0]
+    proof
+      A(0) = {1}
+      proof
+        thus A(0) c= {1}
+        proof
+          let x be object;
+          assume x in A(0);
+          then consider m such that
+A3:       x = F(m) and
+A4:       m is even and
+A5:       m <= 2*0+1;
+          m = 0 by A4,A5,NAT_1:25;
+          hence thesis by A1,A3,TARSKI:def 1;
+        end;
+        let x be object;
+        assume x in {1};
+        then x = 1 by TARSKI:def 1;
+        hence thesis by A1;
+      end;
+      hence thesis by CARD_1:30;
+    end;
+A6: P[a] implies P[a+1]
+    proof
+      assume
+A7:   P[a];
+      set K = F(2*a+2);
+      defpred Q[Nat] means $1 is even;
+      set X = {F(i) where i is Nat: i <= 2*a+1 & Q[i]};
+A8:   X is finite from FINSEQ_1:sch 6;
+      X = A(a)
+      proof
+        thus X c= A(a)
+        proof
+          let x be object;
+          assume x in X;
+          then ex i being Nat st x = F(i) & i <= 2*a+1 & Q[i];
+          hence thesis;
+        end;
+        let x be object;
+        assume x in A(a);
+        then ex i being Nat st x = F(i) & Q[i] & i <= 2*a+1;
+        hence thesis;
+      end;
+      then reconsider An = A(a) as finite set by A8;
+A9:   now
+        assume K in An;
+        then consider m such that
+A10:    K = F(m) and
+        m is even and
+A11:    m <= 2*a+1;
+        2*a+1 < 2*a+1+1 by NAT_1:16;
+        hence contradiction by A10,A11,PEPIN:30;
+      end;
+      set b = a+1;
+      A(b) = A(a) \/ {K}
+      proof
+        thus A(b) c= A(a) \/ {K}
+        proof
+          let x be object;
+          assume x in A(b);
+          then consider m being Nat such that
+A12:      x = F(m) and
+A13:      m is even and
+A14:      m <= 2*b+1;
+          per cases;
+          suppose m <= 2*a+1;
+            then x in A(a) by A12,A13;
+            hence thesis by XBOOLE_0:def 3;
+          end;
+          suppose m > 2*a+1;
+            then m >= 2*a+1+1 by NAT_1:13;
+            then m = 2*a+2+0 or ... or m = 2*a+2+1 by A14,NAT_1:62;
+            then x in {K} by A12,A13,TARSKI:def 1;
+            hence thesis by XBOOLE_0:def 3;
+          end;
+        end;
+        let x be object;
+        assume x in A(a) \/ {K};
+        then per cases by XBOOLE_0:def 3;
+        suppose x in A(a);
+          then consider m such that
+A15:      x = F(m) and
+A16:      m is even and
+A17:      m <= 2*a+1;
+          a <= a+1 by NAT_1:16;
+          then 2*a <= 2*(a+1) by XREAL_1:64;
+          then 2*a+1 <= 2*(a+1)+1 by XREAL_1:6;
+          then m <= 2*b+1 by A17,XXREAL_0:2;
+          hence thesis by A15,A16;
+        end;
+        suppose x in {K};
+          then
+A18:      x = K by TARSKI:def 1;
+          2*a+2 <= 2*(a+1)+1 by NAT_1:16;
+          hence thesis by A18;
+        end;
+      end;
+      hence thesis by A7,A9,CARD_2:41;
+    end;
+    P[a] from NAT_1:sch 2(A2,A6);
+    hence thesis;
+  end;
+
+theorem Th28:
+  card { 3|^m where m is Nat: m is odd & m <= 2*n+1 } = n+1
+  proof
+    deffunc F(Nat) = 3|^$1;
+A1: F(1) = 3;
+    deffunc A(Nat) = { F(m) where m is Nat: m is odd & m <= 2*$1+1 };
+    defpred P[Nat] means card A($1) = $1+1;
+A2: P[0]
+    proof
+      A(0) = {3}
+      proof
+        thus A(0) c= {3}
+        proof
+          let x be object;
+          assume x in A(0);
+          then consider m such that
+A3:       x = F(m) and
+A4:       m is odd and
+A5:       m <= 2*0+1;
+          m = 1 by A4,A5,NAT_1:25;
+          hence thesis by A3,TARSKI:def 1;
+        end;
+        let x be object;
+        assume x in {3};
+        then x = 3 by TARSKI:def 1;
+        hence thesis by A1;
+      end;
+      hence thesis by CARD_1:30;
+    end;
+A6: P[a] implies P[a+1]
+    proof
+      assume
+A7:   P[a];
+      set K = F(2*a+3);
+      defpred Q[Nat] means $1 is odd;
+      set X = {F(i) where i is Nat: i <= 2*a+1 & Q[i]};
+A8:   X is finite from FINSEQ_1:sch 6;
+      X = A(a)
+      proof
+        thus X c= A(a)
+        proof
+          let x be object;
+          assume x in X;
+          then ex i being Nat st x = F(i) & i <= 2*a+1 & Q[i];
+          hence thesis;
+        end;
+        let x be object;
+        assume x in A(a);
+        then ex i being Nat st x = F(i) & Q[i] & i <= 2*a+1;
+        hence thesis;
+      end;
+      then reconsider An = A(a) as finite set by A8;
+A9:   now
+        assume K in An;
+        then consider m such that
+A10:    K = F(m) and
+        m is odd and
+A11:    m <= 2*a+1;
+        2*a+1 < 2*a+1+2 by NAT_1:16;
+        hence contradiction by A10,A11,PEPIN:30;
+      end;
+      set b = a+1;
+      A(b) = A(a) \/ {K}
+      proof
+        thus A(b) c= A(a) \/ {K}
+        proof
+          let x be object;
+          assume x in A(b);
+          then consider m being Nat such that
+A12:      x = F(m) and
+A13:      m is odd and
+A14:      m <= 2*b+1;
+          per cases;
+          suppose m <= 2*a+1;
+            then x in A(a) by A12,A13;
+            hence thesis by XBOOLE_0:def 3;
+          end;
+          suppose m > 2*a+1;
+            then m >= 2*a+1+1 by NAT_1:13;
+            then m = 2*a+2+0 or ... or m = 2*a+2+1 by A14,NAT_1:62;
+            then x in {K} by A12,A13,TARSKI:def 1;
+            hence thesis by XBOOLE_0:def 3;
+          end;
+        end;
+        let x be object;
+        assume x in A(a) \/ {K};
+        then per cases by XBOOLE_0:def 3;
+        suppose x in A(a);
+          then consider m such that
+A15:      x = F(m) and
+A16:      m is odd and
+A17:      m <= 2*a+1;
+          a <= a+1 by NAT_1:16;
+          then 2*a <= 2*(a+1) by XREAL_1:64;
+          then 2*a+1 <= 2*(a+1)+1 by XREAL_1:6;
+          then m <= 2*b+1 by A17,XXREAL_0:2;
+          hence thesis by A15,A16;
+        end;
+        suppose x in {K};
+          then x = K by TARSKI:def 1;
+          hence thesis;
+        end;
+      end;
+      hence thesis by A7,A9,CARD_2:41;
+    end;
+    P[a] from NAT_1:sch 2(A2,A6);
+    hence thesis;
+  end;
+
+theorem Th29:
+  card divisors(3|^(2*n+1),4,1) = n+1
+  proof
+    divisors(3|^(2*n+1),4,1) = { 3|^m: m is even & m <= 2*n+1 } by Th25;
+    hence thesis by Th27;
+  end;
+
+theorem Th30:
+  card divisors(3|^(2*n+1),4,3) = n+1
+  proof
+    divisors(3|^(2*n+1),4,3) = { 3|^m: m is odd & m <= 2*n+1 } by Th26;
+    hence thesis by Th28;
+  end;
+
+Lm9:
+  for n being non zero Nat holds
+  {k where k is Nat: k divides n} is finite
+  proof
+    let n be non zero Nat;
+    set A = {k where k is Nat: k divides n};
+    A c= NatDivisors n
+    proof
+      let x be object;
+      assume x in A;
+      then consider k such that
+A1:   x = k and
+A2:   k divides n;
+      k <> 0 by A2;
+      hence thesis by A1,A2;
+    end;
+    hence thesis;
+  end;
+
+theorem Th31:
+  card divisors(3|^(2*n+1),4,1) = card divisors(3|^(2*n+1),4,3)
+  proof
+    deffunc A(Nat) = divisors(3|^(2*n+1),4,1);
+    deffunc B(Nat) = divisors(3|^(2*n+1),4,3);
+    deffunc A1(Nat) = { 3|^m: m is even & m <= 2*$1+1 };
+    deffunc B1(Nat) = { 3|^m: m is odd & m <= 2*$1+1 };
+A1: A(n) = A1(n) by Th25;
+A2: B(n) = B1(n) by Th26;
+    card A1(n) = n+1 by Th27;
+    hence thesis by A1,A2,Th28;
+  end;
+
+theorem
+  { n where n is Nat:
+    card divisors(3|^(2*n+1),4,1) = card divisors(3|^(2*n+1),4,3)
+  } is infinite
+  proof
+    deffunc A(Nat) = divisors(3|^(2*$1+1),4,1);
+    deffunc B(Nat) = divisors(3|^(2*$1+1),4,3);
+    set X = {n where n is Nat: card A(n) = card B(n)};
+    card A(0) = card B(0) by Th31;
+    then
+A1: 0 in X;
+A2: X is natural-membered
+    proof
+      let x be object;
+      assume x in X;
+      then ex n st x = n & card A(n) = card B(n);
+      hence thesis;
+    end;
+    for a st a in X ex b being Nat st b > a & b in X
+    proof
+      let a;
+      assume a in X;
+      then consider n such that
+A3:   a = n and
+      card A(n) = card B(n);
+      take n+1;
+      thus n+1 > a by A3,NAT_1:16;
+      card A(n+1) = card B(n+1) by Th31;
+      hence thesis;
+    end;
+    hence thesis by A1,A2,NUMBER04:1;
+  end;
+
+theorem :: Problem 38 b
+  { n where n is Nat: card divisors(n,4,1) = card divisors(n,4,3) } is infinite
+  proof
+    deffunc A(Nat) = divisors($1,4,1);
+    deffunc B(Nat) = divisors($1,4,3);
+    set A = {n where n is Nat: card A(3|^(2*n+1)) = card B(3|^(2*n+1))};
+    set X = {n where n is Nat: card A(n) = card B(n)};
+    set n = 3|^(2*0+1);
+A1: card A(n) = 1 by Th29;
+    card B(n) = 1 by Th30;
+    then
+A2: n in X by A1;
+A3: X is natural-membered
+    proof
+      let x be object;
+      assume x in X;
+      then ex n st x = n & card A(n) = card B(n);
+      hence thesis;
+    end;
+    for a st a in X ex b being Nat st b > a & b in X
+    proof
+      let a;
+      assume a in X;
+      take b = 3|^(2*a+1);
+      1*a <= 2*a by XREAL_1:64;
+      then
+A4:   a+0 < 2*a+1 by XREAL_1:8;
+      b > 2*a+1 by NEWTON:86;
+      hence b > a by A4,XXREAL_0:2;
+A5:   card A(b) = a+1 by Th29;
+      card B(b) = a+1 by Th30;
+      hence thesis by A5;
+    end;
+    hence thesis by A2,A3,NUMBER04:1;
+  end;
+
+theorem Th34:
+  k divides 5|^n implies k mod 4 = 1
+  proof
+    assume k divides 5|^n;
+    then consider t being Element of NAT such that
+A1: k = 5|^t and t <= n by PEPIN:34,59;
+A2: 4*1+1 mod 4 = 1 mod 4 by NAT_D:21;
+    5|^t mod 4 = (5 mod 4)|^t mod 4 by PEPIN:12;
+    hence thesis by A1,A2,Lm3;
+  end;
+
+theorem
+  not ex k st k mod 4 = 3 & k divides 5|^n by Th34;
+
+theorem Th36:
+  {k where k is Nat: k divides 5|^n} = divisors(5|^n,4,1)
+  proof
+    set A = {k where k is Nat: k divides 5|^n};
+    set B = divisors(5|^n,4,1);
+    thus A c= B
+    proof
+      let x be object;
+      assume x in A;
+      then consider k such that
+A1:   x = k and
+A2:   k divides 5|^n;
+      k mod 4 = 1 by A2,Th34;
+      hence thesis by A1,A2;
+    end;
+    let x be object;
+    assume x in B;
+    then ex k st x = k & k mod 4 = 1 & k divides 5|^n;
+    hence thesis;
+  end;
+
+theorem Th37:
+  card {k where k is Nat: k divides 5|^n} = n+1
+  proof
+    deffunc F(Nat) = 5|^$1;
+A1: F(0) = 1 by NEWTON:4;
+    deffunc A(Nat) = { m where m is Nat: m divides F($1) };
+    defpred P[Nat] means card A($1) = $1+1;
+A2: P[0]
+    proof
+      A(0) = {1}
+      proof
+        thus A(0) c= {1}
+        proof
+          let x be object;
+          assume x in A(0);
+          then consider m such that
+A3:       x = m and
+A4:       m divides F(0);
+A5:       m mod 4 = 1 by A4,Th34;
+          0 mod 4 = 0;
+          then m = 1 by A1,A5,A4,NAT_D:7,NAT_1:25;
+          hence thesis by A3,TARSKI:def 1;
+        end;
+        let x be object;
+        assume x in {1};
+        then x = 1 by TARSKI:def 1;
+        hence thesis by A1;
+      end;
+      hence thesis by CARD_1:30;
+    end;
+A6: P[a] implies P[a+1]
+    proof
+      assume
+A7:   P[a];
+      set b = a+1;
+      set K = F(b);
+      reconsider An = A(a) as finite set by Lm9;
+A8:   now
+        assume K in An;
+        then
+A9:     ex m st K = m & m divides F(a);
+        a < a+1 by NAT_1:16;
+        hence contradiction by A9,NAT_D:7,PEPIN:66;
+      end;
+      A(b) = A(a) \/ {K}
+      proof
+        thus A(b) c= A(a) \/ {K}
+        proof
+          let x be object;
+          assume x in A(b);
+          then consider m being Nat such that
+A10:      x = m and
+A11:      m divides F(b);
+          consider t being Element of NAT such that
+A12:      m = F(t) and
+A13:      t <= b by A11,PEPIN:34,59;
+          per cases by A13,NAT_1:8;
+          suppose t <= a;
+            then F(t) divides F(a) by NEWTON:89;
+            then x in A(a) by A10,A12;
+            hence thesis by XBOOLE_0:def 3;
+          end;
+          suppose t = b;
+            then x in {K} by A10,A12,TARSKI:def 1;
+            hence thesis by XBOOLE_0:def 3;
+          end;
+        end;
+        let x be object;
+        assume x in A(a) \/ {K};
+        then per cases by XBOOLE_0:def 3;
+        suppose x in A(a);
+          then consider m such that
+A14:      x = m & m divides F(a);
+          a <= a+1 by NAT_1:16;
+          then F(a) divides F(a+1) by NEWTON:89;
+          then ex m st x = m & m divides F(b) by A14,INT_2:9;
+          hence thesis;
+        end;
+        suppose x in {K};
+          then x = K by TARSKI:def 1;
+          hence thesis;
+        end;
+      end;
+      hence thesis by A7,A8,CARD_2:41;
+    end;
+    P[a] from NAT_1:sch 2(A2,A6);
+    hence thesis;
+  end;
+
+theorem Th38:
+  divisors(5|^n,4,3) = {}
+  proof
+    set A = divisors(5|^n,4,3);
+    {} = A
+    proof
+      thus {} c= A;
+      let x be object;
+      assume x in A;
+      then ex k st x = k & k mod 4 = 3 & k divides 5|^n;
+      hence thesis by Th34;
+    end;
+    hence thesis;
+  end;
+
+theorem
+  { n where n is Nat: card divisors(5|^n,4,1) > card divisors(5|^n,4,3) }
+  is infinite
+  proof
+    deffunc A(Nat) = divisors(5|^$1,4,1);
+    deffunc B(Nat) = divisors(5|^$1,4,3);
+    set X = {n where n is Nat: card A(n) > card B(n)};
+    {k where k is Nat: k divides 5|^0} = A(0) by Th36;
+    then card A(0) = 0+1 by Th37;
+    then card A(0) > card B(0) by Th38,CARD_1:27;
+    then
+A1: 0 in X;
+A2: X is natural-membered
+    proof
+      let x be object;
+      assume x in X;
+      then ex n st x = n & card A(n) > card B(n);
+      hence thesis;
+    end;
+    for a st a in X ex b being Nat st b > a & b in X
+    proof
+      let a;
+      assume a in X;
+      then consider n such that
+A3:   a = n and card A(n) > card B(n);
+      take n+1;
+      thus n+1 > a by A3,NAT_1:16;
+      card {a where a is Nat: a divides 5|^(n+1)} = n+1+1 by Th37;
+      then card A(n+1) = n+1+1 by Th36;
+      then card A(n+1) > card B(n+1) by Th38,CARD_1:27;
+      hence thesis;
+    end;
+    hence thesis by A1,A2,NUMBER04:1;
+  end;
+
+theorem :: Problem 38 c
+  { n where n is positive Nat: card divisors(n,4,1) > card divisors(n,4,3) }
+  is infinite
+  proof
+    deffunc A(positive Nat) = divisors($1,4,1);
+    deffunc B(positive Nat) = divisors($1,4,3);
+    set X = { n where n is positive Nat: card A(n) > card B(n) };
+    set n = 5|^0;
+    {k where k is Nat: k divides n} = A(n) by Th36;
+    then
+A1: card A(n) = 0+1 by Th37;
+    card B(n) = 0 by Th38,CARD_1:27;
+    then
+A2: n in X by A1;
+A3: X is natural-membered
+    proof
+      let x be object;
+      assume x in X;
+      then ex n being positive Nat st x = n & card A(n) > card B(n);
+      hence thesis;
+    end;
+    for a st a in X ex b being Nat st b > a & b in X
+    proof
+      let a;
+      assume a in X;
+      then consider n being positive Nat such that
+A4:   a = n and card A(n) > card B(n);
+      take b = 5|^n;
+      thus b > a by A4,NEWTON:86;
+A5:   card B(b) = 0 by Th38,CARD_1:27;
+      {k where k is Nat: k divides b} = A(b) by Th36;
+      then card A(b) = n+1 by Th37;
+      hence b in X by A5;
+    end;
+    hence thesis by A2,A3,NUMBER04:1;
+  end;
+
+begin :: Problem 58
+
+definition
+  let X be set;
+  attr X is positive-membered means :Def2:
+  for x being ExtReal st x in X holds x > 0;
+end;
+
+registration
+  let n be non zero Nat;
+  cluster {n} -> positive-membered;
+  coherence;
+  let m be non zero Nat;
+  cluster {m,n} -> positive-membered;
+  coherence;
+end;
+
+registration
+  cluster NAT \ {0} -> positive-membered;
+  coherence;
+end;
+
+registration
+  cluster non empty finite positive-membered for set;
+  existence
+  proof
+    take {1};
+    thus thesis;
+  end;
+end;
+
+registration
+  cluster infinite positive-membered for set;
+  existence
+  proof
+    take NAT \ {0};
+    thus thesis;
+  end;
+end;
+
+theorem
+  for A being positive-membered set, B being set st B c= A holds
+  B is positive-membered by Def2;
+
+registration
+  let A be positive-membered set;
+  cluster -> positive-membered for Subset of A;
+  coherence by Def2;
+end;
+
+registration
+  let X be positive-membered set;
+  cluster X-valued -> positive-yielding for Relation;
+  coherence
+  proof
+    let R be Relation;
+    assume
+A1: R is X-valued;
+    let r be Real;
+    thus thesis by A1,Def2;
+  end;
+end;
+
+registration
+  let n be Nat;
+  cluster Seg(n) -> positive-membered;
+  coherence by FINSEQ_1:1;
+end;
+
+registration
+  let X be positive-membered set;
+  cluster id X -> positive-yielding;
+  coherence;
+end;
+
+registration
+  let n be Nat;
+  cluster idseq(n) -> positive-yielding;
+  coherence;
+end;
+
+registration
+  let n be Nat;
+  cluster idseq(n) -> increasing;
+  coherence
+  proof
+    set F = idseq(n);
+    let a be Nat such that
+A1: 1 <= a and
+A2: a < len F;
+    a in Seg(n) by A1,A2;
+    then
+A3: F.a = a by FINSEQ_2:49;
+A4: 1 <= a+1 by NAT_1:11;
+    a+1 <= n by A2,NAT_1:13;
+    then
+A5: a+1 in Seg(n) by A4;
+    a+0 < a+1 by XREAL_1:6;
+    hence F.a < F.(a+1) by A3,A5,FINSEQ_2:49;
+  end;
+end;
+
+registration
+  cluster SetPrimes -> positive-membered;
+  coherence
+  proof
+    let x be ExtReal;
+    assume x in SetPrimes;
+    then x is Prime by NEWTON:def 6;
+    hence thesis;
+  end;
+end;
+
+definition
+  let s be Nat;
+  func PrimeNumbersS(s) -> sequence of SetPrimes means :Def3:
+  for n being Nat holds it.n = primenumber(n);
+  existence
+  proof
+    deffunc F(Nat) = In(primenumber($1),SetPrimes);
+    consider f being Function of NAT,SetPrimes such that
+A1: for x being Element of NAT holds f.x = F(x) from FUNCT_2:sch 4;
+    take f;
+    let n be Nat;
+    n in NAT by ORDINAL1:def 12;
+    then f.n = F(n) by A1;
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    let f,g be sequence of SetPrimes such that
+A2: for n being Nat holds f.n = primenumber(n) and
+A3: for n being Nat holds g.n = primenumber(n);
+    let n be Element of NAT;
+    thus f.n = primenumber(n) by A2
+    .= g.n by A3;
+  end;
+end;
+
+registration
+  let s be Nat;
+  cluster PrimeNumbersS(s) -> increasing;
+  coherence
+  proof
+    set f = PrimeNumbersS(s);
+    let m,n be Nat;
+    f.m = primenumber(m) & f.n = primenumber(n) by Def3;
+    hence thesis by MOEBIUS2:21;
+  end;
+end;
+
+registration
+  let s be Nat;
+  cluster PrimeNumbersS(s) -> onto;
+  coherence
+  proof
+    set f = PrimeNumbersS(s);
+    thus rng f c= SetPrimes by RELAT_1:def 19;
+    let y be object;
+    assume y in SetPrimes;
+    then reconsider y as Prime by NEWTON:def 6;
+    set x = primeindex(y);
+A1: dom f = NAT by FUNCT_2:def 1;
+    f.x = primenumber(x) by Def3
+    .= y by NUMBER10:def 4;
+    hence thesis by A1,FUNCT_1:def 3;
+  end;
+end;
+
+registration
+  let s be Nat;
+  cluster PrimeNumbersS(s) | s -> increasing;
+  coherence;
+end;
+
+definition
+  let s be Nat;
+  func PrimeNumbersFS(s) -> FinSequence of SetPrimes equals
+  XFS2FS (PrimeNumbersS(s) | s);
+  coherence
+  proof
+    thus rng XFS2FS (PrimeNumbersS(s) | s) c= SetPrimes by RELAT_1:def 19;
+  end;
+end;
+
+theorem Th42:
+  for s being Nat holds len PrimeNumbersFS(s) = s
+  proof
+    let s be Nat;
+    len PrimeNumbersFS(s) = len (PrimeNumbersS(s) | s) by AFINSQ_1:def 9;
+    hence thesis;
+  end;
+
+theorem Th43:
+  for n,s being Nat st n < s holds PrimeNumbersFS(s).(n+1) = primenumber(n)
+  proof
+    let n,s be Nat;
+    set h = PrimeNumbersS(s);
+    set q = h | s;
+    assume
+A1: n < s;
+    then
+A2: n in Segm s by NAT_1:44;
+    n+1 <= len q by A1,NAT_1:13;
+    hence PrimeNumbersFS(s).(n+1) = q.(n+1-1) by NAT_1:11,AFINSQ_1:def 9
+    .= h.n by A2,FUNCT_1:49
+    .= primenumber(n) by Def3;
+  end;
+
+theorem Th44:
+  for n being non zero Nat
+  for s being Nat st n <= s holds PrimeNumbersFS(s).n = primenumber(n-1)
+  proof
+    let n be non zero Nat;
+    let s be Nat;
+    reconsider n1 = n-1 as Element of NAT by INT_1:3;
+    assume
+A1: n <= s;
+    n1 < n-0 by XREAL_1:8;
+    then n1 < s by A1,XXREAL_0:2;
+    then PrimeNumbersFS(s).(n1+1) = primenumber(n1) by Th43;
+    hence thesis;
+  end;
+
+registration
+  let s be Nat;
+  cluster PrimeNumbersFS(s) -> increasing;
+  coherence;
+end;
+
+registration
+  let s be Nat;
+  cluster PrimeNumbersFS(s) -> positive-yielding;
+  coherence;
+end;
+
+registration
+  let s be non zero Nat;
+  cluster PrimeNumbersFS(s) -> non empty;
+  coherence
+  proof
+    len PrimeNumbersFS(s) = s by Th42;
+    hence thesis;
+  end;
+end;
+
+registration
+  let s be non zero Nat;
+  cluster PrimeNumbersFS(s) -> Chinese_Remainder;
+  coherence
+  proof
+A1: PrimeNumbersFS(s) = Sgm rng PrimeNumbersFS(s) by MATRIX15:6;
+    rng PrimeNumbersFS(s) is Subset of SetPrimes by RELAT_1:def 19;
+    hence thesis by A1;
+  end;
+end;
+
+theorem Th45:
+  for k,s being Nat st k < s holds
+  Product PrimeNumbersFS(s) / primenumber(k) is Nat
+  proof
+    let k,s be Nat;
+    assume k < s;
+    then PrimeNumbersFS(s).(k+1) = primenumber(k) by Th43;
+    hence thesis;
+  end;
+
+definition
+  let s be Nat;
+  func sequenceA(s) -> FinSequence of NAT means :Def5:
+  len it = s &
+  for k being non zero Nat st k <= s holds
+  for e being Nat st e = Product PrimeNumbersFS(s) / primenumber(k-1) holds
+  it.k = CRT(0, e, -1, primenumber(k-1)) + Product PrimeNumbersFS(s);
+  existence
+  proof
+    defpred P[object,object] means
+    for k being non zero Nat st k = $1 holds
+    for e being Nat st e = Product PrimeNumbersFS(s) / primenumber(k-1) holds
+    $2 = CRT(0, e, -1, primenumber(k-1)) + Product PrimeNumbersFS(s);
+A1: for z being Nat st z in Seg s ex x being Element of NAT st P[z,x]
+    proof
+      let z be Nat such that
+A2:   z in Seg s;
+      reconsider z as non zero Nat by A2,FINSEQ_1:1;
+      z <= s by A2,FINSEQ_1:1;
+      then z-1 < s-0 by XREAL_1:8;
+      then reconsider e = Product PrimeNumbersFS(s) / primenumber(z-1) as Nat
+      by Th45;
+      reconsider x = CRT(0,e,-1,primenumber(z-1)) + Product PrimeNumbersFS(s)
+      as Element of NAT by ORDINAL1:def 12;
+      take x;
+      thus thesis;
+    end;
+    consider p being FinSequence of NAT such that
+A3: dom p = Seg s and
+A4: for k being Nat st k in Seg s holds P[k,p.k] from FINSEQ_1:sch 5(A1);
+    take p;
+    s in NAT by ORDINAL1:def 12;
+    hence len p = s by A3,FINSEQ_1:def 3;
+    let k be non zero Nat such that
+A5: k <= s;
+    1 <= k by NAT_1:14;
+    then k in Seg s by A5;
+    hence thesis by A4;
+  end;
+  uniqueness
+  proof
+    let f,g be FinSequence of NAT such that
+A6: len f = s and
+A7: for k being non zero Nat st k <= s holds
+    for e being Nat st e = Product PrimeNumbersFS(s) / primenumber(k-1) holds
+    f.k = CRT(0, e, -1, primenumber(k-1)) + Product PrimeNumbersFS(s) and
+A8: len g = s and
+A9: for k being non zero Nat st k <= s holds
+    for e being Nat st e = Product PrimeNumbersFS(s) / primenumber(k-1) holds
+    g.k = CRT(0, e, -1, primenumber(k-1)) + Product PrimeNumbersFS(s);
+    thus len f = len g by A6,A8;
+    let k be Nat such that
+A10: 1 <= k and
+A11: k <= len f;
+    reconsider k1 = k-1 as Element of NAT by A10,INT_1:3;
+    k-1 < s-0 by A6,A11,XREAL_1:8;
+    then reconsider e = Product PrimeNumbersFS(s) / primenumber(k1) as Nat
+    by Th45;
+    thus f.k = CRT(0, e, -1, primenumber(k1)) + Product PrimeNumbersFS(s)
+    by A6,A7,A10,A11
+    .= g.k by A6,A9,A10,A11;
+  end;
+end;
+
+registration
+  let s be Nat;
+  cluster sequenceA(s) -> s-element;
+  coherence by Def5;
+end;
+
+registration
+  let s be Nat;
+  cluster sequenceA(s) -> positive-yielding;
+  coherence
+  proof
+    set f = sequenceA(s);
+    let m;
+    assume
+A1: m in dom f;
+    then reconsider m as non zero Nat by FINSEQ_3:25;
+A2: len f = s by Def5;
+A3: m <= len f by A1,FINSEQ_3:25;
+    m-1 < m-0 by XREAL_1:8;
+    then m-1 < s by A2,A3,XXREAL_0:2;
+    then reconsider e = Product PrimeNumbersFS(s) / primenumber(m-1) as Nat
+    by Th45;
+    f.m = CRT(0, e, -1, primenumber(m-1)) + Product PrimeNumbersFS(s)
+    by A2,A3,Def5;
+    hence thesis;
+  end;
+end;
+
+theorem Th46:
+  for k, s being non zero Nat holds
+  k <= s implies primenumber(k-1) divides sequenceA(s).k + 1
+  proof
+    let k, s be non zero Nat;
+    set f = sequenceA(s);
+    set p = primenumber(k-1);
+    set g = PrimeNumbersFS(s);
+    assume
+A1: k <= s;
+    k-1 < k-0 by XREAL_1:8;
+    then k-1 < s by A1,XXREAL_0:2;
+    then reconsider e = Product g / p as Nat by Th45;
+    set x = CRT(0,e,-1,p);
+A2: 0+1 <= k by NAT_1:13;
+    len g = s by Th42;
+    then
+A3: k in dom g by A1,A2,FINSEQ_3:25;
+A4: 1 * (Product g / p) * p = Product g by XCMPLX_1:87;
+    g.k = p by A1,Th44;
+    then p,e are_coprime by A3,INT_6:25;
+    then x solves_CRT 0,e,-1,p by NUMBER14:def 2;
+    then x + 1*Product g solves_CRT 0,e,-1,p by A4,NUMBER14:26;
+    then x+Product g,-1 are_congruent_mod p;
+    hence thesis by A1,Def5;
+  end;
+
+theorem Th47:
+  for k, n being non zero Nat st k <> n & n <= s & k <= s
+  holds primenumber(k-1) divides sequenceA(s).n
+  proof
+    let k, n be non zero Nat;
+    assume that
+A1: k <> n and
+A2: n <= s and
+A3: k <= s;
+    reconsider s as non zero Nat by A2;
+    set A = sequenceA(s);
+    set p = primenumber(k-1);
+    set r = primenumber(n-1);
+    set g = PrimeNumbersFS(s);
+A4: 0+1 <= k by NAT_1:13;
+A5: len g = s by Th42;
+    then
+A6: k in dom g by A3,A4,FINSEQ_3:25;
+A7: g.k = p by A3,Th44;
+    n-1 < s-0 by A2,XREAL_1:8;
+    then reconsider e = Product g / r as Nat by Th45;
+    set y = CRT(0,e,-1,r);
+    1 <= n by NAT_1:14;
+    then
+A8: n in dom g by A5,A2,FINSEQ_3:25;
+A9: A.n = y + Product g by A2,Def5;
+A10: g.n = r by A2,Th44;
+    then r, e are_coprime by A8,INT_6:25;
+    then y solves_CRT 0,e,-1,r by NUMBER14:def 2;
+    then
+A11: y,0 are_congruent_mod e;
+    e divides Product g by NUMBER14:3;
+    then
+A12: e divides y + Product g by A11,NAT_D:8;
+    consider z being Integer such that
+A13: z * g.k = Product(g) / g.n by A1,A6,INT_6:12;
+    g.k divides z*g.k;
+    hence thesis by A7,A9,A10,A12,A13,INT_2:9;
+  end;
+
+definition
+  let f, g be real-valued Function;
+  deffunc F(object) = (f.$1) to_power (g.$1);
+  set X = dom f /\ dom g;
+  func f to_power g -> Function means :Def6:
+  dom it = (dom f) /\ (dom g) &
+  for x being object st x in dom it holds it.x = (f.x) to_power (g.x);
+  existence
+  proof
+    ex F being Function st dom F = X & for x being object st x in X holds F.x
+    = F(x) from FUNCT_1:sch 3;
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    let F, G be Function such that
+A1: dom F = X and
+A2: for c being object st c in dom F holds F.c = F(c) and
+A3: dom G = X and
+A4: for c being object st c in dom G holds G.c = F(c);
+    now
+      let x be object;
+      assume
+A5:   x in dom F;
+      hence F.x = F(x) by A2
+      .= G.x by A1,A3,A4,A5;
+    end;
+    hence thesis by A1,A3,FUNCT_1:def 11;
+  end;
+end;
+
+registration
+  let f, g be real-valued FinSequence;
+  cluster f to_power g -> FinSequence-like;
+  coherence
+  proof
+    dom(f to_power g) = dom f /\ dom g by Def6;
+    hence thesis by VALUED_1:19;
+  end;
+end;
+
+registration
+  let n be Nat;
+  let f, g be n-element real-valued FinSequence;
+  cluster f to_power g -> n-element;
+  coherence
+  proof
+A1: dom(f to_power g) = dom f /\ dom g by Def6;
+A2: n in NAT by ORDINAL1:def 12;
+    len f = n & len g = n by CARD_1:def 7;
+    then dom f = Seg n & dom g = Seg n by FINSEQ_1:def 3;
+    hence thesis by A1,A2,FINSEQ_1:def 3;
+  end;
+end;
+
+registration
+  let f, g be real-valued Function;
+  cluster f to_power g -> REAL-valued;
+  coherence
+  proof
+    set F = f to_power g;
+    thus rng F c= REAL
+    proof
+      let y be object;
+      assume y in rng F;
+      then consider x such that
+A1:   x in dom F and
+A2:   F.x = y by FUNCT_1:def 3;
+      F.x = (f.x) to_power (g.x) by A1,Def6;
+      hence thesis by A2,XREAL_0:def 1;
+    end;
+  end;
+end;
+
+registration
+  let f be rational-valued Function;
+  let g be integer-valued Function;
+  cluster f to_power g -> RAT-valued;
+  coherence
+  proof
+    set F = f to_power g;
+    thus rng F c= RAT
+    proof
+      let y be object;
+      assume y in rng F;
+      then consider x such that
+A1:   x in dom F and
+A2:   F.x = y by FUNCT_1:def 3;
+      F.x = (f.x) to_power (g.x) by A1,Def6;
+      hence thesis by A2,RAT_1:def 2;
+    end;
+  end;
+end;
+
+registration
+  let f be integer-valued Function;
+  let g be natural-valued Function;
+  cluster f to_power g -> INT-valued;
+  coherence
+  proof
+    set F = f to_power g;
+    thus rng F c= INT
+    proof
+      let y be object;
+      assume y in rng F;
+      then consider x such that
+A1:   x in dom F and
+A2:   F.x = y by FUNCT_1:def 3;
+      F.x = (f.x) to_power (g.x) by A1,Def6;
+      hence thesis by A2,INT_1:def 2;
+    end;
+  end;
+end;
+
+registration
+  let f, g be natural-valued Function;
+  cluster f to_power g -> NAT-valued;
+  coherence
+  proof
+    set F = f to_power g;
+    thus rng F c= NAT
+    proof
+      let y be object;
+      assume y in rng F;
+      then consider x such that
+A1:   x in dom F and
+A2:   F.x = y by FUNCT_1:def 3;
+      F.x = (f.x) to_power (g.x) by A1,Def6;
+      hence thesis by A2,ORDINAL1:def 12;
+    end;
+  end;
+end;
+
+registration
+  let f, g be positive-yielding real-valued Function;
+  cluster f to_power g -> positive-yielding;
+  coherence
+  proof
+    set F = f to_power g;
+    let r be Real;
+    assume r in rng F;
+    then consider x being object such that
+A1: x in dom F and
+A2: F.x = r by FUNCT_1:def 3;
+    dom F = dom f /\ dom g by Def6;
+    then
+A3: f.x in rng f & g.x in rng g by A1,FUNCT_1:def 3;
+    F.x = (f.x) to_power (g.x) by A1,Def6;
+    hence r > 0 by A2,A3;
+  end;
+end;
+
+definition
+  let s be Nat;
+  func numberQ(s) -> Nat equals
+  Product (idseq(s) to_power sequenceA(s));
+  coherence by TARSKI:1;
+end;
+
+registration
+  let s be Nat;
+  cluster numberQ(s) -> positive;
+  coherence;
+end;
+
+definition
+  let s be Nat;
+  func Problem58Solution(s) -> FinSequence of NAT equals
+  numberQ(s) (#) idseq(s);
+  coherence by FINSEQ_1:103;
+end;
+
+registration
+  let s be Nat;
+  cluster Problem58Solution(s) -> s-element;
+  coherence;
+end;
+
+theorem Th48:
+  1 <= k <= s implies Problem58Solution(s).k = k * numberQ(s)
+  proof
+    assume 1 <= k <= s;
+    then k in Seg(s);
+    hence k*numberQ(s) = numberQ(s) * idseq(s).k by FINSEQ_2:49
+    .= Problem58Solution(s).k by VALUED_1:6;
+  end;
+
+registration
+  let s be Nat;
+  cluster Problem58Solution(s) -> increasing positive-yielding;
+  coherence;
+end;
+
+definition
+  let s be Nat;
+  set A = sequenceA(s);
+  deffunc T(non zero Nat) = (sequenceA(s).$1 + 1) / primenumber($1-1);
+  func sequenceAk1Pk(s) -> FinSequence of NAT means :Def9:
+  len it = s &
+  for k being non zero Nat st k <= s holds
+   it.k = (sequenceA(s).k + 1) / primenumber(k-1);
+  existence
+  proof
+    defpred P[object,object] means
+    for k being non zero Nat st k = $1 & k <= s holds $2 = T(k);
+A1: for z being Nat st z in Seg s ex x being Element of NAT st P[z,x]
+    proof
+      let z be Nat such that
+A2:   z in Seg s;
+      reconsider z as non zero Nat by A2,FINSEQ_1:1;
+      reconsider x = (A.z+1) div primenumber(z-1) as Element of NAT;
+      take x;
+      thus thesis by Th46,RING_3:6;
+    end;
+    consider p being FinSequence of NAT such that
+A3: dom p = Seg s and
+A4: for k being Nat st k in Seg s holds P[k,p.k] from FINSEQ_1:sch 5(A1);
+    take p;
+    s in NAT by ORDINAL1:def 12;
+    hence len p = s by A3,FINSEQ_1:def 3;
+    let k be non zero Nat such that
+A5: k <= s;
+    1 <= k by NAT_1:14;
+    then k in Seg s by A5;
+    hence thesis by A4,A5;
+  end;
+  uniqueness
+  proof
+    let f,g be FinSequence of NAT such that
+A6: len f = s and
+A7: for k being non zero Nat st k <= s holds f.k = T(k) and
+A8: len g = s and
+A9: for k being non zero Nat st k <= s holds g.k = T(k);
+    thus len f = len g by A6,A8;
+    let k such that
+A10: 1 <= k and
+A11: k <= len f;
+    reconsider k as non zero Nat by A10;
+    f.k = T(k) by A6,A7,A11
+    .= g.k by A6,A9,A11;
+    hence thesis;
+  end;
+end;
+
+registration
+  let s be Nat;
+  cluster sequenceAk1Pk(s) -> s-element;
+  coherence by Def9;
+end;
+
+definition
+  let s be Nat;
+  let k be non zero Nat such that
+A1: k <= s;
+  set A = sequenceA(s);
+  set p = primenumber(k-1);
+  deffunc T(non zero Nat) = A.$1 / p;
+  func sequenceAnPk(s,k) -> FinSequence of NAT means :Def10:
+  len it = s &
+  for n being non zero Nat st n <= s holds
+   (n <> k implies it.n = sequenceA(s).n / primenumber(k-1)) &
+   (n = k implies it.n = 0);
+  existence
+  proof
+    defpred P[object,object] means
+    for a being non zero Nat st a = $1 & a <= s holds
+    (a <> k implies $2 = T(a)) & (a = k implies $2 = 0);
+A2: for z being Nat st z in Seg s ex x being Element of NAT st P[z,x]
+    proof
+      let z be Nat such that
+A3:   z in Seg s;
+      reconsider z as non zero Nat by A3,FINSEQ_1:1;
+      per cases;
+      suppose
+A4:     z <> k;
+        z <= s by A3,FINSEQ_1:1;
+        then A.z / p = A.z div p by A1,A4,Th47,RING_3:6;
+        then reconsider x = T(z) as Element of NAT;
+        take x;
+        thus thesis by A4;
+      end;
+      suppose
+A5:     z = k;
+        take 0;
+        thus thesis by A5;
+      end;
+    end;
+    consider p being FinSequence of NAT such that
+A6: dom p = Seg s and
+A7: for a being Nat st a in Seg s holds P[a,p.a] from FINSEQ_1:sch 5(A2);
+    take p;
+    s in NAT by ORDINAL1:def 12;
+    hence len p = s by A6,FINSEQ_1:def 3;
+    let a be non zero Nat such that
+A8: a <= s;
+    1 <= a by NAT_1:14;
+    then a in Seg s by A8;
+    hence thesis by A7,A8;
+  end;
+  uniqueness
+  proof
+    let f,g be FinSequence of NAT such that
+A9: len f = s and
+A10: for z being non zero Nat st z <= s holds
+    (z <> k implies f.z = T(z)) &
+    (z = k implies f.z = 0) and
+A11: len g = s and
+A12: for z being non zero Nat st z <= s holds
+    (z <> k implies g.z = T(z)) &
+    (z = k implies g.z = 0);
+    thus len f = len g by A9,A11;
+    let z be Nat such that
+A13: 1 <= z and
+A14: z <= len f;
+    reconsider z as non zero Nat by A13;
+    per cases;
+    suppose
+A15:   z <> k;
+      then f.z = A.z / p by A9,A10,A14
+      .= g.z by A9,A12,A14,A15;
+      hence thesis;
+    end;
+    suppose
+A16:   z = k;
+      then f.z = 0 by A9,A10,A14
+      .= g.z by A9,A12,A14,A16;
+      hence thesis;
+    end;
+  end;
+end;
+
+definition
+  let s be Nat;
+  deffunc T(non zero Nat) = ($1 |^ (sequenceAk1Pk(s).$1)) *
+           Product((idseq(s) to_power sequenceAnPk(s,$1)));
+  func sequenceQk(s) -> FinSequence of NAT means :Def11:
+  len it = s &
+  for k being non zero Nat st k <= s holds
+   it.k = (k |^ (sequenceAk1Pk(s).k)) *
+           Product((idseq(s) to_power sequenceAnPk(s,k)));
+  existence
+  proof
+    defpred P[object,object] means
+    for k being non zero Nat st k = $1 & k <= s holds $2 = T(k);
+A1: for z being Nat st z in Seg s ex x being Element of NAT st P[z,x]
+    proof
+      let z be Nat;
+      assume z in Seg s;
+      then reconsider z as non zero Nat by FINSEQ_1:1;
+      reconsider x = T(z) as Element of NAT by ORDINAL1:def 12;
+      take x;
+      thus thesis;
+    end;
+    consider p being FinSequence of NAT such that
+A2: dom p = Seg s and
+A3: for k being Nat st k in Seg s holds P[k,p.k] from FINSEQ_1:sch 5(A1);
+    take p;
+    s in NAT by ORDINAL1:def 12;
+    hence len p = s by A2,FINSEQ_1:def 3;
+    let k be non zero Nat such that
+A4: k <= s;
+    1 <= k by NAT_1:14;
+    then k in Seg s by A4;
+    hence thesis by A3,A4;
+  end;
+  uniqueness
+  proof
+    let f,g be FinSequence of NAT such that
+A5: len f = s and
+A6: for k being non zero Nat st k <= s holds f.k = T(k) and
+A7: len g = s and
+A8: for k being non zero Nat st k <= s holds g.k = T(k);
+    thus len f = len g by A5,A7;
+    let k such that
+A9: 1 <= k and
+A10: k <= len f;
+    reconsider k as non zero Nat by A9;
+    f.k = T(k) by A5,A6,A10
+    .= g.k by A5,A8,A10;
+    hence thesis;
+  end;
+end;
+
+registration
+  let s be Nat;
+  cluster sequenceQk(s) -> s-element;
+  coherence by Def11;
+end;
+
+theorem Th49:
+  for k, w being non zero Nat st k <= s & w <= s & w <> k holds
+  (idseq(s) to_power sequenceA(s)).w =
+  ((idseq(s) to_power sequenceAnPk(s,k)) |^ primenumber(k-1)).w
+  proof
+    let k, w be non zero Nat such that
+A1: k <= s and
+A2: w <= s and
+A3: w <> k;
+A4: 1 <= w by NAT_1:14;
+    set p = primenumber(k-1);
+    set AnPk = sequenceAnPk(s,k);
+    len AnPk = s by A1,Def10;
+    then
+    reconsider AnPk as natural-valued s-element FinSequence by CARD_1:def 7;
+    set I = idseq(s);
+    set A = sequenceA(s);
+    set f = I to_power A;
+    set F = I to_power AnPk;
+A5: len (F|^p) = len F by NAT_3:def 1;
+A6: len F = s by CARD_1:def 7;
+    then
+A7: w in dom(F|^p) by A2,A4,A5,FINSEQ_3:25;
+A8: w in Seg(s) by A2,A4;
+    then
+A9: I.w = w by FINSEQ_2:49;
+    dom F = Seg s by A6,FINSEQ_1:def 3;
+    then
+A10: F.w = (I.w) to_power (AnPk.w) by A8,Def6;
+A11: AnPk.w = A.w / p by A1,A2,A3,Def10;
+     len f = s by CARD_1:def 7;
+     then w in dom f by A2,A4,FINSEQ_3:25;
+     then f.w = (I.w) to_power (A.w) by Def6
+     .= w |^ (AnPk.w * p) by A9,A11,XCMPLX_1:87
+     .= F.w |^ p by A9,A10,NEWTON:9
+     .= (F|^p).w by A7,NAT_3:def 1;
+     hence thesis;
+   end;
+
+theorem Th50:
+  for k being non zero Nat st k <= s holds
+  Problem58Solution(s).k = sequenceQk(s).k |^ primenumber(k-1)
+  proof
+    let k be non zero Nat such that
+A1: k <= s;
+    set p = primenumber(k-1);
+    set AnPk = sequenceAnPk(s,k);
+    len AnPk = s by A1,Def10;
+    then
+    reconsider AnPk as natural-valueds-element FinSequence by CARD_1:def 7;
+    set Ak1Pk = sequenceAk1Pk(s);
+    set I = idseq(s);
+    set A = sequenceA(s);
+    set Qk = sequenceQk(s);
+    set F = I to_power AnPk;
+A2: len F = s by CARD_1:def 7;
+    then
+A3: dom F = Seg s by FINSEQ_1:def 3;
+    1 <= k by NAT_1:14;
+    then
+A4: k in dom F by A1,A2,FINSEQ_3:25;
+    Ak1Pk.k = (A.k + 1) / p by A1,Def9;
+    then (Ak1Pk.k) * p = A.k + 1 by XCMPLX_1:87;
+    then
+A5: k |^ (Ak1Pk.k) |^ p = k|^(A.k+1) by NEWTON:9;
+    F is FinSequence of REAL by FINSEQ_1:102;
+    then
+A6: Product(F) |^ p = Product(F|^p) by NAT_3:15;
+A7: len(F|^p) = len F by NAT_3:def 1;
+A8: len(I to_power A) = s by CARD_1:def 7;
+A9: 1 <= k by NAT_1:14;
+    then
+A10: k in dom(F|^p) by A1,A2,A7,FINSEQ_3:25;
+    then
+A11: (F|^p).k = F.k |^ p by NAT_3:def 1;
+A12: I.k = k by A3,A4,FINSEQ_2:49;
+A13: F.k = (I.k) to_power (AnPk.k) by A4,Def6;
+A14: AnPk.k = 0 by A1,Def10;
+A15: k |^ 0 = 1 by NEWTON:4;
+    len A = s by Def5;
+    then
+A16: dom A = Seg s by FINSEQ_1:def 3;
+    dom (I to_power A) = dom I /\ dom A by Def6;
+    then
+A17: (I to_power A).k = k to_power (A.k) by A3,A4,A12,A16,Def6
+    .= k |^ A.k * (F|^p).k by A12,A11,A13,A14,A15;
+    for j being Nat st j in dom(F|^p) & k <> j holds
+    (I to_power A).j = (F|^p).j
+    proof
+      let j be Nat;
+      assume j in dom(F|^p);
+      then j <> 0 & j <= s by A2,A7,FINSEQ_3:25;
+      hence thesis by A1,Th49;
+    end;
+    then
+A18: Product (I to_power A) = k |^ A.k * Product(F) |^ p
+    by A6,A7,A8,A10,A17,Th4,CARD_1:def 7;
+    thus Problem58Solution(s).k = k * numberQ(s) by A1,A9,Th48
+    .= k * k |^ A.k * Product(F) |^ p by A18
+    .= k |^ (Ak1Pk.k) |^ p * Product(F) |^ p by A5,NEWTON:6
+    .= ((k |^ (Ak1Pk.k)) * Product(F)) |^ p by NEWTON:7
+    .= Qk.k |^ p by A1,Def11;
+  end;
+
+registration
+  cluster fAP-like increasing positive-yielding for FinSequence of NAT;
+  existence
+  proof
+    take <*1*>;
+    thus thesis;
+  end;
+end;
+
+registration
+  let s be Nat;
+  cluster Problem58Solution(s) -> fAP-like;
+  coherence
+  proof
+    set f = Problem58Solution(s);
+A1: len f = s by CARD_1:def 7;
+    let i be Nat;
+    assume i in dom f;
+    then 1 <= i & i <= s by A1,FINSEQ_3:25;
+    then
+A2: f.i = i * numberQ(s) by Th48;
+    assume i+1 in dom f;
+    then 1 <= i+1 & i+1 <= s by A1,FINSEQ_3:25;
+    then
+A3: f.(i+1) = (i+1) * numberQ(s) by Th48;
+    assume i+2 in dom f;
+    then 1 <= i+2 & i+2 <= s by A1,FINSEQ_3:25;
+    then f.(i+2) = (i+2) * numberQ(s) by Th48;
+    hence f.(i+2) - f.(i+1) = f.(i+1) - f.i by A2,A3;
+  end;
+end;
+
+theorem :: Problem 58
+  for s being Nat
+   ex f being fAP-like increasing positive-yielding FinSequence of NAT
+  st len f = s & for i being Nat st 1 <= i <= len f holds f.i is perfect_power
+  proof
+    let s be Nat;
+    per cases;
+    suppose
+A1:   s = 0;
+      take <*>NAT;
+      thus thesis by A1;
+    end;
+    suppose s <> 0;
+      then reconsider s1 = s as non zero Nat;
+      take f = Problem58Solution(s1);
+      thus
+A2:   len f = s by CARD_1:def 7;
+      let k be Nat such that
+A3:   1 <= k and
+A4:   k <= len f;
+      reconsider k as non zero Nat by A3;
+      take sequenceQk(s).k;
+      take primenumber(k-1);
+      thus primenumber(k-1) > 1 by INT_2:def 4;
+      thus thesis by A2,A4,Th50;
+    end;
+  end;
+
+begin :: Problem 160
+
+theorem :: Problem 160
+  for x,y,z,t being positive Nat st x <= y <= z <= t holds
+  1/x + 1/y + 1/z + 1/t = 1 iff
+  x = 2 & y = 3 & z = 7 & t = 42 or
+  x = 2 & y = 3 & z = 8 & t = 24 or
+  x = 2 & y = 3 & z = 9 & t = 18 or
+  x = 2 & y = 3 & z = 10 & t = 15 or
+  x = 2 & y = 3 & z = 12 & t = 12 or
+  x = 2 & y = 4 & z = 5 & t = 20 or
+  x = 2 & y = 4 & z = 6 & t = 12 or
+  x = 2 & y = 4 & z = 8 & t = 8 or
+  x = 2 & y = 5 & z = 5 & t = 10 or
+  x = 2 & y = 6 & z = 6 & t = 6 or
+  x = 3 & y = 3 & z = 4 & t = 12 or
+  x = 3 & y = 3 & z = 6 & t = 6 or
+  x = 3 & y = 4 & z = 4 & t = 6 or
+  x = 4 & y = 4 & z = 4 & t = 4
+  proof
+    let x,y,z,t be positive Nat such that
+A1: x <= y and
+A2: y <= z and
+A3: z <= t;
+    thus 1/x + 1/y + 1/z + 1/t = 1 implies
+    x = 2 & y = 3 & z = 7 & t = 42 or
+    x = 2 & y = 3 & z = 8 & t = 24 or
+    x = 2 & y = 3 & z = 9 & t = 18 or
+    x = 2 & y = 3 & z = 10 & t = 15 or
+    x = 2 & y = 3 & z = 12 & t = 12 or
+    x = 2 & y = 4 & z = 5 & t = 20 or
+    x = 2 & y = 4 & z = 6 & t = 12 or
+    x = 2 & y = 4 & z = 8 & t = 8 or
+    x = 2 & y = 5 & z = 5 & t = 10 or
+    x = 2 & y = 6 & z = 6 & t = 6 or
+    x = 3 & y = 3 & z = 4 & t = 12 or
+    x = 3 & y = 3 & z = 6 & t = 6 or
+    x = 3 & y = 4 & z = 4 & t = 6 or
+    x = 4 & y = 4 & z = 4 & t = 4
+    proof
+      assume
+A4:   1/x + 1/y + 1/z + 1/t = 1;
+A5:   now
+A6:     1/y + 1/z + 1/t > 0;
+        assume x < 2;
+        then 1/1 + 1/y + 1/z + 1/t - 1 = 1 - 1 by A4,NAT_1:23;
+        hence contradiction by A6;
+      end;
+A7:   now
+        assume y > 4;
+        then
+A8:     y >= 4+1 by NAT_1:13;
+        then
+A9:     1/y <= 1/5 by XREAL_1:118;
+A10:    z >= 5 by A2,A8,XXREAL_0:2;
+        then 1/z <= 1/5 by XREAL_1:118;
+        then
+A11:    1/y + 1/z <= 1/5 + 1/5 by A9,XREAL_1:7;
+        t >= 5 by A3,A10,XXREAL_0:2;
+        then 1/t <= 1/5 by XREAL_1:118;
+        hence 1/y + 1/z + 1/t <= 2/5 + 1/5 by A11,XREAL_1:7;
+      end;
+      now
+A12:    (2*7+1)/2 is non integer by NUMBER05:37;
+A13:    1/z + 0 < 1/z + 1/t by XREAL_1:8;
+        now
+          assume
+A14:      x > 4;
+          then 1/x < 1/4 by XREAL_1:76;
+          then 1/x + (1/y + 1/z + 1/t) < 1/4 + 3/5
+          by A1,A7,A14,XXREAL_0:2,XREAL_1:8;
+          hence contradiction by A4;
+        end;
+        then x = 0 or ... or x = 4;
+        then per cases by A5;
+        case
+A15:      x = 2;
+          then
+A16:      1/2 + 1/y + 1/z + 1/t - 1/2 = 1 - 1/2 by A4;
+          then
+A17:      1/y + 1/z + 1/t = 1/2;
+          1/z <= 1/y by A2,XREAL_1:118;
+          then
+A18:      1/y + 1/z <= 1/y + 1/y by XREAL_1:7;
+          1/t <= 1/z by A3,XREAL_1:118;
+          then
+A19:      1/z + 1/t <= 1/z + 1/z by XREAL_1:7;
+          y <= t by A2,A3,XXREAL_0:2;
+          then 1/t <= 1/y by XREAL_1:118;
+          then 1/y + 1/z + 1/t <= 1/y + 1/y + 1/y by A18,XREAL_1:7;
+          then 1/2*y <= 3/y*y by A16,XREAL_1:64;
+          then 1/2*y <= 3 by XCMPLX_1:87;
+          then 1/2*y*2 <= 3*2 by XREAL_1:64;
+          then y = 0 or ... or y = 6;
+          then per cases by A1,A15;
+          case y = 2;
+            then
+A20:        1/2 + 1/z + 1/t = 1/2 by A17;
+            1/z + 1/t > 0;
+            hence contradiction by A20;
+          end;
+          case
+A21:        y = 3;
+            then
+A22:        1/3 + 1/z + 1/t - 1/3 = 1/2 - 1/3 by A16;
+            then 1/6*z <= 2/z*z by A19,XREAL_1:64;
+            then 1/6*z <= 2 by XCMPLX_1:87;
+            then 1/6*z*6 <= 2*6 by XREAL_1:64;
+            then z = 0 or ... or z = 12;
+            then per cases by A13,A22;
+            case
+A23:          z = 7;
+              then 1/7 + 1/t - 1/7 = 1/6 - 1/7 by A22;
+              then 1/t = 1/42;
+              hence x = 2 & y = 3 & z = 7 & t = 42 by A15,A21,A23,XCMPLX_1:59;
+            end;
+            case
+A24:          z = 8;
+              then 1/8 + 1/t - 1/8 = 1/6 - 1/8 by A22;
+              then 1/t = 1/24;
+              hence x = 2 & y = 3 & z = 8 & t = 24 by A15,A21,A24,XCMPLX_1:59;
+            end;
+            case
+A25:          z = 9;
+              then 1/9 + 1/t - 1/9 = 1/6 - 1/9 by A22;
+              then 1/t = 1/18;
+              hence x = 2 & y = 3 & z = 9 & t = 18 by A15,A21,A25,XCMPLX_1:59;
+            end;
+            case
+A26:          z = 10;
+              then 1/10 + 1/t - 1/10 = 1/6 - 1/10 by A22;
+              then 1/t = 1/15;
+              hence x = 2 & y = 3 & z = 10 & t = 15 by A15,A21,A26,XCMPLX_1:59;
+            end;
+            case z = 11;
+              then 1/11 + 1/t - 1/11 = 1/6 - 1/11 by A22;
+              then (1/t)" = (5/66)";
+              then t = (5*13+1)/5;
+              hence contradiction by NUMBER05:37;
+            end;
+            case
+A27:          z = 12;
+              then 1/12 + 1/t - 1/12 = 1/6 - 1/12 by A22;
+              hence x = 2 & y = 3 & z = 12 & t = 12 by A15,A21,A27,XCMPLX_1:59;
+            end;
+          end;
+          case
+A28:        y = 4;
+            then
+A29:        1/4 + 1/z + 1/t = 1/2 by A16;
+            then
+A30:        1/z + 1/t = 1/4;
+            1/4*z <= 2/z*z by A19,A29,XREAL_1:64;
+            then 1/4*z <= 2 by XCMPLX_1:87;
+            then 1/4*z*4 <= 2*4 by XREAL_1:64;
+            then z = 0 or ... or z = 8;
+            then per cases by A29,A13;
+            case
+A31:          z = 5;
+              then 1/5 + 1/t - 1/5 = 1/4 - 1/5 by A30;
+              then 1/t = 1/20;
+              hence x = 2 & y = 4 & z = 5 & t = 20 by A15,A28,A31,XCMPLX_1:59;
+            end;
+            case
+A32:          z = 6;
+              then 1/6 + 1/t - 1/6 = 1/4 - 1/6 by A30;
+              then 1/t = 1/12;
+              hence x = 2 & y = 4 & z = 6 & t = 12 by A15,A28,A32,XCMPLX_1:59;
+            end;
+            case z = 7;
+              then 1/7 + 1/t - 1/7 = 1/4 - 1/7 by A30;
+              then (1/t)" = (3/28)";
+              then t = (9*3+1)/3;
+              hence contradiction by NUMBER05:37;
+            end;
+            case
+A33:          z = 8;
+              then 1/8 + 1/t - 1/8 = 1/4 - 1/8 by A30;
+              hence x = 2 & y = 4 & z = 8 & t = 8 by A15,A28,A33,XCMPLX_1:59;
+            end;
+          end;
+          case
+A34:        y = 5;
+            then
+A35:        1/5 + 1/z + 1/t = 1/2 by A16;
+            then
+A36:        1/z + 1/t = 3/10;
+            3/10*z <= 2/z*z by A19,A35,XREAL_1:64;
+            then 3/10*z <= 2 by XCMPLX_1:87;
+            then 3/10*z*(10/3) <= 2*(10/3) by XREAL_1:64;
+            then z < 6+1 by XXREAL_0:2;
+            then z <= 6 by NAT_1:13;
+            then z = 0 or ... or z = 6;
+            then per cases by A2,A34;
+            case
+A37:          z = 5;
+              then 1/5 + 1/t - 1/5 = 3/10 - 1/5 by A36;
+              then 1/t = 1/10;
+              hence x = 2 & y = 5 & z = 5 & t = 10 by A15,A34,A37,XCMPLX_1:59;
+            end;
+            case z = 6;
+              then 1/6 + 1/t - 1/6 = 3/10 - 1/6 by A36;
+              then (1/t)" = (2/15)";
+              hence contradiction by A12;
+            end;
+          end;
+          case
+A38:        y = 6;
+            then
+A39:        1/6 + 1/z + 1/t = 1/2 by A16;
+            then
+A40:        1/z + 1/t = 1/3;
+            (1/3)" >= (2/z)" by A19,A39,XREAL_1:85;
+            then 3/1 >= z/2 by XCMPLX_1:213;
+            then
+A41:        3*2 >= z/2*2 by XREAL_1:64;
+            then 1/6 + 1/t = 1/3 by A2,A40,A38,XXREAL_0:1;
+            hence x = 2 & y = 6 & z = 6 & t = 6
+            by A2,A15,A38,A41,XCMPLX_1:59,XXREAL_0:1;
+          end;
+        end;
+        case
+A42:      x = 3;
+          then
+A43:      1/3 + 1/y + 1/z + 1/t - 1/3 = 1 - 1/3 by A4;
+          then y = 0 or ... or y = 4 by A7;
+          then per cases by A1,A42;
+          case
+A44:        y = 3;
+            then
+A45:        1/3 + 1/z + 1/t - 1/3 = 2/3 - 1/3 by A43;
+            then
+A46:        1/z + 1/t = 1/3;
+            now
+              assume
+A47:          z > 6;
+              then
+A48:          1/z < 1/6 by XREAL_1:76;
+              t > 6 by A3,A47,XXREAL_0:2;
+              then 1/t < 1/6 by XREAL_1:76;
+              then 1/z + 1/t < 1/6 + 1/6 by A48,XREAL_1:8;
+              hence contradiction by A45;
+            end;
+            then z = 0 or ... or z = 6;
+            then per cases by A2,A44;
+            case z = 3;
+              then
+A49:          1/3 + 1/t = 1/3 by A46;
+              1/t > 0;
+              hence contradiction by A49;
+            end;
+            case
+A50:          z = 4;
+              then 1/4 + 1/t = 1/3 by A45;
+              then 1/t = 1/12;
+              hence x = 3 & y = 3 & z = 4 & t = 12 by A42,A44,A50,XCMPLX_1:59;
+            end;
+            case z = 5;
+              then 1/5 + 1/t = 1/3 by A45;
+              then (1/t)" = (2/15)";
+              hence contradiction by A12;
+            end;
+            case
+A51:          z = 6;
+              then 1/6 + 1/t = 1/3 by A45;
+              hence x = 3 & y = 3 & z = 6 & t = 6 by A42,A44,A51,XCMPLX_1:59;
+            end;
+          end;
+          case
+A52:        y = 4;
+            then 1/4 + 1/z + 1/t - 1/4 = 2/3 - 1/4 by A43;
+            then
+A53:        1/z + 1/t = 5/12;
+            1/t <= 1/z by A3,XREAL_1:118;
+            then 1/z + 1/t <= 1/z + 1/z by XREAL_1:7;
+            then 1/z + 1/t <= 2/z;
+            then 5*z <= 2*12 by A53,XREAL_1:106;
+            then 5*z/5 <= 2*12/5 by XREAL_1:72;
+            then z < 4+1 by XXREAL_0:2;
+            then
+A54:        z <= 4 by NAT_1:13;
+            then 1/4 + 1/t - 1/4 = 5/12 - 1/4 by A53,A2,A52,XXREAL_0:1;
+            then 1/t = 1/6;
+            hence x = 3 & y = 4 & z = 4 & t = 6
+            by A42,A54,A2,A52,XXREAL_0:1,XCMPLX_1:59;
+          end;
+        end;
+        case
+A55:      x = 4;
+          then
+A56:      1/4 + 1/y + 1/z + 1/t - 1/4 = 1 - 1/4 by A4;
+          now
+            assume
+A57:        y >= 4+1;
+            then
+A58:        1/y <= 1/5 by XREAL_1:118;
+A59:        z >= 5 by A2,A57,XXREAL_0:2;
+            then 1/z <= 1/5 by XREAL_1:118;
+            then
+A60:        1/y + 1/z <= 1/5 + 1/5 by A58,XREAL_1:7;
+            t >= 5 by A3,A59,XXREAL_0:2;
+            then 1/t <= 1/5 by XREAL_1:118;
+            then 1/y + 1/z + 1/t <= 1/5 + 1/5 + 1/5 by A60,XREAL_1:7;
+            hence contradiction by A56;
+          end;
+          then y <= 4 by NAT_1:13;
+          then
+A61:      y = 4 by A1,A55,XXREAL_0:1;
+          then
+A62:      1/4 + 1/z + 1/t - 1/4 = 3/4 - 1/4 by A56;
+          now
+            assume
+A63:        z >= 4+1;
+            then 1/2 - 1/t <= 1/5 by A62,XREAL_1:118;
+            then
+A64:        1/2 - 1/5 <= 1/t by XREAL_1:12;
+            t >= 5 by A3,A63,XXREAL_0:2;
+            then 1/t <= 1/5 by XREAL_1:118;
+            hence contradiction by A64,XXREAL_0:2;
+          end;
+          then
+A65:      z <= 4 by NAT_1:13;
+          then z = 4 by A2,A61,XXREAL_0:1;
+          then 1/4 + 1/t - 1/4 = 1/2 - 1/4 by A62;
+          hence x = 4 & y = 4 & z = 4 & t = 4
+          by A2,A55,A61,A65,XCMPLX_1:59,XXREAL_0:1;
+        end;
+      end;
+      hence thesis;
+    end;
+    thus thesis;
+  end;
+
+begin :: Problem 164
+
+Lm10:
+  for r being Integer st r >= 2 holds 1/(r^2) <= 1/4
+  proof
+    let r be Integer;
+    assume r >= 2;
+    then r^2 >= 2*2 by XREAL_1:66;
+    hence thesis by XREAL_1:85;
+  end;
+
+Lm11:
+  for r being Integer st r > 2 holds 1/(r^2) <= 1/9
+  proof
+    let r be Integer;
+    assume r > 2;
+    then r >= 2+1 by NAT_1:13;
+    then r^2 >= 3*3 by XREAL_1:66;
+    hence thesis by XREAL_1:85;
+  end;
+
+theorem :: Problem 164
+  for x,y,z,t being positive Integer holds
+  1/(x^2) + 1/(y^2) + 1/(z^2) + 1/(t^2) = 1 iff x = 2 & y = 2 & z = 2 & t = 2
+  proof
+    let x,y,z,t be positive Integer;
+    thus 1/(x^2) + 1/(y^2) + 1/(z^2) + 1/(t^2) = 1 implies
+    x = 2 & y = 2 & z = 2 & t = 2
+    proof
+      assume
+A1:   1/(x^2) + 1/(y^2) + 1/(z^2) + 1/(t^2) = 1;
+      1/(x^2) + 1/(y^2) + 1/(z^2) + 1/(t^2) =
+      1/(t^2) + 1/(x^2) + 1/(y^2) + 1/(z^2) =
+      1/(z^2) + 1/(t^2) + 1/(x^2) + 1/(y^2) =
+      1/(y^2) + 1/(z^2) + 1/(t^2) + 1/(x^2);
+      then
+A2:   x <> 1+0 & y <> 1+0 & z <> 1+0 & t <> 1+0 by A1,XREAL_1:6;
+      then
+A3:   x >= 2 & y >= 2 & z >= 2 & t >= 2 by NAT_1:23;
+A4:   1/(x^2) <= 1/4 & 1/(y^2) <= 1/4 & 1/(z^2) <= 1/4 & 1/(t^2) <= 1/4
+      by A2,Lm10,NAT_1:23;
+A5:   now
+        assume x > 2;
+        then
+A6:     1/(x^2) <= 1/9 by Lm11;
+        1/(y^2)+1/(z^2) <= 1/4+1/4 by A4,XREAL_1:7;
+        then 1/(y^2)+1/(z^2)+1/(t^2) <= 1/4+1/4+1/4 by A4,XREAL_1:7;
+        then 1/(x^2)+(1/(y^2)+1/(z^2)+1/(t^2)) <= 1/9+(1/4+1/4+1/4)
+        by A6,XREAL_1:7;
+        hence contradiction by A1;
+      end;
+A7:   now
+        assume y > 2;
+        then
+A8:     1/(y^2) <= 1/9 by Lm11;
+        1/(z^2)+1/(t^2) <= 1/4+1/4 by A4,XREAL_1:7;
+        then 1/(z^2)+1/(t^2)+1/(x^2) <= 1/4+1/4+1/4 by A4,XREAL_1:7;
+        then 1/(y^2)+(1/(z^2)+1/(t^2)+1/(x^2)) <= 1/9+(1/4+1/4+1/4)
+        by A8,XREAL_1:7;
+        hence contradiction by A1;
+      end;
+A9:   now
+        assume z > 2;
+        then
+A10:    1/(z^2) <= 1/9 by Lm11;
+        1/(t^2)+1/(x^2) <= 1/4+1/4 by A4,XREAL_1:7;
+        then 1/(t^2)+1/(x^2)+1/(y^2) <= 1/4+1/4+1/4 by A4,XREAL_1:7;
+        then 1/(z^2)+(1/(t^2)+1/(x^2)+1/(y^2)) <= 1/9+(1/4+1/4+1/4)
+        by A10,XREAL_1:7;
+        hence contradiction by A1;
+      end;
+      now
+        assume t > 2;
+        then
+A11:    1/(t^2) <= 1/9 by Lm11;
+        1/(x^2)+1/(y^2) <= 1/4+1/4 by A4,XREAL_1:7;
+        then 1/(x^2)+1/(y^2)+1/(z^2) <= 1/4+1/4+1/4 by A4,XREAL_1:7;
+        then 1/(t^2)+(1/(x^2)+1/(y^2)+1/(z^2)) <= 1/9+(1/4+1/4+1/4)
+        by A11,XREAL_1:7;
+        hence contradiction by A1;
+      end;
+      hence thesis by A3,A5,A7,A9,XXREAL_0:1;
+    end;
+    thus thesis;
+  end;
+
+begin :: Problem 168
+
+reserve f,g for complex-valued FinSequence;
+
+theorem Th54:
+  len(f^2) = len f
+  proof
+    dom(f^2) = dom f by VALUED_1:11;
+    hence thesis by FINSEQ_3:29;
+  end;
+
+theorem Th55:
+  len(f") = len f
+  proof
+    dom(f") = dom f by VALUED_1:def 7;
+    hence thesis by FINSEQ_3:29;
+  end;
+
+theorem Th56:
+  (c(#)f)|n = c(#)(f|n)
+  proof
+A1: len(c(#)f) = len f by COMPLSP2:3;
+A2: len(c(#)(f|n)) = len(f|n) by COMPLSP2:3;
+    per cases;
+    suppose
+A3:   n <= len f;
+      then
+A4:   len((c(#)f)|n) = n by A1,FINSEQ_1:59;
+      hence len((c(#)f)|n) = len(c(#)(f|n)) by A2,A3,FINSEQ_1:59;
+      let k such that
+      1 <= k and
+A5:   k <= len((c(#)f)|n);
+A6:   (f|n).k = f.k by A4,A5,FINSEQ_3:112;
+      thus ((c(#)f)|n).k = (c(#)f).k by A4,A5,FINSEQ_3:112
+      .= c*f.k by VALUED_1:6
+      .= (c(#)(f|n)).k by A6,VALUED_1:6;
+    end;
+    suppose
+A7:   n > len f;
+      then
+A8:   f|n = f by FINSEQ_1:58;
+      hence len((c(#)f)|n) = len(c(#)(f|n)) by A2,A7,FINSEQ_1:58;
+      thus thesis by A1,A7,A8,FINSEQ_1:58;
+    end;
+  end;
+
+theorem Th57:
+  for f being complex-valued Function holds f" ^2 = f^2 "
+  proof
+    let f be complex-valued Function;
+A1: dom(f" ^2) = dom(f") by VALUED_1:11;
+A2: dom(f") = dom(f) by VALUED_1:def 7;
+    dom(f^2 ") = dom(f^2) by VALUED_1:def 7;
+    hence dom(f" ^2) = dom(f^2 ") by A1,A2,VALUED_1:11;
+    let x;
+    assume x in dom(f" ^2);
+A3: (f^2).x = (f.x)^2 by VALUED_1:11;
+    f".x = (f.x)" by VALUED_1:10;
+    hence (f" ^2).x = (1/(f.x)) ^2 by VALUED_1:11
+    .= (1^2)/((f.x)^2) by XCMPLX_1:76
+    .= (f^2 ").x by A3,VALUED_1:10;
+  end;
+
+theorem Th58:
+  for f being complex-valued Function holds (c(#)f)" = c" (#) f"
+  proof
+    let f be complex-valued Function;
+A1: dom((c(#)f)") = dom(c(#)f) by VALUED_1:def 7;
+A2: dom(c(#)f) = dom f by VALUED_1:def 5;
+    dom(f") = dom(f) by VALUED_1:def 7;
+    hence dom((c(#)f)") = dom(c"(#)f") by A1,A2,VALUED_1:def 5;
+    let x;
+    assume x in dom((c(#)f)");
+A3: (c(#)f).x = c*f.x by VALUED_1:6;
+A4: f".x = (f.x)" by VALUED_1:10;
+    thus ((c(#)f)").x = ((c(#)f).x)" by VALUED_1:10
+    .= c"*(f.x)" by A3,XCMPLX_1:204
+    .= (c"(#)f").x by A4,VALUED_1:6;
+  end;
+
+theorem Th59:
+  (f^g)^2 = (f^2) ^ (g^2)
+  proof
+A1: len(f^2) = len f by Th54;
+A2: len(g^2) = len g by Th54;
+    dom((f^g)^2) = dom(f^g) by VALUED_1:11
+    .= Seg(len f + len g) by FINSEQ_1:def 7
+    .= dom((f^2)^(g^2)) by A1,A2,FINSEQ_1:def 7;
+    hence len((f^g)^2) = len((f^2)^(g^2)) by FINSEQ_3:29;
+    let k be Nat such that
+A3: 1 <= k and
+A4: k <= len((f^g)^2);
+A5: (f^g)^2.k = ((f^g).k)^2 by VALUED_1:11;
+    per cases;
+    suppose
+A6:   k <= len f;
+      hence (f^g)^2.k = (f.k)^2 by A3,A5,FINSEQ_1:64
+      .= (f^2).k by VALUED_1:11
+      .= ((f^2)^(g^2)).k by A1,A3,A6,FINSEQ_1:64;
+    end;
+    suppose
+A7:   k > len f;
+      then reconsider i = k-len(f) as Element of NAT by INT_1:5;
+A8:   len(f^g) = len f + len g by FINSEQ_1:22;
+A9:   len((f^g)^2) = len(f^g) by Th54;
+A10:  k = len f + i;
+A11:  0+1 <= k - len f by A7,XREAL_1:50,INT_1:7;
+A12:  k - len f <= len g by A4,A8,A9,XREAL_1:20;
+      then
+A13:  (f^g).k = g.i by A10,A11,FINSEQ_1:65;
+      ((f^2)^(g^2)).k = (g^2).i by A1,A2,A10,A11,A12,FINSEQ_1:65;
+      hence (f^g)^2.k = ((f^2)^(g^2)).k by A5,A13,VALUED_1:11;
+    end;
+  end;
+
+theorem Th60:
+  (f^g)" = (f") ^ (g")
+  proof
+A1: len(f") = len f by Th55;
+A2: len(g") = len g by Th55;
+    dom((f^g)") = dom(f^g) by VALUED_1:def 7
+    .= Seg(len f + len g) by FINSEQ_1:def 7
+    .= dom((f")^(g")) by A1,A2,FINSEQ_1:def 7;
+    hence len((f^g)") = len((f")^(g")) by FINSEQ_3:29;
+    let k be Nat such that
+A3: 1 <= k and
+A4: k <= len((f^g)");
+A5: (f^g)".k = ((f^g).k)" by VALUED_1:10;
+    per cases;
+    suppose
+A6:   k <= len f;
+      hence (f^g)".k = (f.k)" by A3,A5,FINSEQ_1:64
+      .= (f").k by VALUED_1:10
+      .= ((f")^(g")).k by A1,A3,A6,FINSEQ_1:64;
+    end;
+    suppose
+A7:   k > len f;
+      then reconsider i = k-len(f) as Element of NAT by INT_1:5;
+A8:   len(f^g) = len f + len g by FINSEQ_1:22;
+A9:   len((f^g)") = len(f^g) by Th55;
+A10:  k = len f + i;
+A11:  0+1 <= k - len f by A7,XREAL_1:50,INT_1:7;
+A12:  k - len f <= len g by A4,A8,A9,XREAL_1:20;
+      then
+A13:  (f^g).k = g.i by A10,A11,FINSEQ_1:65;
+      ((f")^(g")).k = (g").i by A1,A2,A10,A11,A12,FINSEQ_1:65;
+      hence (f^g)".k = ((f")^(g")).k by A5,A13,VALUED_1:10;
+    end;
+  end;
+
+theorem Th61:
+  (f|n)" = f"|n
+  proof
+A1: len(f") = len f by Th55;
+    per cases;
+    suppose
+A2:   n <= len f;
+      then
+A3:   len(f|n) = n by FINSEQ_1:59;
+      dom((f|n)") = dom(f|n) by VALUED_1:def 7
+      .= Seg len(f"|n) by A1,A2,A3,FINSEQ_1:59,FINSEQ_1:def 3
+      .= dom(f"|n) by FINSEQ_1:def 3;
+      hence len((f|n)") = len((f")|n) by FINSEQ_3:29;
+      let k be Nat such that
+      1 <= k and
+A4:   k <= len((f|n)");
+A5:   len((f|n)") = len(f|n) by Th55;
+      then (f|n).k = f.k by A3,A4,FINSEQ_3:112;
+      hence (f|n)".k = (f.k)" by VALUED_1:10
+      .= f".k by VALUED_1:10
+      .= (f"|n).k by A3,A4,A5,FINSEQ_3:112;
+    end;
+    suppose len f < n;
+      then f|n = f & f"|n = f" by A1,FINSEQ_1:58;
+      hence thesis;
+    end;
+  end;
+
+theorem Th62:
+  (f|n)^2 = f^2|n
+  proof
+A1: len(f^2) = len f by Th54;
+    per cases;
+    suppose
+A2:   n <= len f;
+      then
+A3:   len(f|n) = n by FINSEQ_1:59;
+      dom((f|n)^2) = dom(f|n) by VALUED_1:11
+      .= Seg len(f^2|n) by A1,A2,A3,FINSEQ_1:59,FINSEQ_1:def 3
+      .= dom(f^2|n) by FINSEQ_1:def 3;
+      hence len((f|n)^2) = len((f^2)|n) by FINSEQ_3:29;
+      let k be Nat such that
+      1 <= k and
+A4:   k <= len((f|n)^2);
+A5:   len((f|n)^2) = len(f|n) by Th54;
+      then (f|n).k = f.k by A3,A4,FINSEQ_3:112;
+      hence (f|n)^2.k = (f.k)^2 by VALUED_1:11
+      .= f^2.k by VALUED_1:11
+      .= (f^2|n).k by A3,A4,A5,FINSEQ_3:112;
+    end;
+    suppose len f < n;
+      then f|n = f & f^2|n = f^2 by A1,FINSEQ_1:58;
+      hence thesis;
+    end;
+  end;
+
+theorem Th63:
+  <*c*>" = <*c"*>
+  proof
+A1: len(<*c*>") = len <*c*> by Th55
+    .= 1 by FINSEQ_1:39;
+    hence len(<*c*>") = len <*c"*> by FINSEQ_1:39;
+    let k be Nat;
+    assume 1 <= k & k <= len(<*c*>");
+    then k = 1 by A1,XXREAL_0:1;
+    hence <*c"*>.k = (<*c*>.k)"
+    .= <*c*>".k by VALUED_1:10;
+  end;
+
+theorem Th64:
+  <*c1,c2*>" = <*c1",c2"*>
+  proof
+    <*c1*>" = <*c1"*> & <*c2*>" = <*c2"*> by Th63;
+    hence thesis by Th60;
+  end;
+
+theorem
+  <*c1,c2,c3*>" = <*c1",c2",c3"*>
+  proof
+A1: <*c1,c2*>" = <*c1",c2"*> by Th64;
+    <*c3*>" = <*c3"*> by Th63;
+    hence thesis by A1,Th60;
+  end;
+
+definition
+  let s be Nat;
+  let f be (s+1)-element complex-valued FinSequence;
+  attr f is a_solution_of_Sierp168 means
+  Sum ((f|s)" ^2) = 1 / (f.(s+1))^2;
+end;
+
+registration
+  let a be object;
+  cluster <*a*> -> (0+1)-element;
+  coherence;
+end;
+
+registration
+  let a,b be object;
+  cluster <*a,b*> -> (1+1)-element;
+  coherence;
+end;
+
+registration
+  let a,b,c be object;
+  cluster <*a,b,c*> -> (2+1)-element;
+  coherence;
+end;
+
+theorem
+  <*0*> is a_solution_of_Sierp168;
+
+theorem Th67:
+  <*1,1*> is a_solution_of_Sierp168
+  proof
+    set f = <*1,1*>;
+    set h = f|1;
+    set g = h" ^2;
+    g = <*1*>
+    proof
+      dom g = dom(h") /\ dom(h") by VALUED_1:def 4;
+      then
+A1:   len g = len h by VALUED_1:def 7,FINSEQ_3:29;
+      hence len g = len <*1*>;
+      let k;
+      assume 1 <= k <= len g;
+      then
+A2:   k = 1 by A1,XXREAL_0:1;
+      h".1 = (h.1)";
+      hence <*1*>.k = (h".1)^2 by A2
+      .= g.k by A2,VALUED_1:11;
+    end;
+    hence thesis;
+  end;
+
+theorem
+  <*15,20,12*> is a_solution_of_Sierp168
+  proof
+    set f = <*15,20,12*>;
+    set h = f|2;
+    set g = h" ^2;
+    g = <*1/(15^2),1/(20^2)*>
+    proof
+      dom g = dom(h") /\ dom(h") by VALUED_1:def 4;
+      then
+A1:   len g = len h by VALUED_1:def 7,FINSEQ_3:29;
+      len f = 3 by FINSEQ_1:45;
+      then
+A2:   len h = 2 by FINSEQ_1:59;
+      hence len g = len <*1/(15^2),1/(20^2)*> by A1,FINSEQ_1:44;
+      let k;
+      assume that
+      1 <= k and
+A3:   k <= len g;
+A4:   g.k = (h".k)^2 by VALUED_1:11;
+A5:   h".k = (h.k)" by VALUED_1:10;
+      k = 0 or ... or k = 2 by A1,A2,A3;
+      hence g.k = <*1/(15^2),1/(20^2)*>.k by A4,A5;
+    end;
+    then Sum g = 1/(15^2) + 1/(20^2) by RVSUM_1:77;
+    hence thesis;
+  end;
+
+theorem Th69:
+  for s,n being Nat
+  for f being (s+1)-element complex-valued FinSequence holds
+  f is a_solution_of_Sierp168 implies n(#)f is a_solution_of_Sierp168
+  proof
+    let s,n be Nat;
+    let f be (s+1)-element complex-valued FinSequence such that
+A1: Sum ((f|s)" ^2) = 1 / (f.(s+1))^2;
+    set g = n(#)f;
+A2: g.(s+1) = n*f.(s+1) by VALUED_1:6;
+A3: (n(#)(f|s))^2 = (n^2)(#)((f|s)^2) by BORSUK_7:18;
+A4: (f|s)" ^2 = (f|s)^2" by Th57;
+A5: (n(#)(f|s))" ^2 = (n(#)(f|s))^2 " by Th57;
+A6: (n^2(#)(f|s)^2) " = (1/n^2) (#) (((f|s)^2)") by Th58;
+    g|s = n(#)(f|s) by Th56;
+    hence Sum ((g|s)" ^2) = 1/n^2 * Sum(((f|s)^2)") by A3,A5,A6,RVSUM_2:38
+    .= (1*1) / (n^2*(f.(s+1))^2) by A1,A4,XCMPLX_1:76
+    .= 1 / (g.(s+1))^2 by A2;
+  end;
+
+definition
+  let s be positive Nat;
+  let f be (s+1)-element complex-valued FinSequence;
+  func SierpProblem168FS(f) -> FinSequence equals
+  12(#)f|(s-1) ^ <* 15*f.s, 20*f.s, 12*f.(s+1) *>;
+  coherence;
+end;
+
+registration
+  let s be positive Nat;
+  let f be (s+1)-element complex-valued FinSequence;
+  cluster SierpProblem168FS(f) -> (s+1+1)-element;
+  coherence
+  proof
+A1: 12(#)f|(s-1) = (12(#)f)|(s-1) by Th56;
+    len(12(#)f) = s+1 by CARD_1:def 7;
+    then
+A2: len(12(#)f|(s-1)) = s-1 by A1,FINSEQ_1:59,XREAL_1:6;
+    len <* 15*f.s, 20*f.s, 12*f.(s+1) *> = 3 by FINSEQ_1:45;
+    then len SierpProblem168FS(f) = s-1+3 by A2,FINSEQ_1:22;
+    hence thesis;
+  end;
+end;
+
+registration
+  let s be positive Nat;
+  let f be (s+1)-element complex-valued FinSequence;
+  cluster SierpProblem168FS(f) -> complex-valued;
+  coherence;
+end;
+
+registration
+  let s be positive Nat;
+  let f be (s+1)-element real-valued FinSequence;
+  cluster SierpProblem168FS(f) -> real-valued;
+  coherence;
+end;
+
+registration
+  let s be positive Nat;
+  let f be (s+1)-element integer-valued FinSequence;
+  cluster SierpProblem168FS(f) -> integer-valued;
+  coherence;
+end;
+
+registration
+  let s be positive Nat;
+  let f be (s+1)-element natural-valued FinSequence;
+  cluster SierpProblem168FS(f) -> natural-valued;
+  coherence;
+end;
+
+registration
+  let c be non zero Complex;
+  cluster <*c*> -> non-empty;
+  coherence
+  proof
+    assume
+A1: <*c*> is non non-empty;
+    rng <*c*> = {c} by FINSEQ_1:38;
+    hence thesis by A1;
+  end;
+  let f be non-empty complex-valued FinSequence;
+  cluster c(#)f -> non-empty;
+  coherence
+  proof
+    assume c(#)f is non non-empty;
+    then consider x being object such that
+A2: x in dom(c(#)f) and
+A3: (c(#)f).x = 0 by FUNCT_1:def 3;
+A4: (c(#)f).x = c*f.x by VALUED_1:6;
+    dom(c(#)f) = dom f by VALUED_1:def 5;
+    then f.x in rng f by A2,FUNCT_1:def 3;
+    hence thesis by A3,A4;
+  end;
+end;
+
+registration
+  let s be positive Nat;
+  let f be (s+1)-element non-empty real-valued FinSequence;
+  cluster SierpProblem168FS(f) -> non-empty;
+  coherence
+  proof
+A1: 0+1 <= s by NAT_1:13;
+A2: len f = s+1 by CARD_1:def 7;
+    s <= s+1 by NAT_1:11;
+    then s in dom f by A1,A2,FINSEQ_3:25;
+    then
+A3: f.s in rng f by FUNCT_1:def 3;
+    1 <= s+1 by NAT_1:11;
+    then s+1 in dom f by A2,FINSEQ_3:25;
+    then f.(s+1) in rng f by FUNCT_1:def 3;
+    hence thesis by A3;
+  end;
+end;
+
+theorem Th70:
+  for s being positive Nat
+  ex f being (s+1)-element non-empty natural-valued FinSequence st
+  f is a_solution_of_Sierp168
+  proof
+    defpred P[Nat] means
+    ex f being ($1+1)-element non-empty natural-valued FinSequence st
+    f is a_solution_of_Sierp168;
+A1: P[1] by Th67;
+A2: for s being non zero Nat st P[s] holds P[s+1]
+    proof
+      let s be non zero Nat;
+      given T being (s+1)-element non-empty natural-valued FinSequence
+      such that
+A3:   T is a_solution_of_Sierp168;
+      take X = SierpProblem168FS(T);
+A4:   12(#)T|(s-1) = (12(#)T)|(s-1) by Th56;
+A5:   len <*15*T.s,20*T.s*> = 2 by FINSEQ_1:44;
+A6:   len (12(#)T) = len T by COMPLSP2:3;
+A7:   len T = s+1 by CARD_1:def 7;
+      then
+A8:   len (12(#)T|(s-1)) = s-1 by A4,A6,FINSEQ_1:59,XREAL_1:6;
+A9:   len (12(#)T|(s-1)^<*15*T.s,20*T.s*>)
+      = len (12(#)T|(s-1)) + len <*15*T.s,20*T.s*> by FINSEQ_1:22
+      .= s+1 by A5,A8;
+A10:  len <* 15*T.s, 20*T.s, 12*T.(s+1) *> = 3 by FINSEQ_1:45;
+      s-1+1+0 <= s+2 & s+2 <= s-1+3 by XREAL_1:6;
+      then
+A11:  (12(#)T|(s-1)^<* 15*T.s, 20*T.s, 12*T.(s+1) *>).(s+2)
+      = <* 15*T.s, 20*T.s, 12*T.(s+1) *>.(s+2-(s-1))
+      by A8,A10,FINSEQ_1:23;
+A12:  (12"(#)T")^2 = (12"^2)(#)(T"^2) by BORSUK_7:18;
+A13:  (T"|s) ^2 = (T"^2)|s by Th62;
+A14:  (T|s)" ^2 = (T"|s) ^2 by Th61;
+      (T"^2).s = (T".s)^2 by VALUED_1:11;
+      then
+A15:  (T"^2).s = (T.s)"^2 by VALUED_1:10;
+A16:  0+1 <= s by NAT_1:13;
+      s <= s+1 by NAT_1:11;
+      then s in dom T by A7,A16,FINSEQ_3:25;
+      then
+A17:  T.s <> 0;
+      then
+A18:  1/(15*T.s)^2 + 1/(20*T.s)^2
+      = (1*(20^2*(T.s)^2)+1*(15^2*(T.s)^2)) / ((15^2*(T.s)^2)*(20^2*(T.s)^2))
+      by XCMPLX_1:116
+      .= (625*(T.s)^2) / (225*(T.s)^2*400*(T.s)^2)
+      .= (1*625) / (12^2*(T.s)^2*625) by A17,XCMPLX_1:91
+      .= 1/(12*T.s)^2 by XCMPLX_1:91;
+      ((12(#)T)|(s-1))" = (12(#)T)"|(s-1) by Th61;
+      then
+A19:  Sum (((12(#)T)|(s-1))"^2) = Sum ((12(#)T)"^2|(s-1)) by Th62;
+      now
+        let c;
+        thus (c*T.s)"^2 = (1/(c*T.s))^2
+        .= (1*1)/(c*T.s)^2 by XCMPLX_1:76;
+      end;
+      then
+A20:  (15*T.s)"^2 = 1/(15*T.s)^2 & (20*T.s)"^2 = 1/(20*T.s)^2;
+      <* 15*T.s, 20*T.s *>"^2 = <* (15*T.s)", (20*T.s)" *>^2 by Th64
+      .= <* 1/(15*T.s)^2, 1/(20*T.s)^2 *> by A20,TOPREAL6:11;
+      then
+A21:  Sum (<* 15*T.s, 20*T.s *>"^2) = 1/(15*T.s)^2 + 1/(20*T.s)^2
+      by RVSUM_1:77;
+      (12(#)T)" = 12"(#)T" by Th58;
+      then
+A22:  Sum <*(12(#)T)"^2.s*> = 1/(12^2)*((1/(T.s))^2) by A12,A15,VALUED_1:6
+      .= 1/(12^2)*((1^2/(T.s)^2)) by XCMPLX_1:76
+      .= (1*1)/((12^2)*(T.s)^2) by XCMPLX_1:76
+      .= 1/(12*T.s)^2;
+      set p = (12(#)T)"^2;
+      dom ((12(#)T)"^2) = dom ((12(#)T)") by VALUED_1:11;
+      then
+A23:  len ((12(#)T)"^2) = len ((12(#)T)") by FINSEQ_3:29;
+      dom ((12(#)T)") = dom (12(#)T) by VALUED_1:def 7;
+      then len ((12(#)T)") = len (12(#)T) by FINSEQ_3:29;
+      then
+A24:  p|(s-1+1) = p|(s-1) ^ <*p.(s-1+1)*> by A6,A7,A23,FINSEQ_5:83,XREAL_1:6;
+A25:  (12"^2(#)T"^2)|s = 12"^2*(T"^2|s) by Th56;
+A26:  (12"(#)T")^2|s = (12"^2(#)T"^2)|s by BORSUK_7:18;
+      12(#)T|(s-1)^(<*15*T.s,20*T.s*>^<*12*T.(s+1)*>) =
+      12(#)T|(s-1)^<*15*T.s,20*T.s*>^<*12*T.(s+1)*> by FINSEQ_1:32;
+      then (X|(s+1))"
+      = (12(#)T|(s-1))" ^ <* 15*T.s, 20*T.s *>" by A9,Th60;
+      then (X|(s+1))"^2 = (12(#)T|(s-1))"^2 ^ <* 15*T.s, 20*T.s *>"^2 by Th59;
+      hence Sum ((X|(s+1))" ^2)
+      = Sum ((12(#)T|(s-1))"^2) + 1/(12*T.s)^2 by A18,A21,RVSUM_1:75
+      .= Sum ((12(#)T)"^2|(s-1)) + 1/(12*T.s)^2 by A19,Th56
+      .= Sum ((12(#)T)"^2|(s-1) ^ <*(12(#)T)"^2.s*>) by A22,RVSUM_1:74
+      .= Sum ((12"(#)T")^2|s) by A24,Th58
+      .= (1^2)/(12^2) * (1/(T.(s+1))^2) by A3,A13,A14,A25,A26,RVSUM_2:38
+      .= (1*1)/(12^2*(T.(s+1))^2) by XCMPLX_1:76
+      .= 1/(X.(s+1+1))^2 by A11;
+    end;
+    for k being non zero Nat holds P[k] from NAT_1:sch 10(A1,A2);
+    hence thesis;
+  end;
+
+definition
+  let s be positive Nat;
+  mode Solution_of_Sierp168 of s ->
+       (s+1)-element positive-yielding natural-valued FinSequence means :Def14:
+  it is a_solution_of_Sierp168;
+  existence by Th70;
+end;
+
+registration
+  let s be positive Nat;
+  cluster -> a_solution_of_Sierp168 for Solution_of_Sierp168 of s;
+  coherence by Def14;
+end;
+
+registration
+  let s,n be positive Nat;
+  let f be Solution_of_Sierp168 of s;
+  cluster n(#)f -> a_solution_of_Sierp168;
+  coherence by Th69;
+end;
+
+theorem
+  for s,n being positive Nat
+  for f being Solution_of_Sierp168 of s holds
+    n(#)f is Solution_of_Sierp168 of s by Def14;
+
+definition
+  let s be positive Nat;
+  let f be (s+1)-element positive-yielding natural-valued FinSequence;
+  func Solutions_of_Sierp168(f) -> ManySortedSet of NATPLUS means :Def15:
+  for n being non zero Nat holds it.n = n(#)f;
+  existence
+  proof
+    defpred P[object,object] means
+    ex n being positive Nat st n = $1 & $2 = n(#)f;
+A1: for i being object st i in NATPLUS ex j being object st P[i,j]
+    proof
+      let i be object;
+      assume i in NATPLUS;
+      then reconsider i as non zero Nat;
+      take i(#)f;
+      thus thesis;
+    end;
+    consider F being ManySortedSet of NATPLUS such that
+A2: for i being object st i in NATPLUS holds P[i,F.i] from PBOOLE:sch 3(A1);
+    take F;
+    let n be non zero Nat;
+    n in NATPLUS by NAT_LAT:def 6;
+    then P[n,F.n] by A2;
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    let F,G be ManySortedSet of NATPLUS such that
+A3: for n being non zero Nat holds F.n = n(#)f and
+A4: for n being non zero Nat holds G.n = n(#)f;
+    dom F = NATPLUS by PARTFUN1:def 2;
+    hence dom F = dom G by PARTFUN1:def 2;
+    let n be object;
+    assume n in dom F;
+    then reconsider m = n as Element of NATPLUS;
+    thus F.n = m(#)f by A3
+    .= G.n by A4;
+  end;
+end;
+
+registration
+  let s be positive Nat;
+  let f be (s+1)-element positive-yielding natural-valued FinSequence;
+  cluster Solutions_of_Sierp168(f) -> one-to-one;
+  coherence
+  proof
+    set F = Solutions_of_Sierp168(f);
+    let x1,x2 be object;
+    assume x1 in dom F & x2 in dom F;
+    then reconsider x1,x2 as Element of NATPLUS;
+    F.x1 = x1(#)f & F.x2 = x2(#)f by Def15;
+    hence thesis by VALUED_2:9;
+  end;
+end;
+
+theorem Th72:
+  for s being positive Nat
+  for f being Solution_of_Sierp168 of s holds
+  rng Solutions_of_Sierp168(f) c=
+  the set of all g where g is Solution_of_Sierp168 of s
+  proof
+    let s be positive Nat;
+    let f be Solution_of_Sierp168 of s;
+    set F = Solutions_of_Sierp168(f);
+    let y be object;
+    assume y in rng F;
+    then consider x being object such that
+A1: x in dom F and
+A2: F.x = y by FUNCT_1:def 3;
+    reconsider x as Element of NATPLUS by A1;
+    F.x = x(#)f by Def15;
+    then y is Solution_of_Sierp168 of s by A2,Def14;
+    hence thesis;
+  end;
+
+theorem :: Problem 168
+  for S being positive Nat holds
+  the set of all f where f is Solution_of_Sierp168 of S is infinite
+  proof
+    let S be positive Nat;
+    set F = Solutions_of_Sierp168(the Solution_of_Sierp168 of S);
+A1: dom F = NATPLUS by PARTFUN1:def 2;
+    rng F c= the set of all f where f is Solution_of_Sierp168 of S by Th72;
+    hence thesis by A1,CARD_1:59;
+  end;
+
+begin :: Problem 171
+
+theorem Th74: :: Problem 171 a
+  for n being positive Integer holds n <= 7 or n in {9,10,12,15} iff
+  not ex x,y being positive Integer st 3*x+5*y = n
+  proof
+    let n be positive Integer;
+    thus n <= 7 or n in {9,10,12,15} implies
+    not ex x,y being positive Integer st 3*x+5*y = n
+    proof
+      assume
+A1:   n <= 7 or n in {9,10,12,15};
+      given x,y being positive Integer such that
+A2:   3*x+5*y = n;
+      x >= 0+1 by NAT_1:13;
+      then
+A3:   3*x >= 3*1 by XREAL_1:64;
+      y >= 0+1 by NAT_1:13;
+      then
+A4:   5*y >= 5*1 by XREAL_1:64;
+      per cases by A1;
+      suppose
+A5:     n <= 7;
+        3*x+5*y >= 3+5 by A3,A4,XREAL_1:7;
+        hence thesis by A2,A5,XXREAL_0:2;
+      end;
+      suppose n in {9,10,12,15};
+        then per cases by ENUMSET1:def 2;
+        suppose
+A6:       n = 3*3 or n = 3*4 or n = 3*5;
+          then
+A7:       3 divides n;
+          3 divides 3*x;
+          then
+A8:       3 divides n-3*x by A7,INT_5:1;
+          5 divides 5*y;
+          then 3*5 divides 5*y by A2,A8,XPRIMES1:3,5,INT_2:30,PEPIN:4;
+          then 9-3*x >= 15 or 12-3*x >= 15 or 15-3*x >= 15 by A2,A6,INT_2:27;
+          then 3*x <= 9-15 or 3*x <= 12-15 or 3*x <= 15-15 by XREAL_1:11;
+          hence contradiction by A3,XXREAL_0:2;
+        end;
+        suppose
+A9:       n = 5*2;
+          then
+A10:      5 divides n;
+          5 divides 5*y;
+          then
+A11:      5 divides n-5*y by A10,INT_5:1;
+          3 divides 3*x;
+          then 3*5 divides 3*x by A2,A11,XPRIMES1:3,5,INT_2:30,PEPIN:4;
+          then 10-5*y >= 15 by A2,A9,INT_2:27;
+          then 5*y <= 10-15 by XREAL_1:11;
+          hence contradiction by A4,XXREAL_0:2;
+        end;
+      end;
+    end;
+    assume
+A12: for x,y being positive Integer holds 3*x+5*y <> n;
+    assume
+A13: n > 7;
+    assume
+A14: not n in {9,10,12,15};
+    n is Nat by TARSKI:1;
+    then consider k being Nat such that
+A15: n = 3*k or n = 3*k+1 or n = 3*k+2 by NUMBER02:23;
+    per cases by A15;
+    suppose
+A16:  n = 3*k;
+      set x = k-5;
+      set y = 3;
+A17:  now
+        assume x <= 0;
+        then k <= 0+5 by XREAL_1:20;
+        then 3*k <= 3*5 by XREAL_1:64;
+        then
+A18:    n = 0 or ... or n = 15 by A16;
+A19:    3*k mod 3 = 0 by NAT_D:13;
+        (2*3+2) mod 3 = 2 mod 3 & (3*3+2) mod 3 = 2 mod 3 &
+        (4*3+1) mod 3 = 1 mod 3 & (4*3+2) mod 3 = 2 mod 3 by NAT_D:21;
+        hence contradiction by A13,A14,A16,A18,A19,NAT_D:24,ENUMSET1:def 2;
+      end;
+      3*x+5*y = n by A16;
+      hence thesis by A12,A17;
+    end;
+    suppose
+A20:  n = 3*k+1;
+      set x = k-3;
+      set y = 2;
+A21:  now
+        assume x <= 0;
+        then k <= 0+3 by XREAL_1:20;
+        then 3*k <= 3*3 by XREAL_1:64;
+        then 3*k+1 <= 3*3+1 by XREAL_1:6;
+        then
+A22:    n = 0 or ... or n = 10 by A20;
+A23:    3*k+1 mod 3 = 1 mod 3 by NAT_D:21
+        .= 1 by NAT_D:24;
+        (2*3+2) mod 3 = 2 mod 3 by NAT_D:21;
+        hence contradiction by A13,A14,A20,A22,A23,NAT_D:24,ENUMSET1:def 2;
+      end;
+      3*x+5*y = n by A20;
+      hence thesis by A12,A21;
+    end;
+    suppose
+A24:  n = 3*k+2;
+      set x = k-1;
+      set y = 1;
+A25:  now
+        assume x <= 0;
+        then k <= 0+1 by XREAL_1:20;
+        then 3*k <= 3*1 by XREAL_1:64;
+        then 3*k+2 <= 3*1+2 by XREAL_1:6;
+        then n = 0 or ... or n = 5 by A24;
+        hence contradiction by A13;
+      end;
+      3*x+5*y = n by A24;
+      hence thesis by A12,A25;
+    end;
+  end;
+
+theorem :: Problem 171 b
+  for m, n being positive Integer st n > 40*m
+  for A being finite set st
+  A = { [x,y] where x,y is positive Integer: 3*x + 5*y = n }
+  holds card A > m
+  proof
+    let m,n be positive Integer such that
+A1: n > 40*m;
+    let A be finite set such that
+A2: A = { [x,y] where x,y is positive Integer: 3*x + 5*y = n };
+    reconsider M = m as positive Nat by TARSKI:1;
+    m >= 0+1 by NAT_1:13;
+    then
+A3: 40*m >= 40*1 by XREAL_1:64;
+    then 40*m > 7 by XXREAL_0:2;
+    then
+A4: n > 7 by A1,XXREAL_0:2;
+    now
+      assume n in {9,10,12,15};
+      then n = 9 or n = 10 or n = 12 or n = 15 by ENUMSET1:def 2;
+      hence contradiction by A1,A3,XXREAL_0:2;
+    end;
+    then consider x0,y0 being positive Integer such that
+A5: 3*x0+5*y0 = n by A4,Th74;
+    now
+      assume x0 <= 5*m & y0 <= 5*m;
+      then 3*x0 <= 3*(5*m) & 5*y0 <= 5*(5*m) by XREAL_1:64;
+      then n <= 15*m+25*m by A5,XREAL_1:7;
+      hence contradiction by A1;
+    end;
+    then per cases;
+    suppose
+A6:   x0 > 5*m;
+      deffunc A(Nat) = x0-5*$1;
+      deffunc B(Nat) = y0+3*$1;
+      deffunc Q(Nat) = [A($1),B($1)];
+      deffunc R(Nat) = 3*A($1)+5*B($1);
+      set K = { Q(k) where k is Nat: k <= m & R(k) > 0 & n = R(k) };
+      m+1,K are_equipotent
+      proof
+        defpred P[object,object] means
+        ex k being Nat st k = $1 & $2 = Q(k);
+A7:     for e being object st e in M+1 ex u being object st P[e,u]
+        proof
+          let e be object;
+          assume e in M+1;
+          then reconsider e as Nat;
+          take Q(e);
+          take e;
+          thus thesis;
+        end;
+        consider f being Function such that
+A8:     dom f = M+1 and
+A9:     for e being object st e in M+1 holds P[e,f.e] from CLASSES1:sch 1(A7);
+        take f;
+        thus f is one-to-one
+        proof
+          let x1,x2 be object such that
+A10:      x1 in dom f and
+A11:      x2 in dom f and
+A12:      f.x1 = f.x2;
+          consider k1 being Nat such that
+A13:      k1 = x1 and
+A14:      f.x1 = Q(k1) by A8,A9,A10;
+          consider k2 being Nat such that
+A15:      k2 = x2 and
+A16:      f.x2 = Q(k2) by A8,A9,A11;
+          A(k1) = A(k2) by A12,A14,A16,XTUPLE_0:1;
+          hence x1 = x2 by A13,A15;
+        end;
+        thus dom f = m+1 by A8;
+        thus rng f c= K
+        proof
+          let u be object;
+          assume u in rng f;
+          then consider e being object such that
+A17:      e in dom f and
+A18:      f.e = u by FUNCT_1:def 3;
+          consider k being Nat such that
+A19:      k = e and
+A20:      f.e = Q(k) by A8,A9,A17;
+          k in Segm(M+1) by A8,A17,A19;
+          then k < M+1 by NAT_1:44;
+          then
+A21:      k <= m by NAT_1:13;
+          n = R(k) by A5;
+          hence u in K by A18,A20,A21;
+        end;
+        thus K c= rng f
+        proof
+          let u be object;
+          assume u in K;
+          then consider k being Nat such that
+A22:      u = Q(k) and
+A23:      k <= m and
+          R(k) > 0 & n = R(k);
+          k < m+1 by A23,NAT_1:13;
+          then
+A24:      k in Segm(M+1) by NAT_1:44;
+          then P[k,f.k] by A9;
+          hence thesis by A8,A22,A24,FUNCT_1:def 3;
+        end;
+      end;
+      then
+A25:  card K = card(M+1) by CARD_1:5;
+      then reconsider K as finite set;
+      K c= A
+      proof
+        let q be object;
+        assume q in K;
+        then consider k being Nat such that
+A26:    q = Q(k) and
+A27:    k <= m and
+A28:    R(k) > 0 & n = R(k);
+        5*k <= 5*m by A27,XREAL_1:64;
+        then A(k) > 5*m-5*m by A6,XREAL_1:14;
+        hence thesis by A2,A26,A28;
+      end;
+      then card K <= card A by NAT_1:43;
+      hence m < card A by A25,XXREAL_0:2,NAT_1:16;
+    end;
+    suppose
+A29:  y0 > 5*m;
+      deffunc A(Nat) = x0+5*$1;
+      deffunc B(Nat) = y0-3*$1;
+      deffunc Q(Nat) = [A($1),B($1)];
+      deffunc R(Nat) = 3*A($1)+5*B($1);
+      set K = { Q(k) where k is Nat: k <= m & R(k) > 0 & n = R(k) };
+      m+1,K are_equipotent
+      proof
+        defpred P[object,object] means
+        ex k being Nat st k = $1 & $2 = Q(k);
+A30:    for e being object st e in M+1 ex u being object st P[e,u]
+        proof
+          let e be object;
+          assume e in M+1;
+          then reconsider e as Nat;
+          take Q(e);
+          take e;
+          thus thesis;
+        end;
+        consider f being Function such that
+A31:    dom f = M+1 and
+A32:    for e being object st e in M+1 holds P[e,f.e] from CLASSES1:sch 1(A30);
+        take f;
+        thus f is one-to-one
+        proof
+          let x1,x2 be object such that
+A33:      x1 in dom f and
+A34:      x2 in dom f and
+A35:      f.x1 = f.x2;
+          consider k1 being Nat such that
+A36:      k1 = x1 and
+A37:      f.x1 = Q(k1) by A31,A32,A33;
+          consider k2 being Nat such that
+A38:      k2 = x2 and
+A39:      f.x2 = Q(k2) by A31,A32,A34;
+          A(k1) = A(k2) by A35,A37,A39,XTUPLE_0:1;
+          hence x1 = x2 by A36,A38;
+        end;
+        thus dom f = m+1 by A31;
+        thus rng f c= K
+        proof
+          let u be object;
+          assume u in rng f;
+          then consider e being object such that
+A40:      e in dom f and
+A41:      f.e = u by FUNCT_1:def 3;
+          consider k being Nat such that
+A42:      k = e and
+A43:      f.e = Q(k) by A31,A32,A40;
+          k in Segm(M+1) by A31,A40,A42;
+          then k < M+1 by NAT_1:44;
+          then
+A44:      k <= m by NAT_1:13;
+          n = R(k) by A5;
+          hence u in K by A41,A43,A44;
+        end;
+        thus K c= rng f
+        proof
+          let u be object;
+          assume u in K;
+          then consider k being Nat such that
+A45:      u = Q(k) and
+A46:      k <= m and
+          R(k) > 0 & n = R(k);
+          k < m+1 by A46,NAT_1:13;
+          then
+A47:      k in Segm(M+1) by NAT_1:44;
+          then P[k,f.k] by A32;
+          hence thesis by A31,A45,A47,FUNCT_1:def 3;
+        end;
+      end;
+      then
+A48:  card K = card(M+1) by CARD_1:5;
+      then reconsider K as finite set;
+      K c= A
+      proof
+        let q be object;
+        assume q in K;
+        then consider k being Nat such that
+A49:    q = Q(k) and
+A50:    k <= m and
+A51:    R(k) > 0 & n = R(k);
+        3*k <= 3*m by A50,XREAL_1:64;
+        then B(k) > 5*m-3*m by A29,XREAL_1:14;
+        then B(k) > 2*m;
+        hence thesis by A2,A49,A51;
+      end;
+      then card K <= card A by NAT_1:43;
+      hence m < card A by A48,XXREAL_0:2,NAT_1:16;
+    end;
+  end;
+
+begin :: Problem 188
+
+Lm12:
+  not ex x,y,z,t being Nat
+  st x^2 + 2*y^2 = z^2 & 2*x^2 + y^2 = t^2 & x,y are_coprime
+  proof
+    given x,y,z,t being Nat such that
+A1: x^2 + 2*y^2 = z^2 and
+A2: 2*x^2 + y^2 = t^2 and
+A3: x,y are_coprime;
+A4: 2*x^2 mod 4 = ((2 mod 4) * (x^2 mod 4)) mod 4 by NAT_D:67;
+A5: 2*y^2 mod 4 = ((2 mod 4) * (y^2 mod 4)) mod 4 by NAT_D:67;
+A6: 2 mod 4 = 2 by NAT_D:24;
+    per cases;
+    suppose x is even & y is even;
+      hence contradiction by A3,NEWTON05:35;
+    end;
+    suppose x is odd & y is odd;
+      then x^2 mod 4 = 1 & y^2 mod 4 = 1 by PYTHTRIP:4;
+      then (x^2 + 2*y^2) mod 4 = (1+2*1) mod 4 by A5,A6,NAT_D:66
+      .= 3 by NAT_D:24;
+      hence contradiction by A1,PYTHTRIP:3,4;
+    end;
+    suppose x is even & y is odd;
+      then x^2 mod 4 = 0 & y^2 mod 4 = 1 by PYTHTRIP:3,4;
+      then (x^2 + 2*y^2) mod 4 = (0+2*1) mod 4 by A5,A6,NAT_D:66
+      .= 2 by NAT_D:24;
+      hence contradiction by A1,PYTHTRIP:3,4;
+    end;
+    suppose x is odd & y is even;
+      then x^2 mod 4 = 1 & y^2 mod 4 = 0 by PYTHTRIP:3,4;
+      then (2*x^2 + y^2) mod 4 = (2*1+0) mod 4 by A4,A6,NAT_D:66
+      .= 2 by NAT_D:24;
+      hence contradiction by A2,PYTHTRIP:3,4;
+    end;
+  end;
+
+theorem Th76:
+  m <> 0 implies i div (i gcd m) , m div (i gcd m) are_coprime by RING_3:14;
+
+theorem :: Problem 188
+  not ex x,y,z,t being positive Nat st x^2 + 2*y^2 = z^2 & 2*x^2 + y^2 = t^2
+  proof
+    given x,y,z,t being positive Nat such that
+A1: x^2 + 2*y^2 = z^2 and
+A2: 2*x^2 + y^2 = t^2;
+    set d = x gcd y;
+    set x1 = x div d;
+    set y1 = y div d;
+    set z1 = z div d;
+    set t1 = t div d;
+A3: d divides x by INT_2:def 2;
+A4: d divides y by INT_2:def 2;
+    then
+A5: y1 = y / d by RING_3:6;
+A6: d^2 divides x^2 by A3,PYTHTRIP:6;
+A7: d^2 divides y^2 by A4,PYTHTRIP:6;
+    then d^2 divides 2*y^2 by INT_2:2;
+    then d^2 divides z^2 by A1,A6,NAT_D:8;
+    then
+A8: z1 = z / d by RING_3:6,PYTHTRIP:6;
+    d^2 divides 2*x^2 by A6,INT_2:2;
+    then d^2 divides t^2 by A2,A7,NAT_D:8;
+    then
+A9: t1 = t / d by RING_3:6,PYTHTRIP:6;
+A10: x1^2 + 2*y1^2 = x^2/d^2 + 2*(y/d)^2 by A5,XCMPLX_1:76
+     .= x^2/d^2 + 2*(y^2/d^2) by XCMPLX_1:76
+     .= z^2/d^2 by A1
+     .= z1^2 by A8,XCMPLX_1:76;
+    2*x1^2 + y1^2 = 2*(x^2/d^2) + (y/d)^2 by A5,XCMPLX_1:76
+    .= 2*(x^2/d^2) + y^2/d^2 by XCMPLX_1:76
+    .= t^2/d^2 by A2
+    .= t1^2 by A9,XCMPLX_1:76;
+    hence contradiction by A10,Th76,Lm12;
+  end;
+
+begin :: Problem 195
+
+theorem Th78:
+  n is even implies n mod 4 = 0 or n mod 4 = 2
+  proof
+    assume n is even;
+    then consider m being Nat such that
+A1: n = 2*m;
+A2: (2*m) mod (2*2) = 2*(m mod 2) by INT_4:20;
+    m mod 2 = 0 or m mod 2 = 1 by NAT_D:12;
+    hence thesis by A1,A2;
+  end;
+
+theorem
+  n is even implies n,0 are_congruent_mod 4 or n,2 are_congruent_mod 4
+  proof
+    assume n is even;
+    then n mod 4 = 0 or n mod 4 = 2 by Th78;
+    then n mod 4 = 0 mod 4 or n mod 4 = 2 mod 4;
+    hence thesis by NAT_D:64;
+  end;
+
+theorem Th80:
+  n is odd implies n mod 4 = 1 or n mod 4 = 3
+  proof
+    assume n is odd;
+    then consider m being Nat such that
+A1: n = 2*m+1 by ABIAN:9;
+    (2*m+1) mod 4 = (((2*m) mod 4) + (1 mod 4)) mod 4 by NAT_D:66
+    .= (((2*m) mod 4) + 1) mod 4 by NAT_D:24;
+    then n mod 4 = (0+1) mod 4 or n mod 4 = (2+1) mod 4 by A1,Th78;
+    hence thesis by NAT_D:24;
+  end;
+
+theorem Th81:
+  n is odd implies n,1 are_congruent_mod 4 or n,3 are_congruent_mod 4
+  proof
+    assume n is odd;
+    then n mod 4 = 1 or n mod 4 = 3 by Th80;
+    then n mod 4 = 1 mod 4 or n mod 4 = 3 mod 4;
+    hence thesis by NAT_D:64;
+  end;
+
+theorem Th82:
+  i is even implies i|^3 mod 8 = 0
+  proof
+    assume i is even;
+    then consider j being Integer such that
+A1: i = 2*j by ABIAN:11;
+    thus i|^3 mod 8 = ((2|^3)*(j|^3)) mod 8 by A1,NEWTON:7
+    .= ((2*2*2)*(j|^3)) mod 8 by POLYEQ_5:2
+    .= 0 by BINARI_4:20;
+  end;
+
+theorem :: Problem 195
+  for k being non zero Nat holds
+  not ex x,y being positive Nat st x|^2 + 2|^(2*k) + 1 = y|^3
+  proof
+    let k be non zero Nat;
+    given x,y being positive Nat such that
+A1: x|^2 + 2|^(2*k) + 1 = y|^3;
+A2: x|^2 = x^2 by WSIERP_1:1;
+A3: y|^3 = y*y*y by POLYEQ_5:2;
+    now
+      assume x is odd;
+      then reconsider x as odd Nat;
+A4:   x^2 mod 8 = 1 by NUMBER10:60;
+      x|^2 + 2|^(2*k) + 1 is even;
+      then y is even by A1;
+      then
+A5:   y|^3 mod 8 = 0 by Th82;
+A6:   (x|^2 + 2|^(2*k) + 1) mod 8
+      = ((x|^2) mod 8 + (2|^(2*k) mod 8) + (1 mod 8)) mod 8 by NUMBER05:8
+      .= (2 + (2|^(2*k) mod 8)) mod 8 by A2,A4;
+      2|^(k*2) = (2|^k)|^2 by NEWTON:9
+      .= (2|^k)^2 by WSIERP_1:1;
+      then 2|^(2*k) mod 8 = 0 or 2|^(2*k) mod 8 = 4 by NUMBER10:59;
+      hence contradiction by A1,A5,A6,NAT_D:24;
+    end;
+    then consider a, z being Nat such that
+    z is odd and
+A7: a > 0 and
+A8: x = 2|^a * z by NAT_5:2;
+A9: y|^3 - 1 = (y-1) * (y^2+y+1) by A3;
+    reconsider a as positive Nat by A7;
+A10: (2|^a)|^2 = 2|^(2*a) by NEWTON:9;
+A11: (2|^a)|^2 = (2|^a)^2 by WSIERP_1:1;
+A12: 2|^(2*a) = 2|^2|^a by NEWTON:9;
+A13: 2|^(2*k) = 2|^2|^k by NEWTON:9;
+A14: now
+      assume that
+A15:  y|^3-1,0 are_congruent_mod 4 and
+A16:  y,3 are_congruent_mod 4;
+A17:  y-1,3-1 are_congruent_mod 4 by A16;
+A18:  y^2,3^2 are_congruent_mod 4 by A16,INT_1:18;
+A19:  4*1+0,0 are_congruent_mod 4;
+      4*2+1,1 are_congruent_mod 4;
+      then y^2,1 are_congruent_mod 4 by A18,INT_1:15;
+      then y^2+y,1+3 are_congruent_mod 4 by A16,INT_1:16;
+      then y^2+y,0 are_congruent_mod 4 by A19,INT_1:15;
+      then y^2+y+1,0+1 are_congruent_mod 4;
+      then (y-1)*(y^2+y+1),2*1 are_congruent_mod 4 by A17,INT_1:18;
+      then 2,y|^3-1 are_congruent_mod 4 by A3,INT_1:14;
+      then 2,0 are_congruent_mod 4 by A15,INT_1:15;
+      then 2 mod 4 = 0 mod 4;
+      hence contradiction by NAT_D:24;
+    end;
+A20: now
+      assume
+A21:  y,1 are_congruent_mod 4;
+      then y*y,1*1 are_congruent_mod 4 by INT_1:18;
+      then y^2+y,1+1 are_congruent_mod 4 by A21,INT_1:16;
+      then y^2+y+1,2+1 are_congruent_mod 4;
+      then ex A being Integer st y^2+y+1 = A*4+3 by NAT_6:9;
+      then consider p,q being Nat such that
+A22:  p = 4*q+3 and
+A23:  p is prime and
+A24:  p divides y^2+y+1 by NUMBER05:3;
+      take p,q;
+      thus p = 4*q+3 by A22;
+      thus p is prime by A23;
+      thus p divides y^2+y+1 by A24;
+      now
+        assume p divides 2;
+        then p = 1 or p = 2 by NUMBER07:9;
+        hence 4*q+2 = 0 or 4*q+1 = 0 by A22;
+        hence contradiction;
+      end;
+      hence not p divides 2;
+    end;
+    per cases by XXREAL_0:1;
+    suppose
+A25:  a = k;
+      then
+A26:  2|^(2*k) * (z^2+1) = (2|^a*z)^2 + 2|^(2*k) by A10,A11
+      .= y|^3 - 1 by A1,A8,WSIERP_1:1;
+      y is odd by A26;
+      then per cases by Th81;
+      suppose y,1 are_congruent_mod 4;
+        then consider p,q being Nat such that
+A27:    p = 4*q+3 and
+A28:    p is prime and
+A29:    p divides y^2+y+1 and
+A30:    not p divides 2 by A20;
+        p divides 2|^(2*k) * (z^2+1) by A9,A26,A29,INT_2:2;
+        then p divides 2|^(2*k) or p divides z^2+1 by A28,INT_5:7;
+        then p divides z^2+1^2 by A30,A28,NAT_3:5;
+        then p divides 1 by A27,A28,NUMBER10:62;
+        hence contradiction by A28,INT_2:27;
+      end;
+      suppose y,3 are_congruent_mod 4;
+        hence contradiction by A14,A26,A12,A25,Lm1,INT_2:2,NAT_3:3;
+      end;
+    end;
+    suppose a < k;
+      then reconsider ka = k-a as Element of NAT by INT_1:5;
+A31:  2|^(2*a)*(2|^ka)^2 = 2|^(2*a) * 2|^ka * 2|^ka
+      .= 2|^(2*a+ka) * 2|^ka by NEWTON:8
+      .= 2|^(2*a+ka+ka) by NEWTON:8
+      .= 2|^(2*k);
+      then
+A32:  y|^3 - 1 = 2|^(2*a) * ((2|^ka)^2+z^2) by A1,A2,A8,A10,A11;
+      y is odd by A1,A8,A31;
+      then per cases by Th81;
+      suppose y,1 are_congruent_mod 4;
+        then consider p,q being Nat such that
+A33:    p = 4*q+3 and
+A34:    p is prime and
+A35:    p divides y^2+y+1 and
+A36:    not p divides 2 by A20;
+        p divides 2|^(2*a) * ((2|^ka)^2+z^2) by A9,A31,A1,A2,A8,A10,A11,
+        A35,INT_2:2;
+        then p divides 2|^(2*a) or p divides (2|^ka)^2+z^2 by A34,INT_5:7;
+        then p divides 2|^ka by A33,A34,A36,NAT_3:5,NUMBER10:62;
+        hence contradiction by A34,A36,NAT_3:5;
+      end;
+      suppose y,3 are_congruent_mod 4;
+        hence contradiction by A14,A12,A32,Lm1,INT_2:2,NAT_3:3;
+      end;
+    end;
+    suppose a > k;
+      then reconsider ak = a-k as Element of NAT by INT_1:5;
+A37:  2|^(2*k)*2|^ak*2|^ak = 2|^(2*k+ak)*2|^ak by NEWTON:8
+      .= 2|^(2*k+ak+ak) by NEWTON:8
+      .= 2|^(a+a)
+      .= 2|^a*2|^a by NEWTON:8;
+      2|^(2*k)*(2|^ak*z)^2 = 2|^(2*k)*2|^ak*2|^ak*(z*z)
+      .= 2|^a*2|^a*(z*z) by A37
+      .= (2|^a*z)*(2|^a*z);
+      then
+A38:  y|^3 - 1 = 2|^(2*k)*(2|^ak*z)^2 + 2|^(2*k)*1 by A1,A8,WSIERP_1:1
+      .= 2|^(2*k) * ((2|^ak*z)^2+1);
+      then y is odd;
+      then per cases by Th81;
+      suppose y,1 are_congruent_mod 4;
+        then consider p,q being Nat such that
+A39:    p = 4*q+3 and
+A40:    p is prime and
+A41:    p divides y^2+y+1 and
+A42:    not p divides 2 by A20;
+        p divides 2|^(2*k) * ((2|^ak*z)^2+1) by A9,A38,A41,INT_2:2;
+        then p divides 2|^(2*k) or p divides (2|^ak*z)^2+1^2 by A40,INT_5:7;
+        then p divides 1 by A39,A40,A42,NAT_3:5,NUMBER10:62;
+        hence contradiction by A40,INT_2:27;
+      end;
+      suppose y,3 are_congruent_mod 4;
+        hence contradiction by A14,A38,A13,Lm1,INT_2:2,NAT_3:3;
+      end;
+    end;
+  end;
+
+begin :: Problem 196
+
+theorem :: Problem 196 a
+  for x,y,z,t being positive Nat st x <= y & x <= z <= t holds
+  x+y = z*t & z+t = x*y iff
+  x = 1 & y = 5 & z = 2 & t = 3 or
+  x = 2 & y = 2 & z = 2 & t = 2
+  proof
+    let x,y,z,t be positive Nat such that
+A1: x <= y and
+A2: x <= z and
+A3: z <= t;
+    thus x+y = z*t & z+t = x*y implies
+    x = 1 & y = 5 & z = 2 & t = 3 or
+    x = 2 & y = 2 & z = 2 & t = 2
+    proof
+      assume that
+A4:   x+y = z*t and
+A5:   z+t = x*y;
+      per cases;
+      suppose x <= 2;
+        then x = 0 or ... or x = 2;
+        then per cases;
+        suppose
+A6:       x = 1;
+          then z <> 1 by A4,A5;
+          then z < 0+1 or z > 1 by XXREAL_0:1;
+          then z >= 1+1 by NAT_1:13;
+          then per cases by XXREAL_0:1;
+          suppose z = 2;
+            hence thesis by A4,A5,A6;
+          end;
+          suppose
+A7:         z > 2;
+            then reconsider z1 = z-2 as Element of NAT by INT_1:5;
+A8:         t > 2 by A3,A7,XXREAL_0:2;
+            reconsider t1 = t-2 as Element of NAT by A3,A7,XXREAL_0:2,INT_1:5;
+A9:         z+t+3 = z1+t1+7;
+            2+1 <= z & 2+1 <= t by A7,A8,NAT_1:13;
+            then
+A10:        3-2 <= z1 & 3-2 <= t1 by XREAL_1:9;
+            then
+A11:        1+1 <= z1+t1 by XREAL_1:7;
+            1*1 <= z1*t1 by A10,XREAL_1:66;
+            then 1+2 <= z1*t1+(t1+z1) by A11,XREAL_1:7;
+            then 3+(t1+z1) <= z1*t1+t1+z1+(t1+z1) by XREAL_1:6;
+            then z1+t1+3+4 <= z1*t1+2*t1+2*z1+4 by XREAL_1:6;
+            hence thesis by A4,A5,A6,A9,XREAL_1:8;
+          end;
+        end;
+        suppose
+A12:      x = 2;
+          then per cases by A2,XXREAL_0:1;
+          suppose z = 2;
+            hence thesis by A4,A5,A12;
+          end;
+          suppose
+A13:        z > 2;
+            then reconsider z1 = z-2 as Element of NAT by INT_1:5;
+A14:        t > 2 by A3,A13,XXREAL_0:2;
+            reconsider t1 = t-2 as Element of NAT by A3,A13,XXREAL_0:2,INT_1:5;
+            2+1 <= z & 2+1 <= t by A13,A14,NAT_1:13;
+            then
+A15:        3-2 <= z1 & 3-2 <= t1 by XREAL_1:9;
+            then
+A16:        1+1 <= z1+t1 by XREAL_1:7;
+            1*1 <= z1*t1 by A15,XREAL_1:66;
+            then 1+2 <= z1*t1+(t1+z1) by A16,XREAL_1:7;
+            then 3+(t1+z1) <= z1*t1+t1+z1+(t1+z1) by XREAL_1:6;
+            then z1+t1+3+4 <= z1*t1+2*t1+2*z1+4 by XREAL_1:6;
+            then z+t+3-2 <= 1/2*(z+t)+2-2 by A4,A5,A12,XREAL_1:9;
+            then 2*(z+t+1) <= 2*(1/2*(z+t)) by XREAL_1:64;
+            then z+t+(z+t+2) <= z+t+0;
+            hence thesis by XREAL_1:6;
+          end;
+        end;
+      end;
+      suppose
+A17:    x > 2;
+        then
+A18:    z > 2 by A2,XXREAL_0:2;
+        reconsider z1 = z-2 as Element of NAT by A2,A17,XXREAL_0:2,INT_1:5;
+        reconsider t1 = t-2 as Element of NAT by A3,A18,XXREAL_0:2,INT_1:5;
+A19:    z-2 > 2-2 by A18,XREAL_1:8;
+        t > 2 by A3,A18,XXREAL_0:2;
+        then t-2 > 2-2 by XREAL_1:8;
+        then 0+1 <= t1 by NAT_1:13;
+        then
+A20:    1*1 <= z1*t1 by A19,NAT_1:13;
+        z1 <= t1 by A3,XREAL_1:9;
+        then
+A21:    z1+t1 <= t1+t1 by XREAL_1:6;
+A22:    2+1 <= x by A17,NAT_1:13;
+        then consider b being Nat such that
+A23:    y = 3+b by A1,XXREAL_0:2,NAT_1:10;
+        consider a being Nat such that
+A24:    x = 3+a by A22,NAT_1:10;
+        now
+          assume x+y+3 > x*y;
+          then 9+(a+b) > 9+(3*a+3*b+a*b) by A23,A24;
+          then a+b > a+(2*a+3*b+a*b) by XREAL_1:6;
+          then 0+b > b+(2*a+2*b+a*b) by XREAL_1:6;
+          hence contradiction by XREAL_1:6;
+        end;
+        then
+A25:    x+y+3+3 <= x*y+3 by XREAL_1:6;
+        0+1 <= z1 by A19,NAT_1:13;
+        then 2*1 <= 2*z1 by XREAL_1:64;
+        then 1+2 <= z1*t1+2*z1 by A20,XREAL_1:7;
+        then 3+4 <= z1*t1+2*z1+4 by XREAL_1:7;
+        then z1+t1+7 <= 2*t1+(z1*t1+2*z1+4) by A21,XREAL_1:7;
+        then x+y+6 <= x+y+0 by A4,A5,A25,XXREAL_0:2;
+        hence thesis by XREAL_1:6;
+      end;
+    end;
+    thus thesis;
+  end;
+
+  deffunc X(Nat) = -1;
+  deffunc Y(Nat) = $1;
+  deffunc Z(Nat) = 1-Y($1);
+  deffunc T(Nat) = -1;
+  deffunc F(Nat) = [X($1),Y($1),Z($1),T($1)];
+
+definition
+  func exampleSierpinski196 -> Function of NAT, [:INT,INT,INT,INT:] means
+  :Def16:
+  for n being Nat holds it.n = [-1,n,1-n,-1];
+  existence
+  proof
+    deffunc F1(Nat) = In(F($1),[:INT,INT,INT,INT:]);
+    consider f being Function of NAT, [:INT,INT,INT,INT:] such that
+A1: for x being Element of NAT holds f.x = F1(x) from FUNCT_2:sch 4;
+    take f;
+    let n be Nat;
+    n in NAT by ORDINAL1:def 12;
+    hence f.n = F1(n) by A1
+    .= F(n);
+  end;
+  uniqueness
+  proof
+    let f,g be Function of NAT, [:INT,INT,INT,INT:] such that
+A2: for n being Nat holds f.n = F(n) and
+A3: for n being Nat holds g.n = F(n);
+    let n be Element of NAT;
+    thus f.n = F(n) by A2
+    .= g.n by A3;
+  end;
+end;
+
+    set f = exampleSierpinski196;
+
+registration
+  cluster exampleSierpinski196 -> one-to-one;
+  coherence
+  proof
+    let x1,x2 be object;
+    assume x1 in dom f & x2 in dom f;
+    then reconsider x1,x2 as Element of NAT;
+    f.x1 = F(x1) & f.x2 = F(x2) by Def16;
+    hence thesis by XTUPLE_0:5;
+  end;
+end;
+
+theorem Th85:
+  rng exampleSierpinski196 c=
+  { [x,y,z,t] where x,y,z,t is Integer: x+y = z*t & z+t = x*y }
+  proof
+    let y be object;
+    assume y in rng f;
+    then consider k being object such that
+A1: k in dom f and
+A2: f.k = y by FUNCT_1:def 3;
+    reconsider k as Element of NAT by A1;
+    X(k)+Y(k) = Z(k)*T(k) & Z(k)+T(k) = X(k)*Y(k);
+    then F(k) in { [x,y,z,t] where x,y,z,t is Integer: x+y = z*t & z+t = x*y };
+    hence thesis by A2,Def16;
+  end;
+
+theorem :: Problem 196 b
+  { [x,y,z,t] where x,y,z,t is Integer: x+y = z*t & z+t = x*y } is infinite
+  proof
+    dom f = NAT by PARTFUN1:def 2;
+    hence thesis by Th85,CARD_1:59;
+  end;
+
+begin :: Problem 198
+
+reserve a,b,x,y for Real;
+
+registration
+  let r be non negative Real;
+  cluster [/ r \] -> natural;
+  coherence by INT_1:53;
+end;
+
+registration
+  let f be non empty positive-yielding real-valued FinSequence;
+  cluster Sum f -> positive;
+  coherence by PRSUBSET:4;
+end;
+
+registration
+  let a,b be positive Real;
+  let n be Nat;
+  cluster (a,b) Subnomial n -> positive-yielding;
+  coherence
+  proof
+    set f = (a,b) Subnomial n;
+    let e be Nat;
+    assume
+A1: e in dom f;
+    then 1 <= e by FINSEQ_3:25;
+    then reconsider m = e-1 as Element of NAT by INT_1:3;
+A2: e <= len f by A1,FINSEQ_3:25;
+    len f - 1 = n+1-1;
+    then reconsider k = n-m as Element of NAT by A2,XREAL_1:7,INT_1:5;
+    f.e = a|^k * b|^m by A1,NEWTON04:def 2;
+    hence f.e > 0;
+  end;
+end;
+
+registration
+  let r be non positive Real;
+  cluster <*r*> -> non positive-yielding;
+  coherence
+  proof
+    rng <*r*> = {r} by FINSEQ_1:38;
+    then r in rng <*r*> by TARSKI:def 1;
+    hence thesis by PARTFUN3:def 1;
+  end;
+end;
+
+theorem Th87: :: Problem 198 a
+  for n,x,y being positive Nat holds
+  a > 0 & 2 <= n & x|^n - y|^n = a implies
+  x < (n-1) -Root a & y < (n-1) -Root a
+  proof
+    let n,x,y be positive Nat such that
+A1: a > 0 and
+A2: 2 <= n and
+A3: x|^n - y|^n = a;
+    set F = (x,y)Subnomial(n-1);
+A4: 2-1 <= n-1 by A2,XREAL_1:7;
+A5: a = (x-y) * Sum F by A3,NEWTON04:51;
+    then
+A6: x-y > 0 by A1;
+    then reconsider w = x-y as Element of NAT by INT_1:3;
+    w >= 0+1 by A6,NAT_1:13;
+    then
+A7: Sum F <= 1*a by A5,XREAL_1:97;
+    x|^(n-1) + y|^(n-1) <= Sum F by A4,NEWTON04:84;
+    then
+A8: x|^(n-1) + y|^(n-1) <= a by A7,XXREAL_0:2;
+    x|^(n-1) + 0 < x|^(n-1) + y|^(n-1) & y|^(n-1) + 0 < x|^(n-1) + y|^(n-1)
+    by XREAL_1:6;
+    then x|^(n-1) < a & y|^(n-1) < a by A8,XXREAL_0:2;
+    then
+    (n-1) -Root (x|^(n-1)) < (n-1) -Root a &
+    (n-1) -Root (y|^(n-1)) < (n-1) -Root a by A4,PREPOWER:28;
+    hence thesis by A4,PREPOWER:19;
+  end;
+
+theorem :: Problem 198 b
+  for k,x,y being positive Nat holds
+  a > 0 & x|^(2*k) - y|^(2*k) = a implies
+  x < k-Root a & y < k-Root a
+  proof
+    let k,x,y be positive Nat such that
+A1: a > 0 and
+A2: x|^(2*k) - y|^(2*k) = a;
+A3: 1 <= k by NAT_1:14;
+    x|^(2*k) = x|^k|^2 & y|^(2*k) = y|^k|^2 by NEWTON:9;
+    then
+A4: x|^(2*k) - y|^(2*k) = (x|^k-y|^k) * (x|^k+y|^k) by NEWTON01:1;
+    then x|^k-y|^k > 0 by A1,A2;
+    then x|^k-y|^k >= 0+1 by NAT_1:13;
+    then
+A5: x|^k+y|^k <= 1*a by A2,A4,XREAL_1:97;
+    x|^k+0 < x|^k+y|^k & y|^k+0 < x|^k+y|^k by XREAL_1:6;
+    then x|^k < a & y|^k < a by A5,XXREAL_0:2;
+    then k-Root(x|^k) < k-Root a & k-Root(y|^k) < k-Root a
+    by NAT_1:14,PREPOWER:28;
+    hence thesis by A3,PREPOWER:19;
+  end;
+
+theorem :: Problem 198 c
+  for a,x,y being Complex holds x|^1 - y|^1 = a iff x = a+y;
+
+scheme
+  FinitePairs { M,N() -> Nat, P[object,object] } :
+  { [m,n] where m,n is Nat: m < M() & n < N() & P[m,n] } is finite
+  proof
+    set A = { [m,n] where m,n is Nat: m < M() & n < N() & P[m,n] };
+    A c= [:M(),N():]
+    proof
+      let a be object;
+      assume a in A;
+      then consider m,n being Nat such that
+A1:   a = [m,n] and
+A2:   m < M() & n < N() and
+      P[m,n];
+      m in Segm M() & n in Segm N() by A2,NAT_1:44;
+      hence thesis by A1,ZFMISC_1:def 2;
+    end;
+    hence thesis;
+  end;
+
+:: Method - finite number of checking
+theorem :: Problem 198 d
+  for a,n being positive Nat st 2 <= n holds
+  { [x,y] where x,y is positive Nat: x|^n - y|^n = a } is finite
+  proof
+    let a,n be positive Nat such that
+A1: 2 <= n;
+    set A = { [x,y] where x,y is positive Nat: x|^n - y|^n = a };
+    defpred P[object,object] means not contradiction;
+    set M = (n-1) -Root a;
+    set M1 = [/ M \];
+    n-1 >= 2-1 by A1,XREAL_1:6;
+    then M >= 0 by PREPOWER:def 2;
+    then reconsider M1 as Nat by TARSKI:1;
+    set B = { [x,y] where x,y is Nat: x < M1 & y < M1 & P[x,y] };
+A2: B is finite from FinitePairs;
+    A c= B
+    proof
+      let z be object;
+      assume z in A;
+      then consider x,y being positive Nat such that
+A3:   z = [x,y] and
+A4:   x|^n - y|^n = a;
+A5:   x < M & y < M by A1,A4,Th87;
+      M <= M1 by INT_1:def 7;
+      then x < M1 & y < M1 by A5,XXREAL_0:2;
+      hence thesis by A3;
+    end;
+    hence thesis by A2;
+  end;

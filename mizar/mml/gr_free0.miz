@@ -1,0 +1,3446 @@
+:: Free Product of Groups
+::  by Sebastian Koch
+::
+:: Received April 27, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies FUNCT_1, PBOOLE, RELAT_1, XBOOLE_0, ALGSTR_0, FUNCOP_1, SUBSET_1,
+      RLVECT_2, STRUCT_0, CARD_3, TARSKI, BINOP_1, ZFMISC_1, MCART_1, MONOID_0,
+      GROUP_1, SEMI_AF1, FUNCT_4, FINSEQ_1, NAT_1, XXREAL_0, GROUP_6, FUNCT_2,
+      WELLORD1, GROUP_7, PARTFUN1, REWRITE1, EQREL_1, WAYBEL26, AFINSQ_1,
+      ORDINAL4, MSUALG_6, FINSEQ_5, MSUALG_5, ARYTM_0, ARYTM_1, ARYTM_3,
+      CARD_1, NUMBERS, PRE_POLY, FUNCT_5, FINSEQ_2, MSSUBFAM, PRELAMB, GR_CY_1,
+      FUNCT_6, FINSEQ_4, RFINSEQ, GROUP_19, GROUP_23, GR_FREE0, VECTSP13;
+ notations TARSKI, XBOOLE_0, ENUMSET1, XTUPLE_0, ZFMISC_1, SUBSET_1, RELAT_1,
+      FUNCT_1, ORDINAL1, RELSET_1, PARTFUN1, FUNCT_2, NAT_D, BINOP_1, FUNCT_3,
+      FUNCOP_1, FUNCT_4, CARD_1, PBOOLE, FUNCT_5, CARD_3, FUNCT_6, NUMBERS,
+      XCMPLX_0, XXREAL_0, FINSEQ_1, EQREL_1, FINSEQ_2, FINSEQ_4, FINSEQ_5,
+      REWRITE1, AFINSQ_1, PRE_POLY, STRUCT_0, ALGSTR_0, GROUP_1, GROUP_4,
+      GROUP_6, MONOID_0, PRALG_1, RFINSEQ, ALG_1, MSUALG_5, GROUP_7, GROUP_19,
+      GROUP_23, WAYBEL26, ALGSTR_4;
+ constructors MONOID_0, PRALG_2, RELSET_1, FUNCT_4, REWRITE1, WAYBEL26,
+      ALGSTR_4, FINSEQ_5, MSUALG_5, PRE_POLY, FUNCT_3, FUNCT_5, GROUP_4,
+      FINSEQOP, FINSEQ_4, RFINSEQ, NAT_D, GROUP_19, GROUP_23;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, FINSEQ_1, STRUCT_0,
+      GROUP_1, GROUP_2, MONOID_0, ORDINAL1, FUNCOP_1, RELSET_1, GROUP_7,
+      REWRITE1, RELAT_2, EQREL_1, AFINSQ_1, ALGSTR_4, VECTSP_1, XXREAL_0,
+      GROUP_12, XREAL_0, NAT_1, FACIRC_2, XTUPLE_0, PRE_POLY, GR_CY_1, CARD_1,
+      PBOOLE, TOPS_5;
+ requirements NUMERALS, BOOLE, SUBSET, REAL, ARITHM;
+ equalities ALGSTR_0, ALGSTR_4, WAYBEL26, FUNCT_6;
+ theorems EQREL_1, FINSEQ_1, MONOID_0, GROUP_1, GROUP_7, TARSKI, XBOOLE_0,
+      CARD_3, RELAT_1, ZFMISC_1, PRALG_1, ALGSTR_4, PARTFUN1, FUNCT_1, FUNCT_2,
+      WAYBEL26, BINOP_1, FUNCT_4, FINSEQ_2, ENUMSET1, MSUALG_6, SYSREL,
+      REWRITE1, FINSEQ_3, NAT_1, CARD_1, FUNCOP_1, FINSEQ_5, XTUPLE_0, GROUP_4,
+      RELSET_1, FINSEQ_6, XXREAL_0, XREAL_1, INT_1, PRE_POLY, TOPREAL8, CHORD,
+      NAT_D, ABCMIZ_0, XBOOLE_1, MSUALG_5, FUNCT_5, FUNCT_6, FUNCT_3, GROUP_6,
+      TOPGEN_5, PBOOLE, MSAFREE4, FINSEQ_4, RFINSEQ, FUNCT_7, FINSEQOP,
+      GROUP_23;
+ schemes FINSEQ_1, RELSET_1, NAT_1, PBOOLE;
+
+begin :: Preliminaries
+
+:: into FINSEQ_1
+theorem Th1:
+  for p being FinSequence st len p <> 0 holds p|1 = <* p.1 *>
+proof
+  let p be FinSequence;
+  assume len p <> 0;
+  then A1: len(p|1) = 1 by NAT_1:14, FINSEQ_1:59;
+  then 1 in dom(p|1) by FINSEQ_3:25;
+  then A2: 1 in dom(p|Seg 1) by FINSEQ_1:def 16;
+  (p|1).1 = (p|Seg 1).1 by FINSEQ_1:def 16
+    .= p.1 by A2, FUNCT_1:47;
+  hence thesis by A1, FINSEQ_1:40;
+end;
+
+theorem Th2:
+  for p being FinSequence st len p <> 0
+  holds p/^(len p -' 1) = <* p.len p *>
+proof
+  let p be FinSequence;
+  assume len p <> 0;
+  then A1: 1 <= len p by NAT_1:14;
+  then A2: 1-1 <= len p - 1 by XREAL_1:9;
+  A3: len p -' 1 <= len p by NAT_D:44;
+  then A4: len(p/^(len p -' 1)) = len p - (len p + 0 -' 1) by RFINSEQ:def 1
+    .= len p - (len p + 0 - 1) by A1, NAT_D:37
+    .= 1;
+  then 1 in dom(p/^(len p -' 1)) by FINSEQ_3:25;
+  then (p/^(len p -' 1)).1 = p.(len p -' 1 + 1) by A3, RFINSEQ:def 1
+    .= p.len p by A2, NAT_D:72;
+  hence thesis by A4, FINSEQ_1:40;
+end;
+
+:: into FUNCT_5
+theorem
+  for f being Function, x being object st x in dom f
+  holds (uncurry <*f*>).(1,x) = f.x
+proof
+  let f be Function, x be object;
+  assume A1: x in dom f;
+  len <*f*> = 1 by FINSEQ_1:40;
+  then A2: 1 in dom <*f*> by FINSEQ_3:25;
+  <*f*>.1 = f;
+  hence thesis by A1, A2, FUNCT_5:38;
+end;
+
+:: reformulation of TOPGEN5
+:: into FUNCT_6
+theorem Th4:
+  for f being Function, x being object st x in dom f
+  holds (commute <*f*>).x = <*f.x*>
+proof
+  let f be Function, x be object;
+  assume A1: x in dom f;
+  thus (commute <*f*>).x = (commute{[1,f]}).x by FINSEQ_1:def 5
+   .= (commute(1 .--> f)).x by FUNCT_4:82
+   .= 1 .--> f.x by A1, TOPGEN_5:3
+   .= {[1,f.x]} by FUNCT_4:82
+   .= <*f.x*> by FINSEQ_1:def 5;
+end;
+
+:: into REWRITE1
+registration
+  let X be FinSequence-membered set, R be Relation of X;
+  cluster non trivial -> FinSequence-yielding for RedSequence of R;
+  coherence
+  proof
+    let p be RedSequence of R;
+    assume p is non trivial;
+    then A1: 1 < len p by TOPREAL8:2;
+    now
+      let x be object;
+      assume A2: x in dom p;
+      then reconsider n = x as Nat;
+      A3: 1 <= n <= len p by A2, FINSEQ_3:25;
+      then per cases by XXREAL_0:1;
+      suppose n < len p;
+        then A4: n + 1 <= len p by NAT_1:13;
+        1+0 <= n+1 by A3, XREAL_1:8;
+        then n+1 in dom p by A4, FINSEQ_3:25;
+        then [p.n,p.(n+1)] in R by A2, REWRITE1:def 2;
+        then p.n in dom R by XTUPLE_0:def 12;
+        hence p.x is FinSequence;
+      end;
+      suppose A5: n = len p;
+        then reconsider n9 = n-1 as Nat by CHORD:1;
+        1 < n9+1 by A1, A5;
+        then A6: 1 <= n9 by NAT_1:13;
+        n9 <= len p - 0 by A5, XREAL_1:10;
+        then n9 in dom p by A6, FINSEQ_3:25;
+        then [p.n9,p.(n9+1)] in R by A2, REWRITE1:def 2;
+        then p.n in rng R by XTUPLE_0:def 13;
+        hence p.x is FinSequence;
+      end;
+    end;
+    hence thesis by PRE_POLY:def 3;
+  end;
+end;
+
+:: generalization of GROUP_7:39
+:: into GROUP_7
+theorem Th6:
+  for I being non empty set, i being Element of I
+  for F being Group-Family of I
+  st I is trivial holds F.i,product F are_isomorphic
+proof
+  let I be non empty set, i be Element of I;
+  let F be Group-Family of I;
+  assume I is trivial;
+  then reconsider I as 1-element set;
+  set h = proj(F,i);
+  h is onto by GROUP_23:33;
+  then A1: rng h = the carrier of F.i by FUNCT_2:def 3;
+  reconsider i as Element of I;
+  h = proj(Carrier F,i) by GROUP_23:36;
+  then h is bijective by A1, GROUP_6:60;
+  hence thesis by GROUP_6:def 11;
+end;
+
+:: into MONOID_0
+registration
+  cluster {}*+^ -> non empty trivial;
+  coherence by MONOID_0:def 34, FUNCT_7:17;
+  cluster {}*+^+<0> -> non empty trivial;
+  coherence by MONOID_0:61, FUNCT_7:17;
+end;
+
+begin :: Free Product of Groups
+
+reserve x,y,z for object, X for set, I for non empty set, i,j for Element of I,
+    M0 for multMagma-yielding Function,
+    M for non empty multMagma-yielding Function,
+    M1, M2, M3 for non empty multMagma,
+    G for Group-like multMagma-Family of I,
+    H for Group-like associative multMagma-Family of I;
+
+definition
+  let M0;
+  func FreeAtoms(M0) -> Relation equals
+  *graph(Carrier M0);
+  coherence;
+end;
+
+theorem Th7:
+  [x,y] in FreeAtoms(M0) iff x in dom M0 & y in (Carrier M0).x
+proof
+  hereby
+    assume [x,y] in FreeAtoms(M0);
+    then x in dom Carrier M0 & y in (Carrier M0).x by WAYBEL26:38;
+    hence x in dom M0 & y in (Carrier M0).x by PRALG_1:def 14;
+  end;
+  assume A1: x in dom M0 & y in (Carrier M0).x;
+  then x in dom Carrier M0 by PRALG_1:def 14;
+  hence thesis by A1, WAYBEL26:38;
+end;
+
+theorem Th8:
+  for i being Element of dom M
+  holds [i,x] in FreeAtoms(M) iff x in the carrier of (M.i)
+proof
+  let i be Element of dom M;
+  consider R being 1-sorted such that
+    A1: R = M.i & (Carrier M).i = the carrier of R by PRALG_1:def 14;
+  thus [i,x] in FreeAtoms(M) implies x in the carrier of (M.i) by A1, Th7;
+  assume x in the carrier of (M.i);
+  hence thesis by A1, Th7;
+end;
+
+theorem Th9:
+  for N being multMagma-Family of I
+  holds [i,x] in FreeAtoms(N) iff x in the carrier of (N.i)
+proof
+  let N be multMagma-Family of I;
+  consider R being 1-sorted such that
+    A1: R = N.i & (Carrier N).i = the carrier of R by PRALG_1:def 15;
+  thus [i,x] in FreeAtoms(N) implies x in the carrier of (N.i) by A1, Th7;
+  assume A2: x in the carrier of (N.i);
+  dom N = I by PARTFUN1:def 2;
+  hence thesis by A1, A2, Th7;
+end;
+
+theorem Th10:
+  M0 = {} iff FreeAtoms(M0) = {}
+proof
+  A1: dom M0 = dom Carrier M0 by PRALG_1:def 14;
+  hereby
+    assume M0 = {};
+    then Carrier M0 = {} by A1;
+    then rng disjoin Carrier M0 = {} by CARD_3:3;
+    then Union disjoin Carrier M0 = {} by ZFMISC_1:2, CARD_3:def 4;
+    hence FreeAtoms(M0) = {};
+  end;
+  assume A2: FreeAtoms(M0) = {};
+  assume A3: M0 <> {};
+  then consider i being object such that
+    A4: i in dom M0 by XBOOLE_0:def 1;
+  reconsider i as Element of dom M0 by A4;
+  M0.i in rng M0 by A4, FUNCT_1:3;
+  then reconsider R = M0.i as non empty multMagma by GROUP_7:def 1;
+  set x = the Element of R;
+  x in the carrier of R;
+  hence contradiction by A2, A3, Th8;
+end;
+
+registration
+  cluster FreeAtoms({}) -> empty;
+  coherence by Th10;
+  let M;
+  cluster FreeAtoms(M) -> non empty;
+  coherence by Th10;
+end;
+
+registration
+  let I, G;
+  cluster FreeAtoms(G) -> non empty;
+  coherence;
+end;
+
+theorem Th11:
+  FreeAtoms(M) = union the set of all [:{i},the carrier of M.i :]
+    where i is Element of dom M
+proof
+  set S=the set of all [:{i},the carrier of M.i :] where i is Element of dom M;
+  now
+    let z be object;
+    hereby
+      assume A1: z in FreeAtoms(M);
+      then consider i,g being object such that
+        A2: z = [i,g] by RELAT_1:def 1;
+      reconsider i as Element of dom M by A1, A2, Th7;
+      A3: g in the carrier of (M.i) by A1, A2, Th8;
+      i in {i} by TARSKI:def 1;
+      then A4: z in [:{i},the carrier of M.i :] by A2, A3, ZFMISC_1:def 2;
+      [:{i},the carrier of M.i :] in S;
+      hence z in union S by A4, TARSKI:def 4;
+    end;
+    assume z in union S;
+    then consider Z being set such that
+      A5: z in Z & Z in S by TARSKI:def 4;
+    consider i being Element of dom M such that
+      A6: Z = [:{i},the carrier of M.i :] by A5;
+    consider j,g being object such that
+      A7: j in {i} & g in the carrier of M.i & z = [j,g]
+      by A5, A6, ZFMISC_1:def 2;
+    z = [i,g] by A7, TARSKI:def 1;
+    hence z in FreeAtoms(M) by A7, Th8;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+theorem Th12:
+  FreeAtoms(<*M1*>) = [: {1}, the carrier of M1 :]
+proof
+  Union disjoin Carrier <* M1 *>
+     = Union disjoin <* the carrier of M1 *> by PRALG_1:17
+    .= Union disjoin { [1, the carrier of M1] } by FINSEQ_1:def 5
+    .= Union disjoin (1 .--> the carrier of M1) by FUNCT_4:82
+    .= Union (1 .--> [: the carrier of M1, {1} :]) by CARD_3:4
+    .= Union { [1, [: the carrier of M1, {1} :] ] } by FUNCT_4:82
+    .= union rng { [1, [: the carrier of M1, {1} :] ] } by CARD_3:def 4
+    .= union {[: the carrier of M1, {1} :]} by RELAT_1:9
+    .= [: the carrier of M1, {1} :] by ZFMISC_1:25;
+  hence thesis by SYSREL:5;
+end;
+
+theorem Th13:
+  FreeAtoms(<*M1,M2*>) = [: {1}, the carrier of M1 :] \/
+    [: {2}, the carrier of M2 :]
+proof
+  set S1 = [: the carrier of M1, {1} :], S2 = [: the carrier of M2, {2} :];
+  Union disjoin Carrier <* M1, M2 *>
+     = Union disjoin <* the carrier of M1, the carrier of M2 *> by PRALG_1:18
+    .= Union <* S1, S2 *> by FINSEQ_3:161
+    .= union rng <* S1, S2 *> by CARD_3:def 4
+    .= union {S1, S2} by FINSEQ_2:127
+    .= S1 \/ S2 by ZFMISC_1:75
+    .= [: {1}, the carrier of M1 :]~ \/ S2 by SYSREL:5
+    .= [: {1}, the carrier of M1 :]~ \/ [: {2}, the carrier of M2 :]~
+      by SYSREL:5
+    .= ([: {1}, the carrier of M1 :] \/ [: {2}, the carrier of M2 :])~
+      by RELAT_1:23;
+  hence thesis;
+end;
+
+theorem Th14:
+  FreeAtoms(<*M1,M2,M3*>) = [: {1}, the carrier of M1 :] \/
+    [: {2}, the carrier of M2 :] \/ [: {3}, the carrier of M3 :]
+proof
+  set S1 = [: the carrier of M1, {1} :], S2 = [: the carrier of M2, {2} :];
+  set S3 = [: the carrier of M3, {3} :], T1 = [: {1}, the carrier of M1 :];
+  set T2 = [: {2}, the carrier of M2 :], T3 = [: {3}, the carrier of M3 :];
+  Union disjoin Carrier <* M1, M2, M3 *>
+     = Union disjoin <* the carrier of M1, the carrier of M2,
+         the carrier of M3 *> by PRALG_1:19
+    .= Union <* S1, S2, S3 *> by FINSEQ_3:162
+    .= union rng <* S1, S2, S3 *> by CARD_3:def 4
+    .= union {S1, S2, S3} by FINSEQ_2:128
+    .= union ({S1,S2}\/{S3}) by ENUMSET1:3
+    .= (union {S1, S2}) \/ union {S3} by ZFMISC_1:78
+    .= S1 \/ S2 \/ union {S3} by ZFMISC_1:75
+    .= S1 \/ S2 \/ S3 by ZFMISC_1:25
+    .= T1~ \/ S2 \/ S3 by SYSREL:5
+    .= T1~ \/ T2~ \/ S3 by SYSREL:5
+    .= (T1 \/ T2)~ \/ S3 by RELAT_1:23
+    .= (T1 \/ T2)~ \/ T3~ by SYSREL:5
+    .= (T1 \/ T2 \/ T3)~ by RELAT_1:23;
+  hence thesis;
+end;
+
+theorem
+  for x1 being Element of M1 holds [1,x1] in FreeAtoms(<*M1*>) &
+     [1,x1] in FreeAtoms(<*M1,M2*>) & [1,x1] in FreeAtoms(<*M1,M2,M3*>)
+proof
+  let x1 be Element of M1;
+  1 in {1} & x1 in the carrier of M1 by TARSKI:def 1;
+  then A1: [1,x1] in [: {1}, the carrier of M1 :] by ZFMISC_1:def 2;
+  then A2: [1,x1] in [: {1}, the carrier of M1 :]\/[: {2}, the carrier of M2 :]
+    by XBOOLE_0:def 3;
+  then [1,x1] in ([: {1}, the carrier of M1 :] \/ [: {2}, the carrier of M2 :])
+    \/ [: {3}, the carrier of M3 :] by XBOOLE_0:def 3;
+  hence thesis by A1, A2, Th12, Th13, Th14;
+end;
+
+theorem
+  for x2 being Element of M2
+  holds [2,x2] in FreeAtoms(<*M1,M2*>) & [2,x2] in FreeAtoms(<*M1,M2,M3*>)
+proof
+  let x2 be Element of M2;
+  2 in {2} & x2 in the carrier of M2 by TARSKI:def 1;
+  then [2,x2] in [: {2}, the carrier of M2 :] by ZFMISC_1:def 2;
+  then A1: [2,x2] in [: {1}, the carrier of M1 :]\/[: {2}, the carrier of M2 :]
+    by XBOOLE_0:def 3;
+  then [2,x2] in ([: {1}, the carrier of M1 :] \/ [: {2}, the carrier of M2 :])
+    \/ [: {3}, the carrier of M3 :] by XBOOLE_0:def 3;
+  hence thesis by A1, Th13, Th14;
+end;
+
+theorem
+  for x3 being Element of M3 holds [3,x3] in FreeAtoms(<*M1,M2,M3*>)
+proof
+  let x3 be Element of M3;
+  3 in {3} & x3 in the carrier of M3 by TARSKI:def 1;
+  then [3,x3] in [: {3}, the carrier of M3 :] by ZFMISC_1:def 2;
+  then [3,x3] in ([: {1}, the carrier of M1 :] \/ [: {2}, the carrier of M2 :])
+    \/ [: {3}, the carrier of M3 :] by XBOOLE_0:def 3;
+  hence thesis by Th14;
+end;
+
+theorem
+  FreeAtoms(X --> M1) = [: X, the carrier of M1 :]
+proof
+  Union disjoin Carrier(X --> M1)
+     = Union disjoin(X --> the carrier of M1) by PRALG_1:16
+    .= [: the carrier of M1, X :] by CARD_3:25;
+  hence thesis by SYSREL:5;
+end;
+
+theorem Th19:
+  for N0 being multMagma-yielding Function
+  holds FreeAtoms(M0 +* N0) c= FreeAtoms(M0) \/ FreeAtoms(N0)
+proof
+  let N0 be multMagma-yielding Function;
+  A1: Carrier(M0+*N0) = Carrier M0 +* Carrier N0 by PRALG_1:13;
+  now
+    let i,x be object;
+    assume [i,x] in FreeAtoms(M0 +* N0);
+    then A2: i in dom(M0 +* N0) & x in (Carrier(M0+*N0)).i by Th7;
+    per cases;
+    suppose A3: i in dom N0;
+      then i in dom Carrier N0 by PRALG_1:def 14;
+      then x in (Carrier N0).i by A1, A2, FUNCT_4:13;
+      then [i,x] in FreeAtoms(N0) by A3, Th7;
+      hence [i,x] in FreeAtoms(M0) \/ FreeAtoms(N0) by XBOOLE_0:def 3;
+    end;
+    suppose A4: not i in dom N0;
+      i in dom M0 \/ dom N0 by A2, FUNCT_4:def 1;
+      then A5: i in dom M0 by A4, XBOOLE_0:def 3;
+      not i in dom Carrier N0 by A4, PRALG_1:def 14;
+      then x in (Carrier M0).i by A1, A2, FUNCT_4:11;
+      then [i,x] in FreeAtoms(M0) by A5, Th7;
+      hence [i,x] in FreeAtoms(M0) \/ FreeAtoms(N0) by XBOOLE_0:def 3;
+    end;
+  end;
+  hence thesis by RELAT_1:def 3;
+end;
+
+theorem
+  for N0 being multMagma-yielding Function st M0 tolerates N0
+  holds FreeAtoms(M0 +* N0) = FreeAtoms(M0) \/ FreeAtoms(N0)
+proof
+  let N0 be multMagma-yielding Function;
+  A1: Carrier(M0+*N0) = Carrier M0 +* Carrier N0 by PRALG_1:13;
+  A2: FreeAtoms(M0 +* N0) c= FreeAtoms(M0) \/ FreeAtoms(N0) by Th19;
+  assume A3: M0 tolerates N0;
+  now
+    let i,x be object;
+    assume [i,x] in FreeAtoms(M0) \/ FreeAtoms(N0);
+    then per cases by XBOOLE_0:def 3;
+    suppose [i,x] in FreeAtoms(M0);
+      then A4: i in dom M0 & x in (Carrier M0).i by Th7;
+      then i in dom M0 \/ dom N0 by XBOOLE_0:def 3;
+      then A5: i in dom(M0+*N0) by FUNCT_4:def 1;
+      i in dom Carrier M0 by A4, PRALG_1:def 14;
+      then (Carrier(M0+*N0)).i = (Carrier M0).i
+        by A1, A3, PRALG_1:12, FUNCT_4:15;
+      hence [i,x] in FreeAtoms(M0 +* N0) by A4, A5, Th7;
+    end;
+    suppose [i,x] in FreeAtoms(N0);
+      then A6: i in dom N0 & x in (Carrier N0).i by Th7;
+      then i in dom M0 \/ dom N0 by XBOOLE_0:def 3;
+      then A7: i in dom(M0+*N0) by FUNCT_4:def 1;
+      i in dom Carrier N0 by A6, PRALG_1:def 14;
+      then x in (Carrier(M0+*N0)).i by A1, A6, FUNCT_4:13;
+      hence [i,x] in FreeAtoms(M0 +* N0) by A7, Th7;
+    end;
+  end;
+  then FreeAtoms(M0) \/ FreeAtoms(N0) c= FreeAtoms(M0 +* N0) by RELAT_1:def 3;
+  hence thesis by A2, XBOOLE_0:def 10;
+end;
+
+theorem Th21:
+  for p being FinSequence of FreeAtoms(G)
+  ex q being FinSequence of FreeAtoms(G)
+  st len p = len q &
+    for k being Nat,i being Element of I, g being Element of G.i st p.k = [i,g]
+    ex h being Element of G.i st g*h = 1_(G.i) & (Rev q).k = [i,h]
+proof
+  let p be FinSequence of FreeAtoms(G);
+  defpred P[object,object] means ex i being Element of I,
+    g,h being Element of G.i st p.$1 = [i,g] & g*h = 1_(G.i) & $2 = [i,h];
+  A1: now
+    let k be Nat;
+    assume k in Seg len p;
+    then k in dom p by FINSEQ_1:def 3;
+    then A2: p.k in rng p by FUNCT_1:3;
+    then consider i,g being object such that
+      A3: p.k = [i,g] by RELAT_1:def 1;
+    i in dom G by A2, A3, Th7;
+    then reconsider i as Element of I;
+    reconsider g as Element of G.i by A2, A3, Th9;
+    consider e being Element of G.i such that
+      A4: for h0 being Element of G.i holds h0 * e = h0 & e * h0 = h0 &
+        ex g0 being Element of G.i st h0*g0 = e & g0*h0 = e by GROUP_1:def 2;
+    A5: e = 1_(G.i) by A4, GROUP_1:def 4;
+    consider h being Element of G.i such that
+      A6: g*h = e & h*g = e by A4;
+    reconsider z = [i,h] as Element of FreeAtoms(G) by Th9;
+    take z;
+    thus P[k,z] by A3, A5, A6;
+  end;
+  consider q9 being FinSequence of FreeAtoms(G) such that
+    A7: dom q9 = Seg len p & for k being Nat st k in Seg len p holds P[k,q9.k]
+    from FINSEQ_1:sch 5(A1);
+  take Rev q9;
+  thus len p = len q9 by A7, FINSEQ_1:def 3
+    .= len Rev q9 by FINSEQ_5:def 3;
+  let k be Nat, i be Element of I, g be Element of G.i;
+  per cases;
+  suppose not k in Seg len p;
+    then not k in dom p by FINSEQ_1:def 3;
+    hence thesis by FUNCT_1:def 2;
+  end;
+  suppose k in Seg len p;
+    then consider i0 being Element of I, g0,h being Element of G.i0 such that
+      A8: p.k = [i0,g0] & g0*h = 1_(G.i0) & q9.k = [i0,h] by A7;
+    assume p.k = [i,g];
+    then A9: i = i0 & g = g0 by A8, XTUPLE_0:1;
+    then reconsider h as Element of G.i;
+    take h;
+    thus g*h = 1_(G.i) by A8, A9;
+    thus (Rev Rev q9).k = [i,h] by A8, A9;
+  end;
+end;
+
+reserve p, q for FinSequence of FreeAtoms(H), g,h for Element of H.i,
+  k for Nat;
+
+theorem Th22:
+  ex q st len p = len q &
+    for k, i, g st p.k = [i,g] holds (Rev q).k = [i,g"]
+proof
+  consider q such that
+    A1: len p = len q and
+    A2: for k being Nat, i being Element of I, g being Element of H.i
+      st p.k = [i,g] ex h being Element of H.i
+      st g*h = 1_(H.i) & (Rev q).k = [i,h] by Th21;
+  take q;
+  thus len p = len q by A1;
+  let k, i, g;
+  assume p.k = [i,g];
+  then consider h being Element of H.i such that
+    A3: g*h = 1_(H.i) & (Rev q).k = [i,h] by A2;
+  thus thesis by A3, GROUP_1:12;
+end;
+
+theorem Th23:
+  for g being Element of G.i holds <*[i,g]*> is FinSequence of FreeAtoms(G)
+proof
+  let g be Element of G.i;
+  [i,g] in FreeAtoms(G) by Th9;
+  hence thesis by FINSEQ_1:74;
+end;
+
+theorem
+  for g being Element of G.i, h being Element of G.j
+  holds <*[i,g],[j,h]*> is FinSequence of FreeAtoms(G)
+proof
+  let g be Element of G.i, h be Element of G.j;
+  [i,g] in FreeAtoms(G) & [j,h] in FreeAtoms(G) by Th9;
+  hence thesis by FINSEQ_2:13;
+end;
+
+definition
+  let I be set, G be Group-like multMagma-Family of I;
+  func ReductionRel(G) -> Relation of FreeAtoms(G)*+^+<0> means
+  :Def2:
+  (I is empty implies it = {}) & (I is non empty implies
+  ex I9 being non empty set, G9 being Group-like multMagma-Family of I9
+  st I = I9 & G = G9 &
+  for p,q being FinSequence of FreeAtoms(G9) holds [p,q] in it iff
+    (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9
+     st p = s^<* [i,1_(G9.i)] *>^t & q = s^t) or
+    (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9,
+       g,h being Element of (G9.i)
+     st p = s^<* [i,g],[i,h] *>^t & q = s^<* [i,g*h] *>^t));
+  existence
+  proof
+    per cases;
+    suppose A1: I is non empty;
+      then reconsider I9 = I as non empty set;
+      reconsider G9 = G as Group-like multMagma-Family of I9;
+      defpred P[object, object] means
+        (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9
+         st $1 = s^<* [i,1_(G9.i)] *>^t & $2 = s^t) or
+        (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9,
+           g,h being Element of (G9.i)
+         st $1 = s^<* [i,g],[i,h] *>^t & $2 = s^<* [i,g*h] *>^t);
+      set C = the carrier of FreeAtoms(G)*+^+<0>;
+      consider R being Relation of FreeAtoms(G)*+^+<0> such that
+        A2: for x,y being object holds [x,y] in R iff x in C & y in C & P[x,y]
+        from RELSET_1:sch 1;
+      take R;
+      thus I is empty implies R = {} by A1;
+      assume I is non empty;
+      take I9, G9;
+      thus I = I9 & G = G9;
+      let p,q being FinSequence of FreeAtoms(G9);
+      thus [p,q] in R implies P[p,q] by A2;
+      assume A3: P[p,q];
+      p in FreeAtoms(G9)* & q in FreeAtoms(G9)* by FINSEQ_1:def 11;
+      then p in C & q in C by MONOID_0:61;
+      hence thesis by A2, A3;
+    end;
+    suppose A4: I is empty;
+      reconsider R = {} as Relation of FreeAtoms(G)*+^+<0>
+        by RELSET_1:12;
+      take R;
+      thus I is empty implies R = {};
+      thus thesis by A4;
+    end;
+  end;
+  uniqueness
+  proof
+    let R1, R2 being Relation of FreeAtoms(G)*+^+<0>;
+    assume that
+      A5: (I is empty implies R1 = {}) & (I is non empty implies
+        ex I9 being non empty set, G9 being Group-like multMagma-Family of I9
+        st I = I9 & G = G9 &
+        for p,q being FinSequence of FreeAtoms(G9)
+        holds [p,q] in R1 iff
+          (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9
+           st p = s^<* [i,1_(G9.i)] *>^t & q = s^t) or
+          (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9,
+             g,h being Element of (G9.i)
+           st p = s^<* [i,g],[i,h] *>^t & q = s^<* [i,g*h] *>^t)) and
+      A6: (I is empty implies R2 = {}) & (I is non empty implies
+        ex I9 being non empty set, G9 being Group-like multMagma-Family of I9
+        st I = I9 & G = G9 & for p,q being FinSequence of FreeAtoms(G9)
+        holds [p,q] in R2 iff
+          (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9
+           st p = s^<* [i,1_(G9.i)] *>^t & q = s^t) or
+          (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9,
+             g,h being Element of (G9.i)
+           st p = s^<* [i,g],[i,h] *>^t & q = s^<* [i,g*h] *>^t));
+    per cases;
+    suppose I is non empty;
+      then reconsider I9 = I as non empty set;
+      reconsider G9 = G as Group-like multMagma-Family of I9;
+      defpred P[object, object] means
+        (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9
+         st $1 = s^<* [i,1_(G9.i)] *>^t & $2 = s^t) or
+        (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9,
+           g,h being Element of (G9.i)
+         st $1 = s^<* [i,g],[i,h] *>^t & $2 = s^<* [i,g*h] *>^t);
+      set C = the carrier of FreeAtoms(G)*+^+<0>;
+      A7: for p,q being Element of C holds [p,q] in R1 iff P[p,q]
+      proof
+        let p,q be Element of C;
+        p in C & q in C;
+        then p in FreeAtoms(G)* & q in FreeAtoms(G)* by MONOID_0:61;
+        then p is FinSequence of FreeAtoms(G) &
+          q is FinSequence of FreeAtoms(G) by FINSEQ_1:def 11;
+        hence thesis by A5;
+      end;
+      A8: for p,q being Element of C holds [p,q] in R2 iff P[p,q]
+      proof
+        let p,q be Element of C;
+        p in C & q in C;
+        then p in FreeAtoms(G)* & q in FreeAtoms(G)* by MONOID_0:61;
+        then p is FinSequence of FreeAtoms(G) &
+          q is FinSequence of FreeAtoms(G) by FINSEQ_1:def 11;
+        hence thesis by A6;
+      end;
+      thus thesis from RELSET_1:sch 4(A7,A8);
+    end;
+    suppose I is empty;
+      hence thesis by A5, A6;
+    end;
+  end;
+end;
+
+definition
+  let I, G;
+  redefine func ReductionRel(G) means
+  :Def3:
+  for p,q being FinSequence of FreeAtoms(G) holds [p,q] in it iff
+    (ex s,t being FinSequence of FreeAtoms(G), i being Element of I
+     st p = s^<* [i,1_(G.i)] *>^t & q = s^t) or
+    (ex s,t being FinSequence of FreeAtoms(G), i being Element of I,
+       g,h being Element of (G.i)
+     st p = s^<* [i,g],[i,h] *>^t & q = s^<* [i,g*h] *>^t);
+  compatibility
+  proof
+    let R be Relation of FreeAtoms(G)*+^+<0>;
+    defpred P[object,object] means
+      (ex s,t being FinSequence of FreeAtoms(G), i being Element of I
+       st $1 = s^<* [i,1_(G.i)] *>^t & $2 = s^t) or
+      (ex s,t being FinSequence of FreeAtoms(G), i being Element of I,
+         g,h being Element of (G.i)
+       st $1 = s^<* [i,g],[i,h] *>^t & $2 = s^<* [i,g*h] *>^t);
+    thus R = ReductionRel(G) implies
+      for p,q being FinSequence of FreeAtoms(G) holds [p,q] in R iff P[p,q]
+    proof
+      assume R = ReductionRel(G);
+      then consider I9 being non empty set,
+          G9 being Group-like multMagma-Family of I9 such that
+        A1: I = I9 & G = G9 &
+          for p,q being FinSequence of FreeAtoms(G9) holds [p,q] in R iff
+            (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9
+             st p = s^<* [i,1_(G9.i)] *>^t & q = s^t) or
+            (ex s,t being FinSequence of FreeAtoms(G9), i being Element of I9,
+               g,h being Element of (G9.i)
+             st p = s^<* [i,g],[i,h] *>^t & q = s^<* [i,g*h] *>^t) by Def2;
+      thus thesis by A1;
+    end;
+    assume  for p,q being FinSequence of FreeAtoms(G) holds
+      [p,q] in R iff P[p,q];
+    hence thesis by Def2;
+  end;
+end;
+
+theorem Th25:
+  for p,q,r being FinSequence of FreeAtoms(G) st [p,q] in ReductionRel(G)
+  holds [p^r,q^r] in ReductionRel(G) & [r^p,r^q] in ReductionRel(G)
+proof
+  let p,q,r be FinSequence of FreeAtoms(G);
+  assume [p,q] in ReductionRel(G);
+  then per cases by Def3;
+  suppose ex s,t being FinSequence of FreeAtoms(G), i being Element of I
+      st p = s^<* [i,1_(G.i)] *>^t & q = s^t;
+    then consider s,t being FinSequence of FreeAtoms(G), i being Element of I
+      such that A1: p = s^<* [i,1_(G.i)] *>^t & q = s^t;
+    A2: p^r = s^<* [i,1_(G.i)] *>^(t^r) by A1, FINSEQ_1:32;
+    q^r = s^(t^r) by A1, FINSEQ_1:32;
+    hence [p^r,q^r] in ReductionRel(G) by A2, Def3;
+    A3: r^p = (r^(s^<* [i,1_(G.i)] *>))^t by A1, FINSEQ_1:32
+      .= r^s^<* [i,1_(G.i)] *>^t by FINSEQ_1:32;
+    r^q = r^s^t by A1, FINSEQ_1:32;
+    hence thesis by A3, Def3;
+  end;
+  suppose ex s,t being FinSequence of FreeAtoms(G), i being Element of I,
+        g,h being Element of (G.i)
+      st p = s^<* [i,g],[i,h] *>^t & q = s^<* [i,g*h] *>^t;
+    then consider s,t being FinSequence of FreeAtoms(G), i being Element of I,
+        g,h being Element of (G.i) such that
+      A4: p = s^<* [i,g],[i,h] *>^t & q = s^<* [i,g*h] *>^t;
+    A5: p^r = s^<* [i,g],[i,h] *>^(t^r) by A4, FINSEQ_1:32;
+    q^r = s^<* [i,g*h] *>^(t^r) by A4, FINSEQ_1:32;
+    hence [p^r,q^r] in ReductionRel(G) by A5, Def3;
+    A6: r^p = (r^(s^<* [i,g],[i,h] *>))^t by A4, FINSEQ_1:32
+      .= r^s^<* [i,g],[i,h] *>^t by FINSEQ_1:32;
+    r^q = r^(s^<* [i,g*h] *>)^t by A4, FINSEQ_1:32
+      .= r^s^<* [i,g*h] *>^t by FINSEQ_1:32;
+    hence thesis by A6, Def3;
+  end;
+end;
+
+theorem Th26:
+  for p,q being FinSequence of FreeAtoms(G), g,h being Element of G.i
+  holds [p^<*[i,g],[i,h]*>^q, p^<*[i,g*h]*>^q] in ReductionRel(G)
+proof
+  let p,q be FinSequence of FreeAtoms(G), g,h being Element of G.i;
+  [i,g] in FreeAtoms(G) & [i,h] in FreeAtoms(G) & [i,g*h] in FreeAtoms(G)
+    by Th9;
+  then reconsider s = <*[i,g],[i,h]*>, t = <*[i,g*h]*>
+    as FinSequence of FreeAtoms(G) by FINSEQ_1:74, FINSEQ_2:13;
+  p^s^q is FinSequence of FreeAtoms(G) &
+    p^t^q is FinSequence of FreeAtoms(G);
+  hence thesis by Def3;
+end;
+
+theorem Th27:
+  for g,h being Element of G.i
+  holds [<*[i,g],[i,h]*>, <*[i,g*h]*>] in ReductionRel(G)
+proof
+  let g,h be Element of G.i;
+  set p = <*>FreeAtoms(G);
+  [p^<*[i,g],[i,h]*>^p, p^<*[i,g*h]*>^p]
+     = [<*[i,g],[i,h]*>^p, p^<*[i,g*h]*>^p] by FINSEQ_1:34
+    .= [<*[i,g],[i,h]*>, p^<*[i,g*h]*>^p] by FINSEQ_1:34
+    .= [<*[i,g],[i,h]*>, <*[i,g*h]*>^p] by FINSEQ_1:34
+    .= [<*[i,g],[i,h]*>, <*[i,g*h]*>] by FINSEQ_1:34;
+  hence thesis by Th26;
+end;
+
+theorem Th28:
+  for p,q being FinSequence of FreeAtoms(G)
+  holds [p^<*[i,1_(G.i)]*>^q, p^q] in ReductionRel(G)
+proof
+  let p,q be FinSequence of FreeAtoms(G);
+  [i,1_(G.i)] in FreeAtoms(G) by Th9;
+  then reconsider s = <*[i,1_(G.i)]*> as FinSequence of FreeAtoms(G)
+    by FINSEQ_1:74;
+  p^s^q is FinSequence of FreeAtoms(G);
+  hence thesis by Def3;
+end;
+
+theorem Th29:
+  [<*[i,1_(G.i)]*>,{}] in ReductionRel(G)
+proof
+  set p = <*>FreeAtoms(G);
+  [p^<*[i,1_(G.i)]*>^p, p^p] = [<*[i,1_(G.i)]*>^p, p^p] by FINSEQ_1:34
+    .= [<*[i,1_(G.i)]*>, p^p] by FINSEQ_1:34
+    .= [<*[i,1_(G.i)]*>, {}];
+  hence thesis by Th28;
+end;
+
+theorem Th30:
+  dom ReductionRel(G) c= FreeAtoms(G)* & rng ReductionRel(G) = FreeAtoms(G)* &
+    field ReductionRel(G) = FreeAtoms(G)*
+proof
+  dom ReductionRel(G) c= the carrier of FreeAtoms(G)*+^+<0>;
+  hence A1: dom ReductionRel(G) c= FreeAtoms(G)* by MONOID_0:61;
+  rng ReductionRel(G) c= the carrier of FreeAtoms(G)*+^+<0>;
+  then A2: rng ReductionRel(G) c= FreeAtoms(G)* by MONOID_0:61;
+  now
+    let x be object;
+    assume x in FreeAtoms(G)*;
+    then reconsider p = x as FinSequence of FreeAtoms(G) by FINSEQ_1:def 11;
+    set q = <*>FreeAtoms(G), i = the Element of I;
+    [p^<*[i,1_(G.i)]*>^q, p^q] in ReductionRel(G) by Th28;
+    then p^q in rng ReductionRel(G) by XTUPLE_0:def 13;
+    hence x in rng ReductionRel(G) by FINSEQ_1:34;
+  end;
+  then FreeAtoms(G)* c= rng ReductionRel(G) by TARSKI:def 3;
+  hence A3: rng ReductionRel(G) = FreeAtoms(G)* by A2, XBOOLE_0:def 10;
+  dom ReductionRel(G) \/ rng ReductionRel(G) = FreeAtoms(G)*
+    by A1, A3, XBOOLE_1:12;
+  hence thesis by RELAT_1:def 6;
+end;
+
+theorem Th31:
+  for x,y being object st [x,y] in ReductionRel(G)
+  holds x is FinSequence of FreeAtoms(G) & y is FinSequence of FreeAtoms(G)
+proof
+  let x,y be object;
+  assume [x,y] in ReductionRel(G);
+  then x in field ReductionRel(G) & y in field ReductionRel(G) by RELAT_1:15;
+  then x in FreeAtoms(G)* & y in FreeAtoms(G)* by Th30;
+  hence thesis by FINSEQ_1:def 11;
+end;
+
+theorem Th32:
+  for p,q being FinSequence of FreeAtoms(G), g,h being Element of G.i
+  st g*h = 1_(G.i) holds ReductionRel(G) reduces p^<*[i,g],[i,h]*>^q, p^q
+proof
+  let p,q be FinSequence of FreeAtoms(G), g,h be Element of G.i;
+  assume A1: g*h = 1_(G.i);
+  [p^<*[i,g],[i,h]*>^q, p^<*[i,g*h]*>^q] in ReductionRel(G) by Th26;
+  then A2: ReductionRel(G) reduces p^<*[i,g],[i,h]*>^q, p^<*[i,g*h]*>^q
+    by REWRITE1:15;
+  [p^<*[i,g*h]*>^q, p^q] in ReductionRel(G) by A1, Th28;
+  then ReductionRel(G) reduces p^<*[i,g*h]*>^q, p^q by REWRITE1:15;
+  hence thesis by A2, REWRITE1:16;
+end;
+
+theorem Th33:
+  for p,q being FinSequence of FreeAtoms(G) st len p = len q &
+    for k being Nat, i being Element of I, g,h being Element of G.i
+    st p.k = [i,g] & g*h = 1_(G.i) holds (Rev q).k = [i,h]
+  holds ReductionRel(G) reduces p^q,{}
+proof
+  defpred S[FinSequence, FinSequence] means (len $1 = len $2 &
+      for k being Nat, i being Element of I, g,h being Element of G.i
+      st $1.k = [i,g] & g*h = 1_(G.i) holds (Rev $2).k = [i,h])
+    implies ReductionRel(G) reduces $1^$2,{};
+  defpred P[Nat] means for p,q being FinSequence of FreeAtoms(G)
+    st len p = $1 holds S[p,q];
+  A1: P[0]
+  proof
+    let p,q be FinSequence of FreeAtoms(G);
+    assume len p = 0 & len p = len q;
+    then p = {} & q = {};
+    then p^q = {} by FINSEQ_1:34;
+    hence thesis by REWRITE1:12;
+  end;
+  A2: for n being Nat st P[n] holds P[n+1]
+  proof
+    let n be Nat;
+    assume A3: P[n];
+    let p,q be FinSequence of FreeAtoms(G);
+    assume A4: len p = n+1 & len p = len q;
+    assume A5: for k being Nat, i being Element of I, g,h being Element of G.i
+      st p.k = [i,g] & g*h = 1_(G.i) holds (Rev q).k = [i,h];
+    consider p9 being FinSequence of FreeAtoms(G),
+        z1 being Element of FreeAtoms(G) such that
+      A6: p=p9^<*z1*> by A4, FINSEQ_2:19;
+    len Rev q = n+1 by A4, FINSEQ_5:def 3;
+    then consider q9 being FinSequence of FreeAtoms(G),
+        z2 being Element of FreeAtoms(G) such that
+      A7: Rev q=q9^<*z2*> by FINSEQ_2:19;
+    len p = len p9 + 1 & len Rev q = len q9 + 1 by A6, A7, FINSEQ_2:16;
+    then len p9 = n & len q = len q9 + 1 by A4, FINSEQ_5:def 3;
+    then A8: len p9 = n & len q9 = n by A4;
+    then A9: len p9 = len Rev q9 by FINSEQ_5:def 3;
+    A10: Rev Rev q = <*z2*> ^ Rev q9 by A7, FINSEQ_5:63;
+    for k being Nat, i being Element of I, g,h being Element of G.i
+      st p9.k = [i,g] & g*h = 1_(G.i) holds (Rev Rev q9).k = [i,h]
+    proof
+      let k be Nat, i be Element of I, g,h be Element of G.i;
+      assume A11: p9.k = [i,g] & g*h = 1_(G.i);
+      then A12: k in dom p9 by FUNCT_1:def 2;
+      then p.k = [i,g] by A6, A11, FINSEQ_1:def 7;
+      then A13: (Rev q).k = [i,h] by A5, A11;
+      A14: dom p9 = dom q9 by A8, FINSEQ_3:29
+        .= dom Rev q9 by FINSEQ_5:57;
+      then A15: k in dom Rev q9 by A12;
+      A16: len p9 = len Rev q9 by A14, FINSEQ_3:29;
+      k in Seg len p9 by A12, FINSEQ_1:def 3;
+      then len p9 - k + 1 in Seg len p9 by FINSEQ_5:2;
+      then A17: len Rev q9 - k + 1 in dom Rev q9 by A16, FINSEQ_1:def 3;
+      k in dom p by A6, A12, FINSEQ_1:26, TARSKI:def 3;
+      then k in Seg len q by A4, FINSEQ_1:def 3;
+      then len q - k + 1 in Seg len q by FINSEQ_5:2;
+      then A18: len Rev q - k + 1 in Seg len q by FINSEQ_5:def 3;
+      then reconsider m = len Rev q - k + 1 as Nat;
+      m in dom q by A18, FINSEQ_1:def 3;
+      then m in dom Rev q by FINSEQ_5:57;
+      then A19: (Rev Rev q).m
+         = (Rev q).(len Rev q - m + 1) by FINSEQ_5:58
+        .= (Rev q).k;
+      thus (Rev Rev q9).k
+         = (Rev q9).(len Rev q9 - k + 1) by A15, FINSEQ_5:58
+        .= (<*z2*>^Rev q9).(len <*z2*> + (len Rev q9 - k + 1))
+          by A17, FINSEQ_1:def 7
+        .= q.((len <*z2*> + len Rev q9) - k + 1) by A10
+        .= q.(len q - k + 1) by A10, FINSEQ_1:22
+        .= [i,h] by A13, A19, FINSEQ_5:def 3;
+    end;
+    then A20: ReductionRel(G) reduces p9^Rev q9,{} by A3, A8, A9;
+    consider i,g being object such that
+      A21: z1 = [i,g] by RELAT_1:def 1;
+    i in dom G by A21, Th7;
+    then reconsider i as Element of I;
+    reconsider g as Element of G.i by A21, Th9;
+    A22: p.len p = p.(len p9 + 1) by A6, FINSEQ_2:16
+      .= [i,g] by A6, A21, FINSEQ_1:42;
+    consider e being Element of G.i such that
+      A23: for g9 being Element of G.i holds g9 * e = g9 & e * g9 = g9 &
+        ex h being Element of G.i st g9 * h = e & h * g9 = e by GROUP_1:def 2;
+    consider h being Element of G.i such that
+      A24: g * h = e & h * g = e by A23;
+    A25: e = 1_(G.i) by A23, GROUP_1:def 4;
+    then A26: [i,h] = (Rev q).len p by A5, A22, A24
+      .= (Rev q).(len Rev q) by A4, FINSEQ_5:def 3
+      .= (Rev q).(len q9 + 1) by A7, FINSEQ_2:16
+      .= z2 by A7, FINSEQ_1:42;
+    p^q = p9^(<*z1*>^(<*z2*>^Rev q9)) by A6, A10, FINSEQ_1:32
+      .= p9^((<*z1*>^<*z2*>)^Rev q9) by FINSEQ_1:32
+      .= p9^(<*[i,g]*>^<*z2*>)^Rev q9 by A21, FINSEQ_1:32
+      .= p9^<*[i,g],[i,h]*>^Rev q9 by A26, FINSEQ_1:def 9;
+    then ReductionRel(G) reduces p^q,p9^Rev q9 by A24, A25, Th32;
+    hence thesis by A20, REWRITE1:16;
+  end;
+  A27: for n being Nat holds P[n] from NAT_1:sch 2(A1,A2);
+  let p,q being FinSequence of FreeAtoms(G);
+  assume len p = len q & for k being Nat, i being Element of I,
+    g,h being Element of G.i
+    st p.k = [i,g] & g*h = 1_(G.i) holds (Rev q).k = [i,h];
+  hence thesis by A27;
+end;
+
+Lm1:
+  (for k, i, g st p.k = [i,g] holds (Rev q).k = [i,g"]) implies
+    for k, i, g, h st p.k = [i,g] & g*h = 1_(H.i) holds (Rev q).k = [i,h]
+proof
+  assume A1: for k, i, g st p.k = [i,g] holds (Rev q).k = [i,g"];
+  let k, i, g, h;
+  assume A2: p.k = [i,g] & g*h = 1_(H.i);
+  then h = g" by GROUP_1:12;
+  hence thesis by A1, A2;
+end;
+
+theorem Th34:
+  (len p = len q & for k, i, g st p.k = [i,g] holds (Rev q).k = [i,g"])
+  implies ReductionRel(H) reduces p^q,{} & ReductionRel(H) reduces q^p,{}
+proof
+  assume that A1: len p = len q and
+    A2: for k, i, g st p.k = [i,g] holds (Rev q).k = [i,g"];
+  for k, i, g, h st p.k = [i,g] & g*h = 1_(H.i) holds
+    (Rev q).k = [i,h] by A2, Lm1;
+  hence ReductionRel(H) reduces p^q,{} by A1, Th33;
+  for k, i, h st q.k = [i,h] holds (Rev p).k = [i,h"]
+  proof
+    let k, i, h;
+    assume A3: q.k = [i,h];
+    then A4: k in dom q by FUNCT_1:def 2;
+    then k in Seg len p by A1, FINSEQ_1:def 3;
+    then A5: len p - k + 1 in Seg len p by FINSEQ_5:2;
+    then reconsider m = len p - k + 1 as Nat;
+    A6: m in dom p by A5, FINSEQ_1:def 3;
+    then p.m in rng p by FUNCT_1:3;
+    then A7: p.m in FreeAtoms(H);
+    then consider i9,g being object such that
+      A8: p.m = [i9,g] by RELAT_1:def 1;
+    i9 in dom H by A7, A8, Th7;
+    then reconsider i9 as Element of I;
+    reconsider g as Element of H.i9 by A7, A8, Th9;
+    A9: m in dom q by A1, A6, FINSEQ_3:29;
+    [i9,g"] = (Rev q).m by A2, A8
+      .= q.(len q - m + 1) by A9, FINSEQ_5:58
+      .= [i,h] by A1, A3;
+    then A10: i9 = i & g" = h by XTUPLE_0:1;
+    then reconsider g as Element of H.i;
+    dom p = dom q by A1, FINSEQ_3:29;
+    hence (Rev p).k = [i,h"] by A4, A8, A10, FINSEQ_5:58;
+  end;
+  then for k, i, h, g st q.k = [i,h] & h*g = 1_(H.i) holds
+    (Rev p).k = [i,g] by Lm1;
+  hence thesis by A1, Th33;
+end;
+
+theorem Th35:
+  for p,q being FinSequence st [p,q] in ReductionRel(G) holds len p = len q + 1
+proof
+  let p9,q9 be FinSequence;
+  assume A1: [p9,q9] in ReductionRel(G);
+  then reconsider p = p9, q = q9 as FinSequence of FreeAtoms(G) by Th31;
+  per cases by A1, Def3;
+  suppose ex s,t being FinSequence of FreeAtoms(G), i being Element of I
+      st p = s^<* [i,1_(G.i)] *>^t & q = s^t;
+    then consider s,t being FinSequence of FreeAtoms(G), i being Element of I
+      such that A2: p = s^<* [i,1_(G.i)] *>^t & q = s^t;
+    thus len p9 = len(s^<* [i,1_(G.i)] *>) + len t by A2, FINSEQ_1:22
+      .= len s + 1 + len t by FINSEQ_2:16
+      .= len s + len t + 1
+      .= len q9 + 1 by A2, FINSEQ_1:22;
+  end;
+  suppose ex s,t being FinSequence of FreeAtoms(G), i being Element of I,
+        g,h being Element of (G.i)
+      st p = s^<* [i,g],[i,h] *>^t & q = s^<* [i,g*h] *>^t;
+    then consider s,t being FinSequence of FreeAtoms(G), i being Element of I,
+        g,h being Element of (G.i) such that
+      A3: p = s^<* [i,g],[i,h] *>^t & q = s^<* [i,g*h] *>^t;
+    thus len p9 = len(s^<* [i,g],[i,h] *>) + len t by A3, FINSEQ_1:22
+      .= len s + len<* [i,g],[i,h] *> + len t by FINSEQ_1:22
+      .= len s + (1+1) + len t by FINSEQ_1:44
+      .= len s + 1 + len t + 1
+      .= len(s^<* [i,g*h] *>) + len t + 1 by FINSEQ_2:16
+      .= len q9 + 1 by A3, FINSEQ_1:22;
+  end;
+end;
+
+theorem Th36:
+  for p,q being FinSequence of FreeAtoms(G) st ReductionRel(G) reduces p,q
+  holds p = q or len q < len p
+proof
+  let p,q be FinSequence of FreeAtoms(G);
+  assume A1: ReductionRel(G) reduces p,q & p <> q;
+  then consider r being RedSequence of ReductionRel(G) such that
+    A2: r.1 = p & r.len r = q by REWRITE1:def 3;
+  A3: len r <> 1 by A1, A2;
+  now
+    let x be object;
+    assume A4: x in dom r;
+    then reconsider k = x as Nat;
+    1 <= k & k <= len r by A4, FINSEQ_3:25;
+    then per cases by XXREAL_0:1;
+    suppose k < len r;
+      then A5: k+1 <= len r by NAT_1:13;
+      1+0 <= k + 1 by XREAL_1:7;
+      then k+1 in dom r by A5, FINSEQ_3:25;
+      then [r.k,r.(k+1)] in ReductionRel(G) by A4, REWRITE1:def 2;
+      hence r.x is FinSequence by Th31;
+    end;
+    suppose A6: k = len r;
+      then reconsider k9 = k-1 as Nat by INT_1:74;
+      A7: 2-1 <= k9 by A3, A6, NAT_1:23, XREAL_1:9;
+      k9 <= len r - 0 by A6, XREAL_1:10;
+      then k9 in dom r by A7, FINSEQ_3:25;
+      then [r.k9,r.(k9+1)] in ReductionRel(G) by A4, REWRITE1:def 2;
+      hence r.x is FinSequence by Th31;
+    end;
+  end;
+  then reconsider r as FinSequence-yielding FinSequence by PRE_POLY:def 3;
+  defpred P[Nat] means $1 < len r implies len(r.($1+1)) + $1 = len p;
+  A8: P[0] by A2;
+  A9: for k being Nat st P[k] holds P[k+1]
+  proof
+    let k be Nat;
+    assume A10: P[k] & k+1 < len r;
+    then k+1-1 < len r - 0 by XREAL_1:14;
+    then A11: len p = len(r.(k+1)) + k by A10;
+    A12: k+1+1 <= len r by A10, NAT_1:13;
+    A13: k+1+0 <= k+1+1 by XREAL_1:6;
+    A14: 0+1 <= k+1 by XREAL_1:6;
+    then 1 <= k+1+1 & k+1 <= len r by A12, A13, XXREAL_0:2;
+    then k+1 in dom r & k+1+1 in dom r by A12, A14, FINSEQ_3:25;
+    then [r.(k+1),r.(k+1+1)] in ReductionRel(G) by REWRITE1:def 2;
+    then len(r.(k+1)) = len(r.(k+1+1)) + 1 by Th35;
+    hence thesis by A11;
+  end;
+  A15: for k being Nat holds P[k] from NAT_1:sch 2(A8,A9);
+  reconsider k = len r - 1 as Nat by INT_1:74;
+  k < len r - 0 by XREAL_1:15;
+  then A16: len p = len(r.(k+1)) + k by A15
+    .= len q + k by A2;
+  assume len q >= len p;
+  then len q + 0 >= len q + k by A16;
+  then k = 0 by XREAL_1:6;
+  hence contradiction by A3;
+end;
+
+registration
+  let I, G;
+  cluster ReductionRel(G) -> strongly-normalizing;
+  coherence
+  proof
+    now
+      set R = ReductionRel G;
+      A1: field R c= (the carrier of FreeAtoms(G)*+^+<0>) \/
+        the carrier of FreeAtoms(G)*+^+<0> by RELSET_1:8;
+      given f being ManySortedSet of NAT such that
+        A2: for i being Nat holds [f.i,f.(i+1)] in R;
+      [f.0,f.(0+1)] in R by A2;
+      then f.0 in field R by RELAT_1:15;
+      then f.0 in the carrier of FreeAtoms(G)*+^+<0> by A1;
+      then f.0 in FreeAtoms(G)* by MONOID_0:61;
+      then reconsider p=f.0 as FinSequence of FreeAtoms(G) by FINSEQ_1:def 11;
+      defpred P[Nat] means ex q being FinSequence of FreeAtoms(G)
+        st q = f.$1 & len q + $1 = len p;
+      A3: P[0]
+      proof
+        take p;
+        thus thesis;
+      end;
+      A4: for n being Nat st P[n] holds P[n+1]
+      proof
+        let n be Nat;
+        assume A5: P[n];
+        A6: [f.n,f.(n+1)] in R by A2;
+        then f.(n+1) in field R by RELAT_1:15;
+        then f.(n+1) in the carrier of FreeAtoms(G)*+^+<0> by A1;
+        then f.(n+1) in FreeAtoms(G)* by MONOID_0:61;
+        then reconsider q=f.(n+1) as FinSequence of FreeAtoms(G)
+          by FINSEQ_1:def 11;
+        take q;
+        consider q9 being FinSequence of FreeAtoms(G) such that
+          A7: q9 = f.n & len q9 + n = len p by A5;
+        len q9 = len q + 1 by A6, A7, Th35;
+        hence thesis by A7;
+      end;
+      for n being Nat holds P[n] from NAT_1:sch 2(A3,A4);
+      then consider q being FinSequence of FreeAtoms(G) such that
+        A8: q = f.(len p+1) & len q + (len p + 1) = len p;
+      len q + 1 = 0 by A8;
+      hence contradiction;
+    end;
+    hence thesis by REWRITE1:def 15;
+  end;
+end;
+
+theorem Th37:
+  {} is_a_normal_form_wrt ReductionRel G
+proof
+  now
+    set p = <*>FreeAtoms(G);
+    given q being object such that
+      A1: [p,q] in ReductionRel(G);
+    q in field ReductionRel(G) by A1, RELAT_1:15;
+    then q in FreeAtoms(G)* by Th30;
+    then reconsider q as FinSequence of FreeAtoms(G) by FINSEQ_1:def 11;
+    len p = len q + 1 by A1, Th35;
+    hence contradiction;
+  end;
+  hence thesis by REWRITE1:def 5;
+end;
+
+theorem Th38:
+  for g being Element of G.i st g <> 1_(G.i)
+  holds <* [i,g] *> is_a_normal_form_wrt ReductionRel G
+proof
+  let g be Element of G.i;
+  assume A1: g <> 1_(G.i);
+  now
+    set p = <* [i,g] *>;
+    given q being object such that
+      A2: [p,q] in ReductionRel G;
+    p in field ReductionRel G & q in field ReductionRel G by A2, RELAT_1:15;
+    then p in FreeAtoms(G)* & q in FreeAtoms(G)* by Th30;
+    then reconsider p,q as FinSequence of FreeAtoms(G) by FINSEQ_1:def 11;
+    per cases by A2, Def3;
+    suppose ex s,t being FinSequence of FreeAtoms(G), j being Element of I
+        st p = s^<* [j,1_(G.j)] *>^t & q = s^t;
+      then consider s,t being FinSequence of FreeAtoms(G), j being Element of I
+        such that A3: p = s^<* [j,1_(G.j)] *>^t & q = s^t;
+      0+1 = len p by FINSEQ_1:40
+        .= len(s^<* [j,1_(G.j)] *>) + len t by A3, FINSEQ_1:22
+        .= len s + 1 + len t by FINSEQ_2:16;
+      then len s + len t = 0;
+      then A4: s = {} & t = {};
+      then p = <* [j,1_(G.j)] *>^t by A3, FINSEQ_1:34
+        .= <* [j,1_(G.j)] *> by A4, FINSEQ_1:34;
+      then [i,g] = [j,1_(G.j)] by FINSEQ_1:76;
+      then i = j & g = 1_(G.j) by XTUPLE_0:1;
+      hence contradiction by A1;
+    end;
+    suppose ex s,t being FinSequence of FreeAtoms(G), j being Element of I,
+          h1,h2 being Element of (G.j)
+        st p = s^<* [j,h1],[j,h2] *>^t & q = s^<* [j,h1*h2] *>^t;
+      then consider s,t being FinSequence of FreeAtoms(G),
+          j being Element of I, h1,h2 being Element of (G.j)
+        such that A5: p = s^<* [j,h1],[j,h2] *>^t & q = s^<* [j,h1*h2] *>^t;
+      0+1 = len p by FINSEQ_1:40
+        .= len(s^<* [j,h1],[j,h2] *>) + len t by A5, FINSEQ_1:22
+        .= len s + len <* [j,h1],[j,h2] *> + len t by FINSEQ_1:22
+        .= len s + 2 + len t by FINSEQ_1:44
+        .= len s + len t + 1 + 1;
+      hence contradiction;
+    end;
+  end;
+  hence thesis by REWRITE1:def 5;
+end;
+
+Lm2:
+  for p1,q1,r1,p2,q2,r2 being FinSequence
+  st len p1 = len p2 & len q1 = len q2 & p1^q1^r1 = p2^q2^r2
+  holds p1 = p2 & q1 = q2 & r1 = r2
+proof
+  let p1,q1,r1,p2,q2,r2 be FinSequence;
+  assume A1: len p1 = len p2 & len q1 = len q2 & p1^q1^r1 = p2^q2^r2;
+  A2: p1^(q1^r1) = p1^q1^r1 by FINSEQ_1:32
+    .= p2^(q2^r2) by A1, FINSEQ_1:32;
+  then p1 c= p1^(q1^r1) & p2 c= p1^(q1^r1) by FINSEQ_6:10;
+  hence p1 = p2 by A1, FINSEQ_2:129;
+  then A3: q1^r1 = q2^r2 by A2, FINSEQ_1:33;
+  q1 c= q1^r1 & q2 c= q2^r2 by FINSEQ_6:10;
+  hence q1 = q2 by A1, A3, FINSEQ_2:129;
+  hence r1 = r2 by A3, FINSEQ_1:33;
+end;
+
+theorem Th39:
+  for p,q1,q2 being FinSequence of FreeAtoms(G)
+  st [p,q1] in ReductionRel(G) & [p,q2] in ReductionRel(G) & q1 <> q2 holds (
+  ex s,t being FinSequence of FreeAtoms(G), i being Element of I,
+      f,g,h being Element of G.i st
+    p = s^<*[i,f],[i,g],[i,h]*>^t &
+      ((q1 = s^<*[i,f*g],[i,h]*>^t & q2 = s^<*[i,f],[i,g*h]*>^t) or
+       (q1 = s^<*[i,f],[i,g*h]*>^t & q2 = s^<*[i,f*g],[i,h]*>^t))
+  ) or ex r,s,t being FinSequence of FreeAtoms(G), i,j being Element of I st
+    (p = r^<*[i,1_(G.i)]*>^s^<*[j,1_(G.j)]*>^t &
+      ((q1 = r^s^<*[j,1_(G.j)]*>^t & q2 = r^<*[i,1_(G.i)]*>^s^t) or
+       (q1 = r^<*[i,1_(G.i)]*>^s^t & q2 = r^s^<*[j,1_(G.j)]*>^t))
+    ) or ex g,h being Element of G.i st
+      (p = r^<*[i,g],[i,h]*>^s^<*[j,1_(G.j)]*>^t &
+        ((q1 = r^<*[i,g*h]*>^s^<*[j,1_(G.j)]*>^t &
+          q2 = r^<*[i,g],[i,h]*>^s^t) or
+        (q1 = r^<*[i,g],[i,h]*>^s^t &
+          q2 = r^<*[i,g*h]*>^s^<*[j,1_(G.j)]*>^t))) or
+      (p = r^<*[j,1_(G.j)]*>^s^<*[i,g],[i,h]*>^t &
+        ((q1 = r^<*[j,1_(G.j)]*>^s^<*[i,g*h]*>^t &
+          q2 = r^s^<*[i,g],[i,h]*>^t) or
+        (q1 = r^s^<*[i,g],[i,h]*>^t &
+          q2 = r^<*[j,1_(G.j)]*>^s^<*[i,g*h]*>^t))) or
+      ex g9,h9 being Element of G.j
+      st p = r^<*[i,g],[i,h]*>^s^<*[j,g9],[j,h9]*>^t &
+        ((q1 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t &
+          q2 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t) or
+        (q1 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t &
+          q2 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t))
+proof
+  let p,q1,q2 be FinSequence of FreeAtoms(G);
+  assume A1: [p,q1] in ReductionRel(G) & [p,q2] in ReductionRel(G) & q1 <> q2;
+  then per cases by Def3;
+  suppose ex s1,t1 being FinSequence of FreeAtoms(G), i1 being Element of I
+      st p = s1^<* [i1,1_(G.i1)] *>^t1 & q1 = s1^t1; then
+    consider s1,t1 being FinSequence of FreeAtoms(G), i1 being Element of I
+      such that A2: p = s1^<* [i1,1_(G.i1)] *>^t1 & q1 = s1^t1;
+    per cases by A1, Def3;
+    suppose ex s2,t2 being FinSequence of FreeAtoms(G), i2 being Element of I
+        st p = s2^<* [i2,1_(G.i2)] *>^t2 & q2 = s2^t2; then
+      consider s2,t2 being FinSequence of FreeAtoms(G), i2 being Element of I
+        such that A3: p = s2^<* [i2,1_(G.i2)] *>^t2 & q2 = s2^t2;
+      len s1 <> len s2
+      proof
+        assume A4: len s1 = len s2;
+        len <* [i1,1_(G.i1)] *> = 1 by FINSEQ_1:39
+          .= len <* [i2,1_(G.i2)] *> by FINSEQ_1:39;
+        then s1 = s2 & t1 = t2 by A2, A3, A4, Lm2;
+        hence contradiction by A1, A2, A3;
+      end;
+      then per cases by XXREAL_0:1;
+      suppose len s1 < len s2;
+        then len s1 + 1 <= len s2 by NAT_1:13;
+        then A5: len(s1^<* [i1,1_(G.i1)] *>) <= len s2 by FINSEQ_2:16;
+        p = s2^(<* [i2,1_(G.i2)] *>^t2) by A3, FINSEQ_1:32;
+        then consider s being FinSequence such that
+          A6: (s1^<* [i1,1_(G.i1)] *>)^s = s2 by A2, A5, FINSEQ_1:47;
+        set r = s1, t = t2;
+        reconsider s as FinSequence of FreeAtoms(G) by A6, FINSEQ_1:36;
+        p = r^<*[i1,1_(G.i1)]*>^s^<*[i2,1_(G.i2)]*>^t by A3, A6;
+        then p = r^<*[i1,1_(G.i1)]*>^s^(<*[i2,1_(G.i2)]*>^t) by FINSEQ_1:32
+          .= r^<*[i1,1_(G.i1)]*>^(s^(<*[i2,1_(G.i2)]*>^t)) by FINSEQ_1:32
+          .= r^<*[i1,1_(G.i1)]*>^(s^<*[i2,1_(G.i2)]*>^t) by FINSEQ_1:32;
+        then q1 = r^(s^<*[i2,1_(G.i2)]*>^t) by A2, FINSEQ_1:33
+          .= r^(s^(<*[i2,1_(G.i2)]*>^t)) by FINSEQ_1:32
+          .= r^s^(<*[i2,1_(G.i2)]*>^t) by FINSEQ_1:32
+          .= r^s^<*[i2,1_(G.i2)]*>^t by FINSEQ_1:32;
+        hence thesis by A3, A6;
+      end;
+      suppose len s2 < len s1;
+        then len s2 + 1 <= len s1 by NAT_1:13;
+        then A7: len(s2^<* [i2,1_(G.i2)] *>) <= len s1 by FINSEQ_2:16;
+        p = s1^(<* [i1,1_(G.i1)] *>^t1) by A2, FINSEQ_1:32;
+        then consider s being FinSequence such that
+          A8: (s2^<* [i2,1_(G.i2)] *>)^s = s1 by A3, A7, FINSEQ_1:47;
+        set r = s2, t = t1;
+        reconsider s as FinSequence of FreeAtoms(G) by A8, FINSEQ_1:36;
+        p = r^<*[i2,1_(G.i2)]*>^s^<*[i1,1_(G.i1)]*>^t by A2, A8;
+        then p = r^<*[i2,1_(G.i2)]*>^s^(<*[i1,1_(G.i1)]*>^t) by FINSEQ_1:32
+          .= r^<*[i2,1_(G.i2)]*>^(s^(<*[i1,1_(G.i1)]*>^t)) by FINSEQ_1:32
+          .= r^<*[i2,1_(G.i2)]*>^(s^<*[i1,1_(G.i1)]*>^t) by FINSEQ_1:32;
+        then q2 = r^(s^<*[i1,1_(G.i1)]*>^t) by A3, FINSEQ_1:33
+          .= r^(s^(<*[i1,1_(G.i1)]*>^t)) by FINSEQ_1:32
+          .= r^s^(<*[i1,1_(G.i1)]*>^t) by FINSEQ_1:32
+          .= r^s^<*[i1,1_(G.i1)]*>^t by FINSEQ_1:32;
+        hence thesis by A2, A8;
+      end;
+    end;
+    suppose ex s2,t2 being FinSequence of FreeAtoms(G), i2 being Element of I,
+          g2,h2 being Element of (G.i2)
+        st p = s2^<* [i2,g2],[i2,h2] *>^t2 & q2 = s2^<* [i2,g2*h2] *>^t2; then
+      consider s2,t2 being FinSequence of FreeAtoms(G), i2 being Element of I,
+          g2,h2 being Element of (G.i2) such that
+        A9: p = s2^<* [i2,g2],[i2,h2] *>^t2 & q2 = s2^<* [i2,g2*h2] *>^t2;
+      len s1 <> len s2
+      proof
+        assume A10: len s1 = len s2;
+        A11: p = s2^(<*[i2,g2]*>^<*[i2,h2]*>)^t2 by A9, FINSEQ_1:def 9
+          .= s2^((<*[i2,g2]*>^<*[i2,h2]*>)^t2) by FINSEQ_1:32
+          .= s2^(<*[i2,g2]*>^(<*[i2,h2]*>^t2)) by FINSEQ_1:32
+          .= s2^<*[i2,g2]*>^(<*[i2,h2]*>^t2) by FINSEQ_1:32;
+        len <* [i1,1_(G.i1)] *> = 1 by FINSEQ_1:39
+          .= len <*[i2,g2]*> by FINSEQ_1:39;
+        then A12: s1 = s2 & <*[i1,1_(G.i1)]*>=<*[i2,g2]*> & t1 = <*[i2,h2]*>^t2
+          by A2, A10, A11, Lm2;
+        then [i1,1_(G.i1)] = [i2,g2] by FINSEQ_1:76;
+        then i1 = i2 & 1_(G.i1) = g2 by XTUPLE_0:1;
+        then h2 = g2*h2 by GROUP_1:def 4;
+        hence contradiction by A1, A9, A2, A12, FINSEQ_1:32;
+      end;
+      then per cases by XXREAL_0:1;
+      suppose len s1 < len s2;
+        then len s1 + 1 <= len s2 by NAT_1:13;
+        then A13: len(s1^<* [i1,1_(G.i1)] *>) <= len s2 by FINSEQ_2:16;
+        p = s2^(<* [i2,g2],[i2,h2] *>^t2) by A9, FINSEQ_1:32;
+        then consider s being FinSequence such that
+          A14: (s1^<* [i1,1_(G.i1)] *>)^s = s2 by A2, A13, FINSEQ_1:47;
+        set r = s1, t = t2;
+        reconsider s as FinSequence of FreeAtoms(G) by A14, FINSEQ_1:36;
+        p = r^<*[i1,1_(G.i1)]*>^s^<*[i2,g2],[i2,h2]*>^t by A9, A14;
+        then p = r^<*[i1,1_(G.i1)]*>^s^(<*[i2,g2],[i2,h2]*>^t) by FINSEQ_1:32
+          .= r^<*[i1,1_(G.i1)]*>^(s^(<*[i2,g2],[i2,h2]*>^t)) by FINSEQ_1:32
+          .= r^<*[i1,1_(G.i1)]*>^(s^<*[i2,g2],[i2,h2]*>^t) by FINSEQ_1:32;
+        then q1 = r^(s^<*[i2,g2],[i2,h2]*>^t) by A2, FINSEQ_1:33
+          .= r^(s^(<*[i2,g2],[i2,h2]*>^t)) by FINSEQ_1:32
+          .= r^s^(<*[i2,g2],[i2,h2]*>^t) by FINSEQ_1:32
+          .= r^s^<*[i2,g2],[i2,h2]*>^t by FINSEQ_1:32;
+        hence thesis by A9, A14;
+      end;
+      suppose A15: len s2 < len s1;
+        len s2 + 1 <> len s1
+        proof
+          assume len s2 + 1 = len s1;
+          then A16: len(s2^<*[i2,g2]*>) = len s1 by FINSEQ_2:16;
+          A17: p = s2^(<*[i2,g2]*>^<*[i2,h2]*>)^t2 by A9, FINSEQ_1:def 9
+            .= s2^<*[i2,g2]*>^<*[i2,h2]*>^t2 by FINSEQ_1:32;
+          len <* [i1,1_(G.i1)] *> = 1 by FINSEQ_1:39
+            .= len <*[i2,h2]*> by FINSEQ_1:39;
+          then A18: s1 = s2^<*[i2,g2]*> & <*[i1,1_(G.i1)]*>=<*[i2,h2]*> & t1=t2
+            by A2, A16, A17, Lm2;
+          then [i1,1_(G.i1)] = [i2,h2] by FINSEQ_1:76;
+          then i1 = i2 & 1_(G.i1) = h2 by XTUPLE_0:1;
+          hence contradiction by A1, A9, A2, A18, GROUP_1:def 4;
+        end;
+        then len s2 + 1 < len s1 or len s2 + 1 > len s1 by XXREAL_0:1;
+        then len s2 + 1 + 1 < len s1 + 1 by A15, NAT_1:13, XREAL_1:8;
+        then len s2 + 2 <= len s1 by NAT_1:13;
+        then len s2 + len <* [i2,g2],[i2,h2] *> <= len s1 by FINSEQ_1:44;
+        then A19: len(s2^<* [i2,g2],[i2,h2] *>) <= len s1 by FINSEQ_1:22;
+        p = s1^(<* [i1,1_(G.i1)] *>^t1) by A2, FINSEQ_1:32;
+        then consider s being FinSequence such that
+          A20: (s2^<* [i2,g2],[i2,h2] *>)^s = s1 by A9, A19, FINSEQ_1:47;
+        set r = s2, t = t1;
+        reconsider s as FinSequence of FreeAtoms(G) by A20, FINSEQ_1:36;
+        p = r^<* [i2,g2],[i2,h2] *>^s^<*[i1,1_(G.i1)]*>^t by A2, A20;
+        then p = r^<* [i2,g2],[i2,h2] *>^s^(<*[i1,1_(G.i1)]*>^t) by FINSEQ_1:32
+          .= r^<* [i2,g2],[i2,h2] *>^(s^(<*[i1,1_(G.i1)]*>^t)) by FINSEQ_1:32
+          .= r^<* [i2,g2],[i2,h2] *>^(s^<*[i1,1_(G.i1)]*>^t) by FINSEQ_1:32;
+        then q2 = r^<*[i2,g2*h2]*>^(s^<*[i1,1_(G.i1)]*>^t) by A9, FINSEQ_1:33
+          .= r^<*[i2,g2*h2]*>^(s^(<*[i1,1_(G.i1)]*>^t)) by FINSEQ_1:32
+          .= r^<*[i2,g2*h2]*>^s^(<*[i1,1_(G.i1)]*>^t) by FINSEQ_1:32
+          .= r^<*[i2,g2*h2]*>^s^<*[i1,1_(G.i1)]*>^t by FINSEQ_1:32;
+        hence thesis by A2, A20;
+      end;
+    end;
+  end;
+  suppose ex s1,t1 being FinSequence of FreeAtoms(G), i1 being Element of I,
+        g1,h1 being Element of (G.i1)
+      st p = s1^<* [i1,g1],[i1,h1] *>^t1 & q1 = s1^<* [i1,g1*h1] *>^t1; then
+    consider s1,t1 being FinSequence of FreeAtoms(G), i1 being Element of I,
+        g1,h1 being Element of (G.i1) such that
+      A21: p = s1^<* [i1,g1],[i1,h1] *>^t1 & q1 = s1^<* [i1,g1*h1] *>^t1;
+    per cases by A1, Def3;
+    suppose ex s2,t2 being FinSequence of FreeAtoms(G), i2 being Element of I
+        st p = s2^<* [i2,1_(G.i2)] *>^t2 & q2 = s2^t2; then
+      consider s2,t2 being FinSequence of FreeAtoms(G), i2 being Element of I
+        such that A22: p = s2^<* [i2,1_(G.i2)] *>^t2 & q2 = s2^t2;
+      len s1 <> len s2
+      proof
+        assume A23: len s2 = len s1;
+        A24: p = s1^(<*[i1,g1]*>^<*[i1,h1]*>)^t1 by A21, FINSEQ_1:def 9
+          .= s1^((<*[i1,g1]*>^<*[i1,h1]*>)^t1) by FINSEQ_1:32
+          .= s1^(<*[i1,g1]*>^(<*[i1,h1]*>^t1)) by FINSEQ_1:32
+          .= s1^<*[i1,g1]*>^(<*[i1,h1]*>^t1) by FINSEQ_1:32;
+        len <* [i2,1_(G.i2)] *> = 1 by FINSEQ_1:39
+          .= len <*[i1,g1]*> by FINSEQ_1:39;
+        then A25: s2 = s1 & <*[i2,1_(G.i2)]*>=<*[i1,g1]*> & t2 = <*[i1,h1]*>^t1
+          by A22, A23, A24, Lm2;
+        then [i2,1_(G.i2)] = [i1,g1] by FINSEQ_1:76;
+        then i2 = i1 & 1_(G.i2) = g1 by XTUPLE_0:1;
+        then h1 = g1*h1 by GROUP_1:def 4;
+        hence contradiction by A1, A21, A22, A25, FINSEQ_1:32;
+      end;
+      then per cases by XXREAL_0:1;
+      suppose len s2 < len s1;
+        then len s2 + 1 <= len s1 by NAT_1:13;
+        then A26: len(s2^<* [i2,1_(G.i2)] *>) <= len s1 by FINSEQ_2:16;
+        p = s1^(<* [i1,g1],[i1,h1] *>^t1) by A21, FINSEQ_1:32;
+        then consider s being FinSequence such that
+          A27: (s2^<* [i2,1_(G.i2)] *>)^s = s1 by A22, A26, FINSEQ_1:47;
+        set r = s2, t = t1;
+        reconsider s as FinSequence of FreeAtoms(G) by A27, FINSEQ_1:36;
+        p = r^<*[i2,1_(G.i2)]*>^s^<*[i1,g1],[i1,h1]*>^t by A21, A27;
+        then p = r^<*[i2,1_(G.i2)]*>^s^(<*[i1,g1],[i1,h1]*>^t) by FINSEQ_1:32
+          .= r^<*[i2,1_(G.i2)]*>^(s^(<*[i1,g1],[i1,h1]*>^t)) by FINSEQ_1:32
+          .= r^<*[i2,1_(G.i2)]*>^(s^<*[i1,g1],[i1,h1]*>^t) by FINSEQ_1:32;
+        then q2 = r^(s^<*[i1,g1],[i1,h1]*>^t) by A22, FINSEQ_1:33
+          .= r^(s^(<*[i1,g1],[i1,h1]*>^t)) by FINSEQ_1:32
+          .= r^s^(<*[i1,g1],[i1,h1]*>^t) by FINSEQ_1:32
+          .= r^s^<*[i1,g1],[i1,h1]*>^t by FINSEQ_1:32;
+        hence thesis by A21, A27;
+      end;
+      suppose A28: len s1 < len s2;
+        len s1 + 1 <> len s2
+        proof
+          assume len s1 + 1 = len s2;
+          then A29: len(s1^<*[i1,g1]*>) = len s2 by FINSEQ_2:16;
+          A30: p = s1^(<*[i1,g1]*>^<*[i1,h1]*>)^t1 by A21, FINSEQ_1:def 9
+            .= s1^<*[i1,g1]*>^<*[i1,h1]*>^t1 by FINSEQ_1:32;
+          len <* [i2,1_(G.i2)] *> = 1 by FINSEQ_1:39
+            .= len <*[i1,h1]*> by FINSEQ_1:39;
+          then A31: s2 = s1^<*[i1,g1]*> & <*[i2,1_(G.i2)]*>=<*[i1,h1]*> & t2=t1
+            by A22, A29, A30, Lm2;
+          then [i2,1_(G.i2)] = [i1,h1] by FINSEQ_1:76;
+          then i2 = i1 & 1_(G.i2) = h1 by XTUPLE_0:1;
+          hence contradiction by A1, A21, A22, A31, GROUP_1:def 4;
+        end;
+        then len s1 + 1 < len s2 or len s1 + 1 > len s2 by XXREAL_0:1;
+        then len s1 + 1 + 1 < len s2 + 1 by A28, NAT_1:13, XREAL_1:8;
+        then len s1 + 2 <= len s2 by NAT_1:13;
+        then len s1 + len <* [i1,g1],[i1,h1] *> <= len s2 by FINSEQ_1:44;
+        then A32: len(s1^<* [i1,g1],[i1,h1] *>) <= len s2 by FINSEQ_1:22;
+        p = s2^(<* [i2,1_(G.i2)] *>^t2) by A22, FINSEQ_1:32;
+        then consider s being FinSequence such that
+          A33: (s1^<* [i1,g1],[i1,h1] *>)^s = s2 by A21, A32, FINSEQ_1:47;
+        set r = s1, t = t2;
+        reconsider s as FinSequence of FreeAtoms(G) by A33, FINSEQ_1:36;
+        p = r^<* [i1,g1],[i1,h1] *>^s^<*[i2,1_(G.i2)]*>^t by A22, A33;
+        then p = r^<* [i1,g1],[i1,h1] *>^s^(<*[i2,1_(G.i2)]*>^t) by FINSEQ_1:32
+          .= r^<* [i1,g1],[i1,h1] *>^(s^(<*[i2,1_(G.i2)]*>^t)) by FINSEQ_1:32
+          .= r^<* [i1,g1],[i1,h1] *>^(s^<*[i2,1_(G.i2)]*>^t) by FINSEQ_1:32;
+        then q1
+           = r^<*[i1,g1*h1]*>^(s^<*[i2,1_(G.i2)]*>^t) by A21, FINSEQ_1:33
+          .= r^<*[i1,g1*h1]*>^(s^(<*[i2,1_(G.i2)]*>^t)) by FINSEQ_1:32
+          .= r^<*[i1,g1*h1]*>^s^(<*[i2,1_(G.i2)]*>^t) by FINSEQ_1:32
+          .= r^<*[i1,g1*h1]*>^s^<*[i2,1_(G.i2)]*>^t by FINSEQ_1:32;
+        hence thesis by A22, A33;
+      end;
+    end;
+    suppose ex s2,t2 being FinSequence of FreeAtoms(G), i2 being Element of I,
+          g2,h2 being Element of (G.i2)
+        st p = s2^<* [i2,g2],[i2,h2] *>^t2 & q2 = s2^<* [i2,g2*h2] *>^t2; then
+      consider s2,t2 being FinSequence of FreeAtoms(G), i2 being Element of I,
+          g2,h2 being Element of (G.i2) such that
+        A34: p = s2^<* [i2,g2],[i2,h2] *>^t2 & q2 = s2^<* [i2,g2*h2] *>^t2;
+      len s1 <> len s2
+      proof
+        assume A35: len s1 = len s2;
+        len <* [i1,g1],[i1,h1] *> = 2 by FINSEQ_1:44
+          .= len <* [i2,g2],[i2,h2] *> by FINSEQ_1:44;
+        then A36: s1 = s2 & <*[i1,g1],[i1,h1]*> = <*[i2,g2],[i2,h2]*> & t1 = t2
+          by A21, A34, A35, Lm2;
+        then [i1,g1] = [i2,g2] & [i1,h1] = [i2,h2] by FINSEQ_1:77;
+        then i1 = i2 & g1 = g2 & h1 = h2 by XTUPLE_0:1;
+        hence contradiction by A1, A21, A36, A34;
+      end;
+      then per cases by XXREAL_0:1;
+      suppose len s1 < len s2;
+        then len s1 + 1 <= len s2 by NAT_1:13;
+        then per cases by XXREAL_0:1;
+        suppose len s1 + 1 < len s2;
+          then len s1 + 1 + 1 < len s2 + 1 by XREAL_1:8;
+          then len s1 + 2 <= len s2 by NAT_1:13;
+          then len s1 + len <* [i1,g1],[i1,h1] *> <= len s2 by FINSEQ_1:44;
+          then A37: len(s1^<* [i1,g1],[i1,h1] *>) <= len s2 by FINSEQ_1:22;
+          p = s2^(<* [i2,g2],[i2,h2] *>^t2) by A34, FINSEQ_1:32;
+          then consider s being FinSequence such that
+            A38: (s1^<* [i1,g1],[i1,h1] *>)^s = s2 by A21, A37, FINSEQ_1:47;
+          set r = s1, t = t2;
+          reconsider s as FinSequence of FreeAtoms(G) by A38, FINSEQ_1:36;
+          p = r^<*[i1,g1],[i1,h1]*>^s^<*[i2,g2],[i2,h2]*>^t by A34, A38;
+          then p
+             = r^<*[i1,g1],[i1,h1]*>^s^(<*[i2,g2],[i2,h2]*>^t) by FINSEQ_1:32
+            .= r^<*[i1,g1],[i1,h1]*>^(s^(<*[i2,g2],[i2,h2]*>^t)) by FINSEQ_1:32
+            .= r^<*[i1,g1],[i1,h1]*>^(s^<*[i2,g2],[i2,h2]*>^t) by FINSEQ_1:32;
+          then q1
+             = r^<*[i1,g1*h1]*>^(s^<*[i2,g2],[i2,h2]*>^t) by A21, FINSEQ_1:33
+            .= r^<*[i1,g1*h1]*>^(s^(<*[i2,g2],[i2,h2]*>^t)) by FINSEQ_1:32
+            .= r^<*[i1,g1*h1]*>^s^(<*[i2,g2],[i2,h2]*>^t) by FINSEQ_1:32
+            .= r^<* [i1,g1*h1] *>^s^<* [i2,g2],[i2,h2] *>^t by FINSEQ_1:32;
+          hence thesis by A34, A38;
+        end;
+        suppose len s1 + 1 = len s2;
+          then A39: len(s1^<*[i1,g1]*>) = len s2 by FINSEQ_2:16;
+          A40: p = s1^(<*[i1,g1]*>^<*[i1,h1]*>)^t1 by A21, FINSEQ_1:def 9
+            .= s1^<*[i1,g1]*>^<*[i1,h1]*>^t1 by FINSEQ_1:32;
+          A41: p = s2^(<*[i2,g2]*>^<*[i2,h2]*>)^t2 by A34, FINSEQ_1:def 9
+            .= s2^((<*[i2,g2]*>^<*[i2,h2]*>)^t2) by FINSEQ_1:32
+            .= s2^(<*[i2,g2]*>^(<*[i2,h2]*>^t2)) by FINSEQ_1:32
+            .= s2^<*[i2,g2]*>^(<*[i2,h2]*>^t2) by FINSEQ_1:32;
+          len <*[i1,h1]*> = 1 by FINSEQ_1:39
+            .= len <*[i2,g2]*> by FINSEQ_1:39;
+          then A42: s1^<*[i1,g1]*> = s2 & <*[i1,h1]*> = <*[i2,g2]*> &
+            t1 = <*[i2,h2]*>^t2 by A40, A41, A39, Lm2;
+          then [i1,h1] = [i2,g2] by FINSEQ_1:76;
+          then A43: i1 = i2 & h1 = g2 by XTUPLE_0:1;
+          then reconsider h = h2 as Element of G.i1;
+          set f = g1, g = h1, s = s1, t = t2;
+          A44: p
+             = s^<*[i1,g1],[i1,h1]*>^<*[i2,h2]*>^t2 by A21, A42, FINSEQ_1:32
+            .= s^(<*[i1,g1],[i1,h1]*>^<*[i2,h2]*>)^t by FINSEQ_1:32
+            .= s^<*[i1,f],[i1,g],[i1,h]*>^t by A43, FINSEQ_1:43;
+          A45: q1
+             = s^<*[i1,f*g]*>^<*[i1,h]*>^t by A43, A21, A42, FINSEQ_1:32
+            .= s^(<*[i1,f*g]*>^<*[i1,h]*>)^t by FINSEQ_1:32
+            .= s^<*[i1,f*g],[i1,h]*>^t by FINSEQ_1:def 9;
+          q2 = s^(<*[i1,f]*>^<* [i1,g*h] *>)^t by A34, A42, A43, FINSEQ_1:32
+            .= s^<*[i1,f],[i1,g*h]*>^t by FINSEQ_1:def 9;
+          hence thesis by A44, A45;
+        end;
+      end;
+      suppose len s2 < len s1;
+        then len s2 + 1 <= len s1 by NAT_1:13;
+        then per cases by XXREAL_0:1;
+        suppose len s2 + 1 < len s1;
+          then len s2 + 1 + 1 < len s1 + 1 by XREAL_1:8;
+          then len s2 + 2 <= len s1 by NAT_1:13;
+          then len s2 + len <* [i2,g2],[i2,h2] *> <= len s1 by FINSEQ_1:44;
+          then A46: len(s2^<* [i2,g2],[i2,h2] *>) <= len s1 by FINSEQ_1:22;
+          p = s1^(<* [i1,g1],[i1,h1] *>^t1) by A21, FINSEQ_1:32;
+          then consider s being FinSequence such that
+            A47: (s2^<* [i2,g2],[i2,h2] *>)^s = s1 by A34, A46, FINSEQ_1:47;
+          set r = s2, t = t1;
+          reconsider s as FinSequence of FreeAtoms(G) by A47, FINSEQ_1:36;
+          p = r^<*[i2,g2],[i2,h2]*>^s^<*[i1,g1],[i1,h1]*>^t by A21, A47;
+          then p
+             = r^<*[i2,g2],[i2,h2]*>^s^(<*[i1,g1],[i1,h1]*>^t) by FINSEQ_1:32
+            .= r^<*[i2,g2],[i2,h2]*>^(s^(<*[i1,g1],[i1,h1]*>^t)) by FINSEQ_1:32
+            .= r^<*[i2,g2],[i2,h2]*>^(s^<*[i1,g1],[i1,h1]*>^t) by FINSEQ_1:32;
+          then q2
+             = r^<*[i2,g2*h2]*>^(s^<*[i1,g1],[i1,h1]*>^t) by A34, FINSEQ_1:33
+            .= r^<*[i2,g2*h2]*>^(s^(<*[i1,g1],[i1,h1]*>^t)) by FINSEQ_1:32
+            .= r^<*[i2,g2*h2]*>^s^(<*[i1,g1],[i1,h1]*>^t) by FINSEQ_1:32
+            .= r^<* [i2,g2*h2] *>^s^<* [i1,g1],[i1,h1] *>^t by FINSEQ_1:32;
+          hence thesis by A21, A47;
+        end;
+        suppose len s2 + 1 = len s1;
+          then A48: len(s2^<*[i2,g2]*>) = len s1 by FINSEQ_2:16;
+          A49: p = s2^(<*[i2,g2]*>^<*[i2,h2]*>)^t2 by A34, FINSEQ_1:def 9
+            .= s2^<*[i2,g2]*>^<*[i2,h2]*>^t2 by FINSEQ_1:32;
+          A50: p = s1^(<*[i1,g1]*>^<*[i1,h1]*>)^t1 by A21, FINSEQ_1:def 9
+            .= s1^((<*[i1,g1]*>^<*[i1,h1]*>)^t1) by FINSEQ_1:32
+            .= s1^(<*[i1,g1]*>^(<*[i1,h1]*>^t1)) by FINSEQ_1:32
+            .= s1^<*[i1,g1]*>^(<*[i1,h1]*>^t1) by FINSEQ_1:32;
+          len <*[i2,h2]*> = 1 by FINSEQ_1:39
+            .= len <*[i1,g1]*> by FINSEQ_1:39;
+          then A51: s2^<*[i2,g2]*> = s1 & <*[i2,h2]*> = <*[i1,g1]*> &
+            t2 = <*[i1,h1]*>^t1 by A49, A50, A48, Lm2;
+          then [i2,h2] = [i1,g1] by FINSEQ_1:76;
+          then A52: i2 = i1 & h2 = g1 by XTUPLE_0:1;
+          then reconsider h = h1 as Element of G.i2;
+          set f = g2, g = h2, s = s2, t = t1;
+          A53: p
+             = s^<*[i2,g2],[i2,h2]*>^<*[i1,h1]*>^t1 by A34, A51, FINSEQ_1:32
+            .= s^(<*[i2,g2],[i2,h2]*>^<*[i1,h1]*>)^t by FINSEQ_1:32
+            .= s^<*[i2,f],[i2,g],[i2,h]*>^t by A52, FINSEQ_1:43;
+          A54: q2
+             = s^<*[i2,f*g]*>^<*[i2,h]*>^t by A52, A34, A51, FINSEQ_1:32
+            .= s^(<*[i2,f*g]*>^<*[i2,h]*>)^t by FINSEQ_1:32
+            .= s^<*[i2,f*g],[i2,h]*>^t by FINSEQ_1:def 9;
+          q1 = s^(<*[i2,f]*>^<* [i2,g*h] *>)^t by A21, A51, A52, FINSEQ_1:32
+            .= s^<*[i2,f],[i2,g*h]*>^t by FINSEQ_1:def 9;
+          hence thesis by A53, A54;
+        end;
+      end;
+    end;
+  end;
+end;
+
+registration
+  let I, H;
+  cluster ReductionRel(H) -> subcommutative;
+  coherence
+  proof
+    now
+      set R = ReductionRel(H), C = the carrier of FreeAtoms(H)*+^+<0>;
+      let a,b,c be object;
+      assume A1: [a,b] in R & [a,c] in R;
+      A2: field R c= C \/ C by RELSET_1:8;
+      a in field R & b in field R & c in field R by A1, RELAT_1:15;
+      then a in C & b in C & c in C by A2;
+      then a in FreeAtoms(H)* & b in FreeAtoms(H)* & c in FreeAtoms(H)*
+        by MONOID_0:61;
+      then reconsider p = a, q1 = b, q2 = c as FinSequence of FreeAtoms(H)
+        by FINSEQ_1:def 11;
+      :: d will be the common reduced form of q1 and q2
+      :: and we will always show [b,d] in R & [c,d] in R except in the 1. case
+      ex d being object st ([b,d] in R or b = d) & ([c,d] in R or c = d)
+      proof
+      per cases by A1, Th39;
+      suppose b = c;
+        hence thesis;
+      end;
+      suppose ex s,t being FinSequence of FreeAtoms(H), i being Element of I,
+            f,g,h being Element of H.i st
+          p = s^<*[i,f],[i,g],[i,h]*>^t &
+            ((q1 = s^<*[i,f*g],[i,h]*>^t & q2 = s^<*[i,f],[i,g*h]*>^t) or
+             (q1 = s^<*[i,f],[i,g*h]*>^t & q2 = s^<*[i,f*g],[i,h]*>^t)); then
+        consider s,t being FinSequence of FreeAtoms(H), i being Element of I,
+            f,g,h being Element of H.i such that
+          A3: p = s^<*[i,f],[i,g],[i,h]*>^t &
+            ((q1 = s^<*[i,f*g],[i,h]*>^t & q2 = s^<*[i,f],[i,g*h]*>^t) or
+             (q1 = s^<*[i,f],[i,g*h]*>^t & q2 = s^<*[i,f*g],[i,h]*>^t));
+        reconsider v = <*[i,f*g*h]*> as FinSequence of FreeAtoms(H) by Th23;
+        A4: v = <*[i,f*(g*h)]*> by GROUP_1:def 3;
+        take s^v^t;
+        per cases by A3;
+        suppose q1 = s^<*[i,f*g],[i,h]*>^t & q2 = s^<*[i,f],[i,g*h]*>^t;
+          hence thesis by A4, Th26;
+        end;
+        suppose q1 = s^<*[i,f],[i,g*h]*>^t & q2 = s^<*[i,f*g],[i,h]*>^t;
+          hence thesis by A4, Th26;
+        end;
+      end;
+      suppose ex r,s,t being FinSequence of FreeAtoms(H),i,j being Element of I
+        st (p = r^<*[i,1_(H.i)]*>^s^<*[j,1_(H.j)]*>^t &
+          ((q1 = r^s^<*[j,1_(H.j)]*>^t & q2 = r^<*[i,1_(H.i)]*>^s^t) or
+           (q1 = r^<*[i,1_(H.i)]*>^s^t & q2 = r^s^<*[j,1_(H.j)]*>^t))
+        ) or ex g,h being Element of H.i st
+          (p = r^<*[i,g],[i,h]*>^s^<*[j,1_(H.j)]*>^t &
+            ((q1 = r^<*[i,g*h]*>^s^<*[j,1_(H.j)]*>^t &
+              q2 = r^<*[i,g],[i,h]*>^s^t) or
+            (q1 = r^<*[i,g],[i,h]*>^s^t &
+              q2 = r^<*[i,g*h]*>^s^<*[j,1_(H.j)]*>^t))) or
+          (p = r^<*[j,1_(H.j)]*>^s^<*[i,g],[i,h]*>^t &
+            ((q1 = r^<*[j,1_(H.j)]*>^s^<*[i,g*h]*>^t &
+              q2 = r^s^<*[i,g],[i,h]*>^t) or
+            (q1 = r^s^<*[i,g],[i,h]*>^t &
+              q2 = r^<*[j,1_(H.j)]*>^s^<*[i,g*h]*>^t))) or
+          ex g9,h9 being Element of H.j
+          st p = r^<*[i,g],[i,h]*>^s^<*[j,g9],[j,h9]*>^t &
+            ((q1 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t &
+              q2 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t) or
+            (q1 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t &
+              q2 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t)); then
+        consider r,s,t being FinSequence of FreeAtoms(H),i,j being Element of I
+          such that A5: (p = r^<*[i,1_(H.i)]*>^s^<*[j,1_(H.j)]*>^t &
+            ((q1 = r^s^<*[j,1_(H.j)]*>^t & q2 = r^<*[i,1_(H.i)]*>^s^t) or
+             (q1 = r^<*[i,1_(H.i)]*>^s^t & q2 = r^s^<*[j,1_(H.j)]*>^t))
+          ) or ex g,h being Element of H.i st
+            (p = r^<*[i,g],[i,h]*>^s^<*[j,1_(H.j)]*>^t &
+              ((q1 = r^<*[i,g*h]*>^s^<*[j,1_(H.j)]*>^t &
+                q2 = r^<*[i,g],[i,h]*>^s^t) or
+              (q1 = r^<*[i,g],[i,h]*>^s^t &
+                q2 = r^<*[i,g*h]*>^s^<*[j,1_(H.j)]*>^t))) or
+            (p = r^<*[j,1_(H.j)]*>^s^<*[i,g],[i,h]*>^t &
+              ((q1 = r^<*[j,1_(H.j)]*>^s^<*[i,g*h]*>^t &
+                q2 = r^s^<*[i,g],[i,h]*>^t) or
+              (q1 = r^s^<*[i,g],[i,h]*>^t &
+                q2 = r^<*[j,1_(H.j)]*>^s^<*[i,g*h]*>^t))) or
+            ex g9,h9 being Element of H.j
+            st p = r^<*[i,g],[i,h]*>^s^<*[j,g9],[j,h9]*>^t &
+              ((q1 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t &
+                q2 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t) or
+              (q1 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t &
+                q2 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t));
+        per cases by A5;
+        suppose A6: p = r^<*[i,1_(H.i)]*>^s^<*[j,1_(H.j)]*>^t &
+            ((q1 = r^s^<*[j,1_(H.j)]*>^t & q2 = r^<*[i,1_(H.i)]*>^s^t) or
+             (q1 = r^<*[i,1_(H.i)]*>^s^t & q2 = r^s^<*[j,1_(H.j)]*>^t));
+          take r^s^t;
+          per cases by A6;
+          suppose A7: q1 = r^s^<*[j,1_(H.j)]*>^t & q2 = r^<*[i,1_(H.i)]*>^s^t;
+            then q2 = r^<*[i,1_(H.i)]*>^(s^t) by FINSEQ_1:32;
+            then [q1,r^s^t] in R & [q2,r^(s^t)] in R by A7, Th28;
+            hence thesis by FINSEQ_1:32;
+          end;
+          suppose A8: q1 = r^<*[i,1_(H.i)]*>^s^t & q2 = r^s^<*[j,1_(H.j)]*>^t;
+            then q1 = r^<*[i,1_(H.i)]*>^(s^t) by FINSEQ_1:32;
+            then [q1,r^(s^t)] in R & [q2,r^s^t] in R by A8, Th28;
+            hence thesis by FINSEQ_1:32;
+          end;
+        end; :: if two neutral elements
+        suppose ex g,h being Element of H.i st
+            (p = r^<*[i,g],[i,h]*>^s^<*[j,1_(H.j)]*>^t &
+              ((q1 = r^<*[i,g*h]*>^s^<*[j,1_(H.j)]*>^t &
+                q2 = r^<*[i,g],[i,h]*>^s^t) or
+              (q1 = r^<*[i,g],[i,h]*>^s^t &
+                q2 = r^<*[i,g*h]*>^s^<*[j,1_(H.j)]*>^t))) or
+            (p = r^<*[j,1_(H.j)]*>^s^<*[i,g],[i,h]*>^t &
+              ((q1 = r^<*[j,1_(H.j)]*>^s^<*[i,g*h]*>^t &
+                q2 = r^s^<*[i,g],[i,h]*>^t) or
+              (q1 = r^s^<*[i,g],[i,h]*>^t &
+                q2 = r^<*[j,1_(H.j)]*>^s^<*[i,g*h]*>^t))) or
+            ex g9,h9 being Element of H.j
+            st p = r^<*[i,g],[i,h]*>^s^<*[j,g9],[j,h9]*>^t &
+              ((q1 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t &
+                q2 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t) or
+              (q1 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t &
+                q2 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t));
+          then consider g,h being Element of H.i such that
+            A9: (p = r^<*[i,g],[i,h]*>^s^<*[j,1_(H.j)]*>^t &
+              ((q1 = r^<*[i,g*h]*>^s^<*[j,1_(H.j)]*>^t &
+                q2 = r^<*[i,g],[i,h]*>^s^t) or
+              (q1 = r^<*[i,g],[i,h]*>^s^t &
+                q2 = r^<*[i,g*h]*>^s^<*[j,1_(H.j)]*>^t))) or
+            (p = r^<*[j,1_(H.j)]*>^s^<*[i,g],[i,h]*>^t &
+              ((q1 = r^<*[j,1_(H.j)]*>^s^<*[i,g*h]*>^t &
+                q2 = r^s^<*[i,g],[i,h]*>^t) or
+              (q1 = r^s^<*[i,g],[i,h]*>^t &
+                q2 = r^<*[j,1_(H.j)]*>^s^<*[i,g*h]*>^t))) or
+            ex g9,h9 being Element of H.j
+            st p = r^<*[i,g],[i,h]*>^s^<*[j,g9],[j,h9]*>^t &
+              ((q1 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t &
+                q2 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t) or
+              (q1 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t &
+                q2 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t));
+          reconsider v = <*[i,g*h]*> as FinSequence of FreeAtoms(H) by Th23;
+          per cases by A9;
+          suppose A10: p = r^<*[i,g],[i,h]*>^s^<*[j,1_(H.j)]*>^t &
+              ((q1 = r^<*[i,g*h]*>^s^<*[j,1_(H.j)]*>^t &
+                q2 = r^<*[i,g],[i,h]*>^s^t) or
+              (q1 = r^<*[i,g],[i,h]*>^s^t &
+                q2 = r^<*[i,g*h]*>^s^<*[j,1_(H.j)]*>^t));
+            take r^v^s^t;
+            per cases by A10;
+            suppose A11: q1 = r^<*[i,g*h]*>^s^<*[j,1_(H.j)]*>^t &
+                q2 = r^<*[i,g],[i,h]*>^s^t;
+              then q2 = r^<*[i,g],[i,h]*>^(s^t) by FINSEQ_1:32;
+              then [q2,r^v^(s^t)] in R & [q1,r^v^s^t] in R
+                by A11, Th26, Th28;
+              hence thesis by FINSEQ_1:32;
+            end;
+            suppose A12: q1 = r^<*[i,g],[i,h]*>^s^t &
+                q2 = r^<*[i,g*h]*>^s^<*[j,1_(H.j)]*>^t;
+              then q1 = r^<*[i,g],[i,h]*>^(s^t) by FINSEQ_1:32;
+              then [q1,r^v^(s^t)] in R & [q2,r^v^s^t] in R
+                by A12, Th26, Th28;
+              hence thesis by FINSEQ_1:32;
+            end;
+          end;
+          suppose A13: p = r^<*[j,1_(H.j)]*>^s^<*[i,g],[i,h]*>^t &
+              ((q1 = r^<*[j,1_(H.j)]*>^s^<*[i,g*h]*>^t &
+                q2 = r^s^<*[i,g],[i,h]*>^t) or
+              (q1 = r^s^<*[i,g],[i,h]*>^t &
+                q2 = r^<*[j,1_(H.j)]*>^s^<*[i,g*h]*>^t));
+            take r^s^v^t;
+            per cases by A13;
+            suppose A14: q1 = r^<*[j,1_(H.j)]*>^s^<*[i,g*h]*>^t &
+                q2 = r^s^<*[i,g],[i,h]*>^t;
+              then q1 = r^<*[j,1_(H.j)]*>^s^(v^t) by FINSEQ_1:32
+                .= r^<*[j,1_(H.j)]*>^(s^(v^t)) by FINSEQ_1:32;
+              then [q1,r^(s^(v^t))] in R & [q2,r^s^v^t] in R
+                by A14, Th26, Th28;
+              then [q1,r^s^(v^t)] in R & [q2,r^s^v^t] in R by FINSEQ_1:32;
+              hence thesis by FINSEQ_1:32;
+            end;
+            suppose A15: q1 = r^s^<*[i,g],[i,h]*>^t &
+                q2 = r^<*[j,1_(H.j)]*>^s^<*[i,g*h]*>^t;
+              then q2 = r^<*[j,1_(H.j)]*>^s^(v^t) by FINSEQ_1:32
+                .= r^<*[j,1_(H.j)]*>^(s^(v^t)) by FINSEQ_1:32;
+              then [q2,r^(s^(v^t))] in R & [q1,r^s^v^t] in R
+                by A15, Th26, Th28;
+              then [q2,r^s^(v^t)] in R & [q1,r^s^v^t] in R by FINSEQ_1:32;
+              hence thesis by FINSEQ_1:32;
+            end;
+          end;
+          suppose ex g9,h9 being Element of H.j
+            st p = r^<*[i,g],[i,h]*>^s^<*[j,g9],[j,h9]*>^t &
+              ((q1 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t &
+                q2 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t) or
+              (q1 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t &
+                q2 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t));
+            then consider g9,h9 being Element of H.j such that
+              A16: p = r^<*[i,g],[i,h]*>^s^<*[j,g9],[j,h9]*>^t &
+              ((q1 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t &
+                q2 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t) or
+              (q1 = r^<*[i,g],[i,h]*>^s^<*[j,g9*h9]*>^t &
+                q2 = r^<*[i,g*h]*>^s^<*[j,g9],[j,h9]*>^t));
+            reconsider w = <*[j,g9*h9]*> as FinSequence of FreeAtoms(H)
+              by Th23;
+            take r^v^s^w^t;
+            per cases by A16;
+            suppose A17: q1 = r^v^s^<*[j,g9],[j,h9]*>^t &
+                q2 = r^<*[i,g],[i,h]*>^s^w^t;
+              then q2 = r^<*[i,g],[i,h]*>^s^(w^t) by FINSEQ_1:32
+                .= r^<*[i,g],[i,h]*>^(s^(w^t)) by FINSEQ_1:32;
+              then [q2,r^v^(s^(w^t))] in R & [q1,r^v^s^w^t] in R
+                by A17, Th26;
+              then [q2,r^v^s^(w^t)] in R & [q1,r^v^s^w^t] in R by FINSEQ_1:32;
+              hence thesis by FINSEQ_1:32;
+            end;
+            suppose A18: q1 = r^<*[i,g],[i,h]*>^s^w^t &
+                q2 = r^v^s^<*[j,g9],[j,h9]*>^t;
+              then q1 = r^<*[i,g],[i,h]*>^s^(w^t) by FINSEQ_1:32
+                .= r^<*[i,g],[i,h]*>^(s^(w^t)) by FINSEQ_1:32;
+              then [q1,r^v^(s^(w^t))] in R & [q2,r^v^s^w^t] in R
+                by A18, Th26;
+              then [q1,r^v^s^(w^t)] in R & [q2,r^v^s^w^t] in R by FINSEQ_1:32;
+              hence thesis by FINSEQ_1:32;
+            end;
+          end;
+        end;
+      end;
+      end;
+      hence b,c are_convergent<=1_wrt R by REWRITE1:def 9;
+    end;
+    hence thesis by REWRITE1:def 21;
+  end;
+end;
+
+registration
+  let I, H;
+  cluster ReductionRel(H) -> complete with_UN_property;
+  coherence;
+end;
+
+theorem Th40:
+  for g being Element of H.i, h being Element of H.j
+  holds <*[i,g]*>,<*[j,h]*> are_convertible_wrt ReductionRel H iff
+    (g = 1_(H.i) & h = 1_(H.j)) or (i = j & g = h)
+proof
+  let g be Element of H.i, h being Element of H.j;
+  [i,g] in FreeAtoms(H) & [j,h] in FreeAtoms(H) by Th9;
+  then reconsider s1=<*[i,g]*>, s2=<*[j,h]*> as FinSequence of FreeAtoms(H)
+    by FINSEQ_1:74;
+  hereby
+    assume <*[i,g]*>,<*[j,h]*> are_convertible_wrt ReductionRel H;
+    then s1,s2 are_convergent_wrt ReductionRel H by REWRITE1:def 23;
+    then consider c being object such that
+      A1: ReductionRel H reduces <*[i,g]*>,c and
+      A2: ReductionRel H reduces <*[j,h]*>,c by REWRITE1:def 7;
+    per cases;
+    suppose A3: c = s1;
+      len s1 = 1 & len s2 = 1 by FINSEQ_1:40;
+      then [i,g] = [j,h] by A2, A3, Th36, FINSEQ_1:76;
+      hence (g = 1_(H.i) & h = 1_(H.j)) or (i = j & g = h) by XTUPLE_0:1;
+    end;
+    suppose A4: c <> s1;
+      then c in field ReductionRel H by A1, REWRITE1:18;
+      then c in FreeAtoms(H)* by Th30;
+      then reconsider c as FinSequence of FreeAtoms(H) by FINSEQ_1:def 11;
+      len c < len s1 by A1, A4, Th36;
+      then len c < 1 by FINSEQ_1:40;
+      then c <> s2 by FINSEQ_1:40;
+      hence (g = 1_(H.i) & h = 1_(H.j)) or (i = j & g = h)
+        by A1, A2, A4, Th38, REWRITE1:33;
+    end;
+  end;
+  assume (g = 1_(H.i) & h = 1_(H.j)) or (i = j & g = h);
+  then per cases;
+  suppose g = 1_(H.i) & h = 1_(H.j);
+    then [s1,{}] in ReductionRel(H) & [s2,{}] in ReductionRel(H) by Th29;
+    then A5: s1,{} are_convertible_wrt ReductionRel(H) &
+      s2,{} are_convertible_wrt ReductionRel(H) by REWRITE1:29;
+    then {},s2 are_convertible_wrt ReductionRel(H) by REWRITE1:31;
+    hence thesis by A5, REWRITE1:30;
+  end;
+  suppose i = j & g = h;
+    hence thesis by REWRITE1:26;
+  end;
+end;
+
+theorem Th41:
+  for p1,p2,q1,q2 being FinSequence of FreeAtoms(G)
+  st ReductionRel(G) reduces p1,q1 & ReductionRel(G) reduces p2,q2
+  holds ReductionRel(G) reduces p1^p2,q1^q2
+proof
+  let p1,p2,q1,q2 be FinSequence of FreeAtoms(G);
+  assume ReductionRel(G) reduces p1,q1;
+  then consider R1 being RedSequence of ReductionRel(G) such that
+    A1: R1.1 = p1 & R1.len R1 = q1 by REWRITE1:def 3;
+  assume ReductionRel(G) reduces p2,q2;
+  then consider R2 being RedSequence of ReductionRel(G) such that
+    A2: R2.1 = p2 & R2.len R2 = q2 by REWRITE1:def 3;
+  per cases;
+  suppose A3: p1 = q1;
+    per cases;
+    suppose p2 = q2;
+      hence thesis by A3, REWRITE1:12;
+    end;
+    suppose p2 <> q2;
+      then R2 is non trivial by A2, NAT_1:23, NAT_D:60;
+      then reconsider R2 as FinSequence-yielding FinSequence;
+      deffunc F2(object) = q1 ^ (R2.$1);
+      consider S2 being FinSequence such that
+        A4: len S2 = len R2 & for k being Nat st k in dom S2 holds S2.k = F2(k)
+        from FINSEQ_1:sch 2;
+      A5: len S2 > 0 by A4;
+      now
+        let k be Nat;
+        assume A6: k in dom S2 & k+1 in dom S2;
+        dom S2 = dom R2 by A4, FINSEQ_3:29;
+        then A7: [R2.k, R2.(k+1)] in ReductionRel(G) by A6, REWRITE1:def 2;
+        then R2.k is FinSequence of FreeAtoms(G) &
+          R2.(k+1) is FinSequence of FreeAtoms(G) by Th31;
+        then A8: [q1^(R2.k), q1^(R2.(k+1))] in ReductionRel(G) by A7, Th25;
+        q1^(R2.k) = S2.k & q1^(R2.(k+1)) = S2.(k+1) by A4, A6;
+        hence [S2.k,S2.(k+1)] in ReductionRel(G) by A8;
+      end;
+      then reconsider S2 as RedSequence of ReductionRel(G)
+        by A5, REWRITE1:def 2;
+      0+1 < len S2 + 1 by XREAL_1:6;
+      then 1 <= len S2 by NAT_1:13;
+      then A9: 1 in dom S2 & len S2 in dom S2 by FINSEQ_3:25;
+      then A10: S2.1 = p1^p2 by A2, A3, A4;
+      S2.len S2 = q1^q2 by A2, A4, A9;
+      hence thesis by A10, REWRITE1:def 3;
+    end;
+  end;
+  suppose p1 <> q1;
+    then A11: 1 <> len R1 by A1;
+    A12: 2 <= len R1 by A11, NAT_1:23;
+    then R1 is non trivial by NAT_D:60;
+    then reconsider R1 as FinSequence-yielding FinSequence;
+    deffunc F1(object) = (R1.$1) ^ p2;
+    consider S1 being FinSequence such that
+      A13: len S1 = len R1 & for k being Nat st k in dom S1 holds S1.k = F1(k)
+      from FINSEQ_1:sch 2;
+    A14: len S1 > 0 by A13;
+    now
+      let k be Nat;
+      assume A15: k in dom S1 & k+1 in dom S1;
+      dom S1 = dom R1 by A13, FINSEQ_3:29;
+      then A16: [R1.k, R1.(k+1)] in ReductionRel(G) by A15, REWRITE1:def 2;
+      then R1.k is FinSequence of FreeAtoms(G) &
+        R1.(k+1) is FinSequence of FreeAtoms(G) by Th31;
+      then A17: [(R1.k)^p2, (R1.(k+1))^p2] in ReductionRel(G) by A16, Th25;
+      (R1.k)^p2 = S1.k & (R1.(k+1))^p2 = S1.(k+1) by A13, A15;
+      hence [S1.k,S1.(k+1)] in ReductionRel(G) by A17;
+    end;
+    then reconsider S1 as RedSequence of ReductionRel(G)
+      by A14, REWRITE1:def 2;
+    1 <= len S1 by CHORD:1;
+    then A18: 1 in dom S1 & len S1 in dom S1 by FINSEQ_3:25;
+    then A19: S1.1 = p1^p2 by A1, A13;
+    A20: S1.len S1 = q1^p2 by A1, A13, A18;
+    per cases;
+    suppose p2 = q2;
+      hence thesis by A19, A20, REWRITE1:def 3;
+    end;
+    suppose p2 <> q2;
+      then R2 is non trivial by A2, NAT_1:23, NAT_D:60;
+      then reconsider R2 as FinSequence-yielding FinSequence;
+      deffunc F2(object) = q1 ^ (R2.$1);
+      consider S2 being FinSequence such that
+        A21: len S2 = len R2 &
+          for k being Nat st k in dom S2 holds S2.k = F2(k)
+        from FINSEQ_1:sch 2;
+      A22: len S2 > 0 by A21;
+      now
+        let k be Nat;
+        assume A23: k in dom S2 & k+1 in dom S2;
+        dom S2 = dom R2 by A21, FINSEQ_3:29;
+        then A24: [R2.k, R2.(k+1)] in ReductionRel(G) by A23, REWRITE1:def 2;
+        then R2.k is FinSequence of FreeAtoms(G) &
+          R2.(k+1) is FinSequence of FreeAtoms(G) by Th31;
+        then A25: [q1^(R2.k), q1^(R2.(k+1))] in ReductionRel(G) by A24, Th25;
+        q1^(R2.k) = S2.k & q1^(R2.(k+1)) = S2.(k+1) by A21, A23;
+        hence [S2.k,S2.(k+1)] in ReductionRel(G) by A25;
+      end;
+      then reconsider S2 as RedSequence of ReductionRel(G)
+        by A22, REWRITE1:def 2;
+      1 <= len S2 by CHORD:1;
+      then A26: 1 in dom S2 & len S2 in dom S2 by FINSEQ_3:25;
+      then A27: S2.1 = q1^p2 by A2, A21;
+      A28: S2.len S2 = q1^q2 by A2, A21, A26;
+      reconsider S = S1$^S2 as RedSequence of ReductionRel(G)
+        by A20, A27, REWRITE1:8;
+      reconsider s = len S2 - 1 as Nat by CHORD:1;
+      A29: s < len S2 - 0 by XREAL_1:15;
+      len S + 1 = len S1 + len S2 by REWRITE1:66;
+      then A30: S.len S = S.(len S1 + s)
+        .= S2.(s+1) by A29, ABCMIZ_0:33
+        .= q1^q2 by A28;
+      1 < len S1 by A12, A13, XXREAL_0:2;
+      then S.1 = p1^p2 by A19, ABCMIZ_0:32;
+      hence thesis by A30, REWRITE1:def 3;
+    end;
+  end;
+end;
+
+theorem Th42:
+  I is trivial implies for p being non empty FinSequence of FreeAtoms(G)
+    ex g being Element of G.i st ReductionRel(G) reduces p,<*[i,g]*>
+proof
+  assume A1: I is trivial;
+  defpred P[Nat] means for p being non empty FinSequence of FreeAtoms(G)
+    st len p = $1 + 1 ex g being Element of G.i
+    st ReductionRel(G) reduces p,<*[i,g]*>;
+  A2: P[0]
+  proof
+    let p be non empty FinSequence of FreeAtoms(G);
+    assume A3: len p = 0 + 1;
+    then A4: p = <* p.1 *> by FINSEQ_1:40;
+    1 in dom p by A3, FINSEQ_3:25;
+    then A5: p.1 in FreeAtoms(G) by FINSEQ_2:11;
+    then consider x,y being object such that
+      A6: p.1 = [x,y] by RELAT_1:def 1;
+    x in dom G by A5, A6, Th7;
+    then A7: x = i by A1, ZFMISC_1:def 10;
+    then reconsider g = y as Element of G.i by A5, A6, Th9;
+    take g;
+    thus thesis by A4, A6, A7, REWRITE1:12;
+  end;
+  A8: for k being Nat st P[k] holds P[k+1]
+  proof
+    let k be Nat;
+    assume A9: P[k];
+    let p be non empty FinSequence of FreeAtoms(G);
+    assume A10: len p = (k+1)+1;
+    len p <> 0;
+    then consider q being FinSequence of FreeAtoms(G),
+        d being Element of FreeAtoms(G) such that
+      A11: p = q^<*d*> by FINSEQ_2:19;
+    len p = len q + 1 by A11, FINSEQ_2:16;
+    then A12: len q = k+1 by A10;
+    then q is non empty;
+    then consider h being Element of G.i such that
+      A13: ReductionRel(G) reduces q,<*[i,h]*> by A9, A12;
+    consider x,y being object such that
+      A14: d = [x,y] by RELAT_1:def 1;
+    x in dom G by A14, Th7;
+    then A15: x = i by A1, ZFMISC_1:def 10;
+    then reconsider g = y as Element of G.i by A14, Th9;
+    A16: <*[i,g]*> is FinSequence of FreeAtoms(G) &
+      <*[i,h]*> is FinSequence of FreeAtoms(G) by Th23;
+    ReductionRel(G) reduces <*d*>,<*[i,g]*> by A14, A15, REWRITE1:12;
+    then ReductionRel(G) reduces q^<*d*>,<*[i,h]*>^<*[i,g]*> by A13, A16, Th41;
+    then A17: ReductionRel(G) reduces p,<*[i,h],[i,g]*> by A11, FINSEQ_1:def 9;
+    take h*g;
+    [<*[i,h],[i,g]*>, <*[i,h*g]*>] in ReductionRel(G) by Th27;
+    then ReductionRel(G) reduces <*[i,h],[i,g]*>, <*[i,h*g]*> by REWRITE1:15;
+    hence thesis by A17, REWRITE1:16;
+  end;
+  A18: for k being Nat holds P[k] from NAT_1:sch 2(A2,A8);
+  let p be non empty FinSequence of FreeAtoms(G);
+  0+1 < len p + 1 by XREAL_1:8;
+  then 1 <= len p by NAT_1:13;
+  then consider k being Nat such that
+    A19: len p = 1 + k by NAT_1:10;
+  thus thesis by A18, A19;
+end;
+
+theorem Th43:
+  for p1,p2,q1,q2 being FinSequence of FreeAtoms(H)
+  st p1,q1 are_convertible_wrt ReductionRel(H) &
+    p2,q2 are_convertible_wrt ReductionRel(H)
+  holds p1^p2,q1^q2 are_convertible_wrt ReductionRel(H)
+proof
+  let p1,p2,q1,q2 be FinSequence of FreeAtoms(H);
+  assume p1,q1 are_convertible_wrt ReductionRel(H) &
+    p2,q2 are_convertible_wrt ReductionRel(H);
+  then A1: p1,q1 are_convergent_wrt ReductionRel(H) &
+    p2,q2 are_convergent_wrt ReductionRel(H) by REWRITE1:def 23;
+  then consider c1 being object such that
+    A2: ReductionRel(H) reduces p1,c1 & ReductionRel(H) reduces q1,c1
+    by REWRITE1:def 7;
+  p1 in FreeAtoms(H)* by FINSEQ_1:def 11;
+  then p1 in field ReductionRel(H) by Th30;
+  then c1 in field ReductionRel(H) by A2, REWRITE1:19;
+  then c1 in FreeAtoms(H)* by Th30;
+  then reconsider c1 as FinSequence of FreeAtoms(H) by FINSEQ_1:def 11;
+  consider c2 being object such that
+    A3: ReductionRel(H) reduces p2,c2 & ReductionRel(H) reduces q2,c2
+    by A1, REWRITE1:def 7;
+  p2 in FreeAtoms(H)* by FINSEQ_1:def 11;
+  then p2 in field ReductionRel(H) by Th30;
+  then c2 in field ReductionRel(H) by A3, REWRITE1:19;
+  then c2 in FreeAtoms(H)* by Th30;
+  then reconsider c2 as FinSequence of FreeAtoms(H) by FINSEQ_1:def 11;
+  ReductionRel(H) reduces p1^p2,c1^c2 by A2, A3, Th41;
+  then A4: p1^p2,c1^c2 are_convertible_wrt ReductionRel(H) by REWRITE1:25;
+  ReductionRel(H) reduces q1^q2,c1^c2 by A2, A3, Th41;
+  then c1^c2,q1^q2 are_convertible_wrt ReductionRel(H) by REWRITE1:25;
+  hence thesis by A4, REWRITE1:30;
+end;
+
+registration
+  let I be set, H be Group-like associative multMagma-Family of I;
+  cluster EqCl ReductionRel H -> compatible;
+  coherence
+  proof
+    per cases;
+    suppose A1: I is non empty;
+      now
+        let v,v9,w,w9 be Element of FreeAtoms(H)*+^+<0>;
+        set S = the carrier of FreeAtoms(H)*+^+<0>;
+        v in S & v9 in S & w in S & w9 in S;
+        then v in FreeAtoms(H)* & v9 in FreeAtoms(H)* & w in FreeAtoms(H)* &
+          w9 in FreeAtoms(H)* by MONOID_0:61;
+        then reconsider q1=v, p1=v9 ,q2=w, p2=w9 as FinSequence of FreeAtoms(H)
+          by FINSEQ_1:def 11;
+        set R = EqCl ReductionRel H;
+        assume v in Class(R,v9) & w in Class(R,w9);
+        then [v9,v] in R & [w9,w] in R by EQREL_1:18;
+        then p1,q1 are_convertible_wrt ReductionRel(H) &
+          p2,q2 are_convertible_wrt ReductionRel(H) by MSUALG_6:41;
+        then p1^p2,q1^q2 are_convertible_wrt ReductionRel(H) by A1, Th43;
+        then v9*w9,q1^q2 are_convertible_wrt ReductionRel(H) by MONOID_0:62;
+        then v9*w9,v*w are_convertible_wrt ReductionRel(H) by MONOID_0:62;
+        then [v9*w9,v*w] in R by MSUALG_6:41;
+        hence v*w in Class(R,v9*w9) by EQREL_1:18;
+      end;
+      hence thesis by ALGSTR_4:def 3;
+    end;
+    suppose I is empty;
+      then H is empty;
+      then FreeAtoms(H) is empty;
+      hence thesis;
+    end;
+  end;
+end;
+
+theorem Th44:
+  p^q is_a_normal_form_wrt ReductionRel H & len p <> 0 & len q <> 0 implies
+    (p.len p)`1 <> (q.1)`1
+proof
+  assume A1: p^q is_a_normal_form_wrt ReductionRel H & len p <> 0 & len q <> 0;
+  then 1 <= len p & 1 <= len q by NAT_1:14;
+  then len p in dom p & 1 in dom q by FINSEQ_3:25;
+  then p.len p in rng p & q.1 in rng q by FUNCT_1:3;
+  then A2: p.len p in FreeAtoms(H) & q.1 in FreeAtoms(H);
+  then consider x1,y1 being object such that
+    A3: p.len p = [x1,y1] by RELAT_1:def 1;
+  consider x2,y2 being object such that
+    A4: q.1 = [x2,y2] by A2, RELAT_1:def 1;
+  x1 in dom H by A2, A3, Th7;
+  then reconsider i = x1 as Element of I;
+  assume (p.len p)`1 = (q.1)`1;
+  then x1 = (q.1)`1 by A3;
+  then A5: x2 = i by A4;
+  reconsider g = y1 as Element of H.i by A2, A3, Th9;
+  reconsider h = y2 as Element of H.i by A2, A4, A5, Th9;
+  set l = len p -' 1;
+  A6: p^q = (p|l)^(p/^l)^q by RFINSEQ:8
+    .= (p|l)^(p/^l)^((q|1)^(q/^1)) by RFINSEQ:8
+    .= (p|l)^(p/^l)^(q|1)^(q/^1) by FINSEQ_1:32
+    .= (p|l)^((p/^l)^(q|1))^(q/^1) by FINSEQ_1:32
+    .= (p|l)^(<* p.len p *>^(q|1))^(q/^1) by A1, Th2
+    .= (p|l)^(<* p.len p *>^<* q.1 *>)^(q/^1) by A1, Th1
+    .= (p|l)^<* [i,g], [i,h] *>^(q/^1) by A3, A4, A5, FINSEQ_1:def 9;
+  set b = (p|l)^<* [i,g*h] *>^(q/^1);
+  [i, g*h] in FreeAtoms(H) by Th9;
+  then <* [i,g*h] *> is FinSequence of FreeAtoms(H) by FINSEQ_1:74;
+  then b is FinSequence of FreeAtoms(H) by FINSEQ_1:75;
+  then [p^q, b] in ReductionRel H by A6, Def3;
+  hence contradiction by A1, REWRITE1:def 5;
+end;
+
+definition
+  let I be set, H be Group-like associative multMagma-Family of I;
+  func FreeProduct(H) -> strict multMagma equals
+  FreeAtoms(H)*+^+<0> ./. EqCl ReductionRel H;
+  coherence;
+end;
+
+reserve s,t for Element of FreeProduct(H);
+
+theorem Th45:
+  for I being set, H being Group-like associative multMagma-Family of I
+  holds 1_FreeProduct(H) = Class(EqCl ReductionRel H,{})
+proof
+  let I be set, H be Group-like associative multMagma-Family of I;
+  thus 1_FreeProduct(H)
+     = Class(EqCl ReductionRel H,1_(FreeAtoms(H)*+^+<0>)) by ALGSTR_4:49
+    .= Class(EqCl ReductionRel H,{}) by MONOID_0:61;
+end;
+
+theorem Th46:
+  for I being empty set, H being Group-like associative multMagma-Family of I
+  holds the carrier of FreeProduct(H) = { 1_FreeProduct(H) }
+proof
+  let I be empty set, H be Group-like associative multMagma-Family of I;
+  now
+    let x be object;
+    hereby
+      assume x in the carrier of FreeProduct(H);
+      then A1: x in Class EqCl ReductionRel H;
+      reconsider X = x as set by TARSKI:1;
+      consider y being object such that
+        A2: y in the carrier of FreeAtoms(H)*+^+<0> &
+          X = Class(EqCl ReductionRel H,y) by A1, EQREL_1:def 3;
+      y in FreeAtoms(H)* by A2, MONOID_0:61;
+      then y in {{}} by FUNCT_7:17;
+      then y = {} by TARSKI:def 1;
+      hence x = 1_FreeProduct(H) by A2, Th45;
+    end;
+    assume x = 1_FreeProduct(H);
+    hence x in the carrier of FreeProduct(H);
+  end;
+  hence thesis by TARSKI:def 1;
+end;
+
+registration
+  let I be set, H be Group-like associative multMagma-Family of I;
+  cluster FreeProduct(H) -> Group-like non empty;
+  coherence
+  proof
+    per cases;
+    suppose I is non empty;
+      then reconsider I9 = I as non empty set;
+      reconsider H9 = H as Group-like associative multMagma-Family of I9;
+      now
+        set W = FreeAtoms(H)*+^+<0>, R9 = ReductionRel(H), R = EqCl R9;
+        reconsider e = 1_FreeProduct(H) as Element of FreeProduct(H);
+        take e;
+        let h be Element of FreeProduct(H);
+        thus h*e = h & e*h = h by GROUP_1:def 4;
+        consider p being Element of W such that
+          A1: h = Class(R,p) by EQREL_1:36;
+        p in the carrier of W;
+        then p in FreeAtoms(H)* by MONOID_0:61;
+        then reconsider p9=p as FinSequence of FreeAtoms(H9)
+          by FINSEQ_1:def 11;
+        consider q9 being FinSequence of FreeAtoms(H9) such that
+          A2: len p9 = len q9 and
+          A3: for k being Nat, i being Element of I9, g being Element of H9.i
+            st p9.k = [i,g] holds (Rev q9).k = [i,g"] by Th22;
+        q9 in FreeAtoms(H)* by FINSEQ_1:def 11;
+        then reconsider q=q9 as Element of W by MONOID_0:61;
+        set g = Class(R,q);
+        reconsider g as Element of FreeProduct(H) by EQREL_1:def 3;
+        take g;
+        A4: {} = 1_W by MONOID_0:61;
+        A5: p9^q9 is Element of W & q9^p9 is Element of W by MONOID_0:61;
+        R9 reduces p9^q9,{} & R9 reduces q9^p9,{} by A2, A3, Th34;
+        then {},p9^q9 are_convertible_wrt R9 & {},q9^p9 are_convertible_wrt R9
+          by REWRITE1:25;
+        then [{},p9^q9] in R & [{},q9^p9] in R by A4, A5, MSUALG_6:41;
+        then p9^q9 in Class(R,{}) & q9^p9 in Class(R,{}) by EQREL_1:18;
+        then A6: Class(R,p9^q9) = Class(R,{}) & Class(R,q9^p9) = Class(R,{})
+          by A4, EQREL_1:23;
+        thus h*g = Class(R,p*q) by A1, ALGSTR_4:def 4
+          .= Class(R,p9^q9) by MONOID_0:62
+          .= e by A4, A6, ALGSTR_4:49;
+        thus g*h = Class(R,q*p) by A1, ALGSTR_4:def 4
+          .= Class(R,q9^p9) by MONOID_0:62
+          .= e by A4, A6, ALGSTR_4:49;
+      end;
+      hence thesis by GROUP_1:def 2;
+    end;
+    suppose I is empty;
+      then A7: the carrier of FreeProduct(H) = { 1_FreeProduct(H) } by Th46;
+      now
+        reconsider e = 1_FreeProduct(H) as Element of FreeProduct(H);
+        take e;
+        let h be Element of FreeProduct(H);
+        thus h*e = h & e*h = h by GROUP_1:def 4;
+        take g=e;
+        thus h*g = e & g*h = e by A7, TARSKI:def 1;
+      end;
+      hence thesis by GROUP_1:def 2;
+    end;
+  end;
+end;
+
+definition
+  let I be set, H be Group-like associative multMagma-Family of I;
+  redefine func FreeProduct(H) -> strict Group;
+  coherence;
+end;
+
+registration
+  let I be empty set, H be Group-like associative multMagma-Family of I;
+  cluster FreeProduct(H) -> trivial;
+  coherence
+  proof
+    the carrier of FreeProduct(H) = { 1_FreeProduct(H) } by Th46;
+    hence thesis;
+  end;
+end;
+
+theorem Th47:
+  s = Class(EqCl ReductionRel H,p) & t = Class(EqCl ReductionRel H,q) implies
+    s*t = Class(EqCl ReductionRel H,p^q)
+proof
+  set R = EqCl ReductionRel H;
+  assume A1: s = Class(R,p) & t = Class(R,q);
+  p in FreeAtoms(H)* & q in FreeAtoms(H)* by FINSEQ_1:def 11;
+  then reconsider v=p, w=q as Element of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+  reconsider x=s, y=t as Element of Class R;
+  thus s*t = Class(R,v*w) by A1, ALGSTR_4:def 4
+    .= Class(R,p^q) by MONOID_0:62;
+end;
+
+definition
+  let I, H, i, g;
+  func [* i,g *] -> Element of FreeProduct(H) equals
+  Class(EqCl ReductionRel H,<*[i,g]*>);
+  coherence
+  proof
+    [i,g] in FreeAtoms(H) by Th9;
+    then <*[i,g]*> is FinSequence of FreeAtoms(H) by FINSEQ_1:74;
+    then <*[i,g]*> in FreeAtoms(H)* by FINSEQ_1:def 11;
+    then <*[i,g]*> in the carrier of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+    hence thesis by EQREL_1:def 3;
+  end;
+end;
+
+theorem Th48:
+  <*[i,g]*> in [*i,g*]
+proof
+  [i,g] in FreeAtoms(H) by Th9;
+  then <*[i,g]*> is FinSequence of FreeAtoms(H) by FINSEQ_1:74;
+  then <*[i,g]*> in FreeAtoms(H)* by FINSEQ_1:def 11;
+  then <*[i,g]*> in the carrier of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+  hence thesis by EQREL_1:20;
+end;
+
+theorem Th49:
+  [* i,1_(H.i) *] = 1_FreeProduct(H)
+proof
+  [i,1_(H.i)] in FreeAtoms(H) by Th9;
+  then <*[i,1_(H.i)]*> is FinSequence of FreeAtoms(H) by FINSEQ_1:74;
+  then <*[i,1_(H.i)]*> in FreeAtoms(H)* by FINSEQ_1:def 11;
+  then A1: <*[i,1_(H.i)]*> in the carrier of FreeAtoms(H)*+^+<0>
+    by MONOID_0:61;
+  A2: [<*[i,1_(H.i)]*>,{}] in ReductionRel(H) by Th29;
+  ReductionRel(H) c= EqCl ReductionRel(H) by MSUALG_5:def 1;
+  then Class(EqCl ReductionRel H,{}) = [*i,1_(H.i)*] by A1, A2, EQREL_1:35;
+  hence thesis by Th45;
+end;
+
+theorem Th50:
+  for g being Element of H.i, h being Element of H.j
+  holds [* i,g *] = [* j,h *] iff (g = 1_(H.i) & h = 1_(H.j)) or(i = j & g = h)
+proof
+  let g be Element of H.i, h be Element of H.j;
+  [i,g] in FreeAtoms(H) by Th9;
+  then <*[i,g]*> is FinSequence of FreeAtoms(H) by FINSEQ_1:74;
+  then <*[i,g]*> in FreeAtoms(H)* by FINSEQ_1:def 11;
+  then A1: <*[i,g]*> in the carrier of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+  [j,h] in FreeAtoms(H) by Th9;
+  then <*[j,h]*> is FinSequence of FreeAtoms(H) by FINSEQ_1:74;
+  then <*[j,h]*> in FreeAtoms(H)* by FINSEQ_1:def 11;
+  then A2: <*[j,h]*> in the carrier of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+  hereby
+    assume [* i,g *] = [* j,h *];
+    then [<*[i,g]*>,<*[j,h]*>] in EqCl ReductionRel H by A1, EQREL_1:35;
+    then <*[i,g]*>,<*[j,h]*> are_convertible_wrt ReductionRel H
+      by A1, A2, MSUALG_6:41;
+    hence (g = 1_(H.i) & h = 1_(H.j)) or (i = j & g = h) by Th40;
+  end;
+  assume (g = 1_(H.i) & h = 1_(H.j)) or (i = j & g = h);
+  then <*[i,g]*>,<*[j,h]*> are_convertible_wrt ReductionRel H by Th40;
+  then [<*[i,g]*>,<*[j,h]*>] in EqCl ReductionRel H by A1, A2, MSUALG_6:41;
+  hence thesis by A1, EQREL_1:35;
+end;
+
+theorem Th51:
+  [* i, g *] * [* i, h *] = [* i, g*h *]
+proof
+  set R = EqCl ReductionRel(H);
+  [i,g] in FreeAtoms(H) & [i,h] in FreeAtoms(H) by Th9;
+  then reconsider s1 = <*[i,g]*>, s2 = <*[i,h]*> as FinSequence of FreeAtoms H
+    by FINSEQ_1:74;
+  s1^s2 in FreeAtoms(H)*;
+  then A1: s1^s2 in the carrier of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+  A2: [<*[i,g],[i,h]*>, <*[i,g*h]*>] in ReductionRel(H) by Th27;
+  ReductionRel(H) c= EqCl ReductionRel(H) by MSUALG_5:def 1;
+  then [<*[i,g],[i,h]*>, <*[i,g*h]*>] in R by A2;
+  then A3: [s1^s2, <*[i,g*h]*>] in R by FINSEQ_1:def 9;
+  thus [* i,g *] * [* i,h *] = Class(R,s1^s2) by Th47
+    .= [* i,g*h *] by A1, A3, EQREL_1:35;
+end;
+
+theorem
+  [* i, g *]" = [* i, g" *]
+proof
+  [* i,g *] * [* i,g" *] = [* i,g*g" *] by Th51
+    .= [* i,1_(H.i) *] by GROUP_1:def 5
+    .= 1_FreeProduct(H) by Th49;
+  hence thesis by GROUP_1:12;
+end;
+
+Lm3:
+  for f,g being ManySortedSet of I holds dom <: f,g :> = I
+proof
+  let f,g be ManySortedSet of I;
+  thus dom <: f,g :> = dom f /\ dom g by FUNCT_3:def 7
+    .= I /\ dom g by PARTFUN1:def 2
+    .= I /\ I by PARTFUN1:def 2
+    .= I;
+end;
+
+theorem Th53:
+  for f,g being ManySortedSet of I holds dom commute <* <: f,g :> *> = I
+proof
+  let f,g be ManySortedSet of I;
+  A1: dom <: f,g :> = I by Lm3;
+  thus dom commute <* <: f,g :> *>
+     = proj2 dom uncurry <* <: f,g :> *> by FUNCT_5:23
+    .= proj2 dom uncurry { [1,<: f,g :>] } by FINSEQ_1:def 5
+    .= proj2 dom uncurry (1 .--> <: f,g :>) by FUNCT_4:82
+    .= proj2 dom uncurry ({1} --> <: f,g :>) by FUNCOP_1:def 9
+    .= rng [:{1},dom <: f,g :>:] by FUNCT_6:8
+    .= I by A1, RELAT_1:160;
+end;
+
+theorem Th54:
+  for g being Element of G.i holds <*[i,g]*> =
+    (commute <*<:(the carrier of G.i)-->i,id the carrier of(G.i):>*>).g
+proof
+  let g be Element of G.i;
+  set C = the carrier of G.i;
+  A1: dom <:C-->i,id C :> = C by Lm3;
+  thus (commute <*<:C-->i,id C :>*>).g
+     = <*<:C-->i,id C :>.g*> by A1, Th4
+    .= <*[(C-->i).g,(id C).g]*> by A1, FUNCT_3:def 7
+    .= <*[i,g]*>;
+end;
+
+theorem Th55:
+  rng commute <*<:(the carrier of G.i)-->i,id the carrier of(G.i):>*> =
+    1-tuples_on [: {i},the carrier of G.i :]
+proof
+  set C = the carrier of G.i;
+  A1: dom commute <*<:C-->i,id C :>*> = C by Th53;
+  now
+    let p be object;
+    hereby
+      assume p in 1-tuples_on [: {i},C :];
+      then p is Tuple of 1,[: {i},C :] by FINSEQ_2:131;
+      then consider z being Element of [: {i},C :] such that
+        A2: p = <*z*> by FINSEQ_2:97;
+      consider x,g being object such that
+        A3: x in {i} & g in C & z = [x,g] by ZFMISC_1:def 2;
+      reconsider g as Element of G.i by A3;
+      x = i by A3, TARSKI:def 1;
+      then (commute <*<:C-->i,id C :>*>).g = p by A2, A3, Th54;
+      hence p in rng(curry' uncurry <*<:C-->i,id C :>*>) by A1, FUNCT_1:3;
+    end;
+    assume p in rng(curry' uncurry <*<:C-->i,id C :>*>);
+    then consider g being object such that
+      A4: g in dom(curry' uncurry <*<:C-->i,id C :>*>) and
+      A5: (commute <*<:C-->i,id C :>*>).g = p by FUNCT_1:def 3;
+    reconsider g as Element of G.i by A1, A4;
+    A6: p = <*[i,g]*> by A5, Th54;
+    i in {i} & g in C by TARSKI:def 1;
+    then [i,g] in [: {i},C :] by ZFMISC_1:def 2;
+    hence p in 1-tuples_on [: {i},C :] by A6, FINSEQ_2:98;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+Lm4:
+  1-tuples_on [: {i},the carrier of G.i :] c= FreeAtoms(G)*
+proof
+  set S=the set of all [:{i},the carrier of G.i :] where i is Element of dom G;
+  now
+    let p be object;
+    assume p in 1-tuples_on [: {i},the carrier of G.i :];
+    then consider z being set such that
+      A1: z in [: {i},the carrier of G.i :] & p = <* z *> by FINSEQ_2:135;
+    dom G = I by PARTFUN1:def 2;
+    then [: {i},the carrier of G.i :] in S;
+    then z in union S by A1, TARSKI:def 4;
+    then z in FreeAtoms(G) by Th11;
+    then p is FinSequence of FreeAtoms(G) by A1, FINSEQ_1:74;
+    hence p in FreeAtoms(G)* by FINSEQ_1:def 11;
+  end;
+  hence thesis by TARSKI:def 3;
+end;
+
+definition
+  let I, H, i;
+  func injection(H,i) -> Function of H.i,FreeProduct(H) equals
+  (proj Class EqCl ReductionRel H) *
+    (commute <*<:(the carrier of H.i)-->i,id the carrier of(H.i):>*>);
+  coherence
+  proof
+    set C = the carrier of H.i;
+    rng commute <*<:C-->i,id C :>*> = 1-tuples_on [: {i},the carrier of H.i :]
+      by Th55;
+    then A1: rng curry' uncurry <*<:C-->i,id C :>*> c= FreeAtoms(H)* by Lm4;
+    dom(proj Class EqCl ReductionRel H)
+       = the carrier of FreeAtoms(H)*+^+<0> by FUNCT_2:def 1
+      .= FreeAtoms(H)* by MONOID_0:61;
+    then A2: dom((proj Class EqCl ReductionRel H)*(commute<*<:C-->i,id C :>*>))
+       = dom(commute <*<:C-->i,id C :>*>) by A1, RELAT_1:27
+      .= C by Th53;
+    rng((proj Class EqCl ReductionRel H)
+        *(curry' uncurry <*<:C-->i,id C :>*>))
+      c= the carrier of FreeProduct(H);
+    hence thesis by A2, FUNCT_2:2;
+  end;
+end;
+
+theorem Th56:
+  injection(H,i).g = [* i, g *]
+proof
+  set C = the carrier of H.i;
+  A1: <*[i,g]*> in [* i,g *] by Th48;
+  dom commute <*<:C-->i,id C :>*> = C by Th53;
+  hence injection(H,i).g = (proj Class EqCl ReductionRel H).
+      ((commute <*<:C-->i,id C :>*>).g) by FUNCT_1:13
+    .= (proj Class EqCl ReductionRel H).<*[i,g]*> by Th54
+    .= [* i,g *] by A1, EQREL_1:65;
+end;
+
+registration
+  let I, H, i;
+  cluster injection(H,i) -> multiplicative one-to-one;
+  coherence
+  proof
+    now
+      let g,h be Element of H.i;
+      thus injection(H,i).(g*h) = [* i,g*h *] by Th56
+        .= [* i,g *] * [* i,h *] by Th51
+        .= injection(H,i).g * [* i,h *] by Th56
+        .= injection(H,i).g * injection(H,i).h by Th56;
+    end;
+    hence injection(H,i) is multiplicative by GROUP_6:def 6;
+    now
+      let x1,x2 be object;
+      assume x1 in dom injection(H,i) & x2 in dom injection(H,i);
+      then reconsider g1 = x1, g2 = x2 as Element of H.i;
+      assume injection(H,i).x1 = injection(H,i).x2;
+      then [* i,g1 *] = injection(H,i).x2 by Th56
+        .= [* i,g2 *] by Th56;
+      then (i=i & g1 = g2) or (g1 = 1_(H.i) & g2 = 1_(H.i)) by Th50;
+      hence x1 = x2;
+    end;
+    hence injection(H,i) is one-to-one by FUNCT_1:def 4;
+  end;
+end;
+
+theorem Th57:
+  I is trivial implies injection(H,i) is bijective
+proof
+  assume A1: I is trivial;
+  now
+    let Z be object;
+    assume Z in the carrier of FreeProduct(H);
+    then consider p being Element of FreeAtoms(H)*+^+<0> such that
+      A2: Z = Class(EqCl ReductionRel(H),p) by EQREL_1:36;
+    p in the carrier of FreeAtoms(H)*+^+<0>;
+    then p in FreeAtoms(H)* by MONOID_0:61;
+    then reconsider p as FinSequence of FreeAtoms(H) by FINSEQ_1:def 11;
+    per cases;
+    suppose p is non empty;
+      then consider g being Element of H.i such that
+        A3: ReductionRel(H) reduces p,<*[i,g]*> by A1, Th42;
+      [i,g] in FreeAtoms(H) by Th9;
+      then reconsider s = <*[i,g]*> as FinSequence of FreeAtoms(H)
+        by FINSEQ_1:74;
+      s in FreeAtoms(H)* by FINSEQ_1:def 11;
+      then A4: s in the carrier of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+      dom injection(H,i) = the carrier of (H.i) by FUNCT_2:def 1;
+      then A5: g in dom injection(H,i);
+      p,s are_convertible_wrt ReductionRel(H) by A3, REWRITE1:25;
+      then [p,s] in EqCl ReductionRel(H) by A4, MSUALG_6:41;
+      then Z = [* i,g *] by A2, EQREL_1:35
+        .= injection(H,i).g by Th56;
+      hence Z in rng injection(H,i) by A5, FUNCT_1:3;
+    end;
+    suppose p is empty;
+      then A6: Z = 1_FreeProduct(H) by A2, Th45
+        .= [* i,1_(H.i) *] by Th49
+        .= injection(H,i).1_(H.i) by Th56;
+      dom injection(H,i) = the carrier of H.i by FUNCT_2:def 1;
+      hence Z in rng injection(H,i) by A6, FUNCT_1:3;
+    end;
+  end;
+  then the carrier of FreeProduct(H) c= rng injection(H,i) by TARSKI:def 3;
+  then injection(H,i) is onto by XBOOLE_0:def 10, FUNCT_2:def 3;
+  hence injection(H,i) is bijective by FUNCT_2:def 4;
+end;
+
+theorem Th58:
+  I is trivial implies H.i, FreeProduct(H) are_isomorphic
+proof
+  assume I is trivial;
+  then injection(H,i) is bijective by Th57;
+  hence thesis by GROUP_6:def 11;
+end;
+
+definition
+  let I, H, s;
+  func nf s -> FinSequence of FreeAtoms(H) means
+  :Def7:
+  it in s & it is_a_normal_form_wrt ReductionRel(H);
+  existence
+  proof
+    consider p being Element of FreeAtoms(H)*+^+<0> such that
+      A1: s = Class(EqCl ReductionRel H,p) by EQREL_1:36;
+    A2: p in the carrier of FreeAtoms(H)*+^+<0>;
+    set q = nf(p,ReductionRel H);
+    q is_a_normal_form_of p,ReductionRel H by REWRITE1:54;
+    then A3: q is_a_normal_form_wrt ReductionRel H &
+      ReductionRel H reduces p,q by REWRITE1:def 6;
+    p in FreeAtoms(H)* by A2, MONOID_0:61;
+    then p in field ReductionRel H by Th30;
+    then q in field ReductionRel H by A3, REWRITE1:19;
+    then A4: q in FreeAtoms(H)* by Th30;
+    then reconsider q as FinSequence of FreeAtoms(H) by FINSEQ_1:def 11;
+    take q;
+    A5: q in the carrier of FreeAtoms(H)*+^+<0> by A4, MONOID_0:61;
+    p,q are_convertible_wrt ReductionRel H by A3, REWRITE1:25;
+    then [p,q] in EqCl ReductionRel H by A5, MSUALG_6:41;
+    then s = Class(EqCl ReductionRel H,q) by A1, EQREL_1:35;
+    hence thesis by A3, A5, EQREL_1:20;
+  end;
+  uniqueness
+  proof
+    let q1, q2 be FinSequence of FreeAtoms(H) such that
+      A6: q1 in s & q1 is_a_normal_form_wrt ReductionRel(H) and
+      A7: q2 in s & q2 is_a_normal_form_wrt ReductionRel(H);
+    consider p being Element of FreeAtoms(H)*+^+<0> such that
+      A8: s = Class(EqCl ReductionRel H,p) by EQREL_1:36;
+    q1 in FreeAtoms(H)* & q2 in FreeAtoms(H)* by FINSEQ_1:def 11;
+    then A9: q1 in the carrier of FreeAtoms(H)*+^+<0> &
+      q2 in the carrier of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+    [q1,q2] in EqCl ReductionRel H by A6, A7, A8, EQREL_1:22;
+    hence q1 = q2 by A6, A7, A9, MSUALG_6:41, REWRITE1:def 19;
+  end;
+end;
+
+theorem Th59:
+  s = Class(EqCl ReductionRel H,p) implies nf s = nf(p,ReductionRel H)
+proof
+  assume A1: s = Class(EqCl ReductionRel H,p);
+  set q = nf(p,ReductionRel H);
+  q is_a_normal_form_of p,ReductionRel H by REWRITE1:54;
+  then A2: q is_a_normal_form_wrt ReductionRel H &
+    ReductionRel H reduces p,q by REWRITE1:def 6;
+  A3: p in FreeAtoms(H)* by FINSEQ_1:def 11;
+  then p in field ReductionRel H by Th30;
+  then q in field ReductionRel H by A2, REWRITE1:19;
+  then A4: q in FreeAtoms(H)* by Th30;
+  then A5: q in the carrier of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+  A6: p in the carrier of FreeAtoms(H)*+^+<0> by A3, MONOID_0:61;
+  p,q are_convertible_wrt ReductionRel H by A2, REWRITE1:25;
+  then [p,q] in EqCl ReductionRel H by A5, A6, MSUALG_6:41;
+  then A7: q in s by A1, EQREL_1:18;
+  q is FinSequence of FreeAtoms(H) by A4, FINSEQ_1:def 11;
+  hence thesis by A2, A7, Def7;
+end;
+
+theorem Th60:
+  t = Class(EqCl ReductionRel H,(nf s)|k) implies nf t = (nf s)|k
+proof
+  assume A1: t = Class(EqCl ReductionRel H,(nf s)|k);
+  (nf s)|k in FreeAtoms(H)* by FINSEQ_1:def 11;
+  then (nf s)|k is Element of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+  then A2: (nf s)|k in t by A1, EQREL_1:23;
+  (nf s)|k is_a_normal_form_wrt ReductionRel H
+  proof
+    assume not (nf s)|k is_a_normal_form_wrt ReductionRel H;
+    then consider b being object such that
+      A3: [(nf s)|k, b] in ReductionRel H by REWRITE1:def 5;
+    b in rng ReductionRel(H) by A3, XTUPLE_0:def 13;
+    then b in the carrier of FreeAtoms(H)*+^+<0>;
+    then b in FreeAtoms(H)* by MONOID_0:61;
+    then reconsider b as FinSequence of FreeAtoms(H) by FINSEQ_1:def 11;
+    per cases by A3, Def3;
+    suppose ex r,u being FinSequence of FreeAtoms(H), i being Element of I
+        st (nf s)|k = r^<* [i,1_(H.i)] *>^u & b = r^u;
+      then consider r,u being FinSequence of FreeAtoms(H), i being Element of I
+        such that A4: (nf s)|k = r^<* [i,1_(H.i)] *>^u & b = r^u;
+      A5: nf s = r^<* [i,1_(H.i)] *>^u^((nf s)/^k) by A4, RFINSEQ:8
+        .= r^<* [i,1_(H.i)] *>^(u^((nf s)/^k)) by FINSEQ_1:32;
+      set b9 = r^(u^((nf s)/^k));
+      reconsider b9 as FinSequence of FreeAtoms(H);
+      [nf s, b9] in ReductionRel H by A5, Def3;
+      hence contradiction by Def7, REWRITE1:def 5;
+    end;
+    suppose ex r,u being FinSequence of FreeAtoms(H), i being Element of I,
+          g,h being Element of H.i
+        st (nf s)|k = r^<* [i,g],[i,h] *>^u & b = r^<* [i,g*h] *>^u;
+      then consider r,u being FinSequence of FreeAtoms(H),
+          i being Element of I, g,h being Element of H.i such that
+        A6: (nf s)|k = r^<* [i,g],[i,h] *>^u & b = r^<* [i,g*h] *>^u;
+      A7: nf s = r^<* [i,g],[i,h] *>^u^((nf s)/^k) by A6, RFINSEQ:8
+        .= r^<* [i,g],[i,h] *>^(u^((nf s)/^k)) by FINSEQ_1:32;
+      set b9 = r^<* [i,g*h] *>^(u^((nf s)/^k));
+      r^<* [i,g*h] *> is FinSequence of FreeAtoms(H) by A6, FINSEQ_1:36;
+      then reconsider b9 as FinSequence of FreeAtoms(H) by FINSEQ_1:75;
+      [nf s, b9] in ReductionRel H by A7, Def3;
+      hence contradiction by Def7, REWRITE1:def 5;
+    end;
+  end;
+  hence thesis by A2, Def7;
+end;
+
+theorem Th61:
+  t = Class(EqCl ReductionRel H,(nf s)/^k) implies nf t = (nf s)/^k
+proof
+  assume A1: t = Class(EqCl ReductionRel H,(nf s)/^k);
+  (nf s)/^k in FreeAtoms(H)* by FINSEQ_1:def 11;
+  then (nf s)/^k is Element of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+  then A2: (nf s)/^k in t by A1, EQREL_1:23;
+  (nf s)/^k is_a_normal_form_wrt ReductionRel H
+  proof
+    assume not (nf s)/^k is_a_normal_form_wrt ReductionRel H;
+    then consider b being object such that
+      A3: [(nf s)/^k, b] in ReductionRel H by REWRITE1:def 5;
+    b in rng ReductionRel(H) by A3, XTUPLE_0:def 13;
+    then b in the carrier of FreeAtoms(H)*+^+<0>;
+    then b in FreeAtoms(H)* by MONOID_0:61;
+    then reconsider b as FinSequence of FreeAtoms(H) by FINSEQ_1:def 11;
+    per cases by A3, Def3;
+    suppose ex r,u being FinSequence of FreeAtoms(H), i being Element of I
+        st (nf s)/^k = r^<* [i,1_(H.i)] *>^u & b = r^u;
+      then consider r,u being FinSequence of FreeAtoms(H), i being Element of I
+        such that A4: (nf s)/^k = r^<* [i,1_(H.i)] *>^u & b = r^u;
+      A5: nf s = ((nf s)|k)^(r^<* [i,1_(H.i)] *>^u) by A4, RFINSEQ:8
+        .= ((nf s)|k)^(r^<* [i,1_(H.i)] *>)^u by FINSEQ_1:32
+        .= ((nf s)|k)^r^<* [i,1_(H.i)] *>^u by FINSEQ_1:32;
+      set b9 = ((nf s)|k)^r^u;
+      reconsider b9 as FinSequence of FreeAtoms(H);
+      [nf s, b9] in ReductionRel H by A5, Def3;
+      hence contradiction by Def7, REWRITE1:def 5;
+    end;
+    suppose ex r,u being FinSequence of FreeAtoms(H), i being Element of I,
+          g,h being Element of H.i
+        st (nf s)/^k = r^<* [i,g],[i,h] *>^u & b = r^<* [i,g*h] *>^u;
+      then consider r,u being FinSequence of FreeAtoms(H),
+          i being Element of I, g,h being Element of H.i such that
+        A6: (nf s)/^k = r^<* [i,g],[i,h] *>^u & b = r^<* [i,g*h] *>^u;
+      A7: nf s = ((nf s)|k)^(r^<* [i,g],[i,h] *>^u) by A6, RFINSEQ:8
+        .= ((nf s)|k)^(r^<* [i,g],[i,h] *>)^u by FINSEQ_1:32
+        .= ((nf s)|k)^r^<* [i,g],[i,h] *>^u by FINSEQ_1:32;
+      set b9 = ((nf s)|k)^r^<* [i,g*h] *>^u;
+      r^<* [i,g*h] *> is FinSequence of FreeAtoms(H) by A6, FINSEQ_1:36;
+      then <* [i,g*h] *> is FinSequence of FreeAtoms(H) by FINSEQ_1:36;
+      then reconsider b9 as FinSequence of FreeAtoms(H) by FINSEQ_1:75;
+      [nf s, b9] in ReductionRel H by A7, Def3;
+      hence contradiction by Def7, REWRITE1:def 5;
+    end;
+  end;
+  hence thesis by A2, Def7;
+end;
+
+theorem Th62:
+  nf 1_FreeProduct(H) = {}
+proof
+  set p = <*>FreeAtoms(H);
+  1_FreeProduct(H) = Class(EqCl ReductionRel H,p) by Th45;
+  hence nf 1_FreeProduct(H) = nf(p,ReductionRel H) by Th59
+    .= {} by Th37, MSAFREE4:17;
+end;
+
+theorem Th63:
+  len nf s = 0 implies s = 1_FreeProduct(H)
+proof
+  assume len nf s = 0;
+  then nf s = {};
+  then A1: {} in s by Def7;
+  consider x being Element of FreeAtoms(H)*+^+<0> such that
+    A2: s = Class(EqCl ReductionRel H,x) by EQREL_1:36;
+  thus s = Class(EqCl ReductionRel H,{}) by A1, A2, EQREL_1:23
+    .= 1_FreeProduct(H) by Th45;
+end;
+
+theorem Th64:
+  g <> 1_(H.i) implies nf [* i, g *] = <* [i,g] *>
+proof
+  assume g <> 1_(H.i);
+  then A1: <* [i,g] *> is_a_normal_form_wrt ReductionRel H by Th38;
+  [i,g] in FreeAtoms(H) by Th9;
+  then <*[i,g]*> is FinSequence of FreeAtoms(H) by FINSEQ_1:74;
+  hence thesis by A1, Th48, Def7;
+end;
+
+theorem Th65:
+  len nf s = 1 implies ex i, g st g <> 1_(H.i) & s = [* i, g *]
+proof
+  assume A1: len nf s = 1;
+  then 1 in dom nf s by FINSEQ_3:25;
+  then (nf s).1 in rng nf s by FUNCT_1:3;
+  then reconsider z = (nf s).1 as Element of FreeAtoms(H);
+  consider x,y being object such that
+    A2: z = [x,y] by RELAT_1:def 1;
+  x in dom H by A2, Th7;
+  then reconsider i = x as Element of I;
+  reconsider g = y as Element of H.i by A2, Th9;
+  take i, g;
+  A3: nf s = <* [i,g] *> by A1, A2, FINSEQ_1:40;
+  thus g <> 1_(H.i)
+  proof
+    assume g = 1_(H.i);
+    then A4: <* [i, 1_(H.i)] *> is_a_normal_form_wrt ReductionRel H
+      by A3, Def7;
+    [<* [i, 1_(H.i)] *>, {}] in ReductionRel H by Th29;
+    hence contradiction by A4, REWRITE1:def 5;
+  end;
+  consider p being Element of FreeAtoms(H)*+^+<0> such that
+    A5: s = Class(EqCl ReductionRel H,p) by EQREL_1:36;
+  <* [i,g] *> in s by A3, Def7;
+  hence thesis by A5, EQREL_1:23;
+end;
+
+theorem Th66:
+  ((nf s).len nf s)`1 <> ((nf t).1)`1 implies nf(s * t) = (nf s) ^ nf t
+proof
+  assume A1: ((nf s).len nf s)`1 <> ((nf t).1)`1;
+  consider p being Element of FreeAtoms(H)*+^+<0> such that
+    A2: s = Class(EqCl ReductionRel H,p) by EQREL_1:36;
+  consider q being Element of FreeAtoms(H)*+^+<0> such that
+    A3: t = Class(EqCl ReductionRel H,q) by EQREL_1:36;
+  A4: the carrier of FreeAtoms(H)*+^+<0> = FreeAtoms(H)* by MONOID_0:61;
+  then reconsider p,q as FinSequence of FreeAtoms H by FINSEQ_1:def 11;
+  A5: s*t = Class(EqCl ReductionRel H,p^q) by A2, A3, Th47;
+  A6: (nf s) ^ nf t in Class(EqCl ReductionRel H,p^q)
+  proof
+    A7: nf s is Element of FreeAtoms(H)*+^+<0> &
+      nf t is Element of FreeAtoms(H)*+^+<0> &
+      (nf s) ^ nf t is Element of FreeAtoms(H)*+^+<0> &
+      p ^ q is Element of FreeAtoms(H)*+^+<0> by A4, FINSEQ_1:def 11;
+    [p,nf s] in EqCl ReductionRel H by A2, Def7, EQREL_1:18;
+    then A8: p, nf s are_convertible_wrt ReductionRel H by A7, MSUALG_6:41;
+    [q,nf t] in EqCl ReductionRel H by A3, Def7, EQREL_1:18;
+    then q, nf t are_convertible_wrt ReductionRel H by A7, MSUALG_6:41;
+    then p^q, (nf s) ^ nf t are_convertible_wrt ReductionRel H by A8, Th43;
+    then [p^q, (nf s) ^ nf t] in EqCl ReductionRel H by A7, MSUALG_6:41;
+    hence thesis by EQREL_1:18;
+  end;
+  A9: (nf s) ^ nf t is_a_normal_form_wrt ReductionRel(H)
+  proof
+    per cases;
+    suppose t = 1_FreeProduct(H);
+      then (nf s)^nf t = (nf s)^{} by Th62
+        .= nf s by FINSEQ_1:34;
+      hence thesis by Def7;
+    end;
+    suppose A10: t <> 1_FreeProduct(H);
+      assume not (nf s) ^ nf t is_a_normal_form_wrt ReductionRel(H);
+      then consider b being object such that
+        A11: [(nf s) ^ nf t,b] in ReductionRel(H) by REWRITE1:def 5;
+      b in rng ReductionRel(H) by A11, XTUPLE_0:def 13;
+      then reconsider b as FinSequence of FreeAtoms(H) by A4, FINSEQ_1:def 11;
+      per cases by A11, Def3;
+      suppose ex r,u being FinSequence of FreeAtoms(H), i
+          st (nf s) ^ nf t = r^<* [i,1_(H.i)] *>^u & b = r^u;
+        then consider r,u being FinSequence of FreeAtoms(H), i
+          such that A12: (nf s) ^ nf t = r^<* [i,1_(H.i)] *>^u & b = r^u;
+        A13: len(r^<* [i,1_(H.i)] *>) = len r + 1 by FINSEQ_2:16;
+        0+1 <= len r + 1 by XREAL_1:6;
+        then A14: len r + 1 in dom(r^<* [i,1_(H.i)] *>) by A13, FINSEQ_3:25;
+        then A15: len r + 1 in dom((nf s)^nf t) by A12, FINSEQ_2:15;
+        ((nf s)^nf t).(len r + 1) = (r^<* [i,1_(H.i)] *>).(len r + 1)
+            by A12, A14, FINSEQ_1:def 7
+          .= [i,1_(H.i)] by FINSEQ_1:42;
+        then [i,1_(H.i)] in rng((nf s)^nf t) by A15, FUNCT_1:3;
+        then [i,1_(H.i)] in rng nf s \/ rng nf t by FINSEQ_1:31;
+        then per cases by XBOOLE_0:def 3;
+        suppose A16: [i,1_(H.i)] in rng nf s;
+          then A17: nf s
+             = (nf s -| [i,1_(H.i)]) ^ <*[i,1_(H.i)]*> ^ (nf s |-- [i,1_(H.i)])
+              by FINSEQ_4:51;
+          A18: (nf s -| [i,1_(H.i)]) is FinSequence of FreeAtoms(H) &
+            (nf s |-- [i,1_(H.i)]) is FinSequence of FreeAtoms(H)
+            by A16, FINSEQ_4:41, FINSEQ_4:50;
+          then (nf s -| [i,1_(H.i)]) ^ (nf s |-- [i,1_(H.i)])
+              is FinSequence of FreeAtoms(H) by FINSEQ_1:75;
+          then [nf s, (nf s -| [i,1_(H.i)]) ^ (nf s |-- [i,1_(H.i)])]
+            in ReductionRel(H) by A17, A18, Def3;
+          hence contradiction by Def7, REWRITE1:def 5;
+        end;
+        suppose A19: [i,1_(H.i)] in rng nf t;
+          then A20: nf t
+             = (nf t -| [i,1_(H.i)]) ^ <*[i,1_(H.i)]*> ^ (nf t |-- [i,1_(H.i)])
+              by FINSEQ_4:51;
+          A21: (nf t -| [i,1_(H.i)]) is FinSequence of FreeAtoms(H) &
+            (nf t |-- [i,1_(H.i)]) is FinSequence of FreeAtoms(H)
+            by A19, FINSEQ_4:41, FINSEQ_4:50;
+          then (nf t -| [i,1_(H.i)]) ^ (nf t |-- [i,1_(H.i)])
+              is FinSequence of FreeAtoms(H) by FINSEQ_1:75;
+          then [nf t, (nf t -| [i,1_(H.i)]) ^ (nf t |-- [i,1_(H.i)])]
+            in ReductionRel(H) by A20, A21, Def3;
+          hence contradiction by Def7, REWRITE1:def 5;
+        end;
+      end;
+      suppose ex r,u being FinSequence of FreeAtoms(H), i being Element of I,
+            g9,h9 being Element of (H.i)
+          st (nf s) ^ nf t = r^<* [i,g9],[i,h9] *>^u & b = r^<* [i,g9*h9] *>^u;
+        then consider r,u being FinSequence of FreeAtoms(H),
+          i being Element of I, g9,h9 being Element of (H.i) such that
+          A22: (nf s) ^ nf t = r^<*[i,g9],[i,h9]*>^u & b = r^<* [i,g9*h9] *>^u;
+        len r + 2 <= len nf s or len r >= len nf s or len r + 1 = len nf s
+        proof
+          assume not(len r + 2 <= len nf s or len r >= len nf s);
+          then len nf s + 1 <= len r + 1+1 & len r + 1 <= len nf s by NAT_1:13;
+          then len nf s <= len r + 1 & len r + 1 <= len nf s by XREAL_1:6;
+          hence thesis by XXREAL_0:1;
+        end;
+        then per cases;
+        suppose len r + 2 <= len nf s;
+          then len r + len<* [i,g9],[i,h9] *> <= len nf s by FINSEQ_1:44;
+          then len(r^<* [i,g9],[i,h9] *>) <= len nf s by FINSEQ_1:22;
+          then consider t9 being FinSequence such that
+            A23: nf s = r^<* [i,g9],[i,h9] *>^t9 by A22, FINSEQ_1:47;
+          reconsider t9 as FinSequence of FreeAtoms(H) by A23, FINSEQ_1:36;
+          set b9 = r^<* [i,g9*h9] *>^t9;
+          <* [i,g9*h9] *> is FinSequence of FreeAtoms(H) by Th23;
+          then b9 is FinSequence of FreeAtoms(H) by FINSEQ_1:75;
+          then [nf s, b9] in ReductionRel(H) by A23, Def3;
+          hence contradiction by Def7, REWRITE1:def 5;
+        end;
+        suppose A24: len r + 1 = len nf s;
+          len r + 1 <= len r + 2 by XREAL_1:6;
+          then len r + 1 <= len r + len<* [i,g9],[i,h9] *> by FINSEQ_1:44;
+          then A25: len r + 1 <= len(r^<* [i,g9],[i,h9] *>) by FINSEQ_1:22;
+          A26: 0 + 1 <= len r + 1 by XREAL_1:6;
+          then A27: len r + 1 in dom(r^<*[i,g9],[i,h9]*>) by A25, FINSEQ_3:25;
+          2 = len <* [i,g9],[i,h9] *> by FINSEQ_1:44;
+          then A28: 1 in dom<* [i,g9],[i,h9] *> by FINSEQ_3:25;
+          len nf s in dom nf s by A24, A26, FINSEQ_3:25;
+          then (nf s).len nf s = ((nf s)^nf t).len nf s by FINSEQ_1:def 7
+            .= (r^<* [i,g9],[i,h9] *>).(len r + 1)
+              by A22, A24, A27, FINSEQ_1:def 7
+            .= <* [i,g9],[i,h9] *>.1 by A28, FINSEQ_1:def 7
+            .= [i,g9];
+          then A29: ((nf s).len nf s)`1 = i;
+          A30: 0 + 1 <= len r + 2 by XREAL_1:7;
+          2 = len <* [i,g9],[i,h9] *> by FINSEQ_1:44;
+          then A31: 2 in dom <* [i,g9],[i,h9] *> by FINSEQ_3:25;
+          len r + 2 = len r + len<* [i,g9],[i,h9] *> by FINSEQ_1:44
+            .= len(r^<* [i,g9],[i,h9] *>) by FINSEQ_1:22;
+          then A32: len r + 2 in dom(r^<*[i,g9],[i,h9]*>) by A30, FINSEQ_3:25;
+          1 <= len nf t by A10, Th63, NAT_1:14;
+          then 1 in dom nf t by FINSEQ_3:25;
+          then (nf t).1 = ((nf s)^nf t).(len nf s + 1) by FINSEQ_1:def 7
+            .= (r^<* [i,g9],[i,h9] *>).(len r + 2)
+              by A22, A24, A32, FINSEQ_1:def 7
+            .= <* [i,g9],[i,h9] *>.2 by A31, FINSEQ_1:def 7
+            .= [i,h9];
+          hence contradiction by A1, A29;
+        end;
+        suppose A33: len r >= len nf s;
+          (nf s) ^ nf t = r^(<* [i,g9],[i,h9] *>^u) by A22, FINSEQ_1:32;
+          then consider t9, u9 being FinSequence such that
+            A34: (nf s)^t9 = r & u9^(<* [i,g9],[i,h9] *>^u) = nf t
+            by A33, RFINSEQ:34;
+          A35: u9^<* [i,g9],[i,h9] *>^u = nf t by A34, FINSEQ_1:32;
+          reconsider u9 as FinSequence of FreeAtoms(H) by A34, FINSEQ_1:36;
+          set b9 = u9^<* [i,g9*h9] *>^u;
+          <* [i,g9*h9] *> is FinSequence of FreeAtoms(H) by Th23;
+          then b9 is FinSequence of FreeAtoms(H) by FINSEQ_1:75;
+          then [nf t, b9] in ReductionRel(H) by A35, Def3;
+          hence contradiction by Def7, REWRITE1:def 5;
+        end;
+      end;
+    end;
+  end;
+  thus thesis by A5, A6, A9, Def7;
+end;
+
+theorem Th67:
+  k <= len nf s implies
+  ex s1, s2 being Element of FreeProduct(H)
+  st s = s1 * s2 & nf s = (nf s1)^nf s2 & len nf s1 = k
+proof
+  assume A1: k <= len nf s;
+  set s1 = Class(EqCl ReductionRel H, (nf s)|k);
+  (nf s)|k in FreeAtoms(H)* by FINSEQ_1:def 11;
+  then (nf s)|k is Element of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+  then reconsider s1 as Element of FreeProduct(H) by EQREL_1:def 3;
+  set s2 = Class(EqCl ReductionRel H, (nf s)/^k);
+  (nf s)/^k in FreeAtoms(H)* by FINSEQ_1:def 11;
+  then (nf s)/^k is Element of FreeAtoms(H)*+^+<0> by MONOID_0:61;
+  then reconsider s2 as Element of FreeProduct(H) by EQREL_1:def 3;
+  take s1, s2;
+  consider y being Element of FreeAtoms(H)*+^+<0> such that
+    A2: s = Class(EqCl ReductionRel H,y) by EQREL_1:36;
+  nf s in s by Def7;
+  hence s = Class(EqCl ReductionRel H,nf s) by A2, EQREL_1:23
+    .= Class(EqCl ReductionRel H,(nf s)|k ^ ((nf s)/^k)) by RFINSEQ:8
+    .= s1 * s2 by Th47;
+  thus nf s = (nf s)|k ^ ((nf s)/^k) by RFINSEQ:8
+    .= (nf s1) ^ ((nf s)/^k) by Th60
+    .= (nf s1)^nf s2 by Th61;
+  nf s1 = (nf s)|k by Th60;
+  hence thesis by A1, FINSEQ_1:59;
+end;
+
+definition
+  let I, H;
+  let G be Group;
+  mode Homomorphism-Family of H, G -> Function-yielding ManySortedSet of I
+    means
+  :Def8:
+  for i being Element of I holds it.i is Homomorphism of H.i, G;
+  existence
+  proof
+    deffunc F(Element of I) = the Homomorphism of H.$1, G;
+    consider f being ManySortedSet of I such that
+      A1: for i being Element of I holds f.i = F(i) from PBOOLE:sch 5;
+    now
+      let x be object;
+      assume x in dom f;
+      then reconsider i = x as Element of I;
+      f.x = the Homomorphism of H.i, G by A1;
+      hence f.x is Function;
+    end;
+    then reconsider f as Function-yielding ManySortedSet of I
+      by FUNCOP_1:def 6;
+    take f;
+    now
+      let i be Element of I;
+      f.i = the Homomorphism of H.i, G by A1;
+      hence f.i is Homomorphism of H.i, G;
+    end;
+    hence thesis;
+  end;
+end;
+
+definition
+  let I, H;
+  func injection H -> Homomorphism-Family of H, FreeProduct(H) means
+  :Def9:
+  for i being Element of I holds it.i = injection(H,i);
+  existence
+  proof
+    deffunc F(Element of I) = injection(H,$1);
+    consider f being ManySortedSet of I such that
+      A1: for i being Element of I holds f.i = F(i) from PBOOLE:sch 5;
+    now
+      let x be object;
+      assume x in dom f;
+      then reconsider i = x as Element of I;
+      f.x = injection(H,i) by A1;
+      hence f.x is Function;
+    end;
+    then reconsider f as Function-yielding ManySortedSet of I
+      by FUNCOP_1:def 6;
+    now
+      let i be Element of I;
+      f.i = injection(H,i) by A1;
+      hence f.i is Homomorphism of H.i, FreeProduct(H);
+    end;
+    then reconsider f as Homomorphism-Family of H, FreeProduct(H) by Def8;
+    take f;
+    thus thesis by A1;
+  end;
+  uniqueness
+  proof
+    let f1,f2 be Homomorphism-Family of H, FreeProduct(H) such that
+      A2: for i being Element of I holds f1.i = injection(H,i) and
+      A3: for i being Element of I holds f2.i = injection(H,i);
+    now
+      let x be object;
+      assume x in I;
+      then reconsider i=x as Element of I;
+      thus f1.x = injection(H,i) by A2
+        .= f2.x by A3;
+    end;
+    hence thesis by PBOOLE:3;
+  end;
+end;
+
+Lm5:
+  for G being Group, F being Homomorphism-Family of H, G
+  holds uncurry F is ManySortedSet of FreeAtoms(H)
+proof
+  let G be Group, F be Homomorphism-Family of H, G;
+  now
+    let x be object;
+    hereby
+      assume A1: x in FreeAtoms(H);
+      ex i being object, g being Function, y being object
+        st x = [i,y] & i in dom F & g = F.i & y in dom g
+      proof
+        consider i,y being object such that
+          A2: x = [i,y] by A1, RELAT_1:def 1;
+        i in dom H by A1, A2, Th7;
+        then reconsider i as Element of I;
+        take i,F.i,y;
+        A3: y in the carrier of (H.i) by A1, A2, Th9;
+        F.i is Homomorphism of H.i, G by Def8;
+        then y in dom(F.i) & i in I by A3, FUNCT_2:def 1;
+        hence thesis by A2, PARTFUN1:def 2;
+      end;
+      hence x in dom uncurry F by FUNCT_5:def 2;
+    end;
+    assume x in dom uncurry F;
+    then consider y being object, g being Function, z being object such that
+      A4: x = [y,z] & y in dom F & g = F.y & z in dom g by FUNCT_5:def 2;
+    reconsider i = y as Element of I by A4;
+    g = F.i & F.i is Homomorphism of H.i, G by A4, Def8;
+    then z in the carrier of (H.i) by A4, FUNCT_2:def 1;
+    hence x in FreeAtoms(H) by A4, Th9;
+  end;
+  then dom uncurry F = FreeAtoms(H) by TARSKI:2;
+  hence thesis by PARTFUN1:def 2, RELAT_1:def 18;
+end;
+
+definition
+  let I, H;
+  let G be Group, F be Homomorphism-Family of H, G;
+  redefine func uncurry F -> Function of FreeAtoms(H), G;
+  coherence
+  proof
+    uncurry F is ManySortedSet of FreeAtoms(H) by Lm5;
+    then A1: dom uncurry F = FreeAtoms(H) by PARTFUN1:def 2;
+    now
+      let p be object;
+      assume p in rng uncurry F;
+      then consider x being object such that
+        A2: x in dom uncurry F & (uncurry F).x = p by FUNCT_1:def 3;
+      consider i being object, g being Function, y being object such that
+        A3: x = [i,y] & i in dom F & g = F.i & y in dom g by A2, FUNCT_5:def 2;
+      reconsider i as Element of I by A3;
+      A4: g = F.x`1 by A3;
+      p = g.(x`2) by A2, A4, FUNCT_5:def 2
+        .= (F.i).y by A3;
+      then A5: p in rng(F.i) by A3, FUNCT_1:3;
+      F.i is Homomorphism of H.i, G by Def8;
+      then rng(F.i) c= the carrier of G by RELAT_1:def 19;
+      hence p in the carrier of G by A5;
+    end;
+    hence thesis by A1, TARSKI:def 3, FUNCT_2:2;
+  end;
+end;
+
+definition
+  let I, H;
+  let G be Group, p be FinSequence of FreeAtoms(H);
+  let F be Function of FreeAtoms(H), G;
+  redefine func F*p -> FinSequence of G;
+  coherence
+  proof
+    A1: rng(F*p) c= the carrier of G;
+    dom F = FreeAtoms(H) by FUNCT_2:def 1;
+    then rng p c= dom F;
+    then dom(F*p) = dom p by RELAT_1:27;
+    then ex k st dom(F*p) = Seg k by FINSEQ_1:def 2;
+    then F*p is FinSequence by FINSEQ_1:def 2;
+    hence thesis by A1, FINSEQ_1:def 4;
+  end;
+end;
+
+definition
+  let I, H, s;
+  func factorization(s) -> FinSequence of FreeProduct(H) equals
+  (uncurry injection H)*nf s;
+  coherence;
+end;
+
+theorem Th68:
+  factorization 1_FreeProduct(H) = {}
+proof
+  thus factorization 1_FreeProduct(H) = (uncurry injection H)*{} by Th62
+    .= {};
+end;
+
+theorem Th69:
+  for g being Element of H.i st g <> 1_(H.i)
+  holds factorization [* i,g *] = <* [* i,g *] *>
+proof
+  let g be Element of H.i;
+  assume A1: g <> 1_(H.i);
+  A2: [i,g] in dom (uncurry injection H) &
+    (uncurry injection H).[i,g] = [* i,g *]
+  proof
+    i in I;
+    then A3: i in dom injection H by PARTFUN1:def 2;
+    A4: injection(H,i) = (injection H).i by Def9;
+    A5: dom injection(H,i) = the carrier of H.i by FUNCT_2:def 1;
+    A6: [i,g] in FreeAtoms(H) by Th9;
+    uncurry injection H is ManySortedSet of FreeAtoms(H) by Lm5;
+    hence [i,g] in dom uncurry injection H by A6, PARTFUN1:def 2;
+    thus (uncurry injection H).[i,g] = (uncurry injection H).(i,g)
+      by BINOP_1:def 1
+      .= injection(H,i).g by A3, A4, A5, FUNCT_5:38
+      .= [* i,g *] by Th56;
+  end;
+  thus factorization [* i,g *] = (uncurry injection H)*<* [i,g] *> by A1, Th64
+    .= <* [* i,g *] *> by A2, FINSEQ_2:34;
+end;
+
+theorem Th70:
+  ((nf s).len nf s)`1 <> ((nf t).1)`1 implies
+    factorization(s * t) = factorization(s) ^ factorization(t)
+proof
+  reconsider f = uncurry injection H as ManySortedSet of FreeAtoms(H) by Lm5;
+  assume ((nf s).len nf s)`1 <> ((nf t).1)`1;
+  hence factorization(s * t) = f*((nf s) ^ nf t) by Th66
+    .= factorization(s) ^ factorization(t) by FINSEQOP:9;
+end;
+
+Lm6:
+  (uncurry injection H).[i,g] = [* i, g *]
+proof
+  A1: dom injection H = I by PARTFUN1:def 2;
+  (injection H).i = injection(H,i) by Def9;
+  then A2: dom((injection H).i) = the carrier of H.i by FUNCT_2:def 1;
+  thus (uncurry injection H).[i,g]
+     = (uncurry injection H).(i,g) by BINOP_1:def 1
+    .= (injection H).i.g by A1, A2, FUNCT_5:38
+    .= injection(H,i).g by Def9
+    .= [* i, g *] by Th56;
+end;
+
+theorem
+  for s being Element of FreeProduct(H), k being Nat
+  st 1 <= k & k <= len factorization(s)
+  ex i being Element of I, g being Element of H.i
+  st (factorization(s)).k = [* i, g *]
+proof
+  let s be Element of FreeProduct(H), k be Nat;
+  set F = uncurry injection H;
+  assume 1 <= k & k <= len factorization(s);
+  then A1: k in dom factorization(s) by FINSEQ_3:25;
+  then k in dom nf s by FUNCT_1:11;
+  then A2: (nf s).k in rng nf s by FUNCT_1:3;
+  then consider x,y being object such that
+    A3: (nf s).k = [x,y] by RELAT_1:def 1;
+  x in dom H by A2, A3, Th7;
+  then reconsider i = x as Element of I;
+  reconsider g = y as Element of H.i by A2, A3, Th9;
+  take i, g;
+  thus (factorization(s)).k = F.((nf s).k) by A1, FUNCT_1:12
+    .= [* i, g *] by A3, Lm6;
+end;
+
+theorem Th72:
+  Product factorization(s) = s
+proof
+  defpred P[Nat] means for s being Element of FreeProduct(H)
+    st len nf s = $1 holds Product factorization(s) = s;
+  A1: P[0]
+  proof
+    let s be Element of FreeProduct(H);
+    assume len nf s = 0;
+    then A2: s = 1_FreeProduct(H) by Th63;
+    hence Product factorization(s)
+       = Product <*>the carrier of FreeProduct(H) by Th68
+      .= s by A2, GROUP_4:8;
+  end;
+  A3: for k being Nat st P[k] holds P[k+1]
+  proof
+    let k be Nat;
+    assume A4: P[k];
+    let s be Element of FreeProduct(H);
+    assume A5: len nf s = k + 1;
+    then k + 0 <= len nf s by XREAL_1:6;
+    then consider s1, s2 being Element of FreeProduct(H) such that
+      A6: s = s1 * s2 & nf s = (nf s1)^nf s2 & len nf s1 = k by Th67;
+    len nf s = len nf s1 + len nf s2 by A6, FINSEQ_1:22;
+    then A7: 1 = len nf s2 by A5, A6;
+    then consider i, g such that
+      A8: g <> 1_(H.i) & s2 = [* i, g *] by Th65;
+    reconsider r = <*s2*> as FinSequence of FreeProduct(H);
+    per cases;
+    suppose len nf s1 <> 0;
+      then A9: ((nf s1).len nf s1)`1 <> ((nf s2).1)`1
+        by A6, A7, Def7, Th44;
+      thus Product factorization(s)
+         = Product(factorization(s1)^factorization(s2)) by A6, A9, Th70
+        .= Product(factorization(s1))*Product(factorization(s2)) by GROUP_4:5
+        .= s1*Product(factorization(s2)) by A4, A6
+        .= s1*Product r by A8, Th69
+        .= s by A6, GROUP_4:9;
+    end;
+    suppose len nf s1 = 0;
+      then A10: s1 = 1_FreeProduct(H) by Th63;
+      thus Product factorization(s)
+         = Product(factorization(s2)) by A6, A10, GROUP_1:def 4
+        .= Product r by A8, Th69
+        .= s2 by GROUP_4:9
+        .= s by A6, A10, GROUP_1:def 4;
+    end;
+  end;
+  for k being Nat holds P[k] from NAT_1:sch 2(A1,A3);
+  then P[len nf s];
+  hence thesis;
+end;
+
+registration
+  let I, H;
+  let s be Element of FreeProduct H;
+  reduce Product factorization(s) to s;
+  reducibility by Th72;
+end;
+
+:: definition
+  :: let I, H;
+  :: let G be Group, F be Homomorphism-Family of H, G;
+  :: func Ext F -> Homomorphism of FreeProduct(H), G means
+  :: for s holds it.s = Product((uncurry F)*nf(s));
+  :: existence; :: the homomorphism property is a bit tricky to show
+  :: uniqueness;
+:: end;
+
+:: theorem
+  :: Ext injection H = id FreeProduct(H);
+
+begin :: Additional Definitions
+
+registration
+  let G1, G2 be Group;
+  cluster <% G1, G2 %> -> Group-like associative for multMagma-Family of 2;
+  coherence
+  proof
+    let H be multMagma-Family of 2;
+    assume A1: H = <% G1, G2 %>;
+    now
+      let i be set;
+      assume i in 2;
+      then i = 0 or i = 1 by TARSKI:def 2, CARD_1:50;
+      hence ex Hi being non empty Group-like multMagma st Hi = H.i by A1;
+    end;
+    hence H is Group-like by GROUP_7:def 3;
+    now
+      let i be set;
+      assume i in 2;
+      then i = 0 or i = 1 by TARSKI:def 2, CARD_1:50;
+      hence ex Hi being non empty associative multMagma st Hi = H.i by A1;
+    end;
+    hence thesis by GROUP_7:def 4;
+  end;
+end;
+
+definition
+  let G1, G2 be Group;
+  func G1 ^* G2 -> strict Group means
+  ex H being Group-like associative multMagma-Family of 2
+  st H = <% G1, G2 %> & it = FreeProduct(H);
+  existence
+  proof
+    set H = <% G1, G2 %>;
+    reconsider H as Group-like associative multMagma-Family of 2;
+    take FreeProduct(H), H;
+    thus thesis;
+  end;
+  uniqueness;
+end;
+
+definition
+  let G be Group;
+  attr G is free means
+  ex c being Cardinal st G, FreeProduct(c --> INT.Group) are_isomorphic;
+end;
+
+registration
+  cluster trivial -> free for Group;
+  coherence
+  proof
+    let G be Group;
+    assume A1: G is trivial;
+    set c = the empty Cardinal;
+    take c;
+    thus thesis by A1, GROUP_6:69;
+  end;
+  cluster INT.Group -> free;
+  coherence
+  proof
+    set I = 1;
+    take I;
+    reconsider I9 = I as non empty set;
+    A2: 1 = { 0 } by CARD_1:49;
+    then reconsider i = 0 as Element of I9 by TARSKI:def 1;
+    (I9 --> INT.Group).i, FreeProduct(I9 --> INT.Group) are_isomorphic
+      by A2, Th58;
+    hence thesis;
+  end;
+  let c be Cardinal;
+  cluster FreeProduct(c --> INT.Group) -> free for Group;
+  coherence;
+end;
+
+theorem
+  for G, H being Group st G,H are_isomorphic holds G is free iff H is free
+  by GROUP_6:67;
+
+registration
+  cluster free for Group;
+  existence
+  proof
+    take FreeProduct(the Cardinal --> INT.Group);
+    thus thesis;
+  end;
+end;
+
+definition
+  let G be Group;
+  attr G is free-abelian means
+  ex c being Cardinal st G, sum(c --> INT.Group) are_isomorphic;
+end;
+
+registration
+  cluster trivial -> free-abelian for Group;
+  coherence
+  proof
+    let G be Group;
+    assume A1: G is trivial;
+    set c = the empty Cardinal;
+    take c;
+    sum(c --> INT.Group) = product(c --> INT.Group) by GROUP_7:9;
+    hence thesis by A1, GROUP_6:69;
+  end;
+  cluster INT.Group -> free-abelian;
+  coherence
+  proof
+    set I = 1;
+    take I;
+    reconsider I9 = I as non empty set;
+    A2: 1 = { 0 } by CARD_1:49;
+    then reconsider i = 0 as Element of I9 by TARSKI:def 1;
+    (I9 --> INT.Group).i, product(I9 --> INT.Group) are_isomorphic
+      by A2, Th6;
+    hence thesis by GROUP_7:9;
+  end;
+  let c be Cardinal;
+  cluster sum(c --> INT.Group) -> free-abelian for Group;
+  coherence;
+end;
+
+theorem
+  for G, H being Group st G,H are_isomorphic
+  holds G is free-abelian iff H is free-abelian by GROUP_6:67;
+
+registration
+  cluster free-abelian for Group;
+  existence
+  proof
+    take sum(the Cardinal --> INT.Group);
+    thus thesis;
+  end;
+end;
+

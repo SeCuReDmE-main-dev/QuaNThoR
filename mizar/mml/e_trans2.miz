@@ -1,0 +1,2864 @@
+:: Formal Proof of Transcendence of the Number $e$. {P}art {II}
+::  by Yasushige Watase
+:: 
+:: Received November 17, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ARYTM_3, VECTSP_1, TARSKI, NAT_1, MESFUNC1, VECTSP_2, STRUCT_0,
+      SUBSET_1, SUPINF_2, POLYNOM1, POLYNOM3, HURWITZ, FINSEQ_1, FUNCT_1,
+      RELAT_1, CARD_1, XBOOLE_0, NUMBERS, CARD_3, AFINSQ_1, PARTFUN1, XXREAL_0,
+      XCMPLX_0, ORDINAL4, NEWTON, ARYTM_1, FUNCOP_1, RINGDER1, ZF_LANG,
+      ROUGHS_5, FUNCT_7, REALSET1, REAL_1, INT_3, INT_1, INT_2, IDEAL_1,
+      GROUP_1, POLYNOM5, FINSEQ_3, POLYFORM, FIB_NUM, LTLAXIO1, FIELD_1,
+      ORDINAL2, MSAFREE2, SIN_COS, QC_LANG1, POWER, ALGNUM_1, POLYNOM2,
+      RFINSEQ, FINSEQ_2, ABIAN, SEQ_2, COMPLEX1, C0SP1, SERIES_1, ROUGHIF2,
+      FIN_TOPO, FINSET_1, ALGSEQ_1, MEMBERED, FUNCT_3, GAUSSINT, YELLOW_8,
+      WAYBEL_8, COMPLFLD, GROUP_4, RAT_1, E_TRANS1;
+ notations TARSKI, XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, RELSET_1,
+      PARTFUN1, FUNCOP_1, FINSET_1, NUMBERS, XCMPLX_0, XXREAL_0, XREAL_0,
+      NAT_1, INT_1, MEMBERED, COMPLEX1, INT_2, NAT_D, XXREAL_2, FINSEQ_1,
+      RAT_1, FINSEQ_2, VALUED_1, SEQ_2, NEWTON, RFINSEQ, ABIAN, POWER,
+      SERIES_1, SIN_COS, WSIERP_1, STRUCT_0, GROUP_1, VECTSP_1, VECTSP_2,
+      GROUP_4, POLYNOM1, ALGSEQ_1, COMPLFLD, VFUNCT_1, GCD_1, BINOM, POLYNOM3,
+      POLYNOM4, RLVECT_1, POLYNOM5, INT_3, HURWITZ, IDEAL_1, C0SP1, VECTSP11,
+      RATFUNC1, GAUSSINT, RING_1, RING_2, RING_4, ALGNUM_1, POLYDIFF, FIELD_1,
+      RINGDER1, BASEL_2, E_TRANS1;
+ constructors RELSET_1, REALSET1, NAT_D, BINOP_2, XXREAL_2, FINSOP_1, COMSEQ_2,
+      SEQ_2, RFINSEQ, PREPOWER, COMSEQ_3, ABIAN, WSIERP_1, SIN_COS, PARTFUN3,
+      GROUP_4, ALGSEQ_1, VFUNCT_1, GCD_1, BINOM, POLYNOM4, VECTSP11, RATFUNC1,
+      RING_3, ALGNUM_1, POLYDIFF, FIELD_4, RINGDER1, BASEL_2, E_TRANS1;
+ registrations XXREAL_0, XREAL_0, CARD_1, ORDINAL1, RELSET_1, FUNCT_1, NAT_1,
+      INT_1, FINSEQ_1, STRUCT_0, RLVECT_1, VECTSP_1, ALGSTR_1, RING_4,
+      POLYNOM3, POLYNOM4, POLYNOM5, RATFUNC1, FUNCOP_1, FIELD_4, GAUSSINT,
+      INT_3, NAT_6, NEWTON04, XCMPLX_0, MEMBERED, RFINSEQ, FINSET_1, VALUED_0,
+      POWER, XXREAL_2, NEWTON, ALGSTR_0, WSIERP_1, PARTFUN3, FIELD_14, RVSUM_4,
+      RAT_1, COMPLEX1, FINSEQ_2, FIELD_15, XBOOLE_0, E_TRANS1, COMPLFLD,
+      BORSUK_5, LAGRA4SQ;
+ requirements NUMERALS, SUBSET, BOOLE, REAL, ARITHM;
+ definitions TARSKI, XBOOLE_0, FUNCT_1;
+ equalities FINSEQ_1, XCMPLX_0, POLYNOM3, HURWITZ, GROUP_4, STRUCT_0, VECTSP_1,
+      POLYNOM5, POLYDIFF, FINSEQ_2, INT_3, BASEL_2, E_TRANS1;
+ expansions STRUCT_0, TARSKI, FINSEQ_1, FUNCT_1, RING_4, ALGSEQ_1, INT_1;
+ theorems GROUP_1, RLVECT_1, POLYDIFF, PARTFUN1, FUNCT_1, POLYNOM4, RING_5,
+      POLYNOM3, NAT_1, INT_1, FINSEQ_1, XREAL_1, UPROOTS, XXREAL_0, POLYNOM5,
+      FINSEQ_2, GROUP_4, BINOM, FINSEQ_5, VECTSP11, FINSEQ_4, RFINSEQ, FVSUM_1,
+      NAT_D, NEWTON, FIELD_1, RING_2, TARSKI, ORDINAL1, RINGDER1, XBOOLE_0,
+      FUNCOP_1, FIELD_4, IRRAT_1, NUMBERS, RING_3, LIOUVIL2, HURWITZ, XREAL_0,
+      GCD_1, NUMBER08, RATFUNC1, IDEAL_1, FINSOP_1, AFINSQ_1, SIN_COS,
+      VALUED_1, STRUCT_0, SIN_COS2, PEPIN, SERIES_1, POLYALG1, COMPLEX1, POWER,
+      C0SP1, PREPOWER, FIELD_6, ABSVALUE, INT_2, ASYMPT_1, TAYLOR_1, POLYNOM1,
+      FUNCT_2, XXREAL_2, SEQ_2, GAUSSINT, ALGSEQ_1, XCMPLX_1, RAT_1, NAT_3,
+      NAT_4, NAT_6, TAYLOR_2, E_TRANS1, FINSEQ_3, ALGNUM_1, RELAT_1, MATRIX_3,
+      MATRIX_5, FIELD_8, ZMATRLIN;
+ schemes NAT_1, FINSEQ_1;
+
+begin :: Preliminaries
+
+Lm26:
+   for n be Nat, a be Real holds n*a = n*In(a,F_Real)
+   proof
+     let n be Nat, a be Real;
+     defpred P[Nat] means $1*a = $1*In(a,F_Real);
+     0*In(a,F_Real) = 0.F_Real by BINOM:12; then
+A1:  P[0];
+A2:  for k be Nat holds P[k] implies P[k+1]
+     proof
+       let k be Nat;
+       assume
+A3:    P[k];
+       reconsider a1 = a as Element of F_Real by XREAL_0:def 1;
+       (k+1)*a = a1 + k*a1 by A3
+       .= 1*a1 + k*a1 by BINOM:13;
+       hence thesis by BINOM:15;
+     end;
+     for k be Nat holds P[k] from NAT_1:sch 2(A1,A2);
+     hence thesis;
+   end;
+
+Lm30:
+   for n be Nat, z be Element of INT.Ring, r be Integer st z = r holds
+   n*z = n*r
+   proof
+     let n be Nat, z be Element of INT.Ring, r be Integer;
+     assume
+A1:  z = r;
+     defpred P[Nat] means $1*z = $1*r;
+     0*z = 0.INT.Ring by BINOM:12; then
+A2:  P[0];
+A3:  for k be Nat holds P[k] implies P[k+1]
+     proof
+       let k be Nat;
+       assume
+A4:    P[k];
+       (k+1)*z = k*z + 1*z by BINOM:15
+       .= k*r + r by A1,A4,BINOM:13;
+       hence thesis;
+     end;
+     for k be Nat holds P[k] from NAT_1:sch 2(A2,A3);
+     hence thesis;
+   end;
+
+Lm1:
+   for n be Nat,
+   z be Element of INT.Ring holds n*z = In(n,INT.Ring)*z
+   proof
+     let n be Nat,
+     z be Element of the carrier of INT.Ring;
+     defpred P[Nat] means $1*z = In($1,INT.Ring)*z;
+     In(0,INT.Ring)*z = 0.INT.Ring .= 0*z by BINOM:12; then
+A1:  P[0];
+A2:  for k be Nat holds P[k] implies P[k+1]
+     proof
+       let k be Nat;
+       assume
+A3:    P[k];
+       In(k,INT.Ring)*z + z
+       = k*z + 1*z by A3,BINOM:13 .= (k+1)*z by BINOM:15;
+       hence thesis;
+     end;
+     for k be Nat holds P[k] from NAT_1:sch 2(A1,A2);
+     hence thesis;
+   end;
+
+Lm2:
+  for a be Integer, n be Nat holds
+    (In(a,INT))|^n = (In(a,INT.Ring))|^n
+    proof
+      let a be Integer, n be Nat;
+      (In(a, INT))|^n = (In(a, INT.Ring))|^n
+      proof
+        defpred P[Nat] means (In(a, INT))|^$1 = (In(a, INT.Ring))|^$1;
+        (In(a, INT.Ring))|^0 = 1_INT.Ring by BINOM:8;then
+A1:     P[0] by NEWTON:4;
+A2:     for k be Nat holds P[k] implies P[k+1]
+        proof
+          let k be Nat;
+          assume P[k]; then
+          (In(a, INT))|^(k+1)
+          = (In(a, INT.Ring))*(In(a, INT.Ring))|^k by NEWTON:6
+          .= ((In(a, INT.Ring))|^1)*(In(a, INT.Ring))|^k by BINOM:8
+          .= (In(a, INT.Ring))|^(k+1) by BINOM:10;
+          hence thesis;
+        end;
+        for k be Nat holds P[k] from NAT_1:sch 2(A1,A2);
+        hence thesis;
+      end;
+      hence thesis;
+    end;
+
+ reserve R for domRing;
+ reserve p for odd prime Nat, m for positive Nat;
+
+:: domRing is non degenerated domRing-like commutative
+:: Abelian add-associative right_zeroed right_complementable
+::    associative well-unital distributive non empty doubleLoopStr;
+
+Lm3:
+   for n be Nat, z be Element of INT.Ring, r be Real st z = r holds
+   n*z = n*r
+   proof
+     let n be Nat, z be Element of INT.Ring, r be Real;
+     assume
+A1:  z = r;
+     defpred P[Nat] means $1*z = $1*r;
+     0*z = 0.INT.Ring by BINOM:12;then
+A2:  P[0];
+A3:  for k be Nat holds P[k] implies P[k+1]
+     proof
+       let k be Nat;
+       assume
+A4:    P[k];
+       (k+1)*z = k*z + 1*z by BINOM:15
+       .= k*r + r by A1,A4,BINOM:13 .= (k+1)*r;
+       hence thesis;
+     end;
+     for k be Nat holds P[k] from NAT_1:sch 2(A2,A3);
+     hence thesis;
+   end;
+
+theorem Th3:
+  for i be Nat, r be Element of F_Real holds
+    Sum(i |-> r) = i*r
+   proof
+     let i be Nat, r be Element of F_Real;
+     defpred P[Nat] means Sum($1 |->r) = $1*r;
+A1:  for i be Nat st P[i] holds P[(i+1)]
+     proof
+       let i be Nat;
+       assume
+A2:    Sum(i |-> r) = i*r;
+       thus Sum((i+1) |-> r) = Sum((i |-> r)^<*r*>) by FINSEQ_2:60
+       .= i*r + r by A2,FVSUM_1:71
+       .= i*r + 1*r by BINOM:13
+       .= (i+1)*r by BINOM:15;
+     end;
+     0|-> r = <*> the carrier of F_Real; then
+     Sum (0|-> r) = 0.F_Real by RLVECT_1:43 .= 0*r by BINOM:12; then
+A3:  P[0];
+     for i be Nat holds P[i] from NAT_1:sch 2(A3,A1);
+     hence thesis;
+   end;
+
+Lm14:
+  for z be Element of F_Real st z <> 0.F_Real
+  for n be Nat holds |.power(z,n).| = |.z.| to_power n
+  proof
+    let z be Element of F_Real;
+    defpred P[Nat] means |.power(z,$1).| = |.z.| to_power $1;
+    assume
+A1: z <> 0.F_Real;
+A2: for n be Nat st P[n] holds P[n+1]
+    proof
+      let n be Nat;
+      assume
+A3:   |.power(z,n).| = |.z.| to_power n;
+      thus |.power(z,n+1).| = |.(power F_Real).(z,n)*z.| by GROUP_1:def 7
+      .= (|.z.| to_power n)*(|.z.| to_power 1) by A3,COMPLEX1:65
+      .= |.z.| to_power (n+1) by A1,POWER:27;
+    end;
+    |.(power F_Real).(z,0).| = |. z|^0 .| by BINOM:def 2
+    .= |. 1_F_Real .| by BINOM:8 .= 1 by ABSVALUE:def 1
+    .= |.z.| to_power 0 by POWER:24; then
+A4: P[0];
+    thus for n be Nat holds P[n] from NAT_1:sch 2(A4,A2);
+  end;
+
+Lm15:
+  for j be Nat, ks be Real st j in Seg m & 0 <= ks <= m holds
+    |. j - ks .| <= m
+    proof
+       let j be Nat, ks be Real;
+       assume
+A1:    j in Seg m & 0 <= ks <= m;
+       reconsider jks = j - ks as Real;
+       j <= m & 0 <= ks by FINSEQ_1:1,A1; then
+       j + 0 <= m + ks by XREAL_1:7; then
+A3:    j - ks <= m + ks -ks by XREAL_1:9;
+       ks + 0 <= m + j by A1,XREAL_1:7; then
+       ks - j <= m + j -j by XREAL_1:9; then
+       (-1)*m <= (-1)*(ks - j) by XREAL_1:65; then
+       -m <= jks <= m by A3;
+       hence thesis by ABSVALUE:5;
+     end;
+
+Lm5:
+   for k be Nat holds (eta(k,k)) = k!
+   proof
+     let k be Nat;
+     (eta(k,k)) = (k!)/1 by NEWTON:12,XREAL_1:232 .= k!;
+     hence thesis;
+  end;
+
+theorem Th14:
+  for p1, q1 be sequence of INT.Ring holds (p1 *' q1).0 = (p1.0) * q1.0
+    proof
+      let p1, q1 be sequence of INT.Ring;
+      consider r be FinSequence of the carrier of INT.Ring such that
+A1:   len r = 0+1 & (p1*'q1).0 = Sum r &
+      for k be Element of NAT st k in dom r holds
+      r.k = p1.(k-'1) * q1.(0+1-'k) by POLYNOM3:def 9;
+A2:   r = <* r.1 *> by A1,FINSEQ_1:40;
+      dom r = Seg 1 by A1,FINSEQ_1:def 3; then
+      1 in dom r; then
+      r.1 = p1.(1-'1) * q1.(0+1-'1) by A1
+      .= (p1.0) * q1.(0+0);
+      hence thesis by A1,A2,RLVECT_1:44;
+    end;
+
+begin :: On the Ring of Polynomials
+
+theorem Th4:
+  for f be Element of the carrier of Polynom-Ring INT.Ring, n be Nat holds
+    ^(f|^n) = (^ f)|^n
+   proof
+     let f be Element of the carrier of Polynom-Ring INT.Ring, n be Nat;
+     set PRI = Polynom-Ring INT.Ring;
+     set PRF = Polynom-Ring F_Real;
+     defpred P[Nat] means ^(f|^$1) = (^ f)|^$1;
+A1:  P[0]
+     proof
+A2:     PRI is Subring of PRF by FIELD_4:def 1;
+A3:     f|^0 = 1_PRI by BINOM:8 .= 1.PRI;
+        (^ f)|^0 = 1_PRF by BINOM:8 .= 1.PRF;
+        hence thesis by A3,A2,C0SP1:def 3;
+     end;
+A4:  for k be Nat holds P[k] implies P[k+1]
+     proof
+       let k be Nat;
+       assume
+A5:    P[k];
+       f|^(k+1) = (f|^k)*(f|^1) by BINOM:10 .= (f|^k)*f by BINOM:8; then
+       ^(f|^(k+1)) = ((^ f)|^k)*(^ f) by A5,E_TRANS1:27
+         .= ((^ f)|^k)*((^ f)|^1) by BINOM:8 .= (^ f)|^(k+1) by BINOM:10;
+       hence thesis;
+     end;
+     for k be Nat holds P[k] from NAT_1:sch 2(A1,A4);
+     hence thesis;
+   end;
+
+theorem Th5:
+  for f be Element of the carrier of Polynom-Ring R, n be Nat holds
+    ~(f|^n) = (~f)`^n
+    proof
+      let f be Element of the carrier of Polynom-Ring R, n be Nat;
+      set PRR = Polynom-Ring R;
+      defpred P[Nat] means ~(f|^$1) = (~f)`^$1;
+A2:     f|^0 = 1_PRR by BINOM:8 .= 1.PRR;
+        (~f)`^0 = 1_.R by POLYNOM5:15 .= 1.PRR by POLYNOM3:def 10;then
+A1:   P[0] by A2;
+A3:   for k be Nat holds P[k] implies P[k+1]
+      proof
+        let k be Nat;
+        assume
+A4:     P[k];
+        f|^(k+1) = (f|^k)*(f|^1) by BINOM:10 .= (f|^k)*f by BINOM:8; then
+        ~(f|^(k+1)) = ((~f)`^k)*'(~f) by A4,POLYNOM3:def 10
+        .= (~f)`^(k+1) by POLYNOM5:19;
+        hence thesis;
+      end;
+      for k be Nat holds P[k] from NAT_1:sch 2(A1,A3);
+      hence thesis;
+    end;
+
+theorem Th6:  :: **
+  for n be Nat,
+      f be Element of the carrier of Polynom-Ring INT.Ring
+   holds n*f = In(n,INT.Ring)*f
+   proof
+     set R = INT.Ring, PR = Polynom-Ring INT.Ring;
+     let n be Nat,
+     f be Element of the carrier of Polynom-Ring INT.Ring;
+     defpred P[Nat] means $1*f = In($1,INT.Ring)*f;
+     In(0,INT.Ring)*f = 0_.R by POLYNOM5:26
+       .= 0.PR by POLYNOM3:def 10; then
+A1:  P[0] by BINOM:12;
+A2:  for k be Nat holds P[k] implies P[k+1]
+     proof
+       let k be Nat;
+       assume
+A3:    P[k];
+       set r = In(k,INT.Ring);
+A4:    In(k,INT.Ring)*f + f = r*f + 1.R*f by POLYALG1:9
+       .= (r+1.R)*f by POLYALG1:7
+       .= In(k+1,INT.Ring)*f;
+       In(k,INT.Ring)*f + f = k*f + f by A3,POLYNOM3:def 10
+       .= k*f + 1*f by BINOM:13 .= (k+1)*f by BINOM:15;
+       hence thesis by A4;
+     end;
+     for k be Nat holds P[k] from NAT_1:sch 2(A1,A2);
+     hence thesis;
+   end;
+
+Lm16:
+  for n be Nat
+  for m0 be Element of F_Real st m = m0 holds m|^n = m0|^n
+    proof
+      let n be Nat;
+      let m0 be Element of F_Real;
+      assume
+A1:   m = m0;
+      defpred P[Nat] means m|^$1 = m0|^$1;
+       m|^0 = 1_F_Real by NEWTON:4;then
+A2:   P[0] by BINOM:8;
+A3:   for n being Nat st P[n] holds P[n+1]
+      proof
+        let n be Nat;
+        assume
+        P[n]; then
+        m|^(n+1) = m0*(m0|^n) by A1,NEWTON:6
+        .= (m0|^1)*(m0|^n) by BINOM:8;
+        hence thesis by BINOM:10;
+      end;
+      for n being Nat holds P[n] from NAT_1:sch 2(A2,A3);
+      hence thesis;
+    end;
+
+theorem Th41:
+  for M be Element of F_Real
+  for F be FinSequence of F_Real st
+  for i be Nat st i in dom F holds |. F.i .| <= M holds
+  |. Product F .| <= M|^(len F)
+    proof
+      let M be Element of F_Real;
+      defpred P[Nat] means
+      for F being FinSequence of F_Real st len F = $1 &
+      for i being Nat st i in dom F holds |. F.i .| <= M holds
+      |. Product F .| <= M|^(len F);
+A1:   P[0]
+      proof
+        let F be FinSequence of F_Real;
+        assume
+A2:     len F = 0 &
+        for i being Nat st i in dom F holds |. F.i .| <= M;
+A3:     F is Element of (the carrier of F_Real)*
+          by FINSEQ_1:def 11;
+        F in 0-tuples_on the carrier of F_Real by A2, A3; then
+A4:     Product F = 1.F_Real by FVSUM_1:80 .= 1;
+        M|^(len F) = 1_F_Real by A2,BINOM:8 .= 1;
+        hence |. Product F .| <= M|^(len F) by A4,ABSVALUE:def 1;
+      end;
+A5:   for n being Nat st P[n] holds P[n+1]
+      proof
+        let n be Nat;
+        assume
+A6:     P[n];
+        let F1 be FinSequence of F_Real;
+        assume
+A7:     len F1 = n+1 &
+        for i being Nat st i in dom F1 holds |. F1.i .| <= M;
+A8:     dom F1 = Seg (n+1) by A7,FINSEQ_1:def 3;
+        F1 <> {} by A7; then
+A9:     F1 = <* F1/.1 *>^(F1/^1) by FINSEQ_5:29;
+A10:    len F1 >= 1 by A7,NAT_1:11; then
+A11:    len (F1/^1) = (len F1) - 1 by RFINSEQ:def 1 .= n by A7;
+        for i being Nat st i in dom (F1/^1) holds |. (F1/^1).i .| <= M
+        proof
+          let i be Nat;
+          assume
+A12:      i in dom (F1/^1); then
+          i in Seg n by A11,FINSEQ_1:def 3; then
+A14:      1 <= i <= n by FINSEQ_1:1;
+A15:      1 <= i+1 by NAT_1:11;
+          i+1 <= n+1 by A14,XREAL_1:6; then
+A17:      i+1 in dom F1 by A8,A15;
+          (F1/^1).i = F1.(i+1) by A12,A10,RFINSEQ:def 1;
+          hence thesis by A7,A17;
+        end; then
+A19:    |. Product (F1/^1) .| <= M|^(len (F1/^1)) by A6,A11;
+        1 <= 1 <= n+1 by NAT_1:11; then
+A21:    1 in dom F1 by A8; then
+        F1/.1 = F1.1 by PARTFUN1:def 6; then
+A22:    |.(F1/.1).| <= M by A7,A21;
+        Product F1 = (F1/.1)*Product (F1/^1) by A9,FVSUM_1:78; then
+A23:    |.Product F1.| = |.(F1/.1).|* |.Product (F1/^1).| by COMPLEX1:65;
+        M*M|^n = (M|^1) * (M|^n) by BINOM:8
+        .= M|^(len F1) by A7,BINOM:10;
+        hence thesis by A23,A11,A22,A19,XREAL_1:66;
+      end;
+      for n being Nat holds P[n] from NAT_1:sch 2(A1,A5);
+      hence thesis;
+    end;
+
+definition
+  let p be Polynomial of INT.Ring;
+A1: dom |.p.| = dom p by VALUED_1:def 11
+    .= NAT by FUNCT_2:def 1;
+  redefine func |.p.| -> sequence of INT.Ring means :Def9:
+  for n being Nat holds it.n = |. p.n .|;
+  coherence
+  proof
+    for x being object st x in NAT holds |.p.|.x in the carrier of INT.Ring
+      by INT_1:def 1;
+    hence thesis by A1,FUNCT_2:3;
+  end;
+  compatibility
+  proof
+    let f be sequence of INT.Ring;
+    thus f = |.p.| implies for n being Nat holds f.n = |. p.n .|
+      by VALUED_1:18;
+    assume
+A2: for n being Nat holds f.n = |. p.n .|;
+    thus dom f = dom |.p.| by A1,FUNCT_2:def 1;
+    let x be object;
+    assume x in dom f;
+    hence f.x = |. p.x .| by A2
+    .= |.p.|.x by VALUED_1:18;
+  end;
+end;
+
+Lm18:
+  for n being set, p being finite-Support sequence of INT.Ring holds
+  Support p = Support |. p .|
+  proof
+    let n be set, p be finite-Support sequence of INT.Ring;
+A1: dom p = NAT = dom |. p .| by FUNCT_2:def 1;
+    thus Support p c= Support |. p .|
+    proof
+      let x be object;
+      assume x in Support p;
+      then x in dom p & p.x <> 0.INT.Ring &
+      |. p.x .| = |.p.| .x by Def9,POLYNOM1:def 3;
+      hence thesis by A1,POLYNOM1:def 3;
+    end;
+    let x be object;
+    assume x in Support |.p.|;
+    then x in dom |.p.| & |.p.| .x <> 0.INT.Ring &
+    |. p.x .| = |.p.| . x by Def9,POLYNOM1:def 3;
+    then x in dom p & p.x <> 0.INT.Ring by A1;
+    hence thesis by POLYNOM1:def 3;
+  end;
+
+registration
+  let p be Polynomial of INT.Ring;
+  cluster |. p .| -> finite-Support for
+                     (the carrier of INT.Ring)-valued Function;
+  coherence
+  proof
+    Support p = Support |. p .| & Support p is finite by Lm18,POLYNOM1:def 5;
+    hence thesis by POLYNOM1:def 5;
+  end;
+end;
+
+Lm19:
+   for n be Nat
+   for x be Element of F_Real st x > 0 holds
+   (power F_Real).(x,n) = x to_power n
+   proof
+     let n be Nat;
+     let x be Element of F_Real;
+     assume
+A1:  x > 0;
+     defpred P[Nat] means (power F_Real).(x,$1) = x to_power $1;
+     (power F_Real).(x,0) = 1_F_Real by GROUP_1:def 7 .= 1.F_Real; then
+A2:  P[0] by POWER:24;
+A3:  for i be Nat holds P[i] implies P[i+1]
+     proof
+       let i be Nat;
+       assume
+A4:    P[i];
+       set i1=i+1;
+A5:    (power F_Real).(x,i1) = (power F_Real).(x,i) * x by GROUP_1:def 7;
+       x to_power i1 = (x to_power i)*(x to_power 1) by A1,POWER:27;
+       hence thesis by A4,A5;
+     end;
+     for i be Nat holds P[i] from NAT_1:sch 2(A2,A3);
+     hence thesis;
+   end;
+
+Lm22:
+     for x0 be Element of F_Real,s,z0 be Real st 0 < x0 <= m & 0 < s < 1 &
+     1 < z0 holds
+     |. -x0*(z0 to_power (x0*(1-s))) .| <= m*(z0 to_power m)
+     proof
+       let x0 be Element of F_Real,s,z0 be Real;
+       assume
+A1:    0 < x0 <= m & 0 < s < 1 & 1 < z0;
+       set t = 1 -s;
+       1 -s < 1 -0 by A1,XREAL_1:15; then
+       x0*t < x0 by XREAL_1:157,A1; then
+       x0*t < m by A1,XXREAL_0:2; then
+A4:    0 < z0 to_power (x0*(1-s)) < z0 to_power m
+         by A1,POWER:34,POWER:39;
+       |. -x0*(z0 to_power (x0*(1-s))) .|
+        = |. x0*(z0 to_power (x0*(1-s))) .| by COMPLEX1:52
+       .= x0*(z0 to_power (x0*(1-s))) by A4,A1,ABSVALUE:def 1;
+       hence thesis by A1,A4,XREAL_1:97;
+     end;
+
+ reserve g for non zero Polynomial of INT.Ring;
+
+Lm23:
+  for g holds rng |. g .| is finite
+  proof
+    let g;
+    reconsider g1 = |. g .| as
+      Element of the carrier of Polynom-Ring INT.Ring
+        by POLYNOM3:def 10;
+A1: rng g1 = g1.:(Support g1) \/ {0.INT.Ring} by E_TRANS1:8;
+    Support g1 is finite by POLYNOM1:def 5;
+    hence thesis by A1;
+  end;
+
+registration
+  let g;
+  cluster rng |.g.| -> finite;
+  coherence by Lm23;
+end;
+
+theorem Th43:
+  for g be non zero Polynomial of INT.Ring holds
+  ex M be Nat st for i be Nat holds |. g.i .| <= M
+   proof
+     let g be non zero Polynomial of INT.Ring;
+reconsider g1 = |. g .| as Element of the carrier of Polynom-Ring INT.Ring
+by POLYNOM3:def 10;
+A1:  rng g1 = g1.:(Support g1) \/ {0.INT.Ring} by E_TRANS1:8;
+     rng |. g .| c= NAT
+     proof
+       let o be object;
+       assume o in rng |. g .|; then
+       consider x be object such that
+A3:    x in dom |. g .| & (|. g .|).x = o by FUNCT_1:def 3;
+       (|. g .|).x = |. g.x .| by A3,Def9;
+       hence thesis by A3;
+     end; then
+reconsider S = rng |. g .| as finite non empty natural-membered set by A1;
+     max S in S by XXREAL_2:def 8; then
+     reconsider M = max S as Nat;
+     take M;
+A5:  dom |. g .| = NAT by FUNCT_2:def 1;
+     for i be Nat holds |. g.i .| <= M
+     proof
+       let i be Nat;
+       (|. g .|).i = |. g.i .| by Def9; then
+       |. g.i .| in S by A5,ORDINAL1:def 12,FUNCT_1:3;
+       hence thesis by XXREAL_2:def 8;
+     end;
+     hence thesis;
+   end;
+
+begin :: The Polynomial $f_{0}$ and Its Properties
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+::  construct Polynomial
+::  f(p,m) = x^{p-1}(1-x)^{p}(2-x)^{p}\cdots (n-x)^{p}
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+definition
+  let i be Nat;
+  func tau(i) -> Element of the carrier of Polynom-Ring INT.Ring equals
+  <% In(-i,INT.Ring), 1.INT.Ring %>;
+  coherence by POLYNOM3:def 10;
+end;
+
+definition
+  let p be non zero Nat, m be Nat;
+  func x.(m,p) -> FinSequence of the carrier of Polynom-Ring (INT.Ring)
+  means  :Def2:
+  len it = m & for i be Nat st i in dom it holds it.i = (tau(i))|^p;
+  existence
+  proof
+     deffunc F(Nat) = (tau($1))|^p;
+     consider z being FinSequence such that
+A1:  len z = m & for k being Nat st k in dom z holds z.k = F(k)
+       from FINSEQ_1:sch 2;
+     take z;
+     rng z c= the carrier of Polynom-Ring INT.Ring
+     proof
+       let y be object;
+       assume y in rng z; then
+       consider i be object such that
+A3:    i in dom z and
+A4:    y = z.i by FUNCT_1:def 3;
+       dom z = Seg m by A1,FINSEQ_1:def 3; then
+       consider i0 be Nat such that
+A5:    i0 = i and 1 <= i0 and i0 <= m by A3;
+       z.i0 = (tau(i0))|^p by A1,A3,A5;
+       hence thesis by A4,A5;
+     end; then
+     z is FinSequence of the carrier of Polynom-Ring INT.Ring
+       by FINSEQ_1:def 4;
+    hence thesis by A1;
+  end;
+  uniqueness
+  proof
+    let z1,z2 be FinSequence of Polynom-Ring INT.Ring such that
+A7: len z1 = m and
+A8: for i be Nat st i in dom z1 holds
+    z1.i = (tau(i))|^p and
+A9: len z2 = m and
+A10:for j be Nat st j in dom z2 holds z2.j = (tau(j))|^p;
+A11:dom z1 = Seg len z1 by FINSEQ_1:def 3.= dom z2 by A7,A9,FINSEQ_1:def 3;
+    for x be Nat st x in dom z1 holds z1.x = z2.x
+    proof
+      let x be Nat;
+      assume
+A12:  x in dom z1;
+      hence z1.x = (tau(x))|^p by A8
+      .= z2.x by A10,A11,A12;
+    end;
+    hence thesis by A11;
+  end;
+end;
+
+definition
+  let p be odd prime Nat, m be positive Nat;
+  func ff_0(m,p) -> FinSequence of the carrier of Polynom-Ring (INT.Ring)
+  equals
+  (x.(m,p))^<* (tau(0))|^(p-'1) *>;
+  coherence;
+end;
+
+definition
+  let p be odd prime Nat, m be positive Nat;
+  func f_0(m,p) -> Element of the carrier of Polynom-Ring INT.Ring equals
+  Product ff_0(m,p);
+  coherence;
+end;
+
+theorem Th8:
+  for i,n be Nat holds len ~((tau(i))|^n) = n+1
+  proof
+    let i,n be Nat;
+    ~((tau(i))|^n) = (<% In(-i,INT.Ring), 1.INT.Ring %>)`^n by BINOM:def 2;
+    hence thesis by UPROOTS:39;
+  end;
+
+theorem Th9:
+  for f,g be Element of the carrier of Polynom-Ring INT.Ring
+  st (len ~f)*(len ~g) <> 0 holds len ~(f*g) = len ~f + len ~g -1
+    proof
+      let f,g be Element of the carrier of Polynom-Ring INT.Ring;
+      reconsider p = ~f, q = ~g as Polynomial of INT.Ring;
+      assume (len ~f)*(len ~g) <> 0; then
+A2:   len p > 0 & len q > 0;
+      p.(len p -'1) <> 0.INT.Ring & q.(len q -'1) <> 0.INT.Ring
+        by A2,UPROOTS:18; then
+      p.(len p -'1) * q.(len q -'1) <> 0.INT.Ring; then
+      len (p*'q) = len p + len q - 1 by POLYNOM4:10;
+      hence thesis by POLYNOM3:def 10;
+    end;
+
+theorem Th10:
+  for k be non zero Nat,p be odd prime Nat holds
+  (x.(k,p))^<* (tau(k+1))|^p *> = x.(k+1,p) &
+  Product(x.(k+1,p)) = Product((x.(k,p)))*((tau(k+1))|^p)
+    proof
+      let k be non zero Nat, p be odd prime Nat;
+      (x.(k,p))^<* (tau(k+1))|^p *> = x.(k+1,p)
+      proof
+A2:     dom (x.(k,p)) = Seg len(x.(k,p)) by FINSEQ_1:def 3
+        .= Seg k by Def2;
+A3:     len x.(k+1,p) = k+1 by Def2; then
+A5:     dom x.(k+1,p) = Seg (k+1) by FINSEQ_1:def 3;
+        len((x.(k,p))^<* (tau(k+1))|^p *>)
+        = len (x.(k,p)) + 1 by FINSEQ_2:16
+        .= k +1 by Def2; then
+A6:     dom ((x.(k,p))^<* (tau(k+1))|^p *>) = Seg (k+1) by FINSEQ_1:def 3;
+        for i be Nat st i in dom x.(k+1,p) holds
+        (x.(k+1,p)).i = ((x.(k,p))^<* (tau(k+1))|^p *>).i
+        proof
+          let i be Nat;
+          assume i in dom x.(k+1,p); then
+          i in Seg (k+1) by A3,FINSEQ_1:def 3; then
+          i in Seg k \/ { k+1 } by FINSEQ_1:9; then
+          per cases by XBOOLE_0:def 3;
+            suppose
+A9:           i in Seg k;
+              k < k+1 by NAT_1:19; then
+              Seg k c= Seg(k+1) by FINSEQ_1:5; then
+              i in Seg (k+1) by A9; then
+A10:          i in dom (x.(k+1,p)) by A3,FINSEQ_1:def 3;
+              ((x.(k,p))^<* (tau(k+1))|^p *>).i = (x.(k,p)).i
+                by A9,A2,FINSEQ_1:def 7
+              .= (tau(i))|^p by A9,A2,Def2 .= (x.(k+1,p)).i by A10,Def2;
+              hence thesis;
+            end;
+            suppose
+              i in {k+1}; then
+A12:          i = k+1 by TARSKI:def 1;
+              len (x.(k,p)) = k by Def2;
+              hence thesis by A12,A5,FINSEQ_1:3,Def2;
+            end;
+          end;
+          hence thesis by A5,A6;
+        end;
+       hence thesis by GROUP_4:6;
+     end;
+
+theorem Th11:
+  for p be odd prime Nat, m be positive Nat holds
+  len ~(Product (x.(m,p))) = m*p + 1
+    proof
+      let p be odd prime Nat, m be positive Nat;
+      set PR = Polynom-Ring INT.Ring;
+      defpred P[non zero Nat] means len ~(Product (x.($1,p))) = $1*p +1;
+A1:   P[1]
+      proof
+A2:     len x.(1,p) = 1 by Def2;
+A3:     x.(1,p) = <* (x.(1,p)).1 *> by Def2,FINSEQ_1:40;
+        dom x.(1,p) = Seg 1 by A2,FINSEQ_1:def 3; then
+        1 in dom x.(1,p); then
+        (x.(1,p)).1 = (tau(1))|^p by Def2; then
+        len ~Product (x.(1,p)) = len ~((tau(1))|^p) by A3,FINSOP_1:11
+        .= p + 1 by Th8;
+        hence thesis;
+      end;
+A5:   for k be non zero Nat holds P[k] implies P[k+1]
+      proof
+        let k be non zero Nat;
+        assume
+A6:     P[k];
+        set pp0 = Product(x.(k,p)), t0 = (tau(k+1))|^p;
+A7:     len ~((tau(k+1))|^p) = p+1 by Th8; then
+A8:     (len ~pp0)*(len ~t0) <> 0 by A6;
+        len ~(Product (x.(k+1,p)))
+        = len ~(pp0*t0) by Th10
+        .= (len ~pp0) + (len ~t0) -1 by A8,Th9
+        .= (k+1)*p + 1 by A6, A7;
+        hence thesis;
+      end;
+      for k be non zero Nat holds P[k] from NAT_1:sch 10(A1,A5);
+      hence thesis;
+    end;
+
+theorem Th12:
+  for p be odd prime Nat, m be positive Nat holds
+  len ~(f_0(m,p)) = m*p + p
+    proof
+      let p be odd prime Nat, m be positive Nat;
+      set xp0 = x.(m,p);
+      set pp0 = (Product(x.(m,p))), t0 = (tau(0))|^(p-'1);
+A1:   len ~(Product (x.(m,p))) = m*p +1 by Th11;
+A2:   p-'1 = p-1 by XREAL_1:233, NAT_1:14;
+      len ~((tau(0))|^(p-'1)) = p-'1+1 by Th8; then
+A4:   (len ~pp0)*(len ~t0) <> 0 by A1;
+A5:   len ~pp0 = m*p + 1 by Th11;
+      len ~t0 = p-'1 + 1 by Th8; then
+      len ~(pp0*t0) = m*p +1 + p-1 by A2,A5,A4,Th9;
+      hence thesis by GROUP_4:6;
+    end;
+
+Lm4:
+   for i be Nat holds Roots tau(i) = {In(i,INT.Ring)}
+   proof
+     let i be Nat;
+     reconsider x = i as Element of INT.Ring by INT_1:def 2;
+     Roots <% In(-i,INT.Ring), 1.INT.Ring %>
+     = Roots <% -x, 1.INT.Ring %>
+     .= {In(i,INT.Ring)} by UPROOTS:48;
+     hence thesis;
+   end;
+
+theorem Th13:
+  for i be Nat holds
+  (Der1(INT.Ring)).(tau(i)) = 1.Polynom-Ring(INT.Ring)
+   proof
+     set D = Der1(INT.Ring);
+     let i be Nat;
+     len tau(i) = 2 by POLYNOM5:40; then
+A2:  len (D.(tau i))
+     = 2 - 1 by RING_3:76,E_TRANS1:17 .= 1;
+     (D.(tau i)).0
+     = (0+1)*((tau i).(0+1)) by RINGDER1:def 8
+     .= <%In(-i,INT.Ring), 1.INT.Ring %>.1 by BINOM:13
+     .= 1.INT.Ring by POLYNOM5:38; then
+     D.(tau i) = <% 1.INT.Ring %> by A2,UPROOTS:19
+     .= 1_.INT.Ring by UPROOTS:31
+     .= 1.Polynom-Ring INT.Ring by POLYNOM3:def 10;
+     hence thesis;
+   end;
+
+theorem Th15:
+  for f be Element of the carrier of Polynom-Ring INT.Ring holds
+  for i be Nat holds
+  ((tau(0)) *'f).(i+1) = f.i & ((tau(0)) *'f).0 = 0.INT.Ring
+   proof
+     let f be Element of the carrier of Polynom-Ring INT.Ring;
+     for i be Nat holds ((tau(0)) *'f).(i+1) = f.i
+     & ((tau(0)) *'f).0 = 0.INT.Ring
+     proof
+       let i be Nat;
+A1:    i in NAT by ORDINAL1:def 12;
+       tau(0) = <%0.INT.Ring,1.INT.Ring%>`^1 by POLYNOM5:16
+       .= anpoly(1.INT.Ring,1) by FIELD_1:12;
+       hence thesis by A1,RINGDER1:31;
+     end;
+     hence thesis;
+   end;
+
+ reserve f for Element of the carrier of Polynom-Ring INT.Ring;
+
+Lm6:
+   for n be non zero Nat holds
+   for i be Element of NAT holds (~((tau(0))|^n) *'f).(i+n) = f.i &
+   (~((tau(0))|^n) *'f)|(Segm n) = ((Segm n) --> 0.INT.Ring)
+   proof
+     let n be non zero Nat;
+     let i be Element of NAT;
+     (~((tau(0))|^n) *'f).(i+n) = f.i &
+     (~((tau(0))|^n) *'f)|(Segm n) = ((Segm n) --> 0.INT.Ring)
+     proof
+       defpred P[Nat] means (~((tau(0))|^$1)*'f).(i+$1) = f.i &
+       (~((tau(0))|^$1) *'f)|(Segm($1)) = ((Segm($1)) --> 0.INT.Ring);
+A1:    (~((tau(0))|^1) *'f) = (tau(0)) *'f by BINOM:8;
+A2:    (~((tau(0))|^1) *'f)|(Segm(1)) = ((Segm(1))--> 0.INT.Ring)
+       proof
+         for x be object st x in dom ((~((tau(0))|^1) *'f)|(Segm(1))) holds
+         ((~((tau(0))|^1) *'f)|(Segm(1))).x = ((Segm(1))--> 0.INT.Ring).x
+         proof
+           let x be object;
+           assume
+A3:        x in dom ((~((tau(0))|^1) *'f)|(Segm(1))); then
+           ((~((tau(0))|^1) *'f)|(Segm(1))).x = (~((tau(0))|^1) *'f).x
+             by FUNCT_1:49
+             .= (~((tau(0))) *'f).x by BINOM:8
+             .= ((tau(0)) *'f).0 by A3,NAT_1:14,44
+             .= 0.INT.Ring by Th15;
+           hence thesis by A3,FUNCOP_1:7;
+         end;
+         hence thesis;
+       end;
+A4:    P[1] by A1,Th15,A2;
+A5:    for k be non zero Nat holds P[k] implies P[k+1]
+       proof
+         let k be non zero Nat;
+         assume
+A6:      P[k];
+         reconsider fk = (~((tau(0))|^k)*'f) as Element
+           of the carrier of Polynom-Ring INT.Ring by POLYNOM3:def 10;
+A7:      ((tau(0))`^k) = ((tau(0))|^k) by BINOM:def 2;
+A8:      ~((tau(0))|^(k+1)) = (tau(0))`^(k+1) by BINOM:def 2
+           .= (tau(0)) *' (~((tau(0))|^k)) by A7,POLYNOM5:19; then
+A13:     (tau(0))*'fk = ~((tau(0))|^(k+1))*'f by POLYNOM3:33;
+A9:      (tau(0))*'fk
+           = ~((tau(0))|^(k+1))*'f by A8,POLYNOM3:33;
+         set ik = i+k;
+A10:     (~((tau(0))|^(k+1)) *'f).((i+k)+1)
+           = fk.(i+k) by A9,Th15
+           .= f.i by A6;
+         reconsider f1 = ~((tau(0))|^1)*'f as Element of
+           the carrier of Polynom-Ring INT.Ring by POLYNOM3:def 10;
+         (~((tau(0))|^(1+k)) *'f)|(Segm(1+k)) = (Segm(1+k))--> 0.INT.Ring
+         proof
+           for x be object st x in dom((~((tau(0))|^(1+k)) *'f)|(Segm(1+k)))
+           holds ((~((tau(0))|^(1+k)) *'f)|(Segm(1+k))).x
+           = ((Segm(1+k))--> 0.INT.Ring).x
+           proof
+             let x be object;
+             assume
+A11:         x in dom ((~((tau(0))|^(1+k)) *'f)|(Segm(1+k)));
+A12:         Segm k \/ { k } = Segm(1+k) by AFINSQ_1:2;
+             per cases by A11,XBOOLE_0:def 3,A12;
+               suppose
+A14:             x in Segm k;
+                 per cases;
+                   suppose
+A15:               x = 0;
+A16:               (tau(0)).0 = 0.INT.Ring & (tau(0)).1 = 1.INT.Ring
+                     by POLYNOM5:38;
+                   ((~((tau(0))|^(1+k)) *'f)|(Segm(1+k))).x
+                      = (~((tau(0))|^(1+k)) *'f).x by A11,FUNCT_1:49
+                      .= (~(tau(0)).0) * ((~((tau(0))|^k)*'f).0)
+                      by Th14,A13,A15
+                      .= ((Segm(k+1)) --> 0.INT.Ring).x by A11,A16,FUNCOP_1:7;
+                   hence thesis;
+                 end;
+                 suppose
+                   x <> 0; then
+                   reconsider x as non zero Nat by A11;
+                   reconsider x1 = x -1 as Element of NAT by INT_1:3;
+                   x-1 < x by XREAL_1:44; then
+A19:               x1 < k by XXREAL_0:2,NAT_1:44,A14;
+                   ((~((tau(0))|^(1+k)) *'f)|(Segm(1+k))).x
+                      = ((tau(0))*'fk).(x1+1) by A13,A11,FUNCT_1:49
+                      .= (~((tau(0))|^k)*'f).x1 by Th15
+                      .= ((Segm(k)) --> 0.INT.Ring).x1
+                        by A6,NAT_1:44,A19,FUNCT_1:49
+                      .= 0.INT.Ring by NAT_1:44,A19,FUNCOP_1:7
+                      .= ((Segm(k+1)) --> 0.INT.Ring).x by A11,FUNCOP_1:7;
+                   hence thesis;
+                 end;
+               end;
+               suppose
+                 x in {k}; then
+A21:             x = k by TARSKI:def 1;
+A22:             k-1 in Segm k by NAT_1:44,XREAL_1:44;
+                 ((~((tau(0))|^(1+k)) *'f)|(Segm(1+k))).x
+                   = ((tau(0))*'fk).(k-1 +1) by A13,A21,A11,FUNCT_1:49
+                   .= (~((tau(0))|^k)*'f).(k-1) by Th15
+                   .= ((Segm(k)) --> 0.INT.Ring).(k-1) by A6,A22,FUNCT_1:49
+                   .= 0.INT.Ring by FUNCOP_1:7,A22
+                   .= ((Segm(k+1)) --> 0.INT.Ring).x by A11,FUNCOP_1:7;
+                 hence thesis;
+               end;
+             end;
+            hence thesis;
+           end;
+           hence thesis by A10;
+         end;
+         for k be non zero Nat holds P[k] from NAT_1:sch 10(A4,A5);
+         hence thesis;
+     end;
+     hence thesis;
+   end;
+
+theorem Th16:
+  for p be odd prime Nat, m be positive Nat holds
+  len (x.(m,p)) = m &
+  len ff_0(m,p) = m + 1 &
+  (ff_0(m,p)).(len (x.(m,p)) + 1) = (tau(0))|^(p-'1)
+   proof
+     let p be odd prime Nat, m be positive Nat;
+A1:  len <* (tau(0))|^(p-'1) *> = 1 by FINSEQ_1:40;
+     len ff_0(m,p) = len (x.(m,p)) + len <* (tau(0))|^(p-'1) *> by FINSEQ_1:22
+     .= m + 1 by Def2,A1;
+     hence thesis by Def2;
+   end;
+
+Lm7:
+   for p be odd prime Nat, m be positive Nat, i be Nat st i in Seg m holds
+   ff_0(m,p)/.i = (tau(i))|^p &
+   ff_0(m,p).i = (tau(i))|^p &
+   i in dom ff_0(m,p)
+   proof
+     let p be odd prime Nat, m be positive Nat, i be Nat;
+     assume
+A1:  i in Seg m; then
+     i in Seg len(x.(m,p)) by Def2; then
+A2:  i in dom (x.(m,p)) by FINSEQ_1:def 3; then
+A3:  (ff_0(m,p)).i = (x.(m,p)).i by FINSEQ_1:def 7
+     .= (tau(i))|^p by A2,Def2;
+     len ff_0(m,p) = m+1 by Th16; then
+A4:  dom (ff_0(m,p)) = Seg (m+1) by FINSEQ_1:def 3;
+     m+0 <= m+1 by XREAL_1:7; then
+     i in dom (ff_0(m,p)) by A4,A1,FINSEQ_1:5,TARSKI:def 3;
+     hence thesis by A3,PARTFUN1:def 6;
+   end;
+
+Lm8:
+    for i be Nat, k be non zero Nat holds tau(i) divides (tau(i))|^k
+    proof
+      let i be Nat, k be non zero Nat;
+      k-1 + 1 = k; then
+      (tau(i))|^k = ((tau(i))|^1) * ((tau(i))|^(k-1)) by BINOM:10
+      .= (tau(i))*((tau(i))|^(k-1)) by BINOM:8;
+      hence thesis by GCD_1:def 1;
+   end;
+
+Lm9:
+   for p be odd prime Nat, m be positive Nat, j be Nat st j in Seg m holds
+   Product ff_0(m,p) = ((tau(j))|^p)*Product Del(ff_0(m,p),j)
+   proof
+     let p be odd prime Nat, m be positive Nat,j be Nat;
+     assume
+A1:  j in Seg m; then
+A2:  j in dom ff_0(m,p) by Lm7;
+     (tau(j))|^p = (ff_0(m,p))/.j by Lm7,A1;
+     hence thesis by A2,RATFUNC1:3;
+   end;
+
+theorem Th18:
+  for p be odd prime Nat, m be positive Nat, k be Nat st 0<=k<=p-1
+  for i,j be Nat st i in Seg (k+1) holds
+  tau(j) divides
+  (LBZ(Der1(INT.Ring),k,Product Del(ff_0(m,p),j),(tau(j))|^p))/.i
+    proof
+      let p be odd prime Nat, m be positive Nat, k be Nat;
+      assume
+A1:   0<=k<=p-1;
+      set D = Der1(INT.Ring);
+      set PR = Polynom-Ring INT.Ring;
+      for i,j be Nat st i in Seg (k+1) holds
+      tau(j) divides (LBZ(D,k,Product Del(ff_0(m,p),j),(tau(j))|^p))/.i
+      proof
+        let i,j be Nat;
+        set f = Product ff_0(m,p);
+        set xj = tau(j);
+        set yj = Product Del(ff_0(m,p),j);
+        assume
+A2:     i in Seg(k+1);
+A3:     1.PR = D.xj by Th13 .= (D|^1).xj by VECTSP11:19
+        .= (D|^1).(xj|^1) by BINOM:8;
+        len (LBZ(D,k,yj,xj|^p)) = k+1 by RINGDER1:def 4; then
+A4:     i in dom (LBZ(D,k,yj,xj|^p)) by A2,FINSEQ_1:def 3;
+        set p1 = p - 1;
+A5:     k+1 <= p-1 +1 by A1,XREAL_1:6;
+A7:     p1+0 <= p1 +1 by XREAL_1:7;
+A6:     1 <= i <= k+1 by A2,FINSEQ_1:1; then
+A8:     1 <= i <= p by A5,XXREAL_0:2; then
+A9:     i - 1 <= p -1 by XREAL_1:6;
+        set i1 = i -' 1;
+        set s = k choose (i-'1), t = eta(p,i1);
+A10:    0 <= i1 <= p-1 by A6,XREAL_1:233,A9;
+        per cases;
+          suppose
+            i1 <> 0; then
+            1 <= i1 <= p by NAT_1:14,A7,A10,XXREAL_0:2; then
+A13:        (D|^(i-'1)).(xj|^p)
+           = (eta(p,i1))*(xj|^(p-'i1)) by A3,E_TRANS1:19;
+           set tDx = t*(xj|^(p-'i1));
+           set Dy = (D|^(k+1-'i)).yj;
+A14:        (LBZ(D,k,yj,xj|^p)).i
+            = (t*(xj|^(p-'i1)))*(s*((D|^(k+1-'i)).yj))
+            by A13,A4,RINGDER1:def 4
+            .= (xj|^(p-'i1))*(t*(s*((D|^(k+1-'i)).yj))) by RINGDER1:2;
+set u = (xj|^(p-'i1)), v = (t*(s*((D|^(k+1-'i)).yj)));
+reconsider w = (LBZ(D,k,yj,xj|^p)).i as Element of the carrier of PR
+by A4, FINSEQ_2:11;
+A15:        i-i <= p -i by A8,XREAL_1:6;
+            p-'(i-'1) = p-(i-'1) by XREAL_1:233,A7,A10,XXREAL_0:2
+            .= p-(i-1) by A6,XREAL_1:233 .= p - i +1; then
+A17:        xj divides u by A15,Lm8;
+            u divides w by A14,GCD_1:def 1; then
+            xj divides w by A17, GCD_1:2;
+            hence thesis by A4,PARTFUN1:def 6;
+          end;
+          suppose
+            i1 = 0; then
+            (D|^(i-'1)).(xj|^p)
+            = (id PR).(xj|^p) by VECTSP11:18 .= xj|^p; then
+A20:        (LBZ(D,k,yj,xj|^p)).i
+            = (xj|^p)*(s*((D|^(k+1-'i)).yj)) by A4,RINGDER1:def 4;
+            xj divides (xj|^p)*(s*((D|^(k+1-'i)).yj)) by GCD_1:7,Lm8;
+            hence thesis by A20,A4,PARTFUN1:def 6;
+          end;
+        end;
+        hence thesis;
+      end;
+
+Lm10:
+    for n,i be Nat holds ~((tau(i))|^n).0 = (In(-i,INT.Ring))|^n
+    proof
+      let n,i be Nat;
+      ~((tau(i))|^n).0 = (In(-i,INT.Ring))|^n
+      proof
+        defpred P[Nat] means ~((tau(i))|^$1).0 = (In(-i,INT.Ring))|^$1;
+A1:     P[0]
+        proof
+          (tau(i))|^0 = 1_Polynom-Ring (INT.Ring) by BINOM:8
+          .= 1.Polynom-Ring (INT.Ring); then
+A2:       ~((tau(i))|^0)
+          = (1_.(INT.Ring)) by POLYNOM3:def 10;
+          (In(-i,INT.Ring))|^0 = 1_INT.Ring by BINOM:8
+          .= 1.INT.Ring;
+          hence thesis by A2,POLYNOM3:30;
+        end;
+A3:     for k be Nat holds P[k] implies P[k+1]
+        proof
+          let k be Nat;
+          assume
+A4:       P[k];
+A5:      (tau(i))|^(k+1) = ((tau(i))|^1)*((tau(i))|^k) by BINOM:10
+          .= (tau(i))*((tau(i))|^k) by BINOM:8;
+          set p1 = ~(tau(i)), q1 = ~((tau(i))|^k);
+          consider r be FinSequence of the carrier of INT.Ring such that
+A7:       len r = 0+1 & (p1*'q1).0 = Sum r &
+          for k be Element of NAT st k in dom r holds
+          r.k = p1.(k-'1) * q1.(0+1-'k) by POLYNOM3:def 9;
+A8:       r = <* r.1 *> by A7,FINSEQ_1:40;
+          dom r = Seg 1 by A7,FINSEQ_1:def 3; then
+          1 in dom r; then
+A9:       r.1 = p1.(1-'1) * q1.(0+1-'1) by A7
+          .= In(-i,INT.Ring)*((In(-i,INT.Ring))|^k) by A4,POLYNOM5:38
+          .= ((In(-i,INT.Ring))|^1)*((In(-i,INT.Ring))|^k) by BINOM:8
+          .= (In(-i,INT.Ring))|^(k+1) by BINOM:10;
+          (~((tau(i))|^(k+1))).0
+          = Sum r by A7,A5,POLYNOM3:def 10
+          .= (In(-i,INT.Ring))|^(k+1) by A8,A9,RLVECT_1:44;
+          hence thesis;
+        end;
+        for k be Nat holds P[k] from NAT_1:sch 2(A1,A3);
+        hence thesis;
+      end;
+      hence thesis;
+    end;
+
+theorem Th20:
+  for p be odd prime Nat, m be positive Nat holds
+    ~(Product x.(m,p)).0 = (((-1)|^m)*(m!))|^p
+   proof
+     let p be odd prime Nat, m be positive Nat;
+     defpred P[Nat] means ~(Product x.($1,p)).0 = (((-1)|^$1)*($1!))|^p;
+A1:  P[1]
+     proof
+A2:    len x.(1,p) = 1 by Def2;
+A3:    x.(1,p) = <* (x.(1,p)).1 *> by Def2,FINSEQ_1:40;
+       dom x.(1,p) = Seg 1 by A2,FINSEQ_1:def 3; then
+       1 in dom x.(1,p); then
+A4:    (x.(1,p)).1 = (tau(1))|^p by Def2;
+       ~(Product x.(1,p)).0 = ~((tau(1))|^p).0 by A3,A4,FINSOP_1:11
+       .= (In(-1,INT.Ring))|^p by Lm10
+       .= (-1)|^p by Lm2;
+       hence thesis by NEWTON:13;
+     end;
+A6:  for k be non zero Nat holds P[k] implies P[k+1]
+     proof
+       let k be non zero Nat;
+       assume
+A7:    P[k];
+A8:    (-(k+1))|^p = (In(-(k+1),INT.Ring))|^p by Lm2;
+       Product(x.(k+1,p)) = Product((x.(k,p)))*((tau(k+1))|^p) by Th10; then
+      ~(Product(x.(k+1,p))).0
+      = ((~Product((x.(k,p))))*'(~((tau(k+1))|^p))).0 by POLYNOM3:def 10
+      .= (~Product((x.(k,p)))).0 * (~((tau(k+1))|^p)).0 by Th14
+      .= ((((-1)|^k)*(k!))|^p)*((-(k+1))|^p) by A8,A7,Lm10
+      .= ((((-1)|^k)*(k!))*((-1)*(k+1)))|^p by NEWTON:7
+      .= ((((-1)|^k)*(-1)*(k!))*(k+1))|^p
+      .= ((((-1)|^(k+1))*(k!))*(k+1))|^p by NEWTON:6
+      .= (((-1)|^(k+1))*((k!)*(k+1)))|^p
+      .= (((-1)|^(k+1))*((k+1)!))|^p by NEWTON:15;
+      hence thesis;
+     end;
+     for k be non zero Nat holds P[k] from NAT_1:sch 10(A1,A6);
+     hence thesis;
+   end;
+
+theorem Th21:
+  for p be odd prime Nat, m be positive Nat, k be Nat st 0 <= k <= p-'2
+  holds (((Der1(INT.Ring))|^k).f_0(m,p)).0 = 0.INT.Ring
+    proof
+      let p be odd prime Nat, m be positive Nat, k be Nat;
+      set D = Der1(INT.Ring);
+      set t0 = tau(0);
+      assume
+A1:   0 <= k <= p-'2;
+      set F0 = f_0(m,p);
+A2:   1 < p by INT_2:def 4;
+      1+1 < p +1 by INT_2:def 4, XREAL_1:6; then
+      2 <= p by NAT_1:13; then
+A3:   p -'2 = p - 2 & p -' 1 = p -1 by A2,XREAL_1:233; then
+      reconsider p1 = p-'1 as non zero Element of NAT;
+      p - 1 - 1 < p -1 by XREAL_1:44; then
+A5:   k < p-'1 by A3,A1,XXREAL_0:2;
+      set f = Product (x.(m,p));
+A6:   (~((t0|^(p-'1))*f).k) = (~(t0|^(p-'1))*'(~f)).k by POLYNOM3:def 10
+      .= ((~(t0|^(p-'1))*'(~f))|(Segm p1)).k by A5,NAT_1:44,FUNCT_1:49
+      .= ((Segm p1) --> 0.INT.Ring).k by Lm6
+      .= 0.INT.Ring by A5,NAT_1:44,FUNCOP_1:7;
+      ((D|^k).F0).0 = (eta(0+k,k))*(F0.(0 +k)) by E_TRANS1:22
+      .= (eta(0+k,k))*0.INT.Ring by A6,GROUP_4:6
+      .= 0.INT.Ring;
+      hence thesis;
+   end;
+
+theorem Th22:
+  for p be odd prime Nat, m be positive Nat,k be Nat st 0 <= k <= p-'2 holds
+  eval(~(((Der1(INT.Ring))|^k).f_0(m,p)),0.INT.Ring) = 0.INT.Ring
+    proof
+      let p be odd prime Nat, m be positive Nat, k be Nat;
+      assume
+A1:   0 <= k <= p-'2;
+      set Fk = (((Der1(INT.Ring))|^k).f_0(m,p));
+      eval(~Fk,0.INT.Ring) = (~Fk).0 by POLYNOM5:31;
+      hence thesis by Th21,A1;
+    end;
+
+theorem Th23:
+  for p be odd prime Nat, m be positive Nat holds
+  eval(~(((Der1(INT.Ring))|^(p-'1)).f_0(m,p)),0.INT.Ring)
+    = ((p-'1)!)*(In((((-1)|^m)*(m!))|^p,INT.Ring))
+    proof
+      let p be odd prime Nat, m be positive Nat;
+      set D = Der1(INT.Ring);
+      set ProdX = Product (x.(m,p));
+      set t0 = tau(0);
+      set F0 = f_0(m,p);
+A1:   1 < p by INT_2:def 4;
+      1+1 < p +1 by INT_2:def 4, XREAL_1:6; then
+      2 <= p by NAT_1:13; then
+      p -'2 = p - 2 & p -' 1 = p -1 by A1,XREAL_1:233; then
+      reconsider p1 = p-'1 as non zero Element of NAT;
+      reconsider f = Product (x.(m,p))
+        as Element of the carrier of Polynom-Ring INT.Ring;
+A3:   (eta(p1,p1)) = (p1!)/(0!) by XREAL_1:232 .= p1! by NEWTON:12;
+A4:   (~((t0|^p1)*f).p1) = (~(t0|^(p-'1))*'f).(0+p1) by POLYNOM3:def 10
+      .= (~f).0 by Lm6
+      .= In((((-1)|^m)*(m!))|^p,INT.Ring) by Th20;
+      ((D|^p1).F0).0 = (eta(0+p1,p1))*(F0.(0 +p1)) by E_TRANS1:22
+      .= ((p-'1)!)*(In((((-1)|^m)*(m!))|^p,INT.Ring))
+        by A3,A4,GROUP_4:6;
+      hence thesis by POLYNOM5:31;
+    end;
+
+theorem Th24:
+  for p be odd prime Nat, m be positive Nat,
+      k be non zero Nat st p <= k holds
+  eval(~(((Der1(INT.Ring))|^k).f_0(m,p)), 0.INT.Ring)
+    = (k!)*(~(Product (x.(m,p))).(k -' (p-'1)))
+    proof
+      let p be odd prime Nat, m be positive Nat;
+      let k be non zero Nat;
+      set D = Der1(INT.Ring);
+      set t0 = tau(0);
+      assume
+A1:   p <= k;
+      set F0 = f_0(m,p);
+A2:   1 < p by INT_2:def 4;
+      1+1 < p +1 by INT_2:def 4,XREAL_1:6; then
+      2 <= p by NAT_1:13; then
+A5:   p -'2 = p - 2 & p -' 1 = p -1 by A2,XREAL_1:233;
+      reconsider f = Product (x.(m,p))
+        as Element of the carrier of Polynom-Ring INT.Ring;
+      reconsider p1 = p-'1 as non zero Element of NAT by A5;
+A6:   1 = p -(p -1) .= p-(p-'1) by XREAL_1:233,A2; then
+      1 <= k -(p-'1) by A1,XREAL_1:6; then
+      reconsider kp = k - (p-'1) as Element of NAT by INT_1:3;
+A7:   p - 1 < p by XREAL_1:44;
+A8:   (eta(k,k)) = (k!)/(0!) by XREAL_1:232 .= k! by NEWTON:12;
+A9:   (~((t0|^(p-'1))*f).k) = (~(t0|^p1)*'f).(kp + p1) by POLYNOM3:def 10
+      .= f.kp by Lm6;
+      ((D|^k).F0).0 = (eta(0+k,k))*(F0.(0 +k)) by E_TRANS1:22
+      .= (eta(k,k))*(f.kp) by A9,GROUP_4:6
+      .= (k!)*(f.(k -' (p-'1))) by A8,XREAL_1:233,A7,A6,A1,XXREAL_0:2;
+      hence thesis by POLYNOM5:31;
+    end;
+
+theorem Th25:
+  for j be Nat, u be Element of the carrier of Polynom-Ring INT.Ring
+  holds eval(~((tau(j))*u),In(j,INT.Ring)) = 0.INT.Ring
+    proof
+      let j be Nat, u be Element of the carrier of Polynom-Ring INT.Ring;
+      Roots tau(j) = {In(j,INT.Ring)} by Lm4; then
+      In(j,INT.Ring) in Roots tau(j) by TARSKI:def 1; then
+      In(j,INT.Ring) is_a_root_of tau(j) by POLYNOM5:def 10; then
+A1:   eval(tau(j),In(j,INT.Ring)) = 0.INT.Ring by POLYNOM5:def 7;
+      eval(~((tau(j))*u),In(j,INT.Ring))
+      = eval((~(tau(j)))*'(~u),In(j,INT.Ring)) by POLYNOM3:def 10
+      .= 0.INT.Ring * eval((~u),In(j,INT.Ring)) by A1,POLYNOM4:24
+      .= 0.INT.Ring;
+      hence thesis;
+    end;
+
+theorem Th26:
+  for p be odd prime Nat, m be positive Nat,
+      k,j be Nat st k < p & j in Seg m
+  holds eval(~(((Der1(INT.Ring))|^k).f_0(m,p)),In(j,INT.Ring)) = 0.INT.Ring
+    proof
+      let p be odd prime Nat, m be positive Nat;
+      let k,j be Nat;
+      assume
+A1:   k < p & j in Seg m; then
+      k < p-1 + 1; then
+A3:   0 <= k <= p -1 by NAT_1:13;
+      set D = Der1(INT.Ring);
+      set tj = tau(j);
+      set yj = Product Del(ff_0(m,p),j);
+A4:   1 < p by INT_2:def 4;
+      1+1 < p +1 by XREAL_1:6,INT_2:def 4; then
+      2 <= p by NAT_1:13; then
+      p -'2 = p - 2 & p -' 1 = p -1 by A4,XREAL_1:233; then
+      reconsider p1 = p-'1 as non zero Element of NAT;
+      set f = Product Del(ff_0(m,p),j);
+A6:   len (LBZ(D,k,yj,tj|^p)) = k+1 by RINGDER1:def 4; then
+A7:   dom (LBZ(D,k,yj,tj|^p)) = Seg (k+1) by FINSEQ_1:def 3;
+      reconsider lbz = (LBZ(D,k,yj,tj|^p))
+      as non empty FinSequence of the carrier of Polynom-Ring INT.Ring by A6;
+A8:   for i be Nat st i in Seg (k+1) holds
+      tj divides (LBZ(D,k,yj,tj|^p))/.i by A3,Th18;
+      Sum lbz = (D|^k).(yj * (tj|^p)) by RINGDER1:25
+      .= (D|^k).f_0(m,p) by A1,Lm9; then
+      ex u be Element of Polynom-Ring INT.Ring st
+      (D|^k).f_0(m,p) = tau(j)*u by GCD_1:def 1,A8,A7,E_TRANS1:4;
+      hence thesis by Th25;
+   end;
+
+theorem Th27:
+  for i be Nat holds
+  (Der1(INT.Ring)).(tau(i)) = 1.Polynom-Ring(INT.Ring)
+   proof
+     set D = Der1(INT.Ring);
+     let i be Nat;
+     len tau(i) = 2 by POLYNOM5:40; then
+A2:  len (D.(tau i)) = 2 - 1 by RING_3:76,E_TRANS1:17 .= 1;
+     (D.(tau i)).0 = (0+1)*((tau(i)).(0+1)) by RINGDER1:def 8
+     .= <%In(-i,INT.Ring), 1.INT.Ring %>.1 by BINOM:13
+     .= 1.INT.Ring by POLYNOM5:38; then
+     D.(tau i) = <% 1.INT.Ring %> by A2,UPROOTS:19
+     .= 1_.INT.Ring by UPROOTS:31;
+     hence thesis by POLYNOM3:def 10;
+   end;
+
+Lm11:
+  for k be Nat,f be Element of the carrier of Polynom-Ring R
+  holds ((Der1(R))|^0).(f|^k) = f|^k
+  proof
+    let k be Nat, f be Element of the carrier of Polynom-Ring R;
+    (Der1(R))|^0 = id Polynom-Ring R by VECTSP11:18;
+    hence thesis;
+  end;
+
+theorem Th28:
+  for p be odd prime Nat, m be positive Nat,
+      j,k be Nat st j in Seg m & p <= k holds
+  for i be Nat st i in Seg p holds
+  tau(j) divides
+  (LBZ(Der1(INT.Ring),k,Product Del(ff_0(m,p),j),(tau(j))|^p))/.i
+    proof
+      let p be odd prime Nat, m be positive Nat, j,k be Nat;
+      assume
+A1:   j in Seg m & p <= k;
+      set D = Der1(INT.Ring);
+      set PR = Polynom-Ring INT.Ring;
+A2:   p-'1 = p-1 by XREAL_1:233,NAT_1:14;
+      1 < p by INT_2:def 4; then
+      1+1 <= p by INT_1:7; then
+      2 - 2 <= p - 2 by XREAL_1:6; then
+      p-2 in NAT by INT_1:3; then
+      reconsider p2 = p-2 as Nat;
+      reconsider p1 = p-'1 as non zero Nat by A2;
+      (for i be Nat st i in Seg p holds
+      tau(j) divides
+      (LBZ(Der1(INT.Ring),k,Product Del(ff_0(m,p),j),(tau(j))|^p))/.i )
+      proof
+        let i be Nat;
+        set D = Der1(INT.Ring);
+        set PR = Polynom-Ring INT.Ring;
+        set f = Product ff_0(m,p);
+        set xj = tau(j);
+        set yj = Product Del(ff_0(m,p),j);
+        reconsider n0 = j as Nat;
+        assume
+A4:     i in Seg p; then
+A5:     1 <= i <= p by FINSEQ_1:1;
+set f = Product ff_0(m,p);
+set xj = tau(j);
+set yj = Product Del(ff_0(m,p),j);
+A6:     1.PR = D.xj by Th27 .= (D|^1).xj by VECTSP11:19
+        .= (D|^1).(xj|^1) by BINOM:8;
+        len (LBZ(D,k,yj,xj|^p)) = k+1 by RINGDER1:def 4; then
+A7:     dom (LBZ(D,k,yj,xj|^p)) = Seg (k+1) by FINSEQ_1:def 3;
+        p < k+1 by A1,NAT_1:13; then
+A8:     Seg p c= Seg(k+1) by FINSEQ_1:5;
+reconsider i1 = i-1 as Nat by A5;
+A9:     i-'1 = i- 1 by A5,XREAL_1:233;
+A10:    xj divides (D|^(i -' 1)).(xj|^p)
+        proof
+          per cases;
+            suppose
+              i-'1 = 0; then
+              (D|^(i -' 1)).(xj|^p) = (xj|^p) by Lm11;
+              hence thesis by Lm8;
+            end;
+            suppose
+A13:          i-'1 <> 0;
+A14:          i-'1 < i by A9,XREAL_1:44; then
+A15:          1 <= i-'1 < p by A13,NAT_1:14,A5,XXREAL_0:2; then
+A16:          p - (i -' 1) > (i -' 1) - (i -' 1) by XREAL_1:6;
+A17:          p-(i-'1) = p - (i - 1) by A5,XREAL_1:233 .= p - i +1; then
+A18:          p-'(i -' 1)
+              = p-i+1 by A14,A5,XXREAL_0:2,XREAL_1:233;
+reconsider p9 = p-i+1 as non zero Nat by A17,A16,INT_1:3,ORDINAL1:def 12;
+reconsider s = (eta(p,(i -' 1))) as Element of NAT;
+A19:          xj divides s*(xj|^p9) by Lm8,E_TRANS1:7;
+              (D|^(i -' 1)).(xj|^p)
+              = s*(xj|^p9) by A18,A15,A6,E_TRANS1:19;
+              hence thesis by A19;
+            end;
+          end;
+reconsider u = (k choose (i-'1))*((D|^(k+1-'i)).yj)
+as Element of the carrier of PR;
+A20:      xj divides ((D|^(i -' 1)).(xj|^p))*u by A10,GCD_1:7;
+          (LBZ(D,k,yj,xj|^p)).i
+          = ((D|^(i -' 1)).(xj|^p))*u by A7,A4,A8,RINGDER1:def 4;
+          hence thesis by A20,A7,A4,A8,PARTFUN1:def 6;
+        end;
+        hence thesis;
+      end;
+
+theorem Th29:
+  for p be odd prime Nat, m be positive Nat, k,j be Nat
+  for i be Nat st p+1 < i &
+  i in dom(LBZ(Der1(INT.Ring),k,Product Del(ff_0(m,p),j),(tau(j))|^p)) holds
+  (LBZ(Der1(INT.Ring),k,Product Del(ff_0(m,p),j),(tau(j))|^p))/.i
+  = 0.Polynom-Ring INT.Ring
+    proof
+      let p be odd prime Nat, m be positive Nat, k,j be Nat;
+      1 < p by INT_2:def 4; then
+      1+1 <= p by INT_1:7; then
+      2 - 2 <= p - 2 by XREAL_1:6; then
+      p-2 in NAT by INT_1:3; then
+reconsider p2 = p-2 as Nat;
+reconsider n0 = j as Nat;
+set D = Der1(INT.Ring);
+set PR = Polynom-Ring INT.Ring;
+set f = Product ff_0(m,p);
+set xj = tau(j);
+set yj = Product Del(ff_0(m,p),j);
+reconsider u = (k choose p)*((D|^(k -' p)).yj) as Element of the carrier of PR;
+A2:   1.PR = D.xj by Th27 .= (D|^1).xj by VECTSP11:19
+      .= (D|^1).(xj|^1) by BINOM:8;
+      len (LBZ(D,k,yj,xj|^p)) = k+1 by RINGDER1:def 4; then
+A3:   dom (LBZ(D,k,yj,xj|^p)) = Seg (k+1) by FINSEQ_1:def 3;
+      for i be Nat st p+1 < i & i in dom (LBZ(D,k,yj,xj|^p)) holds
+      (LBZ(D,k,yj,xj|^p))/.i = 0.PR
+      proof
+        let i be Nat;
+        assume
+A4:     p+1 < i & i in dom (LBZ(D,k,yj,xj|^p));
+        set u = (k choose (i-'1))*((D|^(k+1-'i)).yj);
+A5:     1 <= i <= k+1 by A3,A4,FINSEQ_1:1;
+        p+1 -1 < i - 1 by A4,XREAL_1:6; then
+A7:     p < i-'1 by A5,XREAL_1:233;
+        (LBZ(D,k,yj,xj|^p)).i = u*((D|^(i-'1)).(xj|^p)) by A4,RINGDER1:def 4
+        .= u*(0.PR) by A7,A2,E_TRANS1:21 .= 0.PR;
+        hence thesis by A4,PARTFUN1:def 6;
+      end;
+      hence thesis;
+    end;
+
+theorem Th30:
+  for p be odd prime Nat, m be positive Nat,
+  k,j be Nat st j in Seg m & p <= k
+  holds ex u,v be Element of the carrier of Polynom-Ring INT.Ring st
+  ((Der1(INT.Ring))|^k).f_0(m,p) = tau(j)*u + (p!)*v
+    proof
+      let p be odd prime Nat, m be positive Nat, k,j be Nat;
+      set D = Der1(INT.Ring);
+      set PR = Polynom-Ring INT.Ring;
+      set tj = tau(j);
+      set gj = Product Del(ff_0(m,p),j);
+      assume
+A1:   j in Seg m & p <= k;
+      set p1 = p+1;
+A2:   1 <= p <= k by A1,INT_2:def 4;
+      1.PR = D.tj by Th27 .= (D|^1).tj by VECTSP11:19
+      .= (D|^1).(tj|^1) by BINOM:8; then
+A3:   (D|^((p+1) -' 1)).(tj|^p)
+      = (eta(p,p))*(tj|^(p-'p)) by A2,E_TRANS1:19
+      .= (eta(p,p))*(tj|^0) by XREAL_1:232
+      .= (eta(p,p))* 1_PR by BINOM:8
+      .= (p!) * 1.PR by Lm5;
+A4:   len (LBZ(D,k,gj,tj|^p)) = k+1 by RINGDER1:def 4; then
+A5:   dom (LBZ(D,k,gj,tj|^p)) = Seg (k+1) by FINSEQ_1:def 3;
+A6:   0+ 1 <= p + 1 by XREAL_1:6;
+A7:   k+1-'(p+1) = k+1 -(p+1) by A1,XREAL_1:6,XREAL_1:233
+      .= k - p .= k -' p by A1,XREAL_1:233;
+      1 <= p+1 <= k+1 by A1,XREAL_1:6,A6; then
+A9:   p+1 in dom (LBZ(D,k,gj,tj|^p)) by A5;
+reconsider lbz = (LBZ(D,k,gj,tj|^p))
+      as non empty FinSequence of the carrier of Polynom-Ring INT.Ring by A4;
+reconsider p9 = p! as Element of NAT by ORDINAL1:def 12;
+A10:  (LBZ(D,k,gj,tj|^p)).(p+1)
+      = ((k choose p)*((D|^(k-'p)).gj))*(p9 * 1.PR)
+       by A7,A3,A9,RINGDER1:def 4
+      .= ((k choose p)*((D|^(k-'p)).gj)* 1.PR)*p9 by BINOM:20
+      .= (p9)*((k choose p)*((D|^(k-'p)).gj)) by BINOM:18;
+      p <= len lbz by A1,A4,XREAL_1:39; then
+A12:  len (lbz|p) = p by FINSEQ_1:59; then
+A13:  dom (lbz|p) = Seg p by FINSEQ_1:def 3;
+      set lbz1 = lbz|p;
+A14:  p <= k+1 by A1,XREAL_1:39;
+      for i be Nat st i in Seg p holds tau(j) divides lbz1/.i
+      proof
+        let i be Nat;
+        assume
+A16:    i in Seg p; then
+        1 <= i <= p by FINSEQ_1:1; then
+        1 <= i <= k+1 by A14,XXREAL_0:2; then
+A18:    i in dom lbz by A5;
+        i in dom lbz1 by A12,FINSEQ_1:def 3,A16; then
+        lbz1/.i = lbz1.i by PARTFUN1:def 6
+        .= lbz.i by A16,FUNCT_1:49
+        .= lbz/.i by A18,PARTFUN1:def 6;
+        hence thesis by A1,A16,Th28;
+      end; then
+      consider u be Element of PR such that
+A20:  Sum lbz1 = tau(j)*u by GCD_1:def 1,A13,E_TRANS1:4;
+A21:  len (lbz/^(p+1)) = (len lbz) -' (p+1) by RFINSEQ:29
+      .= (k+1) -' (p+1) by RINGDER1:def 4;
+A22:  dom (lbz/^(p+1)) = Seg ((k+1) -' (p+1)) by A21,FINSEQ_1:def 3;
+      set kp1 = (k+1) -' (p+1);
+A23:  for i1 be Nat st i1 in dom (lbz/^(p+1)) holds (lbz/^(p+1))/.i1 = 0.PR
+      proof
+        let i1 be Nat;
+        assume
+A24:    i1 in dom (lbz/^(p+1)); then
+A25:    1 <= i1 <= ((k+1) -'(p+1)) by A22,FINSEQ_1:1;
+        set pi1 = (p+1)+i1;
+        (k+1) -'(p+1) = k+1 -(p+1) by A1,XREAL_1:6,XREAL_1:233; then
+        pi1 <= (k+1) -(p+1) + (p+1) by A25,XREAL_1:6; then
+        1 <= pi1 <= k+1 by A25,XREAL_1:39; then
+A29:    pi1 in dom lbz by A5;
+A30:    p+1 < p+1 +i1 by A25,XREAL_1:39;
+        (lbz/^(p+1))/.i1 = lbz/.pi1 by A24,FINSEQ_5:27;
+        hence thesis by A30,A29,Th29;
+      end;
+      (lbz/^(p+1)) = kp1|->0.PR
+      proof
+        for k be Nat st k in dom (lbz/^(p+1)) holds
+        (lbz/^(p+1)).k = (kp1|-> 0.PR).k
+        proof
+          let k be Nat;
+          assume
+A31:      k in dom (lbz/^(p+1)); then
+A32:      k in Seg kp1 by A21,FINSEQ_1:def 3;
+          (lbz/^(p+1)).k = (lbz/^(p+1))/.k by A31,PARTFUN1:def 6
+          .= 0.PR by A31,A23;
+          hence thesis by A32,FINSEQ_2:57;
+        end;
+        hence thesis by A21,FINSEQ_1:def 3;
+      end; then
+      Sum (lbz/^(p+1)) = 0.PR by MATRIX_3:11; then
+A34:  Sum (<*lbz/.(p+1)*>^(lbz/^(p+1))) = lbz/.(p+1) + 0.PR by FVSUM_1:72
+      .= lbz/.(p+1);
+      1 <= p1 & p1 <= len lbz by A1,XREAL_1:6,A6,A4; then
+      lbz = (lbz|(p1-'1))^<*lbz.p1*>^(lbz/^p1) by FINSEQ_5:84
+      .= (lbz|p)^<*lbz/.p1*>^(lbz/^p1) by A9,PARTFUN1:def 6
+      .= (lbz|p)^(<*lbz/.p1*>^(lbz/^p1)) by FINSEQ_1:32; then
+A36:  Sum lbz = tau(j)*u + lbz/.p1 by A34,A20,RLVECT_1:41
+      .= tau(j)*u + (p!)*((k choose p)*((D|^(k-'p)).gj))
+       by A10,A9,PARTFUN1:def 6;
+      Sum lbz = (D|^k).(gj * (tj|^p)) by RINGDER1:25
+      .= (D|^k).f_0(m,p) by A1,Lm9;
+      hence thesis by A36;
+    end;
+
+theorem Th31:
+  for u be Element of the carrier of Polynom-Ring INT.Ring,
+  a,b be Element of INT.Ring holds eval(a*(~u),b) in {a}-Ideal
+  proof
+    let u be Element of the carrier of Polynom-Ring INT.Ring,
+        a,b be Element of INT.Ring;
+    eval(a*(~u),b) = a*eval(~u,b) by RING_5:7;
+    hence thesis by RING_2:18,GCD_1:def 1;
+  end;
+
+theorem Th32:
+  for p be odd prime Nat, m be positive Nat,
+      k,j be Nat st j in Seg m & p <= k
+  holds eval(~(((Der1(INT.Ring))|^k).f_0(m,p)),In(j,INT.Ring))
+    in {In(p!,INT.Ring)}-Ideal
+    proof
+      let p be odd prime Nat, m be positive Nat;
+      let k,j be Nat;
+      assume that
+A1:   j in Seg m and
+AA:   p <= k;
+      consider u,v be Element of the carrier of Polynom-Ring INT.Ring such that
+A2:   ((Der1(INT.Ring))|^k).f_0(m,p) = tau(j)*u + (p!)*v by AA,Th30,A1;
+      reconsider z = p! as Element of INT.Ring by INT_1:def 2;
+      set tu = tau(j)*u;
+      set pv = (p!)*v;
+      set r = In((p!),INT.Ring);
+      set j1 = In(j,INT.Ring);
+       eval(~(((Der1(INT.Ring))|^k).f_0(m,p)),j1)
+       = eval(~(tu) + ~(pv),j1) by A2,POLYNOM3:def 10
+      .= eval(~(tu),j1)+eval(~(pv),j1) by POLYNOM4:19
+      .= 0.INT.Ring + eval(~(pv),j1) by Th25
+      .= eval(r*(~v),j1) by Th6;
+       hence thesis by Th31;
+     end;
+
+::$N Now we apply the polynomial transformation 'F' to f_0.
+theorem Th33:
+  for p be odd prime Nat, m be positive Nat holds
+  ex u be Element of INT.Ring st
+  ('F'(f_0(m,p))).0
+    = ((p-'1)!)*(In((((-1)|^m)*(m!))|^p,INT.Ring)) + (In(p!,INT.Ring))*u
+     proof
+       let p be odd prime Nat, m be positive Nat;
+       set Gf = 'G'(f_0(m,p));
+       set D = Der1(INT.Ring);
+A1:    1 < p by INT_2:def 4; then
+       1+1 <= p by INT_1:7; then
+A3:    p -2 = p -'2 by XREAL_1:233;
+       len f_0(m,p) = len ~f_0(m,p) .= m*p + p by Th12; then
+A5:    len Gf = m*p + p by E_TRANS1:def 8; then
+A6:    1 <= p <= len Gf by INT_2:def 4,XREAL_1:38; then
+A7:    p in dom Gf by FINSEQ_3:25;
+       set p1 = p-'1;
+       (p-'1) <= len Gf by NAT_D:35,XREAL_1:38,A5; then
+A8:    len (Gf|(p-'1)) = (p-'1) by FINSEQ_1:59; then
+A9:    dom (Gf|(p-'1)) = Seg (p-'1) by FINSEQ_1:def 3;
+A10:   dom (Gf|(p-'1)) = dom(p1|-> 0.INT.Ring) by A8,FINSEQ_1:def 3;
+A11:   eval(Gf|(p-'1),0.INT.Ring) = p1|-> 0.INT.Ring
+       proof
+         for k be Nat st k in dom (eval(Gf|(p-'1),0.INT.Ring)) holds
+         (eval(Gf|(p-'1),0.INT.Ring)).k = (p1|-> 0.INT.Ring).k
+         proof
+          let k be Nat;
+          assume
+A12:      k in dom (eval((Gf|(p-'1)),0.INT.Ring)); then
+A13:      k in dom (Gf|(p-'1)) by E_TRANS1:def 7;
+A14:      k in Seg p1 by A12,E_TRANS1:def 7,A9; then
+A15:      1 <= k <= p1 by FINSEQ_1:1; then
+A17:      k-'1 = k -1 by XREAL_1:233;
+          p1 <= len Gf by NAT_D:35,XREAL_1:38,A5; then
+          1 <= k <= len Gf by A15,XXREAL_0:2; then
+A16:      k in dom Gf by FINSEQ_3:25;
+A18:      (p -' 1) -1 = (p - 1) - 1 by A1,XREAL_1:233 .= p -2;
+          k in dom(Gf|(p-'1)) by A12,E_TRANS1:def 7; then
+          (Gf|(p-'1))/.k = (Gf|(p-'1)).k by PARTFUN1:def 6
+          .= Gf.k by FUNCT_1:49,A14
+          .= (D|^(k-'1)).f_0(m,p) by A16,E_TRANS1:def 8; then
+          (eval((Gf|(p-'1)),0.INT.Ring)).k
+          = eval(~((D|^(k-'1)).f_0(m,p)),0.INT.Ring) by A13,E_TRANS1:def 7
+          .= 0.INT.Ring by A18,A3,A17,A15,XREAL_1:9,Th22
+          .= (p1|-> 0.INT.Ring).k;
+          hence thesis;
+        end;
+        hence thesis by E_TRANS1:def 7,A10;
+      end;
+      Gf = (Gf|(p-'1))^<*Gf.p*>^(Gf/^p) by A6,FINSEQ_5:84
+      .= (Gf|(p-'1))^<*Gf/.p*>^(Gf/^p) by A7,PARTFUN1:def 6
+      .= (Gf|(p-'1))^(<*Gf/.p*>^(Gf/^p)) by FINSEQ_1:32; then
+A20:  Sum Gf
+      = Sum (Gf|(p-'1)) + Sum (<*Gf/.p*>^(Gf/^p)) by RLVECT_1:41
+      .= Sum (Gf|(p-'1)) + (Sum (<*Gf/.p*>) + Sum(Gf/^p)) by RLVECT_1:41;
+A21:  (Eval(~^(Sum(Gf|(p-'1))))).0
+       = Sum (p1|-> 0.INT.Ring) by A11,E_TRANS1:30
+      .= 0.INT.Ring by MATRIX_3:11;
+A22:  dom <*Gf/.p*> = Seg 1 by FINSEQ_1:38; then
+      1 in dom <*Gf/.p*>; then
+A23:  (eval(<*Gf/.p*>,0.INT.Ring)).1
+      = eval(~(<*Gf/.p*>/.1),0.INT.Ring) by E_TRANS1:def 7
+      .= eval(~(Gf/.p),0.INT.Ring) by FINSEQ_4:16;
+A25:  Gf/.p = Gf.p by A7,PARTFUN1:def 6
+      .= (D|^(p-'1)).f_0(m,p) by A7,E_TRANS1:def 8;
+      dom (eval(<*Gf/.p*>,0.INT.Ring)) = {1} 
+by A22,E_TRANS1:def 7,FINSEQ_1:2;
+      then
+      rng (eval(<*Gf/.p*>,0.INT.Ring)) = {eval(~(Gf/.p),0.INT.Ring)}
+        by A23,FUNCT_1:4; then
+      eval(<*Gf/.p*>,0.INT.Ring) = <* eval(~(Gf/.p),0.INT.Ring) *>
+        by FINSEQ_1:38,A22,E_TRANS1:def 7; then
+A26:  (Eval(~^(Sum(<*Gf/.p*>)))).0
+      = Sum <* eval(~(Gf/.p),0.INT.Ring) *> by E_TRANS1:30
+      .= eval(~((D|^(p-'1)).f_0(m,p)),0.INT.Ring) by A25,BINOM:3
+      .= ((p-'1)!)*(In((((-1)|^m)*(m!))|^p,INT.Ring)) by Th23;
+A27:  p < len Gf by XREAL_1:39,A5; then
+      len (Gf/^p) = (len Gf) - p by RFINSEQ:def 1 .= m*p by A5; then
+A29:  dom (Gf/^p) = Seg (m*p) by FINSEQ_1:def 3;
+      for j being Nat st j in dom (eval(Gf/^p,0.INT.Ring)) holds
+      (eval(Gf/^p,0.INT.Ring)).j in {In(p!,INT.Ring)}-Ideal
+      proof
+        let j be Nat;
+        assume
+A30:    j in dom eval(Gf/^p,0.INT.Ring); then
+A31:    j in dom (Gf/^p) by E_TRANS1:def 7;
+A32:    j in Seg (m*p) by A29,A30,E_TRANS1:def 7; then
+A33:    1 <= j <= m*p by FINSEQ_1:1; then
+A34:    j+p <= m*p + p by XREAL_1:6;
+        1 <= j+p by A33,XREAL_1:38; then
+        j+p in Seg len Gf by A5,A34; then
+A35:    j+p in dom Gf by FINSEQ_1:def 3;
+        set jp = j+p;
+A36:    jp -'1 = j + p -1 by A33,XREAL_1:38,233;
+        1 <= j by A32,FINSEQ_1:1; then
+A38:    0 + p <= j -1 +p by XREAL_1:6; then
+        consider w be Integer such that
+A39:    (jp-'1)! = (p!)*w by INT_1:def 3,A36,NUMBER08:6;
+        reconsider w0 = w as Element of INT.Ring by INT_1:def 2;
+A40:    In((jp-'1)!,INT.Ring) = (In(p!,INT.Ring))*w0 by A39;
+        set t9 = ~(Product (x.(m,p))).((jp-'1)-'(p-'1));
+        (Gf/^p)/.j = (Gf/^p).j by A31,PARTFUN1:def 6
+        .= Gf.(p+j) by A27,A31,RFINSEQ:def 1
+        .= (D|^(jp-'1)).f_0(m,p) by A35,E_TRANS1:def 8;then
+        (eval(~((Gf/^p)/.j),0.INT.Ring))
+        = ((jp-'1)!)*(~(Product (x.(m,p))).((jp-'1) -' (p-'1)))
+         by A36,A38,Th24; then
+        (eval(~((Gf/^p)/.j),0.INT.Ring)) = (In((jp-'1)!,INT.Ring))*t9
+          by Lm1; then
+A43:    (eval(~((Gf/^p)/.j),0.INT.Ring)) in {In((jp-'1)!,INT.Ring)}-Ideal
+          by RING_2:18, GCD_1:def 1;
+        {In((jp-'1)!,INT.Ring)}-Ideal c= {In(p!,INT.Ring)}-Ideal
+          by A40,GCD_1:def 1,RING_2:19; then
+        (eval(~((Gf/^p)/.j),0.INT.Ring)) in {In(p!,INT.Ring)}-Ideal by A43;
+        hence thesis by A31,E_TRANS1:def 7;
+      end; then
+A45:  Sum (eval(Gf/^p,0.INT.Ring)) in {In(p!,INT.Ring)}-Ideal by E_TRANS1:3;
+      (Eval(~^Sum(Gf/^p))).0 in {In(p!,INT.Ring)}-Ideal by A45,E_TRANS1:30;
+      then
+      (Eval(~^Sum(Gf/^p))).0 in
+      the set of all (In(p!,INT.Ring))*r where r is Element of INT.Ring
+        by IDEAL_1:64; then
+      consider u be Element of INT.Ring such that
+A46:  (Eval(~^Sum(Gf/^p))).0 = (In(p!,INT.Ring))*u;
+A47:  ^(Sum (Gf|(p-'1)) + ((Sum (<*Gf/.p*>) + Sum(Gf/^p))))
+      = ^(Sum (Gf|(p-'1))) + ^((Sum (<*Gf/.p*>) + Sum(Gf/^p))) by E_TRANS1:27;
+A48:  ^((Sum (<*Gf/.p*>) + Sum(Gf/^p))) = ^(Sum (<*Gf/.p*>)) + ^Sum(Gf/^p)
+      by E_TRANS1:27;
+      ~^(Sum Gf)
+      = ~^(Sum (Gf|(p-'1))) + ~^((Sum (<*Gf/.p*>) + Sum(Gf/^p)))
+      by A20,A47,POLYNOM3:def 10
+      .= ~^(Sum (Gf|(p-'1))) + (~^(Sum (<*Gf/.p*>)) + ~^Sum(Gf/^p))
+      by A48,POLYNOM3:def 10; then
+      Eval(~^(Sum Gf))
+      = Eval(~^(Sum (Gf|(p-'1)))) + Eval(~^(Sum (<*Gf/.p*>)) + ~^Sum(Gf/^p))
+      by POLYDIFF:55; then
+A50:  (Eval(~^(Sum Gf))).0
+      = 0.INT.Ring + (Eval(~^(Sum(<*Gf/.p*>)) + ~^Sum(Gf/^p))).0
+        by A21,VALUED_1:1
+      .= (Eval(~^(Sum(<*Gf/.p*>)) + ~^Sum(Gf/^p))).0;
+      (Eval(~^(Sum(<*Gf/.p*>)) + ~^Sum(Gf/^p))).0
+      = (Eval(~^(Sum(<*Gf/.p*>))) + Eval(~^Sum(Gf/^p))).0 by POLYDIFF:55
+      .= ((p-'1)!)*(In((((-1)|^m)*(m!))|^p,INT.Ring))
+         + (In(p!,INT.Ring))*u by A46,A26,VALUED_1:1;
+      hence thesis by A50;
+    end;
+
+theorem Th34:
+  for p be odd prime Nat, m be positive Nat, j be Nat st j in Seg m holds
+    ('F'(f_0(m,p))).In(j,F_Real) in {In(p!,INT.Ring)}-Ideal
+    proof
+      let p be odd prime Nat, m be positive Nat;
+      set Gf = 'G'(f_0(m,p));
+      set D = Der1(INT.Ring);
+      let j be Nat;
+      assume
+A1:   j in Seg m;
+A2:   len f_0(m,p) = len ~f_0(m,p) .= m*p + p by Th12; then
+A3:   len Gf = m*p + p by E_TRANS1:def 8; then
+A4:   1 <= p <= len Gf by INT_2:def 4,XREAL_1:38;
+      set p1 = p-'1;
+A5:   len (Gf|p) = p by XREAL_1:38,A3,FINSEQ_1:59; then
+A6:   dom (Gf|p) = Seg p by FINSEQ_1:def 3;
+A7:   dom (Gf|p) = dom(p|-> 0.INT.Ring) by A5,FINSEQ_1:def 3;
+A8:   eval(Gf|p,In(j,INT.Ring)) = p|-> 0.INT.Ring
+      proof
+        for k be Nat st k in dom (eval(Gf|p,In(j,INT.Ring))) holds
+        (eval(Gf|p,In(j,INT.Ring))).k = (p|-> 0.INT.Ring).k
+        proof
+          let k be Nat;
+          assume
+A9:       k in dom eval((Gf|p),In(j,INT.Ring)); then
+A10:      k in dom (Gf|p) by E_TRANS1:def 7;
+A11:      k in Seg p by A6,A9,E_TRANS1:def 7; then
+A12:      1 <= k <= p by FINSEQ_1:1; then
+          1 <= k <= len Gf by XREAL_1:38,A3; then
+A13:      k in dom Gf by FINSEQ_3:25;
+          k-1 < k by XREAL_1:44; then
+          k-1 < p by A12,XXREAL_0:2; then
+A15:      k-'1 < p by A12,XREAL_1:233;
+A16:      (Gf|p)/.k = (Gf|p).k by A10,PARTFUN1:def 6
+          .= Gf.k by FUNCT_1:49,A11
+          .= (D|^(k-'1)).f_0(m,p) by A13,E_TRANS1:def 8;
+          (eval((Gf|p),In(j,INT.Ring))).k
+          = eval(~((D|^(k-'1)).f_0(m,p)),In(j,INT.Ring))
+          by A16,A10,E_TRANS1:def 7
+          .= 0.INT.Ring by A1,A15,Th26;
+          hence thesis;
+        end;
+        hence thesis by E_TRANS1:def 7,A7;
+      end;
+A17:  (Eval(~^(Sum(Gf|p)))).(In(j,F_Real))
+      = Sum (p|-> 0.INT.Ring) by A8,E_TRANS1:30
+      .= 0.INT.Ring by MATRIX_3:11;
+      len (Gf/^p) = (len Gf) - p by A4,RFINSEQ:def 1
+      .= m*p+p - p by A2,E_TRANS1:def 8 .= m*p; then
+A18:  dom (Gf/^p) = Seg (m*p) by FINSEQ_1:def 3;
+      for k being Nat st k in dom (eval(Gf/^p,In(j,INT.Ring))) holds
+      (eval(Gf/^p,In(j,INT.Ring))).k in {In(p!,INT.Ring)}-Ideal
+      proof
+        let k be Nat;
+        assume
+A19:    k in dom (eval(Gf/^p,In(j,INT.Ring))); then
+A20:    k in dom (Gf/^p) by E_TRANS1:def 7;
+A21:    k in Seg (m*p) by A18,A19,E_TRANS1:def 7; then
+A22:    1 <= k <= m*p by FINSEQ_1:1; then
+A23:    k+p <= m*p + p by XREAL_1:6;
+        1 <= k+p by A22,XREAL_1:38; then
+        k+p in Seg len Gf by A3,A23; then
+A24:    k+p in dom Gf by FINSEQ_1:def 3;
+        set kp = k+p;
+A25:    kp -'1 = k + p -1 by A22,XREAL_1:38,233;
+        1 <= k by FINSEQ_1:1,A21; then
+A27:    0 + p <= k -1 +p by XREAL_1:6;
+A28:    (Gf/^p)/.k = (Gf/^p).k by A20,PARTFUN1:def 6
+        .= Gf.(p+k) by A4,A20,RFINSEQ:def 1
+        .= (D|^(kp-'1)).f_0(m,p) by A24,E_TRANS1:def 8;
+        (eval(~((D|^(kp-'1)).f_0(m,p)),In(j,INT.Ring)))
+        in {In(p!,INT.Ring)}-Ideal by A1,A25,A27,Th32;
+        hence thesis by A28,E_TRANS1:def 7,A20;
+      end; then
+A30:  Sum (eval(Gf/^p,In(j,INT.Ring))) in {In(p!,INT.Ring)}-Ideal
+        by E_TRANS1:3;
+      ^(Sum Gf) = ^(Sum ((Gf|p)^(Gf/^p)))
+      .= ^(Sum (Gf|p) + Sum(Gf/^p)) by RLVECT_1:41
+      .= ^(Sum (Gf|p)) + ^(Sum(Gf/^p)) by E_TRANS1:27; then
+      ~^(Sum Gf) = ~^(Sum (Gf|p)) + ~^Sum(Gf/^p) by POLYNOM3:def 10; then
+      Eval(~^(Sum Gf))
+      = Eval(~^(Sum (Gf|p))) + Eval(~^Sum(Gf/^p)) by POLYDIFF:55; then
+      (Eval(~^(Sum Gf))).In(j,F_Real)
+      = 0.INT.Ring + (Eval(~^Sum(Gf/^p))).In(j,F_Real) by A17,VALUED_1:1
+      .= (Eval(~^Sum(Gf/^p))).In(j,F_Real);
+      hence thesis by A30,E_TRANS1:30;
+    end;
+
+begin :: The Main Part of the Proof
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+::: Formalize "die Gleichumgen (4)"
+::: F(i) - e^{i}F(0) = \varepsilon_{i}  (i=1,...,n=deg g)
+::  delta_1.i corresponds to F(i)
+::  delta_2.i corresponds to -e^i*F(0)
+::  delta = epsilon_i = delta_1 + delta_2  however slightly modified to
+::  multiply g.i where g is deg g = n polynomial, also not yet apply
+::  the denominator 1/(p-1)! for faciltating later culuculation
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+theorem Th35:
+  for x be Element of F_Real holds
+    (Eval(~(^ f_0(m,p)))).x
+    = eval(~(^Product((x.(m,p)))),x) * eval(~(^((tau(0))|^(p-'1))),x)
+    proof
+      let x be Element of F_Real;
+      set Pxmp = Product((x.(m,p)));
+      set tp1 = (tau(0))|^(p-'1);
+      ~^(f_0(m,p)) = ~^(Pxmp*tp1) by GROUP_4:6
+      .= ~(^Pxmp * (^tp1)) by E_TRANS1:27
+      .= ~(^Pxmp) *' ~(^tp1) by POLYNOM3:def 10; then
+      (Eval(~(^ f_0(m,p)))).x
+      = eval(~(^Pxmp) *' ~(^tp1), x) by POLYNOM5:def 13;
+      hence thesis by POLYNOM4:24;
+    end;
+
+definition
+  let m,p,g;
+  func delta_1(m,p,g) -> FinSequence of F_Real means :Def5:
+  len it = m & for i being Nat st i in dom it holds
+  it.i = (g.i)*(('F'(f_0(m,p))).(In(i,F_Real)));
+   existence
+   proof
+     defpred P[Nat,object] means
+     $2 = (g.$1)*(('F'(f_0(m,p))).(In($1,F_Real)));
+A1:  for k be Nat st k in Seg m ex x being Element of F_Real st P[k,x]
+     proof
+       let k be Nat;
+       assume k in Seg m;
+       reconsider r = (g.k)*(('F'(f_0(m,p))).(In(k,F_Real)))
+         as Element of F_Real by XREAL_0:def 1;
+       take r;
+       thus thesis;
+     end;
+     consider f being FinSequence of F_Real such that
+A2:  dom f = Seg m & for k being Nat st k in Seg m holds P[k,f.k]
+     from FINSEQ_1:sch 5(A1);
+     take f;
+     Seg len f = Seg m by FINSEQ_1:def 3,A2;
+     hence thesis by A2,FINSEQ_1:6;
+   end;
+   uniqueness
+   proof
+     let z1,z2 be FinSequence of F_Real;
+     assume that
+A3:  len z1 = m and
+A4:  for i be Nat st i in dom z1 holds
+     z1.i = (g.i)*(('F'(f_0(m,p))).(In(i,F_Real))) and
+A5:  len z2 = m and
+A6:  for i be Nat st i in dom z2 holds
+     z2.i = (g.i)*(('F'(f_0(m,p))).(In(i,F_Real)));
+A7:  dom z1 = Seg len z1 by FINSEQ_1:def 3 .= dom z2 by A3,A5,FINSEQ_1:def 3;
+     for x be Nat st x in dom z1 holds z1.x = z2.x
+     proof
+       let x be Nat;
+       assume
+A8:    x in dom z1;
+       thus z1.x = (g.x)*(('F'(f_0(m,p))).(In(x,F_Real))) by A4,A8
+       .= z2.x by A6,A7,A8;
+     end;
+     hence thesis by A7;
+   end;
+end;
+
+ reserve z0 for non zero Element of F_Real;
+
+definition
+  let m,p,g,z0;
+  func delta_2(m,p,g,z0) -> FinSequence of F_Real means :Def6:
+  len it = m & for i being Nat st i in dom it holds
+  it.i = -(g.i)*(((power F_Real).(z0,i))*(('F'(f_0(m,p))).0));
+   existence
+   proof
+     defpred P[Nat,object] means
+     $2 = -(g.$1)*(((power F_Real).(z0,$1))*(('F'(f_0(m,p))).0));
+A1:  for k be Nat st k in Seg m ex x being Element of F_Real st P[k,x]
+     proof
+       let k be Nat;
+       assume k in Seg m;
+       set r = -(g.k)*(((power F_Real).(z0,k))*(('F'(f_0(m,p))).0));
+       reconsider r as Element of F_Real by XREAL_0:def 1;
+       take r;
+       thus thesis;
+     end;
+     consider f being FinSequence of F_Real such that
+A2:  dom f = Seg m & for k being Nat st k in Seg m holds P[k,f.k]
+     from FINSEQ_1:sch 5(A1);
+     take f;
+     Seg len f = Seg m by FINSEQ_1:def 3,A2;
+     hence thesis by A2,FINSEQ_1:6;
+   end;
+   uniqueness
+   proof
+     let z1,z2 be FinSequence of F_Real;
+     assume that
+A3:  len z1 = m and
+A4:  for i be Nat st i in dom z1 holds
+     z1.i = -(g.i)*(((power F_Real).(z0,i))*(('F'(f_0(m,p))).0))
+     and
+A5:  len z2 = m and
+A6:  for i be Nat st i in dom z2 holds
+     z2.i = -(g.i)*(((power F_Real).(z0,i))*(('F'(f_0(m,p))).0));
+A7:  dom z1 = Seg len z1 by FINSEQ_1:def 3 .= dom z2 by A3,A5,FINSEQ_1:def 3;
+     for x be Nat st x in dom z1 holds z1.x = z2.x
+     proof
+       let x be Nat;
+       assume
+A8:    x in dom z1;
+       hence z1.x = -(g.x)*(((power F_Real).(z0,x))*(('F'(f_0(m,p))).0))
+       by A4
+       .= z2.x by A6,A7,A8;
+     end;
+     hence thesis by A7;
+   end;
+end;
+
+definition
+  let m,p,g,z0;
+  func delta(m,p,g,z0) -> FinSequence of F_Real equals
+  delta_1(m,p,g) + delta_2(m,p,g,z0);
+  coherence;
+end;
+
+Lm12:
+   delta_1(m,p,g) is FinSequence of INT.Ring
+   proof
+     rng delta_1(m,p,g) c= the carrier of INT.Ring
+     proof
+       let x be object;
+       assume x in rng delta_1(m,p,g); then
+       consider z be object such that
+A2:    z in dom delta_1(m,p,g) & x = (delta_1(m,p,g)).z by FUNCT_1:def 3;
+       len delta_1(m,p,g) = m by Def5; then
+A4:    z in Seg m by A2,FINSEQ_1:def 3;
+       reconsider i0 = z as Nat by A2;
+A5:    ('F'(f_0(m,p))).In(i0,F_Real) in {In(p!,INT.Ring)}-Ideal by A4,Th34;
+reconsider Ff = ('F'(f_0(m,p))).In(i0,F_Real) as Element of INT.Ring by A5;
+       (g.i0)*Ff is Element of INT.Ring; then
+       (delta_1(m,p,g)).i0 is Element of INT.Ring by A2,Def5;
+       hence thesis by A2;
+     end;
+     hence thesis by FINSEQ_1:def 4;
+   end;
+
+definition
+  let m,p,g;
+  func ^delta(m,p,g) -> FinSequence of INT.Ring equals
+  delta_1(m,p,g);
+  coherence by Lm12;
+end;
+
+theorem Th36:
+  for p,m,g holds Sum delta_1(m,p,g) in INT.Ring
+  proof
+    let p,m,g;
+    for i being Nat st i in dom delta_1(m,p,g) holds
+    (delta_1(m,p,g)).i in INT
+    proof
+      let i be Nat;
+      assume i in dom delta_1(m,p,g); then
+A2:   (delta_1(m,p,g)).i = (g.i)*(('F'(f_0(m,p))).(In(i,F_Real))) by Def5;
+reconsider r = i as Element of F_Real by XREAL_0:def 1;
+reconsider i0 = i as Element of INT.Ring by INT_1:def 2;
+      ('F'(f_0(m,p))).(In(i,F_Real))
+        = Sum eval('G'(f_0(m,p)),i0) by E_TRANS1:30;
+      hence thesis by A2,INT_1:def 2;
+    end;
+    hence thesis by ZMATRLIN:42;
+  end;
+
+Lm13:
+  for i be Nat holds exp_R.i = (power F_Real).(In(number_e,F_Real),i)
+  proof
+    let i be Nat;
+    reconsider x = In(number_e,F_Real) as Element of F_Real;
+    defpred P[Nat] means exp_R.$1 = (power F_Real).(x,$1);
+    exp_R.0 = 1_F_Real by SIN_COS2:13;then
+A1: P[0] by GROUP_1:def 7;
+A3: for k be Nat holds P[k] implies P[k+1]
+    proof
+      let k be Nat;
+      assume
+A4:   P[k];
+A5:   exp_R.1 = x by IRRAT_1:def 7,SIN_COS:def 23;
+      (power F_Real).(x,k + 1)
+      = (power F_Real).(x,k) * x by GROUP_1:def 7;
+      hence thesis by A5,A4,SIN_COS2:12;
+    end;
+    for k be Nat holds P[k] from NAT_1:sch 2(A1,A3);
+    hence thesis;
+  end;
+
+theorem Th37:
+  for g be non zero Polynomial of INT.Ring st deg g = m holds
+  for x be non zero Element of F_Real holds
+  Sum delta_2(m,p,g,x)
+    = (g.0)*(('F'(f_0(m,p))).0) - (Ext_eval(g,x))*(('F'(f_0(m,p))).0)
+    proof
+      let g be non zero Polynomial of INT.Ring;
+      assume deg g = m; then
+A2:   len g = m+1;
+      for x be non zero Element of F_Real holds
+      Sum delta_2(m,p,g,x)
+      = (g.0)*(('F'(f_0(m,p))).0) -(Ext_eval(g,x))*(('F'(f_0(m,p))).0)
+      proof
+        let x be non zero Element of F_Real;
+A3:     (power F_Real).(x,0) = x|^0 by BINOM:def 2 .= 1_F_Real by BINOM:8;
+reconsider r=-(g.0)*(('F'(f_0(m,p))).0) as Element of F_Real by XREAL_0:def 1;
+A4:     Sum (<* r *>^(delta_2(m,p,g,x))) = r + Sum (delta_2(m,p,g,x))
+        by FVSUM_1:72;
+        set F = <* r *>^(delta_2(m,p,g,x));
+        consider u be Element of INT.Ring such that
+A5:     ('F'(f_0(m,p))).0
+        = ((p-'1)!)*(In((((-1)|^m)*(m!))|^p,INT.Ring)) + (In(p!,INT.Ring))*u
+         by Th33;
+        reconsider s = ('F'(f_0(m,p))).0 as Element of INT.Ring by A5;
+A6:     len <* r *> = 1 & len delta_2(m,p,g,x) = m by Def6,FINSEQ_1:39;
+        len F = 1 + m by A6,FINSEQ_1:22; then
+A8:     dom F = Seg (m+1) by FINSEQ_1:def 3;
+A9:     dom (delta_2(m,p,g,x)) = Seg m by A6,FINSEQ_1:def 3;
+A10:    for n be Element of NAT st n in dom F holds
+        F.n = -(s*g).(n-'1)*(power F_Real).(x,n-'1)
+        proof
+          let n be Element of NAT;
+          assume
+A11:      n in dom F;
+          per cases;
+            suppose
+A12:          n = 1; then
+              n-'1 = 0 by XREAL_1:232; then
+              F.n = -(s*(g.(n-'1)))*(power F_Real).(x,n-'1) by A3,A12;
+              hence thesis by POLYNOM5:def 4;
+            end;
+            suppose
+A14:          n <> 1;
+A15:          1 <= n <= m+1 by A8,A11,FINSEQ_1:1; then
+A16:          len <*r*> + 1 <= n <= len<*r*> + len(delta_2(m,p,g,x))
+                by A6,NAT_1:23,A14;
+              set n1 = n-'1;
+A17:          2-1 <= n-1 by NAT_1:23,A14,A15,XREAL_1:9;
+              n-1 <= m+1 -1 by A15,XREAL_1:9; then
+              1 <= n-'1 <= m by XREAL_1:233,A15,A17; then
+A19:          n1 in dom delta_2(m,p,g,x) by A9;
+              F.n = (delta_2(m,p,g,x)).(n - 1) by A16,A6,FINSEQ_1:23
+              .= (delta_2(m,p,g,x)).n1 by XREAL_1:233,A15
+              .= -(g.n1)*(((power F_Real).(x,n1))*s) by A19,Def6
+              .= -((s*(g.n1))*((power F_Real).(x,n1)));
+              hence thesis by POLYNOM5:def 4;
+            end;
+          end;
+          per cases;
+            suppose
+A20:          s = 0;
+A21:          for i being Nat st i in dom delta_2(m,p,g,x) holds
+              (delta_2(m,p,g,x)).i = ((Seg m) --> 0).i
+              proof
+                let i be Nat;
+                assume i in dom delta_2(m,p,g,x); then
+                (delta_2(m,p,g,x)).i
+                = -(g.i)*(((power F_Real).(x,i))*0.INT.Ring) by A20,Def6;
+                hence thesis;
+              end;
+              delta_2(m,p,g,x) = m |-> 0.F_Real by A21,A6,FINSEQ_1:def 3;
+              hence thesis by MATRIX_3:11,A20;
+            end;
+            suppose
+              s <> 0; then
+reconsider s0 = -s as non zero Element of INT.Ring by STRUCT_0:def 12;
+              (-s)*g is Polynomial of INT.Ring; then
+reconsider h = -(s*g) as Polynomial of INT.Ring by HURWITZ:15;
+A25:          deg (s0*g) = deg g by RING_5:4;
+reconsider h0 = (s0*g) as Polynomial of F_Real by FIELD_4:9,LIOUVIL2:5;
+              deg ~@(s0*g) = deg ~@h0 by FIELD_4:20; then
+A28:          len F = len h0 by A25,A2,A6,FINSEQ_1:22;
+A29:          for n be Element of NAT st n in dom F holds
+              F.n = h0.(n-'1)*(power F_Real).(x,n-'1)
+              proof
+                let n be Element of NAT;
+                assume n in dom F; then
+                F.n = -((s*g).(n-'1)*(power F_Real).(x,n-'1)) by A10
+                .= -(s*(g.(n-'1)))*(power F_Real).(x,n-'1) by POLYNOM5:def 4
+                .= (s0*(g.(n-'1)))*(power F_Real).(x,n-'1);
+                hence thesis by POLYNOM5:def 4;
+              end;
+              reconsider s1 = s0 as Element of F_Real by XREAL_0:def 1;
+              eval(h0,x) = eval(~@h0,x)
+              .= Ext_eval(~@(s0*g),x) by FIELD_4:26
+              .= s1*Ext_eval(g,x) by E_TRANS1:36; then
+              Sum F = -(('F'(f_0(m,p))).0)*Ext_eval(g,x)
+                by A29,A28,POLYNOM4:def 2;
+              hence thesis by A4;
+            end;
+          end;
+          hence thesis;
+        end;
+
+theorem Th38:
+  for p,m,g holds
+  Sum(delta_1(m,p,g)) in {In(p!,INT.Ring)}-Ideal
+  proof
+    let p,m,g;
+    (for i being Nat st i in dom (^delta(m,p,g)) holds
+    (^delta(m,p,g)).i in {In(p!,INT.Ring)}-Ideal)
+    proof
+      let i be Nat;
+      assume
+A1:   i in dom (^delta(m,p,g));
+      len ^delta(m,p,g) = m by Def5; then
+A2:   i in Seg m by A1,FINSEQ_1:def 3; then
+      ('F'(f_0(m,p))).In(i,F_Real) in {In(p!,INT.Ring)}-Ideal by Th34;
+        then
+reconsider Ff = ('F'(f_0(m,p))).In(i,F_Real) as Element of INT.Ring;
+      (g.i)*Ff in {In(p!,INT.Ring)}-Ideal by A2,Th34,IDEAL_1:def 2;
+      hence thesis by A1,Def5;
+    end; then
+    Sum (^delta(m,p,g)) in {In(p!,INT.Ring)}-Ideal by E_TRANS1:3;
+    hence thesis by LIOUVIL2:5,FIELD_4:2;
+  end;
+
+theorem Th39:
+  for x be Element of F_Real st 0 < x <= m holds
+  for i be Nat st i in Seg m holds |.eval(~(^((x.(m,p))/.i)),x) .| <= m|^p
+    proof
+      let x be Element of F_Real;
+      set PRI = Polynom-Ring INT.Ring;
+      set PRF = Polynom-Ring F_Real;
+      set FR = F_Real;
+      assume
+A1:   0 < x <= m;
+      let i be Nat;
+      assume
+A2:   i in Seg m;
+A3:   dom x.(m,p) = Seg (len x.(m,p)) by FINSEQ_1:def 3 .= Seg m by Def2;
+      then
+A4:   (x.(m,p))/.i = (x.(m,p)).i by A2,PARTFUN1:def 6
+        .= (tau(i))|^p by A2,A3,Def2;
+A5:   PRI is Subring of PRF by FIELD_4:def 1;
+      p in NAT by ORDINAL1:def 12; then
+A6:   ^((tau(i))|^p) = (^(tau(i))) |^ p by A5,FIELD_6:19;
+      reconsider ui = tau(i) as Polynomial of F_Real by FIELD_4:8;
+A7:   (^(tau(i))) |^ p = ui`^p by RINGDER1:37;
+      reconsider z0 = -i as Element of FR by XREAL_0:def 1;
+A8:   eval(ui,x) = eval(<% In(-i,FR),1.FR %>,x)
+        .= z0+(1.FR)*x by POLYNOM5:44
+        .= z0 + x;
+A9:   eval(~(^((x.(m,p))/.i)),x)
+        = (power F_Real).(eval(ui,x),p) by A6,A4,A7,POLYNOM5:22
+        .= (z0 + x)|^p by A8,BINOM:def 2;
+      |. (i -x) .| = |. -(i -x) .| by COMPLEX1:52
+        .= |. z0 + x .|; then
+A10:  |. z0 + x .| <= m by Lm15,A1,A2;
+      |.(z0 + x)|^p.| <= m|^p
+      proof
+        per cases;
+          suppose
+A11:        |. z0 + x .| <> 0; then
+A12:        z0 + x <> 0.F_Real;
+            |.(z0 + x)|^p.| = |.power(z0 + x,p).| by BINOM:def 2
+            .= |.(z0 + x) .| to_power p by A12,Lm14;
+            hence thesis by A11,PREPOWER:9,A10;
+          end;
+          suppose
+            |. z0 + x .| = 0; then
+            z0 + x = 0.F_Real;
+            hence thesis;
+          end;
+        end;
+        hence thesis by A9;
+    end;
+
+theorem Th40:
+  for x be Element of F_Real holds
+  eval(~(^((tau(0))|^(p-'1))),x) = x|^(p-'1)
+    proof
+      let x be Element of F_Real;
+      set t0 = <% In(-0,F_Real), 1.F_Real %>;
+      reconsider u0 = tau(0) as Polynomial of F_Real by FIELD_4:8;
+A1:   eval(u0,x) = eval(<% In(-0,F_Real),1.F_Real %>,x)
+      .= 0.F_Real + (1.F_Real)*x by POLYNOM5:44
+      .= x;
+      set p1 = p-'1;
+      eval(~(^((tau(0))|^p1)),x)
+      = eval(~((^(tau(0)))|^p1),x) by Th4
+      .= eval((~(^(tau(0))))`^p1,x) by Th5
+      .= (power F_Real).(x,p1) by POLYNOM5:22,A1;
+      hence thesis by BINOM:def 2;
+    end;
+
+Lm17:
+    for x be Element of F_Real st 0 < x <= m holds
+    |. eval(~(^Product((x.(m,p)))),x) .| <= m|^(p*m)
+    proof
+      let x be Element of F_Real;
+      assume
+A1:   0 < x <= m;
+A2:   len x.(m,p) = m by Def2;
+A3:   dom x.(m,p) = Seg (len x.(m,p)) by FINSEQ_1:def 3 .= Seg m by Def2; then
+A4:   dom ^(x.(m,p)) = Seg m by E_TRANS1:def 6;
+      Seg len eval(^(x.(m,p)),x) = dom(eval(^(x.(m,p)),x)) by FINSEQ_1:def 3
+      .= Seg m by A4,E_TRANS1:def 7; then
+A5:   len eval(^(x.(m,p)),x) = m by FINSEQ_1:6;
+      x.(m,p) is non empty by A2; then
+A6:   eval(~(^Product((x.(m,p)))),x) = Product (eval(^(x.(m,p)),x))
+      by E_TRANS1:38;
+reconsider m0 = m as Element of F_Real by NUMBERS:15,INT_1:def 2;
+      set M = m0|^p;
+A7:   M = m|^p by Lm16;
+A8:   M|^m = m0|^(p*m) by BINOM:11 .= m|^(p*m) by Lm16;
+      for i be Nat st i in dom (eval(^(x.(m,p)),x)) holds
+      |. (eval(^(x.(m,p)),x)).i .| <= m|^p
+      proof
+        let i be Nat;
+        assume
+A10:    i in dom eval(^(x.(m,p)),x); then
+A11:    i in dom (^(x.(m,p))) by E_TRANS1:def 7;
+A12:    i in Seg m by A4,A10,E_TRANS1:def 7;
+        set F = x.(m,p);
+A13:    i in dom F by A3,A4,A10,E_TRANS1:def 7;
+A14:    (^(x.(m,p)))/.i = (^(x.(m,p))).i by A11,PARTFUN1:def 6
+        .= ^((x.(m,p))/.i) by A13,E_TRANS1:def 6;
+        (eval(^(x.(m,p)),x)).i
+        = eval(~(^((x.(m,p))/.i)),x) by A14,A11,E_TRANS1:def 7;
+        hence thesis by A12,Th39,A1;
+      end;
+      hence thesis by A8,A5,A6,A7,Th41;
+    end;
+
+Lm20:
+    for j be Element of F_Real st 0 < j <= m holds
+    eval(~(^((tau(0))|^(p-'1))),j) <= m|^(p-'1)
+    proof
+      let j be Element of F_Real;
+      assume
+A1:   0 < j <= m;
+      1 < p by INT_2:def 4; then
+A3:   p-'1 = p-1 by XREAL_1:233;
+      set p1 = p-1;
+      reconsider m0 = m as Element of F_Real by NUMBERS:15,INT_1:def 2;
+A4:   m to_power p1 = (power F_Real).(m0,p1) by Lm19 .= m0|^p1 by BINOM:def 2
+      .= m|^(p-'1) by A3, Lm16;
+      eval(~(^((tau(0))|^(p-'1))),j) = j|^(p-'1) by Th40
+      .= (power F_Real).(j,p1) by A3,BINOM:def 2
+      .= j to_power p1 by A1,Lm19;
+      hence thesis by A4,A1,ASYMPT_1:64;
+    end;
+
+::  Summation of all the right hand side of Gleichung(2) through 1 to m
+::  is bounded and sinked when p is enough large.
+
+Lm21:
+    for k be Element of F_Real st 0 < k <= m holds
+    |. (Eval(~(^ f_0(m,p)))).k .| <= m|^(p*m + (p-'1))
+    proof
+      let k be Element of F_Real;
+      set t1 = eval(~(^Product((x.(m,p)))),k),
+          t2 = eval(~(^((tau(0))|^(p-'1))),k);
+      assume
+A1:   0 < k <= m;
+A2:   1 < p by INT_2:def 4; then
+A3:   p-'1 = p-1 by XREAL_1:233;
+set p1 = p-1;
+reconsider m0 = m as Element of F_Real by NUMBERS:15,INT_1:def 2;
+      t2 = k|^(p-'1) by Th40
+      .= (power F_Real).(k,p1) by A3,BINOM:def 2
+      .= k to_power p1 by A1,Lm19; then
+A5:   |. t2 .| = t2 by A1,ABSVALUE:def 1;
+A6:   t2 <= m|^(p-'1) by A1,Lm20;
+A7:   |. (Eval(~(^ f_0(m,p)))).k .|
+      = |. eval(~(^Product((x.(m,p)))),k) * eval(~(^((tau(0))|^(p-'1))),k) .|
+        by Th35
+      .= |. t1 .| * |. t2 .| by COMPLEX1:65;
+      |. t1 .| <= m|^(p*m) by A1,Lm17; then
+A8:   |. t1 .| * |. t2 .| <= (m|^(p*m))*|.t2.| by XREAL_1:64;
+A9:   (m|^(p*m))*|.t2.| <= (m|^(p*m))*(m|^(p-'1)) by XREAL_1:66,A6,A5;
+      set pm = p*m;
+      (m|^(p*m))*(m|^(p-'1))
+      = (m to_power pm)*(m to_power p1) by A2,XREAL_1:233
+      .= m to_power (pm+p1) by POWER:27
+      .= m|^(p*m + (p-'1)) by A2,XREAL_1:233;
+      hence thesis by A7,A8,A9,XXREAL_0:2;
+    end;
+
+Lm24:
+   for k be Nat st k in Seg m holds
+   (delta(m,p,g,z0)).k = (delta(m,p,g,z0))/.k &
+   (delta(m,p,g,z0)).k = (delta_1(m,p,g)).k + (delta_2(m,p,g,z0)).k
+   proof
+     let k be Nat;
+     assume
+A1:  k in Seg m; then
+A2:  1 <= k <= m by FINSEQ_1:1;
+A3:  len delta_1(m,p,g) = m by Def5;
+     len delta_2(m,p,g,z0) = m by Def6; then
+A5:  k in dom delta_1(m,p,g) & k in dom delta_2(m,p,g,z0)
+       by A1,A3,FINSEQ_1:def 3;
+A6:  dom delta(m,p,g,z0)
+     = dom delta_1(m,p,g) by BINOM:def 1 .= Seg m by A3,FINSEQ_1:def 3;
+     Seg (len delta(m,p,g,z0)) = dom delta(m,p,g,z0) by FINSEQ_1:def 3
+     .= dom delta_1(m,p,g) by BINOM:def 1
+     .= Seg (len delta_1(m,p,g)) by FINSEQ_1:def 3; then
+A7:  len delta(m,p,g,z0) = len delta_1(m,p,g) by FINSEQ_1:6 .= m
+       by Def5;
+A8:  (delta_2(m,p,g,z0)).k = (delta_2(m,p,g,z0))/.k by A5,PARTFUN1:def 6;
+     (delta(m,p,g,z0)).k
+     = (delta_1(m,p,g) + delta_2(m,p,g,z0))/.k by A1,A6,PARTFUN1:def 6
+     .= (delta_1(m,p,g))/.k + (delta_2(m,p,g,z0))/.k by A2,A7,BINOM:def 1
+     .= (delta_1(m,p,g)).k + (delta_2(m,p,g,z0)).k
+       by A5,PARTFUN1:def 6,A8;
+     hence thesis by A1,A6,PARTFUN1:def 6;
+   end;
+
+Lm25:
+    for z0 be non zero Element of F_Real, M be Nat st z0 = number_e &
+    (for i be Nat holds |. g.i .| <= M) holds
+    for k be Nat st k in Seg m holds
+    |. (delta_1(m,p,g)).k + (delta_2(m,p,g,z0)).k .|
+        <= M*((z0 to_power m)*(m|^(p*(m+1))))
+    proof
+      let z0 be non zero Element of F_Real, M be Nat;
+      assume
+A1:   z0 = number_e & (for i be Nat holds |. g.i .| <= M);
+      for k be Nat st k in Seg m holds
+      |. (delta_1(m,p,g)).k + (delta_2(m,p,g,z0)).k .|
+       <= M*((z0 to_power m)*(m|^(p*(m+1))))
+      proof
+        let k be Nat;
+        assume
+A2:     k in Seg m; then
+A4:     1 <= k <= m by FINSEQ_1:1;
+A3:     p > 1 by INT_2:def 4;
+A5:     len delta_1(m,p,g) = m by Def5;
+        len delta_2(m,p,g,z0) = m by Def6; then
+A7:     k in dom delta_1(m,p,g) & k in dom delta_2(m,p,g,z0)
+          by A2,A5,FINSEQ_1:def 3;
+        set kr = In(k,F_Real);
+        (delta_2(m,p,g,z0)).k
+        = -(g.k)*(((power F_Real).(z0,k))*(('F'(f_0(m,p))).0))
+          by A7,Def6; then
+A9:     (delta_1(m,p,g)).k + (delta_2(m,p,g,z0)).k
+         = (g.k)*(('F'(f_0(m,p))).kr)
+        -(g.k)*(((power F_Real).(z0,k))*(('F'(f_0(m,p))).0))
+         by A7,Def5
+        .= (g.k)*(('F'(f_0(m,p))).kr
+        - ((power F_Real).(z0,k))*(('F'(f_0(m,p))).0));
+A10:    ('F'(f_0(m,p))).kr - ((power F_Real).(z0,k))*(('F'(f_0(m,p))).0)
+        = ('F'(f_0(m,p))).kr - (exp_R.kr)*(('F'(f_0(m,p))).0)
+         by A1,Lm13;
+        reconsider k0 = kr as positive Real by A2,FINSEQ_1:1;
+        len f_0(m,p) = len ~f_0(m,p)
+        .= m*p + p by Th12; then
+        consider s be Real such that
+A12:    0 < s & s < 1 &
+        ('F'(f_0(m,p))).k0 - (exp_R.k0)*(('F'(f_0(m,p))).0)
+        = -k0*(exp_R.(k0*(1-s)))*(Eval(~(^(f_0(m,p))))).(s*k0)
+          by E_TRANS1:34;
+set t = |.(-k0*(exp_R.(k0*(1-s)))*(Eval(~(^(f_0(m,p))))).(s*k0)).|;
+A13:    |. (delta_1(m,p,g)).k + (delta_2(m,p,g,z0)).k .|
+        = |.(g.k).|*t by A12,A10,A9,COMPLEX1:65;
+A14:    |.(g.k).|*t <= M*t by A1,XREAL_1:64;
+        set u = |.(-k0*(z0 to_power (k0*(1-s)))) .|;
+        set v = |. (Eval(~(^(f_0(m,p))))).(s*k0) .|;
+        1 < z0 by A1,XXREAL_0:2,TAYLOR_1:11; then
+A16:    u <= m*(z0 to_power m) by A4,A12,Lm22;
+        (exp_R.(k0*(1-s))) = z0 to_power (k0*(1-s)) by A1,TAYLOR_1:10; then
+        t = |.(-k0*(z0 to_power (k0*(1-s))))*((Eval(~(^(f_0(m,p))))).(s*k0)).|
+        .= u * v by COMPLEX1:65; then
+A17:    t <= m*(z0 to_power m)*v by A16,XREAL_1:64;
+        reconsider sk = s*k0 as Element of F_Real by XREAL_0:def 1;
+        0 < s & 0 < k0 & s < 1 & k0 <= m & s < 1 by A2,FINSEQ_1:1,A12; then
+A18:    s*k0 < m*1 by XREAL_1:98;
+A20:    p*m + (p-'1)+1 = p*m + (p-1)+1 by A3,XREAL_1:233
+        .= p*(m+1);
+        0 < sk <= m by A12,A18; then
+        v <= m|^(p*m + (p-'1)) by Lm21; then
+A21:    (m*(z0 to_power m))*v <= (m*(z0 to_power m))*(m|^(p*m + (p-'1)))
+          by A1,TAYLOR_1:11,XREAL_1:64;
+        (m*(z0 to_power m))*(m|^(p*m + (p-'1)))
+        = (z0 to_power m)*(m*(m|^(p*m + (p-'1))))
+        .= (z0 to_power m)*(m|^(p*(m+1))) by A20,NEWTON:6; then
+        t <= (z0 to_power m)*(m|^(p*(m+1))) by A21,XXREAL_0:2,A17; then
+        M*t <= M*((z0 to_power m)*(m|^(p*(m+1)))) by XREAL_1:64;
+        hence thesis by A13,A14,XXREAL_0:2;
+      end;
+      hence thesis;
+    end;
+
+Lm27:
+    for z0 be non zero Element of F_Real, M be Nat holds
+    z0 = number_e & (for i be Nat holds |. g.i .| <= M) &
+    (for k be Nat st k in Seg m holds
+    |. (delta_1(m,p,g)).k + (delta_2(m,p,g,z0)).k .|
+    <= M*((z0 to_power m)*(m|^(p*(m+1)))) ) implies
+    Sum delta(m,p,g,z0) <= ((m*M)*(z0 to_power m))*(m|^(p*(m+1)))
+    proof
+      let z0 be non zero Element of F_Real, M be Nat;
+      assume
+A1:   z0 = number_e &
+      (for i be Nat holds |. g.i .| <= M) &
+      (for k be Nat st k in Seg m holds
+      |. (delta_1(m,p,g)).k + (delta_2(m,p,g,z0)).k .|
+       <= M*((z0 to_power m)*(m|^(p*(m+1)))) );
+      set r = (M*(z0 to_power m))*(m|^(p*(m+1)));
+      Sum delta(m,p,g,z0) <= m*r
+      proof
+A3:     for i be Nat st i in Seg m holds
+        (delta(m,p,g,z0)).i <= (M*(z0 to_power m))*(m|^(p*(m+1)))
+        proof
+          let i be Nat;
+          assume
+A4:       i in Seg m; then
+          (delta(m,p,g,z0)).i = (delta_1(m,p,g)).i + (delta_2(m,p,g,z0)).i
+            by Lm24; then
+A5:       (delta(m,p,g,z0)).i <=
+          |.(delta_1(m,p,g)).i + (delta_2(m,p,g,z0)).i .| by ABSVALUE:4;
+          |.(delta_1(m,p,g)).i + (delta_2(m,p,g,z0)).i .| <= r by A4,A1;
+          hence thesis by A5,XXREAL_0:2;
+        end;
+        Seg len delta(m,p,g,z0) = dom delta(m,p,g,z0) by FINSEQ_1:def 3
+        .= dom delta_1(m,p,g) by BINOM:def 1
+        .= Seg len delta_1(m,p,g) by FINSEQ_1:def 3; then
+A6:     len delta(m,p,g,z0) = len delta_1(m,p,g) by FINSEQ_1:6
+        .= m by Def5;
+        reconsider r0 = r as Element of F_Real by XREAL_0:def 1;
+A7:     m*r = m*In(r,F_Real) by Lm26 .= m*r0;
+        set h = m |-> r0;
+A8:     for i be Nat st i in Seg m holds (delta(m,p,g,z0)).i <= h.i
+        proof
+          let i be Nat;
+          assume
+A9:       i in Seg m; then
+          h.i = r by FUNCOP_1:7;
+          hence thesis by A9,A3;
+        end;
+A11:    dom delta(m,p,g,z0) = Seg m by A6,FINSEQ_1:def 3;
+        len delta(m,p,g,z0) = len h by A6; then
+        Sum delta(m,p,g,z0) <= Sum h by A8,A11,E_TRANS1:2;
+        hence thesis by A7,Th3;
+      end;
+      hence thesis;
+    end;
+
+Lm28:
+    for z0 be non zero Element of F_Real, M be Nat holds
+    z0 = number_e & (for i be Nat holds |. g.i .| <= M) &
+    (for k be Nat st k in Seg m holds
+    |. (delta_1(m,p,g)).k + (delta_2(m,p,g,z0)).k .|
+    <= M*((z0 to_power m)*(m|^(p*(m+1)))) ) implies
+    -((m*M)*(z0 to_power m))*(m|^(p*(m+1))) <= Sum delta(m,p,g,z0)
+    proof
+      let z0 be non zero Element of F_Real, M be Nat;
+      assume
+A1:   z0 = number_e &
+      (for i be Nat holds |. g.i .| <= M) & (for k be Nat st k in Seg m holds
+      |. (delta_1(m,p,g)).k + (delta_2(m,p,g,z0)).k .|
+       <= M*((z0 to_power m)*(m|^(p*(m+1)))) );
+       set r = (M*(z0 to_power m))*(m|^(p*(m+1)));
+       -m*r <= Sum delta(m,p,g,z0)
+      proof
+A3:    for i be Nat st i in Seg m holds
+       -(M*(z0 to_power m))*(m|^(p*(m+1))) <= (delta(m,p,g,z0)).i
+       proof
+         let i be Nat;
+         assume
+A4:      i in Seg m; then
+         (delta(m,p,g,z0)).i = (delta_1(m,p,g)).i + (delta_2(m,p,g,z0)).i
+         by Lm24; then
+A5:      -|.(delta_1(m,p,g)).i + (delta_2(m,p,g,z0)).i .|
+           <= (delta(m,p,g,z0)).i by ABSVALUE:4;
+         -r <= -|.(delta_1(m,p,g)).i + (delta_2(m,p,g,z0)).i .|
+           by A1,A4,XREAL_1:24;
+         hence thesis by A5,XXREAL_0:2;
+       end;
+       Seg (len delta(m,p,g,z0)) = dom delta(m,p,g,z0) by FINSEQ_1:def 3
+       .= dom delta_1(m,p,g) by BINOM:def 1
+       .= Seg len delta_1(m,p,g) by FINSEQ_1:def 3; then
+A7:    len delta(m,p,g,z0) = len delta_1(m,p,g) by FINSEQ_1:6 .= m by Def5;
+       reconsider r0 = -r as Element of F_Real by XREAL_0:def 1;
+A8:    m*(-r) = m*In(-r,F_Real) by Lm26 .= m*r0;
+       set h = m |-> r0;
+A9:    for i be Nat st i in Seg m holds h.i <= (delta(m,p,g,z0)).i
+        proof
+          let i be Nat;
+          assume
+A10:      i in Seg m; then
+          h.i = -r by FUNCOP_1:7;
+          hence thesis by A10,A3;
+        end;
+A12:    dom h = Seg m;
+        len delta(m,p,g,z0) = len h by A7; then
+        Sum h <= Sum delta(m,p,g,z0) by A9,A12,E_TRANS1:2;
+        hence thesis by A8,Th3;
+      end;
+      hence thesis;
+    end;
+
+theorem Th44:
+  (m|^(m+1)) rExpSeq is convergent & lim ((m|^(m+1)) rExpSeq) = 0
+   proof
+     (m|^(m+1)) rExpSeq is summable by SIN_COS:45;
+     hence thesis by SERIES_1:4;
+   end;
+
+theorem Th45:
+  for M be non zero Nat, z0 be non zero Element of F_Real st z0 = number_e
+  holds
+  ex n1 be Nat st for n be Nat st n1 <= n holds
+  |. (m|^(m+1))|^n/(n!) - 0 .| < 1/(2*(M*(z0 to_power m)))
+    proof
+      let M be non zero Nat, z0 be non zero Element of F_Real;
+      assume
+A1:   z0 = number_e;
+A2:   ((m|^(m+1)) rExpSeq) is convergent & lim ((m|^(m+1)) rExpSeq) = 0
+        by Th44; then
+      consider n1 be Nat such that
+A3:   for n be Nat st n1<=n holds
+      |. ((m|^(m+1)) rExpSeq).n - lim ((m|^(m+1)) rExpSeq) .|
+      < 1/(2*(M*(z0 to_power m))) by A1,TAYLOR_1:11,SEQ_2:def 7;
+      take n1;
+      let n be Nat;
+      assume
+A4:   n1 <= n;
+      |. ((m|^(m+1)) rExpSeq).n - lim ((m|^(m+1)) rExpSeq) .|
+        = |. (m|^(m+1))|^n/(n!) - lim ((m|^(m+1)) rExpSeq) .| by SIN_COS:def 5;
+      hence thesis by A2,A4,A3;
+    end;
+
+theorem Th46:  :: F_Rat version of LIOUVIL2:19
+  for f being INT -valued Polynomial of F_Rat holds
+  f is Polynomial of INT.Ring
+  proof
+    let f be INT -valued Polynomial of F_Rat;
+    rng f c= INT; then
+    reconsider f1 = f as sequence of INT.Ring by FUNCT_2:6;
+    0.F_Rat = 0 by GAUSSINT:def 14; then
+    f1 is finite-Support by ALGSEQ_1:def 1;
+    hence thesis;
+  end;
+
+Lm8a:
+   for n be Nat,
+   f be Element of the carrier of Polynom-Ring F_Rat holds
+   n*f = (In(n,F_Rat)|F_Rat)*'(~f)
+   proof
+     let n be Nat;
+     let f be Element of the carrier of Polynom-Ring F_Rat;
+     n*f = In(n,F_Rat)*f by E_TRANS1:6;
+     hence thesis by FIELD_8:2;
+   end;
+
+::$INSERT The following theorem corresponds to the equation (3) in \cite{HURWITZ1}.
+theorem LMM:
+  number_e is algebraic implies
+  ex g be INT -valued Polynomial of F_Rat st @g is irreducible &
+    Ext_eval(g,In(number_e,F_Real)) = 0 & deg g >=2 & g.0 <> 0.F_Rat
+    proof
+      set PRat = Polynom-Ring F_Rat;
+      assume number_e is algebraic; then
+      consider x being Element of F_Complex such that
+A2:   x = number_e &
+      x is_integral_over F_Rat by ALGNUM_1:def 4;
+      reconsider e1 = number_e as Element of F_Real by XREAL_0:def 1;
+      consider f0 be Element of Polynom-Ring F_Rat such that
+A3:   f0 <> 0_.F_Rat & {f0}-Ideal = Ann_Poly(x,F_Rat) & f0 = NormPolynomial(f0)
+        by ALGNUM_1:3,A2,ALGNUM_1:33;
+      f0 in Ann_Poly(x,F_Rat) by A3,IDEAL_1:66; then
+      f0 in {p where p is Polynomial of F_Rat: Ext_eval(p,x) = 0.F_Complex}
+      by ALGNUM_1:def 8; then
+      consider f be Polynomial of F_Rat such that
+A4:   f0 = f & Ext_eval(f,x) = 0.F_Complex;
+      f0 <> 0.Polynom-Ring F_Rat by A3,POLYNOM3:def 10; then
+reconsider f0 as non zero Element of Polynom-Ring F_Rat by STRUCT_0:def 12;
+      {f0}-Ideal is maximal by A2,E_TRANS1:11,ALGNUM_1:3,A3; then
+A7:   f0 is irreducible by RING_2:25;
+      reconsider f0 as non zero Element of the carrier of Polynom-Ring F_Rat
+        by A3,UPROOTS:def 5;
+      reconsider m = Product denomi-seq(f0) as non zero Nat by E_TRANS1:9;
+A8:   m*f0 = (In(m,F_Rat)|F_Rat)*'(~f0) by Lm8a;
+      reconsider mf0 = m*f0 as Element of the carrier of Polynom-Ring F_Rat;
+A14:  rng mf0 c= INT
+      proof
+        let y be object;
+        assume y in rng mf0; then
+        consider x1 be object such that
+A10:    x1 in dom mf0 & y = mf0.x1 by FUNCT_1:def 3;
+        reconsider i = x1 as Element of NAT by A10;
+        reconsider f0i = f0.i as Rational;
+A11:    mf0.i = (In(m,F_Rat))*f0.i by A8,RINGDER1:27;
+        consider z be Integer such that
+A12:    z*(denominator (f0.i)) = m by E_TRANS1:10;
+        m*f0i = z*((denominator (f0i))*f0i) by A12
+        .= z*numerator(f0i) by RAT_1:def 4;
+        hence thesis by A11,A10,INT_1:def 2;
+       end;
+reconsider g = (In(m,F_Rat)|F_Rat)*'(~f0) as INT -valued Polynomial of F_Rat
+         by A14,RELAT_1:def 19, A8;
+A16:   Ext_eval(g,x) = Ext_eval((In(m,F_Rat)|F_Rat),x) *0.F_Complex
+       by A4,ALGNUM_1:3,20
+       .= 0 by MATRIX_5:2;
+       take g;
+       @g = m*f0 by Lm8a; then
+A18:   @g is irreducible by A7,E_TRANS1:12;
+reconsider FR = F_Real as Subring of F_Complex by LIOUVIL2:3;
+        g is Polynomial of F_Real by FIELD_4:8; then
+reconsider g1 = g as Element of the carrier of Polynom-Ring F_Real
+          by POLYNOM3:def 10;
+        g is Polynomial of F_Complex by FIELD_4:8; then
+reconsider gc = g as Element of the carrier of Polynom-Ring F_Complex
+          by POLYNOM3:def 10;
+reconsider g0 = g as Element of the carrier of Polynom-Ring F_Rat
+          by POLYNOM3:def 10;
+A19:    Ext_eval(g0,x) = 0 by A16;
+A20:    Ext_eval(g0,e1) = eval(g1,e1) by FIELD_4:26
+        .= eval(gc,x) by A2,FIELD_4:27
+        .= 0 by A19,FIELD_4:26;
+        then deg g >= 2 by A18,E_TRANS1:13;
+        hence thesis by A18,A20,E_TRANS1:14;
+      end;
+
+::$MR The Main Theorem
+theorem
+  number_e is transcendental
+    proof
+      assume not number_e is transcendental;
+      then consider g be INT -valued Polynomial of F_Rat such that
+A2:   @g is irreducible &
+      Ext_eval(g,In(number_e,F_Real)) = 0 & deg g >=2 & g.0 <> 0.F_Rat by LMM;
+      reconsider g0 = g as Polynomial of INT.Ring by Th46;
+A4:   deg ~@g0 = deg ~@g by FIELD_4:20; then
+      deg g0 in NAT by A2,INT_1:3; then
+A5:   g0 <> 0_.INT.Ring by FIELD_1:1;
+reconsider g0 = g as non zero Polynomial of INT.Ring by A5,UPROOTS:def 5;
+      reconsider m0 = deg g0 as positive Nat by A2,A4;
+      number_e <> 0.F_Real; then
+      reconsider z0 = number_e as non zero Element of F_Real
+        by XREAL_0:def 1,STRUCT_0:def 12;
+      reconsider g1 = g as Polynomial of F_Real by FIELD_4:8;
+      0 = eval(~@g1,z0) by A2,FIELD_4:26; then
+A8:   Ext_eval(~@g0,z0) = 0 by FIELD_4:26;
+      set g00 = g0.0;
+      consider M0 be Nat such that
+A9:   for i be Nat holds |. g0.i .| <= M0 by Th43;
+      0 < |. g0.0 .| by A2,GAUSSINT:def 14; then
+      reconsider M0 as non zero Nat by A9;
+      consider n1 be Nat such that
+A10:  for n be Nat st n1<=n holds
+      |. (m0|^(m0+1))|^n/(n!) - 0 .|
+      < 1/(2*(((m0*M0)*(m0|^(m0+1)))*(z0 to_power m0))) by Th45;
+      reconsider M00 = (m0*M0)*(m0|^(m0+1)) as Nat;
+      consider p1 be Prime such that
+A11:  n1 + m0 + M0 < p1 by NEWTON:72;
+      2 <= (n1 + M0) + m0 by A2,A4,XREAL_1:38; then
+      2 < p1 by XXREAL_0:2,A11; then
+      reconsider p1 as odd prime Nat by PEPIN:17;
+      1 < p1 by INT_2:def 4; then
+A14:  p1-'1 = p1 -1 by XREAL_1:233;
+A15:  2-1 <= m0 -1 by A2,A4,XREAL_1:9;
+A16:  n1 + m0 + M0 -1 < p1 -1 by A11,XREAL_1:8;
+      n1 <= n1 +M0 by XREAL_1:31; then
+      n1 < (n1 + M0) + (m0 -1) by A15,XREAL_1:39; then
+A17:  n1 < p1 -'1 by A14,A16,XXREAL_0:2;
+      m0 <= m0 + (n1 + M0) by XREAL_1:31; then
+A18:  m0 < p1 by A11,XXREAL_0:2;
+      M0 <= M0 + (n1+m0) by XREAL_1:31; then
+A19:  M0 < p1 by A11,XXREAL_0:2;
+A20:  Sum delta(m0,p1,g0,z0) = Sum delta_1(m0,p1,g0) + Sum delta_2(m0,p1,g0,z0)
+      proof
+A22:    len delta_2(m0,p1,g0,z0) = m0 by Def6;
+        len delta_1(m0,p1,g0) = m0 by Def5; then
+        dom delta_1(m0,p1,g0) = Seg m0 by FINSEQ_1:def 3
+        .= dom delta_2(m0,p1,g0,z0) by A22,FINSEQ_1:def 3;
+        hence thesis by BINOM:7;
+      end;
+      Sum delta_1(m0,p1,g0) in INT.Ring by Th36; then
+      reconsider S1 = Sum delta_1(m0,p1,g0) as Element of INT.Ring;
+      set pp1ft = p1!;
+      reconsider p1ft = (p1-'1)! as Nat;
+      reconsider sgm0ft = In((((-1)|^m0)*(m0!))|^p1,INT.Ring)
+        as Element of INT.Ring;
+      reconsider p0 = p1 -'1 as Nat;
+      p0 + 1 = p1 -1 + 1 .= p1; then
+A25:  pp1ft = p1ft*p1 by SIN_COS:1;
+      consider u be Element of INT.Ring such that
+A26:  ('F'(f_0(m0,p1))).0
+      = ((p1-'1)!)*(In((((-1)|^m0)*(m0!))|^p1,INT.Ring))
+      + (In(p1!,INT.Ring))*u by Th33;
+A27:  (Sum delta_2(m0,p1,g0,z0))/((p1-'1)!) is Element of INT.Ring &
+      (Sum delta_2(m0,p1,g0,z0))/((p1-'1)!)
+      = ((In((((-1)|^m0)*(m0!))|^p1,INT.Ring)) + (p1*u))*(g0.0)
+      proof
+A28:    Sum delta_2(m0,p1,g0,z0) = (g0.0)*(('F'(f_0(m0,p1))).0)
+        - (Ext_eval(g0,z0))*(('F'(f_0(m0,p1))).0) by Th37;
+        set sgmp1u = sgm0ft + (p1*u);
+A29:    ('F'(f_0(m0,p1))).0
+        = p1ft* sgm0ft + (p1ft*p1)*u by A25,A26,Lm1
+        .= p1ft* sgm0ft + p1ft*(p1*u) by E_TRANS1:1
+        .= p1ft * (sgm0ft + (p1*u)) by RINGDER1:1;
+reconsider xfr = 1/p1ft as Element of F_Rat by GAUSSINT:def 14,RAT_1:def 2;
+        p1ft in NAT by ORDINAL1:def 12;then
+A30:    (p1ft * (sgm0ft + (p1*u)))*(g0.0)
+        = p1ft*(sgmp1u*(g00)) by BINOM:19
+        .= p1ft*(sgmp1u*(g00));
+        reconsider sgmg00 = sgmp1u*(g00) as Real;
+        (Sum delta_2(m0,p1,g0,z0))/p1ft
+        = ((sgmg00)*p1ft)/p1ft by Lm3,A30,A29,A28,A8
+        .= (sgmp1u*(g00)) by XCMPLX_1:89;
+        hence thesis;
+      end;
+A32:  Sum(delta_1(m0,p1,g0)) in {In(p1!,INT.Ring)}-Ideal by Th38;
+      Sum(delta_1(m0,p1,g0)) in
+      the set of all (In(p1!,INT.Ring))*r where r is Element of INT.Ring
+        by A32,IDEAL_1:64; then
+      consider v be Element of INT.Ring such that
+A33:  Sum delta_1(m0,p1,g0) = (In(p1!,INT.Ring))*v;
+      reconsider vr = v as Real;
+A34:  (Sum delta_1(m0,p1,g0))/((p1-'1)!) = p1*v
+      proof
+        Sum(delta_1(m0,p1,g0))/((p1-'1)!)
+        = (vr*p1)*p1ft/p1ft by A25,A33
+        .= p1*vr by XCMPLX_1:89;
+        hence thesis by Lm3;
+      end;
+A35:  Sum delta(m0,p1,g0,z0)/((p1-'1)!) in INT.Ring &
+      Sum delta(m0,p1,g0,z0)/((p1-'1)!)
+      = Sum delta_1(m0,p1,g0)/((p1-'1)!) + Sum delta_2(m0,p1,g0,z0)/((p1-'1)!)
+      proof
+        reconsider S2p1 = Sum delta_2(m0,p1,g0,z0)/((p1-'1)!)
+          as Element of INT.Ring by A27;
+        reconsider S1p1 = Sum delta_1(m0,p1,g0)/((p1-'1)!)
+          as Element of INT.Ring by A34;
+        Sum delta(m0,p1,g0,z0)/((p1-'1)!) = S1p1 + S2p1 by A20;
+        hence thesis;
+      end;
+A37:  for k be Nat st k in Seg m0 holds
+      |. (delta_1(m0,p1,g0)).k + (delta_2(m0,p1,g0,z0)).k .|
+      <= M0*((z0 to_power m0)*(m0|^(p1*(m0+1)))) by A9,Lm25;
+A40:  ((m0*M0)*(z0 to_power m0))*(m0|^(p1*(m0+1)))
+        = ((m0*M0)*(z0 to_power m0))*((m0|^(m0+1))|^((p1-1)+1)) by NEWTON:9
+        .= ((m0*M0)*(z0 to_power m0))*((m0|^(m0+1))*(m0|^(m0+1))|^(p1-1))
+        by NEWTON:6
+        .= (M00*(z0 to_power m0))*(m0|^(m0+1))|^(p1-1);
+      |. (m0|^(m0+1))|^p0/(p0!) - 0 .| < 1/(2*(M00*(z0 to_power m0)))
+          by A10,A17; then
+A41:  (m0|^(m0+1))|^p0/(p0!) <= 1/(2*(M00*(z0 to_power m0)))
+        by ABSVALUE:def 1;
+A38:  |. Sum delta(m0,p1,g0,z0)/((p1-'1)!) .| <= 1/2
+      proof
+        reconsider x = M00*(z0 to_power m0) as Real;
+        x*(1/(2*x)) = 1/2 by TAYLOR_1:11,XCMPLX_1:92; then
+A43:    (M00*(z0 to_power m0))*((m0|^(m0+1))|^p0/(p0!)) <= 1/2
+        by A41,TAYLOR_1:11,XREAL_1:64;
+A44:    (-(((m0*M0)*(z0 to_power m0))*(m0|^(p1*(m0+1)))))/((p1-'1)!)
+        <= (Sum delta(m0,p1,g0,z0))/((p1-'1)!) by XREAL_1:72,Lm28,A37,A9;
+reconsider mMzmp1 =(((m0*M0)*(z0 to_power m0))*(m0|^(p1*(m0+1)))) as Real;
+reconsider M00zmp0 = (M00*(z0 to_power m0))*(m0|^(m0+1))|^(p1-1) as Real;
+A45:    (-mMzmp1)/((p1-'1)!) = -(M00zmp0)/((p1-'1)!) by A40;
+        -1/2 <= -(M00zmp0)/((p1-'1)!) by A14,A43,XREAL_1:24; then
+A46:    -1/2 <= (Sum delta(m0,p1,g0,z0))/((p1-'1)!) by A44,A45,XXREAL_0:2;
+        (Sum delta(m0,p1,g0,z0))/((p1-'1)!) <= M00zmp0/((p1-'1)!)
+          by A40,XREAL_1:72,Lm27,A37,A9; then
+        (Sum delta(m0,p1,g0,z0))/((p1-'1)!) <= 1/2 by A14,A43,XXREAL_0:2;
+        hence thesis by A46,ABSVALUE:5;
+      end;
+A49:  (Sum delta(m0,p1,g0,z0))/((p1-'1)!) = 0
+      proof
+        |. (Sum delta(m0,p1,g0,z0))/((p1-'1)!) .| < 1 by A38,XXREAL_0:2;
+        hence thesis by A35,NAT_1:14;
+      end;
+A50:  -p1*v = (In((((-1)|^m0)*(m0!))|^p1,INT.Ring))*(g0.0) + (p1*u)*(g0.0)
+        by A27,A49,A34,A35;
+A51:  (In((((-1)|^m0)*(m0!))|^p1,INT.Ring))*(g0.0)
+      = ((((-1)|^m0)|^p1)*((m0!)|^p1))*(g0.0) by NEWTON:7
+      .= (((-1)|^(m0*p1))*((m0!)|^p1))*(g0.0) by NEWTON:9;
+      reconsider uI = u, vI = v, g0I = g0.0 as Integer;
+      p1 in NAT by ORDINAL1:def 12;
+      then (p1*u)*(g0.0) = p1*(u*(g0.0)) by BINOM:19
+      .= p1*(uI*g0I) by Lm30; then
+A54:  -p1*v - (p1*u)*(g0.0) = -p1*vI - p1*(uI*g0I) by Lm3;
+      |. -1 .| = --1 by ABSVALUE:def 1; then
+A55:  |.(-1)|^(m0*p1).| = 1 |^(m0*p1) by TAYLOR_2:1 .= 1;
+A56:  |. (((-1)|^(m0*p1))*((m0!)|^p1))*g0I .|
+      = |. (((-1)|^(m0*p1))*((m0!)|^p1)) .| * |.g0I.| by COMPLEX1:65
+      .= |. (-1)|^(m0*p1) .| * |. (m0!)|^p1 .| * |.g0I.| by COMPLEX1:65
+      .= |. ((m0!)|^p1)*g0I.| by COMPLEX1:65,A55;
+      |. g0.0 .| <= M0 by A9; then
+A57:  |. g0.0 .| < p1 by A19,XXREAL_0:2;
+      p1 = |. p1 .| by ABSVALUE:def 1; then
+A59:  not p1 divides g0I by INT_2:16,INT_2:27,A57,A2,GAUSSINT:def 14;
+      not p1 divides (m0!)|^p1 by NAT_3:5,A18,NAT_4:19; then
+      not |. p1 .| divides |. (((-1)|^(m0*p1))*((m0!)|^p1))*g0I .|
+        by A56,NAT_6:7,A59,INT_2:16; then
+A61:  not p1 divides (((-1)|^(m0*p1))*((m0!)|^p1))*g0I by INT_2:16;
+      -p1*vI - p1*(uI*g0I) = p1*(-vI - (uI*g0I));
+      hence contradiction by A61,A50,A51,A54;
+    end;

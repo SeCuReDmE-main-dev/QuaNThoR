@@ -1,0 +1,804 @@
+:: Elementary Number Theory Problems. Part {XIV} -- Diophantine Equations
+::  by Artur Korni{\l}owicz
+::
+:: Received October 22, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, NAT_1, RELAT_1, FUNCT_1, XXREAL_0, ARYTM_3, XCMPLX_0,
+      CARD_1, INT_1, NEWTON, ARYTM_1, SUBSET_1, XBOOLE_0, TARSKI, ORDINAL1,
+      FINSET_1, ABIAN, MEMBERED, NUMBER02, PBOOLE, REAL_1, INT_2, SQUARE_1,
+      COMPLEX1, NUMBER09, ZFMISC_1, NUMBER03, NUMBER12, FINSEQ_1, INT_6,
+      CARD_3, VALUED_0, ORDINAL4, PARTFUN3, NAT_3, PRE_POLY, UPROOTS, RFINSEQ2,
+      ORDINAL2, FUNCT_7, CALCUL_2, VALUED_1, FIB_NUM2, RAT_1, EULER_1, NAT_LAT,
+      MCART_1, GROEB_1, NUMBER14;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, XTUPLE_0, DOMAIN_1, ORDINAL1,
+      CARD_1, NUMBERS, XCMPLX_0, RELAT_1, FUNCT_1, RELSET_1, FUNCT_2, PBOOLE,
+      FINSET_1, MEMBERED, VALUED_0, VALUED_1, XREAL_0, INT_1, ABSVALUE, INT_2,
+      NAT_1, XXREAL_0, SQUARE_1, FINSEQ_1, PARTFUN3, FIB_NUM2, RVSUM_1,
+      RFINSEQ2, NEWTON, ABIAN, EULER_1, PRE_POLY, RAT_1, NAT_3, NAT_LAT, INT_6,
+      NUMBER02, NUMBER03, CALCUL_2, NUMBER09, NUMBER12;
+ constructors NAT_D, ABIAN, PEPIN, FIB_NUM2, NAT_3, NUMBER02, NUMBER03,
+      CLASSES1, PYTHTRIP, MOEBIUS1, RFINSEQ2, WELLORD2, NEWTON03, POWER,
+      DOMAIN_1, EC_PF_2, WSIERP_1, NUMBER09, INT_6, INT_7, CALCUL_2, NUMBER12,
+      NEWTON04, EULER_1, NAT_LAT;
+ registrations ORDINAL1, RELSET_1, FINSET_1, NUMBERS, XCMPLX_0, XXREAL_0,
+      XREAL_0, NAT_1, INT_1, MEMBERED, VALUED_0, CARD_1, NEWTON, NEWTON02,
+      NEWTON03, ABIAN, NAT_6, JORDAN1D, WSIERP_1, NEWTON01, FINSEQ_1, FUNCT_1,
+      RELAT_1, XBOOLE_0, NAT_3, SUBSET_1, RAT_1, PYTHTRIP, VALUED_1, PARTFUN3,
+      FINSEQ_9, RAMSEY_1, SQUARE_1, NUMBER08, NUMBER09, FUZIMPL4, EULRPART,
+      INT_7, CALCUL_2, NUMBER04, FOMODEL0, INT_6, NAT_LAT, XTUPLE_0;
+ requirements REAL, NUMERALS, BOOLE, SUBSET, ARITHM;
+
+
+begin
+
+reserve a,b,c,h for Integer;
+reserve k,m,n for Nat;
+reserve i,j,z for Integer;
+reserve p for Prime;
+
+registration
+  let a,b,c be Integer;
+  reduce In([a,b,c],[:INT,INT,INT:]) to [a,b,c];
+end;
+
+theorem :: NUMBER14:1
+  for a,b being Real holds 0 <= a & a < b implies |.a.| < |.b.|;
+
+theorem :: NUMBER14:2
+  for a,b being Real holds b < a & a <= 0 implies |.a.| < |.b.|;
+
+theorem :: NUMBER14:3
+  j <> 0 & z = i / j implies z divides i;
+
+theorem :: NUMBER14:4
+  i divides j iff i divides |.j.|;
+
+theorem :: NUMBER14:5
+  i divides j iff |.i.| divides j;
+
+theorem :: NUMBER14:6  ::: NAT_3:5 generalized
+  p divides i |^ n implies p divides i;
+
+theorem :: NUMBER14:7
+  for m,n being Nat holds
+  m divides n*p implies m divides n or ex z being Nat st m = z*p & z divides n;
+
+theorem :: NUMBER14:8
+  for m,n being Integer st
+  m divides n*p holds m divides n or ex z be Integer st m = z*p & z divides n;
+
+theorem :: NUMBER14:9
+  i,j are_coprime iff |.i.|,|.j.| are_coprime;
+
+theorem :: NUMBER14:10
+  i,j are_coprime iff |.i.|,j are_coprime;
+
+theorem :: NUMBER14:11
+  i,j are_coprime iff -i,-j are_coprime;
+
+theorem :: NUMBER14:12
+  i,j are_coprime iff -i,j are_coprime;
+
+theorem :: NUMBER14:13
+  for i,j,k being Integer st i <> 0 holds
+  i divides k & i*j,k are_coprime implies i = 1 or i = -1;
+
+theorem :: NUMBER14:14
+  for i,j,k being Integer st
+  i divides j & i,j are_coprime holds i = 1 or i = -1;
+
+theorem :: NUMBER14:15
+  i divides j implies j,0 are_congruent_mod i;
+
+theorem :: NUMBER14:16  ::: EULER_1:14
+  for a,b,c being Integer holds
+  a <> 0 & c <> 0 & a,c are_coprime & b,c are_coprime implies a*b,c are_coprime
+;
+
+theorem :: NUMBER14:17
+  i,j are_congruent_mod 2 implies (i is odd iff j is odd);
+
+theorem :: NUMBER14:18
+  i,j are_congruent_mod 2 implies (i is even iff j is even);
+
+theorem :: NUMBER14:19
+  for i,j,k being Integer holds
+  i > 0 & j,k are_congruent_mod i implies (i divides j iff i divides k);
+
+theorem :: NUMBER14:20
+  for a,b being object, f being FinSequence holds
+  1 in dom (<*a,b*>^f) & 2 in dom (<*a,b*>^f);
+
+theorem :: NUMBER14:21
+  for a,b being object, f being FinSequence holds
+  (<*a,b*>^f).1 = a & (<*a,b*>^f).2 = b;
+
+theorem :: NUMBER14:22
+  for a,b being object, f being FinSequence holds
+  n in dom f implies n+2 in dom (<*a,b*>^f);
+
+theorem :: NUMBER14:23
+  for a,b being object, f being FinSequence st n in dom f holds
+  (<*a,b*>^f).(n+2) = f.n;
+
+theorem :: NUMBER14:24
+  for f being decreasing real-valued FinSequence holds min_p(f) = len f;
+
+theorem :: NUMBER14:25
+  for f being increasing real-valued FinSequence holds max_p(f) = len f;
+
+registration
+  let X be included_in_Seg real-membered set;
+  cluster Sgm X -> increasing;
+end;
+
+begin :: Chinese Remainder Theorem
+
+registration
+  let f be Chinese_Remainder integer-valued FinSequence;
+  cluster -f -> Chinese_Remainder;
+end;
+
+registration
+  let f be Chinese_Remainder integer-valued non-empty FinSequence;
+  cluster f(#)f -> Chinese_Remainder;
+end;
+
+definition
+  let a1,n1,a2,n2 be Integer;
+  let x be Integer;
+  pred x solves_CRT a1,n1,a2,n2 means
+:: NUMBER14:def 1
+  x,a1 are_congruent_mod n1 & x,a2 are_congruent_mod n2;
+end;
+
+theorem :: NUMBER14:26
+  for a1,n1,a2,n2 being Integer
+  for x being Integer st x solves_CRT a1,n1,a2,n2
+  for k being Integer holds x + k*n1*n2 solves_CRT a1,n1,a2,n2;
+
+theorem :: NUMBER14:27
+  for a1,a2 being Integer
+  for n1,n2 being Nat st n1 > 0 & n2 > 0
+  for x being Integer st x solves_CRT a1,n1,a2,n2 holds
+  x mod (n1*n2) solves_CRT a1,n1,a2,n2;
+
+definition
+  let a1,a2 be Integer;
+  let n1,n2 be Nat such that
+ n1,n2 are_coprime and
+ n1 > 0 and
+ n2 > 0;
+  func CRT(a1,n1,a2,n2) -> Element of NAT means
+:: NUMBER14:def 2
+  it solves_CRT a1,n1,a2,n2 & it < n1*n2;
+end;
+
+theorem :: NUMBER14:28
+  for a1,a2 being Integer
+  for n1,n2 being Nat st n1,n2 are_coprime & n1 > 0 & n2 > 0 holds
+  { x where x is positive Nat: x solves_CRT a1,n1,a2,n2 } is infinite;
+
+theorem :: NUMBER14:29
+  for a1,a2 being Integer
+  for n1,n2 being Nat st n1,n2 are_coprime & n1 > 0 & n2 > 0 holds
+  { x where x is Nat: x solves_CRT a1,n1,a2,n2 } is infinite;
+
+definition
+  let u, m be integer-valued FinSequence;
+  let z be Integer;
+  pred z solves_CRT u,m means
+:: NUMBER14:def 3
+  for i being Nat st i in dom u holds z,u.i are_congruent_mod m.i;
+end;
+
+definition
+  let u be integer-valued FinSequence;
+  let m be CR_Sequence;
+  assume
+ dom u = dom m;
+  func CRT(u,m) -> Element of NAT means
+:: NUMBER14:def 4
+  it solves_CRT u,m & it < Product(m);
+end;
+
+theorem :: NUMBER14:30
+  for u being integer-valued FinSequence
+  for m being CR_Sequence st dom u = dom m holds
+  for z being Integer st z solves_CRT u,m
+  for k being Integer holds z + k*Product(m) solves_CRT u,m;
+
+theorem :: NUMBER14:31
+  for u being integer-valued FinSequence
+  for m being CR_Sequence st dom u = dom m holds
+  { z where z is positive Nat: z solves_CRT u,m } is infinite;
+
+theorem :: NUMBER14:32
+  for u being integer-valued FinSequence
+  for m being CR_Sequence st dom u = dom m holds
+  { z where z is Nat: z solves_CRT u,m } is infinite;
+
+begin :: Problem 45
+
+definition
+  let a,b,c be Integer;
+  pred two_or_more_are_even_among a,b,c means
+:: NUMBER14:def 5
+  a is even & b is even & c is odd or
+  a is even & b is odd & c is even or
+  a is odd & b is even & c is even or
+  a is even & b is even & c is even;
+  pred two_or_more_are_odd_among a,b,c means
+:: NUMBER14:def 6
+  a is odd & b is odd & c is even or
+  a is odd & b is even & c is odd or
+  a is even & b is odd & c is odd or
+  a is odd & b is odd & c is odd;
+end;
+
+definition
+  let a,b,c,n be Integer;
+  pred a,b,c give_three_different_remainders_upon_dividing_by n means
+:: NUMBER14:def 7
+  a mod n, b mod n, c mod n are_mutually_distinct;
+  pred a,b,c at_least_two_are_not_divisible_by n means
+:: NUMBER14:def 8
+  not n divides a & not n divides b & n divides c or
+  not n divides a & n divides b & not n divides c or
+  n divides a & not n divides b & not n divides c or
+  not n divides a & not n divides b & not n divides c;
+end;
+
+definition
+  let a,b,c be Integer;
+  func numberR(a,b,c) -> Element of NAT equals
+:: NUMBER14:def 9
+  1 if two_or_more_are_even_among a,b,c
+  otherwise 0;
+end;
+
+theorem :: NUMBER14:33
+  for r being Nat st r = numberR(a,b,c) holds
+  two_or_more_are_odd_among a+r, b+r, c+r;
+
+definition
+  let a,b,c be Integer;
+  func numberR0(a,b,c) -> Element of INT equals
+:: NUMBER14:def 10
+  0 if a,b,c give_three_different_remainders_upon_dividing_by 3,
+  1 - (a mod 3) if a mod 3 = b mod 3 or a mod 3 = c mod 3
+  otherwise 1 - (b mod 3);
+end;
+
+theorem :: NUMBER14:34
+  for r0 being Integer st r0 = numberR0(a,b,c) holds
+  a+r0, b+r0, c+r0 at_least_two_are_not_divisible_by 3;
+
+definition
+  let h be Integer;
+  func PrimeDivisors>3(h) -> Subset of NAT equals
+:: NUMBER14:def 11
+  PrimeDivisors(h) /\ GreaterOrEqualsNumbers(4);
+end;
+
+theorem :: NUMBER14:35
+  i in PrimeDivisors>3(h) implies i > 3;
+
+theorem :: NUMBER14:36
+  i in PrimeDivisors>3(h) implies i divides h;
+
+theorem :: NUMBER14:37
+  i in PrimeDivisors>3(h) implies i is prime;
+
+theorem :: NUMBER14:38
+  i is prime & i > 3 & i divides h implies i in PrimeDivisors>3(h);
+
+theorem :: NUMBER14:39
+  h <> 0 implies PrimeDivisors>3(h) c= Seg |.h.|;
+
+registration
+  let h be non zero Integer;
+  cluster PrimeDivisors>3(h) -> included_in_Seg;
+end;
+
+theorem :: NUMBER14:40
+  h <> 0 implies
+  for n being Nat st n in dom Sgm PrimeDivisors>3(h) holds
+  (Sgm PrimeDivisors>3(h)).n > 3;
+
+theorem :: NUMBER14:41
+  h <> 0 implies
+  for n being Nat st n in dom Sgm PrimeDivisors>3(h) holds
+  (Sgm PrimeDivisors>3(h)).n divides h;
+
+theorem :: NUMBER14:42
+  h <> 0 implies
+  for n being Nat st n in dom Sgm PrimeDivisors>3(h) holds
+  (Sgm PrimeDivisors>3(h)).n is prime;
+
+definition
+  let a,b,c be Integer such that
+ a,b,c are_mutually_distinct;
+  mode Sierp45FS of a,b,c -> FinSequence of INT means
+:: NUMBER14:def 12
+  ex h being Integer, F being FinSequence of NAT st
+  h = (a-b)*(a-c)*(b-c) & F = Sgm PrimeDivisors>3(h) &
+  len it = len F &
+  for i being object st i in dom it holds
+  not F.i divides a+it.i & not F.i divides b+it.i & not F.i divides c+it.i;
+end;
+
+theorem :: NUMBER14:43
+  for a,b,c,h being Integer st h = (a-b)*(a-c)*(b-c)
+  for S being Sierp45FS of a,b,c st a,b,c are_mutually_distinct
+  for n being Nat st
+  n, numberR(a,b,c) are_congruent_mod 2 &
+  n, numberR0(a,b,c) are_congruent_mod 3 &
+  for i being Nat st i in dom S holds
+    n, S.i are_congruent_mod (Sgm PrimeDivisors>3(h)).i
+  holds a+n, b+n, c+n are_mutually_coprime;
+
+theorem :: NUMBER14:44
+  h <> 0 implies rng (<*2,3*> ^ Sgm PrimeDivisors>3(h)) c= SetPrimes;
+
+theorem :: NUMBER14:45
+  h <> 0 implies <*2,3*> ^ Sgm PrimeDivisors>3(h) is Chinese_Remainder;
+
+:: Problem 45
+theorem :: NUMBER14:46
+  a,b,c are_mutually_distinct implies
+  { n where n is positive Nat: a+n,b+n,c+n are_mutually_coprime } is infinite;
+
+begin :: Problem 49
+
+registration
+  let n be non zero Nat;
+  cluster PrimeDivisors(n) -> finite;
+end;
+
+registration
+  let n be non zero Nat;
+  cluster PrimeDivisors(n) -> included_in_Seg;
+end;
+
+registration
+  let X be non trivial natural-membered set;
+  cluster non empty included_in_Seg for Subset of X;
+end;
+
+registration
+  let X be non empty included_in_Seg Subset of SetPrimes;
+  cluster Sgm X -> non empty;
+end;
+
+registration
+  let X be included_in_Seg Subset of SetPrimes;
+  cluster Sgm X -> positive-yielding;
+  cluster Sgm X -> Chinese_Remainder;
+end;
+
+definition
+  let n be non zero Nat;
+  func PrimeDivisorsFS(n) -> FinSequence of SetPrimes equals
+:: NUMBER14:def 13
+  Sgm PrimeDivisors(n);
+end;
+
+registration
+  let n be non zero Nat;
+  cluster PrimeDivisorsFS(n) -> increasing;
+end;
+
+theorem :: NUMBER14:47
+  for n being non zero Nat, i being Nat st i in dom PrimeDivisorsFS(n) holds
+  PrimeDivisorsFS(n).i is prime;
+
+definition
+  let m be non zero Nat;
+  let k be Nat;
+  mode Sierp49FS of m,k -> FinSequence of INT means
+:: NUMBER14:def 14
+  len it = len PrimeDivisorsFS(m) &
+  for i being object st i in dom it holds
+  not PrimeDivisorsFS(m).i divides it.i * (it.i + 2*k);
+end;
+
+registration
+  let n be non zero Nat;
+  cluster PrimeDivisorsFS(n) -> Chinese_Remainder positive-yielding;
+end;
+
+registration
+  cluster PrimeDivisorsFS(1) -> empty;
+end;
+
+theorem :: NUMBER14:48
+  for n being non zero Nat holds support pfexp n = PrimeDivisors(n);
+
+theorem :: NUMBER14:49
+  for n being non zero Nat st PrimeDivisors(n) is empty holds n = 1;
+
+theorem :: NUMBER14:50
+  for n being non zero Nat st PrimeDivisorsFS(n) is empty holds n = 1;
+
+registration
+  let n be non trivial Nat;
+  cluster PrimeDivisors(n) -> non empty;
+  cluster PrimeDivisorsFS(n) -> non empty;
+end;
+
+theorem :: NUMBER14:51
+  for n being non zero Nat holds
+  PrimeDivisorsFS(n) = sort_a canFS support pfexp n;
+
+theorem :: NUMBER14:52
+  for n being non zero Nat holds
+  PrimeDivisorsFS(n) = sort_a canFS support ppf n;
+
+theorem :: NUMBER14:53
+  for j being Integer st j <> 0
+  for n being positive Nat st
+    for i being Nat st i in dom PrimeDivisorsFS(n) holds
+      j,PrimeDivisorsFS(n).i are_coprime holds
+  j,n are_coprime;
+
+:: Problem 49 with example solution
+theorem :: NUMBER14:54
+  for m being positive Nat, k being Nat
+  for S being Sierp49FS of m,k
+  for q being CR_Sequence st q = PrimeDivisorsFS(m)
+  ex a,b being positive Nat st 2*k = a-b & a,m are_coprime & b,m are_coprime &
+     a = CRT(S,q) + Product(q) + 2*k & b = CRT(S,q) + Product(q);
+
+:: Problem 49
+theorem :: NUMBER14:55
+  for m being positive Nat, k being Nat
+  ex a,b being positive Nat st 2*k = a-b & a,m are_coprime & b,m are_coprime;
+
+begin :: Problem 120
+
+:: Problem 120
+theorem :: NUMBER14:56
+  for m being non zero Nat
+  ex s being Nat st for n being Nat st n > s holds
+  (2|^m) * 2|^(2|^n) + 1 is composite;
+
+begin :: Problem 131
+
+definition
+  let i be Integer;
+  mode Multiple of i -> Integer means
+:: NUMBER14:def 15
+  i divides it;
+end;
+
+theorem :: NUMBER14:57
+  i*j is Multiple of i;
+
+theorem :: NUMBER14:58
+  j is Multiple of i implies j+h*i is Multiple of i;
+
+theorem :: NUMBER14:59
+  i <> 1 & i <> -1 implies for m being Multiple of i st m is prime holds
+  m = i or m = -i;
+
+theorem :: NUMBER14:60
+  n <> 1 implies for m being Multiple of n st m is prime holds m = n;
+
+definition
+  let i;
+  func multiples(i) -> Subset of INT equals
+:: NUMBER14:def 16
+  the set of all m where m is Multiple of i;
+end;
+
+theorem :: NUMBER14:61
+  for x being object holds
+    x in multiples(i) implies x is Multiple of i;
+
+theorem :: NUMBER14:62
+  j in multiples(i) iff i divides j;
+
+theorem :: NUMBER14:63
+  i*j in multiples(i);
+
+registration
+  let i;
+  cluster multiples(i) -> non empty;
+end;
+
+theorem :: NUMBER14:64
+  multiples(0) = { 0 };
+
+theorem :: NUMBER14:65
+  multiples(1) = INT;
+
+theorem :: NUMBER14:66
+  multiples(-1) = INT;
+
+registration
+  let i be non zero Integer;
+  cluster i (#) id INT -> one-to-one;
+end;
+
+theorem :: NUMBER14:67
+  for i being non zero Integer holds INT,multiples(i) are_equipotent;
+
+registration
+  let i be non zero Integer;
+  cluster multiples(i) -> infinite;
+end;
+
+theorem :: NUMBER14:68
+  i <> 1 & i <> -1 & not i is prime & not -i is prime implies
+  multiples(i) misses SetPrimes;
+
+definition :: search operation
+  let m,n;
+  func primeNumbers(m,n) -> Subset of NAT equals
+:: NUMBER14:def 17
+  seq(m,n) /\ SetPrimes;
+end;
+
+registration
+  let m,n;
+  cluster primeNumbers(m,n) -> finite;
+end;
+
+theorem :: NUMBER14:69
+  primeNumbers(0,10) = { 2,3,5,7 };
+
+theorem :: NUMBER14:70
+  primeNumbers(1,10) = { 2,3,5,7,11 };
+
+theorem :: NUMBER14:71
+  primeNumbers(2,10) = { 3,5,7,11 };
+
+theorem :: NUMBER14:72
+  primeNumbers(3,10) = { 5,7,11,13 };
+
+theorem :: NUMBER14:73
+  card seq(m,n) = n;
+
+theorem :: NUMBER14:74
+  seq(m,n) misses { m+n+1,m+n+2 };
+
+theorem :: NUMBER14:75
+  a is even implies a is Multiple of 2;
+
+theorem :: NUMBER14:76
+  a is even implies a in multiples(2);
+
+theorem :: NUMBER14:77
+  a is odd implies not a is Multiple of 2;
+
+theorem :: NUMBER14:78
+  a is odd implies not a in multiples(2);
+
+theorem :: NUMBER14:79
+  a is even implies multiples(2) /\ {a,a+1} = {a};
+
+theorem :: NUMBER14:80
+  a is odd implies multiples(2) /\ {a,a+1} = {a+1};
+
+theorem :: NUMBER14:81
+  multiples(2) /\ {a,a+1} = {a} or multiples(2) /\ {a,a+1} = {a+1};
+
+theorem :: NUMBER14:82
+  card (multiples(2) /\ {a,a+1}) = 1;
+
+theorem :: NUMBER14:83
+  card (multiples(2) /\ seq(k,2*m)) = m;
+
+theorem :: NUMBER14:84
+  n >= 8 implies ex m being Multiple of 3 st m in seq(k,n) & m is odd;
+
+theorem :: NUMBER14:85
+  for p being Prime holds
+  p <= k implies multiples(p) /\ seq(k,m) misses primeNumbers(k,m);
+
+:: Problem 131 a
+theorem :: NUMBER14:86
+  card primeNumbers(0,10) = 4;
+
+:: Problem 131 b
+theorem :: NUMBER14:87
+  card primeNumbers(1,10) = 5;
+
+:: Problem 131 c
+theorem :: NUMBER14:88
+  2 <= k implies card primeNumbers(k,10) <= 4;
+
+begin
+
+registration
+  let A be set;
+  cluster -> even for Element of EvenNAT \ A;
+end;
+
+registration
+  let A be set;
+  cluster even for Element of EvenNAT \ A;
+end;
+
+:: Problem 144
+theorem :: NUMBER14:89
+  for D being non zero Integer holds
+  { [x,y,z] where x,y,z is positive Nat : x^2-D*y^2 = z^2 & x,y are_coprime }
+  is infinite;
+
+begin :: Problem 148
+
+theorem :: NUMBER14:90
+  for x,y,z being Complex holds
+  x^2+y^2+z^2+x+y+z = 1 iff (2*x+1)^2+(2*y+1)^2+(2*z+1)^2 = 7;
+
+theorem :: NUMBER14:91
+  for a,b,c being Integer st (a^2+b^2+c^2) mod 4 = 0 holds
+  a is even & b is even & c is even;
+
+theorem :: NUMBER14:92
+  (a^2+b^2+c^2) mod 8 = 0 or (a^2+b^2+c^2) mod 8 = 1 or (a^2+b^2+c^2) mod 8 = 2
+  or
+  (a^2+b^2+c^2) mod 8 = 3 or (a^2+b^2+c^2) mod 8 = 4 or (a^2+b^2+c^2) mod 8 = 5
+  or
+  (a^2+b^2+c^2) mod 8 = 6;
+
+theorem :: NUMBER14:93
+  not ex x,y,z being Rational st x^2+y^2+z^2 = 7;
+
+:: Problem 148
+theorem :: NUMBER14:94
+  not ex x,y,z being Rational st x^2+y^2+z^2+x+y+z = 1;
+
+begin :: Problem 149
+
+:: Problem 149 a
+theorem :: NUMBER14:95
+  not ex x,y,z being positive Integer st 4*x*y-x-y = z^2;
+
+definition
+  func exampleSierpinski149 -> Function of NATPLUS, [:INT,INT,INT:] means
+:: NUMBER14:def 18
+
+  for n being non zero Nat holds it.n = [-1,-5*n^2-2*n,-5*n-1];
+end;
+
+registration
+  cluster exampleSierpinski149 -> one-to-one;
+end;
+
+theorem :: NUMBER14:96
+  rng exampleSierpinski149 c=
+  { [x,y,z] where x,y,z is negative Integer: 4*x*y-x-y = z^2 };
+
+:: Problem 149 b
+theorem :: NUMBER14:97
+  { [x,y,z] where x,y,z is negative Integer: 4*x*y-x-y = z^2 } is infinite;
+
+begin :: Problem 150
+
+definition
+  let m,D be Complex;
+  func exampleSierpinski150(m,D) -> sequence of [:COMPLEX,COMPLEX:] means
+:: NUMBER14:def 19
+
+  it.0 = [ 2*m^2+1 , 2*m ] &
+  for n being Nat holds
+   it.(n+1) = [ (it.n)`1^2+D*(it.n)`2^2 , 2*(it.n)`1*(it.n)`2 ];
+end;
+
+registration
+  let m,D be Real;
+  cluster exampleSierpinski150(m,D) -> [:REAL,REAL:]-valued;
+end;
+
+registration
+  let m,D be Rational;
+  cluster exampleSierpinski150(m,D) -> [:RAT,RAT:]-valued;
+end;
+
+registration
+  let m,D be Integer;
+  cluster exampleSierpinski150(m,D) -> [:INT,INT:]-valued;
+end;
+
+registration
+  let m,D be Nat;
+  cluster exampleSierpinski150(m,D) -> [:NAT,NAT:]-valued;
+end;
+
+registration
+  let m,D be positive natural Number;
+  let n be Nat;
+  cluster (exampleSierpinski150(m,D).n)`1 -> positive;
+  cluster (exampleSierpinski150(m,D).n)`2 -> positive;
+end;
+
+theorem :: NUMBER14:98
+  for m,D being positive natural Number, a,b being Nat st a < b holds
+  (exampleSierpinski150(m,D).a)`1 < (exampleSierpinski150(m,D).b)`1 &
+  (exampleSierpinski150(m,D).a)`2 < (exampleSierpinski150(m,D).b)`2;
+
+registration
+  let m,D be positive natural Number;
+  cluster exampleSierpinski150(m,D) -> one-to-one;
+end;
+
+:: Problem 150
+theorem :: NUMBER14:99
+  for D,m being positive Integer st D = m^2+1 holds
+  { [x,y] where x,y is positive Integer: x^2 - D*y^2 = 1 } is infinite;
+
+begin :: Problem 151
+
+theorem :: NUMBER14:100
+  2|^2 <= n & 2|^n divides i|^3 implies 2|^2 divides i;
+
+theorem :: NUMBER14:101
+  2|^3 <= n & 2|^n divides i|^3 implies 2|^3 divides i;
+
+theorem :: NUMBER14:102
+  i,j are_coprime & p|^n divides i*j implies p|^n divides i or p|^n divides j;
+
+theorem :: NUMBER14:103
+  n is odd & i,j are_coprime & i*j = z|^n implies ex k be Integer st i = k|^n;
+
+theorem :: NUMBER14:104
+  n is odd implies
+  for r,s being negative Real holds r <= s implies r|^n <= s|^n;
+
+theorem :: NUMBER14:105
+  0 <= j & j^2 < z < (j+1)^2 implies not ex i being Integer st z = i^2;
+
+:: Problem 151
+theorem :: NUMBER14:106
+  { [x,y] where x,y is Integer: y|^2 = x|^3+(x+4)|^2 } = { [0,4], [0,-4] };
+
+begin :: Problem 152
+
+theorem :: NUMBER14:107
+  for m being Complex holds
+  for x,y,z being non zero Complex holds
+  x/y + y/z + z/x = m iff x^2*z + y^2*x + z^2*y = m*x*y*z;
+
+theorem :: NUMBER14:108
+  for m being Integer
+  for x,y,z being non zero Integer st
+  x/y + y/z + z/x = m & x,y,z are_mutually_coprime holds
+  (x = 1 or x = -1) & (y = 1 or y = -1) & (z = 1 or z = -1);
+
+theorem :: NUMBER14:109
+  for m being Integer
+  for x,y,z being positive Integer st
+  x/y + y/z + z/x = m & x,y,z are_mutually_coprime holds
+  x = 1 & y = 1 & z = 1;
+
+:: Problem 152 a
+theorem :: NUMBER14:110
+  { [x,y,z] where x,y,z is positive Integer:
+     x/y + y/z + z/x = 3 & x,y,z are_mutually_coprime } =
+  { [1,1,1] };
+
+:: Problem 152 b
+theorem :: NUMBER14:111
+  { [x,y,z] where x,y,z is non zero Integer:
+     x/y + y/z + z/x = 3 & x,y,z are_mutually_coprime } =
+  { [1,1,1] , [-1,-1,-1] };
+
+:: Problem 152 c
+theorem :: NUMBER14:112
+  for m being Nat st m <> 3 holds
+  not ex x,y,z being non zero Integer st
+  x/y + y/z + z/x = m & x,y,z are_mutually_coprime;

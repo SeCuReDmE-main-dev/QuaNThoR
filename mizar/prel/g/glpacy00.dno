@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<Notations>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="XTUPLE_0"/>
+<ArticleID name="XBOOLE_0"/>
+<ArticleID name="ZFMISC_1"/>
+<ArticleID name="SUBSET_1"/>
+<ArticleID name="RELAT_1"/>
+<ArticleID name="FUNCT_1"/>
+<ArticleID name="MCART_1"/>
+<ArticleID name="PARTFUN1"/>
+<ArticleID name="FUNCT_2"/>
+<ArticleID name="ORDINAL1"/>
+<ArticleID name="FINSET_1"/>
+<ArticleID name="CARD_1"/>
+<ArticleID name="FINSEQ_1"/>
+<ArticleID name="XREAL_0"/>
+<ArticleID name="INT_1"/>
+<ArticleID name="GLIB_000"/>
+<ArticleID name="RELAT_2"/>
+<ArticleID name="FUNCOP_1"/>
+<ArticleID name="FUNCT_7"/>
+<ArticleID name="ABIAN"/>
+<ArticleID name="GLIB_001"/>
+<ArticleID name="GLIB_006"/>
+<ArticleID name="GLIB_014"/>
+<ArticleID name="GLPACY00"/>
+</Signature>
+<Vocabularies>
+<Vocabulary>
+<ArticleID name="GLIB_001"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="8"/>
+<SymbolCount kind="O" nr="22"/>
+<SymbolCount kind="R" nr="1"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="4"/>
+</Vocabulary>
+</Vocabularies>
+<Pattern kind="V" nr="1" aid="GLPACY00" constrkind="V" constrnr="104">
+<Format kind="V" symbolnr="2" argnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="10">
+<Func kind="K" nr="88"/>
+</Adjective>
+<Adjective nr="12"/>
+<Adjective nr="31"/>
+<Adjective nr="46"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="V" nr="2" aid="GLPACY00" constrkind="V" constrnr="105">
+<Format kind="V" symbolnr="2" argnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="12"/>
+<Adjective nr="57"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="V" nr="3" aid="GLPACY00" constrkind="V" constrnr="105">
+<Format kind="V" symbolnr="2" argnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="4" value="false"/>
+<Adjective nr="7"/>
+<Adjective nr="12"/>
+<Adjective nr="57"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="V" nr="4" aid="GLPACY00" constrkind="V" constrnr="105">
+<Format kind="V" symbolnr="2" argnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="10">
+<Func kind="K" nr="88"/>
+</Adjective>
+<Adjective nr="12"/>
+<Adjective nr="17">
+<Func kind="K" nr="88"/>
+</Adjective>
+<Adjective nr="57"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="V" nr="5" aid="GLPACY00" constrkind="V" constrnr="106">
+<Format kind="V" symbolnr="2" argnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="89"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="V" nr="6" aid="GLPACY00" constrkind="V" constrnr="107">
+<Format kind="V" symbolnr="4" argnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="10">
+<Func kind="K" nr="88"/>
+</Adjective>
+<Adjective nr="12"/>
+<Adjective nr="31"/>
+<Adjective nr="46"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="V" nr="7" aid="GLPACY00" constrkind="V" constrnr="108">
+<Format kind="V" symbolnr="4" argnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="12"/>
+<Adjective nr="57"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="V" nr="8" aid="GLPACY00" constrkind="V" constrnr="108">
+<Format kind="V" symbolnr="4" argnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="4" value="false"/>
+<Adjective nr="7"/>
+<Adjective nr="12"/>
+<Adjective nr="57"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="V" nr="9" aid="GLPACY00" constrkind="V" constrnr="108">
+<Format kind="V" symbolnr="4" argnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="10">
+<Func kind="K" nr="88"/>
+</Adjective>
+<Adjective nr="12"/>
+<Adjective nr="17">
+<Func kind="K" nr="88"/>
+</Adjective>
+<Adjective nr="57"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="V" nr="10" aid="GLPACY00" constrkind="V" constrnr="109">
+<Format kind="V" symbolnr="4" argnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="89"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+</Notations>

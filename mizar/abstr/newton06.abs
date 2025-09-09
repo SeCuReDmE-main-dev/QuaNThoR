@@ -1,0 +1,661 @@
+:: Application of Complex Classes to Number Theory
+::  by Rafa{\l} Ziobro
+:: 
+:: Received May 11, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ABIAN, NUMBERS, NAT_1, INT_1, ARYTM_3, XXREAL_0, CARD_1, ARYTM_1,
+      INT_2, COMPLEX1, RELAT_1, PYTHTRIP, SQUARE_1, REAL_1, XCMPLX_0, ORDINAL1,
+      NEWTON, POWER, NEWTON05, SUBSET_1, ZFMISC_1, MOEBIUS1, COMPLEX3;
+ notations ORDINAL1, XCMPLX_0, XREAL_0, NUMBERS, XXREAL_0, POWER, INT_1, INT_2,
+      NEWTON, ABIAN, COMPLEX1, PYTHTRIP, NEWTON05, SUBSET_1, NAT_D, PEPIN,
+      MOEBIUS1, COMPLEX3;
+ constructors NAT_D, ABIAN, NEWTON03, PYTHTRIP, PEPIN, NEWTON05, EC_PF_2,
+      MOEBIUS1, SERIES_1, COMPLEX3;
+ registrations ABIAN, ORDINAL1, XXREAL_0, XREAL_0, NAT_1, INT_1, NEWTON,
+      XCMPLX_0, WSIERP_1, NAT_6, PYTHTRIP, NEWTON01, NEWTON02, NEWTON03,
+      NEWTON05, COMPLEX3;
+ requirements REAL, NUMERALS, SUBSET, ARITHM;
+
+
+begin
+
+:: different registrations for COMPLEX3
+
+registration
+  let a be weightless Complex;
+  cluster |.a.| -> weightless;
+end;
+
+registration
+  let a be light Complex;
+  cluster |.a.| -> light;
+end;
+
+registration
+  let a be heavy Complex;
+  cluster |.a.| -> heavy;
+end;
+
+registration
+  let a be heavy positive Real, b be negative Real;
+  cluster a - b -> heavy;
+end;
+
+registration
+  let a be heavy negative Real, b be positive Real;
+  cluster a - b -> heavy;
+end;
+
+registration
+  let a be non light positive Real, b be negative Real;
+  cluster a - b -> heavy;
+end;
+
+registration
+  let a be non light negative Real, b be positive Real;
+  cluster a - b -> heavy;
+end;
+
+registration
+  let a be non heavy Real, b be heavy negative Real;
+  cluster a - b -> positive;
+end;
+
+registration
+  let a be light Real, b be non light negative Real;
+  cluster a - b -> positive;
+end;
+
+registration
+  let a be non heavy Real, b be non light negative Real;
+  cluster a - b -> non negative;
+end;
+
+registration
+  let a be non heavy Real, b be heavy positive Real;
+  cluster a - b -> negative;
+end;
+
+registration
+  let a be light Real, b be non light positive Real;
+  cluster a - b -> negative;
+end;
+
+registration
+  let a be non heavy Real, b be non light positive Real;
+  cluster a - b -> non positive;
+end;
+
+registration
+  let a be light positive Real, b be light positive Real;
+  cluster a - b -> light;
+end;
+
+registration
+  let a be non heavy positive Real, b be non heavy positive Real;
+  cluster a - b -> non heavy;
+end;
+
+:: non integer numbers
+
+registration
+  let a be Real;
+  cluster frac a -> light non negative;
+  reduce frac (frac a) to frac a;
+end;
+
+registration
+  let a be integer Real;
+  cluster frac a -> zero;
+end;
+
+registration
+  cluster weightless for even Integer;
+  cluster weightless for odd Integer;
+  cluster heavy for Integer;
+  cluster non weightless -> heavy for Integer;
+  cluster heavy for odd Integer;
+  cluster heavy for even Integer;
+  cluster heavy for positive Integer;
+  cluster heavy for negative Integer;
+end;
+
+theorem :: NEWTON06:1
+  for a,b be non weightless Integer holds a,b are_coprime implies
+    not a divides b & not b divides a;
+
+registration
+  cluster non integer for Real;
+end;
+
+registration
+  let a be non integer Complex;
+  cluster -a -> non integer;
+end;
+
+registration
+  let a be non integer Real;
+  cluster frac a -> light positive;
+end;
+
+registration
+  let a be non integer Complex;
+  let b be non zero Integer;
+  cluster a + b -> non integer;
+  cluster a - b -> non integer;
+  cluster a/b -> non integer;
+end;
+
+registration
+  let b be light positive Real;
+  cluster [/b\] -> weightless positive;
+  cluster [\b/] -> zero;
+  reduce frac b to b;
+  let a be Integer;
+  reduce [\a + b/] to a;
+  reduce [/a - b\] to a;
+  reduce frac (a + b) to b;
+end;
+
+registration
+  let a be positive Real;
+  cluster [\a/] -> non negative;
+  cluster [/a\] -> positive;
+end;
+
+registration
+  let a be heavy positive Real;
+  cluster [\a/] -> positive;
+end;
+
+registration
+  let a be negative Real;
+  cluster [\a/] -> negative;
+  cluster [/a\] -> non positive;
+end;
+
+registration
+  let a be heavy negative Real;
+  cluster [/a\] -> negative;
+end;
+
+registration
+  let a be Integer, b be light negative Real;
+  reduce [\a - b/] to a;
+  reduce [/a + b\] to a;
+end;
+
+:: inequalities in rounding products and fractions
+
+theorem :: NEWTON06:2
+  for a,b be positive Real holds [\a/]*[\b/] <= [\a/]*b <= a*b;
+
+theorem :: NEWTON06:3
+  for a,b be positive Real holds [\a/]*[\b/] <= [\a*b/];
+
+theorem :: NEWTON06:4
+  for a,b be positive Real holds [\a/]/b <= a/b;
+
+theorem :: NEWTON06:5
+  for a be positive Real, b be heavy positive Real holds a/[\b/] >= a/b;
+
+theorem :: NEWTON06:6
+  for a be Integer, b be non zero Integer holds b divides a iff a mod b = 0;
+
+theorem :: NEWTON06:7
+  for a be positive Real, n being Nat holds [\n*a/] >= n*[\a/];
+
+registration
+  let a be Integer;
+  cluster a mod 1 -> zero;
+  cluster a mod (-1) -> zero;
+  cluster a mod 0 -> zero;
+  let b be weightless Integer;
+  cluster a mod b -> zero;
+end;
+
+registration
+  let a be Integer, b be non zero Nat;
+  cluster a |^b mod a -> zero;
+end;
+
+registration
+  let a be Integer, b be non negative Integer;
+  cluster a mod b -> natural;
+end;
+
+registration
+  let a be odd Integer, b be non zero even Integer;
+  cluster a mod b -> odd;
+end;
+
+registration
+  let a be even Integer, b be non zero even Integer;
+  cluster a mod b -> even;
+end;
+
+registration let a be even Integer;
+  cluster a|^4 mod 8 -> zero;
+end;
+
+:: square
+
+registration
+  cluster odd for square Nat;
+end;
+
+registration
+  let a,b be odd Integer;
+  cluster (a|^2 - b|^2)/2 -> even;
+  cluster (a|^2 + b|^2)/2 -> odd;
+end;
+
+registration
+  let a be square Integer;
+  cluster 2-root a -> natural;
+  reduce (2-root a)*(2-root a) to a;
+end;
+
+registration
+  let a be even square Integer;
+  cluster 2-root a -> even;
+  cluster a/2 -> even;
+  let b be odd square Integer;
+  cluster a - b -> non square;
+end;
+
+registration
+  let a be odd square Integer;
+  cluster 2-root a -> odd;
+  let b be odd square Integer;
+  cluster (a + b)/2 -> odd;
+  cluster (a - b)/2 -> even;
+end;
+
+registration
+  let a be non negative Real;
+  cluster 2-root a -> non negative;
+end;
+
+registration
+  cluster even for square Integer;
+  cluster odd for square Integer;
+  cluster even for square Nat;
+end;
+
+registration
+  let n be non zero Nat;
+  reduce n-root 1 to 1;
+  reduce n-root 0 to 0;
+end;
+
+registration
+  let a be positive Real, n be non zero Nat;
+  cluster n-root a -> positive;
+end;
+
+theorem :: NEWTON06:8
+  for a be Nat holds a is square & a is square-free iff a = 1;
+
+registration
+  cluster square-free square for Nat;
+end;
+
+registration
+  let a be even square Integer;
+  cluster a/4 -> square integer;
+end;
+
+registration
+  let a be non zero square Integer;
+  cluster 2*a -> non square;
+  cluster a + a -> non square;
+end;
+
+registration
+  let a be Integer, b,c be non zero Nat;
+  reduce (a mod b) mod (b*c) to a mod b;
+end;
+
+registration
+  let b be non trivial Nat;
+  reduce 1 mod b to 1;
+  let a be Nat;
+  reduce (a*b + 1) mod b to 1;
+  let n be Nat;
+  reduce (a*b+1)|^n mod b to 1;
+end;
+
+registration
+  let b be non trivial Nat, n be even Nat;
+  reduce (b - 1)|^n mod b to 1;
+end;
+
+registration
+  let b be non trivial Nat, n be odd Nat;
+  reduce (b - 1)|^n mod b to b - 1;
+end;
+
+theorem :: NEWTON06:9
+  for a be Nat, p be Prime holds
+    a|^(p - 1) mod p = 0 or a|^(p - 1) mod p = 1;
+
+registration
+  let a be Nat;
+  cluster a mod 2 -> square;
+  cluster a|^2 mod 3 -> square;
+  cluster a|^2 mod 4 -> square;
+  cluster a|^2 mod 5 -> square;
+  cluster a|^2 mod 8 -> square;
+  let p be prime Nat;
+  cluster a|^(p - 1) mod p -> square;
+end;
+
+theorem :: NEWTON06:10
+  for a be non integer Real holds (frac a) + (frac (-a)) = 1;
+
+registration
+  let a be non integer Real;
+  cluster (frac a) + (frac (-a)) -> non zero trivial;
+end;
+
+theorem :: NEWTON06:11
+  for a be non integer Real holds -1 < frac a - frac (-a) < 1;
+
+theorem :: NEWTON06:12
+  for a be non integer Real holds frac a = frac -a iff 2*a is odd Integer;
+
+theorem :: NEWTON06:13
+  for a,b be Real holds
+    frac (a*b) = frac ((a*frac b) + (b*frac a) - (frac a)*(frac b));
+
+theorem :: NEWTON06:14
+  for a,b be Real holds
+    frac (a*b) = frac (([\a/]*frac b) + ([\b/]*frac a) + (frac a)*(frac b));
+
+theorem :: NEWTON06:15
+  for a be Real, b be Integer holds frac (a*b) = frac (b*frac a);
+
+theorem :: NEWTON06:16
+  for a be Real holds frac (a*a) = frac ((2*a*frac a) - (frac a)*(frac a));
+
+theorem :: NEWTON06:17
+  for a be Real holds frac (a*a) = frac ((2*[\a/]*frac a) + (frac a)*(frac a));
+
+theorem :: NEWTON06:18
+  for a be positive Real st frac a = 1/2 holds frac (2*a) = 0;
+
+theorem :: NEWTON06:19
+  for a be positive Real holds 1/2 > frac a implies frac (2*a) = 2*(frac a);
+
+theorem :: NEWTON06:20
+  for a be positive Real holds 1/2 < frac a implies frac (2*a) < frac a;
+
+theorem :: NEWTON06:21
+  for a be Integer, b be non zero Integer st
+    not b divides a holds (a div b) + ((-a) div b) = -1;
+
+theorem :: NEWTON06:22
+  for a be Integer, b be non zero Integer holds
+    not b divides a iff (a mod b) + ((-a) mod b) = b;
+
+theorem :: NEWTON06:23
+  for a,b be Integer holds
+    (a mod b) + ((-a) mod b) = 0 or (a mod b) + ((-a) mod b) = b;
+
+theorem :: NEWTON06:24
+  for a be even Integer, b be odd Integer holds
+    a div b is odd iff a mod b is odd;
+
+theorem :: NEWTON06:25
+  for a,b be odd Integer holds a mod b is odd iff a div b is even;
+
+theorem :: NEWTON06:26
+  for a be Integer, b be odd Integer st
+    not b divides a holds a mod b is odd iff (-a) mod b is even;
+
+theorem :: NEWTON06:27
+  for a be non zero Integer, b be Integer holds
+    a divides b iff a divides (b mod a);
+
+theorem :: NEWTON06:28
+  for a be non weightless Integer, b be non weightless odd Integer st
+    a,b are_coprime holds (b + a) mod b <> (b - a) mod b;
+
+theorem :: NEWTON06:29
+  for a be Integer, b be even Integer st
+    not b divides a holds a mod b is odd implies (-a) mod b is odd;
+
+theorem :: NEWTON06:30
+  for a,b be non zero Integer holds
+    b mod a = (-b) mod a implies a is even or a divides b;
+
+theorem :: NEWTON06:31
+  for a,b be Nat st a,b are_coprime holds
+    for n be non trivial Nat holds max (a mod n, b mod n) > 0;
+
+theorem :: NEWTON06:32
+  for s be square Integer holds s mod 3 is trivial Nat;
+
+theorem :: NEWTON06:33
+  for a,b be square Nat holds (a + b)/2 is square implies a mod 3 = b mod 3;
+
+theorem :: NEWTON06:34
+  for a,b be odd Nat st a,b are_coprime holds
+    (a|^2 + b|^2)/2 is square implies not 3 divides a*b;
+
+theorem :: NEWTON06:35
+  for a,b be Integer holds a div b = (-a) div (-b);
+
+theorem :: NEWTON06:36
+  for a,b be square Nat st a,b are_coprime holds
+    (a - b)/2 is square implies b mod 3 = 1;
+
+theorem :: NEWTON06:37
+  for a be odd Nat holds 3 divides 2|^a + 1;
+
+theorem :: NEWTON06:38
+  for a,b,c,d be Integer holds a*b gcd c*d = 1 implies a gcd c = 1;
+
+theorem :: NEWTON06:39 ::: WSIERP_1:11
+  for a,b be Integer, m,n be non zero Nat holds
+    a,b are_coprime iff a|^m, b|^n are_coprime;
+
+theorem :: NEWTON06:40
+  for a,b be square Nat st a,b are_coprime holds not 3 divides a + b;
+
+theorem :: NEWTON06:41
+  for a,b be odd square Nat st a,b are_coprime holds not 3 divides (a + b)/2;
+
+:: the uniqueness of coprime factorization
+
+theorem :: NEWTON06:42
+  for a,b,c,d be Nat st a,c are_coprime & b,d are_coprime holds
+    a*b = c*d implies a = d & b = c;
+
+:: may be proved the other way
+
+theorem :: NEWTON06:43
+  for a,b,c be Nat st a,b are_coprime holds
+    c divides a*b implies (a gcd c)*(b gcd c) = c;
+
+theorem :: NEWTON06:44
+  for a,b,c,d be Nat st a,b are_coprime holds
+    a*b = c*d implies a*b = (a gcd c)*(b gcd c)*(a gcd d)*(b gcd d);
+
+theorem :: NEWTON06:45
+  for a,b,c,d be positive Real holds a*b = c*d & a*c = b*d implies a = d;
+
+theorem :: NEWTON06:46
+  for a,b be Integer st a,b are_coprime holds (a - b)*(a + b) gcd a*b = 1;
+
+theorem :: NEWTON06:47
+  for a be odd Integer, b be even Integer st a,b are_coprime holds
+  (a - b)*(a + b) gcd 2*a*b = 1;
+
+theorem :: NEWTON06:48  ::: NEWTON02:48
+  for a be even Integer, b be Integer st a,b are_coprime holds
+    (a + b),(a - b) are_coprime;
+
+theorem :: NEWTON06:49
+  for a be even Integer, b be Integer, n be non zero Nat st
+    a,b are_coprime holds b|^n + a|^n, b|^n - a|^n are_coprime;
+
+theorem :: NEWTON06:50
+  for a,b be Nat, c,d be non zero Nat holds
+    a mod (c*d) = b mod (c*d) implies a mod c = b mod c;
+
+theorem :: NEWTON06:51
+  for a,b be non zero Nat holds (a - b) mod 2*b = (a + b) mod 2*b;
+
+theorem :: NEWTON06:52
+  for a,b be non zero Nat st a|^2 - b|^2 in NAT holds
+    (a|^2 - b|^2) mod (2*b) = (a|^2 + b|^2) mod (2*b);
+
+theorem :: NEWTON06:53
+  for a,b be non zero Nat holds (a - b)|^2 mod (4*a*b) = (a + b)|^2 mod (4*a*b)
+;
+
+theorem :: NEWTON06:54
+  for a,b be odd Nat holds ((a - b)/2)|^2 mod (a*b) = ((a + b)/2)|^2 mod (a*b);
+
+theorem :: NEWTON06:55
+  for a,b,c be Nat st a|^2 + b|^2 = c|^2 holds
+    b|^2 mod a = c|^2 mod a & a|^2 mod b = c|^2 mod b;
+
+theorem :: NEWTON06:56
+  for a be Nat, b be non trivial Nat,c be non zero Nat holds
+    a mod (b*c) = 1 implies a mod b = 1;
+
+theorem :: NEWTON06:57
+  for a be Nat, b be non zero Nat, m,n be non zero Nat st m >= n holds
+    a mod b|^m = 1 implies a mod b|^n = 1;
+
+theorem :: NEWTON06:58
+  for i be Integer holds (i|^2) mod 4 = 0 or (i|^2) mod 4 = 1;
+
+theorem :: NEWTON06:59
+  for i be Integer holds
+    (i|^2) mod 8 = 0 or (i|^2) mod 8 = 1 or (i|^2) mod 8 = 4;
+
+theorem :: NEWTON06:60
+  for i be Integer holds (i|^4) mod 8 = 0 or (i|^4) mod 8 = 1;
+
+theorem :: NEWTON06:61
+  for a,b be odd Integer holds (a + b) mod 4 = 2 or (a - b) mod 4 = 2;
+
+theorem :: NEWTON06:62
+  for a,b be odd Integer holds (a + b) mod 4 = 0 or (a - b) mod 4 = 0;
+
+theorem :: NEWTON06:63
+  for a,b be odd Integer holds max ((a + b) mod 4, (a - b) mod 4) = 2;
+
+theorem :: NEWTON06:64
+  for a,b be odd Integer holds min ((a + b) mod 4, (a - b) mod 4) = 0;
+
+theorem :: NEWTON06:65
+  for a,b be Nat st a,b are_coprime holds
+    (a|^4 + b|^4) mod 5 = 1 or (a|^4 + b|^4) mod 5 = 2;
+
+theorem :: NEWTON06:66  :: REAL_3:3
+  for a,b be Integer holds a mod b = b*frac (a/b);
+
+theorem :: NEWTON06:67
+  for a be Integer, b be non zero Integer holds frac (b*frac (a/b)) = 0;
+
+registration
+  let a be heavy positive Real;
+  cluster 1/a -> light positive;
+end;
+
+theorem :: NEWTON06:68
+  for b,c be positive Nat holds c*frac (1/(b + c)) < 1;
+
+registration
+  let a be Integer;
+  reduce a div 1 to a;
+end;
+
+registration
+  let a be non zero Integer;
+  reduce 1*a div a to 1;
+end;
+
+registration
+  let a be heavy positive Integer;
+  cluster 1 div a -> zero;
+end;
+
+registration
+  let a be heavy positive Integer, b be Integer;
+  cluster b div (a*b) -> zero;
+  reduce b mod (a*b) to b;
+end;
+
+theorem :: NEWTON06:69
+  for a,b,c be Integer holds (a*b) mod (a*c) = a*(b mod c);
+
+theorem :: NEWTON06:70
+  for a,b be non zero Integer, c be Integer holds c mod (a*b) mod a = c mod a;
+
+theorem :: NEWTON06:71
+  for a be Integer, b be non zero Integer, n be non zero Nat holds
+    a mod b|^n mod b = a mod b;
+
+theorem :: NEWTON06:72
+  for a be non zero Nat, b be Nat holds
+    b mod a < [/a/2\] implies frac (b/a) < 1/2;
+
+theorem :: NEWTON06:73 :: MF2:
+  for a be non zero Nat, b be Nat holds
+    b mod a < [/a/2\] implies (2*b) mod a = 2*(b mod a);
+
+theorem :: NEWTON06:74
+  for a be odd square Integer holds a mod 8 = 1;
+
+registration let a be square Integer;
+  cluster a mod 3 -> square;
+  cluster a mod 4 -> square;
+  cluster a mod 8 -> square;
+end;
+
+theorem :: NEWTON06:75
+  for a be Integer holds a|^4 mod 8 is trivial Nat;
+
+theorem :: NEWTON06:76
+  for a be odd Integer holds a|^4 mod 8 = 1;
+
+theorem :: NEWTON06:77
+  for i be Integer holds (i|^4) mod 5 = 0 or (i|^4) mod 5 = 1;
+
+theorem :: NEWTON06:78
+  for a,b be odd Nat st a,b are_coprime holds
+    ((a|^4 + b|^4)/2) mod 5 = 3 or ((a|^4 + b|^4)/2) mod 5 = 1;
+
+theorem :: NEWTON06:79 :: MOD5:
+  for a,b be Nat st a,b are_coprime holds (a|^4 - b|^4) mod 5 is square;
+
+theorem :: NEWTON06:80
+  for a,b be Integer, n be Nat holds a|^n mod b = (a mod b)|^n mod b;
+
+theorem :: NEWTON06:81
+  for a be Integer, b be non zero Integer holds a|^2 mod b = (b-a)|^2 mod b;
+
+theorem :: NEWTON06:82
+  for a,b be Integer, c be odd Integer holds
+    (a + b) mod c = (a - b) mod c implies c divides b;
+
+theorem :: NEWTON06:83
+  for k be Integer holds
+    (ex a,b be Integer st a|^2 - b|^2 = k) iff k mod 4 <> 2;

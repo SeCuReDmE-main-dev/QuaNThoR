@@ -1,0 +1,861 @@
+:: Finite Fields
+::  by Christoph Schwarzweller
+:: 
+:: Received December 27, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ARYTM_3, VECTSP_1, ALGSTR_0, TARSKI, STRUCT_0, SUBSET_1, RING_2,
+      SUPINF_2, MESFUNC1, C0SP1, POLYNOM1, RLVECT_5, TOPGEN_1, FUNCSDOM,
+      EC_PF_1, HURWITZ, CARD_1, WELLORD1, FUNCT_1, RELAT_1, NUMBERS, POLYNOM5,
+      FOMODEL1, FIELD_14, ZFMISC_1, REALSET1, QUOFIELD, CAT_1, POLYNOM3,
+      FINSEQ_1, UPROOTS, ARYTM_1, FIELD_4, ALGNUM_1, XBOOLE_0, XXREAL_0,
+      GLIB_000, FIELD_1, RING_3, XCMPLX_0, POLYNOM2, ALGSEQ_1, FUNCT_2, MOD_4,
+      FIELD_6, RING_5, NAT_1, INT_2, VECTSP_2, FIELD_8, RATFUNC1, GROUP_1,
+      CARD_3, NEWTON, FINSET_1, RLVECT_1, FUNCT_4, BINOP_1, LATTICES, FUNCOP_1,
+      UNIROOTS, BCIALG_2, VECTSP13, PEPIN, TOPZARI1, VECTSP10, MSSUBFAM,
+      GROUPP_1, FIELD_15, INT_7, FSM_1, GAUSSINT, FUNCT_7, RANKNULL, ORDINAL1,
+      FIELD_13, FIELD_16, RLSUB_1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, BINOP_1, RELAT_1, RELSET_1,
+      FINSET_1, REALSET1, FUNCT_1, ORDINAL1, FUNCT_2, FUNCOP_1, NUMBERS,
+      CARD_1, PARTFUN1, FUNCT_4, XCMPLX_0, XXREAL_0, NAT_1, NEWTON, UNIROOTS,
+      VFUNCT_1, INT_2, INT_7, NAT_D, FINSEQ_1, ALGSEQ_1, STRUCT_0, BINOM,
+      POLYNOM3, POLYNOM4, POLYNOM5, ALGSTR_0, QUOFIELD, GCD_1, GROUP_1,
+      GROUP_6, MOD_4, UPROOTS, RLVECT_1, VECTSP_1, VECTSP_2, VECTSP_4,
+      VECTSP_9, FUNCT_7, VECTSP10, VECTSP13, MATRLIN, HURWITZ, RANKNULL,
+      TOPZARI1, C0SP1, EC_PF_1, GAUSSINT, RATFUNC1, ALGNUM_1, RING_2, RING_3,
+      RING_4, RING_5, FIELD_1, FIELD_4, FIELD_6, AIMLOOP, FIELD_8, FIELD_12,
+      FIELD_13, FIELD_14, FIELD_15;
+ constructors FUNCT_4, VFUNCT_1, NAT_D, ALGSEQ_1, RINGDER1, REALSET1, GR_CY_1,
+      NAT_6, RINGCAT1, ALGNUM_1, POLYNOM4, VECTSP_9, BINOM, INT_7, TOPZARI1,
+      UNIROOTS, VECTSP13, RING_5, FIELD_8, FIELD_9, FIELD_12, FIELD_13,
+      FIELD_14, FIELD_15, AIMLOOP, FUNCT_7;
+ registrations XBOOLE_0, ORDINAL1, RELSET_1, FUNCOP_1, XCMPLX_0, XXREAL_0,
+      NAT_1, XREAL_0, INT_1, MEMBERED, SUBSET_1, STRUCT_0, VECTSP_1, ALGSTR_1,
+      EC_PF_1, FINSET_1, INT_3, GAUSSINT, NAT_6, VECTSP13, FUNCT_2, ALGSTR_0,
+      GROUP_1, RLVECT_1, FUNCT_1, VFUNCT_1, CARD_1, REALSET1, UNIROOTS, MOD_4,
+      RATFUNC1, FINSEQ_1, TOPZARI1, NEWTON, RELAT_1, RINGCAT1, RING_2, RING_3,
+      RING_4, RING_5, POLYNOM3, POLYNOM4, FIELD_1, FIELD_4, FIELD_6, FIELD_7,
+      FIELD_8, FIELD_9, FIELD_12, FIELD_14, FIELD_15, HILBERT4, VECTSP_4,
+      VECTSP_9, ZMODUL06;
+ requirements NUMERALS, SUBSET, BOOLE, REAL, ARITHM;
+
+
+begin
+
+registration
+let L1,L2 be non empty 1-sorted;
+cluster Funcs(L1,L2)-valued for sequence;
+end;
+
+definition
+let L1,L2 be non empty 1-sorted;
+let F be Funcs(L1,L2)-valued sequence;
+let n be Nat;
+redefine func F.n -> Function of L1,L2;
+end;
+
+registration let F be Field;
+  cluster trivial for VectSp of F;
+end;
+
+scheme :: FIELD_16:sch 1
+ RecExF {D() -> non empty 1-sorted,
+        F() -> Function of D(),D(),
+        P[object,Function of D(),D(),Function of D(),D()]}:
+ex f being Funcs(D(),D())-valued sequence
+  st f.0 = F() & for n being Nat holds P[n,f.n,f.(n+1)]
+provided
+for n being Nat, g1 being Function of D(),D()
+   ex g2 being Function of D(),D() st P[n,g1,g2];
+
+definition ::: FUNCT_7:def 11 should be reused
+let L be non empty 1-sorted;
+let f be Function of L,L;
+let n be Nat;
+func f`^n -> Function of L,L means
+:: FIELD_16:def 1
+  ex F being Funcs(L,L)-valued sequence st
+  it = F.n & F.0 = id L & for i being Nat holds F.(i+1) = (F.i) * f;
+end;
+
+registration
+let L be non empty 1-sorted;
+let f be Function of L,L;
+reduce f`^1 to f;
+end;
+
+theorem :: FIELD_16:1
+for L being non empty 1-sorted
+for f being Function of L,L holds f`^0 = id L & f`^1 = f & f`^2 = f * f;
+
+theorem :: FIELD_16:2
+for L being non empty 1-sorted
+for f being Function of L,L
+for n being Nat holds f`^(n+1) = (f`^n) * f = f * (f`^n);
+
+registration
+let L be non empty 1-sorted;
+let n be Nat;
+reduce (id L)`^n to id L;
+end;
+
+theorem :: FIELD_16:3
+for L being non empty 1-sorted
+for f being Function of L,L
+for n,m being Nat holds f`^(n+m) = (f`^n) * (f`^m);
+
+theorem :: FIELD_16:4
+for L being non empty 1-sorted
+for f being Function of L,L
+for n,m being Nat holds f`^(n*m) = (f`^n)`^m;
+
+theorem :: FIELD_16:5
+for L being non empty 1-sorted
+for f being bijective Function of L,L
+for n,m being Nat holds f`^(n+1) = f`^(m+1) iff f`^n = f`^m;
+
+theorem :: FIELD_16:6
+for L being non empty 1-sorted
+for f being bijective Function of L,L
+for n,m,k being Nat st f`^n = f`^m & k = n-m holds f`^k = f`^0;
+
+registration
+let F be Field;
+cluster isomorphism for Function of F,F;
+end;
+
+registration
+let R be Ring;
+let f,g be isomorphism Function of R,R;
+cluster f * g -> isomorphism for Function of R,R;
+end;
+
+registration
+let R be Ring;
+let f be isomorphism Function of R,R;
+let n be Nat;
+cluster f`^n -> isomorphism for Function of R,R;
+end;
+
+registration
+let R be Ring;
+let f be isomorphism Function of R,R;
+cluster f" -> isomorphism for Function of R,R;
+end;
+
+begin :: Induced subfields
+
+definition
+let F be Field;
+let S be Subset of F;
+attr S is inducing_subfield means
+:: FIELD_16:def 2
+   0.F in S & 1.F in S &
+   (for a,b being Element of F st a in S & b in S
+    holds a + b in S & a * b in S & -a in S) &
+   (for a being non zero Element of F st a in S holds a" in S);
+end;
+
+registration
+let F be Field;
+cluster inducing_subfield for Subset of F;
+end;
+
+registration
+let F be Field;
+cluster -> non empty for inducing_subfield Subset of F;
+end;
+
+definition
+let F be Field;
+let S be inducing_subfield Subset of F;
+func InducedSubfield S -> strict non empty doubleLoopStr means
+:: FIELD_16:def 3
+  the carrier of it = S &
+  the addF of it = (the addF of F)||S &
+  the multF of it = (the multF of F)||S &
+  0.it = 0.F & 1.it = 1.F;
+end;
+
+registration
+let F be Field;
+let S be inducing_subfield Subset of F;
+cluster InducedSubfield S -> non degenerated;
+end;
+
+registration
+let F be Field;
+let S be inducing_subfield Subset of F;
+cluster InducedSubfield S -> Abelian add-associative right_zeroed
+                             right_complementable;
+end;
+
+registration
+let F be Field;
+let S be inducing_subfield Subset of F;
+cluster InducedSubfield S -> commutative associative well-unital distributive
+                             almost_left_invertible;
+end;
+
+definition
+let F be Field;
+let S be inducing_subfield Subset of F;
+redefine func InducedSubfield S -> strict Subfield of F;
+end;
+
+registration
+let E be Field;
+let F be Subfield of E;
+cluster the carrier of F -> inducing_subfield for Subset of E;
+end;
+
+registration
+let F be Field;
+cluster the carrier of F -> inducing_subfield for Subset of F;
+end;
+
+
+begin  :: Some more Preliminaries
+
+registration
+let R1 be Ring;
+let R2 be R1-isomorphic Ring;
+let R3 be R2-isomorphic Ring;
+let f be Isomorphism of R1,R2, g be Isomorphism of R2,R3;
+cluster g * f -> isomorphism for Function of R1,R3;
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+let f be additive Function of E,E;
+cluster f|(the carrier of F) -> additive for Function of F,F;
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+let f be multiplicative Function of E,E;
+cluster f|(the carrier of F) -> multiplicative for Function of F,F;
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+let f be unity-preserving Function of E,E;
+cluster f|(the carrier of F) -> unity-preserving for Function of F,F;
+end;
+
+definition
+let n,m be Nat;
+attr m is n-power means
+:: FIELD_16:def 4
+  ex l being non zero Nat st m = n |^ l;
+end;
+
+registration
+let n be Nat, l be non zero Nat;
+cluster n|^l -> n-power;
+end;
+
+registration
+let n be Nat;
+cluster n-power for Nat;
+end;
+
+definition
+let n be Nat;
+mode Power of n is n-power Nat;
+end;
+
+registration
+let n be non zero Nat;
+cluster -> non zero for Power of n;
+end;
+
+registration
+let n be non trivial Nat;
+cluster -> non trivial for Power of n;
+end;
+
+theorem :: FIELD_16:7
+for p1,p2 being Prime
+for n1,n2 being Nat st (n1 <> 0 or n2 <> 0) &
+p1|^n1 = p2|^n2 holds p1 = p2 & n1 = n2;
+
+theorem :: FIELD_16:8
+for F being Field
+for a being non zero Element of F
+for n being Nat holds (a")|^n = (a|^n)";
+
+theorem :: FIELD_16:9
+for R being Ring
+for S being R-homomorphic Ring
+for f being multiplicative unity-preserving Function of R,S
+for a being Element of R
+for n being Nat holds f.(a|^n) = (f.a)|^n;
+
+registration
+let R be Ring;
+let p be Polynomial of R;
+reduce --p to p;
+end;
+
+theorem :: FIELD_16:10
+for R being Ring
+for p1,p2 being Polynomial of R holds p1 *' (-p2) = -(p1 *' p2);
+
+theorem :: FIELD_16:11
+for R being domRing
+for S being domRingExtension of R
+for p being non zero Element of the carrier of Polynom-Ring R
+holds card Roots(S,p) <= deg p;
+
+theorem :: FIELD_16:12
+for F being Field
+for E being FieldExtension of F
+for a being Element of E
+for n being Nat holds a|^n in the carrier of FAdj(F,{a});
+
+theorem :: FIELD_16:13
+for F being Field
+for E being FieldExtension of F
+for a being F-algebraic Element of E
+for f being F-fixing Automorphism of FAdj(F,{a})
+holds f.a in Roots(FAdj(F,{a}),MinPoly(a,F));
+
+theorem :: FIELD_16:14
+for F being Field
+for E1,E2 being FieldExtension of F st E1 == E2
+for f being Automorphism of E1 holds f is Automorphism of E2;
+
+theorem :: FIELD_16:15
+for F being Field
+for E1,E2 being FieldExtension of F st E1 == E2
+holds the set of all f where f is Automorphism of E1
+    = the set of all f where f is Automorphism of E2;
+
+theorem :: FIELD_16:16
+for F being Field
+for E being FieldExtension of F
+for a being F-algebraic Element of E
+for f,g being F-fixing Automorphism of FAdj(F,{a}) st f.a = g.a holds f = g;
+
+theorem :: FIELD_16:17
+for F being Field
+for E being FieldExtension of F
+for a being F-algebraic Element of E holds
+the set of all f where f is F-fixing Automorphism of FAdj(F,{a}) is finite;
+
+theorem :: FIELD_16:18
+for F being Field
+for E being FieldExtension of F
+for a being F-algebraic Element of E
+holds card(the set of all f where f is F-fixing Automorphism of FAdj(F,{a}))
+      c= card Roots(FAdj(F,{a}),MinPoly(a,F));
+
+theorem :: FIELD_16:19
+for F being Field
+for E being FieldExtension of F
+for p being non constant Element of the carrier of Polynom-Ring F
+holds card Roots(E,p) = deg p iff (p splits_in E & p is separable);
+
+registration
+let F be finite Field;
+cluster -> finite for Subfield of F;
+end;
+
+registration
+let F be Field;
+let K be FieldExtension of (PrimeField F);
+cluster K-extending for FieldExtension of (PrimeField F);
+end;
+
+notation
+let F be finite Field;
+synonym order F for card F;
+end;
+
+registration
+let F be finite Field;
+cluster order F -> natural;
+end;
+
+registration
+let F be finite Field;
+cluster order F -> non trivial;
+end;
+
+registration
+let F be finite Field;
+cluster -> finite for F-finite FieldExtension of F;
+end;
+
+registration
+let F be finite Field;
+cluster -> F-simple for F-finite FieldExtension of F;
+end;
+
+
+begin :: Reduced Rings and Frobenious Morphism
+
+definition
+let R be Ring;
+attr R is reduced means
+:: FIELD_16:def 5
+  for a being nilpotent Element of R holds a = 0.R;
+end;
+
+registration
+let R be non degenerated commutative Ring;
+cluster nilpotent -> non unital for Element of R;
+end;
+
+theorem :: FIELD_16:20
+for R being non degenerated commutative Ring
+holds R is reduced iff nilrad R = { 0.R };
+
+registration
+cluster -> reduced for domRing;
+end;
+
+registration
+let R be domRing;
+cluster -> non nilpotent for non zero Element of R;
+end;
+
+definition
+let R be Ring;
+func FrobeniusMorphism R -> Function of R,R means
+:: FIELD_16:def 6
+  for a being Element of R holds it.a = a|^(Char R);
+end;
+
+notation
+let R be Ring;
+synonym Frob R for FrobeniusMorphism R;
+end;
+
+registration
+let p be Prime;
+let R be p-characteristic commutative Ring;
+cluster Frob R -> additive multiplicative unity-preserving;
+end;
+
+theorem :: FIELD_16:21
+for n being Nat
+for R being n-characteristic Ring
+holds ker(Frob R) = { a where a is Element of R : a|^n = 0.R };
+
+theorem :: FIELD_16:22
+for R being non degenerated commutative Ring holds ker(Frob R) c= nilrad R;
+
+theorem :: FIELD_16:23
+for R being 0-characteristic Ring holds Frob R = (the carrier of R) --> 1.R;
+
+theorem :: FIELD_16:24
+for p being Prime holds card(Z/p) = p;
+
+theorem :: FIELD_16:25
+for p being Prime, a being Element of Z/p holds a|^p = a;
+
+theorem :: FIELD_16:26
+for p being Prime holds Frob(Z/p) = id(Z/p);
+
+theorem :: FIELD_16:27
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n holds Char F = p;
+
+theorem :: FIELD_16:28
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n
+for a being Element of F holds a|^(p|^n) = a;
+
+registration
+let p be Prime;
+let R be p-characteristic reduced commutative Ring;
+cluster Frob R -> one-to-one;
+end;
+
+registration
+let F be finite Field;
+cluster Frob F -> onto;
+end;
+
+theorem :: FIELD_16:29
+for p being Prime
+for F being p-characteristic Field
+holds F is perfect iff Frob F is Automorphism of F;
+
+
+begin
+
+definition
+let R be unital non empty doubleLoopStr;
+let n be non trivial Nat;
+func X^(n,R) -> sequence of R equals
+:: FIELD_16:def 7
+  0_.(R) +* ((1,n) --> (-1.R,1.R));
+end;
+
+registration
+let R be unital non empty doubleLoopStr;
+let n be non trivial Nat;
+cluster X^(n,R) -> finite-Support;
+end;
+
+registration
+let R be non degenerated Ring;
+let n be non trivial Nat;
+cluster X^(n,R) -> non constant monic;
+end;
+
+definition
+let R be non degenerated Ring;
+let n be non trivial Nat;
+redefine func X^(n,R) -> non constant Element of the carrier of Polynom-Ring R;
+end;
+
+theorem :: FIELD_16:30
+for R being unital non degenerated doubleLoopStr
+for a being Element of R
+for n being non trivial Nat
+holds X^(n,R).1 = -1.R & X^(n,R).n = 1.R &
+      for m being Nat st m <> 1 & m <> n holds X^(n,R).m = 0.R;
+
+theorem :: FIELD_16:31
+for R being unital non degenerated doubleLoopStr
+for n being non trivial Nat holds deg X^(n,R) = n;
+
+theorem :: FIELD_16:32
+for R being unital non degenerated doubleLoopStr
+for n being non trivial Nat holds LC X^(n,R) = 1.R;
+
+theorem :: FIELD_16:33
+for R being non degenerated Ring
+for n being non trivial Nat
+for a being Element of R holds eval(X^(n,R),a) = a|^n - a;
+
+theorem :: FIELD_16:34
+for R being unital non degenerated Ring
+for n being non trivial Nat
+for a being Element of R holds a is_a_root_of X^(n,R) iff a|^n = a;
+
+theorem :: FIELD_16:35
+for p being Prime
+for n being non zero Nat
+for F being p-characteristic Field st card F = p|^n
+for a being Element of F holds eval(X^(p|^n,F),a) = 0.F;
+
+theorem :: FIELD_16:36
+for R being non degenerated Ring
+for S being RingExtension of R
+for n being non trivial Nat
+for a being Element of S holds Ext_eval(X^(n,R),a) = a|^n - a;
+
+theorem :: FIELD_16:37
+for R being unital non degenerated Ring
+for S being RingExtension of R
+for n being non trivial Nat
+for a being Element of S holds a is_a_root_of X^(n,R),S iff a|^n = a;
+
+theorem :: FIELD_16:38
+for p being Prime
+for R being p-characteristic commutative Ring
+for n being non zero Nat
+holds { m * 1.R where m is Nat : m < p } c= Roots X^(p|^n,R);
+
+theorem :: FIELD_16:39
+for p being Prime
+for n being non zero Nat
+for F being p-characteristic Field st card F = p|^n
+holds Roots X^(p|^n,F) = the carrier of F;
+
+theorem :: FIELD_16:40
+for p being Prime
+for n being non zero Nat
+for F being p-characteristic Field holds (Deriv F).X^(p|^n,F) = -1_.(F);
+
+theorem :: FIELD_16:41
+for n being non trivial Nat
+for R being Ring
+for S being RingExtension of R holds X^(n,R) = X^(n,S);
+
+registration
+let p be Prime;
+let n be non zero Nat;
+let F be p-characteristic Field;
+cluster X^(p|^n,F) -> separable
+                   for non constant Element of the carrier of Polynom-Ring F;
+end;
+
+registration
+let F be finite Field;
+cluster X^(order F,F) -> separable
+                   for non constant Element of the carrier of Polynom-Ring F;
+end;
+
+
+begin
+
+theorem :: FIELD_16:42
+for F being finite Field holds card(PrimeField F) = Char F;
+
+theorem :: FIELD_16:43
+for F being finite Field
+holds Roots X^(Char F,F) = the carrier of PrimeField F;
+
+theorem :: FIELD_16:44
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n holds card(PrimeField F) = p;
+
+theorem :: FIELD_16:45
+for F being finite Field
+for a being Element of F holds (Frob F).a = a iff a in PrimeField F;
+
+theorem :: FIELD_16:46
+for p being Prime
+for n being non zero Nat
+for F be Field st card F = p|^n
+for a being Element of F holds a in PrimeField F iff a|^p = a;
+
+theorem :: FIELD_16:47
+for F being finite Field
+for f being Automorphism of F
+for a being Element of F
+holds f.a in PrimeField F iff a in PrimeField F;
+
+theorem :: FIELD_16:48
+for F being prime Field
+for f being Automorphism of F holds f = id F;
+
+theorem :: FIELD_16:49
+for F being finite Field
+for f being Automorphism of F
+for a being Element of PrimeField F holds f.a = a;
+
+theorem :: FIELD_16:50
+for p being Prime
+for n being non zero Nat
+for F being Field
+for E being FieldExtension of F
+st card E = p|^n & F == PrimeField E holds deg(E,F) = n;
+
+theorem :: FIELD_16:51
+for F being finite Field holds
+F is (PrimeField F)-finite FieldExtension of (PrimeField F);
+
+theorem :: FIELD_16:52
+for F being finite Field holds
+F is (PrimeField F)-simple FieldExtension of (PrimeField F);
+
+
+begin :: Existence and uniqueness of finite Fields
+
+registration
+let p be Prime;
+let n be non zero Nat;
+let F be p-characteristic Field;
+cluster Roots X^(p|^n,F) -> inducing_subfield;
+end;
+
+registration
+let p be Prime;
+let n be non zero Nat;
+let F be p-characteristic Field;
+let E be SplittingField of X^(p|^n,PrimeField F);
+cluster Roots(E,X^(p|^n,PrimeField F)) -> inducing_subfield;
+end;
+
+theorem :: FIELD_16:53
+for p being Prime
+for n being non zero Nat
+for F being p-characteristic Field
+for E being SplittingField of X^(p|^n,PrimeField F)
+holds card Roots(E,X^(p|^n,PrimeField F)) = p|^n;
+
+theorem :: FIELD_16:54
+for p being Prime
+for n being non zero Nat
+for F being p-characteristic Field
+for E being SplittingField of X^(p|^n,PrimeField F)
+holds E == InducedSubfield Roots(E,X^(p|^n,PrimeField F));
+
+theorem :: FIELD_16:55
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n
+holds F is SplittingField of X^(p|^n,PrimeField F);
+
+theorem :: FIELD_16:56
+for p being Prime
+for n being non zero Nat
+for F being finite Field st card F = p|^n
+holds X^(p|^n,F) is Ppoly of F,[#](the carrier of F);
+
+theorem :: FIELD_16:57
+for p being Prime
+for n being non zero Nat
+ex F being finite Field st Char F = p & order F = p|^n;
+
+theorem :: FIELD_16:58
+for F being finite Field
+ex p being Prime, n being non zero Nat st Char F = p & order F = p|^n;
+
+theorem :: FIELD_16:59
+for F1,F2 being finite Field st order F1 = order F2 holds F1,F2 are_isomorphic;
+
+theorem :: FIELD_16:60
+for F being finite Field
+holds F is (PrimeField F)-normal (PrimeField F)-separable
+                                      FieldExtension of (PrimeField F);
+
+
+begin :: Automorphisms of finite Fields
+
+registration
+let F be finite Field;
+let n be Nat;
+cluster (Frob F)`^n -> isomorphism;
+end;
+
+registration
+let F be finite Field;
+cluster Frob F -> isomorphism;
+end;
+
+theorem :: FIELD_16:61
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n holds (Frob F)`^n = id F;
+
+theorem :: FIELD_16:62
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n
+for k being Nat st 0 < k & k <= n-1 holds (Frob F)`^k <> id F;
+
+theorem :: FIELD_16:63
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n
+for m,k being Nat st 0 <= m & m <= n-1 & 0 <= k & k <= n-1 & m <> k
+holds (Frob F)`^m <> (Frob F)`^k;
+
+theorem :: FIELD_16:64
+for p being Prime
+for n being non zero Nat
+for F be Field st card F = p|^n
+holds card{(Frob F)`^m where m is Nat : 0 <= m & m <= n-1} = n;
+
+theorem :: FIELD_16:65
+for p being Prime
+for n being non zero Nat
+for F be Field st card F = p|^n
+holds the set of all f where f is Automorphism of F =
+      { (Frob F)`^m where m is Nat : 0 <= m & m <= n-1 };
+
+
+begin :: Galois Fields -- as extensions of Z/p
+
+definition
+let p be Prime;
+let q be Power of p;
+mode GaloisField of q -> finite Field means
+:: FIELD_16:def 8
+   order it = q & Z/p is Subfield of it;
+end;
+
+definition
+let p be Prime;
+mode GaloisField of p is GaloisField of p|^1;
+end;
+
+registration
+let p be Prime;
+let q be Power of p;
+cluster strict for GaloisField of q;
+end;
+
+registration
+let p be Prime;
+let q be Power of p;
+cluster -> p-characteristic (Z/p)-extending for GaloisField of q;
+end;
+
+theorem :: FIELD_16:66
+for p being Prime holds Z/p is GaloisField of p;
+
+theorem :: FIELD_16:67
+for p being Prime
+for F being GaloisField of p holds F == Z/p;
+
+theorem :: FIELD_16:68
+for p being Prime
+for F being strict GaloisField of p holds F = Z/p;
+
+theorem :: FIELD_16:69
+for F being Field holds F is finite iff
+ex p being Prime, n being non zero Nat,
+   G being GaloisField of p|^n st F,G are_isomorphic;
+
+theorem :: FIELD_16:70
+for p being Prime
+for n being non zero Nat
+for F being GaloisField of p|^n holds PrimeField F = Z/p;
+
+theorem :: FIELD_16:71
+for p being Prime
+for n being non zero Nat
+for F being GaloisField of p|^n holds F is SplittingField of X^(p|^n,Z/p);
+
+theorem :: FIELD_16:72
+for p being Prime
+for n being non zero Nat
+for F1,F2 being GaloisField of p|^n holds F1,F2 are_isomorphic_over Z/p;
+
+theorem :: FIELD_16:73
+for p being Prime
+for n being non zero Nat
+for F being GaloisField of p|^n holds deg(F,Z/p) = n;
+
+registration
+let p be Prime;
+let n be non zero Nat;
+cluster -> (Z/p)-finite (Z/p)-simple for GaloisField of p|^n;
+end;
+
+registration
+let p be Prime;
+let n be non zero Nat;
+let F be GaloisField of p|^n;
+let m be Nat;
+cluster (Frob F)`^m -> (Z/p)-fixing;
+end;
+
+registration
+let p be Prime;
+let n be non zero Nat;
+let F be GaloisField of p|^n;
+cluster -> (Z/p)-fixing for Automorphism of F;
+end;
+
+registration
+let p be Prime;
+let n be non zero Nat;
+cluster -> (Z/p)-normal (Z/p)-separable for GaloisField of p|^n;
+end;
+

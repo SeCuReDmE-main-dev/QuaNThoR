@@ -1,0 +1,3094 @@
+:: Conway Numbers -- Formal Introduction
+::  by Karol P\kak
+:: 
+:: Received December 12, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MCART_1, FACIRC_1, RELAT_1, TARSKI, XBOOLE_0, LFUZZY_0, SUBSET_1,
+      XXREAL_0, FUNCT_1, ZFMISC_1, CARD_1, ORDINAL1, WAYBEL_3, ORDINAL6,
+      SURREAL0;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, XTUPLE_0, SUBSET_1, RELAT_1, FUNCT_1,
+      RELSET_1, ORDINAL1, ORDINAL6;
+ constructors RELSET_1, ORDINAL6;
+ registrations XBOOLE_0, RELAT_1, SUBSET_1, XTUPLE_0, ORDINAL1, ORDINAL3,
+      FUNCT_1, ORDINAL6, FOMODEL0, FACIRC_1;
+ requirements BOOLE, SUBSET;
+ definitions TARSKI, XBOOLE_0, RELAT_1;
+ equalities ORDINAL1;
+ expansions XTUPLE_0;
+ theorems RELAT_1, TARSKI, ZFMISC_1, FUNCT_1, XBOOLE_0, XBOOLE_1, XTUPLE_0,
+      ORDINAL1, ORDINAL6;
+ schemes ORDINAL1, CLASSES1, RELSET_1, XBOOLE_0, TARSKI_0;
+
+begin :: Construction of Games on $\alpha$-day
+
+reserve A,A1,A2,B,B1,B2,C,O for Ordinal,
+      R,S for Relation,
+      a,b,c,o,l,r for object;
+
+notation
+  let x be object;
+  synonym L_x for x`1;
+  synonym R_x for x`2;
+end;
+
+definition
+   let x be object;
+   redefine func L_x -> set;
+   coherence by TARSKI:1;
+end;
+
+definition
+   let x be object;
+   redefine func R_x -> set;
+   correctness by TARSKI:1;
+ end;
+
+definition ::: generalize ARROW:def 4 to include this
+  let a,b;
+  let O be set;
+  pred a <=O, b means
+    [a,b] in O;
+end;
+
+notation
+  let a,b;
+  let O be set;
+  synonym b >=O, a for a <=O, b;
+end;
+
+definition
+  let L,R be set;
+  let O be set;
+  pred L >>=O, R means
+     l in L & r in R implies l >=O, r;
+end;
+
+definition
+  let L,R be set;
+  let O be set;
+  pred L <<O, R means
+     l in L & r in R implies not l >=O, r;
+end;
+
+definition
+  let A;
+  func Games A -> set means :Def4:
+  ex L be Sequence st it = L.A & dom L = succ A &
+    for O st O in succ A holds
+      L.O = [:bool union rng (L|O), bool union rng (L|O):];
+  correctness
+  proof
+    deffunc r(Sequence) = bool union rng $1;
+    deffunc H(Sequence) = [:r($1), r($1):];
+    consider L be Sequence such that
+    A1: dom L = succ A and
+    A2: for B be Ordinal,L1 be Sequence st B in succ A & L1 = L|B
+      holds L.B = H(L1) from ORDINAL1:sch 4;
+    thus ex IT be set,L be Sequence st IT = L.A & dom L = succ A &
+    for O be Ordinal st O in succ A holds L.O = [:r(L|O), r(L|O):]
+    proof
+      take IT=L.A,L;
+      thus thesis by A1,A2;
+    end;
+    let it1,it2 be set;
+    given L1 be Sequence such  that
+    A3:it1 = L1.A & dom L1 = succ A &
+      for O be Ordinal st O in succ A holds L1.O = [:r(L1|O), r(L1|O):];
+    given L2 be Sequence such  that
+    A4:it2 = L2.A & dom L2 = succ A &
+      for O be Ordinal st O in succ A holds L2.O = [:r(L2|O), r(L2|O):];
+    A5:dom L1 = succ A & for B be Ordinal,L be Sequence st B in succ A &
+      L = L1|B holds L1.B = H(L) by A3;
+    A6:dom L2 = succ A & for B be Ordinal,L be Sequence st B in succ A &
+    L = L2|B holds L2.B = H(L) by A4;
+    L1=L2 from ORDINAL1:sch 3(A5,A6);
+    hence thesis by A3,A4;
+  end;
+end;
+
+registration
+  let A;
+  cluster Games A -> non empty Relation-like;
+  coherence
+  proof
+    consider L be Sequence such that
+    A1:Games A = L.A & dom L = succ A &
+      for O be Ordinal st O in succ A holds
+      L.O = [:bool union rng (L|O), bool union rng (L|O):] by Def4;
+    L.A = [:bool union rng (L|A), bool union rng (L|A):] by A1,ORDINAL1:6;
+    hence thesis by A1;
+  end;
+end;
+
+theorem Th1:
+   A c= B implies Games A c= Games B
+proof
+  assume A1: A c= B;
+    consider La be Sequence such that
+    A2:Games A = La.A & dom La = succ A &
+      for O be Ordinal st O in succ A holds
+      La.O = [:bool union rng (La|O), bool union rng (La|O):] by Def4;
+    consider Lb be Sequence such that
+    A3:Games B = Lb.B & dom Lb = succ B &
+      for O be Ordinal st O in succ B holds
+      Lb.O = [:bool union rng (Lb|O), bool union rng (Lb|O):] by Def4;
+    defpred P[Ordinal] means $1 c= A implies La.$1=Lb.$1;
+    A4: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+    proof
+      let D be Ordinal such that A5: for C be Ordinal st C in D holds P[C];
+      assume A6: D c= A;
+      B c= succ B by XBOOLE_1:7;
+      then A c= succ A & A c= succ B by XBOOLE_1:7,A1,XBOOLE_1:1;
+      then A7:dom (La|D)=D = dom (Lb|D)
+        by A2,A3,RELAT_1:62,A6,XBOOLE_1:1;
+      for x be object st x in D holds (La|D).x = (Lb|D).x
+      proof
+        let x be object such that A8:x in D;
+        reconsider o=x as Ordinal by A8;
+        thus (La|D).x = La.o by A8,FUNCT_1:49
+        .= Lb.o by A8,ORDINAL1:def 2,A6,A5
+        .= (Lb|D).x by A8,FUNCT_1:49;
+      end;
+      then A9: La|D = Lb|D by A7,FUNCT_1:2;
+      A10: D c= B in succ B by A1,A6,ORDINAL1:6,XBOOLE_1:1;
+      D in succ A by ORDINAL1:6,A6,ORDINAL1:12;
+      hence La.D
+       = [:bool union rng (Lb|D), bool union rng (Lb|D):] by A2,A9
+      .= Lb.D by A10,A3,ORDINAL1:12;
+    end;
+    A11:for D be Ordinal holds P[D] from ORDINAL1:sch 2(A4);
+    A12:Lb.B = [:bool union rng (Lb|B), bool union rng (Lb|B):]
+      by A3,ORDINAL1:6;
+    A13: La.A = [:bool union rng (La|A), bool union rng (La|A):]
+      by ORDINAL1:6,A2;
+    rng (La|A) c= rng (Lb|B)
+    proof
+      let y be object such that A14:y in rng (La|A);
+      consider x be object such that
+      A15: x in dom (La|A) & (La|A).x = y by A14,FUNCT_1:def 3;
+      A16:dom (La|A)=A & dom (Lb|B)=B by A2,A3,RELAT_1:62,XBOOLE_1:7;
+      reconsider x as Ordinal by A15;
+      (La|A).x = La.x by A15,FUNCT_1:49
+      .= Lb.x by A15,ORDINAL1:def 2,A11
+      .=(Lb|B).x by A1,A15,A16,FUNCT_1:49;
+      hence thesis by A1,A16,A15,FUNCT_1:def 3;
+    end;
+    then union rng (La|A) c= union rng (Lb|B) by ZFMISC_1:77;
+    then bool union rng (La|A) c= bool union rng (Lb|B) by ZFMISC_1:67;
+    hence thesis by A2,A3,A12,A13,ZFMISC_1:96;
+end;
+
+theorem Th2:
+  Games 0 = {[{},{}]}
+proof
+  consider L be Sequence such that
+  A1:Games 0 = L.0 & dom L = succ 0 and
+  A2:for O be Ordinal st O in succ 0 holds
+    L.O = [:bool union rng (L|O), bool union rng (L|O):] by Def4;
+  A3:L.0 = [:bool union rng (L|0), bool union rng (L|0):] by A2,ORDINAL1:6;
+  bool union rng (L|0)={{}} by ZFMISC_1:1,2;
+  hence thesis by A1,A3,ZFMISC_1:29;
+end;
+
+theorem Th3:
+  for L be Sequence,O st
+      dom L = succ O &
+      for A st A in succ O holds
+          L.A = [:bool union rng (L|A), bool union rng (L|A):]
+  holds for A st A in succ O holds L.A = Games A
+proof
+  let L be Sequence, Ord be Ordinal such that
+  A1:dom L = succ Ord and
+  A2:for A be Ordinal st A in succ Ord holds
+    L.A = [:bool union rng (L|A), bool union rng (L|A):];
+  let O be Ordinal such that A3: O in succ Ord;
+  consider LO be Sequence such that
+  A4:Games O = LO.O & dom LO = succ O and
+  A5:for A be Ordinal st A in succ O holds
+    LO.A = [:bool union rng (LO|A), bool union rng (LO|A):] by Def4;
+  defpred P[Ordinal] means $1 c= O implies LO.$1=L.$1;
+  A6: for A be Ordinal st for C be Ordinal st C in A holds P[C] holds P[A]
+  proof
+    let A be Ordinal such that A7:for C be Ordinal st C in A holds P[C];
+    assume A8: A c= O;
+    then A9:A in succ O by ORDINAL1:22;
+    A10: A in succ Ord by A8,A3,ORDINAL1:12;
+    A11: L.A = [:bool union rng (L|A), bool union rng (L|A):]
+      by A2,A8,A3,ORDINAL1:12;
+    A12:dom (L|A)=A & dom (LO|A)=A by A4,A1,A9,ORDINAL1:def 2,RELAT_1:62,A10;
+    for x be object st x in A holds (LO|A).x = (L|A).x
+    proof
+      let x be object such that A13:x in A;
+      reconsider x as Ordinal by A13;
+      (LO|A).x = LO.x by A13,FUNCT_1:49
+      .= L.x by A13,A7,A8,ORDINAL1:def 2;
+      hence thesis by A13,FUNCT_1:49;
+    end;
+    then
+    LO|A = L|A by A12,FUNCT_1:2;
+    hence thesis by A5,A8,ORDINAL1:22,A11;
+  end;
+  for A be Ordinal holds P[A] from ORDINAL1:sch 2(A6);
+  hence thesis by A4;
+end;
+
+theorem Th4:
+  o in Games O iff
+     o is pair & for a st a in L_o \/ R_o
+       ex A st A in O & a in Games A
+proof
+  consider L be Sequence such that
+  A1:Games O= L.O & dom L = succ O and
+  A2:for A st A in succ O holds
+    L.A = [:bool union rng (L|A), bool union rng (L|A):] by Def4;
+  A3: O in succ O by ORDINAL1:6;
+  A4: Games O = [:bool union rng (L|O), bool union rng (L|O):]
+    by A1,A2,ORDINAL1:6;
+  A5:dom (L|O) = O by RELAT_1:62,A1,A3,ORDINAL1:def 2;
+  thus o in Games O implies o is pair &
+    for x be object st x in L_o \/ R_o
+    ex B be Ordinal st B in O & x in Games B
+  proof
+    assume o in Games O;
+    then consider x,y be object such that
+    A6:x in bool union rng (L|O) & y in bool union rng (L|O) & o=[x,y]
+      by A4,ZFMISC_1:def 2;
+    reconsider x,y as set by TARSKI:1;
+    thus o is pair by A6;
+    let z be object such that A7:z in L_o \/ R_o;
+    x\/y c= union rng (L|O) by A6,XBOOLE_1:8;
+    then consider Y be set such that
+    A8: z in Y & Y in rng (L|O) by A6,A7,TARSKI:def 4;
+    consider OO be object such that
+    A9: OO in dom (L|O) & (L|O).OO=Y by A8,FUNCT_1:def 3;
+    reconsider OO as Ordinal by A9;
+    take OO;
+    A10:OO in succ O by ORDINAL1:8,A9;
+    (L|O).OO = L.OO by A9,FUNCT_1:49;
+    hence thesis by A9,A1,A8,A10,A2,Th3;
+  end;
+  assume that A11: o is pair and
+  A12: for x be object st x in L_o \/ R_o
+    ex B be Ordinal st B in O & x in Games B;
+  A13: L_o \/ R_o c= union rng (L|O)
+  proof
+    let x be object such that A14:x in L_o \/ R_o;
+    consider B be Ordinal such that
+    A15: B in O & x in Games B by A14,A12;
+    B in succ O by A15,ORDINAL1:8;
+    then Games B = L.B = (L|O).B in rng (L|O)
+    by A5,A15,A1,A2,Th3,FUNCT_1:49,def 3;
+    hence thesis by A15,TARSKI:def 4;
+  end;
+  L_o c= L_o \/ R_o & R_o c= L_o \/ R_o by XBOOLE_1:7;
+  then L_o c= union rng (L|O) & R_o c= union rng (L|O)
+    by A13,XBOOLE_1:1;
+  hence thesis by A11,A4,ZFMISC_1:def 2;
+end;
+
+definition
+  let A;
+  func BeforeGames A -> Subset of Games A means :Def5:
+    a in it iff ex O st O in A & a in Games O;
+  existence
+  proof
+    defpred P[object] means ex O be Ordinal st O in A & $1 in Games O;
+    consider X be set such that
+    A1: for x be object holds
+      x in X iff x in Games A & P[x] from XBOOLE_0:sch 1;
+    X c= Games A
+    proof
+      let x be object;
+      thus thesis by A1;
+    end;
+    then reconsider X as Subset of Games A;
+    take X;
+    let x be object;
+    thus x in X implies ex O be Ordinal st O in A & x in Games O by A1;
+    given O be Ordinal such that
+    A2: O in A & x in Games O;
+    Games O c= Games A by A2,Th1,ORDINAL1:def 2;
+    hence thesis by A2,A1;
+  end;
+  uniqueness
+  proof
+    let B1,B2 be Subset of Games A such that
+    A3: for x be object holds
+        x in B1 iff ex O be Ordinal st O in A & x in Games O and
+    A4: for x be object holds
+        x in B2 iff ex O be Ordinal st O in A & x in Games O;
+    now let x be object;
+      x in B1 iff ex O be Ordinal st O in A & x in Games O by A3;
+      hence x in B1 iff x in B2 by A4;
+    end;
+    hence thesis by TARSKI:2;
+  end;
+end;
+
+theorem Th5:
+  A c= B implies BeforeGames A c= BeforeGames B
+proof
+  assume A1: A c= B;
+  let x,y be object;
+  assume [x,y] in BeforeGames A;
+  then ex O be Ordinal st O in A & [x,y] in Games O by Def5;
+  hence thesis by A1,Def5;
+end;
+
+definition
+  let O,R;
+  func Day(R,O) -> Subset of Games O means :Def6:
+    ex L be Sequence st it = L.O & dom L = succ O &
+      for A st A in succ O holds
+          L.A = {x where x is Element of Games A:
+                   L_x c= union rng (L|A) & R_x c= union rng (L|A) &
+                   L_x <<R, R_x};
+  existence
+  proof
+    deffunc H(Sequence) =
+    {x where x is Element of Games dom $1:
+     L_x c= union rng ($1) & R_x c= union rng ($1) & L_x <<R, R_x};
+    consider L be Sequence such that A1:dom L = succ O and
+    A2: for B be Ordinal,L1 be Sequence st B in succ O & L1 = L|B
+      holds L.B = H(L1) from ORDINAL1:sch 4;
+    A3:O in succ O by ORDINAL1:6;
+    A4: L.O = H(L|O) by A2,ORDINAL1:6;
+    A5:dom (L|O) = O by RELAT_1:62,A3,A1,ORDINAL1:def 2;
+    L.O c= Games O
+    proof
+      let y be object;
+      assume y in L.O;
+      then ex x be Element of Games O st y=x &
+        L_x c= union rng (L|O) & R_x c= union rng (L|O) &
+        L_x <<R, R_x by A4,A5;
+      hence thesis;
+    end;
+    then reconsider  IT = L.O as Subset of Games O;
+    take IT,L;
+    thus IT = L.O & dom L = succ O by A1;
+    let A be Ordinal such that A6: A in succ O;
+    A7: dom (L|A) = A by A1,RELAT_1:62,A6,ORDINAL1:def 2;
+    hence L.A c= {x where x is Element of Games A:
+      L_x c= union rng (L|A) & R_x c= union rng (L|A) &
+      L_x <<R, R_x} by A2,A6;
+    let y be object;
+    assume y in {x where x is Element of Games A :
+    L_x c= union rng (L|A) & R_x c= union rng (L|A) &
+    L_x <<R, R_x};
+    hence thesis by A7,A2,A6;
+  end;
+  uniqueness
+  proof
+    let X1,X2 be Subset of Games O;
+    given L1 be Sequence such that
+    A8:X1 = L1.O & dom L1 = succ O and
+    A9:for A be Ordinal st A in succ O holds
+      L1.A = {x where x is Element of Games A:
+      L_x c= union rng (L1|A) & R_x c= union rng (L1|A) &
+      L_x <<R, R_x};
+    given  L2 be Sequence such that
+    A10:X2 = L2.O & dom L2 = succ O and
+    A11:for A be Ordinal st A in succ O holds
+    L2.A = {x where x is Element of Games A:
+      L_x c= union rng (L2|A) & R_x c= union rng (L2|A) &
+      L_x <<R, R_x};
+    deffunc  H(Sequence) =
+      {x where x is Element of Games dom $1:
+      L_x c= union rng ($1) & R_x c= union rng ($1) & L_x <<R, R_x};
+    A12:dom L1 = succ O & for B be Ordinal,L be Sequence st
+    B in succ O & L = L1|B holds L1.B = H(L)
+    proof
+      thus dom L1 = succ O by A8;
+      let B be Ordinal,L be Sequence such that
+      A13:  B in succ O & L = L1|B;
+      A14: dom (L1|B) = B by A13,A8,RELAT_1:62,ORDINAL1:def 2;
+      thus L1.B c= H(L) by A14,A13,A9;
+      let y be object;
+      thus thesis by A13,A14,A9;
+    end;
+    A15:dom L2 = succ O & for B be Ordinal,L be Sequence st
+    B in succ O & L = L2|B holds L2.B = H(L)
+    proof
+      thus dom L2 = succ O by A10;
+      let B be Ordinal,L be Sequence such that
+      A16:  B in succ O & L = L2|B;
+      dom (L2|B) = B by A16,A10,RELAT_1:62,ORDINAL1:def 2;
+      hence thesis by A16,A11;
+    end;
+    L1=L2 from ORDINAL1:sch 3(A12,A15);
+    hence thesis by A8,A10;
+  end;
+end;
+
+begin :: Construction of Order on the $\alpha$-day
+
+definition
+  let R;
+  attr R is almost-No-order means
+    ex O st R c= [:Day(R,O),Day(R,O):];
+end;
+
+theorem Th6:
+  for L be Sequence st
+    dom L = succ O &
+    for A st A in succ O holds
+      L.A = {x where x is Element of Games A:
+             L_x c= union rng (L|A) & R_x c= union rng (L|A) & L_x <<R, R_x}
+   holds for A st A in succ O holds L.A = Day(R,A)
+proof
+  let L be Sequence such that
+  A1:dom L = succ O and
+  A2:for A be Ordinal st A in succ O holds
+  L.A = {x where x is Element of Games A:
+    L_x c= union rng (L|A) & R_x c= union rng (L|A) & L_x <<R, R_x};
+  let D be Ordinal such that A3: D in succ O;
+  consider LO be Sequence such that
+  A4:Day(R,D) = LO.D & dom LO = succ D and
+  A5:for A be Ordinal st A in succ D holds
+  LO.A = {x where x is Element of Games A:
+  L_x c= union rng (LO|A) & R_x c= union rng (LO|A) & L_x <<R, R_x} by Def6;
+  defpred P[Ordinal] means $1 c= D implies LO.$1=L.$1;
+  A6: for A be Ordinal st for C be Ordinal st C in A holds P[C] holds P[A]
+  proof
+    let A be Ordinal such that A7:for C be Ordinal st C in A holds P[C];
+    assume A8: A c= D;
+    then A9:A in succ D by ORDINAL1:22;
+    A10: A in succ O by A8,A3,ORDINAL1:12;
+    A11: L.A = {x where x is Element of Games A:
+    L_x c= union rng (L|A) & R_x c= union rng (L|A) &
+    L_x <<R, R_x} by A2,A8,A3,ORDINAL1:12;
+    A12:dom (L|A)=A & dom (LO|A)=A by A4,A1,A9,ORDINAL1:def 2,RELAT_1:62,A10;
+    for x be object st x in A holds (LO|A).x = (L|A).x
+    proof
+      let x be object such that A13:x in A;
+      reconsider x as Ordinal by A13;
+      (LO|A).x = LO.x by A13,FUNCT_1:49
+      .= L.x by A13,A7,A8,ORDINAL1:def 2;
+      hence thesis by A13,FUNCT_1:49;
+    end;
+    then LO|A = L|A by A12,FUNCT_1:2;
+    hence thesis by A8,ORDINAL1:22,A5,A11;
+  end;
+  for A holds P[A] from ORDINAL1:sch 2(A6);
+  hence thesis by A4;
+end;
+
+theorem Th7:
+  for x be Element of Games O holds
+    x in Day(R,O) iff L_x <<R, R_x &
+      for o st o in L_x \/ R_x
+        ex A st A in O & o in Day(R,A)
+proof
+  let A be Element of Games O;
+  consider L be Sequence such that
+  A1:Day(R,O) = L.O & dom L = succ O and
+  A2:for A st A in succ O holds
+  L.A = {x where x is Element of Games A:
+  L_x c= union rng (L|A) & R_x c= union rng (L|A) & L_x <<R, R_x} by Def6;
+  A3: O in succ O by ORDINAL1:6;
+  A4: Day(R,O) ={x where x is Element of Games O:
+  L_x c= union rng (L|O) & R_x c= union rng (L|O) & L_x <<R, R_x}
+    by A1,A2,ORDINAL1:6;
+  A5:dom (L|O) = O by RELAT_1:62,A1,A3,ORDINAL1:def 2;
+  thus A in Day(R,O) implies L_A <<R, R_A &
+  for x be object st x in L_A \/ R_A
+    ex B be Ordinal st B in O & x in Day(R,B)
+  proof
+    assume A in Day(R,O);
+    then consider x be Element of Games O such that
+    A6:A=x& L_x c= union rng (L|O) & R_x c= union rng (L|O) &
+    L_x <<R, R_x by A4;
+    thus L_A <<R, R_A by A6;
+    let y be object such that A7:y in L_A \/ R_A;
+    L_x\/R_x c= union rng (L|O) by A6,XBOOLE_1:8;
+    then consider Y be set such that
+    A8: y in Y & Y in rng (L|O) by A6,A7,TARSKI:def 4;
+    consider B be object such that
+    A9: B in dom (L|O) & (L|O).B=Y by A8,FUNCT_1:def 3;
+    reconsider B as Ordinal by A9;
+    take B;
+    A10:B in succ O by A9,ORDINAL1:8;
+    (L|O).B = L.B by A9,FUNCT_1:49;
+    hence thesis by A9,A1,A8,A10,A2,Th6;
+  end;
+  assume that A11: L_A <<R, R_A and
+  A12: for x be object st x in L_A \/ R_A
+  ex B be Ordinal st B in O & x in Day(R,B);
+  A13: L_A \/ R_A c= union rng (L|O)
+  proof
+    let x be object such that A14:x in L_A \/ R_A;
+    consider B be Ordinal such that
+    A15: B in O & x in Day(R,B) by A14,A12;
+    B in succ O by A15,ORDINAL1:8;
+    then Day(R,B) = L.B = (L|O).B in rng (L|O)
+      by A5,A15,A1,A2,Th6,FUNCT_1:49,def 3;
+    hence thesis by A15,TARSKI:def 4;
+  end;
+  L_A c= L_A \/ R_A & R_A c= L_A \/ R_A by XBOOLE_1:7;
+  then L_A c= union rng (L|O) & R_A c= union rng (L|O) by A13,XBOOLE_1:1;
+  hence thesis by A11,A4;
+end;
+
+theorem Th8:
+  Day(R,0) = Games 0
+proof
+  reconsider A=[{},{}] as Element of Games 0 by Th2,TARSKI:def 1;
+  A1: L_A <<R, R_A;
+  for x be object st x in L_A \/ R_A
+  ex O be Ordinal st O in 0 & x in Day(R,O);
+  then A in Day(R,0) by Th7,A1;
+  hence thesis by Th2,ZFMISC_1:33;
+end;
+
+theorem Th9:
+   A c= B implies Day(R,A) c= Day(R,B)
+proof
+  assume A1:A c= B;
+  let x1,x2 be object;
+  set x=[x1,x2];
+  assume A2:x in Day(R,A);
+  then A3:x in Games A;
+  A4:L_x <<R, R_x &
+      for y be object st y in L_x \/ R_x
+        ex O be Ordinal st O in A & y in Day(R,O) by Th7,A2;
+  A5:Games A c= Games B by A1,Th1;
+  for y be object st y in L_x \/ R_x
+    ex O be Ordinal st O in B & y in Day(R,O)
+  proof
+    let y be object;
+    assume y in L_x \/ R_x;
+    then ex O be Ordinal st O in A & y in Day(R,O) by Th7,A2;
+    hence thesis by A1;
+  end;
+  hence thesis by A4,A5,A3, Th7;
+end;
+
+registration
+  let R,A;
+  cluster Day(R,A) -> non empty;
+  coherence
+  proof
+    {} c= A;
+    then Day(R,{}) c= Day(R,A) by Th9;
+    hence thesis by Th8;
+  end;
+end;
+
+Lm1:for R,S be Relation st
+      R /\ [:BeforeGames A,BeforeGames A:] =
+      S /\ [:BeforeGames A,BeforeGames A:]
+    holds
+      Day(R,A) = Day(S,A)
+proof
+  defpred P[Ordinal] means
+  for R,S be Relation st
+      R /\ [:BeforeGames $1,BeforeGames $1:] =
+      S /\ [:BeforeGames $1,BeforeGames $1:]
+    holds Day(R,$1) c= Day(S,$1);
+  A1: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that A2: for C be Ordinal st C in D holds P[C];
+    let R,S be Relation such that
+    A3: R /\ [:BeforeGames D,BeforeGames D:] =
+        S /\ [:BeforeGames D,BeforeGames D:];
+    let x1,x2 be object such that
+    A4:  [x1,x2] in Day(R,D);
+    set x=[x1,x2];
+    reconsider A=x as Element of Games D by A4;
+    A5: L_A <<R, R_A &
+    for x be object st x in L_A \/ R_A
+    ex O be Ordinal st O in D & x in Day(R,O) by A4,Th7;
+    A6:L_A <<S, R_A
+    proof
+      let l,r be object such that A7:l in L_A & r in R_A;
+      l in L_A\/R_A by A7,XBOOLE_0:def 3;
+      then consider OL be Ordinal such that
+      A8: OL in D & l in Day(R,OL) by A4,Th7;
+      r in L_A\/R_A by A7,XBOOLE_0:def 3;
+      then consider OR be Ordinal such that
+      A9: OR in D & r in Day(R,OR) by A4,Th7;
+      l in BeforeGames D & r in BeforeGames D by A8,A9,Def5;
+      then A10: [r,l] in [:BeforeGames D,BeforeGames D:]
+        by ZFMISC_1:87;
+      A11:not l >=R, r by A7,A5;
+      assume l >=S, r;
+      then [r,l] in R /\ [:BeforeGames D,BeforeGames D:]
+        by A10,A3,XBOOLE_0:def 4;
+      hence thesis by A11,XBOOLE_0:def 4;
+    end;
+    for x be object st x in L_A \/ R_A
+      ex O be Ordinal st O in D & x in Day(S,O)
+    proof
+      let x be object such that A12: x in L_A \/ R_A;
+      consider O be Ordinal such that
+      A13:O in D & x in Day(R,O) by A12,A4,Th7;
+      BeforeGames O c= BeforeGames D by Th5,A13,ORDINAL1:def 2;
+      then A14: [:BeforeGames O,BeforeGames O:]
+      /\ [:BeforeGames D,BeforeGames D:] =
+      [:BeforeGames O,BeforeGames O:] by XBOOLE_1:28,ZFMISC_1:96;
+      then A15: R /\ [:BeforeGames O,BeforeGames O:] =
+      S /\ [:BeforeGames D,BeforeGames D:]
+        /\ [:BeforeGames O,BeforeGames O:] by A3,XBOOLE_1:16
+      .= S /\ [:BeforeGames O,BeforeGames O:] by A14,XBOOLE_1:16;
+      Day(R,O) c= Day(S,O) by A15,A13,A2;
+      hence thesis by A13;
+    end;
+    hence thesis by A6,Th7;
+  end;
+  A16: for D be Ordinal holds P[D] from ORDINAL1:sch 2(A1);
+  let R,S be Relation such that
+  A17:R /\ [:BeforeGames A,BeforeGames A:] =
+  S /\ [:BeforeGames A,BeforeGames A:];
+  Day(R,A) c= Day(S,A) & Day(S,A) c= Day(R,A) by A16,A17;
+  hence thesis by XBOOLE_0:def 10;
+end;
+
+theorem Th10:
+  B c= A &
+  R /\ [:BeforeGames A,BeforeGames A:] = S /\ [:BeforeGames A,BeforeGames A:]
+    implies Day(R,B) = Day(S,B)
+proof
+  assume that A1:B c= A and
+  A2: R /\ [:BeforeGames A,BeforeGames A:] =
+      S /\ [:BeforeGames A,BeforeGames A:];
+  BeforeGames B c= BeforeGames A by A1,Th5;
+  then A3: [:BeforeGames B,BeforeGames B:] /\
+  [:BeforeGames A,BeforeGames A:] =
+  [:BeforeGames B,BeforeGames B:] by XBOOLE_1:28,ZFMISC_1:96;
+  then R /\ [:BeforeGames B,BeforeGames B:] =
+  S /\ [:BeforeGames A,BeforeGames A:]
+  /\ [:BeforeGames B,BeforeGames B:] by A2,XBOOLE_1:16
+  .= S /\ [:BeforeGames B,BeforeGames B:] by A3,XBOOLE_1:16;
+  hence thesis by Lm1;
+end;
+
+definition
+  let R,o;
+  assume A1: ex O st o in Day(R,O);
+  func born(R,o) -> Ordinal means :Def8:
+    o in Day(R,it) & for O st o in Day(R,O) holds it c= O;
+  existence
+  proof
+    defpred P[Ordinal] means o in Day(R,$1);
+    A2:ex O be Ordinal st P[O] by A1;
+    ex A be Ordinal st P[A] & for B be Ordinal st P[B] holds A c= B
+    from ORDINAL1:sch 1(A2);
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    let it1,it2 be Ordinal such that
+    A3: o in Day(R,it1) & for O be Ordinal st o in Day(R,O)
+    holds it1 c= O and
+    A4:o in Day(R,it2) & for O be Ordinal st o in Day(R,O)
+    holds it2 c= O;
+    it1 c= it2 c= it1 by A3,A4;
+    hence thesis by XBOOLE_0:def 10;
+  end;
+end;
+
+theorem Th11:
+  R /\ [:BeforeGames A,BeforeGames A:] = S /\ [:BeforeGames A,BeforeGames A:]
+    implies for a st a in Day(R,A) holds born(R,a) = born(S,a)
+proof
+  assume A1: R /\ [:BeforeGames A,BeforeGames A:] =
+      S /\ [:BeforeGames A,BeforeGames A:];
+  A2:Day(R,A) = Day(S,A) by A1,Th10;
+  let x be object such that A3: x in Day(R,A);
+  A4: x in Day(S,A) by A3,A1,Th10;
+  born(R,x) c= A by A3,Def8;
+  then Day(R,born(R,x)) = Day(S,born(R,x)) by A1,Th10;
+  then x in Day(S,born(R,x)) by A3,Def8;
+  then A5:born(S,x) c= born(R,x) by Def8;
+  born(S,x) c= A by A3,A2,Def8;
+  then Day(S,born(S,x)) = Day(R,born(S,x)) by A1,Th10;
+  then x in Day(R,born(S,x)) by A4,Def8;
+  then born(R,x) c= born(S,x) by Def8;
+  hence thesis by A5,XBOOLE_0:def 10;
+end;
+
+theorem Th12:
+  o in Games O & not o in Day(R,O) implies not o in Day(R,A)
+proof
+  defpred P[Ordinal] means for x be object, O be Ordinal st
+    x in (Games O) \  Day(R,O) holds not x in Day(R,$1);
+  A1: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that A2: for C be Ordinal st C in D holds P[C];
+    let x be object;
+    let O be Ordinal such that
+    A3: x in (Games O) \  Day(R,O) and
+    A4: x in Day(R,D);
+    reconsider xD=x as Element of Games D by A4;
+    reconsider xO=x as Element of Games O by A3;
+    A5: L_xD <<R, R_xD & for x be object st x in L_xD \/ R_xD
+      ex O be Ordinal st O in D & x in Day(R,O) by A4,Th7;
+    not xO in Day(R,O) by A3,XBOOLE_0:def 5;
+    then consider y be object such that
+    A6:  y in L_xO \/ R_xO & for H be Ordinal st H in O holds
+    not y in Day(R,H) by A5,Th7;
+    consider H be Ordinal such that
+    A7: H in O & y in Games H by A6,Th4;
+    not y in Day(R,H) by A6,A7;
+    then A8: y in (Games H)\Day(R,H) by A7,XBOOLE_0:def 5;
+    ex W be Ordinal st
+    W in D & y in Day(R,W) by A6,A4,Th7;
+    hence thesis by A8,A2;
+  end;
+  A9:for D be Ordinal holds P[D] from ORDINAL1:sch 2(A1);
+  assume o in Games O & not o in Day(R,O);
+  then o in (Games O) \ Day(R,O) by XBOOLE_0:def 5;
+  hence thesis by A9;
+end;
+
+definition
+  let R,A,B;
+  func OpenProd(R,A,B) -> Relation of Day(R,A) means :Def9:
+    for x,y be Element of Day(R,A) holds
+      [x,y] in it iff (born(R,x) in A & born(R,y) in A) or
+        (born(R,x) = A & born(R,y) in B) or
+        (born(R,x) in B & born(R,y) = A);
+  existence
+  proof
+    defpred P[object,object] means (born(R,$1) in A & born(R,$2) in A) or
+    (born(R,$1) = A & born(R,$2) in B) or
+    (born(R,$1) in B & born(R,$2) = A);
+    ex I be Relation of Day(R,A),Day(R,A) st
+    for x,y be Element of Day(R,A) holds
+    [x,y] in I iff P[x,y] from RELSET_1:sch 2;
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    defpred P[object,object] means (born(R,$1) in A & born(R,$2) in A) or
+    (born(R,$1) = A & born(R,$2) in B) or
+    (born(R,$1) in B & born(R,$2) = A);
+    let I1,I2 be Relation of Day(R,A) such that
+    A1: for x,y be Element of Day(R,A) holds [x,y] in I1 iff P[x,y] and
+    A2:for x,y be Element of Day(R,A) holds [x,y] in I2 iff P[x,y];
+    I1=I2 from RELSET_1:sch 4(A1,A2);
+    hence thesis;
+  end;
+end;
+
+definition
+  let R,A,B;
+  func ClosedProd(R,A,B) -> Relation of Day(R,A) means :Def10:
+    for x,y be Element of Day(R,A) holds
+      [x,y] in it iff (born(R,x) in A & born(R,y) in A) or
+        (born(R,x) = A & born(R,y) c= B) or
+        (born(R,x) c= B & born(R,y) = A);
+  existence
+  proof
+    defpred P[object,object] means (born(R,$1) in A & born(R,$2) in A) or
+    (born(R,$1) = A & born(R,$2) c= B) or
+    (born(R,$1) c= B & born(R,$2) = A);
+    ex I be Relation of Day(R,A),Day(R,A) st
+    for x,y be Element of Day(R,A) holds
+    [x,y] in I iff P[x,y] from RELSET_1:sch 2;
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    defpred P[object,object] means (born(R,$1) in A & born(R,$2) in A) or
+    (born(R,$1) = A & born(R,$2) c= B) or
+    (born(R,$1) c= B & born(R,$2) = A);
+    let I1,I2 be Relation of Day(R,A) such that
+    A1: for x,y be Element of Day(R,A) holds [x,y] in I1 iff P[x,y] and
+    A2:for x,y be Element of Day(R,A) holds [x,y] in I2 iff P[x,y];
+    I1=I2 from RELSET_1:sch 4(A1,A2);
+    hence thesis;
+  end;
+end;
+
+theorem
+  A1 in A2 or (A1=A2 & B1 c= B2) implies
+    OpenProd(R,A1,B1) c= OpenProd(R,A2,B2)
+proof
+  assume A1: A1 in A2 or (A1=A2 & B1 c= B2);
+  A2:A1 c= A2 by A1,ORDINAL1:def 2;
+  A3:Day(R,A1) c= Day(R,A2) by A1,ORDINAL1:def 2,Th9;
+  let x,y be object such that A4:[x,y] in OpenProd(R,A1,B1);
+  A5:x in Day(R,A1) & y in Day(R,A1) by A4,ZFMISC_1:87;
+  per cases by A5,A4,Def9;
+  suppose (born(R,x) in A1 & born(R,y) in A1);
+    hence thesis by A2,A3,A5,Def9;
+  end;
+  suppose A6:born(R,x) = A1 & born(R,y) in B1;
+    per cases by A1;
+    suppose A7: A1 in A2;
+      born(R,y) c= A1 by A5,Def8;
+      then born(R,y) in A2 by A7,ORDINAL1:12;
+      hence thesis by A6,A7,A5,A3,Def9;
+    end;
+    suppose A1=A2 & B1 c= B2;
+      hence thesis by A6,A5,Def9;
+    end;
+  end;
+  suppose A8:born(R,x) in B1 & born(R,y) = A1;
+    per cases by A1;
+    suppose A9: A1 in A2;
+      born(R,x) c= A1 by A5,Def8;
+      then born(R,x) in A2 by A9,ORDINAL1:12;
+      hence thesis by A8,A9,A5,A3,Def9;
+    end;
+    suppose
+      A1=A2 & B1 c= B2;
+      hence thesis by A8,A5,Def9;
+    end;
+  end;
+end;
+
+theorem
+    R /\ [:BeforeGames A,BeforeGames A:] =
+    S /\ [:BeforeGames A,BeforeGames A:]
+  implies OpenProd(R,A,B) = OpenProd(S,A,B)
+proof
+  assume A1: R /\ [:BeforeGames A,BeforeGames A:] =
+  S /\ [:BeforeGames A,BeforeGames A:];
+  A2:Day(R,A) = Day(S,A) by A1,Th10;
+  let x,y be object;
+  thus [x,y] in OpenProd(R,A,B) implies [x,y] in OpenProd(S,A,B)
+  proof
+    assume A3:[x,y] in OpenProd(R,A,B);
+    A4: x in Day(R,A) & y in Day(R,A) by A3,ZFMISC_1:87;
+    A5: born(R,x) = born(S,x) & born(R,y) = born(S,y) by A1,A4,Th11;
+    (born(R,x) in A & born(R,y) in A) or
+    (born(R,x) = A & born(R,y) in B) or
+    (born(R,x) in B & born(R,y) = A) by A3,A4,Def9;
+    hence thesis by A4,A2,A5,Def9;
+  end;
+  assume A6:[x,y] in OpenProd(S,A,B);
+  A7: x in Day(S,A) & y in Day(S,A) by A6,ZFMISC_1:87;
+  A8: born(R,x) = born(S,x) & born(R,y) = born(S,y) by A1,A7,Th11;
+  (born(S,x) in A & born(S,y) in A) or
+  (born(S,x) = A & born(S,y) in B) or
+  (born(S,x) in B & born(S,y) = A) by A6,A7,Def9;
+  hence thesis by A7,A2,A8,Def9;
+end;
+
+theorem Th15:
+    R /\ [:BeforeGames A,BeforeGames A:] =
+    S /\ [:BeforeGames A,BeforeGames A:]
+  implies ClosedProd(R,A,B) = ClosedProd(S,A,B)
+proof
+  assume A1: R /\ [:BeforeGames A,BeforeGames A:] =
+  S /\ [:BeforeGames A,BeforeGames A:];
+  A2:Day(R,A) = Day(S,A) by A1,Th10;
+  let x,y be object;
+  thus [x,y] in ClosedProd(R,A,B) implies [x,y] in ClosedProd(S,A,B)
+  proof
+    assume A3:[x,y] in ClosedProd(R,A,B);
+    A4: x in Day(R,A) & y in Day(R,A) by A3,ZFMISC_1:87;
+    A5: born(R,x) = born(S,x) & born(R,y) = born(S,y) by A1,A4,Th11;
+    (born(R,x) in A & born(R,y) in A) or
+    (born(R,x) = A & born(R,y) c= B) or
+    (born(R,x) c= B & born(R,y) = A) by A3,A4,Def10;
+    hence thesis by A4,A2,A5,Def10;
+  end;
+  assume A6:[x,y] in ClosedProd(S,A,B);
+  A7: x in Day(S,A) & y in Day(S,A) by A6,ZFMISC_1:87;
+  A8: born(R,x) = born(S,x) & born(R,y) = born(S,y) by A1,A7,Th11;
+  (born(S,x) in A & born(S,y) in A) or
+  (born(S,x) = A & born(S,y) c= B) or
+  (born(S,x) c= B & born(S,y) = A) by A6,A7,Def10;
+  hence thesis by A7,A2,A8,Def10;
+end;
+
+theorem Th16:
+  OpenProd(R,A,B) c= ClosedProd(R,A,B)
+proof
+  let x,y be object;
+  assume A1:[x,y] in OpenProd(R,A,B);
+  then A2: x in Day(R,A) & y in Day(R,A) by ZFMISC_1:87;
+  then (born(R,x) in A & born(R,y) in A) or
+  (born(R,x) = A & born(R,y) in B) or
+  (born(R,x) in B & born(R,y) = A) by A1,Def9;
+  then (born(R,x) in A & born(R,y) in A) or
+  (born(R,x) = A & born(R,y) c= B) or
+  (born(R,x) c= B & born(R,y) = A) by ORDINAL1:def 2;
+  hence thesis by A2,Def10;
+end;
+
+theorem Th17:
+  A1 in A2 or (A1=A2 & B1 c= B2) implies
+    ClosedProd(R,A1,B1) c= ClosedProd(R,A2,B2)
+proof
+  assume A1: A1 in A2 or (A1=A2 & B1 c= B2);
+  A2:A1 c= A2 by A1,ORDINAL1:def 2;
+  A3:Day(R,A1) c= Day(R,A2) by Th9,A1,ORDINAL1:def 2;
+  let x,y be object such that A4:[x,y] in ClosedProd(R,A1,B1);
+  A5:x in Day(R,A1) & y in Day(R,A1) by A4,ZFMISC_1:87;
+  per cases by A5,A4,Def10;
+  suppose (born(R,x) in A1 & born(R,y) in A1);
+    hence thesis by A2,A3,A5,Def10;
+  end;
+  suppose A6:born(R,x) = A1 & born(R,y) c= B1;
+    per cases by A1;
+    suppose A7: A1 in A2;
+      born(R,y) c= A1 by A5,Def8;
+      then born(R,y) in A2 by A7,ORDINAL1:12;
+      hence thesis by A6,A7,A5,A3,Def10;
+    end;
+    suppose
+      A1=A2 & B1 c= B2;
+      then born(R,x) = A2 & born(R,y) c= B2 by A6,XBOOLE_1:1;
+      hence thesis by A5,A3,Def10;
+    end;
+  end;
+  suppose A8:born(R,x) c= B1 & born(R,y) = A1;
+    per cases by A1;
+    suppose A9: A1 in A2;
+      born(R,x) c= A1 by A5,Def8;
+      then born(R,x) in A2 by A9,ORDINAL1:12;
+      hence thesis by A8,A9,A5,A3,Def10;
+    end;
+    suppose
+      A1=A2 & B1 c= B2;
+      then born(R,y) = A2 & born(R,x) c= B2 by A8,XBOOLE_1:1;
+      hence thesis by A5,A3,Def10;
+    end;
+  end;
+end;
+
+theorem Th18:
+  B in C implies ClosedProd(R,A,B) c= OpenProd(R,A,C)
+proof
+  assume A1: B in C;
+  let x,y be object such that A2: [x,y] in ClosedProd(R,A,B);
+  A3: x in Day(R,A) & y in Day(R,A) by A2,ZFMISC_1:87;
+  then (born(R,x) in A & born(R,y) in A) or
+  (born(R,x) = A & born(R,y) c= B) or
+  (born(R,x) c= B & born(R,y) = A) by A2,Def10;
+  then (born(R,x) in A & born(R,y) in A) or
+  (born(R,x) = A & born(R,y) in C) or
+  (born(R,x) in C & born(R,y) = A) by A1,ORDINAL1:12;
+  hence thesis by A3,Def9;
+end;
+
+theorem Th19:
+  A in B implies ClosedProd(R,A,B) c= OpenProd(R,A,B)
+proof
+  assume A1:A in B;
+  let x,y be object;
+  assume A2:[x,y] in ClosedProd(R,A,B);
+  then A3: x in Day(R,A) & y in Day(R,A) by ZFMISC_1:87;
+  born(R,x) c= A & born(R,y) c= A by A3,Def8;
+  then A4: born(R,x) in B & born(R,y) in B by A1,ORDINAL1:12;
+  (born(R,x) in A & born(R,y) in A) or
+  (born(R,x) = A & born(R,y) c= B) or
+  (born(R,x) c= B & born(R,y) = A) by A3,A2,Def10;
+  hence thesis by A3,A4,Def9;
+end;
+
+definition
+  let X,R be set;
+  pred R preserves_No_Comparison_on X means
+    for a,b be object st [a,b] in X holds
+        a <=R, b iff L_a <<R, {b} & {a} <<R, R_b;
+end;
+
+theorem Th20:
+    R is almost-No-order & S is almost-No-order &
+    R /\ OpenProd(R,A,B) = S /\ OpenProd(S,A,B)
+  implies R /\ [:BeforeGames A,BeforeGames A:] =
+          S /\ [:BeforeGames A,BeforeGames A:]
+proof
+  assume that A1:R is almost-No-order & S is almost-No-order and
+  A2:R /\ OpenProd(R,A,B) = S /\ OpenProd(S,A,B);
+  consider R0 be Ordinal such that
+  A3:   R c= [:Day(R,R0),Day(R,R0):] by A1;
+  consider S0 be Ordinal such that
+  A4:   S c= [:Day(S,S0),Day(S,S0):] by A1;
+  let y,z be object;
+  thus [y,z] in R /\ [:BeforeGames A,BeforeGames A:] implies
+  [y,z] in S /\ [:BeforeGames A,BeforeGames A:]
+  proof
+    assume [y,z] in R /\ [:BeforeGames A,BeforeGames A:];
+    then A5: [y,z] in R & [y,z] in [:BeforeGames A,BeforeGames A:]
+    by XBOOLE_0:def 4;
+    then
+    A6: y in BeforeGames A & z in BeforeGames A by ZFMISC_1:87;
+    A7:y in Day(R,R0) & z in Day(R,R0) by A3,A5,ZFMISC_1:87;
+    y in BeforeGames A & z in BeforeGames A by A5,ZFMISC_1:87;
+    then consider Ay be Ordinal such that
+    A8: Ay in A & y in Games Ay by Def5;
+    consider Az be Ordinal such that
+    A9: Az in A & z in Games Az by A6,Def5;
+    A10: Day(R,Ay) c= Day(R,A) & Day(R,Az) c= Day(R,A)
+      by Th9,A8,A9,ORDINAL1:def 2;
+    A11:y in Day(R,Ay) & z in Day(R,Az) by A8,A7,A9,Th12;
+    then born(R,y) c= Ay & born(R,z) c= Az by Def8;
+    then A12:born(R,y) in A & born(R,z) in A by A8,A9,ORDINAL1:12;
+    [y,z] in OpenProd(R,A,B) by A10,A11,A12,Def9;
+    then [y,z] in R /\ OpenProd(R,A,B) by XBOOLE_0:def 4,A5;
+    then [y,z] in S by A2,XBOOLE_0:def 4;
+    hence thesis by A5,XBOOLE_0:def 4;
+  end;
+  assume [y,z] in S /\ [:BeforeGames A,BeforeGames A:];
+  then A13: [y,z] in S & [y,z] in [:BeforeGames A,BeforeGames A:]
+    by XBOOLE_0:def 4;
+  then A14: y in BeforeGames A & z in BeforeGames A by ZFMISC_1:87;
+  A15:y in Day(S,S0) & z in Day(S,S0) by A4,A13,ZFMISC_1:87;
+  consider Ay be Ordinal such that
+  A16: Ay in A & y in Games Ay by A14,Def5;
+  consider Az be Ordinal such that
+  A17: Az in A & z in Games Az by A14,Def5;
+  A18: Day(S,Ay) c= Day(S,A) & Day(S,Az) c= Day(S,A)
+    by Th9,A16,A17,ORDINAL1:def 2;
+  A19:y in Day(S,Ay) & z in Day(S,Az) by A16,A15,A17,Th12;
+  then born(S,y) c= Ay & born(S,z) c= Az by Def8;
+  then A20:born(S,y) in A & born(S,z) in A by A16,A17,ORDINAL1:12;
+  [y,z] in OpenProd(S,A,B) by A18,A19,A20,Def9;
+  then [y,z] in S /\ OpenProd(S,A,B) by XBOOLE_0:def 4,A13;
+  then [y,z] in R by A2,XBOOLE_0:def 4;
+  hence thesis by A13,XBOOLE_0:def 4;
+end;
+
+Lm2: for A,B be Ordinal st B c= A
+    for R,S be Relation st R is almost-No-order & S is almost-No-order &
+    R /\ OpenProd(R,A,B) = S /\ OpenProd(S,A,B) &
+    R preserves_No_Comparison_on ClosedProd(R,A,B) &
+    S preserves_No_Comparison_on ClosedProd(S,A,B)
+       holds
+   R /\ ClosedProd(R,A,B) c= S /\ ClosedProd(S,A,B)
+proof
+  let A,B be Ordinal such that A1:B c= A;
+  let R,S be Relation such that
+  A2:R is almost-No-order & S is almost-No-order and
+  A3:R /\ OpenProd(R,A,B) = S /\ OpenProd(S,A,B) and
+  A4:  R preserves_No_Comparison_on ClosedProd(R,A,B) &
+    S preserves_No_Comparison_on ClosedProd(S,A,B);
+  A5:S /\ [:BeforeGames A,BeforeGames A:] =
+  R /\ [:BeforeGames A,BeforeGames A:] by Th20,A2,A3;
+  let x,y be object;
+  A6: OpenProd(R,A,B) c= ClosedProd(R,A,B) & OpenProd(S,A,B)
+  c= ClosedProd(S,A,B) by Th16;
+  assume A7: [x,y] in R /\ ClosedProd(R,A,B);
+  then A8:[x,y] in R & [x,y] in ClosedProd(R,A,B) by XBOOLE_0:def 4;
+  reconsider x,y as Element of Day(R,A) by ZFMISC_1:87,A7;
+  x <=R,y by A7,XBOOLE_0:def 4;
+  then A9: L_x <<R, {y} & {x} <<R, R_y by A8,A4;
+  A10: [x,y] in ClosedProd(R,A,B) by A7,XBOOLE_0:def 4;
+  then per cases by Def10;
+  suppose born(R,x) in A & born(R,y) in A;
+    then [x,y] in OpenProd(R,A,B) by Def9;
+    then [x,y] in S /\ OpenProd(S,A,B) by A3,A8,XBOOLE_0:def 4;
+    then [x,y] in S & [x,y] in OpenProd(S,A,B) by XBOOLE_0:def 4;
+    hence thesis by A6,XBOOLE_0:def 4;
+  end;
+  suppose A11:born(R,x) = A & born(R,y) c= B;
+    per cases;
+    suppose A12: born(R,y) = B;
+      A13:Day(R,A) = Day(S,A) by A5,Th10;
+      A14:ClosedProd(R,A,B) = ClosedProd(S,A,B) by A5,Th15;
+      A15:L_x <<S, {y}
+      proof
+        given l,r be object such that
+        A16: l in L_x & r in {y} & l >=S,r;
+        A17:r=y by A16,TARSKI:def 1;
+        l in L_x \/R_x by A16,XBOOLE_0:def 3;
+        then consider O be Ordinal such that
+        A18: O in A & l in Day(R,O) by Th7;
+        A19:Day(S,O) = Day(R,O) c= Day(R,A)
+        by Th9,A5,Th10,A18,ORDINAL1:def 2;
+        born(S,l) c= O by A18,A19,Def8;
+        then A20:born(S,l) in A by ORDINAL1:12,A18;
+        A21: born(S,y) =B by A12,Th11,A5;
+        [y,l] in OpenProd(S,A,B)
+        proof
+          per cases;
+          suppose A=B;
+            hence thesis by A20,Def9,A19,A18,A13,A21;
+          end;
+          suppose A<> B;
+            then B in A by ORDINAL1:11,A1,XBOOLE_0:def 8;
+            hence thesis by A20,Def9,A19,A18,A13,A21;
+          end;
+        end;
+        then [y,l] in R /\ OpenProd(R,A,B) by A3,A16,A17,XBOOLE_0:def 4;
+        then l >=R,r by A17,XBOOLE_0:def 4;
+        hence thesis by A9,A16;
+      end;
+      A22:{x} <<S, R_y
+      proof
+        given l,r be object such that
+        A23: l in {x} & r in R_y & l >=S,r;
+        A24:l=x by A23,TARSKI:def 1;
+        A25: y in Day(R,B) by A12,Def8;
+        r in L_y \/R_y by A23,XBOOLE_0:def 3;
+        then consider O be Ordinal such that
+        A26: O in B & r in Day(R,O) by A25,Th7;
+        A27:Day(S,O) = Day(R,O) c= Day(R,A) =Day(S,A)
+        by Th9,A5,Th10,A1,A26,ORDINAL1:def 2;
+        born(S,r) c= O by A26,A27,Def8;
+        then A28:  born(S,r) in B by A26,ORDINAL1:12;
+        born(S,x) =A by A11,Th11,A5;
+        then [r,x] in OpenProd(S,A,B) by A28,Def9,A27,A26;
+        then [r,x]  in S /\ OpenProd(S,A,B) by A23,A24,XBOOLE_0:def 4;
+        then l >=R,r by A24,A3,XBOOLE_0:def 4;
+        hence thesis by A9,A23;
+      end;
+      x <=S,y by A15,A22,A4,A14,A10;
+      hence thesis by A14,A10,XBOOLE_0:def 4;
+    end;
+    suppose born(R,y) <> B;
+      then born(R,y) in B by A11,XBOOLE_0:def 8,ORDINAL1:11;
+      then [x,y] in OpenProd(R,A,B) by A11,Def9;
+      then [x,y] in R /\ OpenProd(R,A,B) by A8,XBOOLE_0:def 4;
+      then [x,y] in S & [x,y] in OpenProd(S,A,B) by A3,XBOOLE_0:def 4;
+      hence thesis by A6,XBOOLE_0:def 4;
+    end;
+  end;
+  suppose A29:born(R,y) = A & born(R,x) c= B;
+    per cases;
+    suppose A30: born(R,x) = B;
+      A31:Day(R,A) = Day(S,A) by A5,Th10;
+      A32:ClosedProd(R,A,B) = ClosedProd(S,A,B) by A5,Th15;
+      A33:L_x <<S, {y}
+      proof
+        given l,r be object such that
+        A34: l in L_x & r in {y} & l >=S,r;
+        A35:r=y by A34,TARSKI:def 1;
+        A36: x in Day(R,B) by A30,Def8;
+        l in L_x \/R_x by A34,XBOOLE_0:def 3;
+        then consider O be Ordinal such that
+        A37: O in B & l in Day(R,O) by A36,Th7;
+        A38:Day(S,O) = Day(R,O) c= Day(R,A) =Day(S,A)
+        by Th9,A5,Th10,A1,A37,ORDINAL1:def 2;
+        born(S,l) c= O by A37,A38,Def8;
+        then A39: born(S,l) in B by A37,ORDINAL1:12;
+        born(S,y) =A by A29,Th11,A5;
+        then [y,l] in OpenProd(S,A,B) by A39,Def9,A37,A38;
+        then [y,l] in R /\ OpenProd(R,A,B) by A3,A34,A35,XBOOLE_0:def 4;
+        then l >=R,r by A35,XBOOLE_0:def 4;
+        hence thesis by A9,A34;
+      end;
+      A40:{x} <<S, R_y
+      proof
+        given l,r be object such that
+        A41: l in {x} & r in R_y & l >=S,r;
+        A42:l=x by A41,TARSKI:def 1;
+        r in L_y \/R_y by A41,XBOOLE_0:def 3;
+        then consider O be Ordinal such that
+        A43: O in A & r in Day(R,O) by Th7;
+        A44:Day(S,O) = Day(R,O) c= Day(R,A)
+        by Th9,A5,Th10,A43,ORDINAL1:def 2;
+        born(S,r) c= O by A43,A44,Def8;
+        then A45:born(S,r) in A by ORDINAL1:12,A43;
+        A46: born(S,x) =B by A30,Th11,A5;
+        [r,x] in OpenProd(S,A,B)
+        proof
+          per cases;
+          suppose A=B;
+            hence thesis by A45,A31,Def9,A44,A43,A46;
+          end;
+          suppose A<> B;
+            then B in A by ORDINAL1:11,A1,XBOOLE_0:def 8;
+            hence thesis by A45,A31,Def9,A44,A43,A46;
+          end;
+        end;
+        then [r,x] in S /\ OpenProd(S,A,B) by A41,A42,XBOOLE_0:def 4;
+        then l >=R,r by A3,A42,XBOOLE_0:def 4;
+        hence thesis by A9,A41;
+      end;
+      x <=S,y by A32,A10,A33,A40,A4;
+      hence thesis by A32,A10,XBOOLE_0:def 4;
+    end;
+    suppose born(R,x) <> B;
+      then born(R,x) in B by ORDINAL1:11,A29,XBOOLE_0:def 8;
+      then [x,y] in OpenProd(R,A,B) by A29,Def9;
+      then [x,y] in R /\ OpenProd(R,A,B) by A8,XBOOLE_0:def 4;
+      then [x,y] in S & [x,y] in OpenProd(S,A,B) by A3,XBOOLE_0:def 4;
+      hence thesis by A6,XBOOLE_0:def 4;
+    end;
+  end;
+end;
+
+theorem Th21:
+    R is almost-No-order & S is almost-No-order &
+    R /\ OpenProd(R,A,B) = S /\ OpenProd(S,A,B) &
+    R preserves_No_Comparison_on ClosedProd(R,A,B) &
+    S preserves_No_Comparison_on ClosedProd(S,A,B)
+  implies R /\ ClosedProd(R,A,B) = S /\ ClosedProd(S,A,B)
+proof
+  assume A1: R is almost-No-order & S is almost-No-order &
+  R /\ OpenProd(R,A,B) = S /\ OpenProd(S,A,B) &
+  R preserves_No_Comparison_on ClosedProd(R,A,B) &
+  S preserves_No_Comparison_on ClosedProd(S,A,B);
+  per cases by ORDINAL1:16;
+  suppose B c= A;
+    then R /\ ClosedProd(R,A,B) c= S /\ ClosedProd(S,A,B) &
+    S /\ ClosedProd(S,A,B) c= R /\ ClosedProd(R,A,B) by A1,Lm2;
+    hence thesis by XBOOLE_0:def 10;
+  end;
+  suppose A in B;
+    then ClosedProd(R,A,B) c= OpenProd(R,A,B) &
+    OpenProd(R,A,B) c= ClosedProd(R,A,B) & ClosedProd(S,A,B)
+    c= OpenProd(S,A,B) &
+    OpenProd(S,A,B) c= ClosedProd(S,A,B) by Th16,Th19;
+    then ClosedProd(R,A,B) = OpenProd(R,A,B) &
+    ClosedProd(S,A,B) = OpenProd(S,A,B) by XBOOLE_0:def 10;
+    hence thesis by A1;
+  end;
+end;
+
+theorem Th22:
+    R is almost-No-order & S is almost-No-order &
+    R /\ OpenProd(R,A,0) = S /\ OpenProd(S,A,0) &
+    R preserves_No_Comparison_on ClosedProd(R,A,B) &
+    S preserves_No_Comparison_on ClosedProd(S,A,B)
+  implies R /\ ClosedProd(R,A,B) = S /\ ClosedProd(S,A,B)
+proof
+  assume that A1: R is almost-No-order &
+  S is almost-No-order and
+  A2:R /\ OpenProd(R,A,0) = S /\ OpenProd(S,A,0) and
+  A3:R preserves_No_Comparison_on ClosedProd(R,A,B) &
+     S preserves_No_Comparison_on ClosedProd(S,A,B);
+  defpred P[Ordinal] means $1 c= B implies
+  R /\ ClosedProd(R,A,$1) = S /\ ClosedProd(S,A,$1);
+  A4: R /\ [:BeforeGames A,BeforeGames A:] =
+      S /\ [:BeforeGames A,BeforeGames A:] by A1,A2,Th20;
+  A5: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that A6: for C be Ordinal st C in D holds P[C];
+    assume A7: D c= B;
+    then ClosedProd(R,A,D) c= ClosedProd(R,A,B) &
+    ClosedProd(S,A,D) c= ClosedProd(S,A,B) by Th17;
+    then A8:R preserves_No_Comparison_on ClosedProd(R,A,D) &
+    S preserves_No_Comparison_on ClosedProd(S,A,D) by A3;
+    A9:R /\ OpenProd(R,A,D) c= S /\ OpenProd(S,A,D)
+    proof
+      let x,y be object;
+      assume A10:[x,y] in R /\ OpenProd(R,A,D);
+      then A11:[x,y] in R & [x,y] in OpenProd(R,A,D) by XBOOLE_0:def 4;
+      A12:x in Day(R,A) & y in Day(R,A) by ZFMISC_1:87,A10;
+      then A13: born(R,x) = born(S,x) & born(R,y) = born(S,y) by A4,Th11;
+      per cases by A11,A12,Def9;
+      suppose born(R,x) in A & born(R,y) in A;
+        then [x,y] in OpenProd(R,A,0) by A12,Def9;
+        then A14: [x,y] in S /\ OpenProd(S,A,0) by A2,A11,XBOOLE_0:def 4;
+        then A15:[x,y] in S & [x,y] in OpenProd(S,A,0) by XBOOLE_0:def 4;
+        A16:x in Day(S,A) & y in Day(S,A) by A14,ZFMISC_1:87;
+        then (born(S,x) in A & born(S,y) in A) or
+        (born(S,x) = A & born(S,y) in {}) or
+        (born(S,x) in {} & born(S,y) = A) by A15,Def9;
+        then [x,y] in OpenProd(S,A,D) by A16,Def9;
+        hence thesis by A15,XBOOLE_0:def 4;
+      end;
+      suppose A17: born(R,x) = A & born(R,y) in D;
+        then [x,y] in ClosedProd(R,A,born(R,y)) by A12,Def10;
+        then A18:[x,y] in R /\ ClosedProd(R,A,born(R,y)) by A11,XBOOLE_0:def 4;
+        A19:ClosedProd(S,A,born(R,y)) c= OpenProd(S,A,D) by Th18,A17;
+        [x,y] in S /\ ClosedProd(S,A,born(R,y))
+          by A7,A17,A6,A18,ORDINAL1:def 2;
+        then [x,y] in S & [x,y] in ClosedProd(S,A,born(S,y))
+          by A13,XBOOLE_0:def 4;
+        hence thesis by A19,A13,XBOOLE_0:def 4;
+      end;
+      suppose A20: born(R,x) in D & born(R,y) = A;
+        then [x,y] in ClosedProd(R,A,born(R,x)) by A12,Def10;
+        then A21:[x,y] in R /\ ClosedProd(R,A,born(R,x)) by A11,XBOOLE_0:def 4;
+        A22:ClosedProd(S,A,born(R,x)) c= OpenProd(S,A,D) by Th18,A20;
+        [x,y] in S /\ ClosedProd(S,A,born(R,x))
+          by A7,A20,A6,A21,ORDINAL1:def 2;
+        then [x,y] in S & [x,y] in ClosedProd(S,A,born(S,x))
+          by A13,XBOOLE_0:def 4;
+        hence thesis by XBOOLE_0:def 4, A22,A13;
+      end;
+    end;
+    S /\ OpenProd(S,A,D) c= R /\ OpenProd(R,A,D)
+    proof
+      let x,y be object;
+      assume A23: [x,y] in S /\ OpenProd(S,A,D);
+      then A24:[x,y] in S & [x,y] in OpenProd(S,A,D) by XBOOLE_0:def 4;
+      A25:x in Day(S,A) & y in Day(S,A) by ZFMISC_1:87,A23;
+      then A26: born(R,x) = born(S,x) & born(R,y) = born(S,y) by A4,Th11;
+      per cases by A24,A25,Def9;
+      suppose born(S,x) in A & born(S,y) in A;
+        then [x,y] in OpenProd(S,A,0) by A25,Def9;
+        then A27:[x,y] in R /\ OpenProd(R,A,0) by A2,A24,XBOOLE_0:def 4;
+        then A28:[x,y] in R & [x,y] in OpenProd(R,A,0) by XBOOLE_0:def 4;
+        A29:x in Day(R,A) & y in Day(R,A) by A27,ZFMISC_1:87;
+        then born(R,x) in A & born(R,y) in A by A28,Def9;
+        then [x,y] in OpenProd(R,A,D) by A29,Def9;
+        hence thesis by A28,XBOOLE_0:def 4;
+      end;
+      suppose A30: born(S,x) = A & born(S,y) in D;
+        then [x,y] in ClosedProd(S,A,born(S,y)) by A25,Def10;
+        then A31:[x,y] in S /\ ClosedProd(S,A,born(S,y)) by A24,XBOOLE_0:def 4;
+        A32:ClosedProd(R,A,born(S,y)) c= OpenProd(R,A,D) by Th18,A30;
+        [x,y] in R /\ ClosedProd(R,A,born(R,y))
+        by A26,A6,A30,A31,A7,ORDINAL1:def 2;
+        then [x,y] in R & [x,y] in ClosedProd(R,A,born(R,y)) by XBOOLE_0:def 4;
+        hence thesis by A32,A26,XBOOLE_0:def 4;
+      end;
+      suppose A33: born(S,x) in D & born(S,y) = A;
+        then [x,y] in ClosedProd(S,A,born(S,x)) by A25,Def10;
+        then A34:[x,y] in S /\ ClosedProd(S,A,born(S,x)) by A24,XBOOLE_0:def 4;
+        A35:ClosedProd(R,A,born(S,x)) c= OpenProd(R,A,D) by Th18,A33;
+        [x,y] in R /\ ClosedProd(R,A,born(S,x))
+          by A7,A33,A6,A34,ORDINAL1:def 2;
+        then [x,y] in R & [x,y] in ClosedProd(R,A,born(R,x))
+          by A26,XBOOLE_0:def 4;
+        hence thesis by A35,A26,XBOOLE_0:def 4;
+      end;
+    end;
+    hence thesis by A1,A8,Th21,A9,XBOOLE_0:def 10;
+  end;
+  for D be Ordinal holds P[D] from ORDINAL1:sch 2(A5);
+  hence thesis;
+end;
+
+theorem Th23:
+    R is almost-No-order & S is almost-No-order &
+    R preserves_No_Comparison_on ClosedProd(R,A,B) &
+    S preserves_No_Comparison_on ClosedProd(S,A,B)
+  implies
+      R /\ ClosedProd(R,A,B) = S /\ ClosedProd(S,A,B)
+proof
+  assume A1: R is almost-No-order & S is almost-No-order &
+    R preserves_No_Comparison_on ClosedProd(R,A,B) &
+    S preserves_No_Comparison_on ClosedProd(S,A,B);
+  defpred P[Ordinal] means
+        $1 in A implies R /\ ClosedProd(R,$1,$1) = S /\ ClosedProd(S,$1,$1);
+  A2: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that A3: for C be Ordinal st C in D holds P[C];
+    assume A4:D in A;
+    ClosedProd(R,D,D) c= ClosedProd(R,A,B) &
+    ClosedProd(S,D,D) c= ClosedProd(S,A,B) by A4,Th17;
+    then A5: R preserves_No_Comparison_on ClosedProd(R,D,D) &
+    S preserves_No_Comparison_on ClosedProd(S,D,D) by A1;
+    A6: R /\ OpenProd(R,D,0) c= S /\ OpenProd(S,D,0)
+    proof
+      let x,y be object such that A7:[x,y] in R /\ OpenProd(R,D,0);
+      A8: [x,y] in R & [x,y] in OpenProd(R,D,0) by A7,XBOOLE_0:def 4;
+      A9:x in Day(R,D) & y in Day(R,D) by A7,ZFMISC_1:87;
+      then A10: born(R,x) in D & born(R,y) in D by A8,Def9;
+      A11:x in Day(R,born(R,x)) & y in Day(R,born(R,y)) by A9,Def8;
+      A12: born(R,x) in A & born(R,y) in A by A10,A4,ORDINAL1:10;
+      per cases by ORDINAL1:16;
+      suppose A13: born(R,x) c= born(R,y);
+        set b = born(R,y);
+        Day(R,born(R,x)) c= Day(R,b) by A13,Th9;
+        then [x,y] in ClosedProd(R,b,born(R,y)) by A11,Def10,A13;
+        then [x,y] in R/\ClosedProd(R,b,b) by A8,XBOOLE_0:def 4;
+        then A14: [x,y] in S/\ClosedProd(S,b,b) by A10,A12,A3;
+        then A15:[x,y] in S & [x,y] in ClosedProd(S,b,b) by XBOOLE_0:def 4;
+        A16: x in Day(S,b) & y in Day(S,b) by A14,ZFMISC_1:87;
+        A17: Day(S,b) c= Day(S,D) by A10,ORDINAL1:def 2, Th9;
+        (born(S,x) in b & born(S,y) in b) or
+        (born(S,x) = b & born(S,y) c= b) or
+        (born(S,x) c= b & born(S,y) = b) by A15,A16,Def10;
+        then (born(S,x) in D & born(S,y) in D) or
+        (born(S,x) in D & born(S,y) in D) or
+        (born(S,x) in D & born(S,y) in D) by A10,ORDINAL1:10,12;
+        then [x,y] in OpenProd(S,D,0) by A17,A16,Def9;
+        hence thesis by A15,XBOOLE_0:def 4;
+      end;
+      suppose A18: born(R,y) in born(R,x);
+        then A19:born(R,y) c= born(R,x) by ORDINAL1:def 2;
+        set b = born(R,x);
+        Day(R,born(R,y)) c= Day(R,b) by A18,ORDINAL1:def 2,Th9;
+        then [x,y] in ClosedProd(R,b,born(R,x)) by A11,Def10,A19;
+        then [x,y] in R/\ClosedProd(R,b,b) by A8,XBOOLE_0:def 4;
+        then A20: [x,y] in S/\ClosedProd(S,b,b) by A10,A12,A3;
+        then A21:[x,y] in S & [x,y] in ClosedProd(S,b,b) by XBOOLE_0:def 4;
+        A22: x in Day(S,b) & y in Day(S,b) by ZFMISC_1:87,A20;
+        A23:Day(S,b) c= Day(S,D) by A10,ORDINAL1:def 2, Th9;
+        (born(S,x) in b & born(S,y) in b) or
+        (born(S,x) = b & born(S,y) c= b) or
+        (born(S,x) c= b & born(S,y) = b) by A21,A22,Def10;
+        then (born(S,x) in D & born(S,y) in D) or
+        (born(S,x) in D & born(S,y) in D) or
+        (born(S,x) in D & born(S,y) in D) by A10,ORDINAL1:10,12;
+        then [x,y] in OpenProd(S,D,0) by A23,A22,Def9;
+        hence thesis by A21,XBOOLE_0:def 4;
+      end;
+    end;
+    S /\ OpenProd(S,D,0) c= R /\ OpenProd(R,D,0)
+    proof
+      let x,y be object such that A24:[x,y] in S /\ OpenProd(S,D,0);
+      A25: [x,y] in S & [x,y] in OpenProd(S,D,0) by A24,XBOOLE_0:def 4;
+      A26:x in Day(S,D) & y in Day(S,D) by A24,ZFMISC_1:87;
+      then A27: born(S,x) in D & born(S,y) in D by A25,Def9;
+      A28:x in Day(S,born(S,x)) & y in Day(S,born(S,y)) by A26,Def8;
+      A29: born(S,x) in A & born(S,y) in A by A27,A4,ORDINAL1:10;
+      per cases by ORDINAL1:16;
+      suppose
+        A30: born(S,x) c= born(S,y);
+        set b = born(S,y);
+        Day(S,born(S,x)) c= Day(S,b) by A30,Th9;
+        then [x,y] in ClosedProd(S,b,born(S,y)) by A28,Def10,A30;
+        then [x,y] in S/\ClosedProd(S,b,b) by A25,XBOOLE_0:def 4;
+        then A31: [x,y] in R/\ClosedProd(R,b,b) by A27,A29,A3;
+        then A32:[x,y] in R & [x,y] in ClosedProd(R,b,b) by XBOOLE_0:def 4;
+        A33: x in Day(R,b) & y in Day(R,b) by A31,ZFMISC_1:87;
+        A34:Day(R,b) c= Day(R,D) by A27,ORDINAL1:def 2, Th9;
+        (born(R,x) in b & born(R,y) in b) or
+        (born(R,x) = b & born(R,y) c= b) or
+        (born(R,x) c= b & born(R,y) = b) by A32,A33,Def10;
+        then (born(R,x) in D & born(R,y) in D) or
+        (born(R,x) in D & born(R,y) in D) or
+        (born(R,x) in D & born(R,y) in D) by A27,ORDINAL1:10,12;
+        then [x,y] in OpenProd(R,D,0) by A34,A33,Def9;
+        hence thesis by A32,XBOOLE_0:def 4;
+      end;
+      suppose
+        A35: born(S,y) in born(S,x);
+        then A36:born(S,y) c= born(S,x) by ORDINAL1:def 2;
+        set b = born(S,x);
+        Day(S,born(S,y)) c= Day(S,b) by A35,ORDINAL1:def 2,Th9;
+        then [x,y] in ClosedProd(S,b,born(S,x)) by A28,Def10,A36;
+        then [x,y] in S/\ClosedProd(S,b,b) by A25,XBOOLE_0:def 4;
+        then A37: [x,y] in R/\ClosedProd(R,b,b) by A27,A29,A3;
+        then A38:[x,y] in R & [x,y] in ClosedProd(R,b,b) by XBOOLE_0:def 4;
+        A39: x in Day(R,b) & y in Day(R,b) by ZFMISC_1:87,A37;
+        A40: Day(R,b) c= Day(R,D) by A27,ORDINAL1:def 2, Th9;
+        (born(R,x) in b & born(R,y) in b) or
+        (born(R,x) = b & born(R,y) c= b) or
+        (born(R,x) c= b & born(R,y) = b) by A38,A39,Def10;
+        then (born(R,x) in D & born(R,y) in D) or
+        (born(R,x) in D & born(R,y) in D) or
+        (born(R,x) in D & born(R,y) in D) by A27,ORDINAL1:10,12;
+        then [x,y] in OpenProd(R,D,0) by A40,A39,Def9;
+        hence thesis by A38,XBOOLE_0:def 4;
+      end;
+    end;
+    hence thesis by A1,A5,Th22, A6,XBOOLE_0:def 10;
+  end;
+  A41:for D be Ordinal holds P[D] from ORDINAL1:sch 2(A2);
+  A42: R /\ OpenProd(R,A,0) c= S /\ OpenProd(S,A,0)
+  proof
+    let x,y be object such that A43:[x,y] in R /\ OpenProd(R,A,0);
+    A44: [x,y] in R & [x,y] in OpenProd(R,A,0) by A43,XBOOLE_0:def 4;
+    A45:x in Day(R,A) & y in Day(R,A) by ZFMISC_1:87,A43;
+    then A46: born(R,x) in A & born(R,y) in A by A44,Def9;
+    A47:x in Day(R,born(R,x)) & y in Day(R,born(R,y)) by A45,Def8;
+    per cases by ORDINAL1:16;
+    suppose A48: born(R,x) c= born(R,y);
+      set b = born(R,y);
+      Day(R,born(R,x)) c= Day(R,b) by A48,Th9;
+      then [x,y] in ClosedProd(R,b,born(R,y)) by A47,Def10,A48;
+      then [x,y] in R/\ClosedProd(R,b,b) by A44,XBOOLE_0:def 4;
+      then A49: [x,y] in S/\ClosedProd(S,b,b) by A41,A46;
+      then A50:[x,y] in S & [x,y] in ClosedProd(S,b,b) by XBOOLE_0:def 4;
+      A51: x in Day(S,b) & y in Day(S,b) by A49,ZFMISC_1:87;
+      A52: Day(S,b) c= Day(S,A) by A46,ORDINAL1:def 2, Th9;
+      (born(S,x) in b & born(S,y) in b) or
+      (born(S,x) = b & born(S,y) c= b) or
+      (born(S,x) c= b & born(S,y) = b) by A50,A51,Def10;
+      then (born(S,x) in A & born(S,y) in A) or
+      (born(S,x) in A & born(S,y) in A) or
+      (born(S,x) in A & born(S,y) in A) by A46,ORDINAL1:10,12;
+      then [x,y] in OpenProd(S,A,0) by A52,A51,Def9;
+      hence thesis by A50,XBOOLE_0:def 4;
+    end;
+    suppose A53:born(R,y) in born(R,x);
+      then A54:born(R,y) c= born(R,x) by ORDINAL1:def 2;
+      set b = born(R,x);
+      Day(R,born(R,y)) c= Day(R,b) by A53,ORDINAL1:def 2,Th9;
+      then [x,y] in ClosedProd(R,b,born(R,x)) by A47,Def10,A54;
+      then [x,y] in R/\ClosedProd(R,b,b) by A44,XBOOLE_0:def 4;
+      then A55: [x,y] in S/\ClosedProd(S,b,b) by A41,A46;
+      then A56:[x,y] in S & [x,y] in ClosedProd(S,b,b) by XBOOLE_0:def 4;
+      A57: x in Day(S,b) & y in Day(S,b) by A55,ZFMISC_1:87;
+      A58:Day(S,b) c= Day(S,A) by A46,ORDINAL1:def 2, Th9;
+      (born(S,x) in b & born(S,y) in b) or
+      (born(S,x) = b & born(S,y) c= b) or
+      (born(S,x) c= b & born(S,y) = b) by A56,A57,Def10;
+      then (born(S,x) in A & born(S,y) in A) or
+      (born(S,x) in A & born(S,y) in A) or
+      (born(S,x) in A & born(S,y) in A) by A46,ORDINAL1:10,12;
+      then [x,y] in OpenProd(S,A,0) by A58,A57,Def9;
+      hence thesis by A56,XBOOLE_0:def 4;
+    end;
+  end;
+  S /\ OpenProd(S,A,0) c= R /\ OpenProd(R,A,0)
+  proof
+    let x,y be object such that A59:[x,y] in S /\ OpenProd(S,A,0);
+    A60: [x,y] in S & [x,y] in OpenProd(S,A,0) by A59,XBOOLE_0:def 4;
+    A61:x in Day(S,A) & y in Day(S,A) by A59,ZFMISC_1:87;
+    then A62: born(S,x) in A & born(S,y) in A by A60,Def9;
+    A63:x in Day(S,born(S,x)) & y in Day(S,born(S,y)) by A61,Def8;
+    per cases by ORDINAL1:16;
+    suppose A64: born(S,x) c= born(S,y);
+      set b = born(S,y);
+      Day(S,born(S,x)) c= Day(S,b) by A64,Th9;
+      then [x,y] in ClosedProd(S,b,born(S,y)) by A63,Def10,A64;
+      then [x,y] in S/\ClosedProd(S,b,b) by A60,XBOOLE_0:def 4;
+      then A65: [x,y] in R/\ClosedProd(R,b,b) by A41,A62;
+      then A66:[x,y] in R & [x,y] in ClosedProd(R,b,b) by XBOOLE_0:def 4;
+      A67: x in Day(R,b) & y in Day(R,b) by A65,ZFMISC_1:87;
+      A68: Day(R,b) c= Day(R,A) by A62,ORDINAL1:def 2, Th9;
+      (born(R,x) in b & born(R,y) in b) or
+      (born(R,x) = b & born(R,y) c= b) or
+      (born(R,x) c= b & born(R,y) = b) by A66,A67,Def10;
+      then (born(R,x) in A & born(R,y) in A) or
+      (born(R,x) in A & born(R,y) in A) or
+      (born(R,x) in A & born(R,y) in A) by A62,ORDINAL1:10,12;
+      then [x,y] in OpenProd(R,A,0) by A68,A67,Def9;
+      hence thesis by A66,XBOOLE_0:def 4;
+    end;
+    suppose A69: born(S,y) in born(S,x);
+      then A70:born(S,y) c= born(S,x) by ORDINAL1:def 2;
+      set b = born(S,x);
+      Day(S,born(S,y)) c= Day(S,b) by A69,ORDINAL1:def 2,Th9;
+      then [x,y] in ClosedProd(S,b,born(S,x)) by A63,Def10,A70;
+      then [x,y] in S/\ClosedProd(S,b,b) by A60,XBOOLE_0:def 4;
+      then A71: [x,y] in R/\ClosedProd(R,b,b) by A41,A62;
+      then A72:[x,y] in R & [x,y] in ClosedProd(R,b,b) by XBOOLE_0:def 4;
+      A73: x in Day(R,b) & y in Day(R,b) by A71,ZFMISC_1:87;
+      A74: Day(R,b) c= Day(R,A) by A62,ORDINAL1:def 2, Th9;
+      (born(R,x) in b & born(R,y) in b) or
+      (born(R,x) = b & born(R,y) c= b) or
+      (born(R,x) c= b & born(R,y) = b) by A72,A73,Def10;
+      then (born(R,x) in A & born(R,y) in A) or
+      (born(R,x) in A & born(R,y) in A) or
+      (born(R,x) in A & born(R,y) in A) by A62,ORDINAL1:10,12;
+      then [x,y] in OpenProd(R,A,0) by A74,A73,Def9;
+      hence thesis by A72,XBOOLE_0:def 4;
+    end;
+  end;
+  hence thesis by A1,Th22,A42,XBOOLE_0:def 10;
+end;
+
+theorem Th24:
+  for Lp,Lr be Sequence st dom Lp =dom Lr &
+     for A st A in dom Lp holds
+       (ex a,b be Ordinal,R be Relation st
+          R =Lr.A & Lp.A = ClosedProd(R,a,b)) &
+       Lr.A is Relation &
+       (for R be Relation st R=Lr.A holds
+          R preserves_No_Comparison_on Lp.A & R c= Lp.A)
+   holds union rng Lr is Relation &
+     for R st R = union rng Lr holds
+       R preserves_No_Comparison_on union rng Lp & R c= union rng Lp
+       & for A,a,b be Ordinal,S st
+           A in dom Lp & S=Lr.A & Lp.A=ClosedProd(S,a,b)
+         holds
+  R /\ [:BeforeGames a,BeforeGames a:] = S /\ [:BeforeGames a,BeforeGames a:]
+proof
+  let Lp,Lr be Sequence such that
+  A1:dom Lp =dom Lr and
+  A2:for A be Ordinal st A in dom Lp holds
+  (ex a,b be Ordinal,R be Relation st R=Lr.A & Lp.A=ClosedProd(R,a,b)) &
+  Lr.A is Relation &
+  (for R be Relation st R=Lr.A holds R preserves_No_Comparison_on Lp.A &
+  R c= Lp.A);
+  union rng Lr is Relation-like
+  proof
+    let y be object such that A3:y in union rng Lr;
+    consider Y be set such that
+    A4:y in Y & Y in rng Lr by A3,TARSKI:def 4;
+    consider A be object such that
+    A5:A in dom Lr & Lr.A = Y by A4,FUNCT_1:def 3;
+    reconsider A as Ordinal by A5;
+    ex a,b be Ordinal,R be Relation st
+    R=Lr.A & Lp.A=ClosedProd(R,a,b) by A5,A2,A1;
+    hence thesis by A4,A5,RELAT_1:def 1;
+  end;
+  hence union rng Lr is Relation;
+  let R be Relation such that A6:R=union rng Lr;
+  A7:R c= union rng Lp
+  proof
+    let y,z be object such that A8:[y,z] in R;
+    consider Y be set such that
+    A9:  [y,z]  in Y & Y in rng Lr by A6,A8,TARSKI:def 4;
+    consider A be object such that
+    A10:  A in dom Lr & Lr.A = Y by A9,FUNCT_1:def 3;
+    reconsider A as Ordinal by A10;
+    reconsider R=Lr.A as Relation by A10,A1,A2;
+    R c= Lp.A in rng Lp by A10,A1,A2,FUNCT_1:def 3;
+    hence thesis by A9,A10,TARSKI:def 4;
+  end;
+  R preserves_No_Comparison_on union rng Lp
+  proof
+    let x,y be object such that A11: [x,y] in union rng Lp;
+    consider Y be set such that
+    A12:[x,y]  in Y & Y in rng Lp by A11,TARSKI:def 4;
+    consider A be object such that
+    A13:A in dom Lp & Lp.A = Y by A12,FUNCT_1:def 3;
+    consider a,b be Ordinal,T be Relation  such that
+    A14:T=Lr.A & Lp.A=ClosedProd(T,a,b) by A13,A2;
+    A15: T preserves_No_Comparison_on Lp.A & T c= Lp.A by A13,A14,A2;
+    thus x <=R, y implies  L_x <<R, {y} & {x} <<R, R_y
+    proof
+      assume x<=R,y;
+      then consider Y be set such that
+      A16: [x,y] in Y & Y in rng Lr by A6,TARSKI:def 4;
+      consider A be object such that
+      A17: A in dom Lr & Lr.A = Y by A16,FUNCT_1:def 3;
+      consider a,b be Ordinal,S be Relation such that
+      A18: S=Lr.A & Lp.A=ClosedProd(S,a,b) by A17,A2,A1;
+      A19: S preserves_No_Comparison_on ClosedProd(S,a,b) &
+      S c= ClosedProd(S,a,b) by A17,A18,A1,A2;
+      then A20: S is almost-No-order by XBOOLE_1:1;
+      x<=S,y by A16,A17,A18;
+      then A21: L_x <<S, {y} & {x} <<S, R_y by A19;
+      A22: L_x <<R, {y}
+      proof
+        given l,r be object such that
+        A23:l in L_x & r in {y} & l >=R,r;
+        A24:not l >=S,r by A21,A23;
+        consider Z be set such that
+        A25:  [r,l]  in Z & Z in rng Lr by A23,A6,TARSKI:def 4;
+        consider B be object such that
+        A26:  B in dom Lr & Lr.B = Z by A25,FUNCT_1:def 3;
+        consider a1,b1 be Ordinal,W be Relation  such that
+        A27:  W=Lr.B & Lp.B=ClosedProd(W,a1,b1) by A26,A2,A1;
+        A28: W preserves_No_Comparison_on ClosedProd(W,a1,b1) &
+        W c= ClosedProd(W,a1,b1) by A26,A27,A1,A2;
+        then A29: W is almost-No-order by XBOOLE_1:1;
+        per cases;
+        suppose a1 in a or (a1=a & b1 c= b);
+          then ClosedProd(S,a1,b1) c= ClosedProd(S,a,b) by Th17;
+          then S preserves_No_Comparison_on ClosedProd(S,a1,b1) by A19;
+          then A30: S /\ ClosedProd(S,a1,b1) = W /\ ClosedProd(W,a1,b1)
+          by A28,A20,A29,Th23;
+          [r,l] in W /\ ClosedProd(W,a1,b1) by A25,A26,A27,A28,XBOOLE_0:def 4;
+          hence thesis by A24,A30,XBOOLE_0:def 4;
+        end;
+        suppose A31:not a1 in a & not (a1=a & b1 c= b);
+          then A32:a c= a1 by ORDINAL1:16;
+          a in a1 or (a=a1 & b c= b1)
+          proof
+            assume A33:not a in a1 & not (a=a1 & b c= b1);
+            then a1 c= a by ORDINAL1:16;
+            hence thesis by A33,A31,A32,XBOOLE_0:def 10;
+          end;
+          then ClosedProd(W,a,b) c= ClosedProd(W,a1,b1) by Th17;
+          then W preserves_No_Comparison_on ClosedProd(W,a,b) by A28;
+          then A34: S /\ ClosedProd(S,a,b) = W /\ ClosedProd(W,a,b)
+            by A19,A20,A29,Th23;
+          [x,y] in W /\ ClosedProd(W,a,b)
+            by A34,A16,A17,A18,A19,XBOOLE_0:def 4;
+          then [x,y] in W by XBOOLE_0:def 4;
+          then x<=W,y & [x,y] in ClosedProd(W,a1,b1) by A28;
+          then L_x <<W, {y} by A28;
+          then not l >=W,r by A23;
+          hence thesis by A25,A26,A27;
+        end;
+      end;
+      {x} <<R, R_y
+      proof
+        given l,r be object such that
+        A35:l in {x} & r in R_y & l >=R,r;
+        A36: not l >=S,r by A21,A35;
+        consider Z be set such that
+        A37:  [r,l]  in Z & Z in rng Lr by A35,A6,TARSKI:def 4;
+        consider B be object such that
+        A38:  B in dom Lr & Lr.B = Z by A37,FUNCT_1:def 3;
+        consider a1,b1 be Ordinal,W be Relation  such that
+        A39:  W=Lr.B & Lp.B=ClosedProd(W,a1,b1) by A38,A2,A1;
+        A40: W  preserves_No_Comparison_on ClosedProd(W,a1,b1) &
+              W c= ClosedProd(W,a1,b1) by A38,A39,A1,A2;
+        then A41: W is almost-No-order by XBOOLE_1:1;
+        per cases;
+        suppose a1 in a or (a1=a & b1 c= b);
+          then ClosedProd(S,a1,b1) c= ClosedProd(S,a,b) by Th17;
+          then S preserves_No_Comparison_on ClosedProd(S,a1,b1) by A19;
+          then A42: S /\ ClosedProd(S,a1,b1) = W /\ ClosedProd(W,a1,b1)
+            by A40,A20,A41,Th23;
+          [r,l] in W /\ ClosedProd(W,a1,b1) by A37,A38,A39,A40,XBOOLE_0:def 4;
+          hence thesis by A36,A42,XBOOLE_0:def 4;
+        end;
+        suppose A43:not a1 in a & not (a1=a & b1 c= b);
+          then A44:a c= a1 by ORDINAL1:16;
+          a in a1 or (a=a1 & b c= b1)
+          proof
+            assume A45:not a in a1 & not (a=a1 & b c= b1);
+            then a1 c= a by ORDINAL1:16;
+            hence thesis by A45,A43,A44,XBOOLE_0:def 10;
+          end;
+          then ClosedProd(W,a,b) c= ClosedProd(W,a1,b1) by Th17;
+          then W preserves_No_Comparison_on ClosedProd(W,a,b) by A40;
+          then S /\ ClosedProd(S,a,b) = W /\ ClosedProd(W,a,b)
+            by A19,A20,A41,Th23;
+          then [x,y] in W /\ ClosedProd(W,a,b)
+            by A16,A17,A18,A19,XBOOLE_0:def 4;
+          then [x,y] in W by XBOOLE_0:def 4;
+          then x<=W,y & [x,y] in ClosedProd(W,a1,b1) by A40;
+          then {x} <<W, R_y by A40;
+          then not l >=W,r by A35;
+          hence thesis by A37,A38,A39;
+        end;
+      end;
+      hence thesis by A22;
+    end;
+    assume A46: L_x <<R, {y} & {x} <<R, R_y;
+    assume A47:not x <=R, y;
+    A48:not x <=T,y
+    proof
+      assume A49: x<=T,y;
+      T in rng Lr by A13,A14,A1,FUNCT_1:def 3;
+      hence thesis by A47,A49,A6,TARSKI:def 4;
+    end;
+    per cases by A48,A15,A12,A13;
+    suppose not L_x <<T, {y};
+      then consider l,r be object such that
+      A50:l in L_x & r in {y} & l >=T,r;
+      T in rng Lr by A13,A14,A1,FUNCT_1:def 3;
+      then r <=R,l by A50,A6,TARSKI:def 4;
+      hence thesis by A46,A50;
+    end;
+    suppose not {x} <<T, R_y;
+      then consider l,r be object such that
+      A51:l in {x} & r in R_y & l >=T,r;
+      T in rng Lr by A13,A14,A1,FUNCT_1:def 3;
+      then r <=R,l by A51,A6,TARSKI:def 4;
+      hence thesis by A46,A51;
+    end;
+  end;
+  hence R preserves_No_Comparison_on union rng Lp & R c= union rng Lp by A7;
+  let A,a,b be Ordinal,S be Relation such that
+  A52:A in dom Lp & S=Lr.A & Lp.A=ClosedProd(S,a,b);
+  A53: R /\ [:BeforeGames a,BeforeGames a:] c=
+  S /\ [:BeforeGames a,BeforeGames a:]
+  proof
+    let x,y be object such that
+    A54:[x,y] in R /\ [:BeforeGames a,BeforeGames a:];
+    A55: [x,y] in [:BeforeGames a,BeforeGames a:]
+    by A54,XBOOLE_0:def 4;
+    [x,y] in R by A54,XBOOLE_0:def 4;
+    then consider Y be set such that
+    A56:  [x,y]  in Y & Y in rng Lr by A6,TARSKI:def 4;
+    consider B be object such that
+    A57:  B in dom Lr & Lr.B = Y by A56,FUNCT_1:def 3;
+    reconsider B as Ordinal by A57;
+    consider a1,b1 be Ordinal,W be Relation such that
+    A58:  W=Lr.B & Lp.B=ClosedProd(W,a1,b1) by A57,A1,A2;
+    reconsider W=Lr.B as Relation by A57,A1,A2;
+    A59:S preserves_No_Comparison_on Lp.A & S c= Lp.A by A52,A2;
+    then A60:S is almost-No-order by A52,XBOOLE_1:1;
+    A61:W preserves_No_Comparison_on Lp.B & W c= Lp.B by A57,A1,A2;
+    then A62:W is almost-No-order by A58,XBOOLE_1:1;
+    per cases;
+    suppose
+      A63:not a1 in a & not (a1=a & b1 c= b);
+      then A64:a c= a1 by ORDINAL1:16;
+      a in a1 or (a=a1 & b c= b1)
+      proof
+        assume A65:not a in a1 & not (a=a1 & b c= b1);
+        then a1 c= a by ORDINAL1:16;
+        hence thesis by A65,A63,A64,XBOOLE_0:def 10;
+      end;
+      then ClosedProd(W,a,b) c= ClosedProd(W,a1,b1) by Th17;
+      then W preserves_No_Comparison_on ClosedProd(W,a,b) by A61,A58;
+      then A66: S /\ ClosedProd(S,a,b) = W /\ ClosedProd(W,a,b)
+      by A62,A60,A52,A59,Th23;
+      [x,y] in ClosedProd(W,a1,b1) by A56,A57,A61,A58;
+      then A67:x in Day(W,a1) & y in Day(W,a1) by ZFMISC_1:87;
+      A68: x in BeforeGames a & y in BeforeGames a by A55,ZFMISC_1:87;
+      then consider Ox be Ordinal such that
+      A69: Ox in a & x in Games Ox by Def5;
+      consider Oy be Ordinal such that
+      A70: Oy in a & y in Games Oy by A68,Def5;
+      A71: Day(W,Ox) c= Day(W,a) by Th9,A69,ORDINAL1:def 2;
+      A72: x in Day(W,Ox) by A67,A69,Th12;
+      then born(W,x) c= Ox by Def8;
+      then A73:born(W,x) in a & x in Day(W,a) by A69,A71,A72,ORDINAL1:12;
+      A74: Day(W,Oy) c= Day(W,a) by A70,ORDINAL1:def 2,Th9;
+      A75: y in Day(W,Oy) by A67,A70,Th12;
+      then born(W,y) c= Oy by Def8;
+      then born(W,y) in a & y in Day(W,a) by A70,A74,A75,ORDINAL1:12;
+      then [x,y] in ClosedProd(W,a,b) by A73,Def10;
+      then [x,y] in W /\ ClosedProd(W,a,b) by A56,A57,XBOOLE_0:def 4;
+      then [x,y] in S by A66,XBOOLE_0:def 4;
+      hence thesis by A55,XBOOLE_0:def 4;
+    end;
+    suppose a1 in a or (a1=a & b1 c= b);
+      then ClosedProd(S,a1,b1) c= ClosedProd(S,a,b) by Th17;
+      then S preserves_No_Comparison_on ClosedProd(S,a1,b1) by A52,A59;
+      then A76: S /\ ClosedProd(S,a1,b1) = W /\ ClosedProd(W,a1,b1)
+        by A61,A62,A60,A58,Th23;
+      [x,y] in W /\ ClosedProd(W,a1,b1) by A56,A57,A61,A58,XBOOLE_0:def 4;
+      then [x,y] in S by A76,XBOOLE_0:def 4;
+      hence thesis by A55,XBOOLE_0:def 4;
+    end;
+  end;
+  S /\ [:BeforeGames a,BeforeGames a:] c=
+    R /\ [:BeforeGames a,BeforeGames a:]
+  proof
+    let x,y be object such that
+    A77:[x,y] in S /\ [:BeforeGames a,BeforeGames a:];
+    A78:[x,y] in [:BeforeGames a,BeforeGames a:] by A77,XBOOLE_0:def 4;
+    A79:[x,y] in S by A77,XBOOLE_0:def 4;
+    S in rng Lr by A52,A1,FUNCT_1:def 3;
+    then [x,y] in R by A79,A6,TARSKI:def 4;
+    hence thesis by A78,XBOOLE_0:def 4;
+  end;
+  hence thesis by A53,XBOOLE_0:def 10;
+end;
+
+theorem Th25:
+  [a,b] in ClosedProd(R,A,B)\OpenProd(R,A,B) iff
+     a in Day(R,A) & b in Day(R,A)&
+     (born(R,a) = A & born(R,b) = B or born(R,a) = B & born(R,b) = A)
+proof
+  thus [a,b] in ClosedProd(R,A,B)\OpenProd(R,A,B) implies
+    a in Day(R,A) & b in Day(R,A)&
+    (born(R,a) = A & born(R,b) = B or born(R,a) = B & born(R,b) = A)
+  proof
+    assume A1:[a,b] in ClosedProd(R,A,B)\OpenProd(R,A,B);
+    then A2:[a,b] in ClosedProd(R,A,B) & not [a,b] in OpenProd(R,A,B)
+    by XBOOLE_0:def 5;
+    A3:a in Day(R,A) & b in Day(R,A) by ZFMISC_1:87,A1;
+    then per cases by A2,Def10;
+    suppose born(R,a) in A & born(R,b) in A;
+      hence thesis by A2,A3,Def9;
+    end;
+    suppose A4:born(R,a) = A & born(R,b) c= B;
+      then not born(R,b) in B by A2,A3,Def9;
+      then B c= born(R,b) by ORDINAL1:16;
+      hence thesis by A1, ZFMISC_1:87,A4,XBOOLE_0:def 10;
+    end;
+    suppose A5:born(R,a) c= B & born(R,b) = A;
+      then not born(R,a) in B by A2,A3,Def9;
+      then B c= born(R,a) by ORDINAL1:16;
+      hence thesis by A1,ZFMISC_1:87,A5,XBOOLE_0:def 10;
+    end;
+  end;
+  assume that A6: a in Day(R,A) & b in Day(R,A) and
+  A7:  born(R,a) = A & born(R,b) = B or born(R,a) = B & born(R,b) = A;
+  A8:not [a,b] in OpenProd(R,A,B)
+  proof
+    assume [a,b] in OpenProd(R,A,B);
+    then (born(R,a) in A & born(R,b) in A) or
+    (born(R,a) = A & born(R,b) in B) or
+    (born(R,a) in B & born(R,b) = A) by A6,Def9;
+    hence thesis by A7;
+  end;
+  [a,b] in ClosedProd(R,A,B) by A6,A7,Def10;
+  hence thesis by A8,XBOOLE_0:def 5;
+end;
+
+theorem Th26:
+  R preserves_No_Comparison_on OpenProd(R,A,B) & R c= OpenProd(R,A,B) implies
+    ex S st R c= S & S preserves_No_Comparison_on ClosedProd(S,A,B) &
+       S c= ClosedProd(S,A,B)
+proof
+  assume A1: R preserves_No_Comparison_on OpenProd(R,A,B) &
+  R c= OpenProd(R,A,B);
+  set CC = {[x,y] where x,y is Element of Day(R,A):
+  (born(R,x) = B & born(R,y) = A or born(R,x) = A & born(R,y) = B) &
+        L_x <<R, {y} & {x} <<R, R_y};
+  CC is Relation-like
+  proof
+    let z be object;
+    assume z in CC;
+    then ex x,y be Element of Day(R,A) st z = [x,y] &
+    (born(R,x) = B & born(R,y) = A or born(R,x) = A & born(R,y) = B) &
+    L_x <<R, {y} & {x} <<R, R_y;
+    hence thesis;
+  end;
+  then reconsider RCC=R\/CC as Relation;
+  take RCC;
+  thus R c= RCC by XBOOLE_1:7;
+  A2:R /\ [:BeforeGames A,BeforeGames A:]
+  c= RCC /\ [:BeforeGames A,BeforeGames A:] by XBOOLE_1:7,26;
+  A3: RCC /\ [:BeforeGames A,BeforeGames A:] c=
+  R /\ [:BeforeGames A,BeforeGames A:]
+  proof
+    let y1,z1 be object;
+    assume [y1,z1] in RCC /\ [:BeforeGames A,BeforeGames A:];
+    then A4:[y1,z1] in RCC & [y1,z1] in [:BeforeGames A,BeforeGames A:]
+      by XBOOLE_0:def 4;
+    not [y1,z1] in CC
+    proof
+      assume [y1,z1] in CC;
+      then consider y,z be Element of Day(R,A) such that
+      A5:[y1,z1]=[y,z] and A6: (born(R,y) = B & born(R,z) = A) or
+      (born(R,y) = A & born(R,z) = B) and
+      L_y <<R, {z} & {y} <<R, R_z;
+      A7: y in BeforeGames A & z in BeforeGames A by A5,A4,ZFMISC_1:87;
+      then consider Oy be Ordinal such that
+      A8: Oy in A & y in Games Oy by Def5;
+      y in Day(R,Oy) by A8,Th12;
+      then A9: born(R,y) c= Oy by Def8;
+      consider Oz be Ordinal such that
+      A10: Oz in A & z in Games Oz by A7,Def5;
+      z in Day(R,Oz) by A10,Th12;
+      then born(R,z) c= Oz by Def8;
+      hence thesis by A6,A9,A8,ORDINAL1:12,A10;
+    end;
+    then [y1,z1] in R by A4,XBOOLE_0:def 3;
+    hence thesis by A4,XBOOLE_0:def 4;
+  end;
+  A11:RCC c= ClosedProd(R,A,B)
+  proof
+    let x,y be object such that A12:[x,y] in RCC;
+    per cases by A12,XBOOLE_0:def 3;
+    suppose [x,y] in R;
+      then [x,y] in OpenProd(R,A,B) c=ClosedProd(R,A,B) by A1,Th16;
+      hence thesis;
+    end;
+    suppose [x,y] in CC;
+      then consider x1,y1 be Element of Day(R,A) such that
+      A13:[x,y]=[x1,y1] and A14: (born(R,x1) = B & born(R,y1) = A) or
+      (born(R,x1) = A & born(R,y1) = B) and
+      L_x1 <<R, {y1} & {x1} <<R, R_y1;
+      thus thesis by A13,A14,Def10;
+     end;
+   end;
+   RCC preserves_No_Comparison_on ClosedProd(R,A,B)
+   proof
+     let x,y be object such that A15:[x,y] in ClosedProd(R,A,B);
+     A16:x in Day(R,A) & y in Day(R,A) by A15,ZFMISC_1:87;
+     per cases;
+     suppose A17: [x,y] in OpenProd(R,A,B);
+       thus x <=RCC, y implies  L_x <<RCC, {y} & {x} <<RCC, R_y
+       proof
+         assume x <=RCC, y;
+         then per cases by XBOOLE_0:def 3;
+         suppose [x,y] in R;
+           then x<=R,y;
+           then A18: L_x <<R, {y} & {x} <<R, R_y by A1;
+           thus  L_x <<RCC, {y}
+           proof
+             given l,r be object such that
+             A19: l in L_x & r in {y} & l >=RCC,r;
+             A20:r=y by A19,TARSKI:def 1;
+             not l >=R,r by A19,A18;
+             then [r,l] in CC by A19,XBOOLE_0:def 3;
+             then consider x1,y1 be Element of Day(R,A) such that
+             A21:[r,l]=[x1,y1] and A22: (born(R,x1) = B & born(R,y1) = A) or
+             (born(R,x1) = A & born(R,y1) = B) and
+             L_x1 <<R, {y1} & {x1} <<R, R_y1;
+             A23: x in Day(R,A) & y in Day(R,A) by A15,ZFMISC_1:87;
+             then A24:x in Day(R,born(R,x)) by Def8;
+             l in L_x \/R_x by A19,XBOOLE_0:def 3;
+             then consider Ol be Ordinal such that
+             A25:   Ol in born(R,x) & l in Day(R,Ol) by A24,Th7;
+             A26:r=x1 & l=y1 by A21,XTUPLE_0:1;
+             A27:born(R,l) c= Ol by A25,Def8;
+             (born(R,x) in A & born(R,y) in A) or
+             (born(R,x) = A & born(R,y) in B) or
+             (born(R,x) in B & born(R,y) = A) by A17,A23,Def9;
+             hence thesis by A27,A26,A25,A20,A22;
+           end;
+           thus {x} <<RCC, R_y
+           proof
+             given l,r be object such that
+             A28: l in {x} & r in R_y & l >=RCC,r;
+             A29:l=x by A28,TARSKI:def 1;
+             not l >=R,r by A28,A18;
+             then [r,l] in CC by A28,XBOOLE_0:def 3;
+             then consider x1,y1 be Element of Day(R,A) such that
+             A30:[r,l]=[x1,y1] and A31: (born(R,x1) = B & born(R,y1) = A) or
+             (born(R,x1) = A & born(R,y1) = B) and
+             L_x1 <<R, {y1} & {x1} <<R, R_y1;
+             A32: x in Day(R,A) & y in Day(R,A) by A15,ZFMISC_1:87;
+             then A33:y in Day(R,born(R,y)) by Def8;
+             r in L_y \/R_y by A28,XBOOLE_0:def 3;
+             then consider Or be Ordinal such that
+             A34:   Or in born(R,y) & r in Day(R,Or) by A33,Th7;
+             A35:r=x1 & l=y1 by A30,XTUPLE_0:1;
+             A36: born(R,r) c= Or by A34,Def8;
+             (born(R,x) in A & born(R,y) in A) or
+             (born(R,x) = A & born(R,y) in B) or
+             (born(R,x) in B & born(R,y) = A) by A17,A32,Def9;
+             hence thesis by A36,A31,A35,A29,A34;
+           end;
+         end;
+         suppose [x,y] in CC;
+           then consider x1,y1 be Element of Day(R,A) such that
+           A37:[x,y]=[x1,y1] and A38: (born(R,x1) = B & born(R,y1) = A) or
+           (born(R,x1) = A & born(R,y1) = B) and
+           L_x1 <<R, {y1} & {x1} <<R, R_y1;
+           not (born(R,x1) in B & born(R,y1) = A) &
+           not (born(R,x1) = A & born(R,y1) in B) &
+           not (born(R,x1) in A & born(R,y1) in A) by A38;
+           hence thesis by A37,A17,Def9;
+         end;
+       end;
+       assume A39:L_x <<RCC, {y} & {x} <<RCC, R_y;
+       A40: L_x <<R, {y}
+       proof
+         given l,r be object such that
+         A41: l in L_x & r in {y} & l >=R,r;
+         l >=RCC,r by A41,XBOOLE_0:def 3;
+         hence thesis by A39,A41;
+       end;
+       {x} <<R, R_y
+       proof
+         given l,r be object such that
+         A42: l in {x} & r in R_y & l >=R,r;
+         l >=RCC,r by A42,XBOOLE_0:def 3;
+         hence thesis by A39,A42;
+       end;
+       then x <=R,y by A17,A1,A40;
+       hence x <=RCC, y by XBOOLE_0:def 3;
+     end;
+     suppose A43: not [x,y] in OpenProd(R,A,B);
+       then [x,y] in ClosedProd(R,A,B)\OpenProd(R,A,B) by A15,XBOOLE_0:def 5;
+       then A44: (born(R,x) = A & born(R,y) = B) or
+       (born(R,x) = B & born(R,y) = A) by Th25;
+       thus x <=RCC, y implies  L_x <<RCC, {y} & {x} <<RCC, R_y
+       proof
+         assume x <=RCC, y;
+         then [x,y] in R or [x,y] in CC by XBOOLE_0:def 3;
+         then consider x1,y1 be Element of Day(R,A) such that
+         A45:[x,y] = [x1,y1] and
+         A46:(born(R,x1) = B & born(R,y1) = A or
+         born(R,x1) = A & born(R,y1) = B) and
+         A47:  L_x1 <<R, {y1} & {x1} <<R, R_y1 by A1,A43;
+         A48:x=x1 & y=y1 by A45,XTUPLE_0:1;
+         thus L_x <<RCC, {y}
+         proof
+           given l,r be object such that
+           A49: l in L_x & r in {y} & l >=RCC,r;
+           A50:r=y by A49,TARSKI:def 1;
+           not l >=R,r by A49,A47,A48;
+           then [r,l] in CC by A49,XBOOLE_0:def 3;
+           then consider x1,y1 be Element of Day(R,A) such that
+           A51:[r,l]=[x1,y1] and A52: (born(R,x1) = B & born(R,y1) = A) or
+           (born(R,x1) = A & born(R,y1) = B) and
+           L_x1 <<R, {y1} & {x1} <<R, R_y1;
+           A53:x in Day(R,born(R,x)) by A16,Def8;
+           l in L_x \/R_x by A49,XBOOLE_0:def 3;
+           then consider Ol be Ordinal such that
+           A54:Ol in born(R,x) & l in Day(R,Ol) by A53,Th7;
+           A55:r=x1 & l=y1 by A51,XTUPLE_0:1;
+           born(R,l) c= Ol by A54,Def8;
+           hence thesis by A46,A48,A50,A52,A55,A54,ORDINAL1:12;
+         end;
+         thus {x} <<RCC, R_y
+         proof
+           given l,r be object such that
+           A56: l in {x} & r in R_y & l >=RCC,r;
+           A57:l=x by A56,TARSKI:def 1;
+           not l >=R,r by A56,A47,A48;
+           then [r,l] in CC by A56,XBOOLE_0:def 3;
+           then consider x1,y1 be Element of Day(R,A) such that
+           A58:[r,l]=[x1,y1] and A59: (born(R,x1) = B & born(R,y1) = A) or
+           (born(R,x1) = A & born(R,y1) = B) and
+           L_x1 <<R, {y1} & {x1} <<R, R_y1;
+           A60:y in Day(R,born(R,y)) by A16,Def8;
+           r in L_y \/R_y by A56,XBOOLE_0:def 3;
+           then consider Or be Ordinal such that
+           A61:   Or in born(R,y) & r in Day(R,Or) by A60,Th7;
+           A62:r=x1 & l=y1 by A58,XTUPLE_0:1;
+           born(R,r) c= Or by A61,Def8;
+           hence thesis by A46,A48,A57,A59,A62,A61,ORDINAL1:12;
+         end;
+       end;
+       assume A63:L_x <<RCC, {y} & {x} <<RCC, R_y;
+       A64: L_x <<R, {y}
+       proof
+         given l,r be object such that
+         A65: l in L_x & r in {y} & l >=R,r;
+         l >=RCC,r by A65,XBOOLE_0:def 3;
+         hence thesis by A63,A65;
+       end;
+       {x} <<R, R_y
+       proof
+         given l,r be object such that
+         A66: l in {x} & r in R_y & l >=R,r;
+         l >=RCC,r by A66,XBOOLE_0:def 3;
+         hence thesis by A63,A66;
+       end;
+       then [x,y] in CC by A64,A44,A16;
+       hence x <=RCC, y by XBOOLE_0:def 3;
+     end;
+   end;
+   hence thesis by A3,Th15,A2,XBOOLE_0:def 10,A11;
+end;
+
+theorem Th27:
+  (ex R st R preserves_No_Comparison_on OpenProd(R,A,{}) &
+       R c= OpenProd(R,A,{}))
+    implies ex S st S preserves_No_Comparison_on ClosedProd(S,A,B) &
+             S c= ClosedProd(S,A,B)
+proof
+  assume A1:ex R be Relation st R preserves_No_Comparison_on OpenProd(R,A,{})&
+  R c= OpenProd(R,A,{});
+  defpred P[Ordinal] means
+  ex R be Relation st R preserves_No_Comparison_on ClosedProd(R,A,$1) &
+  R c= ClosedProd(R,A,$1);
+  A2: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that A3: for C be Ordinal st C in D holds P[C];
+    per cases;
+    suppose A4:D={};
+      consider R be Relation such that
+      A5:R preserves_No_Comparison_on OpenProd(R,A,{}) &
+      R c= OpenProd(R,A,{}) by A1;
+      ex S be Relation st R c= S &
+      S preserves_No_Comparison_on ClosedProd(S,A,{}) &
+      S c= ClosedProd(S,A,{}) by Th26,A5;
+      hence thesis by A4;
+    end;
+    suppose A6: D<>{};
+      defpred Q[object,object] means for B be Ordinal st B =$1
+      ex R be Relation st $2=R &
+      R preserves_No_Comparison_on ClosedProd(R,A,B) &
+      R c= ClosedProd(R,A,B);
+      A7:for e be object st e in D ex u be object st Q[e,u]
+      proof
+        let e be object such that A8: e in D;
+        reconsider E=e as Ordinal by A8;
+        consider R be Relation such that
+        A9: R preserves_No_Comparison_on ClosedProd(R,A,E) &
+          R c= ClosedProd(R,A,E) by A3,A8;
+        take R;
+        thus thesis by A9;
+      end;
+      consider Lr be Function such that A10:dom Lr = D &
+      for e being object st e in D holds Q[e,Lr.e] from CLASSES1:sch 1(A7);
+      reconsider Lr as Sequence by A10,ORDINAL1:def 7;
+      defpred R[object,object] means
+      for B be Ordinal, R be Relation st B =$1 & R = Lr.B holds
+      $2 = ClosedProd(R,A,B);
+      A11:for e be object st e in D ex u be object st R[e,u]
+      proof
+        let e be object such that A12: e in D;
+        reconsider E=e as Ordinal by A12;
+        consider R be Relation such that
+        A13:Lr.E=R & R preserves_No_Comparison_on ClosedProd(R,A,E) &
+          R c= ClosedProd(R,A,E)by A12,A10;
+        take ClosedProd(R,A,E);
+        thus thesis by A13;
+      end;
+      consider Lp be Function such that A14:dom Lp = D &
+      for e being object st e in D holds R[e,Lp.e] from CLASSES1:sch 1(A11);
+      reconsider Lp as Sequence by A14,ORDINAL1:def 7;
+      A15:for E be Ordinal st E in dom Lp holds
+      (ex a,b be Ordinal,R be Relation st R=Lr.E & Lp.E=ClosedProd(R,a,b)) &
+      Lr.E is Relation &
+      (for R be Relation st R=Lr.E holds
+       R preserves_No_Comparison_on Lp.E & R c= Lp.E)
+      proof
+        let E be Ordinal such that A16: E in dom Lp;
+        consider R be Relation such that
+        A17:Lr.E=R & R preserves_No_Comparison_on ClosedProd(R,A,E) &
+        R c= ClosedProd(R,A,E) by A16,A10,A14;
+        thus thesis by A17,A16,A14;
+      end;
+      then reconsider RR = union rng Lr as Relation by A14,A10,Th24;
+      A18: RR preserves_No_Comparison_on union rng Lp & RR c= union rng Lp
+        by A15,A14,A10,Th24;
+      A19:union rng Lp c= OpenProd(RR,A,D)
+      proof
+        let x be object;
+        assume x in union rng Lp;
+        then consider Y be set such that
+        A20:x in Y & Y in rng Lp by TARSKI:def 4;
+        consider E be object such that
+        A21:  E in dom Lp & Y = Lp.E by A20,FUNCT_1:def 3;
+        reconsider E as Ordinal by A21;
+        reconsider R=Lr.E as Relation by A21,A15;
+        A22:Lp.E = ClosedProd(R,A,E) by A21,A14;
+        then RR /\ [:BeforeGames A,BeforeGames A:] =
+        R /\ [:BeforeGames A,BeforeGames A:] by A15,A14,A10,Th24,A21;
+        then A23:x in ClosedProd(RR,A,E) by A20,A21,A22,Th15;
+        ClosedProd(RR,A,E) c= OpenProd(RR,A,D) by Th18,A21,A14;
+        hence thesis by A23;
+      end;
+      OpenProd(RR,A,D) c=union rng Lp
+      proof
+        let x,y be object such that A24:[x,y] in OpenProd(RR,A,D);
+        A25: x in Day(RR,A) & y in Day(RR,A) by A24,ZFMISC_1:87;
+        then per cases by A24,Def9;
+        suppose A26: born(RR,x) in A & born(RR,y) in A;
+          consider B be object such that A27: B in D by A6,XBOOLE_0:def 1;
+          reconsider B as Ordinal by A27;
+          consider R be Relation such that
+          A28:Lr.B=R & R preserves_No_Comparison_on ClosedProd(R,A,B) &
+          R c= ClosedProd(R,A,B) by A27,A10;
+          A29: Lp.B = ClosedProd(R,A,B) by A27,A28,A14;
+          then RR /\ [:BeforeGames A,BeforeGames A:] =
+          R /\ [:BeforeGames A,BeforeGames A:]
+            by A27,A28,A15,A14,A10,Th24;
+          then A30:ClosedProd(RR,A,B) = ClosedProd(R,A,B) by Th15;
+          A31:[x,y] in ClosedProd(RR,A,B) by A26,A25,Def10;
+          Lp.B in rng Lp by A27,A14,FUNCT_1:def 3;
+          hence thesis by A30,A29,A31,TARSKI:def 4;
+        end;
+        suppose A32: born(RR,x) = A & born(RR,y) in D;
+          set B=born(RR,y);
+          consider R be Relation such that
+          A33:Lr.B=R & R preserves_No_Comparison_on ClosedProd(R,A,B) &
+          R c= ClosedProd(R,A,B) by A32,A10;
+          A34: Lp.B = ClosedProd(R,A,B) by A33,A32,A14;
+          then RR /\ [:BeforeGames A,BeforeGames A:] =
+          R /\ [:BeforeGames A,BeforeGames A:]
+          by A32,A33,A15,A14,A10,Th24;
+          then A35:ClosedProd(RR,A,B) = ClosedProd(R,A,B) by Th15;
+          A36:[x,y] in ClosedProd(RR,A,B) by A32,A25,Def10;
+          Lp.B in rng Lp by A32,A14,FUNCT_1:def 3;
+          hence thesis by A35,A34,A36,TARSKI:def 4;
+        end;
+        suppose A37: born(RR,x) in D & born(RR,y) = A;
+          set B=born(RR,x);
+          consider R be Relation such that
+          A38:Lr.B=R & R preserves_No_Comparison_on ClosedProd(R,A,B) &
+          R c= ClosedProd(R,A,B) by A37,A10;
+          A39: Lp.B = ClosedProd(R,A,B) by A38,A37,A14;
+          then RR /\ [:BeforeGames A,BeforeGames A:] =
+          R /\ [:BeforeGames A,BeforeGames A:]
+          by A37,A38,A15,A14,A10,Th24;
+          then A40:ClosedProd(RR,A,B) = ClosedProd(R,A,B) by Th15;
+          A41:[x,y] in ClosedProd(RR,A,B) by A37,A25,Def10;
+          Lp.B in rng Lp by A37,A14,FUNCT_1:def 3;
+          hence thesis by A40,A39,A41,TARSKI:def 4;
+        end;
+      end;
+      then OpenProd(RR,A,D) = union rng Lp by A19,XBOOLE_0:def 10;
+      then ex R be Relation st RR c= R &
+      R preserves_No_Comparison_on ClosedProd(R,A,D) &
+      R c= ClosedProd(R,A,D) by A18,Th26;
+      hence thesis;
+    end;
+  end;
+  for D be Ordinal holds P[D] from ORDINAL1:sch 2(A2);
+  hence thesis;
+end;
+
+theorem Th28:
+  ex R st R preserves_No_Comparison_on ClosedProd(R,A,B) &
+  R c= ClosedProd(R,A,B)
+proof
+  defpred P[Ordinal] means
+    for B be Ordinal holds
+      ex R be Relation st R preserves_No_Comparison_on ClosedProd(R,$1,B) &
+      R c= ClosedProd(R,$1,B);
+  A1: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that A2: for C be Ordinal st C in D holds P[C];
+    let B be Ordinal;
+    defpred Q[object,object] means for B be Ordinal st B =$1
+    ex R be Relation st $2=R & R preserves_No_Comparison_on ClosedProd(R,B,B)&
+    R c= ClosedProd(R,B,B);
+    A3: for e be object st e in D ex u be object st Q[e,u]
+    proof
+      let e be object such that A4: e in D;
+      reconsider E=e as Ordinal by A4;
+      consider R be Relation such that
+      A5: R preserves_No_Comparison_on ClosedProd(R,E,E) &
+      R c= ClosedProd(R,E,E) by A4,A2;
+      take R;
+      thus thesis by A5;
+    end;
+    consider Lr be Function such that A6:dom Lr = D &
+    for e being object st e in D holds Q[e,Lr.e] from CLASSES1:sch 1(A3);
+    reconsider Lr as Sequence by A6,ORDINAL1:def 7;
+    defpred R[object,object] means for B be Ordinal, R be Relation st
+    B =$1 & R = Lr.B holds
+    $2 = ClosedProd(R,B,B);
+    A7:for e be object st e in D ex u be object st R[e,u]
+    proof
+      let e be object such that A8: e in D;
+      reconsider E=e as Ordinal by A8;
+      consider R be Relation such that
+      A9:Lr.E=R & R preserves_No_Comparison_on ClosedProd(R,E,E) &
+      R c= ClosedProd(R,E,E) by A8,A6;
+      take ClosedProd(R,E,E);
+      thus thesis by A9;
+    end;
+    consider Lp be Function such that A10:dom Lp = D &
+    for e being object st e in D holds R[e,Lp.e] from CLASSES1:sch 1(A7);
+    reconsider Lp as Sequence by A10,ORDINAL1:def 7;
+    A11:for E be Ordinal st E in dom Lp holds
+    (ex a,b be Ordinal,R be Relation st R=Lr.E & Lp.E=ClosedProd(R,a,b)) &
+    Lr.E is Relation &
+    (for R be Relation st R=Lr.E holds
+    R preserves_No_Comparison_on Lp.E & R c= Lp.E)
+    proof
+      let E be Ordinal such that A12: E in dom Lp;
+      consider R be Relation such that
+      A13:Lr.E=R & R preserves_No_Comparison_on ClosedProd(R,E,E) &
+      R c= ClosedProd(R,E,E) by A12,A6,A10;
+      thus thesis by A13,A12,A10;
+    end;
+    then reconsider RR = union rng Lr as Relation by A10,A6,Th24;
+    A14: RR preserves_No_Comparison_on union rng Lp & RR c= union rng Lp
+    by A11,A10,A6,Th24;
+    A15:union rng Lp c= OpenProd(RR,D,{})
+    proof
+      let x be object;
+      assume x in union rng Lp;
+      then consider Y be set such that
+      A16:x in Y & Y in rng Lp by TARSKI:def 4;
+      consider E be object such that
+      A17:E in dom Lp & Y = Lp.E by A16,FUNCT_1:def 3;
+      reconsider E as Ordinal by A17;
+      A18: Day(RR,E) c= Day(RR,D) by A10,A17,Th9,ORDINAL1:def 2;
+      reconsider R=Lr.E as Relation by A17,A11;
+      A19:Lp.E = ClosedProd(R,E,E) by A17,A10;
+      then RR /\ [:BeforeGames E,BeforeGames E:] =
+            R /\ [:BeforeGames E,BeforeGames E:]
+      by A11,A10,A6,Th24,A17;
+      then A20:x in ClosedProd(RR,E,E) by A16,A17,A19,Th15;
+      then consider y,z be object such that
+      A21:y in Day(RR,E) & z in Day(RR,E) & [y,z] =x by ZFMISC_1:def 2;
+      (born(RR,y) in E & born(RR,z) in E) or
+      (born(RR,y) = E & born(RR,z) c= E) or
+      (born(RR,y) c= E & born(RR,z) = E) by A20,A21,Def10;
+      then born(RR,y) in D & born(RR,z) in D by ORDINAL1:10,12, A10,A17;
+      hence thesis by A18,A21,Def9;
+    end;
+    OpenProd(RR,D,{}) c=union rng Lp
+    proof
+      let x,y be object such that A22:[x,y] in OpenProd(RR,D,{});
+      A23: x in Day(RR,D) & y in Day(RR,D) by A22,ZFMISC_1:87;
+      then A24: born(RR,x) in D & born(RR,y) in D by A22,Def9;
+      per cases;
+      suppose A25: born(RR,x) c= born(RR,y);
+        set B = born(RR,y);
+        A26: Day(RR,born(RR,x)) c= Day(RR,B) by A25,Th9;
+        A27: x in Day(RR,born(RR,x)) & y in Day(RR,B) by A23,Def8;
+        consider R be Relation such that
+        A28:Lr.B=R & R preserves_No_Comparison_on ClosedProd(R,B,B) &
+          R c= ClosedProd(R,B,B) by A24,A6;
+        A29: Lp.B = ClosedProd(R,B,B) by A24,A28,A10;
+        then RR /\ [:BeforeGames B,BeforeGames B:] =
+        R /\ [:BeforeGames B,BeforeGames B:] by A24,A28,A11,A10,A6,Th24;
+        then A30:ClosedProd(RR,B,B) = ClosedProd(R,B,B) by Th15;
+        A31:[x,y] in ClosedProd(RR,B,B) by A25,Def10,A26,A27;
+        Lp.B in rng Lp by A24,A10,FUNCT_1:def 3;
+        hence thesis by A30,A29,A31,TARSKI:def 4;
+      end;
+      suppose A32: not born(RR,x) c= born(RR,y);
+        set B = born(RR,x);
+        A33: Day(RR,born(RR,y)) c= Day(RR,B) by A32,Th9;
+        A34: y in Day(RR,born(RR,y)) & x in Day(RR,B) by A23,Def8;
+        consider R be Relation such that
+        A35:Lr.B=R & R preserves_No_Comparison_on ClosedProd(R,B,B) &
+        R c= ClosedProd(R,B,B) by A24,A6;
+        A36: Lp.B = ClosedProd(R,B,B) by A24,A35,A10;
+        then RR /\ [:BeforeGames B,BeforeGames B:] =
+        R /\ [:BeforeGames B,BeforeGames B:]
+        by A24,A35,A11,A10,A6,Th24;
+        then A37:ClosedProd(RR,B,B) = ClosedProd(R,B,B) by Th15;
+        A38:[x,y] in ClosedProd(RR,B,B) by A32,A33,A34,Def10;
+        Lp.B in rng Lp by A24,A10,FUNCT_1:def 3;
+        hence thesis by A37,A36,A38,TARSKI:def 4;
+      end;
+    end;
+    then OpenProd(RR,D,{}) =union rng Lp by A15,XBOOLE_0:def 10;
+    hence thesis by A14,Th27;
+  end;
+  for D be Ordinal holds P[D] from ORDINAL1:sch 2(A1);
+  hence thesis;
+end;
+
+theorem Th29:
+  A in B implies ClosedProd(R,A,A) = OpenProd(R,A,B)
+proof
+  assume
+  A1: A in B;
+  then A2: ClosedProd(R,A,A) c= ClosedProd(R,A,B) by Th17,ORDINAL1:def 2;
+  ClosedProd(R,A,B) c= ClosedProd(R,A,A)
+  proof
+    let x,y be object such that A3:[x,y] in ClosedProd(R,A,B);
+    A4:x in Day(R,A) & y in Day(R,A) by A3,ZFMISC_1:87;
+    then A5:born(R,x) c= A & born(R,y) c= A by Def8;
+    (born(R,x) in A & born(R,y) in A) or
+    (born(R,x) = A & born(R,y) c= B) or
+    (born(R,x) c= B & born(R,y) = A) by A4,A3,Def10;
+    hence thesis by A4,A5,Def10;
+  end;
+  then A6:ClosedProd(R,A,B) = ClosedProd(R,A,A) by A2,XBOOLE_0:def 10;
+  A7:ClosedProd(R,A,B) c= OpenProd(R,A,B) by A1,Th19;
+  OpenProd(R,A,B) c= ClosedProd(R,A,B) by Th16;
+  hence thesis by A6,A7,XBOOLE_0:def 10;
+end;
+
+theorem Th30:
+  A c= B implies ClosedProd(R,A,A) c= ClosedProd(R,B,B)
+proof
+  assume A c= B;
+  then A=B or A in B by ORDINAL1:11,XBOOLE_0:def 8;
+  hence thesis by Th17;
+end;
+
+Lm3: ClosedProd(R,A,A) = [:Day(R,A),Day(R,A):]
+proof
+  let x,y be object;
+  thus [x,y] in ClosedProd(R,A,A) implies [x,y] in [:Day(R,A),Day(R,A):];
+  assume [x,y] in [:Day(R,A),Day(R,A):];
+  then A1:x in Day(R,A) & y in Day(R,A) by ZFMISC_1:87;
+  then A2:born(R,x) c= A & born(R,y) c= A by Def8;
+  per cases;
+    suppose born(R,x) = A or born(R,y) = A;
+      hence thesis by A1,A2,Def10;
+    end;
+    suppose born(R,x) <> A & born(R,y) <> A;
+      then born(R,x) in A & born(R,y) in A by ORDINAL1:11,A2,XBOOLE_0:def 8;
+      hence thesis by A1,Def10;
+    end;
+end;
+
+begin :: The Order on the $\alpha$-day
+
+definition
+  let A;
+  func No_Ord A -> Relation means :Def12:
+    it preserves_No_Comparison_on [:Day(it,A),Day(it,A):] &
+    it c= [:Day(it,A),Day(it,A):];
+  existence
+  proof
+  consider R such that
+   A1: R preserves_No_Comparison_on ClosedProd(R,A,A) &
+  R c= ClosedProd(R,A,A) by Th28;
+  take R;
+  thus thesis by A1,Lm3;
+  end;
+  uniqueness
+  proof
+    let S1,S2 be Relation such that
+    A2:S1 preserves_No_Comparison_on [:Day(S1,A),Day(S1,A):] &
+    S1 c= [:Day(S1,A),Day(S1,A):] and
+    A3: S2 preserves_No_Comparison_on [:Day(S2,A),Day(S2,A):] &
+    S2 c= [:Day(S2,A),Day(S2,A):];
+    A4: [:Day(S1,A),Day(S1,A):] = ClosedProd(S1,A,A) &
+    [:Day(S2,A),Day(S2,A):] = ClosedProd(S2,A,A) by Lm3;
+    A5: S1 is almost-No-order & S2 is almost-No-order by A2,A3;
+    thus S1 = S1 /\ ClosedProd(S1,A,A) by A4,A2,XBOOLE_1:28
+    .= S2 /\ ClosedProd(S2,A,A) by A4,A5,A2,A3,Th23
+    .= S2 by A4,A3,XBOOLE_1:28;
+  end;
+end;
+
+registration
+  let A;
+  cluster No_Ord A -> almost-No-order;
+  coherence
+  proof
+   [:Day(No_Ord A,A),Day(No_Ord A,A):] = ClosedProd(No_Ord A,A,A) by Lm3;
+    hence thesis by Def12;
+  end;
+end;
+
+definition
+  let A;
+  func Day A -> non empty Subset of Games A equals
+    Day(No_Ord A,A);
+  coherence;
+end;
+
+begin :: Surreal Number as a Special Type of Abstract Game
+
+definition
+  let o;
+  attr o is surreal means :Def14:
+    ex A st o in Day A;
+end;
+
+registration
+  cluster [{},{}]-> surreal;
+  coherence
+  proof
+    [{},{}] in Games 0 by Th2,TARSKI:def 1;
+    then [{},{}] in Day 0 by Th8;
+    hence thesis;
+  end;
+  cluster surreal for set;
+  existence
+  proof
+    [{},{}] is surreal;
+    hence thesis;
+  end;
+end;
+
+registration
+  let A be Ordinal;
+  cluster -> surreal for Element of Day A;
+  coherence;
+end;
+
+definition
+  mode Surreal is surreal set;
+end;
+
+reserve x,y,z,t,r,l for Surreal,
+        X,Y,Z for set;
+
+definition
+  func 0_No -> Surreal equals
+    [{},{}];
+  coherence by TARSKI:1;
+end;
+
+registration
+  cluster -> pair for Surreal;
+  coherence
+  proof
+    let x be Surreal;
+    ex A be Ordinal st x in Day A by Def14;
+    hence thesis;
+  end;
+end;
+
+registration
+  cluster surreal -> non empty for set;
+  coherence;
+end;
+
+definition
+  let X be set;
+  attr X is surreal-membered means :Def16:
+     o in X implies o is surreal;
+end;
+
+registration
+  cluster surreal-membered for set;
+  existence
+  proof
+    take E=the empty set;
+    thus thesis;
+  end;
+end;
+
+registration
+  let x;
+  cluster {x} -> surreal-membered;
+  coherence by TARSKI:def 1;
+  cluster L_x -> surreal-membered for set;
+  coherence
+  proof
+    consider A be Ordinal such that
+    A1:x in Day A by Def14;
+    let S be set such that A2:S=L_x;
+    let y be object such that A3:y in S;
+    y in L_x \/R_x by A2,A3,XBOOLE_0:def 3;
+    then consider O be Ordinal such that
+    A4:  O in A & y in Day(No_Ord A,O) by A1,Th7;
+    Day(No_Ord A,O) c= Day(No_Ord A,A)=Day A by Th9,A4,ORDINAL1:def 2;
+    hence thesis by A4;
+  end;
+  cluster R_x -> surreal-membered for set;
+  coherence
+  proof
+    consider A be Ordinal such that
+    A5:x in Day A by Def14;
+    let S be set such that A6:S=R_x;
+    let y be object such that A7:y in S;
+    y in L_x \/R_x by A6,A7,XBOOLE_0:def 3;
+    then consider O be Ordinal such that
+    A8:  O in A & y in Day(No_Ord A,O) by A5,Th7;
+    Day(No_Ord A,O) c= Day(No_Ord A,A) = Day A by Th9,A8,ORDINAL1:def 2;
+    hence thesis by A8;
+  end;
+end;
+
+registration
+  let X,Y be surreal-membered set;
+  cluster X\/Y -> surreal-membered;
+  coherence
+  proof
+    let o;
+    assume o in X\/Y;
+    then o in X or o in Y by XBOOLE_0:def 3;
+    hence thesis by Def16;
+  end;
+  cluster X\Y -> surreal-membered;
+  coherence by Def16;
+  cluster X/\Y -> surreal-membered;
+  coherence
+  proof
+    let o;
+    assume o in X/\Y;
+    then o in X by XBOOLE_0:def 4;
+    hence thesis by Def16;
+  end;
+end;
+
+registration
+  cluster non empty surreal-membered for set;
+  existence
+  proof
+    take {0_No};
+    thus thesis;
+  end;
+end;
+
+begin :: The Preorder of Surreal Numbers
+
+definition
+  let x,y;
+  pred x <= y means
+    ex A st x <=No_Ord A,y;
+end;
+
+theorem Th31:
+  for A,B,X be Ordinal st X c= A & X c= B holds
+     No_Ord A /\ [:BeforeGames X,BeforeGames X:] =
+     No_Ord B /\ [:BeforeGames X,BeforeGames X:]
+proof
+  let A,B,X be Ordinal such that A1: X c= A & X c= B;
+  set SA=No_Ord A,SB=No_Ord B;
+  [:Day(SA,A),Day(SA,A):] = ClosedProd(SA,A,A) by Lm3;
+  then A2: SA preserves_No_Comparison_on ClosedProd(SA,A,A) by Def12;
+  A c= X or X  in A by ORDINAL1:16;
+  then X=A or X in A by A1,XBOOLE_0:def 10;
+  then ClosedProd(SA,X,X) c= ClosedProd(SA,A,A) by Th17;
+  then A3: SA preserves_No_Comparison_on ClosedProd(SA,X,X) by A2;
+   [:Day(SB,B),Day(SB,B):] = ClosedProd(SB,B,B) by Lm3;
+  then A4: SB preserves_No_Comparison_on ClosedProd(SB,B,B) by Def12;
+  B c= X or X  in B by ORDINAL1:16;
+  then X=B or X in B by A1,XBOOLE_0:def 10;
+  then ClosedProd(SB,X,X) c= ClosedProd(SB,B,B) by Th17;
+  then SB preserves_No_Comparison_on ClosedProd(SB,X,X) by A4;
+  then A5:SA /\ ClosedProd(SA,X,X) = SB /\ ClosedProd(SB,X,X) by Th23,A3;
+  ClosedProd(SA,X,X) = OpenProd(SA,X,succ X) &
+  ClosedProd(SB,X,X) = OpenProd(SB,X,succ X) by ORDINAL1:6,Th29;
+  hence thesis by A5,Th20;
+end;
+
+theorem Th32:
+  A c= B implies
+    ClosedProd(No_Ord A,A,A) = ClosedProd(No_Ord B,A,A)
+proof
+  assume A c= B;
+  then No_Ord A /\ [:BeforeGames A,BeforeGames A:] =
+  No_Ord B /\ [:BeforeGames A,BeforeGames A:] by Th31;
+  hence thesis by Th15;
+end;
+
+theorem Th33:
+  [a,b] in ClosedProd(No_Ord A,A,A) iff a in Day A & b in Day A
+proof
+  thus [a,b] in ClosedProd(No_Ord A,A,A) implies a in Day A & b in Day A
+  by ZFMISC_1:87;
+  assume A1:a in Day A & b in Day A;
+  then born(No_Ord A,a) c= A & born(No_Ord A,b) c= A by Def8;
+  then (born(No_Ord A,a) in A & born(No_Ord A,b) in A)  or
+  (born(No_Ord A,a) = A & born(No_Ord A,b) c= A) or
+  (born(No_Ord A,a) c= A & born(No_Ord A,b) = A) or
+  (born(No_Ord A,a) = A & born(No_Ord A,b) = A)
+    by ORDINAL1:11,XBOOLE_0:def 8;
+  hence thesis by Def10,A1;
+end;
+
+theorem Th34:
+  A c= B implies
+    No_Ord A = No_Ord B /\ ClosedProd(No_Ord B,A,A)
+proof
+  set R=No_Ord A, S= No_Ord B;
+  assume A c= B;
+  then A1: ClosedProd(S,A,A) c= ClosedProd(S,B,B) by Th30;
+  A2: [:Day(S,B),Day(S,B):] = ClosedProd(S,B,B)&
+  [:Day(R,A),Day(R,A):] = ClosedProd(R,A,A) by Lm3;
+  then S preserves_No_Comparison_on ClosedProd(S,B,B) by Def12;
+  then R preserves_No_Comparison_on ClosedProd(R,A,A) &
+  S preserves_No_Comparison_on ClosedProd(S,A,A) by A2,A1,Def12;
+  then A3:R /\ ClosedProd(R,A,A) = S /\ ClosedProd(S,A,A) by Th23;
+  R c= ClosedProd(R,A,A) by A2,Def12;
+  hence thesis by A3,XBOOLE_1:28;
+end;
+
+theorem Th35:
+  A c= B implies Day A c= Day B
+proof
+  assume A1:A c= B;
+  set R=No_Ord A, S= No_Ord B;
+  R /\ [:BeforeGames A,BeforeGames A:] =
+  S /\ [:BeforeGames A,BeforeGames A:] by A1,Th31;
+  then Day(R,A) = Day(S,A) by Th10;
+  hence thesis by A1,Th9;
+end;
+
+theorem Th36:
+  o in Day(No_Ord A,B) & B c= A implies o in Day B
+proof
+  assume A1:o in Day(No_Ord A,B) & B c= A;
+  then No_Ord A /\ [:BeforeGames B,BeforeGames B:] =
+  No_Ord B /\ [:BeforeGames B,BeforeGames B:] by Th31;
+  hence thesis by A1,Th10;
+end;
+
+definition
+  let x;
+  func born x -> Ordinal means :Def18:
+    x in Day it & for O st x in Day O holds it c= O;
+  existence
+  proof
+    consider O be Ordinal such that
+    A1:x in Day O by Def14;
+    take b=born(No_Ord O,x);
+    A2:b c= O by A1,Def8;
+    A3:x in Day(No_Ord O,b) by Def8,A1;
+    hence x in Day b by A2,Th36;
+    let A be Ordinal such that A4:x in Day A;
+    No_Ord b /\ [:BeforeGames b,BeforeGames b:] =
+    No_Ord O /\ [:BeforeGames b,BeforeGames b:] by A2,Th31;
+    then A5:b = born(No_Ord b,x) by A3,Th11;
+    A6:born(No_Ord A,x) c= A by A4,Def8;
+    assume A7:not b c= A;
+    then No_Ord b /\ [:BeforeGames A,BeforeGames A:] =
+    No_Ord A /\ [:BeforeGames A,BeforeGames A:] by Th31;
+    hence thesis by A5,A7,A6,Th11,A4;
+  end;
+  uniqueness
+  proof
+    let b1,b2 be Ordinal such that
+    A8:x in Day b1 & for O be Ordinal st x in Day O holds b1 c= O and
+    A9:x in Day b2 & for O be Ordinal st x in Day O holds b2 c= O;
+    b1 c= b2 & b2 c= b1 by A8,A9;
+    hence thesis by XBOOLE_0:def 10;
+  end;
+end;
+
+theorem
+  born x = {} iff x = 0_No
+proof
+  hereby assume born x={};
+    then x in Day {} by Def18;
+    hence x=0_No by Th2,TARSKI:def 1;
+  end;
+  assume x = 0_No;
+  then x in Games {} by Th2,TARSKI:def 1;
+  then x in Day {} by Th8;
+  then born x c= {} by Def18;
+  hence thesis;
+end;
+
+theorem
+  x in Day A implies born x = born(No_Ord A,x)
+proof
+  set bx=born x;
+  set bS=born(No_Ord A,x);
+  assume A1: x in Day A;
+  then A2:x in Day(No_Ord A,bS) by Def8;
+  bS c= A by A1,Def8;
+  then x in Day bS by Th36,A2;
+  then A3:bx c= bS by Def18;
+  bx c= A by Def18,A1;
+  then A4: No_Ord bx /\ [:BeforeGames bx,BeforeGames bx:] =
+  No_Ord A /\ [:BeforeGames bx,BeforeGames bx:] by Th31;
+  A5:x in Day bx by Def18;
+  then born(No_Ord bx,x) = bS by A4,Th11;
+  then bS c= bx by A5,Def8;
+  hence thesis by A3,XBOOLE_0:def 10;
+end;
+
+theorem Th39:
+  a <=No_Ord A,b & a in Day B & b in Day B
+    implies a <=No_Ord B,b
+proof
+  set R=No_Ord A, S=No_Ord B;
+  assume A1: a <=R,b & a in Day B & b in Day B;
+  then A2:[a,b] in ClosedProd(S,B,B) by Th33;
+  per cases;
+  suppose A3:B c= A;
+    then ClosedProd(No_Ord B,B,B) = ClosedProd(No_Ord A,B,B) by Th32;
+    then No_Ord B = No_Ord A /\ ClosedProd(No_Ord B,B,B) by A3,Th34;
+    hence thesis by A1,A2,XBOOLE_0:def 4;
+  end;
+  suppose A c= B;
+    then A4:ClosedProd(S,A,A) c= ClosedProd(S,B,B) by Th30;
+    A5: [:Day(S,B),Day(S,B):] = ClosedProd(S,B,B)&
+  [:Day(R,A),Day(R,A):] = ClosedProd(R,A,A) by Lm3;
+    then R preserves_No_Comparison_on ClosedProd(R,A,A) &
+    S preserves_No_Comparison_on ClosedProd(S,B,B) by Def12;
+    then R preserves_No_Comparison_on ClosedProd(R,A,A) &
+    S preserves_No_Comparison_on ClosedProd(S,A,A) by A4;
+    then A6:R /\ ClosedProd(R,A,A) = S /\ ClosedProd(S,A,A) by Th23;
+    A7:No_Ord A c= ClosedProd(R,A,A) by A5,Def12;
+    [a,b] in R/\ClosedProd(R,A,A) by A1,A7,XBOOLE_0:def 4;
+    hence thesis by A6,XBOOLE_0:def 4;
+  end;
+end;
+
+theorem Th40:
+  x <= y iff
+    for A st x in Day A & y in Day A holds x <=No_Ord A,y
+proof
+  consider Ax be Ordinal such that
+  A1:x in Day Ax by Def14;
+  consider Ay be Ordinal such that
+  A2:y in Day Ay by Def14;
+  thus x <= y implies
+  for A be Ordinal st x in Day A & y in Day A
+  holds x <=No_Ord A,y by Th39;
+  assume A3:for A be Ordinal st x in Day A & y in Day A
+    holds x <=No_Ord A,y;
+  set A=Ax\/Ay;
+  Day Ax c= Day A & Day Ay c= Day A by Th35,XBOOLE_1:7;
+  hence thesis by A1,A2,A3;
+end;
+
+definition
+  let L,R be set;
+  pred L >>= R means
+    for l,r st l in L & r in R holds r <= l;
+end;
+
+notation
+  let R,L be set;
+  synonym L <<= R for R >>= L;
+end;
+
+definition
+  let L,R be set;
+  pred L << R means
+   for l,r st l in L & r in R holds not r <= l;
+end;
+
+notation
+  let L,R be set;
+  synonym R >> L for L << R;
+end;
+
+theorem
+  for X1,X2,Y be set st X1 << Y & X2 << Y holds
+    X1\/X2 << Y
+proof
+  let X1,X2,Y be set such that A1: X1 << Y & X2 << Y;
+  let l,r be Surreal such that A2: l in X1\/X2 & r in Y;
+  l in X1 or l in X2 by A2,XBOOLE_0:def 3;
+  hence thesis by A1,A2;
+end;
+
+theorem
+  for X,Y1,Y2 be set st X << Y1 & X << Y2 holds
+    X << Y1\/Y2
+proof
+  let X,Y1,Y2 be set such that A1: X << Y1 & X << Y2;
+  let l,r be Surreal such that A2: l in X & r in Y1\/Y2;
+  r in Y1 or r in Y2 by A2,XBOOLE_0:def 3;
+  hence thesis by A1,A2;
+end;
+
+theorem Th43:
+  x <= y iff L_x << {y} & {x} << R_y
+proof
+  consider Ax be Ordinal such that
+  A1:x in Day Ax by Def14;
+  consider Ay be Ordinal such that
+  A2:y in Day Ay by Def14;
+  set A=Ax\/Ay;
+  A3: Day Ax c= Day A & Day Ay c= Day A by XBOOLE_1:7,Th35;
+  then A4:x in Day A & y in Day A by A1,A2;
+  set S = No_Ord A;
+  [:Day(S,A),Day(S,A):] = ClosedProd(S,A,A) by Lm3; then
+  A5: S preserves_No_Comparison_on ClosedProd(S,A,A) &
+  S c= ClosedProd(S,A,A) by Def12;
+  thus x <= y implies L_x << {y} & {x} << R_y
+  proof
+    assume x <= y;
+    then x<= S,y by A3,A1,A2,Th40;
+    then A6:L_x <<S, {y} & {x} <<S, R_y by A5;
+    thus L_x << {y}
+    proof
+      given l,r be Surreal such that
+      A7:  l in L_x & r in {y} & r <= l;
+      A8: r=y by A7,TARSKI:def 1;
+      l in L_x \/ R_x by A7,XBOOLE_0:def 3;
+      then consider Ol be Ordinal such that
+      A9: Ol in A & l in Day(S,Ol) by A4,Th7;
+      Day(S,Ol) c= Day(S,A) by Th9,A9,ORDINAL1:def 2;
+      hence thesis by A9,A6,A3,A2,A8,A7,Th40;
+    end;
+    thus {x} << R_y
+    proof
+      given l,r be Surreal such that
+      A10: l in {x} & r in R_y & r <= l;
+      A11: l=x by A10,TARSKI:def 1;
+      r in L_y \/ R_y by A10,XBOOLE_0:def 3;
+      then consider Or be Ordinal such that
+      A12: Or in A & r in Day(S,Or) by A4,Th7;
+      Day(S,Or) c= Day(S,A) by Th9,A12,ORDINAL1:def 2;
+      hence thesis by A3,A12,A6,A1,A11,A10,Th40;
+    end;
+  end;
+  assume A13:L_x << {y} & {x} << R_y;
+  A14: [x,y] in ClosedProd(S,A,A) by A3,A1,A2,Th33;
+  A15: L_x <<S, {y}
+  proof
+    given l,r be object such that
+    A16: l in L_x & r in {y} & l >=S, r;
+    [r,l] in ClosedProd(S,A,A) by A16,A5;
+    then l in Day A & r in Day A by ZFMISC_1:87;
+    then reconsider l,r as Surreal;
+    r <= l by A16;
+    hence thesis by A13,A16;
+  end;
+  {x} <<S, R_y
+  proof
+    given l,r be object such that
+    A17: l in {x} & r in R_y & l >=S, r;
+    [r,l] in ClosedProd(S,A,A) by A17,A5;
+    then l in Day A & r in Day A by ZFMISC_1:87;
+    then reconsider l,r as Surreal;
+    r <= l by A17;
+    hence thesis by A13,A17;
+  end;
+  then x<= S,y by A15,A14,A5;
+  hence x <= y;
+end;
+
+theorem ::: move to preliminaries
+  for X1,X2,Y1,Y2 be set st
+    (for x st x in X1 ex y st y in X2 & x <= y) &
+    (for x st x in Y2 ex y st y in Y1 & y <= x) &
+     x = [X1,Y1] & y = [X2,Y2]
+  holds x <= y
+proof
+  let X1,X2,Y1,Y2 be set such that
+  A1: (for x st x in X1 ex y st y in X2 & x <= y) &
+  (for x st x in Y2 ex y st y in Y1 & y <= x) & x = [X1,Y1] & y = [X2,Y2];
+  A2: L_x << {y}
+  proof
+    assume not L_x << {y};
+    then consider l,r such that
+    A3:  l in L_x & r in {y} & r <= l;
+    consider z such that
+    A4: z in L_y & l <=z by A3,A1;
+    r=y by A3,TARSKI:def 1;
+    then L_y << {l} & l in {l} by TARSKI:def 1,A3,Th43;
+    hence thesis by A4;
+  end;
+  {x} << R_y
+  proof
+    assume not {x} << R_y;
+    then consider l,r such that
+    A5:l in {x} & r in R_y & r <= l;
+    consider z such that
+    A6: z in R_x and A7:  z <= r by A5,A1;
+    l=x by TARSKI:def 1,A5;
+    then r in {r} & {r} << R_x by TARSKI:def 1,A5,Th43;
+    hence thesis by A6,A7;
+  end;
+  hence thesis by A2,Th43;
+end;
+
+theorem Th45:
+  L_x << R_x
+proof
+  let l,r be Surreal such that
+  A1: l in L_x & r in R_x;
+  consider A be Ordinal such that
+  A2: x in Day A by Def14;
+  set S=No_Ord A;
+  A3: L_x <<S,R_x by A2,Th7;
+  l in L_x \/R_x by A1,XBOOLE_0:def 3;
+  then consider OL be Ordinal such that
+  A4:OL in A & l in Day(S,OL) by A2,Th7;
+  OL c= A by A4,ORDINAL1:def 2;
+  then A5:l in Day OL c= Day A by A4,Th35,Th36;
+  r in L_x \/R_x by A1,XBOOLE_0:def 3;
+  then consider OR be Ordinal such that
+  A6:OR in A & r in Day(S,OR) by A2,Th7;
+  OR c= A by A6,ORDINAL1:def 2;
+  then r in Day OR c= Day A by A6,Th35,Th36;
+  hence thesis by A3,A1,A5,Th40;
+end;
+
+theorem
+  for X,Y be set, A holds
+    [X,Y] in Day A iff X << Y &
+       for o be object st o in X \/ Y
+          ex O st O in A & o in Day O
+proof
+  let X,Y be set, A be Ordinal;
+  set S=No_Ord A;
+  thus [X,Y] in Day A implies
+  X << Y & for x be object st x in X \/ Y
+    ex O st O in A & x in Day O
+  proof
+    assume A1:[X,Y] in Day A;
+    then reconsider XY=[X,Y] as Surreal;
+    L_XY << R_XY by Th45;
+    hence X << Y;
+    let x be object;
+    assume x in X\/Y;
+    then x in L_XY \/R_XY;
+    then consider OL be Ordinal such that
+    A2:OL in A & x in Day(S,OL) by A1,Th7;
+    take OL;
+    OL c= A by A2,ORDINAL1:def 2;
+    hence thesis by A2,Th36;
+  end;
+  set XY=[X,Y];
+  assume A3: X << Y & for x be object st x in X \/ Y ex O be Ordinal st
+  O in A & x in Day O;
+  for x be object st x in L_XY \/ R_XY
+  ex O be Ordinal st O in A & x in Games O
+  proof
+    let x be object;
+    assume x in L_XY \/ R_XY;
+    then ex O be Ordinal st O in A & x in Day O by A3;
+    hence thesis;
+  end;
+  then reconsider XY as Element of Games A by Th4;
+  A4: L_XY << S, R_XY
+  proof
+    let l,r be object such that A5:l in L_XY & r in R_XY;
+    assume A6: l >=S, r;
+    then [r,l] in S c= [:Day(S,A),Day(S,A):] =
+      ClosedProd(S,A,A) by Def12,Lm3;
+    then r in Day A & l in Day A by Th33;
+    then reconsider r,l as Surreal;
+    r <=l by A6;
+    hence thesis by A3,A5;
+  end;
+  for x be object st x in L_XY \/ R_XY
+  ex O be Ordinal st O in A & x in Day(S,O)
+  proof
+    let x be object;
+    assume x in L_XY \/ R_XY;
+    then consider O be Ordinal such that
+    A7: O in A & x in Day O by A3;
+    O c= A by A7,ORDINAL1:def 2;
+    then No_Ord A /\ [:BeforeGames O,BeforeGames O:] =
+    No_Ord O /\ [:BeforeGames O,BeforeGames O:] by Th31;
+    then Day(No_Ord O,O) = Day(S,O) by Th10;
+    hence thesis by A7;
+  end;
+  hence thesis by Th7,A4;
+end;
+
+theorem
+  X is surreal-membered implies
+   ex M be Ordinal st
+     for o st o in X ex A be Ordinal st A in M & o in Day A
+proof
+  assume A1: X is surreal-membered;
+  defpred P[object,object] means
+  $1 is Surreal & for z be Surreal st z = $1 holds $2 = born z;
+  A2: for x,y,z being object st P[x,y] & P[x,z] holds y = z
+  proof
+    let x,y,z be object such that A3: P[x,y] & P[x,z];
+    reconsider x as Surreal by A3;
+    thus y=born x by A3
+    .=z by A3;
+  end;
+  consider OO be set such that
+  A4: for z be object holds z in OO iff ex y be object st y in X & P[y,z]
+  from TARSKI_0:sch 1(A2);
+  for x be set st x in OO holds x is ordinal
+  proof
+    let x be set;
+    assume x in OO;
+    then consider y be object such that
+    A5: y in X & P[y,x] by A4;
+    reconsider y as Surreal by A5;
+    x= born y by A5;
+    hence thesis;
+  end;
+  then OO is ordinal-membered by ORDINAL6:1;
+  then reconsider U=union OO as Ordinal;
+  take succ U;
+  let o be object such that A6: o in X;
+  reconsider o as Surreal by A1,A6;
+  P[o,born o];
+  then born o c= U by A4,A6,ZFMISC_1:74;
+  then A7: born o in succ U by ORDINAL1:6,12;
+  o in Day born o by Def18;
+  hence thesis by A7;
+end;

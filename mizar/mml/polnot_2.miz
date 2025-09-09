@@ -1,0 +1,1469 @@
+:: Extensions of Languages in {P}olish Notation
+::  by Taneli Huuskonen
+:: 
+:: Received May 23, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, SUBSET_1, XBOOLE_0, FINSEQ_1, XXREAL_0, TARSKI, ARYTM_3,
+      CARD_1, ORDINAL4, FUNCT_1, RELAT_1, NAT_1, POLNOT_1, PRE_POLY, ZFMISC_1,
+      QC_LANG1, BINOP_1, FUNCOP_1, POLNOT_2, FOMODEL1, ALGSPEC1, FUNCT_4,
+      CAT_1, VALUED_0, AOFA_L00, QUANTAL1;
+ notations TARSKI, XBOOLE_0, SUBSET_1, NUMBERS, FINSEQ_1, XXREAL_0, XCMPLX_0,
+      RELAT_1, FUNCT_1, ORDINAL1, ZFMISC_1, BINOP_1, FUNCT_2, POLNOT_1,
+      FUNCOP_1, FUNCT_4, VALUED_0, FREEALG;
+ constructors PRE_POLY, RELSET_1, POLNOT_1, FUNCT_4, FREEALG;
+ registrations ORDINAL1, XREAL_0, FINSEQ_1, SUBSET_1, RELAT_1, XBOOLE_0,
+      FUNCT_1, NAT_1, CARD_1, RELSET_1, POLNOT_1, FUNCOP_1, VALUED_0;
+ requirements NUMERALS, SUBSET, BOOLE, ARITHM, REAL;
+ definitions TARSKI, POLNOT_1;
+ expansions TARSKI, FINSEQ_1, XBOOLE_0, POLNOT_1, VALUED_0;
+ theorems TARSKI, FUNCT_1, FINSEQ_1, XBOOLE_1, FUNCT_2, NAT_1, ZFMISC_1,
+      XXREAL_0, BINOP_1, POLNOT_1, FUNCT_4, FUNCOP_1, GRFUNC_1, RELAT_1,
+      XBOOLE_0, SUBSET_1, XREAL_1, FREEALG;
+ schemes NAT_1, FUNCT_2, BINOP_1;
+
+begin
+
+ reserve a,b for object;
+ reserve k,l,m,n for Nat;
+ reserve p,q,r,s for FinSequence;
+ reserve P for non empty FinSequence-membered set;
+ reserve S,T for Polish-language;
+ reserve V for Polish-language of T;
+ reserve K for non trivial Polish-language;
+ reserve E for Polish-arity-function of K;
+
+Lm22:
+  for x being trivial set, y being Subset of x st y is non empty holds x = y
+proof
+  let x be trivial set;
+  let y be Subset of x;
+  assume A1: y is non empty;
+  then consider a being Element of x such that A3: x = {a} by SUBSET_1:46;
+  consider b being Element of x such that A4: y = {b} by A1, SUBSET_1:47;
+  thus thesis by A3, A4, SUBSET_1:def 7;
+end;
+
+definition
+  let F be Function;
+  attr F is Polish-arity-like means :Def1:
+  ex T st F is Polish-arity-function of T;
+end;
+
+registration
+  let T;
+  cluster -> Polish-arity-like for Polish-arity-function of T;
+  coherence;
+end;
+
+definition
+  let F be Function;
+  redefine attr F is Polish-arity-like means :Def2:
+  dom F is Polish-language & F is natural-valued & F is with_zero;
+  compatibility
+  proof
+    thus F is Polish-arity-like implies
+      dom F is Polish-language & F is natural-valued & F is with_zero
+    proof
+      assume F is Polish-arity-like;
+      then consider T such that A1: F is Polish-arity-function of T;
+      reconsider A = F as Polish-arity-function of T by A1;
+      dom A = T by FUNCT_2:def 1;
+      hence dom F is Polish-language;
+      rng A c= NAT by RELAT_1:def 19;
+      hence F is natural-valued;
+      consider a such that A5: a in T & A.a = 0 by POLNOT_1:def 18;
+      0 in rng F by A5,FUNCT_2:4;
+      hence thesis;
+    end;
+    assume that
+      A10: dom F is Polish-language and
+      A11: F is natural-valued and
+      A12: F is with_zero;
+    reconsider T = dom F as Polish-language by A10;
+    reconsider F as Function of T,NAT by A11, FUNCT_2:2;
+    0 in rng F by A12,FREEALG:def 2; then
+    ex a st a in T & F.a = 0 by FUNCT_1:def 3;
+    then F is Polish-arity-function of T by POLNOT_1:def 18;
+    hence thesis;
+  end;
+end;
+
+registration
+  cluster Polish-arity-like -> natural-valued with_zero
+    for Function;
+  coherence;
+end;
+
+registration
+  cluster Polish-arity-like for Function;
+  existence
+  proof
+    take the Polish-arity-function of the Polish-language;
+    thus thesis;
+  end;
+end;
+
+definition
+  mode Polish-arity-function is Polish-arity-like Function;
+end;
+
+ reserve B for Polish-arity-function;
+
+definition
+  let B, C be Polish-arity-function;
+  attr C is B-extending means :Def3:
+  B c= C;
+end;
+
+definition
+  let B be Polish-arity-function;
+  redefine func dom B -> Polish-language;
+  coherence
+  proof
+    consider T such that A1: B is Polish-arity-function of T by Def1;
+    thus thesis by A1, FUNCT_2:def 1;
+  end;
+end;
+
+Lemma1:
+for B be Polish-arity-function holds
+  B is empty-yielding iff
+    for a st a in dom B holds B.a = 0
+proof
+  let B be Polish-arity-function;
+  thus B is empty-yielding implies
+    for a st a in dom B holds B.a = 0;
+  assume
+A1: for a st a in dom B holds B.a = 0;
+  for a being object st a in dom B holds B.a is empty
+  proof
+    let a be object;
+    assume a in dom B; then
+    B.a = {} by A1;
+    hence thesis;
+  end;
+  hence thesis by FUNCT_1:def 8;
+end;
+
+theorem Th1:
+  for T,B holds B is Polish-arity-function of T iff T = dom B
+proof
+  let T,B;
+  thus B is Polish-arity-function of T implies T = dom B by FUNCT_2:def 1;
+  consider U being Polish-language such that
+  A1: B is Polish-arity-function of U by Def1;
+  assume T = dom B;
+  hence thesis by A1, FUNCT_2:def 1;
+end;
+
+ reserve A for Polish-arity-function of T;
+
+definition
+  let B be Polish-arity-function;
+  func Polish-WFF-set B -> Polish-language of dom B means  :Def4:
+  ex T,A st A = B & it = Polish-WFF-set(T,A);
+  existence
+  proof
+    set T = dom B;
+    reconsider A = B as Polish-arity-function of T by Th1;
+    take Polish-WFF-set(T,A);
+    thus thesis;
+  end;
+  uniqueness
+  proof
+    let U,V be Polish-language of dom B;
+    given T1 being Polish-language, A1 being Polish-arity-function of T1
+        such that A1: A1 = B and A2: U = Polish-WFF-set(T1,A1);
+    given T2 being Polish-language, A2 being Polish-arity-function of T2
+        such that A3: A2 = B and A4: V = Polish-WFF-set(T2,A2);
+    T1 = dom A2 by A1, A3, FUNCT_2:def 1 .= T2 by FUNCT_2:def 1;
+    hence U = V by A1, A2, A3, A4;
+  end;
+end;
+
+definition
+  let T, A;
+  redefine attr A is empty-yielding means
+  for a st a in T holds A.a = 0;
+  compatibility
+  proof
+    dom A = T by FUNCT_2:def 1;
+    hence thesis by Lemma1;
+  end;
+end;
+
+definition
+  let T, A, P;
+  redefine attr P is A-closed means  :Def6:
+  for p, n, q st p in T & n = A.p & q in P^^n holds p^q in P;
+  compatibility
+  proof
+    dom A = T by FUNCT_2:def 1;
+    hence thesis;
+  end;
+end;
+
+registration
+  let T;
+  cluster empty-yielding for Polish-arity-function of T;
+  existence
+  proof
+    set A = T --> 0;
+    rng A = {0} by FUNCOP_1:8; then
+    0 in rng A by TARSKI:def 1;
+    then A is Polish-arity-like;
+    then reconsider A as Polish-arity-function of T by Th1;
+    take A;
+    thus thesis by FUNCOP_1:7;
+  end;
+end;
+
+definition
+  let T, V;
+  attr V is full means  :Def8:
+  ex A st V = Polish-WFF-set(T,A);
+end;
+
+registration
+  let T;
+  cluster full for Polish-language of T;
+  existence
+  proof
+    set A = the Polish-arity-function of T;
+    take Polish-WFF-set(T,A);
+    thus thesis;
+  end;
+end;
+
+definition
+  let T,A;
+  redefine func Polish-WFF-set(T,A) -> full Polish-language of T;
+  coherence by Def8;
+end;
+
+Lm2:
+  for K, m, n, a st a in K^^m & a in K^^n holds m <= n
+proof
+  let K, m, n, a;
+  assume that A1: a in K^^m and A2: a in K^^n and A3: m > n;
+  consider k such that A10: m = n+k by A3, NAT_1:10;
+  a in (K^^n)^(K^^k) by A1, A10, POLNOT_1:10;
+  then consider p,q such that
+      A12: a = p^q and
+      A13: p in K^^n and
+      A14: q in K^^k by POLNOT_1:def 2;
+  k = 0 by A2, A12, A13, A14, POLNOT_1:def 16;
+  hence thesis by A3, A10;
+end;
+
+Lm3:
+  for T,m,n,a st a in T^^m & a in T^^n & T is non trivial holds m = n
+proof
+  let T,m,n,a;
+  assume that A1: a in T^^m & a in T^^n and A2: T is non trivial;
+  reconsider T as non trivial Polish-language by A2;
+  a in T^^m & a in T^^n by A1;
+  then m <= n & n <= m by Lm2;
+  hence thesis by XXREAL_0:1;
+end;
+
+Lm4:
+  for T,A for t being Element of T, u being FinSequence holds
+    t^u in Polish-WFF-set(T,A) iff u in Polish-WFF-set(T,A)^^(A.t)
+proof
+  let T, A;
+  let t be Element of T;
+  set W = Polish-WFF-set(T,A);
+  set n = A.t;
+  let u be FinSequence;
+  thus t^u in W implies u in W^^n
+  proof
+    assume t^u in W;
+    then consider m,p,q such that
+      A11: p in T and
+      A12: m = A.p and
+      A13: t^u = Polish-operation(T,A,m,p).q and
+      A14: q in W^^m by POLNOT_1:38;
+    q in dom Polish-operation(T,A,m,p) by A14, FUNCT_2:def 1;
+    then A16: t^u = p^q by A11, A13, POLNOT_1:def 12;
+    t = T-head (p^q) by A16 .= p by A11, POLNOT_1:52;
+    hence u in W^^n by A12, A14, A16, FINSEQ_1:33;
+  end;
+  thus thesis by Def6;
+end;
+
+Lm5:
+  for T,A,a st T is trivial & a in T holds A.a = 0
+proof
+  let T,A,a;
+  assume A1: T is trivial & a in T;
+  consider b such that A3: b in T & A.b = 0 by POLNOT_1:def 18;
+  thus thesis by A1, A3, ZFMISC_1:def 10;
+end;
+
+definition
+  let T, U be Polish-language;
+  attr U is T-extending means  :Def9:
+  T c= U;
+end;
+
+registration
+  let T;
+  cluster T-extending for Polish-language;
+  existence
+  proof
+    take T;
+    thus thesis;
+  end;
+end;
+
+registration
+  let K;
+  cluster K-extending -> non trivial for Polish-language;
+  coherence;
+end;
+
+definition
+  let B,S;
+  attr S is B-compatible means
+  for s st s in S & s is (dom B)-headed ex n st
+      n = (B.((dom B)-head s)) & (dom B)-tail s in S^^n;
+end;
+
+definition
+  let T,A,S;
+  redefine attr S is A-compatible means
+  for s st s in S & s is T-headed holds T-tail s in S^^(A.(T-head s));
+  compatibility
+  proof
+    A1: dom A = T by FUNCT_2:def 1;
+    thus S is A-compatible implies
+        for s st s in S & s is T-headed holds T-tail s in S^^(A.(T-head s))
+    proof
+      assume A2: S is A-compatible;
+      let s;
+      assume A3: s in S & s is T-headed;
+      set p = T-head s;
+      set q = T-tail s;
+      consider n such that A5: n = A.((dom A)-head s) & (dom A)-tail s in S^^n
+        by A1, A2, A3;
+      thus q in S^^A.p by A1, A5;
+    end;
+    assume A10: for s st s in S & s is T-headed holds
+        T-tail s in S^^(A.(T-head s));
+    let s;
+    assume A11: s in S & s is (dom A)-headed;
+    take n = A.((dom A)-head s);
+    thus thesis by A1, A10, A11;
+  end;
+end;
+
+registration
+  let T,A;
+  cluster Polish-WFF-set(T,A) -> A-compatible;
+  coherence
+  proof
+    set S = Polish-WFF-set(T,A);
+    let s;
+    assume s in S;
+    then reconsider F = s as Polish-WFF of T,A;
+    A.(T-head s) = A.(Polish-WFF-head F) by POLNOT_1:def 33
+        .= Polish-arity F by POLNOT_1:def 35;
+    hence thesis by POLNOT_1:67;
+  end;
+end;
+
+registration
+  let T,A;
+  cluster A-closed A-compatible for Polish-language;
+  existence
+  proof
+    take Polish-WFF-set(T,A);
+    thus thesis;
+  end;
+end;
+
+registration
+  let B;
+  cluster B-extending for Polish-arity-function;
+  existence
+  proof
+    take B;
+    thus thesis;
+  end;
+
+  cluster B-closed B-compatible for Polish-language;
+  existence
+  proof
+    set T = dom B;
+    reconsider A = B as Polish-arity-function of T by Th1;
+    take Polish-WFF-set(T,A);
+    thus thesis;
+  end;
+end;
+
+definition
+  let B;
+  mode Polish-ext-set of B is B-closed B-compatible Polish-language;
+  mode Extension of B is B-extending Polish-arity-function;
+end;
+
+ reserve C for Extension of B;
+
+registration
+  let B, C;
+  cluster C-extending -> B-extending for Polish-arity-function;
+  coherence
+  proof
+    let D be Polish-arity-function;
+    assume D is C-extending;
+    then A1: C c= D;
+    B c= C by Def3;
+    then B c= D by A1;
+    hence D is B-extending;
+  end;
+end;
+
+registration
+  let B,C;
+  cluster C-closed -> B-closed for Polish-language;
+  coherence
+  proof
+    let T;
+    assume A1: T is C-closed;
+    let p,n,q;
+    assume that A4: p in dom B and A5: n = B.p and A6: q in T^^n;
+    B c= C by Def3;
+    then dom B c= dom C & n = C.p by A4, A5, GRFUNC_1:2;
+    hence p^q in T by A1, A4, A6;
+  end;
+
+  cluster C-compatible -> B-compatible for Polish-language;
+  coherence
+  proof
+    set X = dom B;
+    set Y = dom C;
+    let T;
+    assume A1: T is C-compatible;
+    let s;
+    assume that A3: s in T and A4: s is X-headed;
+    A5: B c= C by Def3;
+    then A6: X c= Y by GRFUNC_1:2;
+    then s is Y-headed by A4;
+    then consider n such that
+      A10: n = (C.(Y-head s)) & Y-tail s in T^^n by A1, A3;
+    take n;
+    X-head s in X & X-head s = Y-head s & X-tail s = Y-tail s
+       by A4, A6, POLNOT_1:55, POLNOT_1:def 22;
+    hence thesis by A5, A10, GRFUNC_1:2;
+  end;
+end;
+
+ reserve Z for B-closed Polish-language;
+
+theorem
+  for B, Z, p, q st p in dom B & B.p = 1 & q in Z holds p^q in Z
+proof
+  let B, Z, p, q;
+  assume that A1: p in dom B & B.p = 1 and A2: q in Z;
+  A3: q in Z^^1 by A2;
+  Z is B-closed;
+  hence p^q in Z by A1, A3;
+end;
+
+theorem
+  for B, Z, p, q, r st p in dom B & B.p = 2 & q in Z & r in Z
+    holds p^(q^r) in Z
+proof
+  let B, Z, p, q, r;
+  assume that A1: p in dom B & B.p = 2 and A2: q in Z & r in Z;
+  Z^^2 = Z^^(1+1) .= (Z^^1)^Z by POLNOT_1:6 .= Z^Z;
+  then A3: q^r in Z^^2 by A2, POLNOT_1:def 2;
+  Z is B-closed;
+  hence p^(q^r) in Z by A1, A3;
+end;
+
+definition
+  let B,Z,p;
+  assume A1: p in dom B & B.p = 1;
+  func Polish-unOp(B,Z,p) -> UnOp of Z means  :Def15:
+  for q st q in Z holds it.q = p^q;
+  existence
+  proof
+    defpred P[object, object] means ex q st $1 = q & $2 = p^q;
+    A10: for a st a in Z ex b st b in Z & P[a,b]
+    proof
+      let a;
+      assume A11: a in Z;
+      then reconsider q = a as FinSequence;
+      A12: q in Z^^1 by A11;
+      take b = p^q;
+      Z is B-closed;
+      hence b in Z by A1, A12;
+      thus thesis;
+    end;
+    consider f being Function of Z,Z such that
+      A20: for a st a in Z holds P[a, f.a] from FUNCT_2:sch 1(A10);
+    reconsider f as UnOp of Z;
+    take f;
+    let q;
+    assume q in Z;
+    then consider s such that A22: q = s & f.q = p^s by A20;
+    thus thesis by A22;
+  end;
+  uniqueness
+  proof
+    let f1, f2 be UnOp of Z such that
+      A1: for q st q in Z holds f1.q = p^q and
+      A2: for q st q in Z holds f2.q = p^q;
+    for w being Element of Z holds f1.w = f2.w
+    proof
+      let w be Element of Z;
+      f1.w = p^w by A1 .= f2.w by A2;
+      hence thesis;
+    end;
+    hence thesis by FUNCT_2:def 8;
+  end;
+end;
+
+definition
+  let B,Z,p;
+  assume A1: p in dom B & B.p = 2;
+  func Polish-binOp(B,Z,p) -> BinOp of Z means  :Def16:
+  for q,r st q in Z & r in Z holds it.(q,r) = p^(q^r);
+  existence
+  proof
+    defpred P[object, object, object] means
+        ex q,r st $1 = q & $2 = r & $3 = p^(q^r);
+    A10: for a,b st a in Z & b in Z
+    ex c being object st c in Z & P[a,b,c]
+    proof
+      let a,b;
+      assume A11: a in Z & b in Z;
+      then reconsider q = a, r = b as FinSequence;
+      take c = p^(q^r);
+      Z^^2 = Z^^(1+1) .= (Z^^1)^Z by POLNOT_1:6 .= Z^Z;
+      then A13: q^r in Z^^2 by A11, POLNOT_1:def 2;
+      Z is B-closed;
+      hence c in Z by A1, A13;
+      thus thesis;
+    end;
+    consider f being Function of [:Z,Z:],Z such that
+        A20: for a,b st a in Z & b in Z holds P[a,b,f.(a,b)]
+      from BINOP_1:sch 1(A10);
+    take f;
+    let q, r;
+    assume q in Z & r in Z;
+    then consider s,t being FinSequence such that
+      A22: q = s & r = t & f.(q,r) = p^(s^t) by A20;
+    thus thesis by A22;
+  end;
+  uniqueness
+  proof
+    let f1, f2 be BinOp of Z such that
+      A1: for q,r st q in Z & r in Z holds f1.(q,r) = p^(q^r) and
+      A2: for q,r st q in Z & r in Z holds f2.(q,r) = p^(q^r);
+    for q,r being Element of Z holds f1.(q,r) = f2.(q,r)
+    proof
+      let q,r be Element of Z;
+      thus f1.(q,r) = p^(q^r) by A1
+          .= f2.(q,r) by A2;
+    end;
+    hence thesis by BINOP_1:2;
+  end;
+end;
+
+ reserve J for Polish-ext-set of B;
+
+definition
+  let B, J;
+  func Polish-ext-complement(B, J) -> Subset of J equals
+  { p where p is Element of J : p is non (dom B)-headed };
+  coherence
+  proof
+    set T = dom B;
+    set S = { p where p is Element of J : p is non T-headed };
+    for a st a in S holds a in J
+    proof
+      let a;
+      assume a in S;
+      then consider p being Element of J such that
+        A1: a = p and p is non T-headed;
+      thus thesis by A1;
+    end;
+    then S c= J;
+    hence thesis;
+  end;
+end;
+
+definition
+  let B, J;
+  func Polish-ext-domain(B,J) -> (dom B)-extending Polish-language equals
+  dom B \/ Polish-ext-complement(B,J);
+  coherence
+  proof
+    set T = dom B;
+    set X = Polish-ext-complement(B,J);
+    reconsider U = T \/ X as FinSequence-membered set;
+    A5: for p st p in X holds p is non T-headed
+    proof
+      let p;
+      assume p in X;
+      then consider r being Element of J such that
+      A6: p = r & r is non T-headed;
+      thus thesis by A6;
+    end;
+    U is antichain-like
+    proof
+      let p,q;
+      assume p in U & p^q in U;
+      then per cases by XBOOLE_0:def 3;
+      suppose A10: p in T & p^q in T;
+        T is antichain-like;
+        hence thesis by A10;
+      end;
+      suppose A20: p in X & p^q in X;
+        X is antichain-like;
+        hence thesis by A20;
+      end;
+      suppose that A30: p in T and A31: p^q in X;
+        p^q is non T-headed by A5, A31;
+        hence thesis by A30;
+      end;
+      suppose that A40: p in X and A41: p^q in T;
+        reconsider r = p^q as Element of T by A41;
+        set s = the Element of J^^(B.r);
+        J is B-closed;
+        then A42: r^s in J;
+        r^s = p^(q^s) by FINSEQ_1:32;
+        hence thesis by A42, A40, POLNOT_1:def 16;
+      end;
+    end;
+    then reconsider U as Polish-language;
+    U is T-extending by XBOOLE_1:7;
+    hence thesis;
+  end;
+end;
+
+Lm21:
+  for B, J, a st a in Polish-ext-complement(B,J) holds
+    a in J & a in Polish-ext-domain(B,J) & not a in dom B
+  proof
+  let B, J, a;
+  set T = dom B;
+  assume A2: a in Polish-ext-complement(B,J);
+  then consider p being Element of J such that
+     A3: a = p and A4: p is non T-headed;
+  thus a in J by A3;
+  thus a in Polish-ext-domain(B,J) by A2, XBOOLE_0:def 3;
+  A6: T is T-headed by POLNOT_1:50;
+  assume a in T;
+  hence thesis by A3, A4, A6;
+  end;
+
+theorem Th8:
+  for B, J holds Polish-WFF-set B c= J
+proof
+  let B, J;
+  set T = dom B;
+  set V = Polish-WFF-set B;
+  reconsider A = B as Polish-arity-function of T by Th1;
+  V = Polish-expression-set(T,A) by Def4;
+  hence thesis by POLNOT_1:37;
+end;
+
+Lm23:
+  for B, J st {} in J or {} in dom B holds
+      J = {{}} & Polish-WFF-set B = {{}} & dom B = {{}} &
+        Polish-ext-complement(B,J) = {}
+proof
+  let B, J;
+  set T = dom B;
+  reconsider A = B as Polish-arity-function of T by Th1;
+  set V = Polish-WFF-set B;
+  assume A1: {} in J or {} in T;
+  {} in T implies {} in J
+  proof
+    assume B2: {} in T;
+    then T = {{}} by POLNOT_1:46;
+    then A.{} = 0 by B2, Lm5;
+    then B3: {} in Polish-atoms(T,A) by B2, POLNOT_1:def 7;
+    Polish-atoms(T,A) c= J by POLNOT_1:34;
+    hence thesis by B3;
+  end;
+  hence A3: J = {{}} by A1, POLNOT_1:46;
+  then V is trivial non empty Subset of J by Th8;
+  hence A4: V = {{}} by A3, Lm22;
+  V = Polish-expression-set(T,A) by Def4;
+  then Polish-atoms(T,A) is trivial non empty Subset of V by A4, POLNOT_1:36;
+  then Polish-atoms(T,A) = {{}} by A4, Lm22;
+  then {} in Polish-atoms(T,A) by TARSKI:def 1;
+  then {} in T by POLNOT_1:def 7;
+  hence A5: T = {{}} by POLNOT_1:46;
+  for a holds not a in Polish-ext-complement(B,J) by A3, A5, Lm21;
+  hence thesis by XBOOLE_0:def 1;
+end;
+
+definition
+  let P, n;
+  func P |` n -> Subset of P equals
+  { p where p is Element of P : len p <= n };
+  coherence
+  proof
+    set Q = { p where p is Element of P : len p <= n };
+    Q c= P
+    proof
+      let a;
+      assume a in Q;
+      then consider p being Element of P such that A1: a = p and len p <= n;
+      thus thesis by A1;
+    end;
+    hence thesis;
+  end;
+end;
+
+Lm19:
+  for P,p,n holds p in P |` n iff p in P & len p <= n
+proof
+  let P,p,n;
+  thus p in P |` n implies p in P & len p <= n
+  proof
+    assume p in P |` n;
+    then consider q being Element of P such that
+      A1: p = q and A2: len q <= n;
+      thus thesis by A1, A2;
+  end;
+  assume p in P & len p <= n;
+  hence thesis;
+end;
+
+Lm20:
+  for P,m,n holds (P^^n) |` m c= (P |` m)^^n
+proof
+  let P,m;
+  defpred Q[Nat] means (P^^$1) |` m c= (P |` m)^^$1;
+  P^^0 = {{}} by POLNOT_1:6 .= (P |` m)^^0 by POLNOT_1:6;
+  then A10: Q[0];
+  A20: for n st Q[n] holds Q[n+1]
+  proof
+    let n;
+    assume A21: Q[n];
+    let a;
+    assume A22: a in (P^^(n+1)) |` m;
+    then reconsider p = a as FinSequence;
+    p in P^^(n+1) by A22;
+    then p in (P^^n)^P by POLNOT_1:6;
+    then consider q,r such that A24: p = q^r and A25: q in P^^n and A26: r in P
+        by POLNOT_1:def 2;
+    A30: len p <= m by A22, Lm19;
+    len p = len q + len r by A24, FINSEQ_1:22;
+    then len q <= len p & len r <= len p by NAT_1:11;
+    then len q <= m & len r <= m by A30, XXREAL_0:2;
+    then q in (P^^n) |` m & r in P |` m by A25, A26;
+    then p in ((P |` m)^^n) ^ (P |` m) by A21, A24, POLNOT_1:def 2;
+    hence a in (P |` m)^^(n+1) by POLNOT_1:6;
+  end;
+  thus for n holds Q[n] from NAT_1:sch 2(A10,A20);
+end;
+
+Lm9:
+  for T,A st A is empty-yielding holds Polish-WFF-set(T,A) = T
+proof
+  let T,A;
+  assume A1: A is empty-yielding;
+  A2: Polish-WFF-set(T,A) c= T
+  proof
+    set Q = Polish-expression-set(T,A);
+    let a;
+    assume a in Polish-WFF-set(T,A);
+    then reconsider t = a as Element of Q;
+    consider n,p,q such that
+      A5: p in T and
+      A6: n = A.p and
+      A7: q in Q^^n and
+      A8: t = p^q by POLNOT_1:32;
+    n = 0 by A1, A6;
+    then q in {{}} by A7, POLNOT_1:6;
+    then q = {} by TARSKI:def 1;
+    hence a in T by A5, A8, FINSEQ_1:34;
+  end;
+  T c= Polish-WFF-set(T,A)
+  proof
+    let a;
+    assume A10: a in T;
+    A.a = 0 by A1;
+    then a in Polish-atoms(T,A) by A10, POLNOT_1:def 7;
+    hence a in Polish-WFF-set(T,A) by POLNOT_1:34, TARSKI:def 3;
+  end;
+  hence thesis by A2;
+end;
+
+theorem
+  for T holds T is full Polish-language of T
+proof
+  let T;
+  set A = the empty-yielding Polish-arity-function of T;
+  T = Polish-WFF-set(T,A) by Lm9;
+  hence thesis;
+end;
+
+ reserve V for full Polish-language of T;
+ reserve U for T-extending Polish-language;
+ reserve W for full Polish-language of U;
+
+definition
+  let T, V;
+  func Polish-arity V -> Polish-arity-function of T means  :Def10:
+  V = Polish-WFF-set(T,it);
+  existence by Def8;
+  uniqueness
+  proof
+    let A,B be Polish-arity-function of T;
+    assume that
+      A1: V = Polish-WFF-set(T,A) and
+      A2: V = Polish-WFF-set(T,B);
+      for a st a in T holds A.a = B.a
+      proof
+        let a;
+        assume a in T;
+        then reconsider t = a as Element of T;
+        per cases;
+        suppose T is trivial;
+          then A.t = 0 &  B.t = 0 by Lm5;
+          hence thesis;
+        end;
+        suppose A20: T is non trivial;
+          set n = A.t;
+          set u = the Element of V^^n;
+          set F = t^u;
+          F in V by A1, Lm4;
+          then u in V^^(B.t) & u in V^^(A.t) by A2, Lm4;
+          hence thesis by A1, A20, Lm3;
+        end;
+      end;
+      hence A = B by FUNCT_2:12;
+  end;
+end;
+
+registration
+  let T, A;
+  reduce Polish-arity Polish-WFF-set(T,A) to A;
+  reducibility by Def10;
+end;
+
+registration
+  let T, V;
+  reduce Polish-WFF-set(T, Polish-arity V) to V;
+  reducibility by Def10;
+end;
+
+definition
+  let B, J;
+  func Polish-ext-arity(B,J)
+      -> Polish-arity-function of Polish-ext-domain(B,J) means  :Def23:
+  J = Polish-WFF-set(Polish-ext-domain(B,J),it);
+  existence
+  proof
+    set U = Polish-ext-domain(B,J);
+    set S = Polish-ext-complement(B,J);
+    set V = Polish-WFF-set B;
+    set T = dom B;
+    reconsider A = B as Polish-arity-function of T by Th1;
+    set D = (U --> 0) +* B;
+    A1: V = Polish-WFF-set(T,A) by Def4;
+    A2: dom D = dom (U --> 0) \/ dom A by FUNCT_4:def 1
+        .= U by Def9, XBOOLE_1:12;
+A0: rng A c= rng D by FUNCT_4:18;
+    0 in rng A by FREEALG:def 2; then
+    D is with_zero by A0;
+    then D is Polish-arity-function by A2, Def2;
+    then reconsider D as Polish-arity-function of U by A2, Th1;
+    take D;
+    A4: J is A-closed;
+    A6: for a st a in S holds a in dom D & not a in dom A & D.a = 0
+    proof
+      let a;
+      assume a in S;
+      then A7: a in U & not a in T by Lm21;
+      then reconsider p = a as Element of U;
+      thus a in dom D & not a in dom A by A7, FUNCT_2:def 1;
+      thus D.a = (U --> 0).p by A7, FUNCT_4:11
+              .= 0;
+      end;
+    set X = Polish-WFF-set(U,D);
+    A9: J is D-closed
+    proof
+      let p, n, q;
+      assume that A10: p in U and A11: n = D.p and A12: q in J^^n;
+      reconsider p as Element of U by A10;
+      per cases;
+      suppose A13: p in T;
+        then A.p = n by A11, FUNCT_4:13;
+        hence thesis by A4, A12, A13;
+      end;
+      suppose not p in T;
+        then A21: p in S by XBOOLE_0:def 3;
+        then D.p = 0 by A6;
+        then q in {{}} by A11, A12, POLNOT_1:6;
+        then q = {} by TARSKI:def 1;
+        then p^q = p by FINSEQ_1:34;
+        hence thesis by A21;
+      end;
+    end;
+    for a holds a in J iff a in X
+      proof
+      defpred P[Nat] means J |` $1 c= X;
+      A30: P[0]
+      proof
+        let a;
+        assume A31: a in J |` 0;
+        then reconsider p = a as Element of J;
+        len p <= 0 by A31, Lm19;
+        then p = {};
+        then A33: J = {{}} & V = {{}} & T = {{}} & S = {} by Lm23;
+        then dom (U --> 0) c= dom A;
+        then D = A by FUNCT_4:19;
+        then p in X by A1, A33;
+        hence thesis;
+      end;
+      A40: for n st P[n] holds P[n+1]
+      proof
+        let n;
+        assume A41: P[n];
+        let a;
+        assume A42: a in J |` (n+1);
+        then reconsider p = a as Element of J;
+        A43: len p <= n+1 by A42, Lm19;
+        per cases;
+        suppose {} in T & p is T-headed;
+          then A44: J = {{}} & V = {{}} & T = {{}} & S = {} by Lm23;
+          then dom (U --> 0) c= dom A;
+          then D = A by FUNCT_4:19;
+          then p in X by A1, A44;
+          hence thesis;
+        end;
+        suppose that A50: not {} in T and A51: p is T-headed;
+          set q = T-head p;
+          set r = T-tail p;
+          A52: q in T by A51, POLNOT_1:def 22;
+          then A54: len q + len r >= len r + 1 by A50, FINSEQ_1:20, XREAL_1:6;
+          p = q^r;
+          then len q + len r <= n+1 by A43, FINSEQ_1:22;
+          then len r + 1 <= n + 1 by A54, XXREAL_0:2;
+          then A56: len r <= n by XREAL_1:6;
+          set m = A.q;
+          A57: (J^^m) |` n c= (J |` n)^^m by Lm20;
+          A58: (J |` n) ^^ m c= X^^m by A41, POLNOT_1:17;
+          J is A-compatible;
+          then r in J^^m by A51;
+          then r in (J^^m) |` n by A56;
+          then A59: r in X^^m by A57, A58;
+          A60: m = D.q by A52, FUNCT_4:13;
+          A61: q in U by A52, XBOOLE_0:def 3;
+          q^r = p;
+          hence thesis by A59, A60, A61, Def6;
+        end;
+        suppose p is non T-headed;
+          then p in S;
+          then p in dom D & D.p = 0 by A6;
+          then p in U & D.p = 0 by FUNCT_2:def 1;
+          then p in Polish-atoms(U,D) by POLNOT_1:def 7;
+          hence a in X by POLNOT_1:36, TARSKI:def 3;
+        end;
+      end;
+      A70: for n holds P[n] from NAT_1:sch 2(A30, A40);
+      let a;
+      thus a in J implies a in X
+      proof
+        assume a in J;
+        then reconsider p = a as Element of J;
+        set m = len p;
+        p in J |` m;
+        hence thesis by A70, TARSKI:def 3;
+      end;
+      X c= J by A9, POLNOT_1:37;
+      hence thesis;
+    end;
+    hence J = X by TARSKI:2;
+  end;
+  uniqueness
+  proof
+    set U = Polish-ext-domain(B,J);
+    let A,D be Polish-arity-function of U;
+    assume J = Polish-WFF-set(U,A) & J = Polish-WFF-set(U,D);
+    hence A = Polish-arity Polish-WFF-set(U,D) .= D;
+  end;
+end;
+
+definition
+  let T;
+  mode Formula of T is Element of T;
+end;
+
+definition
+  let B, J;
+  let F be Formula of J;
+  func Polish-ext-head F -> Element of Polish-ext-domain(B,J) equals
+  (Polish-ext-domain(B,J))-head F;
+  coherence
+  proof
+    set U = Polish-ext-domain(B,J);
+    J = Polish-WFF-set(U, Polish-ext-arity(B,J)) by Def23;
+    then J is U-headed by POLNOT_1:65;
+    then F is U-headed;
+    hence thesis by POLNOT_1:def 22;
+  end;
+end;
+
+theorem Th10:
+  for S,T,p st S-head p in T holds p is T-headed & S-head p = T-head p
+proof
+  let S,T,p;
+  set q = S-head p;
+  set r = S-tail p;
+  assume A1: q in T;
+  p = q^r;
+  hence thesis by A1, POLNOT_1:52;
+end;
+
+theorem
+  for B, J for F being Formula of J st Polish-ext-head F in dom B
+    holds Polish-ext-head F = (dom B)-head F by Th10;
+
+theorem Th12:
+  for B, J for F being Formula of J st F is (dom B)-headed
+    holds Polish-ext-head F = (dom B)-head F
+proof
+  let B, J;
+  set T = dom B;
+  let F be Formula of J;
+  assume A1: F is T-headed;
+  T c= Polish-ext-domain(B,J) by Def9;
+  hence thesis by A1, POLNOT_1:55;
+end;
+
+ reserve M for Polish-ext-set of C;
+ reserve e for Element of dom C;
+ reserve F, G, H for Formula of M;
+
+theorem
+  for C,e,M,F st C.e = 1 & Polish-ext-head F = e
+      ex G st F = Polish-unOp(C,M,e).G
+proof
+  let C,e,M,F;
+  set K = dom C;
+  assume that A1: C.e = 1 and A2: Polish-ext-head F = e;
+  set G = K-tail F;
+  A5: M is C-compatible;
+  A6: F is K-headed & K-head F = e by A2, Th10;
+  then consider n such that A8: n = C.e & G in M^^n by A5;
+  reconsider G as Element of M by A1, A8;
+  take G;
+  thus F = e^G by A6 .= Polish-unOp(C,M,e).G by A1, Def15;
+  thus thesis;
+end;
+
+theorem
+  for C,e,M,G st C.e = 1 holds Polish-ext-head(Polish-unOp(C,M,e).G) = e
+proof
+  let C,e,M,G;
+  set K = dom C;
+  set F = Polish-unOp(C,M,e).G;
+  assume C.e = 1;
+  then F = e^G by Def15;
+  then F is K-headed & K-head F = e;
+  hence thesis by Th12;
+end;
+
+theorem
+  for C,e,M,F st C.e = 2 & Polish-ext-head F = e ex G,H
+    st F = Polish-binOp(C,M,e).(G,H)
+proof
+  let C,e,M,F;
+  set K = dom C;
+  assume that A1: C.e = 2 and A2: Polish-ext-head F = e;
+  set g = K-tail F;
+  A5: M is C-compatible;
+  A6: F is K-headed & K-head F = e by A2, Th10;
+  then consider n such that A7: n = C.e & g in M^^n by A5;
+  reconsider g as Element of M^^(1+1) by A1, A7;
+  M^^(1+1) = (M^^1)^M by POLNOT_1:6;
+  then consider p,q such that A8: g = p^q and A9: p in M and A10: q in M
+    by POLNOT_1:def 2;
+  reconsider G = p, H = q as Formula of M by A9, A10;
+  take G,H;
+  thus F = e^(p^q) by A6, A8 .= Polish-binOp(C,M,e).(G,H) by A1, Def16;
+  thus thesis;
+end;
+
+theorem
+  for C,e,M,G,H st C.e = 2 holds
+      Polish-ext-head(Polish-binOp(C,M,e).(G,H)) = e
+proof
+  let C,e,M,G,H;
+  set F = Polish-binOp(C,M,e).(G,H);
+  set K = dom C;
+  assume A1: C.e = 2;
+  F = e^(G^H) by A1, Def16;
+  then F is K-headed & K-head F = e;
+  hence thesis by Th12;
+end;
+
+theorem Th22:
+  for T,U,V,W holds Polish-arity V c= Polish-arity W iff V c= W
+proof
+  let T,U,V,W;
+  A1: T c= U by Def9;
+  thus Polish-arity V c= Polish-arity W implies V c= W
+  proof
+    assume A2: Polish-arity V c= Polish-arity W;
+    set A = Polish-arity V;
+    set B = Polish-arity W;
+    A5: for a st a in T holds A.a = B.a
+    proof
+      let a;
+      assume a in T;
+      then a in dom A by FUNCT_2:def 1;
+      hence thesis by A2, GRFUNC_1:2;
+    end;
+    defpred P[Nat] means Polish-expression-hierarchy(T,A,$1)
+        c= Polish-expression-hierarchy(U,B,$1);
+    A10: P[0]
+    proof
+      let a;
+      assume a in Polish-expression-hierarchy(T,A,0);
+      then a in Polish-atoms(T,A) by POLNOT_1:22;
+      then a in T & A.a = 0 by POLNOT_1:def 7;
+      then a in U & B.a = 0 by A1, A5;
+      then a in Polish-atoms(U,B) by POLNOT_1:def 7;
+      hence a in Polish-expression-hierarchy(U,B,0) by POLNOT_1:22;
+    end;
+    A20: for k st P[k] holds P[k+1]
+    proof
+      let k;
+      set G = Polish-expression-hierarchy(T,A,k);
+      set H = Polish-expression-hierarchy(U,B,k);
+      assume A21: P[k];
+      let a;
+      assume a in Polish-expression-hierarchy(T,A,k+1);
+      then a in Polish-expression-layer(T,A,G) by POLNOT_1:23;
+      then consider p,q,n such that
+        A23: a = p^q and A24: p in T and A25: n = A.p and A26: q in G^^n
+          by POLNOT_1:def 6;
+      A27: p in U & n = B.p by A1, A5, A24, A25;
+      G^^n c= H^^n by A21, POLNOT_1:17;
+      then a in Polish-expression-layer(U,B,H) by A23, A26, A27, POLNOT_1:18;
+      hence thesis by POLNOT_1:23;
+    end;
+    A30: for n holds P[n] from NAT_1:sch 2(A10, A20);
+    let a;
+    assume a in V;
+    then a in Polish-expression-set(T,A);
+    then consider n such that A31: a in Polish-expression-hierarchy(T,A,n+1)
+        by POLNOT_1:28;
+    Polish-expression-hierarchy(T,A,n+1)
+        c= Polish-expression-hierarchy(U,B,n+1) by A30;
+    then a in Polish-expression-set(U,B) by A31, POLNOT_1:26, TARSKI:def 3;
+    hence a in W;
+  end;
+  assume A40: V c= W;
+  set A = Polish-arity V;
+  set B = Polish-arity W;
+  A41: dom A = T & dom B = U by FUNCT_2:def 1;
+  for a st a in dom A holds A.a = B.a
+  proof
+    let a;
+    assume a in dom A;
+    then reconsider t = a as Element of T by FUNCT_2:def 1;
+    per cases;
+    suppose A45: U is trivial;
+      then T is trivial;
+      then A.t = 0 by Lm5 .= B.t by A1, A45, Lm5;
+      hence thesis;
+    end;
+    suppose U is non trivial;
+      then reconsider U as non trivial Polish-language;
+      reconsider B as Polish-arity-function of U;
+      set n = A.t;
+      set u = the Element of V^^n;
+      set v = t^u;
+      A50: W = Polish-WFF-set(U,B);
+      V = Polish-WFF-set(T,A);
+      then V is A-closed;
+      then v in Polish-expression-set(U,B) by A40;
+      then consider m,p,q such that
+        A52: p in U and
+        A53: m = B.p and
+        A54: q in W^^m and
+        A55: v = p^q by POLNOT_1:32;
+      A56: V^^n c= W^^n by A40, POLNOT_1:17;
+      T c= U by Def9;
+      then t in U;
+      then A57: p = t & u = q by A52, A55, POLNOT_1:43;
+      then u in W^^n & u in W^^m by A54, A56;
+      hence thesis by A50, A53, A57, Lm3;
+    end;
+  end;
+  hence A c= B by A41, Def9, GRFUNC_1:2;
+end;
+
+theorem
+  for T,U,V,W holds V c= W iff W is (Polish-arity V)-closed
+proof
+  let T,U,V,W;
+  set A = Polish-arity V;
+  set B = Polish-arity W;
+  thus V c= W implies W is A-closed
+  proof
+    assume V c= W;
+    then A2: A c= B by Th22;
+    W = Polish-WFF-set(U,B);
+    then A3: W is B-closed;
+    let p,n,q;
+    assume that
+      A5: p in T and A6: n = A.p and A7: q in W^^n;
+    A9: T c= U by Def9;
+    p in dom A by A5, FUNCT_2:def 1;
+    then n = B.p by A2, A6, GRFUNC_1:2;
+    hence p^q in W by A3, A5, A7, A9;
+  end;
+  V = Polish-expression-set(T,A);
+  hence thesis by POLNOT_1:37;
+end;
+
+definition
+  let T, U, V, W;
+  redefine attr W is V-extending means
+  Polish-arity V c= Polish-arity W;
+  compatibility by Th22;
+end;
+
+registration
+  let T, U, V;
+  cluster V-extending for full Polish-language of U;
+  existence
+  proof
+    set A = Polish-arity V;
+    set B = (U --> 0) +* A;
+    A1: dom B = dom (U --> 0) \/ dom A by FUNCT_4:def 1
+        .= U \/ T by FUNCT_2:def 1
+        .= U by Def9, XBOOLE_1:12;
+A0: rng A c= rng B by FUNCT_4:18;
+    0 in rng A by FREEALG:def 2; then
+    B is with_zero by A0;
+    then B is Polish-arity-function by A1, Def2;
+    then reconsider B as Polish-arity-function of U by A1, Th1;
+    take W = Polish-WFF-set(U,B);
+    thus Polish-arity V c= Polish-arity W by FUNCT_4:25;
+  end;
+end;
+
+definition
+  let T, V;
+  mode Extension of V is Polish-ext-set of Polish-arity V;
+end;
+
+registration
+  let T,V;
+  cluster -> (Polish-arity V)-closed (Polish-arity V)-compatible
+      for Extension of V;
+  coherence;
+end;
+
+ reserve Q for Extension of V;
+
+theorem
+  for T,V,Q holds V c= Q
+proof
+  let T,V,Q;
+  set A = Polish-arity V;
+  V = Polish-expression-set(T,A);
+  hence thesis by POLNOT_1:37;
+end;
+
+definition
+  let T,V,Q;
+  func Polish-ext-complement Q -> Subset of Q equals
+    Polish-ext-complement(Polish-arity V, Q);
+  coherence;
+end;
+
+definition
+  let T, V, Q;
+  func Polish-ext-domain Q -> T-extending Polish-language equals
+  Polish-ext-domain(Polish-arity V, Q);
+  coherence
+  proof
+    dom Polish-arity V = T by FUNCT_2:def 1;
+    hence thesis;
+  end;
+end;
+
+definition
+  let T, V, Q;
+  func Polish-ext-arity Q
+      -> Polish-arity-function of Polish-ext-domain Q equals
+  Polish-ext-arity(Polish-arity V, Q);
+  coherence;
+end;
+
+definition
+  let T,V,Q;
+  let F be Formula of Q;
+  func Polish-ext-head F -> Element of Polish-ext-domain Q equals
+  (Polish-ext-domain Q)-head F;
+  coherence
+  proof
+    set U = Polish-ext-domain Q;
+    Q = Polish-WFF-set(U, Polish-ext-arity Q) by Def23;
+    then Q is U-headed by POLNOT_1:65;
+    then F is U-headed;
+    hence thesis by POLNOT_1:def 22;
+  end;
+end;
+
+theorem
+  for T,V,Q for F being Formula of Q st Polish-ext-head F in T
+    holds Polish-ext-head F = T-head F by Th10;
+
+theorem Th32:
+  for T,V,Q for F being Formula of Q st F is T-headed
+    holds Polish-ext-head F = T-head F
+proof
+  let T,V,Q;
+  let F be Formula of Q;
+  assume A1: F is T-headed;
+  T c= Polish-ext-domain Q by Def9;
+  hence thesis by A1, POLNOT_1:55;
+end;
+
+ reserve M for Extension of Polish-WFF-set(K,E);
+ reserve e for Element of K;
+ reserve F,G,H for Formula of M;
+
+definition
+  let T,V,Q;
+  let t be Element of T;
+  assume A1: (Polish-arity V).t = 1;
+  func Polish-unOp(T,Q,t) -> UnOp of Q means  :Def15r:
+  for p st p in Q holds it.p = t^p;
+  existence
+  proof
+    set A = Polish-arity V;
+    reconsider t as Element of dom A by FUNCT_2:def 1;
+    take Polish-unOp(A,Q,t);
+    thus thesis by A1, Def15;
+  end;
+  uniqueness
+  proof
+    let f1, f2 be UnOp of Q such that
+      A1: for p st p in Q holds f1.p = t^p and
+      A2: for p st p in Q holds f2.p = t^p;
+    for w being Element of Q holds f1.w = f2.w
+    proof
+      let w be Element of Q;
+      reconsider w as FinSequence;
+      f1.w = t^w by A1 .= f2.w by A2;
+      hence thesis;
+    end;
+    hence thesis by FUNCT_2:def 8;
+  end;
+end;
+
+definition
+  let T,V,Q;
+  let t be Element of T;
+  assume A1: (Polish-arity V).t = 2;
+  func Polish-binOp(T,Q,t) -> BinOp of Q means  :Def16r:
+  for p,q st p in Q & q in Q holds it.(p,q) = t^(p^q);
+  existence
+  proof
+    set A = Polish-arity V;
+    reconsider t as Element of dom A by FUNCT_2:def 1;
+    take Polish-binOp(A,Q,t);
+    thus thesis by A1, Def16;
+  end;
+  uniqueness
+  proof
+    let f1, f2 be BinOp of Q such that
+      A1: for p,q st p in Q & q in Q holds f1.(p,q) = t^(p^q) and
+      A2: for p,q st p in Q & q in Q holds f2.(p,q) = t^(p^q);
+    for p,q being Element of Q holds f1.(p,q) = f2.(p,q)
+    proof
+      let p,q be Element of Q;
+      thus f1.(p,q) = t^(p^q) by A1
+          .= f2.(p,q) by A2;
+    end;
+    hence thesis by BINOP_1:2;
+  end;
+end;
+
+theorem
+  for K,E,e,M,F st E.e = 1 & Polish-ext-head F = e
+      ex G st F = Polish-unOp(K,M,e).G
+proof
+  let K,E,e,M,F;
+  assume that A1: E.e = 1 and A2: Polish-ext-head F = e;
+  set G = K-tail F;
+  A5: M is E-compatible;
+  A6: F is K-headed & K-head F = e by A2, Th10;
+  then G in M^^(E.e) by A5;
+  then reconsider G as Element of M by A1;
+  take G;
+  thus F = e^G by A6 .= Polish-unOp(K,M,e).G by A1, Def15r;
+  thus thesis;
+end;
+
+theorem
+  for K,E,e,M,G st E.e = 1 holds Polish-ext-head(Polish-unOp(K,M,e).G) = e
+proof
+  let K,E,e,M,G;
+  set F = Polish-unOp(K,M,e).G;
+  assume E.e = 1;
+  then F = e^G by Def15r;
+  then F is K-headed & K-head F = e;
+  hence thesis by Th32;
+end;
+
+theorem
+  for K,E,e,M,F st E.e = 2 & Polish-ext-head F = e ex G,H
+    st F = Polish-binOp(K,M,e).(G,H)
+proof
+  let K,E,e,M,F;
+  assume that A1: E.e = 2 and A2: Polish-ext-head F = e;
+  set g = K-tail F;
+  A5: M is E-compatible;
+  A6: F is K-headed & K-head F = e by A2, Th10;
+  then reconsider g as Element of M^^(1+1) by A1, A5;
+  M^^(1+1) = (M^^1)^M by POLNOT_1:6;
+  then consider p,q such that A8: g = p^q and A9: p in M and A10: q in M
+    by POLNOT_1:def 2;
+  reconsider G = p, H = q as Formula of M by A9, A10;
+  take G,H;
+  thus F = e^(p^q) by A6, A8
+        .= Polish-binOp(K,M,e).(G,H) by A1, Def16r;
+  thus thesis;
+end;
+
+theorem
+  for K,E,e,M,G,H st E.e = 2 holds
+    Polish-ext-head(Polish-binOp(K,M,e).(G,H)) = e
+proof
+  let K,E,e,M,G,H;
+  set F = Polish-binOp(K,M,e).(G,H);
+  assume A1: E.e = 2;
+  F = e^(G^H) by A1, Def16r;
+  then F is K-headed & K-head F = e;
+  hence thesis by Th32;
+end;

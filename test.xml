@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xml" href="file://C:\Users\jeans\Desktop\QuaNThoR\mizar\miz.xml"?>
+<Article aid="TEST" mizfiles="C:\Users\jeans\Desktop\QuaNThoR\mizar\">
+<JustifiedTheorem line="5" col="7">
+<Proposition line="5" col="15" nr="1" vid="1">
+<Pred kind="R" nr="1" pid="1">
+<Num nr="1"/>
+<Num nr="1"/>
+</Pred>
+</Proposition>
+<By line="5" col="17"/>
+</JustifiedTheorem>
+
+<Proposition line="6" col="5">
+<ErrorFrm/>
+</Proposition>
+<Proof line="6" col="5">
+<BlockThesis>
+<ErrorFrm/>
+</BlockThesis>
+<Conclusion>
+<Proposition line="8" col="12">
+<Pred kind="R" nr="1" pid="1">
+<Num nr="1"/>
+<Num nr="1"/>
+</Pred>
+</Proposition>
+<By line="8" col="12"/>
+</Conclusion>
+<Thesis>
+<ErrorFrm/>
+<ThesisExpansions/>
+</Thesis>
+<EndPosition line="9" col="3"/>
+</Proof>
+
+</Article>

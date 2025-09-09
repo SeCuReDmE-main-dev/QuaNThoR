@@ -1,0 +1,698 @@
+:: Extensions of Orderings
+::  by Christoph Schwarzweller
+::
+:: Received December 18, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ARYTM_3, ARYTM_1, FUNCT_1, RELAT_1, VECTSP_1, TARSKI, STRUCT_0,
+      SUBSET_1, SUPINF_2, PYTHTRIP, XXREAL_0, FUNCSDOM, REWRITE2, NUMBERS,
+      RAT_1, FINSEQ_1, MESFUNC1, XCMPLX_0, ABIAN, ALGSTR_0, QC_LANG1, IDEAL_1,
+      CARD_3, ZFMISC_1, VECTSP_2, BINOP_2, CAT_1, COMPLEX1, XBOOLE_0, SQUARE_1,
+      RING_3, NEWTON, ORDINAL4, ALGSTR_4, FUNCT_2, INTERVA1, EC_PF_1, REALSET1,
+      GLIB_000, GROUP_1, INT_1, YELLOW_8, RLVECT_2, RLVECT_3, GAUSSINT,
+      HURWITZ, NAT_1, C0SP1, POLYNOM2, CARD_1, PARTFUN1, AFINSQ_1, EQREL_1,
+      RLVECT_5, RING_2, FIELD_3, FIELD_4, FIELD_6, FIELD_7, FIELD_9, RLVECT_1,
+      REALALG1, FDIFF_1, REALALG2, REALALG3, POLYNOM1, POLYNOM3, FUNCT_8,
+      POLYNOM5, FOMODEL1, INT_2, RATFUNC1, ALGNUM_1;
+ notations TARSKI, ZFMISC_1, XBOOLE_0, SUBSET_1, DOMAIN_1, RELAT_1, REALSET1,
+      FUNCT_1, FINSEQ_1, ALGSEQ_1, BINOP_2, RELSET_1, PARTFUN1, ORDINAL1,
+      FUNCT_2, BINOP_1, SETFAM_1, EQREL_1, SQUARE_1, XREAL_0, XCMPLX_0,
+      XXREAL_0, NAT_1, INT_1, INT_2, RAT_1, ABIAN, NUMBERS, STRUCT_0, BINOM,
+      ALGSTR_0, GROUP_1, GROUP_2, RLVECT_1, VECTSP_1, VECTSP_2, VECTSP_6,
+      VECTSP_7, MATRLIN, POLYNOM1, POLYNOM3, POLYNOM4, POLYNOM5, HURWITZ,
+      RATFUNC1, C0SP1, GAUSSINT, IDEAL_1, RING_2, RING_3, RING_4, EC_PF_1,
+      ALGNUM_1, O_RING_1, FIELD_1, FIELD_3, FIELD_4, FIELD_5, FIELD_6, FIELD_7,
+      FIELD_9, REALALG1, REALALG2;
+ constructors BINOM, REALSET1, BINOP_2, NAT_D, RATFUNC1, GCD_1, FVSUM_1,
+      SQUARE_1, ALGSEQ_1, POLYNOM4, ABIAN, VECTSP_9, ALGNUM_1, REALALG2,
+      FIELD_9, FIELD_14;
+ registrations ORDINAL1, XXREAL_0, XREAL_0, VECTSP_1, STRUCT_0, MEMBERED,
+      RLVECT_1, INT_1, VECTSP_2, NAT_1, INT_2, INT_3, XCMPLX_0, REALSET1,
+      RAT_1, ALGSTR_1, SUBSET_1, RELAT_1, ABIAN, FUNCOP_1, CARD_1, FINSET_1,
+      POLYNOM3, POLYNOM5, RATFUNC1, FINSEQ_1, REALALG1, REALALG2, GAUSSINT,
+      FIELD_2, FIELD_4, FIELD_5, FIELD_6, FIELD_7, FIELD_9, RING_2, RING_3,
+      RING_4, RING_5, FIELD_14;
+ requirements NUMERALS, SUBSET, BOOLE, REAL, ARITHM;
+
+
+begin :: Preliminaries
+
+scheme :: REALALG3:sch 1
+ 3SeqDEx{D() -> non empty set, A() -> Nat,
+               P[object,object], Q[object,object], R[object,object]}:
+  ex p,q,r being FinSequence of D()
+  st dom p = Seg A() & dom q = Seg A() & dom r = Seg A() &
+     for k being Nat st k in Seg A() holds P[k,p.k] &
+     for k being Nat st k in Seg A() holds Q[k,q.k] &
+     for k being Nat st k in Seg A() holds R[k,r.k]
+provided
+ for k being Nat st k in Seg A() ex x being Element of D() st P[k,x] and
+ for k being Nat st k in Seg A() ex x being Element of D() st Q[k,x] and
+ for k being Nat st k in Seg A() ex x being Element of D() st R[k,x];
+
+theorem :: REALALG3:1
+for L being add-associative right_zeroed right_complementable
+   non empty addLoopStr holds -{0.L} = {0.L};
+
+definition
+let R be Ring;
+func 2.R -> Element of R equals
+:: REALALG3:def 1
+  1.R + 1.R;
+end;
+
+registration
+cluster 2-characteristic for Field;
+end;
+
+registration
+let R be 2-characteristic Ring;
+cluster 2.R -> zero;
+end;
+
+registration
+let R be non 2-characteristic non degenerated Ring;
+cluster 2.R -> non zero;
+end;
+
+registration
+cluster 2.F_Rat -> non square;
+cluster 2.F_Real -> square;
+end;
+
+registration
+cluster preordered polynomial_disjoint for Field;
+end;
+
+registration
+cluster preordered -> non 2-characteristic for non degenerated Ring;
+end;
+
+theorem :: REALALG3:2
+for F being Field,
+    E being FieldExtension of F
+for f being FinSequence of E st
+for i being Nat st i in dom f holds f.i in F
+holds f is FinSequence of F & Sum f in F;
+
+registration
+let F be Field;
+let a be sum_of_squares Element of F;
+let b be sum_of_squares non zero Element of F;
+cluster a * b" -> sum_of_squares;
+end;
+
+registration
+let F be Field;
+let f be quadratic non empty FinSequence of F;
+cluster Sum f -> sum_of_squares;
+end;
+
+registration
+let R be ZeroStr;
+cluster trivial for FinSequence of R;
+end;
+
+registration
+let R be ZeroStr;
+cluster <*>(the carrier of R) -> trivial;
+cluster empty -> trivial for FinSequence of R;
+end;
+
+registration
+let R be ZeroStr;
+let f,g be trivial FinSequence of R;
+cluster f^g -> trivial;
+end;
+
+registration
+let R be non degenerated Ring;
+let f be non trivial FinSequence of R, g be FinSequence of R;
+cluster f^g -> non trivial;
+cluster g^f -> non trivial;
+end;
+
+registration
+let R be Ring;
+let f be trivial FinSequence of R;
+cluster Sum f -> zero;
+end;
+
+definition
+let E be Field, F be Subfield of E;
+let a be Element of F;
+func @(a,E) -> Element of E equals
+:: REALALG3:def 2
+  a;
+end;
+
+definition
+let E be Field, F be Subfield of E;
+let a be Element of E;
+attr a is F-membered means
+:: REALALG3:def 3
+  a in the carrier of F;
+end;
+
+registration
+let E be Field, F be Subfield of E;
+cluster F-membered for Element of E;
+end;
+
+definition
+let E be Field, F be Subfield of E;
+let a be Element of E;
+assume a is F-membered;
+func @(F,a) -> Element of F equals
+:: REALALG3:def 4
+  a;
+end;
+
+registration
+let E be Field, F be Subfield of E;
+let a be F-membered Element of E;
+reduce @(F,a) to a;
+end;
+
+registration
+let R be non degenerated Ring;
+cluster 1.R -> non zero;
+cluster -1.R -> non zero;
+end;
+
+registration
+let R be preordered non degenerated Ring;
+let P be Preordering of R;
+let a,b be P-positive Element of R;
+cluster a + b -> P-positive;
+end;
+
+registration
+let R be preordered domRing;
+let P be Preordering of R;
+let a,b be P-positive Element of R;
+cluster a * b -> P-positive;
+end;
+
+definition
+let R be Ring;
+let S be Subset of R;
+func S^+ -> Subset of R equals
+:: REALALG3:def 5
+  S \ {0.R};
+func S^- -> Subset of R equals
+:: REALALG3:def 6
+  -S \ {0.R};
+end;
+
+registration
+let R be preordered non degenerated Ring;
+let P be Preordering of R;
+cluster P^+ -> non empty;
+cluster P^- -> non empty;
+end;
+
+registration
+let R be preordered non degenerated Ring;
+let P be Preordering of R;
+cluster (P^+) /\ (P^-) -> empty;
+end;
+
+registration
+let R be preordered non degenerated Ring;
+let P be Preordering of R;
+cluster P^+ -> add-closed;
+end;
+
+registration
+let R be preordered domRing;
+let P be Preordering of R;
+cluster P^+ -> mult-closed;
+end;
+
+theorem :: REALALG3:3
+for R being preordered non degenerated Ring,
+    P being Preordering of R
+holds P + P^+ c= P^+ & P^+ + P c= P^+;
+
+theorem :: REALALG3:4
+for R being preordered domRing,
+    P being Preordering of R
+holds P^- * (P^-) c= P^+ & P^+ * (P^-) c= P^- & P^- * (P^+) c= P^-;
+
+theorem :: REALALG3:5
+for R being non degenerated domRing,
+    S being Subset of R
+holds S is positive_cone
+implies ({S^+, {0.R}, S^-} is a_partition of the carrier of R &
+         S^+ is add-closed mult-closed);
+
+theorem :: REALALG3:6
+for R being non degenerated Ring,
+    S being Subset of R
+holds ({S, {0.R}, -S} is a_partition of the carrier of R &
+       S is add-closed mult-closed)
+implies S \/ {0.R} is positive_cone;
+
+theorem :: REALALG3:7
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F
+for f being FinSequence of E st
+for i being Nat st i in dom f holds f.i in P holds Sum f in P;
+
+theorem :: REALALG3:8
+for F being ordered Field,
+    P being Ordering of F
+for E being Field st E == F holds
+E is ordered & ex Q being Subset of E st Q = P & Q is positive_cone;
+
+registration
+let F be ordered Field;
+cluster ordered for FieldExtension of F;
+end;
+
+
+begin :: Some Properties of Polynomials
+
+definition
+let F be Field;
+let g be non empty FinSequence of the carrier of Polynom-Ring F;
+let i be Element of dom g;
+redefine func g.i -> Element of the carrier of Polynom-Ring F;
+end;
+
+theorem :: REALALG3:9
+for F being Field
+for p,q being Polynomial of F st LC p + LC q <> 0.F
+holds deg(p + q) = max(deg p, deg q);
+
+theorem :: REALALG3:10
+for F being Field
+for p,q being Polynomial of F
+holds (deg p > deg q implies LC(p + q) = LC p) &
+      (deg p < deg q implies LC(p + q) = LC q) &
+      ((deg p = deg q & LC p + LC q <> 0.F) implies LC(p + q) = LC p + LC q);
+
+theorem :: REALALG3:11
+for F being Field
+for p being Element of the carrier of Polynom-Ring F
+holds deg(NormPolynomial p) = deg p;
+
+theorem :: REALALG3:12
+for F being Field
+for p being non constant Element of the carrier of Polynom-Ring F
+ex q being non constant monic Element of the carrier of Polynom-Ring F
+st q divides p & q is irreducible;
+
+theorem :: REALALG3:13
+for F being Field
+for p being Element of the carrier of Polynom-Ring F
+st deg p is odd
+ex q being non constant monic Element of the carrier of Polynom-Ring F
+st q divides p & q is irreducible & deg q is odd;
+
+theorem :: REALALG3:14
+for F being Field
+for f being FinSequence of the carrier of Polynom-Ring F
+for p being non zero Polynomial of F st p = Sum f
+for g being FinSequence of F
+for n being Nat
+st for i being Element of dom f, q being Polynomial of F
+   st q = f.i holds deg q <= n
+holds deg p <= n;
+
+theorem :: REALALG3:15
+for F being ordered Field,
+    P being Ordering of F
+for f being FinSequence of the carrier of Polynom-Ring F
+for p being non zero Polynomial of F
+st p = Sum f &
+   for i being Element of dom f, q being Polynomial of F
+   st q = f.i holds deg q is even & LC q in P
+holds deg p is even;
+
+theorem :: REALALG3:16
+for F being Field,
+    E being FieldExtension of F
+for p being Polynomial of F
+for a being Element of F,
+    x,b being Element of E st b = a
+holds Ext_eval(a*p,x) = b * Ext_eval(p,x);
+
+theorem :: REALALG3:17    :: Ext_eval(Sum p_i,a) = Sum Ext_eval(p_i,a)
+for F being Field,
+    E being FieldExtension of F
+for f being FinSequence of the carrier of Polynom-Ring F
+for p being Polynomial of F st p = Sum f
+for a being Element of E,
+    g being FinSequence of E
+st len g = len f &
+   for i being Element of dom f, q being Polynomial of F
+   st q = f.i holds g.i = Ext_eval(q,a)
+holds Ext_eval(p,a) = Sum g;
+
+
+begin :: More on the fields F(a)
+
+theorem :: REALALG3:18
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E
+for b being Element of F st b = a^2 holds Ext_eval(X^2-b,a) = 0.E;
+
+theorem :: REALALG3:19
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E st a^2 in F holds a is F-algebraic;
+
+theorem :: REALALG3:20
+for F being Field,
+    E being FieldExtension of F
+for a being F-algebraic Element of E holds
+not a in F iff
+for p being non zero Polynomial of F st Ext_eval(p,a) = 0.E holds deg p >= 2;
+
+theorem :: REALALG3:21
+for F being Field,
+    E being FieldExtension of F
+for a being F-algebraic Element of E st not a in F
+for b being Element of F st b = a^2 holds MinPoly(a,F) = X^2-b;
+
+theorem :: REALALG3:22
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E st not a in F & a^2 in F
+holds {1.E,a} is Basis of VecSp(FAdj(F,{a}),F) & deg(FAdj(F,{a}),F) = 2;
+
+theorem :: REALALG3:23
+for F being Field,
+    E being FieldExtension of F
+for a being F-algebraic Element of E,
+    b being Element of E holds
+b in the carrier of FAdj(F,{a}) iff
+ex p being Polynomial of F st deg p < deg MinPoly(a,F) & b = Ext_eval(p,a);
+
+theorem :: REALALG3:24
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E st a^2 in F
+for b being Element of FAdj(F,{a})
+ex c1,c2 being Element of FAdj(F,{a})
+st c1 in F & c2 in F & b = c1 + @(FAdj(F,{a}),a) * c2;
+
+theorem :: REALALG3:25
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E st not a in F & a^2 in F
+for c1,c2,d1,d2 being Element of FAdj(F,{a})
+st c1 in F & c2 in F & d1 in F & d2 in F &
+   c1 + @(FAdj(F,{a}),a) * c2 = d1 + @(FAdj(F,{a}),a) * d2
+holds c1 = d1 & c2 = d2;
+
+theorem :: REALALG3:26
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E, b being Element of F
+for f being quadratic non empty FinSequence of FAdj(F,{a})
+st not a in F & a^2 = b
+ex g1,g2 being quadratic non empty FinSequence of F,
+   g3 being non empty FinSequence of F
+st Sum f =
+ @(Sum g1 + b * Sum g2,FAdj(F,{a})) + @(FAdj(F,{a}),a) * @(Sum g3,FAdj(F,{a}));
+
+theorem :: REALALG3:27
+for F being Field,
+    E being FieldExtension of F
+for a being Element of E, b being Element of F
+for f being quadratic non empty FinSequence of FAdj(F,{a})
+st not a in F & a^2 = b & Sum f in F
+ex g1,g2 being quadratic non empty FinSequence of F
+st Sum f = Sum g1 + b * Sum g2;
+
+
+begin :: Extensions of orderings
+
+definition
+let F be ordered Field,
+    E be Field;
+let P be Ordering of F;
+pred P extends_to E means
+:: REALALG3:def 7
+  ex O being Subset of E st P c= O & O is positive_cone;
+end;
+
+notation
+let F be ordered Field,
+    E be Field;
+let P be Ordering of F;
+antonym P not_extends_to E for P extends_to E;
+end;
+
+definition
+let F be ordered Field,
+    E be ordered FieldExtension of F;
+let P be Ordering of F, O be Ordering of E;
+pred O extends P means
+:: REALALG3:def 8
+  O /\ (the carrier of F) = P;
+end;
+
+theorem :: REALALG3:28
+for F being ordered Field,
+    E being ordered FieldExtension of F
+for P being Ordering of F, O be Ordering of E
+holds O extends P iff
+      for a being Element of F holds a in P iff a in O;
+
+theorem :: REALALG3:29
+for F being ordered Field,
+    E being ordered FieldExtension of F
+for P being Ordering of F, O be Ordering of E
+holds O extends P iff P c= O;
+
+definition
+let R be ordered Ring;
+let P be Ordering of R;
+let a be Element of R;
+func signum(P,a) -> Integer equals
+:: REALALG3:def 9
+  1 if a in P \ {0.R},
+  0 if a = 0.R
+  otherwise -1;
+end;
+
+definition
+let R be ordered Ring;
+let P be Ordering of R;
+func signum P -> Function of the carrier of R,INT means
+:: REALALG3:def 10
+  for a being Element of R holds it.a = signum(P,a);
+end;
+
+theorem :: REALALG3:30
+for R being ordered domRing,
+    P being Ordering of R
+for a being Element of R holds a = signum(P,a) '*' abs(P,a);
+
+theorem :: REALALG3:31
+for F being ordered Field,
+    E being ordered FieldExtension of F
+for P being Ordering of F,
+    O being Ordering of E
+holds O extends P iff (signum O)|(the carrier of F) = signum P;
+
+definition
+let F be ordered Field,
+    E be FieldExtension of F;
+let P be Ordering of F;
+let f be FinSequence of E;
+attr f is P-quadratic means
+:: REALALG3:def 11
+  for i being Element of NAT st i in dom f
+  ex a being non zero Element of E,
+     b being Element of E st a in P & f.i = a * b^2;
+end;
+
+registration
+let F be ordered Field,
+    E be FieldExtension of F;
+let P be Ordering of F;
+cluster P-quadratic non empty for FinSequence of E;
+end;
+
+registration
+let F be ordered Field, P be Ordering of F,
+    E be FieldExtension of F;
+let f,g be P-quadratic FinSequence of E;
+cluster f^g -> P-quadratic for FinSequence of E;
+end;
+
+theorem :: REALALG3:32
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F
+for f being P-quadratic FinSequence of E
+for g1,g2 being FinSequence of E
+st f = g1^g2 holds g1 is P-quadratic & g2 is P-quadratic;
+
+definition
+let F be ordered Field,
+    E be FieldExtension of F;
+let P be Ordering of F;
+func P-Quadratic_Sums E -> non empty Subset of E equals
+:: REALALG3:def 12
+  the set of all Sum f where f is P-quadratic FinSequence of E;
+end;
+
+notation
+let F be ordered Field,
+    E be FieldExtension of F;
+let P be Ordering of F;
+synonym QS(E,P) for P-Quadratic_Sums E;
+end;
+
+registration
+let F be ordered Field,
+    E be FieldExtension of F;
+let P be Ordering of F;
+cluster QS(E,P) -> add-closed mult-closed with_sums_of_squares;
+end;
+
+theorem :: REALALG3:33
+for F being ordered Field,
+    P being Ordering of F
+for E being FieldExtension of F,
+    a being non zero Element of E
+holds a in QS(E,P)
+iff ex f being P-quadratic non empty FinSequence of E
+    st Sum f = a &
+       for i being Element of NAT st i in dom f holds f.i <> 0.E;
+
+theorem :: REALALG3:34
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F holds P c= QS(E,P);
+
+theorem :: REALALG3:35
+for F being ordered Field,
+    E being ordered FieldExtension of F
+for P being Ordering of F, O being Ordering of E
+st O extends P holds QS(E,P) c= O;
+
+theorem :: REALALG3:36
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F
+holds QS(E,P) is prepositive_cone iff not -1.E in QS(E,P);
+
+theorem :: REALALG3:37
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F
+holds P extends_to E iff QS(E,P) is prepositive_cone;
+
+theorem :: REALALG3:38
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F
+holds P extends_to E iff
+      for f being P-quadratic non empty FinSequence of E
+      st Sum f = 0.E holds f is trivial;
+
+theorem :: REALALG3:39
+for F being ordered Field,
+    E being FieldExtension of F
+for P being Ordering of F
+for a being Element of E st a^2 in F
+for f being P-quadratic non empty FinSequence of FAdj(F,{a})
+ex g1,g2 being non empty FinSequence of FAdj(F,{a})
+st Sum f = Sum g1 + @(FAdj(F,{a}),a) * (2 '*' Sum g2) &
+   (for i being Element of NAT st i in dom g1
+        ex b being non zero Element of FAdj(F,{a}),
+           c1,c2 being Element of FAdj(F,{a})
+        st b in P & c1 in F & c2 in F &
+           g1.i = b * (c1^2 + c2^2 * @(FAdj(F,{a}),a)^2)) &
+   (for i being Element of NAT st i in dom g2
+        ex b being non zero Element of FAdj(F,{a}),
+           c1,c2 being Element of FAdj(F,{a})
+        st b in P & c1 in F & c2 in F & g2.i = b * c1 * c2);
+
+theorem :: REALALG3:40
+for F being ordered Field,
+    E being FieldExtension of F
+for a being Element of E st a^2 in F
+for P being Ordering of F holds P extends_to FAdj(F,{a}) iff a^2 in P;
+
+theorem :: REALALG3:41
+for F being ordered polynomial_disjoint Field,
+    P being Ordering of F
+for a being non square Element of F
+holds P extends_to FAdj(F,{sqrt a}) iff a in P;
+
+theorem :: REALALG3:42
+Positives(F_Rat) extends_to FAdj(F_Rat,{sqrt 2.F_Rat});
+
+theorem :: REALALG3:43
+Positives(F_Rat) not_extends_to FAdj(F_Rat,{sqrt -1.F_Rat});
+
+theorem :: REALALG3:44
+for F being ordered Field,
+    P being Ordering of F
+for E being FieldExtension of F
+for a being Element of F,
+    b,c being Element of E st b^2 = a & c^2 = -a
+holds P extends_to FAdj(F,{b}) or P extends_to FAdj(F,{c});
+
+theorem :: REALALG3:45
+for F being ordered polynomial_disjoint Field,
+    P being Ordering of F
+for a,b being non square Element of F st b = -a
+holds P extends_to FAdj(F,{sqrt a}) or P extends_to FAdj(F,{sqrt b});
+
+theorem :: REALALG3:46
+for F being formally_real Field,
+    E being FieldExtension of F
+for a being Element of F,
+    b being Element of E
+st b^2 = a & a in QS F holds FAdj(F,{b}) is formally_real;
+
+theorem :: REALALG3:47
+for F being formally_real Field,
+    E being FieldExtension of F
+for a being Element of F,
+    b being Element of E
+st b^2 = a & FAdj(F,{b}) is non formally_real holds -a in QS F;
+
+theorem :: REALALG3:48
+for F being ordered polynomial_disjoint Field
+for a being non square Element of F
+st a in QS F holds FAdj(F,{sqrt a}) is formally_real;
+
+theorem :: REALALG3:49
+for F being ordered polynomial_disjoint Field
+for a being non square Element of F
+st FAdj(F,{sqrt a}) is non formally_real holds -a in QS F;
+
+theorem :: REALALG3:50
+for F being ordered Field,
+    P being Ordering of F
+for E being FieldExtension of F st deg(E,F) is odd Nat holds P extends_to E;
+
+theorem :: REALALG3:51
+for F being ordered Field,
+    P being Ordering of F
+for p being irreducible Element of the carrier of Polynom-Ring F
+for E being FieldExtension of F,
+    a being Element of E
+st deg p is odd & a is_a_root_of p,E holds P extends_to FAdj(F,{a});

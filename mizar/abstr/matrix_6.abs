@@ -1,0 +1,403 @@
+:: Some Properties Of Some Special Matrices
+::  by Xiaopeng Yue , Xiquan Liang and Zhongpin Sun
+::
+:: Received December 7, 2005
+:: Copyright (c) 2005-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ORDINAL1, XCMPLX_0, XBOOLE_0, NAT_1, VECTSP_1, SUBSET_1,
+      MATRIX_1, REWRITE1, RELAT_1, MESFUNC1, ALGSTR_0, ARYTM_1, FINSEQ_1,
+      TREES_1, ARYTM_3, SUPINF_2, XXREAL_0, CARD_1, QC_LANG1, ZFMISC_1,
+      RELAT_2, BINOP_1, FUNCOP_1, GROUP_1, MATRIX_6, FUNCSDOM, MATRIX_0;
+ notations XCMPLX_0, XBOOLE_0, TARSKI, ZFMISC_1, ORDINAL1, NUMBERS, FINSEQ_1,
+      RLVECT_1, GROUP_1, VECTSP_1, MATRIX_0, STRUCT_0, MATRIX_1, MATRIX_3,
+      MATRIX_4, XXREAL_0;
+ constructors ORDINAL1, XCMPLX_0, NAT_1, XBOOLE_0, XXREAL_0, FVSUM_1, MATRIX_3,
+      MATRIX_4, MATRIX_1;
+ registrations XCMPLX_0, XBOOLE_0, RELSET_1, XREAL_0, STRUCT_0, FINSEQ_1,
+      VECTSP_1, NAT_1, ORDINAL1, MATRIX_0, MATRIX_1, MATRIX_4;
+ requirements NUMERALS, BOOLE, SUBSET;
+
+
+begin
+
+reserve i,j,n for Nat,
+  K for Field,
+  a for Element of K,
+  M,M1,M2,M3,M4 for Matrix of n,K;
+reserve A for Matrix of K;
+
+definition
+  let n be Nat, R be Ring, M1,M2 be Matrix of n,R;
+  pred M1 commutes_with M2 means
+:: MATRIX_6:def 1
+  M1 * M2 = M2 * M1;
+  reflexivity;
+  symmetry;
+end;
+
+definition
+  let n be Nat,R be Ring,M1,M2 be Matrix of n,R;
+  pred M1 is_reverse_of M2 means
+:: MATRIX_6:def 2
+  M1*M2 = M2*M1 & M1*M2 = 1.(R,n);
+  symmetry;
+end;
+
+definition
+  let n be Nat, R be Ring;
+  let M1 be Matrix of n,R;
+  attr M1 is invertible means
+:: MATRIX_6:def 3
+  ex M2 be Matrix of n,R st M1 is_reverse_of M2;
+end;
+
+registration
+  let n;
+  let K be Ring;
+  let M1 be Matrix of n,K;
+  cluster -M1 -> (n,n)-size;
+end;
+
+registration
+  let n;
+  let K be Ring;
+  let M1,M2 be Matrix of n,K;
+  cluster M1+M2 -> (n,n)-size;
+end;
+
+registration
+  let n;
+  let K be Field;
+  let M1,M2 be Matrix of n,K;
+  cluster M1-M2 -> (n,n)-size;
+end;
+
+registration
+  let n;
+  let K be Ring;
+  let M1,M2 be Matrix of n,K;
+  cluster M1*M2 -> (n,n)-size;
+end;
+
+theorem :: MATRIX_6:1
+  for K being Ring, A being Matrix of K holds
+    (0.(K,len A,len A))*A = 0.(K,len A,width A);
+
+theorem :: MATRIX_6:2
+  for K being Ring,A being Matrix of K holds
+    A*(0.(K,width A,width A))=0.(K,len A,width A);
+
+theorem :: MATRIX_6:3
+  for K being Ring, M1 being Matrix of n,K
+  holds M1 commutes_with 0.(K,n,n);
+
+theorem :: MATRIX_6:4
+  for R being Ring
+  for M1,M2,M3 being Matrix of n,R
+  holds M1 commutes_with M2 & M2 commutes_with M3 & M1 commutes_with M3
+    implies M1 commutes_with M2*M3;
+
+theorem :: MATRIX_6:5
+  for R being Ring
+  for M1,M2,M3 being Matrix of n,R
+  holds
+  M1 commutes_with M2 & M1 commutes_with M3 implies
+    M1 commutes_with M2+M3;
+
+theorem :: MATRIX_6:6
+  for R being Ring
+  for M1 being Matrix of n,R
+  holds M1 commutes_with 1.(R,n);
+
+theorem :: MATRIX_6:7
+  for R being Ring
+  for M1,M2,M3 being Matrix of n,R
+  holds M2 is_reverse_of M3 & M1 is_reverse_of M3 implies M1=M2;
+
+definition
+  let n be Nat, R be Ring, M1 be Matrix of n,R;
+  assume
+ M1 is invertible;
+  func M1~ -> Matrix of n,R means
+:: MATRIX_6:def 4
+  it is_reverse_of M1;
+end;
+
+registration let R be Ring, n be Nat;
+  cluster 1.(R,n) -> invertible;
+end;
+
+theorem :: MATRIX_6:8
+  for R being Ring
+  holds (1.(R,n))~ = 1.(R,n) & 1.(R,n) is invertible;
+
+registration let R be Ring, n be Nat;
+  cluster invertible for Matrix of n, R;
+end;
+
+theorem :: MATRIX_6:9
+  for R being Ring
+  holds ((1.(R,n))~)~ = 1.(R,n);
+
+theorem :: MATRIX_6:10
+  for R being Ring
+  holds (1.(R,n))@ = 1.(R,n);
+
+theorem :: MATRIX_6:11
+  for R being Ring, n being Nat holds ((1.(R,n))@)~ = 1.(R,n);
+
+theorem :: MATRIX_6:12
+  for R being commutative Ring, M1,M3 being Matrix of n,R
+  holds M3 is_reverse_of M1 & n>0 implies M1@ is_reverse_of M3@;
+
+theorem :: MATRIX_6:13
+  for R being commutative Ring, M being Matrix of n,R
+  holds M is invertible implies M@ is invertible & M@~= M~@;
+
+registration let K, n;
+             let M be invertible Matrix of n, K;
+  cluster M@ -> invertible;
+end;
+
+theorem :: MATRIX_6:14
+  for K being Ring, n being Nat, M1,M2,M3,M4 being Matrix of n,K st
+  M3 is_reverse_of M1 & M4 is_reverse_of M2 holds M3*M4 is_reverse_of M2*M1;
+
+theorem :: MATRIX_6:15
+  for K being Field, n being Nat, M1,M2 being Matrix of n,K st
+    M2 is_reverse_of M1 holds M1 commutes_with M2;
+
+theorem :: MATRIX_6:16
+  for R being Ring, n being Nat
+  for M being Matrix of n,R
+  holds M is invertible implies M~ is invertible & (M~)~= M;
+
+registration let K be Ring, n;
+             let M be invertible Matrix of n, K;
+  cluster M~ -> invertible;
+end;
+
+theorem :: MATRIX_6:17
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds M1*M2=0.(R,n,n) & M1 is invertible implies M1 commutes_with M2;
+
+theorem :: MATRIX_6:18
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds M1=M1*M2 & M1 is invertible implies M1 commutes_with M2;
+
+theorem :: MATRIX_6:19
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds M1=M2*M1 & M1 is invertible implies M1 commutes_with M2;
+
+definition
+  let n be Nat, K be Ring;
+  let M1 be Matrix of n,K;
+  attr M1 is symmetric means
+:: MATRIX_6:def 5
+  M1@=M1;
+end;
+
+registration
+  let n be Nat, K be Ring;
+  cluster 1.(K,n) -> symmetric;
+end;
+
+theorem :: MATRIX_6:20
+  for R being Ring, a being Element of R
+  holds ((n,n)-->a)@ = (n,n)-->a;
+
+theorem :: MATRIX_6:21
+  for R being Ring, a being Element of R
+  holds (n,n)-->a is symmetric;
+
+theorem :: MATRIX_6:22
+  for R being commutative Ring, M1,M2 being Matrix of n,R
+  holds n > 0 & M1 is symmetric & M2 is symmetric implies
+  (M1 commutes_with M2 iff M1*M2 is symmetric);
+
+theorem :: MATRIX_6:23
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds (M1+M2)@ = M1@+M2@;
+
+theorem :: MATRIX_6:24
+  for R being Ring, M1,M2 being Matrix of n,R
+  st M1 is symmetric & M2 is symmetric holds M1+M2 is symmetric;
+
+theorem :: MATRIX_6:25 ::: should be a cluster
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds M1 is upper_triangular Matrix of n,R &
+  M1 is lower_triangular Matrix of n,R implies M1 is symmetric;
+
+theorem :: MATRIX_6:26
+  for K being Field,n being Nat,M1 being Matrix of n,K holds (-M1) @=-(M1@);
+
+theorem :: MATRIX_6:27
+  for K being Field, n being Nat, M1 being Matrix of n,K st
+  M1 is symmetric holds -M1 is symmetric;
+
+theorem :: MATRIX_6:28
+  for K being Field,n being Nat,M1,M2 being Matrix of n,K st
+  M1 is symmetric & M2 is symmetric holds M1-M2 is symmetric;
+
+definition
+  let n be Nat,K be Field;
+  let M1 be Matrix of n,K;
+  attr M1 is antisymmetric means
+:: MATRIX_6:def 6
+  M1@=-M1;
+end;
+
+theorem :: MATRIX_6:29
+  for K being Fanoian Field,n being Nat,M1 being Matrix of n,K st
+  M1 is symmetric antisymmetric holds M1=0.(K,n,n);
+
+theorem :: MATRIX_6:30
+  for K being Fanoian Field,n,i being Nat,M1 being Matrix of n,K st
+  M1 is antisymmetric & i in Seg n holds M1*(i,i) = 0.K;
+
+theorem :: MATRIX_6:31
+  for K being Field,n being Nat,M1,M2 being Matrix of n,K st
+  M1 is antisymmetric & M2 is antisymmetric holds
+    M1+M2 is antisymmetric;
+
+theorem :: MATRIX_6:32
+  for K being Field,n being Nat,M1 being Matrix of n,K st
+  M1 is antisymmetric holds -M1 is antisymmetric;
+
+theorem :: MATRIX_6:33
+  for K being Field,n being Nat,M1,M2 being Matrix of n,K st
+  M1 is antisymmetric & M2 is antisymmetric holds
+    M1-M2 is antisymmetric;
+
+theorem :: MATRIX_6:34
+  n>0 implies M1-M1@ is antisymmetric;
+
+theorem :: MATRIX_6:35
+  M1 commutes_with M2 iff
+  (M1+M2)*(M1+M2)=M1*M1+M1*M2+M1*M2+M2*M2;
+
+theorem :: MATRIX_6:36
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds M1 is invertible & M2 is invertible implies M1*M2 is invertible
+  & (M1*M2)~=(M2~)*(M1~);
+
+theorem :: MATRIX_6:37
+  M1 is invertible & M2 is invertible & M1 commutes_with M2 implies
+  M1*M2 is invertible & (M1*M2)~ = (M1~)*(M2~);
+
+theorem :: MATRIX_6:38
+  for K being Ring, M1,M2 being Matrix of n,K
+  holds M1 is invertible & M1*M2=1.(K,n) implies M1 is_reverse_of M2;
+
+theorem :: MATRIX_6:39
+  for K being Ring, M1,M2 being Matrix of n,K
+  holds M2 is invertible & M2*M1=1.(K,n) implies M1 is_reverse_of M2;
+
+theorem :: MATRIX_6:40
+  for K being Ring
+  for M1,M2 being Matrix of n,K holds
+  M1 is invertible & M1 commutes_with M2 implies M1~ commutes_with M2;
+
+definition
+  let n be Nat, K be Ring;
+  let M1 be Matrix of n,K;
+  attr M1 is Orthogonal means
+:: MATRIX_6:def 7
+  M1 is invertible & M1@ = M1~;
+end;
+
+theorem :: MATRIX_6:41
+  for K being Ring
+  for M1 being Matrix of n,K
+  holds M1*(M1@)=1.(K,n) & M1 is invertible iff M1 is Orthogonal;
+
+theorem :: MATRIX_6:42
+  for K being Ring
+  for M1 being Matrix of n,K
+  holds M1 is invertible & (M1@)*M1=1.(K,n) iff M1 is Orthogonal;
+
+theorem :: MATRIX_6:43
+  for K being Ring
+  for M1 being Matrix of n,K
+  holds M1 is Orthogonal implies (M1@)*M1=M1*(M1@);
+
+theorem :: MATRIX_6:44
+  for K being Ring
+  for M1,M2 being Matrix of n,K
+  holds M1 is Orthogonal & M1 commutes_with M2 implies M1@ commutes_with M2;
+
+theorem :: MATRIX_6:45
+  for K being Ring
+  for M1,M2 being Matrix of n,K
+  holds M1 is invertible & M2 is invertible implies M1*M2 is invertible
+  & (M1*M2)~=M2~*M1~;
+
+theorem :: MATRIX_6:46
+  for K being commutative Ring
+  for M1,M2 being Matrix of n,K holds
+  n > 0 & M1 is Orthogonal & M2 is Orthogonal implies M1*M2 is Orthogonal;
+
+theorem :: MATRIX_6:47
+  for K being Ring
+  for M1,M2 being Matrix of n,K holds
+  M1 is Orthogonal & M1 commutes_with M2 implies M1@ commutes_with M2;
+
+theorem :: MATRIX_6:48
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds M1 commutes_with M2 implies M1+M1 commutes_with M2;
+
+theorem :: MATRIX_6:49
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds M1 commutes_with M2 implies M1+M2 commutes_with M2;
+
+theorem :: MATRIX_6:50
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds M1 commutes_with M2 implies M1+M1 commutes_with M2+M2;
+
+theorem :: MATRIX_6:51
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds M1 commutes_with M2 implies M1+M2 commutes_with M2+M2;
+
+theorem :: MATRIX_6:52
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds M1 commutes_with M2 implies M1*M2 commutes_with M2;
+
+theorem :: MATRIX_6:53
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds M1 commutes_with M2 implies M1*M1 commutes_with M2;
+
+theorem :: MATRIX_6:54
+  for R being Ring, M1,M2 being Matrix of n,R
+  holds M1 commutes_with M2 implies M1*M1 commutes_with M2*M2;
+
+theorem :: MATRIX_6:55
+  for R being commutative Ring, M1,M2 being Matrix of n,R
+  holds n>0 & M1 commutes_with M2 implies M1@ commutes_with M2@;
+
+theorem :: MATRIX_6:56
+  for R being Ring, M1,M2,M3 being Matrix of n,R
+  holds M1 is invertible & M2 is invertible & M3 is invertible implies
+  M1*M2*M3 is invertible & (M1*M2*M3)~=M3~*M2~*M1~;
+
+theorem :: MATRIX_6:57
+  for R being commutative Ring, M1,M2,M3 being Matrix of n,R
+  holds n > 0 & M1 is Orthogonal & M2 is Orthogonal & M3 is Orthogonal implies
+  M1*M2*M3 is Orthogonal;
+
+theorem :: MATRIX_6:58
+  for K being Ring holds 1.(K,n) is Orthogonal;
+
+theorem :: MATRIX_6:59
+  for R being commutative Ring, M1,M2 being Matrix of n,R
+  holds n > 0 & M1 is Orthogonal & M2 is Orthogonal implies
+    M1~*M2 is Orthogonal;

@@ -1,0 +1,240 @@
+:: Differentiability Properties of Lipschitzian Bilinear Operators in Real 
+:: Normed Spaces
+::  by Kazuhisa Nakasho and Yasunari Shidama
+:: 
+:: Received December 9, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, REAL_1, ZFMISC_1, NORMSP_1, PRE_TOPC, PARTFUN1, FUNCT_1,
+      NAT_1, FDIFF_1, SUBSET_1, RELAT_1, LOPBAN_1, RCOMP_1, TARSKI, ARYTM_3,
+      ARYTM_1, SUPINF_2, FCONT_1, STRUCT_0, CARD_1, XXREAL_0, RLVECT_1,
+      CFCONT_1, NDIFF_7, MCART_1, FUNCOP_1, LOPBAN_8, LOPBAN_9, MSSUBFAM,
+      SEQ_4, NDIFF_6;
+ notations TARSKI, ZFMISC_1, SUBSET_1, FUNCT_1, RELSET_1, PARTFUN1, FUNCT_2,
+      BINOP_1, FUNCOP_1, ORDINAL1, NUMBERS, XCMPLX_0, XXREAL_0, XREAL_0, NAT_1,
+      SEQ_4, STRUCT_0, PRE_TOPC, RLVECT_1, VECTSP_1, NORMSP_0, NORMSP_1,
+      LOPBAN_1, NFCONT_1, NDIFF_1, PRVECT_3, NDIFF_6, NDIFF_7, LOPBAN_8,
+      LOPBAN_9;
+ constructors NDIFF_1, RELSET_1, RSSPACE3, NDIFF_6, NDIFF_7, LOPBAN_7,
+      COMPLEX1, LOPBAN_9, LOPBAN13, SEQ_4;
+ registrations RELSET_1, STRUCT_0, XREAL_0, MEMBERED, FUNCT_2, LOPBAN_1,
+      PRVECT_3, XTUPLE_0, RELAT_1, LOPBAN_9, NORMSP_3;
+ requirements SUBSET, REAL, BOOLE, ARITHM, NUMERALS;
+
+
+begin :: Fundamental Properties and Partial Differentiability
+
+reserve E, F, G,S,T,W,Y for RealNormSpace;
+reserve f,f1,f2 for PartFunc of S,T;
+reserve Z for Subset of S;
+reserve i,n for Nat;
+
+theorem :: NDIFF12:1
+  for f be BilinearOperator of E,F,G,
+      z be Point of [:E,F:]
+  holds
+      f * reproj1(z) is LinearOperator of E,G
+    & f * reproj2(z) is LinearOperator of F,G;
+
+theorem :: NDIFF12:2
+  for f be Lipschitzian BilinearOperator of E,F,G,
+      z be Point of [:E,F:]
+  holds
+    f * reproj1(z) is Lipschitzian LinearOperator of E,G
+  & f * reproj2(z) is Lipschitzian LinearOperator of F,G
+  & ex g be Point of (R_NormSpace_of_BoundedBilinearOperators (E,F,G))
+    st f = g
+     & ( for x be VECTOR of E
+         holds ||. (f * reproj1(z)).x .|| <= ||.g.|| * ||.z`2.|| * ||.x.|| )
+     & ( for y be VECTOR of F
+         holds ||. (f * reproj2(z)).y .|| <= ||.g.|| * ||.z`1.|| * ||.y.|| );
+
+theorem :: NDIFF12:3
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+    ex K be Real st 0 <= K
+      &
+    for z be Point of [:E,F:]
+    holds
+    ( for x be Point of E
+      holds ||. (f * (reproj1 z)).x .|| <= K * ||.z`2.|| * ||.x.|| )
+        &
+    ( for y be Point of F
+      holds ||. (f * (reproj2 z)).y .|| <= K * ||.z`1.|| * ||.y.|| );
+
+theorem :: NDIFF12:4
+  for f be Lipschitzian BilinearOperator of E,F,G,
+      z be Point of [:E,F:]
+  holds
+      f is_partial_differentiable_in`1 z
+    & partdiff`1(f,z) = f * (reproj1 z)
+    & f is_partial_differentiable_in`2 z
+    & partdiff`2(f,z) = f * (reproj2 z);
+
+theorem :: NDIFF12:5
+  for s,t be Point of [:E,F:], a be Real
+  holds
+      s = [s`1,s`2]
+    & (s + t)`1 = s`1 + t`1 & (s + t)`2 = s`2 + t`2
+    & (s - t)`1 = s`1 - t`1 & (s - t)`2 = s`2 - t`2
+    & (a * s)`1 = a * s`1 & (a * s)`2 = a * s`2;
+
+theorem :: NDIFF12:6
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+    ex K be Real st 0 <= K
+      &
+    for z be Point of [:E,F:]
+    holds
+      ||. partdiff`1(f,z) .|| <= K * ||.z.||
+    & ||. partdiff`2(f,z) .|| <= K * ||.z.||;
+
+begin :: Total Differentiability and Continuity
+
+theorem :: NDIFF12:7
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+  ( for z1,z2 be Point of [:E,F:]
+    holds partdiff`1(f, z1 + z2) = partdiff`1(f, z1) + partdiff`1(f, z2) )
+    &
+  ( for z be Point of [:E,F:], a be Real
+    holds partdiff`1(f, a * z) = a * partdiff`1(f,z) )
+    &
+  ( for z1,z2 be Point of [:E,F:]
+    holds partdiff`1(f, z1 - z2) = partdiff`1(f, z1) - partdiff`1(f, z2) );
+
+theorem :: NDIFF12:8
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+  ( for z1,z2 be Point of [:E,F:]
+    holds partdiff`2(f, z1 + z2) = partdiff`2(f, z1) + partdiff`2(f, z2) )
+      &
+  ( for z be Point of [:E,F:], a be Real
+    holds partdiff`2(f, a * z) = a * partdiff`2(f, z) )
+      &
+  ( for z1,z2 be Point of [:E,F:]
+    holds partdiff`2(f, z1 - z2) = partdiff`2(f, z1) - partdiff`2(f, z2) );
+
+theorem :: NDIFF12:9
+  for f be Lipschitzian BilinearOperator of E,F,G,
+      Z be Subset of [:E,F:]
+    st Z is open
+  holds
+    f is_partial_differentiable_on`1 Z
+  & f is_partial_differentiable_on`2 Z
+  & f `partial`1| Z is_continuous_on Z
+  & f `partial`2| Z is_continuous_on Z;
+
+theorem :: NDIFF12:10
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+    ex K be Real
+    st 0 <= K
+     & for z be Point of [:E,F:]
+       holds
+        ex L be Lipschitzian LinearOperator of [:E,F:],G
+        st ( for dx be Point of E, dy be Point of F
+             holds L.(dx,dy) = f.(dx, z `2) + f.(z `1, dy) )
+         & for s be Point of [:E,F:]
+           holds ||.L.s.|| <= K * ||.z.|| * ||.s.||;
+
+theorem :: NDIFF12:11
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+    ex K be Real st 0 <= K
+  & for z be Point of [:E,F:]
+    holds
+      f is_differentiable_in z
+    & ( for dx be Point of E, dy be Point of F
+        holds diff(f,z).(dx,dy) = f.(dx,z `2)+ f.(z `1,dy) )
+    & ||.diff(f,z).|| <= K * ||.z.||;
+
+theorem :: NDIFF12:12
+  for f be Lipschitzian BilinearOperator of E,F,G,
+      z be Point of [:E,F:]
+  holds
+    for dx be Point of E, dy be Point of F
+    holds diff(f,z).(dx,dy) = partdiff`1(f,z).dx + partdiff`2(f,z).dy;
+
+theorem :: NDIFF12:13
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+    ( for z1,z2 be Point of [:E,F:]
+      holds diff(f, z1 + z2) = diff(f,z1) + diff(f,z2) )
+  & ( for z be Point of [:E,F:], a be Real
+      holds diff(f, a * z) = a * diff(f,z) )
+  & ( for z1,z2 be Point of [:E,F:]
+      holds diff(f, z1 - z2) = diff(f,z1) - diff(f,z2) );
+
+theorem :: NDIFF12:14
+  for f be Lipschitzian BilinearOperator of E,F,G,
+      Z be Subset of [:E,F:]
+   st Z is open
+  holds
+    f is_differentiable_on Z
+  & f `| Z is_continuous_on Z;
+
+begin :: Higher-Order Derivatives and Special Properties
+
+theorem :: NDIFF12:15
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+    f `| [#][:E,F:] is Lipschitzian LinearOperator of [:E,F:],
+      R_NormSpace_of_BoundedLinearOperators([:E,F:],G)
+  & f `| [#][:E,F:] is_differentiable_on [#][:E,F:]
+  & f `| [#][:E,F:] is_continuous_on the carrier of [:E,F:]
+  & for z be Point of [:E,F:]
+    holds diff(f `| [#][:E,F:], z) = f `| [#][:E,F:];
+
+theorem :: NDIFF12:16
+  for L be Lipschitzian LinearOperator of E,F
+  holds
+    (diff(L,[#]E)).0 = L
+  & (diff(L,[#]E)).1 = [#]E --> L
+  & (diff(L,[#]E)).2 = [#]E --> ([#]E --> ([#]E --> 0.F))
+  & (diff(L,[#]E)).3 = [#]E --> ([#]E --> ([#]E --> ([#]E --> 0.F)));
+
+theorem :: NDIFF12:17
+  for i be Nat
+  holds 0.diff_SP(i+1,E,F) = [#]E --> 0.diff_SP(i,E,F);
+
+theorem :: NDIFF12:18
+  for L be Lipschitzian LinearOperator of E,F
+  holds
+    for i be Nat
+    holds diff(L,i+2,[#]E) = [#]E --> 0.diff_SP(i+2,E,F);
+
+theorem :: NDIFF12:19
+  for L be Lipschitzian LinearOperator of E,F
+  holds
+    for i be Nat
+    holds
+      diff(L,i+1,[#]E) is_differentiable_on [#]E
+    & diff(L,i+1,[#]E) `| [#]E = [#]E --> 0.diff_SP(i+2,E,F)
+    & diff(L,i+1,[#]E) `| [#]E is_continuous_on [#]E;
+
+theorem :: NDIFF12:20
+  for L be Lipschitzian LinearOperator of E,F
+  holds
+    for i be Nat
+    holds
+      diff(L,i,[#]E) is_differentiable_on [#]E
+    & diff(L,i,[#]E) `| [#]E is_continuous_on [#]E;
+
+theorem :: NDIFF12:21
+  for B be Lipschitzian BilinearOperator of E,F,G
+  holds
+    for i be Nat
+    holds
+      diff(B,i,[#][:E,F:]) is_differentiable_on [#][:E,F:]
+    & diff(B,i,[#][:E,F:]) `| [#][:E,F:] is_continuous_on [#][:E,F:];

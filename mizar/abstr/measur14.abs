@@ -1,0 +1,512 @@
+:: Universality of Measure Space
+::  by Noboru Endou and Yasunari Shidama
+:: 
+:: Received December 9, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MEASUR14, INTEGRA1, MEASUR13, FINSEQ_1, FINSEQ_2, NUMBERS,
+      XXREAL_0, SUBSET_1, MESFUNC2, CARD_1, ARYTM_3, ARYTM_1, RELAT_1, REAL_1,
+      FUNCT_1, XBOOLE_0, TARSKI, ZFMISC_1, PROB_1, SUPINF_2, VALUED_0,
+      PARTFUN1, MEASURE1, MESFUNC5, MESFUNC1, MEASUR10, MEASUR11, MESFUN12,
+      RFUNCT_3, ORDINAL2, INTEGRA5, NAT_1, ORDINAL4, FUNCT_2, FUNCOP_1, PBOOLE,
+      CARD_3, FINSUB_1, SETFAM_1, PROB_2, MSSUBFAM, SEQ_2, SEQFUNC, XCMPLX_0,
+      MEASURE5, EQREL_1, MESFUNC3, MEASUR12;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, SETFAM_1, RELAT_1, FUNCT_1,
+      ORDINAL1, RELSET_1, PARTFUN1, FUNCT_2, BINOP_1, FUNCT_3, FUNCOP_1,
+      XXREAL_3, CARD_1, FINSUB_1, CARD_3, NUMBERS, XXREAL_0, XREAL_0, VALUED_0,
+      EXTREAL1, NAT_1, SUPINF_1, FINSEQ_1, FINSEQ_2, FINSEQOP, EUCLID,
+      SUPINF_2, PROB_1, PROB_2, SEQFUNC, MEASURE1, MEASURE3, MEASURE4,
+      MEASURE5, MEASUR12, MESFUNC1, MESFUNC2, MESFUNC3, MESFUNC5, MEASUR10,
+      PROB_3, MEASUR11, MESFUN12, MEASUR13;
+ constructors EXTREAL1, SUPINF_1, MESFUNC2, MEASUR11, MESFUN12, DOMAIN_1,
+      MESFUNC3, FINSEQOP, SEQFUNC, MEASURE3, PROB_3, MEASUR12, MEASUR13,
+      EUCLID;
+ registrations ORDINAL1, XBOOLE_0, RELAT_1, SUBSET_1, XREAL_0, NAT_1, NUMBERS,
+      VALUED_0, RELSET_1, MEASURE1, FINSEQ_1, FINSEQ_2, FUNCT_1, FUNCT_2,
+      FUNCOP_1, CARD_1, CARD_3, MEASURE9, MEMBERED, SRINGS_4, SETFAM_1,
+      MEASUR13, GLIBPRE1, EUCLID;
+ requirements BOOLE, SUBSET, NUMERALS, REAL, ARITHM;
+
+
+begin :: Universality of Cartesian product type sets and tuple type sets
+
+theorem :: MEASUR14:1
+  for X,Y be non empty set, f be Function of X,Y st f is bijective
+    holds .:f is bijective & for s be Subset of X holds .:f.s = f.:s;
+
+theorem :: MEASUR14:2
+  for X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X
+    st f is bijective holds .:f.:S is Field_Subset of Y;
+
+definition
+  let X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X;
+  assume  f is bijective;
+  func CopyField(f,S) -> Field_Subset of Y equals
+:: MEASUR14:def 1
+  .:f.:S;
+end;
+
+theorem :: MEASUR14:3
+for X,Y be non empty set, f be Function of X,Y, S be SigmaField of X
+  st f is bijective holds .:f.:S is SigmaField of Y;
+
+definition
+  let X,Y be non empty set, f be Function of X,Y, S be SigmaField of X;
+  assume  f is bijective;
+  func CopyField(f,S) -> SigmaField of Y equals
+:: MEASUR14:def 2
+  .:f.:S;
+end;
+
+theorem :: MEASUR14:4
+for X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X,
+    M be Measure of S st f is bijective holds
+  (ex G be Function of S,CopyField(f,S) st G = (.:f) |S
+       & dom G = S & rng G = CopyField(f,S) & G is bijective)
+& (ex F be Function of CopyField(f,S),S st F = ((.:f) |S)"
+       & rng F = S & dom F = CopyField(f,S) & F is bijective);
+
+theorem :: MEASUR14:5
+for X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X,
+    M be Measure of S st f is bijective holds
+ ex M1 be Measure of CopyField(f,S) st M1 = M * ((.:f) |S)"
+     & for s being Element of CopyField(f,S) holds
+        ex t be Element of S st s = f.:t & M1.s = M.t;
+
+definition
+  let X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X,
+      M be Measure of S;
+  assume f is bijective;
+  func CopyMeasure(f,M) -> Measure of CopyField(f,S) means
+:: MEASUR14:def 3
+     it = M * ((.:f) |S)"
+   & for s being Element of CopyField(f,S) holds
+      ex t be Element of S st s = f.:t & it.s = M.t;
+end;
+
+theorem :: MEASUR14:6
+for X,Y be non empty set, f be Function of X,Y, S be SigmaField of X,
+    M be sigma_Measure of S st f is bijective holds
+ ex M1 be sigma_Measure of CopyField(f,S)
+    st M1 = M * ((.:f) |S)"
+     & for s being Element of CopyField(f,S) holds
+        ex t be Element of S st s = f.:t & M1.s = M.t;
+
+definition
+  let X,Y be non empty set, f be Function of X,Y, S be SigmaField of X,
+      M be sigma_Measure of S;
+  assume f is bijective;
+  func CopyMeasure(f,M) ->sigma_Measure of CopyField(f,S) means
+:: MEASUR14:def 4
+     it = M*((.:f) |S)"
+   & for s being Element of CopyField(f,S) holds
+      ex t be Element of S st s = f.:t & it.s = M.t;
+end;
+
+definition
+  let m be non zero Nat, X be non-empty m-element FinSequence;
+  func Pt2FinSeq X -> m-element FinSequence means
+:: MEASUR14:def 5
+   ( ex id1 be Function of CarProduct SubFin(X,1),product SubFin(X,1)
+     st it.1 = id1 & id1 is bijective
+   & for x be object st x in CarProduct SubFin(X,1) holds id1.x = <*x*>)
+   & ( for i be non zero Nat st i < m holds
+     ex Fi be Function of CarProduct SubFin(X,i),product SubFin(X,i),
+        IK be Function of [: CarProduct SubFin(X,i),ElmFin(X,i+1) :],
+         product SubFin(X,i+1)
+     st Fi = it.i & IK = it.(i+1) & Fi is bijective & IK is bijective
+      & for x,y be object st x in CarProduct SubFin(X,i) & y in ElmFin(X,i+1)
+         ex s be FinSequence st Fi.x = s & IK.(x,y) = s^ <*y*> );
+end;
+
+theorem :: MEASUR14:7
+for m,n be non zero Nat, X be non-empty m-element FinSequence st n <= m holds
+  (Pt2FinSeq X).n is Function of CarProduct SubFin(X,n),product SubFin(X,n);
+
+theorem :: MEASUR14:8
+for m,n1,n2,k be non zero Nat, X be non-empty m-element FinSequence
+ st k <= n1 & n1 <= n2 & n2 <= m holds
+  SubFin(SubFin(X,n1),k) = SubFin(SubFin(X,n2),k)
+& ElmFin(SubFin(X,n1),k) = ElmFin(SubFin(X,n2),k);
+
+theorem :: MEASUR14:9
+for m,n1,n2,k be non zero Nat, X be non-empty m-element FinSequence
+ st k <= n1 & n1 <= n2 & n2 <= m holds
+ (Pt2FinSeq SubFin(X,n1)).k = (Pt2FinSeq SubFin(X,n2)).k;
+
+theorem :: MEASUR14:10
+for m,n,k be non zero Nat, X be non-empty m-element FinSequence st
+  k <= n & n <= m holds (Pt2FinSeq X).k = (Pt2FinSeq SubFin(X,n)).k;
+
+theorem :: MEASUR14:11
+for m,n be non zero Nat, X be non-empty m-element FinSequence,
+ P be Function of CarProduct SubFin(X,n),product SubFin(X,n) st
+  n <= m & P = (Pt2FinSeq X).n holds P is bijective;
+
+definition
+  let m be non zero Nat, X be non-empty m-element FinSequence;
+  func CarProd X -> Function of CarProduct X,product X equals
+:: MEASUR14:def 6
+    (Pt2FinSeq X).m;
+end;
+
+theorem :: MEASUR14:12
+for m be non zero Nat, X be non-empty m-element FinSequence holds
+ CarProd X is bijective;
+
+theorem :: MEASUR14:13
+for n be non zero Nat, X be non-empty (n+1)-element FinSequence,
+ x,y be object st x in CarProduct SubFin(X,n) & y in ElmFin(X,n+1)
+  ex s,t be FinSequence st
+   (CarProd SubFin(X,n)).x = s & <*y*> = t & (CarProd X).(x,y) = s^t;
+
+definition
+  let n be non zero Nat, X be non-empty n-element FinSequence,
+      S be sigmaFieldFamily of X;
+  func XProd_Field S -> SigmaField of product X equals
+:: MEASUR14:def 7
+    CopyField(CarProd X,Prod_Field S);
+end;
+
+definition
+  let n be non zero Nat, X be non-empty n-element FinSequence,
+      S be sigmaFieldFamily of X, m be sigmaMeasureFamily of S;
+  func XProd_Measure m -> sigma_Measure of XProd_Field S equals
+:: MEASUR14:def 8
+    CopyMeasure(CarProd X,Prod_Measure m);
+end;
+
+theorem :: MEASUR14:14
+for X,Y be non empty set, f be Function of X,Y st f is bijective holds
+ ex g be Function of Y,X st g is bijective & g = f" & .:g = (.:f)";
+
+theorem :: MEASUR14:15
+  for X,Y be non empty set,
+      T be Function of X,Y, f be PartFunc of X,ExtREAL,
+      g be PartFunc of Y,ExtREAL st T is bijective & g = f*T" holds
+    dom g = T.:(dom f) & dom g = (.:T).(dom f);
+
+theorem :: MEASUR14:16
+  for X,Y be non empty set,
+      S be SigmaField of X, T be Function of X,Y,
+      f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL,
+      A be Element of S, B be Element of CopyField(T,S)
+  st T is bijective & g = f*T" holds
+   for r be Real holds T.:(less_dom(f,r)) = less_dom(g,r);
+
+theorem :: MEASUR14:17
+  for X,Y be non empty set,
+      S be SigmaField of X, T be Function of X,Y
+   st T is bijective holds
+    ex H be Function of Y,X
+     st H is bijective
+     & H = T" & H" = T & .:H = (.:T)" & (.:H).:CopyField(T,S) = S
+     & CopyField(H,CopyField(T,S)) = S;
+
+theorem :: MEASUR14:18
+  for X,Y be non empty set,
+      S be SigmaField of X, T be Function of X,Y,
+      A be Subset of X st T is bijective holds
+    A in S iff T.:A in CopyField(T,S);
+
+theorem :: MEASUR14:19
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ B be Subset of Y st T is bijective holds T"B in S iff B in CopyField(T,S);
+
+begin :: Integral on a tuple type set (one dimensional)
+
+theorem :: MEASUR14:20
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL,
+ A be Element of S, B be Element of CopyField(T,S)
+  st T is bijective & B = T.:A & g = f*T" holds
+   f is A -measurable iff g is B -measurable;
+
+theorem :: MEASUR14:21
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ F be Finite_Sep_Sequence of S st T is bijective holds
+  ((.:T) |S)*F is Finite_Sep_Sequence of CopyField(T,S);
+
+theorem :: MEASUR14:22
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL
+  st T is bijective & g = f*T" holds
+   f is_simple_func_in S iff g is_simple_func_in CopyField(T,S);
+
+theorem :: MEASUR14:23
+for X,Y be non empty set, T be Function of X,Y, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL st T is bijective & g = f*T" holds
+  f is nonnegative iff g is nonnegative;
+
+theorem :: MEASUR14:24
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ F be Finite_Sep_Sequence of S, a be FinSequence of ExtREAL,
+ f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL
+  st T is bijective & g = f*T"
+   & F,a are_Re-presentation_of f holds
+   ex G be Finite_Sep_Sequence of CopyField(T,S)
+    st G = ((.:T) |S) * F & G,a are_Re-presentation_of g;
+
+theorem :: MEASUR14:25
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL
+  st T is bijective & g = f*T" & f is_simple_func_in S & f is nonnegative
+  holds integral(CopyMeasure(T,M),g) = integral(M,f);
+
+theorem :: MEASUR14:26
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL
+  st T is bijective & g = f*T" & f is_simple_func_in S & f is nonnegative
+  holds integral'(CopyMeasure(T,M),g) = integral'(M,f);
+
+theorem :: MEASUR14:27
+for X,Y be non empty set, T be Function of X,Y, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL st T is bijective & g = f*T" holds
+  max+g = (max+ f)*T" & max-g = (max- f)*T";
+
+theorem :: MEASUR14:28
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL, A being Element of S
+  st T is bijective & g = f*T" & A = dom f & f is A -measurable holds
+   ex B being Element of CopyField(T,S) st
+      B = T.:A & B = dom g & g is B -measurable;
+
+theorem :: MEASUR14:29
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL, A be Element of S,
+ g be PartFunc of Y,ExtREAL st T is bijective & g = f*T"
+  & f is nonnegative & A = dom f & f is A -measurable
+holds integral+(CopyMeasure(T,M),g) = integral+(M,f);
+
+theorem :: MEASUR14:30
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL, B being Element of CopyField(T,S)
+  st T is bijective & g = f*T" & B = dom g & g is B -measurable holds
+   ex A being Element of S st B = T.:A & A = dom f & f is A -measurable;
+
+theorem :: MEASUR14:31
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL, A be Element of S
+  st T is bijective & g = f*T" & A = dom f & f is A -measurable
+holds
+   integral+(M,max+f) = integral+(CopyMeasure(T,M),max+g)
+ & integral+(M,max-f) = integral+(CopyMeasure(T,M),max-g);
+
+theorem :: MEASUR14:32
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL, A be Element of S
+  st T is bijective & g = f*T" & A = dom f & f is A -measurable
+ holds Integral(CopyMeasure(T,M),g) = Integral(M,f);
+
+theorem :: MEASUR14:33
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL st T is bijective & g = f*T" holds
+  f is_integrable_on M iff g is_integrable_on CopyMeasure(T,M);
+
+begin :: Integral on a tuple type set (n-dimensional)
+
+theorem :: MEASUR14:34
+for n be non zero Nat, X be non-empty n-element FinSequence,
+    S be sigmaFieldFamily of X, m be sigmaMeasureFamily of S,
+    f be PartFunc of CarProduct X,ExtREAL,
+    g be PartFunc of product X,ExtREAL,
+    A be Element of Prod_Field S, B be Element of XProd_Field S
+ st B = (CarProd X).:A & g = f*(CarProd X)" holds
+    f is A -measurable iff g is B -measurable;
+
+theorem :: MEASUR14:35
+for n be non zero Nat, X be non-empty n-element FinSequence,
+    S be sigmaFieldFamily of X, m be sigmaMeasureFamily of S,
+    f be PartFunc of CarProduct X,ExtREAL,
+    g be PartFunc of product X,ExtREAL, A be Element of Prod_Field S
+ st g = f*(CarProd X)" & A = dom f & f is A -measurable
+ holds Integral(XProd_Measure m,g) = Integral(Prod_Measure m,f);
+
+theorem :: MEASUR14:36
+for n be non zero Nat, X be non-empty n-element FinSequence,
+    S be sigmaFieldFamily of X, m be sigmaMeasureFamily of S,
+    f be PartFunc of CarProduct X,ExtREAL,
+    g be PartFunc of product X,ExtREAL st g = f*(CarProd X)" holds
+    f is_integrable_on Prod_Measure m iff g is_integrable_on XProd_Measure m;
+
+begin
+
+registration
+  let n be non zero Nat;
+  cluster Seg n --> REAL -> non-empty n-element for FinSequence;
+end;
+
+definition
+  let n be non zero Nat;
+  func L-Field n -> sigmaFieldFamily of (Seg n --> REAL) equals
+:: MEASUR14:def 9
+  Seg n --> L-Field;
+end;
+
+definition
+  let n be non zero Nat;
+  func L-Meas n -> sigmaMeasureFamily of L-Field n equals
+:: MEASUR14:def 10
+  Seg n --> L-Meas;
+end;
+
+definition
+  let n be non zero Nat;
+  func XL-Field n -> SigmaField of REAL n equals
+:: MEASUR14:def 11
+    XProd_Field(L-Field n);
+end;
+
+definition
+  let n be non zero Nat;
+  func XL-Meas n -> sigma_Measure of XL-Field n equals
+:: MEASUR14:def 12
+    XProd_Measure(L-Meas n);
+end;
+
+theorem :: MEASUR14:37
+  CarProduct(Seg 1 --> REAL) = REAL
+& ElmFin(Seg 1 --> REAL,1) = REAL
+& CarProduct(Seg 2 --> REAL) = [:REAL,REAL:]
+& ElmFin(Seg 2 --> REAL,2) = REAL
+& CarProduct(Seg 3 --> REAL) = [:REAL,REAL,REAL:];
+
+theorem :: MEASUR14:38
+  CarProd(Seg 1 --> REAL) is Function of REAL,REAL 1
+& for s be object st s in REAL holds (CarProd(Seg 1 --> REAL)).s = <*s*>;
+
+theorem :: MEASUR14:39
+  CarProd(Seg 2 --> REAL) is Function of [:REAL,REAL:],REAL 2
+& for s,t be object st s in REAL & t in REAL holds
+          (CarProd(Seg 2 --> REAL)).([s,t])= <*s,t*>;
+
+theorem :: MEASUR14:40
+  CarProd(Seg 3 --> REAL) is Function of [:REAL,REAL,REAL:],REAL 3
+& for s,t,u be object st s in REAL & t in REAL & u in REAL holds
+          (CarProd(Seg 3 --> REAL)). [[s,t],u] = <*s,t,u*>;
+
+theorem :: MEASUR14:41
+  Prod_Field(L-Field 1) = L-Field
+& Borel_Sets c= Prod_Field(L-Field 1)
+& for I being Subset of REAL st I is Interval holds I in Prod_Field(L-Field 1);
+
+theorem :: MEASUR14:42
+  Prod_Field(L-Field 2) = sigma measurable_rectangles(L-Field,L-Field)
+& measurable_rectangles(L-Field,L-Field)
+   c= sigma measurable_rectangles(L-Field,L-Field)
+& ( the set of all [:A,B:] where A is Element of Borel_Sets,
+      B is Element of Borel_Sets )
+   c= measurable_rectangles(L-Field,L-Field)
+& { [:I,J:] where I,J is Subset of REAL: I is Interval & J is Interval }
+   c= ( the set of all [:A,B:]
+          where A is Element of Borel_Sets, B is Element of Borel_Sets );
+
+theorem :: MEASUR14:43
+  Prod_Field(L-Field 3)
+   = sigma measurable_rectangles
+      (sigma measurable_rectangles(L-Field,L-Field),L-Field)
+& measurable_rectangles(sigma measurable_rectangles(L-Field,L-Field),L-Field)
+   c= sigma measurable_rectangles(
+       sigma measurable_rectangles(L-Field,L-Field),L-Field)
+& ( the set of all [:A,B,C:] where A is Element of Borel_Sets,
+         B is Element of Borel_Sets, C is Element of Borel_Sets)
+   c= measurable_rectangles(
+       sigma measurable_rectangles(L-Field,L-Field),L-Field)
+& { [:I,J,K:] where I,J,K is Subset of REAL:
+       I is Interval & J is Interval & K is Interval }
+   c= ( the set of all [:A,B,C:] where A is Element of Borel_Sets,
+           B is Element of Borel_Sets, C is Element of Borel_Sets );
+
+theorem :: MEASUR14:44
+for n be non zero Nat holds
+ Prod_Field(L-Field (n+1)) =
+     sigma measurable_rectangles(Prod_Field(L-Field n),L-Field);
+
+theorem :: MEASUR14:45
+  Prod_Measure(L-Meas 1) = L-Meas
+& for E be Element of L-Field holds E in Prod_Field(L-Field 1);
+
+theorem :: MEASUR14:46
+   Prod_Measure(L-Meas 2) = Prod_Measure(L-Meas,L-Meas)
+& for E1,E2 be Element of L-Field holds
+   [:E1,E2:] in measurable_rectangles(L-Field,L-Field)
+& (Prod_Measure(L-Meas 2)).([:E1,E2:]) = (L-Meas.E1)*(L-Meas.E2);
+
+theorem :: MEASUR14:47
+  Prod_Measure(L-Meas 3) = Prod_Measure(Prod_Measure(L-Meas,L-Meas),L-Meas)
+& for E1,E2,E3 be Element of L-Field holds
+   [:E1,E2,E3:] in measurable_rectangles(
+                     sigma measurable_rectangles(L-Field,L-Field),L-Field)
+& (Prod_Measure(L-Meas 3)).([:E1,E2,E3:]) = (L-Meas.E1)*(L-Meas.E2)*(L-Meas.E3)
+;
+
+theorem :: MEASUR14:48
+for n be non zero Nat holds
+  Prod_Measure(L-Meas(n+1)) = Prod_Measure(Prod_Measure(L-Meas n),L-Meas);
+
+theorem :: MEASUR14:49
+for n be non zero Nat, f be PartFunc of CarProduct(Seg n --> REAL),ExtREAL,
+  g be PartFunc of REAL n,ExtREAL,
+  A be Element of Prod_Field(L-Field n), B be Element of XL-Field n
+ st g = f*(CarProd(Seg n --> REAL))" & B = (CarProd(Seg n --> REAL)).:A
+ holds f is A -measurable iff g is B -measurable;
+
+theorem :: MEASUR14:50
+for f1 be PartFunc of [:REAL,REAL:],ExtREAL,
+    f2 be PartFunc of CarProduct(Seg 2 --> REAL),ExtREAL,
+    A1 be Element of sigma measurable_rectangles(L-Field,L-Field),
+    A2 be Element of Prod_Field(L-Field 2) st f1 = f2 & A1 = A2 holds
+  f1 is A1-measurable iff f2 is A2-measurable;
+
+theorem :: MEASUR14:51
+for f be PartFunc of [:REAL,REAL:],ExtREAL, g be PartFunc of REAL 2,ExtREAL,
+ A be Element of sigma measurable_rectangles(L-Field,L-Field),
+ B be Element of XL-Field 2
+ st g = f*(CarProd(Seg 2 --> REAL))" & B = (CarProd(Seg 2 --> REAL)).:A
+ holds f is A-measurable iff g is B-measurable;
+
+theorem :: MEASUR14:52
+for f1 be PartFunc of [:[:REAL,REAL:],REAL:],ExtREAL,
+    f2 be PartFunc of CarProduct(Seg 3 --> REAL),ExtREAL,
+    A1 be Element of sigma measurable_rectangles(
+       sigma measurable_rectangles(L-Field,L-Field),L-Field),
+    A2 be Element of Prod_Field(L-Field 3) st f1 = f2 & A1 = A2 holds
+  f1 is A1-measurable iff f2 is A2-measurable;
+
+theorem :: MEASUR14:53
+for f be PartFunc of [:[:REAL,REAL:],REAL:],ExtREAL,
+ g be PartFunc of REAL 3,ExtREAL,
+ A be Element of sigma measurable_rectangles(
+       sigma measurable_rectangles(L-Field,L-Field),L-Field),
+ B be Element of XL-Field 3
+ st g = f*(CarProd(Seg 3 --> REAL))" & B = (CarProd(Seg 3 --> REAL)).:A
+ holds f is A-measurable iff g is B-measurable;
+
+theorem :: MEASUR14:54
+for n be non zero Nat, f be PartFunc of CarProduct(Seg n --> REAL),ExtREAL,
+  g be PartFunc of REAL n,ExtREAL, A be Element of Prod_Field(L-Field n)
+ st g = f*(CarProd(Seg n --> REAL))" & A = dom f & f is A -measurable holds
+   Integral(XL-Meas n,g) = Integral(Prod_Measure(L-Meas n),f);
+
+theorem :: MEASUR14:55
+for n be non zero Nat, f be PartFunc of CarProduct(Seg n --> REAL),ExtREAL,
+  g be PartFunc of REAL n,ExtREAL
+ st g = f*(CarProd(Seg n --> REAL))" holds
+  f is_integrable_on Prod_Measure(L-Meas n) iff g is_integrable_on XL-Meas n;

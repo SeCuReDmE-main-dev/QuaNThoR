@@ -1,0 +1,1618 @@
+:: Differentiability Properties of Lipschitzian Bilinear Operators in Real 
+:: Normed Spaces
+::  by Kazuhisa Nakasho and Yasunari Shidama
+:: 
+:: Received December 9, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, REAL_1, ZFMISC_1, NORMSP_1, PRE_TOPC, PARTFUN1, FUNCT_1,
+      NAT_1, FDIFF_1, SUBSET_1, RELAT_1, LOPBAN_1, RCOMP_1, TARSKI, ARYTM_3,
+      ARYTM_1, SUPINF_2, FCONT_1, STRUCT_0, CARD_1, XXREAL_0, RLVECT_1,
+      CFCONT_1, NDIFF_7, MCART_1, FUNCOP_1, LOPBAN_8, LOPBAN_9, MSSUBFAM,
+      SEQ_4, NDIFF_6;
+ notations TARSKI, ZFMISC_1, SUBSET_1, FUNCT_1, RELSET_1, PARTFUN1, FUNCT_2,
+      BINOP_1, FUNCOP_1, ORDINAL1, NUMBERS, XCMPLX_0, XXREAL_0, XREAL_0, NAT_1,
+      SEQ_4, STRUCT_0, PRE_TOPC, RLVECT_1, VECTSP_1, NORMSP_0, NORMSP_1,
+      LOPBAN_1, NFCONT_1, NDIFF_1, PRVECT_3, NDIFF_6, NDIFF_7, LOPBAN_8,
+      LOPBAN_9;
+ constructors NDIFF_1, RELSET_1, RSSPACE3, NDIFF_6, NDIFF_7, LOPBAN_7,
+      COMPLEX1, LOPBAN_9, LOPBAN13, SEQ_4;
+ registrations RELSET_1, STRUCT_0, XREAL_0, MEMBERED, FUNCT_2, LOPBAN_1,
+      PRVECT_3, XTUPLE_0, RELAT_1, LOPBAN_9, NORMSP_3;
+ requirements SUBSET, REAL, BOOLE, ARITHM, NUMERALS;
+ equalities RLVECT_1, LOPBAN_1, BINOP_1, PRVECT_3, LOPBAN_9, XBOOLE_0,
+      STRUCT_0, NDIFF_6, NORMSP_0;
+ expansions VECTSP_1, NDIFF_1;
+ theorems RLVECT_1, NAT_1, FUNCT_2, LOPBAN_1, PARTFUN1, NFCONT_1, NDIFF_1,
+      XXREAL_0, NORMSP_0, PRVECT_3, NDIFF_7, FUNCOP_1, LOPBAN_7, LOPBAN_8,
+      LOPBAN_9, XCMPLX_1, NORMSP_1, XREAL_1, RLVECT_4, XCMPLX_0, SEQ_4,
+      NDIFF_6;
+ schemes BINOP_1, NAT_1;
+
+begin :: Fundamental Properties and Partial Differentiability
+
+reserve E, F, G,S,T,W,Y for RealNormSpace;
+reserve f,f1,f2 for PartFunc of S,T;
+reserve Z for Subset of S;
+reserve i,n for Nat;
+
+theorem Th1:
+  for f be BilinearOperator of E,F,G,
+      z be Point of [:E,F:]
+  holds
+      f * reproj1(z) is LinearOperator of E,G
+    & f * reproj2(z) is LinearOperator of F,G
+  proof
+    let f be BilinearOperator of E,F,G,
+        z be Point of [:E,F:];
+
+    reconsider L1 = f * reproj1(z) as Function of E,G;
+
+    for x, y be Element of E
+    holds L1.(x + y) = L1.x + L1.y
+    proof
+      let x, y be Element of E;
+      A1: L1.(x + y)
+         = f.((reproj1 z).(x + y)) by FUNCT_2:15
+        .= f.(x + y, z`2) by NDIFF_7:def 1
+        .= f.(x, z`2) + f.(y, z`2) by LOPBAN_8:12;
+
+      A2: f.(x, z`2)
+         = f.((reproj1 z).x) by NDIFF_7:def 1
+        .= L1.x by FUNCT_2:15;
+
+      f.(y, z`2)
+        = f.((reproj1 z).y) by NDIFF_7:def 1
+       .= L1.y by FUNCT_2:15;
+      hence L1.(x + y) = L1.x + L1.y by A1,A2;
+    end;
+
+    then
+    A3: L1 is additive;
+
+    A4: for x be VECTOR of E, a be Real
+        holds L1.(a * x) = a * L1.x
+    proof
+      let x be VECTOR of E, a be Real;
+      A5: L1.(a * x)
+       = f.((reproj1 z).(a * x)) by FUNCT_2:15
+      .= f.(a * x, z`2) by NDIFF_7:def 1
+      .= a * f.(x, z`2) by LOPBAN_8:12;
+      f.(x,z`2)
+       = f.((reproj1 z).x) by NDIFF_7:def 1
+      .= L1.x by FUNCT_2:15;
+      hence L1.(a * x) = a * L1.x by A5;
+    end;
+
+    reconsider L2 = f * reproj2(z) as Function of F,G;
+
+    for x, y be Element of F
+    holds L2.(x + y) = L2.x + L2.y
+    proof
+      let x, y be Element of F;
+      A6: L2.(x + y)
+       = f.((reproj2 z).(x + y)) by FUNCT_2:15
+      .= f.(z`1, x + y) by NDIFF_7:def 2
+      .= f.(z`1, x) + f.(z`1, y) by LOPBAN_8:12;
+
+      A7: f.(z`1,x)
+       = f.((reproj2 z).x) by NDIFF_7:def 2
+      .= L2.x by FUNCT_2:15;
+
+      f.(z`1, y)
+       = f.((reproj2 z).y) by NDIFF_7:def 2
+      .= L2.y by FUNCT_2:15;
+      hence L2 . (x + y) = L2.x+L2.y by A6,A7;
+    end;
+    then
+    A8: L2 is additive;
+
+    for x be VECTOR of F, a be Real
+    holds L2.(a * x) = a * L2.x
+    proof
+      let x be VECTOR of F, a be Real;
+      A9: L2.(a * x)
+      = f.((reproj2 z).(a * x)) by FUNCT_2:15
+      .= f.(z`1, a * x) by NDIFF_7:def 2
+      .= a * f.(z`1, x) by LOPBAN_8:12;
+
+      f.(z`1, x)
+       = f.((reproj2 z).x) by NDIFF_7:def 2
+      .= L2.x by FUNCT_2:15;
+      hence L2.(a * x) = a * L2.x by A9;
+    end;
+    hence thesis by A3,A4,LOPBAN_1:def 5,A8;
+  end;
+
+theorem Th2:
+  for f be Lipschitzian BilinearOperator of E,F,G,
+      z be Point of [:E,F:]
+  holds
+    f * reproj1(z) is Lipschitzian LinearOperator of E,G
+  & f * reproj2(z) is Lipschitzian LinearOperator of F,G
+  & ex g be Point of (R_NormSpace_of_BoundedBilinearOperators (E,F,G))
+    st f = g
+     & ( for x be VECTOR of E
+         holds ||. (f * reproj1(z)).x .|| <= ||.g.|| * ||.z`2.|| * ||.x.|| )
+     & ( for y be VECTOR of F
+         holds ||. (f * reproj2(z)).y .|| <= ||.g.|| * ||.z`1.|| * ||.y.|| )
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G,
+        z be Point of [:E,F:];
+
+    reconsider g = f as Point of R_NormSpace_of_BoundedBilinearOperators(E,F,G)
+      by LOPBAN_9:def 4;
+
+    set K = ||.g.||;
+    A1: 0 <= K
+      & for x be VECTOR of E
+        for y be VECTOR of F
+        holds ||. f.(x,y) .|| <= K * ||.x.|| * ||.y.|| by LOPBAN_9:16,17;
+
+    reconsider L1 = f * reproj1(z) as LinearOperator of E,G by Th1;
+    reconsider L2 = f * reproj2(z) as LinearOperator of F,G by Th1;
+    set K1 = K * ||.z`2.||;
+    set K2 = K * ||.z`1.||;
+    A2: 0 <= ||.z`2.|| by NORMSP_1:4;
+    A3: for x be VECTOR of E holds ||. L1.x .|| <= K1 * ||.x.||
+    proof
+      let x be VECTOR of E;
+      f.(x,z`2)
+       = f.((reproj1 z).x) by NDIFF_7:def 1
+      .= L1.x by FUNCT_2:15;
+      then ||.L1.x.|| <= K * ||.x.|| * ||.z`2.|| by LOPBAN_9:16;
+      hence thesis;
+    end;
+    A4: 0 <= ||.z`1.|| by NORMSP_1:4;
+    for y be VECTOR of F holds ||. L2.y .|| <= K2 * ||.y.||
+    proof
+      let y be VECTOR of F;
+      f.(z`1,y)
+       = f.((reproj2 z).y) by NDIFF_7:def 2
+      .= L2.y by FUNCT_2:15;
+      hence thesis by LOPBAN_9:16;
+    end;
+    hence thesis by A1,A2,A3,A4,XREAL_1:127,LOPBAN_1:def 8;
+  end;
+
+theorem Th3:
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+    ex K be Real st 0 <= K
+      &
+    for z be Point of [:E,F:]
+    holds
+    ( for x be Point of E
+      holds ||. (f * (reproj1 z)).x .|| <= K * ||.z`2.|| * ||.x.|| )
+        &
+    ( for y be Point of F
+      holds ||. (f * (reproj2 z)).y .|| <= K * ||.z`1.|| * ||.y.|| )
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G;
+    consider K be Real such that
+    A1: 0 <= K
+      & for x be VECTOR of E
+        for y be VECTOR of F
+        holds ||. f.(x, y) .|| <= K * ||.x.|| * ||.y.|| by LOPBAN_9:def 3;
+
+    take K;
+    thus 0 <= K by A1;
+    let z be Point of [:E,F:];
+    set L1 = f * (reproj1 z);
+    set L2 = f * (reproj2 z);
+    set K1 = K * ||.z`2.||;
+    set K2 = K * ||.z`1.||;
+
+    thus for x be VECTOR of E holds ||.L1. x.|| <= K1 * ||.x.||
+    proof
+      let x be VECTOR of E;
+      f.(x, z`2)
+       = f.((reproj1 z).x) by NDIFF_7:def 1
+      .= L1.x by FUNCT_2:15;
+      then ||.L1.x.|| <= K * ||.x.|| * ||.z`2.|| by A1;
+      hence thesis;
+    end;
+
+    let y be VECTOR of F;
+    f.(z`1, y)
+       = f.((reproj2 z).y) by NDIFF_7:def 2
+      .= L2.y by FUNCT_2:15;
+    hence thesis by A1;
+  end;
+
+theorem Th4:
+  for f be Lipschitzian BilinearOperator of E,F,G,
+      z be Point of [:E,F:]
+  holds
+      f is_partial_differentiable_in`1 z
+    & partdiff`1(f,z) = f * (reproj1 z)
+    & f is_partial_differentiable_in`2 z
+    & partdiff`2(f,z) = f * (reproj2 z)
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G,
+        z be Point of [:E,F:];
+    reconsider L1 = f * (reproj1 z) as Lipschitzian LinearOperator of E,G
+      by Th2;
+    reconsider L2 = f * (reproj2 z) as Lipschitzian LinearOperator of F,G
+      by Th2;
+    A1: L1 is_differentiable_in z `1
+      & diff(L1, z `1) = L1 by NDIFF_7:26;
+
+    hence f is_partial_differentiable_in`1 z by NDIFF_7:def 4;
+    thus partdiff`1(f, z) = f * (reproj1 z) by A1,NDIFF_7:def 6;
+
+    A2: L2 is_differentiable_in z `2
+      & diff(L2, z `2) = L2 by NDIFF_7:26;
+    hence f is_partial_differentiable_in`2 z by NDIFF_7:def 5;
+    thus partdiff`2(f, z) = f * (reproj2 z) by A2,NDIFF_7:def 7;
+  end;
+
+theorem Th5:
+  for s,t be Point of [:E,F:], a be Real
+  holds
+      s = [s`1,s`2]
+    & (s + t)`1 = s`1 + t`1 & (s + t)`2 = s`2 + t`2
+    & (s - t)`1 = s`1 - t`1 & (s - t)`2 = s`2 - t`2
+    & (a * s)`1 = a * s`1 & (a * s)`2 = a * s`2
+  proof
+    let s,t be Point of [:E,F:], a be Real;
+
+    consider s1 be Point of E,s2 be Point of F such that
+    A1: s = [s1,s2] by PRVECT_3:18;
+
+    consider t1 be Point of E,t2 be Point of F such that
+    A2: t = [t1,t2] by PRVECT_3:18;
+
+    thus s = [s`1,s`2] by A1;
+    s + t = [s`1 + t`1, s`2 + t`2] by A1,A2,PRVECT_3:18;
+    hence (s + t)`1 = s`1 + t`1 & (s + t)`2 = s`2 + t`2;
+
+    A3: (-1) * t
+     = [(-1) * t`1, (-1) * t`2] by A2,PRVECT_3:18
+    .= [-(t`1), (-1) * t`2] by RLVECT_1:16
+    .= [-(t`1), -(t`2)] by RLVECT_1:16;
+
+    s - t
+     = s + (-1) * t by RLVECT_1:16
+    .= [s`1 - t`1, s`2 - t`2] by A1,A3,PRVECT_3:18;
+    hence (s - t)`1 = s`1 - t`1 & (s - t)`2 = s`2 - t`2;
+
+    a * s = [a * s`1, a * s`2] by A1,PRVECT_3:18;
+    hence (a * s)`1 = a * s`1 & (a * s)`2 = a * s`2;
+  end;
+
+theorem Th6:
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+    ex K be Real st 0 <= K
+      &
+    for z be Point of [:E,F:]
+    holds
+      ||. partdiff`1(f,z) .|| <= K * ||.z.||
+    & ||. partdiff`2(f,z) .|| <= K * ||.z.||
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G;
+    consider K be Real such that
+    A1: 0 <= K
+          &
+        for z be Point of [:E,F:]
+        holds
+        ( for x be Point of E
+          holds ||. (f * (reproj1 z)).x .|| <= K * ||.z`2.|| * ||.x.|| )
+            &
+        ( for y be Point of F
+          holds ||. (f * (reproj2 z)).y .|| <= K * ||.z`1.|| * ||.y.|| )
+          by Th3;
+
+    take K;
+    thus 0 <= K by A1;
+
+    let z be Point of [:E,F:];
+    reconsider L1 = f * (reproj1 z) as Lipschitzian LinearOperator of E,G
+      by Th2;
+    reconsider L2 = f * (reproj2 z) as Lipschitzian LinearOperator of F,G
+      by Th2;
+    A2: partdiff`1(f,z) = L1 by Th4;
+    A3: partdiff`2(f,z) = L2 by Th4;
+    A4: z = [z`1, z`2] by Th5;
+    A5: ( for s be Real st s in PreNorms L2 holds s <= K * ||.z.|| )
+        implies upper_bound PreNorms L2 <= K * ||.z.|| by SEQ_4:45;
+
+    A6:
+    now
+      let t be VECTOR of F such that
+      A7: ||.t.|| <= 1;
+      A8: ||. L2.t .|| <= K * ||.z`1.|| * ||.t.|| by A1;
+      0 <= ||.z `1.|| by NORMSP_1:4;
+      then 0 <= K * ||.z `1.|| by A1,XREAL_1:127;
+      then K * ||.z`1.|| * ||.t.|| <= K * ||.z`1.|| * 1 by A7,XREAL_1:64;
+      then
+      A9: ||. L2.t .|| <= K * ||.z`1.|| by A8,XXREAL_0:2;
+      K * ||.z`1.|| <= K * ||.z.|| by A1,A4,LOPBAN_7:15,XREAL_1:64;
+      hence ||. L2.t .|| <= K * ||.z.|| by A9,XXREAL_0:2;
+    end;
+
+    A10:
+    now
+      let r be Real;
+      assume r in PreNorms L2;
+      then ex t be VECTOR of F st r= ||.L2.t.|| & ||.t.|| <= 1;
+      hence r <= K * ||.z.|| by A6;
+    end;
+
+    A11: ( for s be Real st s in PreNorms L1 holds s <= K * ||.z.|| )
+        implies upper_bound PreNorms L1 <= K * ||.z.|| by SEQ_4:45;
+
+    A12:
+    now
+      let t be VECTOR of E such that
+      A13: ||.t.|| <= 1;
+      A14: ||. L1.t .|| <= K * ||.z`2.|| * ||.t.|| by A1;
+      0 <= ||.z `2.|| by NORMSP_1:4;
+      then 0 <= K * ||.z `2.|| by A1,XREAL_1:127;
+      then K * ||.z`2.|| * ||.t.|| <= K * ||.z`2.|| * 1 by A13,XREAL_1:64;
+      then
+      A15: ||. L1.t .|| <= K * ||.z`2.|| by A14,XXREAL_0:2;
+      K * ||.z`2.|| <= K * ||.z.|| by A1,A4,LOPBAN_7:15,XREAL_1:64;
+      hence ||. L1.t .|| <= K * ||.z.|| by A15,XXREAL_0:2;
+    end;
+
+    now
+      let r be Real;
+      assume r in PreNorms L1;
+      then ex t be VECTOR of E st r=||.L1.t.|| & ||.t.|| <= 1;
+      hence r <= K*||.z.|| by A12;
+    end;
+    hence thesis by A2,A3,A5,A10,A11,LOPBAN_1:30;
+  end;
+
+begin :: Total Differentiability and Continuity
+
+theorem Th7:
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+  ( for z1,z2 be Point of [:E,F:]
+    holds partdiff`1(f, z1 + z2) = partdiff`1(f, z1) + partdiff`1(f, z2) )
+    &
+  ( for z be Point of [:E,F:], a be Real
+    holds partdiff`1(f, a * z) = a * partdiff`1(f,z) )
+    &
+  ( for z1,z2 be Point of [:E,F:]
+    holds partdiff`1(f, z1 - z2) = partdiff`1(f, z1) - partdiff`1(f, z2) )
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G;
+
+    A1:
+    now
+      let z1,z2 be Point of [:E,F:];
+      for x be VECTOR of E
+      holds partdiff`1(f, z1 + z2).x = partdiff`1(f,z1).x + partdiff`1(f,z2).x
+      proof
+        let x be VECTOR of E;
+        A2: (partdiff`1(f, z1)).x
+         = (f * (reproj1 z1)).x by Th4
+        .= f.((reproj1 z1).x) by FUNCT_2:15
+        .= f.(x, z1`2) by NDIFF_7:def 1;
+
+        A3: (partdiff`1(f,z2)).x
+         = (f * (reproj1 z2)).x by Th4
+        .= f.((reproj1 z2).x) by FUNCT_2:15
+        .= f.(x, z2`2) by NDIFF_7:def 1;
+
+        thus partdiff`1(f, z1 + z2).x
+         = (f * reproj1(z1 + z2)).x by Th4
+        .= f.((reproj1(z1 + z2)).x) by FUNCT_2:15
+        .= f.[x,(z1 + z2)`2] by NDIFF_7:def 1
+        .= f.(x, z1`2 + z2`2) by Th5
+        .= partdiff`1(f, z1).x + partdiff`1(f, z2).x by A2,A3,LOPBAN_8:12;
+      end;
+      hence partdiff`1(f, z1 + z2) = partdiff`1(f, z1) + partdiff`1(f, z2)
+        by LOPBAN_1:35;
+    end;
+
+    A4:
+    now
+      let z1 be Point of [:E,F:], a be Real;
+      for x be VECTOR of E
+      holds partdiff`1(f, a * z1).x = a * partdiff`1(f, z1).x
+      proof
+        let x be VECTOR of E;
+        A5: partdiff`1(f, z1).x
+         = (f * (reproj1 z1)).x by Th4
+        .= f.((reproj1 z1).x) by FUNCT_2:15
+        .= f.(x, z1`2) by NDIFF_7:def 1;
+        thus partdiff`1(f, a * z1).x
+        = (f * reproj1(a * z1)).x by Th4
+        .= f.((reproj1(a * z1)).x) by FUNCT_2:15
+        .= f.[x, (a * z1)`2] by NDIFF_7:def 1
+        .= f.(x, a * z1`2) by Th5
+        .= a * partdiff`1(f, z1).x by A5,LOPBAN_8:12;
+      end;
+      hence partdiff`1(f, a * z1) = a * partdiff`1(f, z1) by LOPBAN_1:36;
+    end;
+
+    now
+      let z1,z2 be Point of [:E,F:];
+      thus partdiff`1(f, z1 - z2)
+       = partdiff`1(f, z1 + (-1) * z2) by RLVECT_1:16
+      .= partdiff`1(f, z1) + partdiff`1(f, (-1) * z2) by A1
+      .= partdiff`1(f, z1) + (-1) * partdiff`1(f, z2) by A4
+      .= partdiff`1(f, z1) - partdiff`1(f, z2) by RLVECT_1:16;
+    end;
+    hence thesis by A1,A4;
+  end;
+
+theorem Th8:
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+  ( for z1,z2 be Point of [:E,F:]
+    holds partdiff`2(f, z1 + z2) = partdiff`2(f, z1) + partdiff`2(f, z2) )
+      &
+  ( for z be Point of [:E,F:], a be Real
+    holds partdiff`2(f, a * z) = a * partdiff`2(f, z) )
+      &
+  ( for z1,z2 be Point of [:E,F:]
+    holds partdiff`2(f, z1 - z2) = partdiff`2(f, z1) - partdiff`2(f, z2) )
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G;
+    A1:
+    now
+      let z1,z2 be Point of [:E,F:];
+      for x be VECTOR of F
+      holds partdiff`2(f, z1 + z2).x = partdiff`2(f, z1).x + partdiff`2(f,z2).x
+      proof
+        let x be VECTOR of F;
+        A2: partdiff`2(f,z1).x
+         = (f * (reproj2 z1)).x by Th4
+        .= f.((reproj2 z1).x) by FUNCT_2:15
+        .= f.(z1`1,x) by NDIFF_7:def 2;
+        A3: (partdiff`2(f,z2)).x
+         = (f * (reproj2 z2)).x by Th4
+        .= f.((reproj2 z2).x) by FUNCT_2:15
+        .= f.(z2`1,x) by NDIFF_7:def 2;
+        thus partdiff`2(f,z1 + z2).x
+         = (f * (reproj2(z1 + z2))).x by Th4
+        .= f.((reproj2(z1 + z2)).x) by FUNCT_2:15
+        .= f. [(z1 + z2)`1, x] by NDIFF_7:def 2
+        .= f.(z1`1 + z2`1, x) by Th5
+        .= partdiff`2(f, z1).x + partdiff`2(f, z2).x by A2,A3,LOPBAN_8:12;
+      end;
+      hence partdiff`2(f,z1 + z2) = partdiff`2(f, z1) + partdiff`2(f, z2)
+        by LOPBAN_1:35;
+    end;
+
+    A4:
+    now
+      let z1 be Point of [:E,F:], a be Real;
+      for x be VECTOR of F
+      holds partdiff`2(f, a * z1).x = a * partdiff`2(f,z1).x
+      proof
+        let x be VECTOR of F;
+        A5: partdiff`2(f,z1).x
+         = (f * (reproj2 z1)).x by Th4
+        .= f.((reproj2 z1).x) by FUNCT_2:15
+        .= f.(z1`1, x) by NDIFF_7:def 2;
+        thus partdiff`2(f,a * z1) . x
+         = (f * (reproj2(a * z1))).x by Th4
+        .= f.((reproj2(a * z1)).x) by FUNCT_2:15
+        .= f.[(a * z1)`1, x] by NDIFF_7:def 2
+        .= f.(a * z1`1, x) by Th5
+        .= a * partdiff`2(f, z1).x by A5,LOPBAN_8:12;
+      end;
+      hence partdiff`2(f, a * z1) = a * partdiff`2(f,z1)
+        by LOPBAN_1:36;
+    end;
+    now
+      let z1,z2 be Point of [:E,F:];
+      thus partdiff`2(f, z1 - z2)
+       = partdiff`2(f, z1 + (-1) * z2) by RLVECT_1:16
+      .= partdiff`2(f, z1) + partdiff`2(f, (-1) * z2) by A1
+      .= partdiff`2(f, z1) + (-1) * partdiff`2(f, z2) by A4
+      .= partdiff`2(f, z1) - partdiff`2(f, z2) by RLVECT_1:16;
+    end;
+    hence thesis by A1,A4;
+  end;
+
+theorem
+  for f be Lipschitzian BilinearOperator of E,F,G,
+      Z be Subset of [:E,F:]
+    st Z is open
+  holds
+    f is_partial_differentiable_on`1 Z
+  & f is_partial_differentiable_on`2 Z
+  & f `partial`1| Z is_continuous_on Z
+  & f `partial`2| Z is_continuous_on Z
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G,
+        Z be Subset of [:E,F:];
+    assume
+    A1: Z is open;
+    A2: dom f = the carrier of [:E,F:] by FUNCT_2:def 1;
+
+    for x be Point of [:E,F:] st x in Z
+    holds f is_partial_differentiable_in`1 x by Th4;
+    hence
+    A3: f is_partial_differentiable_on`1 Z by A1,A2,NDIFF_7:43;
+    for x be Point of [:E,F:] st x in Z
+    holds f is_partial_differentiable_in`2 x by Th4;
+    hence
+    A4: f is_partial_differentiable_on`2 Z by A1,A2,NDIFF_7:44;
+
+    set g1 = f `partial`1| Z;
+    set g2 = f `partial`2| Z;
+    A5: dom g1 = Z by A3,NDIFF_7:def 10;
+    A6: dom g2 = Z by A4,NDIFF_7:def 11;
+    consider K be Real such that
+    A7: 0 <=K
+      & for z be Point of [:E,F:]
+        holds
+          ||. partdiff`1 (f,z) .|| <= K * ||.z.||
+        & ||. partdiff`2 (f,z) .|| <= K * ||.z.|| by Th6;
+    A8: 0 + 0 < K + 1 by A7,XREAL_1:8;
+    A9: K + 0 < K + 1 by XREAL_1:8;
+    for t0 be Point of [:E,F:]
+    for r be Real
+      st t0 in Z & 0 < r
+    holds
+      ex s be Real
+      st 0 < s
+       & for t1 be Point of [:E,F:]
+          st t1 in Z & ||.t1 - t0.|| < s
+         holds ||.(g1/. t1) - (g1/. t0).|| < r
+    proof
+      let t0 be Point of [:E,F:];
+      let r0 be Real;
+      assume
+      A10: t0 in Z & 0 < r0;
+      set r = r0/2;
+      set s = r/(K+1);
+      take s;
+      A11: 0 < r & r < r0 by A10,XREAL_1:215,XREAL_1:216;
+      hence 0 < s by A8,XREAL_1:139;
+      let t1 be Point of [:E,F:];
+      assume
+      A12: t1 in Z & ||.t1 - t0.|| < s;
+      A13: g1/.t1 = partdiff`1(f,t1) by A3,A12,NDIFF_7:def 10;
+      (g1/. t1) - (g1/. t0)
+       = partdiff`1(f,t1) - partdiff`1(f,t0) by A3,A10,A13,NDIFF_7:def 10
+      .= partdiff`1(f,t1-t0) by Th7;
+      then
+      A14: ||. (g1/. t1) - (g1/. t0) .|| <= K * ||.t1 - t0.|| by A7;
+      0 <= ||.t1 - t0.|| by NORMSP_1:4;
+      then
+      A15: K * ||.t1 - t0.|| <= (K+1) * ||.t1 - t0.|| by A9,XREAL_1:64;
+      (K + 1) * ||.t1 - t0.|| <= (K+1) * s by A8,A12,XREAL_1:64;
+      then (K + 1) * ||.t1 - t0.|| <= r by A8,XCMPLX_1:87;
+      then (K + 1) * ||.t1 - t0.|| < r0 by A11,XXREAL_0:2;
+      then K * ||.t1 - t0.|| < r0 by A15,XXREAL_0:2;
+      hence ||.(g1/. t1) - (g1/. t0).|| < r0 by A14,XXREAL_0:2;
+    end;
+    hence f `partial`1| Z is_continuous_on Z by A5,NFCONT_1:19;
+
+    for t0 be Point of [:E,F:]
+    for r be Real
+      st t0 in Z & 0 < r
+    holds
+      ex s be Real
+      st 0 < s
+       & for t1 be Point of [:E,F:]
+          st t1 in Z & ||.t1 - t0.|| < s
+         holds ||.(g2/. t1) - (g2/. t0).|| < r
+    proof
+      let t0 be Point of [:E,F:];
+      let r0 be Real;
+      assume
+      A16: t0 in Z & 0 < r0;
+      set r = r0/2;
+      set s = r/(K+1);
+      take s;
+      A17: 0 < r & r < r0 by A16,XREAL_1:215,216;
+      hence 0 < s by A8,XREAL_1:139;
+      let t1 be Point of [:E,F:];
+      assume
+      A18: t1 in Z & ||.t1 - t0.|| < s;
+      A19: g2/.t1 = partdiff`2(f,t1) by A4,A18,NDIFF_7:def 11;
+      (g2/. t1) - (g2/. t0)
+       = partdiff`2(f, t1) - partdiff`2(f, t0) by A4,A16,A19,NDIFF_7:def 11
+      .= partdiff`2(f, t1 - t0) by Th8;
+      then
+      A20: ||. (g2/. t1) - (g2/. t0) .|| <= K * ||.t1 - t0.|| by A7;
+      0 <= ||.t1 - t0.|| by NORMSP_1:4;
+      then
+      A21: K * ||.t1 - t0.|| <= (K + 1) * ||.t1 - t0.|| by A9,XREAL_1:64;
+      (K + 1) * ||.t1 - t0.|| <= (K + 1) * s by A8,A18,XREAL_1:64;
+      then (K + 1) * ||.t1 - t0.|| <= r by A8,XCMPLX_1:87;
+      then (K + 1) * ||.t1 - t0.|| < r0 by A17,XXREAL_0:2;
+      then K * ||.t1 - t0.|| < r0 by A21,XXREAL_0:2;
+      hence ||.(g2/. t1) - (g2/. t0).|| < r0 by A20,XXREAL_0:2;
+    end;
+    hence f `partial`2| Z is_continuous_on Z by A6,NFCONT_1:19;
+  end;
+
+theorem Th10:
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+    ex K be Real
+    st 0 <= K
+     & for z be Point of [:E,F:]
+       holds
+        ex L be Lipschitzian LinearOperator of [:E,F:],G
+        st ( for dx be Point of E, dy be Point of F
+             holds L.(dx,dy) = f.(dx, z `2) + f.(z `1, dy) )
+         & for s be Point of [:E,F:]
+           holds ||.L.s.|| <= K * ||.z.|| * ||.s.||
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G;
+    consider K be Real such that
+    A1: 0 <= K
+      & for x be VECTOR of E
+        for y be VECTOR of F
+        holds ||.f.(x,y).|| <= K * ||.x.|| * ||.y.|| by LOPBAN_9:def 3;
+    set H = 2 * K;
+    take H;
+    thus 0 <= H by A1,XREAL_1:127;
+
+    let z be Point of [:E,F:];
+
+    deffunc F4(Element of E,Element of F) = f.($1,z `2) + f.(z `1,$2);
+
+    consider L0 be Function of [:the carrier of E,the carrier of F:],
+                               the carrier of G such that
+    A2: for x be Element of the carrier of E
+        for y be Element of the carrier of F
+        holds L0.(x, y) = F4(x, y) from BINOP_1:sch 4;
+
+    reconsider L = L0 as Function of [:E,F:],G;
+    for x,y be Element of [:E,F:] holds L.(x + y) = L.x + L.y
+    proof
+      let x,y be Element of [:E,F:];
+      consider Ex be Point of E, Fx be Point of F such that
+      A3: x = [Ex,Fx] by PRVECT_3:18;
+
+      consider Ey be Point of E, Fy be Point of F such that
+      A4: y = [Ey,Fy] by PRVECT_3:18;
+      A5: L.x
+       = L.(Ex,Fx) by A3
+      .= f.(Ex,z `2) + f.(z `1,Fx) by A2;
+      A6: L.y
+       = L.(Ey,Fy) by A4
+      .= f.(Ey,z `2) + f.(z `1,Fy) by A2;
+
+      thus
+      L.(x + y)
+       = L.(Ex + Ey,Fx + Fy) by A3,A4,PRVECT_3:18
+      .= f.(Ex + Ey, z `2) + f.(z `1, Fx + Fy) by A2
+      .= f.(Ex,z `2) + f.(Ey,z `2) + f.(z `1, Fx + Fy) by LOPBAN_8:12
+      .= f.(Ex,z `2) + f.(Ey,z `2) + (f.(z `1, Fx) + f.(z `1, Fy))
+          by LOPBAN_8:12
+      .= (f.(Ex,z `2) + f.(Ey,z `2) + f.(z `1,Fx)) + f.(z `1,Fy)
+          by RLVECT_1:def 3
+      .= (f.(Ex,z `2) + f.(z `1,Fx) + f.(Ey,z `2)) + f.(z `1,Fy)
+          by RLVECT_1:def 3
+      .= L.x + L.y by A5,A6,RLVECT_1:def 3;
+    end;
+    then
+    A7: L is additive;
+    for x be VECTOR of [:E,F:], a be Real
+    holds L.(a * x) = a * L.x
+    proof
+      let x be VECTOR of [:E,F:], a be Real;
+      consider Ex be Point of E,Fx be Point of F such that
+      A8: x = [Ex,Fx] by PRVECT_3:18;
+      A9: L.x
+       = L.(Ex,Fx) by A8
+      .= f.(Ex,z `2) + f.(z `1,Fx) by A2;
+      thus L.(a * x)
+       = L.(a * Ex, a * Fx) by A8,PRVECT_3:18
+      .= f.(a * Ex, z `2) + f.(z `1, a * Fx) by A2
+      .= a * f.(Ex, z `2) + f.(z `1, a * Fx) by LOPBAN_8:12
+      .= a * f.(Ex, z `2) + a * f.(z `1, Fx) by LOPBAN_8:12
+      .= a * L.x by A9,RLVECT_1:def 5;
+    end;
+    then reconsider L as LinearOperator of [:E,F:],G
+      by LOPBAN_1:def 5,A7;
+    set K1 = 2 * K * ||.z.||;
+    0 <= ||.z `2.|| by NORMSP_1:4;
+    then
+    A10: 0 <= K * ||.z `2.|| by A1,XREAL_1:127;
+    0 <= ||.z `1.|| by NORMSP_1:4;
+    then
+    A11: 0 <= K * ||.z `1.|| by A1,XREAL_1:127;
+    0 <= ||.z.|| by NORMSP_1:4;
+    then
+    0 <= K * ||.z.|| by A1,XREAL_1:127; then
+    A13: 0 <= 2 * (K * ||.z.||) by XREAL_1:127;
+    A14: for w be VECTOR of [:E,F:]
+         holds ||.L . w.|| <= K1 * ||.w.||
+    proof
+      let w be Element of [:E,F:];
+      consider x be Point of E,y be Point of F such that
+      A15: w = [x,y] by PRVECT_3:18;
+      L.w
+       = L0.(x, y) by A15
+      .= f.(x, z `2) + f.(z `1, y) by A2;
+      then
+      A16: ||.L.w.|| <= ||.f.(x, z `2).|| + ||.f.(z `1, y).||
+          by NORMSP_1:def 1;
+      A17: ||.f.(x,z `2).|| <= K * ||.x.|| * ||.z `2.|| by A1;
+      ||.f.(z `1, y).|| <= K * ||.z `1.|| * ||.y.|| by A1;
+      then ||.f.(x, z `2).|| + ||.f.(z `1,y).||
+        <= K * ||.x.|| * ||.z `2.|| + K * ||.z `1.|| * ||.y.||
+        by A17,XREAL_1:7;
+      then
+      A18: ||.L.w.|| <= K * ||.z `2.|| * ||.x.|| + K * ||.z `1.|| * ||.y.||
+        by A16,XXREAL_0:2;
+      A19: K * ||.z `2.|| * ||.x.|| <= K * ||.z `2.|| * ||.w.||
+        by A10,A15,LOPBAN_7:15,XREAL_1:64;
+      K * ||.z `1.|| * ||.y.|| <= K * ||.z `1.|| * ||.w.||
+        by A11,A15,LOPBAN_7:15,XREAL_1:64;
+      then K * ||.z `2.|| * ||.x.|| + K * ||.z `1.|| * ||.y.||
+        <= K * ||.z `2.|| * ||.w.|| + K * ||.z `1.|| * ||.w.||
+        by A19,XREAL_1:7;
+      then
+      A20: ||.L.w.|| <= (K * ||.z `2.|| + K * ||.z `1.||) * ||.w.||
+        by A18,XXREAL_0:2;
+
+      consider x1 be Point of E,y1 be Point of F such that
+      A21: z = [x1, y1] by PRVECT_3:18;
+      A22: K * ||.z `1.|| <= K * ||.z.|| by A1,A21,LOPBAN_7:15,XREAL_1:64;
+      K * ||.z `2.|| <= K * ||.z.|| by A1,A21,LOPBAN_7:15,XREAL_1:64;
+      then
+      A23: K * ||.z `2.|| + K * ||.z `1.|| <= K * ||.z.|| + K * ||.z.||
+        by A22,XREAL_1:7;
+      0 <= ||.w.|| by NORMSP_1:4;
+      then (K * ||.z `2.|| + K * ||.z `1.||) * ||.w.||
+        <= (2 * K * ||.z.||) * ||.w.|| by A23,XREAL_1:64;
+      hence ||.L . w.|| <= K1 * ||.w.|| by A20,XXREAL_0:2;
+    end;
+    then reconsider L as Lipschitzian LinearOperator of [:E,F:],G
+      by A13,LOPBAN_1:def 8;
+    take L;
+    thus thesis by A2,A14;
+  end;
+
+theorem Th11:
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+    ex K be Real st 0 <= K
+  & for z be Point of [:E,F:]
+    holds
+      f is_differentiable_in z
+    & ( for dx be Point of E, dy be Point of F
+        holds diff(f,z).(dx,dy) = f.(dx,z `2)+ f.(z `1,dy) )
+    & ||.diff(f,z).|| <= K * ||.z.||
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G;
+
+    consider K0 be Real such that
+    A1: 0 <= K0
+      & for x be VECTOR of E
+        for y be VECTOR of F
+        holds ||.f . (x,y).|| <= K0 * ||.x.|| * ||.y.||
+        by LOPBAN_9:def 3;
+
+    consider K be Real such that
+    A2: 0<=K
+      & for z be Point of [:E,F:]
+        holds
+          ex L be Lipschitzian LinearOperator of [:E,F:],G
+          st for dx be Point of E, dy be Point of F
+             holds L.(dx,dy) = f.(dx,z `2) + f.(z `1,dy)
+           & for s be Point of [:E,F:]
+             holds ||.L.s.|| <= K * ||.z.|| * ||.s.|| by Th10;
+    take K;
+    thus 0 <= K by A2;
+    let z be Point of [:E,F:];
+
+    consider L be Lipschitzian LinearOperator of [:E,F:],G such that
+    A3: for dx be Point of E, dy be Point of F
+        holds L.(dx,dy) = f.(dx,z `2) + f.(z `1,dy)
+          and
+    A4: for s be Point of [:E,F:]
+        holds ||.L.s.|| <= K * ||.z.|| * ||.s.|| by A2;
+
+    reconsider L0 = L as Point of
+      R_NormSpace_of_BoundedLinearOperators([:E,F:],G)
+      by LOPBAN_1:def 9;
+
+    deffunc F4(Element of E, Element of F) = f.($1, $2);
+
+    consider R be Function of [:the carrier of E,the carrier of F:],
+                              the carrier of G such that
+    A5: for dx be Element of the carrier of E
+        for dy be Element of the carrier of F
+        holds R.(dx,dy) = F4(dx,dy) from BINOP_1:sch 4;
+
+    reconsider R as Function of [:E,F:],G;
+    A6: dom R = the carrier of [:E,F:] by FUNCT_2:def 1;
+
+    for r be Real st r > 0
+    holds
+      ex d be Real
+      st d > 0
+       & for w be Point of [:E,F:]
+          st w <> 0. [:E,F:] & ||.w.|| < d
+         holds (||.w.|| ") * ||.(R /. w).|| < r
+    proof
+      let r be Real;
+      assume
+      A7: r > 0;
+      A8: 0 + 0 < K0 + 1 by A1,XREAL_1:8;
+      set d = r / (K0 + 1);
+      take d;
+      thus 0 < d by A7,A8,XREAL_1:139;
+      let w be Point of [:E,F:];
+      assume
+      A9: w <> 0. [:E,F:] & ||.w.|| < d;
+      then
+      A10: 0 <> ||.w.|| by NORMSP_0:def 5;
+      0 <= ||.w.|| by NORMSP_1:4;
+      then
+      A11: 0 < ||.w.|| by A9,NORMSP_0:def 5,XXREAL_0:1;
+
+      consider x be Point of E,y be Point of F such that
+      A12: w = [x,y] by PRVECT_3:18;
+
+      R /. w
+       = R.(x,y) by A12
+      .= f.(x,y) by A5;
+      then
+      A13: ||.R /. w.|| <= K0 * ||.x.|| * ||.y.|| by A1;
+      A14: ||.x.|| <= ||.w.|| & ||.y.|| <= ||.w.|| by A12,LOPBAN_7:15;
+      0 <= ||.x.|| & 0 <= ||.y.|| by NORMSP_1:4;
+      then ||.x.|| * ||.y.|| <= ||.w.|| * ||.w.|| by A14,XREAL_1:66;
+      then K0 * (||.x.|| * ||.y.||) <= K0 * (||.w.|| *||.w.||)
+        by A1,XREAL_1:64;
+      then
+      A15: ||.R /. w.|| <= K0 * (||.w.|| * ||.w.||) by A13,XXREAL_0:2;
+      A16: 0 < ||.w.|| " by A11,XREAL_1:122;
+      (||.w.|| ") * (K0 * (||.w.|| * ||.w.||))
+       = (||.w.|| ") * ||.w.|| * K0 * ||.w.||
+      .= 1 * K0 * ||.w.|| by A10,XCMPLX_0:def 7;
+      then
+      A17: (||.w.|| ") * ||.(R /. w).|| <= K0 * ||.w.|| by A15,A16,XREAL_1:64;
+      K0 + 0 < K0 + 1 by XREAL_1:8;
+      then
+      A18: K0 * ||.w.|| < (K0 + 1) * ||.w.|| by A11,XREAL_1:68;
+      (K0 + 1) * ||.w.|| < (K0 + 1) * d by A8,A9,XREAL_1:68;
+      then (K0 + 1) * ||.w.|| < r by A8,XCMPLX_1:87;
+      then K0 * ||.w.|| < r by A18,XXREAL_0:2;
+      hence (||.w.|| ") * ||.(R /. w).|| < r by A17,XXREAL_0:2;
+    end;
+    then reconsider R as RestFunc of [:E,F:],G by NDIFF_1:23;
+    set N = the Neighbourhood of z;
+
+    A19: for w be Point of [:E,F:]
+          st w in the Neighbourhood of z
+         holds (f /. w) - (f /. z) = (L0.(w - z)) + (R /. (w - z))
+    proof
+      let w be Point of [:E,F:];
+      consider w1 be Point of E, w2 be Point of F such that
+      A20: w = [w1, w2] by PRVECT_3:18;
+      consider z1 be Point of E,z2 be Point of F such that
+      A21: z = [z1,z2] by PRVECT_3:18;
+      set dx = w1 - z1;
+      set dy = w2 - z2;
+      A22: w2 = dy + z2 by RLVECT_4:1;
+      f /. w
+       = f.(dx + z1,dy + z2) by A20,A22,RLVECT_4:1
+      .= f.(dx, dy + z2) + f.(z1, dy + z2) by LOPBAN_8:12
+      .= f.(dx, dy) + f.(dx, z2) + f.(z1, dy + z2) by LOPBAN_8:12
+      .= f.(dx, dy) + f.(dx, z2) + (f.(z1, dy) + f.(z1, z2)) by LOPBAN_8:12
+      .= (f.(dx,dy) + f.(dx,z2) + f.(z1,dy)) + f.(z1,z2) by RLVECT_1:def 3;
+
+      then
+      A24: f /. w - f /. z
+       = f.(dx,dy) + f.(dx,z2) + f.(z1,dy) by A21,RLVECT_4:1
+      .= f.(dx,z2) + f.(z1,dy) + f.(dx,dy) by RLVECT_1:def 3
+      .= L.(dx,dy)+ f.(dx,dy) by A3,A21;
+AA:   -z = [-z1,-z2] by A21,PRVECT_3:18; then
+      w - z = [dx, dy] by A20,PRVECT_3:18; then
+      R /. (w - z)
+       = R.(dx,dy) by A6,PARTFUN1:def 6
+      .= f.(dx,dy) by A5;
+      hence thesis by A24,AA,A20,PRVECT_3:18;
+    end;
+    A28: dom f = the carrier of [:E,F:] by FUNCT_2:def 1;
+    hence f is_differentiable_in z by A19;
+    then
+    A29: diff(f,z) = L0 by A19,A28,NDIFF_1:def 7;
+
+    hence
+    for dx be Point of E, dy be Point of F
+    holds diff(f,z).(dx,dy) = f.(dx,z `2) + f.(z `1,dy) by A3;
+
+    A30: (for s be Real st s in PreNorms L holds s <= K * ||.z.||)
+          implies upper_bound PreNorms L <= K*||.z.|| by SEQ_4:45;
+    A31:
+    now
+      let t be VECTOR of [:E,F:] such that
+      A32: ||.t.|| <= 1;
+      A33: ||. L.t .|| <= K * ||.z.|| * ||.t.|| by A4;
+      0 <= ||.z.|| by NORMSP_1:4;
+      then 0 <= K * ||. z .|| by A2,XREAL_1:127;
+      then K * ||.z.|| * ||.t.|| <= K * ||.z.|| * 1 by A32,XREAL_1:64;
+      hence ||. L.t .|| <= K * ||.z.|| by A33,XXREAL_0:2;
+    end;
+    now
+      let r be Real;
+      assume r in PreNorms L;
+      then ex t be VECTOR of [:E,F:] st r = ||. L.t .|| & ||.t.|| <= 1;
+      hence r <= K * ||.z.|| by A31;
+    end;
+    hence ||.diff(f,z).|| <= K * ||.z.|| by A29,A30,LOPBAN_1:30;
+  end;
+
+theorem Th12:
+  for f be Lipschitzian BilinearOperator of E,F,G,
+      z be Point of [:E,F:]
+  holds
+    for dx be Point of E, dy be Point of F
+    holds diff(f,z).(dx,dy) = partdiff`1(f,z).dx + partdiff`2(f,z).dy
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G;
+    let z be Point of [:E,F:];
+
+    consider K be Real such that
+    A1: 0 <= K
+      & for z be Point of [:E,F:]
+        holds
+          f is_differentiable_in z
+        & (for dx be Point of E, dy be Point of F
+           holds diff(f,z).(dx,dy) = f.(dx,z `2) + f.(z `1,dy))
+        & ||.diff(f,z).|| <= K * ||.z.|| by Th11;
+
+    let dx be Point of E, dy be Point of F;
+    A2: partdiff`1(f,z).dx
+     = (f * (reproj1 z)).dx by Th4
+    .= f.((reproj1 z).dx) by FUNCT_2:15
+    .= f.(dx,z`2) by NDIFF_7:def 1;
+    partdiff`2(f,z).dy
+     = (f * (reproj2 z)).dy by Th4
+    .= f.((reproj2 z).dy) by FUNCT_2:15
+    .= f.(z`1,dy) by NDIFF_7:def 2;
+    hence diff(f,z).(dx,dy) = partdiff`1(f,z).dx + partdiff`2(f,z).dy
+      by A1,A2;
+  end;
+
+theorem Th13:
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+    ( for z1,z2 be Point of [:E,F:]
+      holds diff(f, z1 + z2) = diff(f,z1) + diff(f,z2) )
+  & ( for z be Point of [:E,F:], a be Real
+      holds diff(f, a * z) = a * diff(f,z) )
+  & ( for z1,z2 be Point of [:E,F:]
+      holds diff(f, z1 - z2) = diff(f,z1) - diff(f,z2) )
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G;
+
+    A1:
+    now
+      let z1,z2 be Point of [:E,F:];
+      for x be VECTOR of [:E,F:]
+      holds diff(f, z1 + z2).x = diff(f,z1).x + diff(f,z2).x
+      proof
+        let x be VECTOR of [:E,F:];
+        consider dx be Point of E, dy be Point of F such that
+        A2: x = [dx,dy] by PRVECT_3:18;
+        A3: diff(f, z1 + z2).x
+         = diff(f, z1 + z2).(dx,dy) by A2
+        .= partdiff`1(f, z1 + z2).dx + partdiff`2(f, z1 + z2).dy by Th12
+        .= (partdiff`1(f, z1) + partdiff`1(f, z2)).dx
+          + partdiff`2(f, z1 + z2).dy by Th7
+        .= (partdiff`1(f, z1) + partdiff`1(f, z2)).dx
+          + (partdiff`2(f, z1) + partdiff`2(f, z2)).dy by Th8
+        .= partdiff`1(f, z1).dx + partdiff`1(f, z2).dx
+          + (partdiff`2(f, z1) + partdiff`2(f, z2)).dy by LOPBAN_1:35
+        .= partdiff`1(f, z1).dx + partdiff`1(f, z2).dx
+          + (partdiff`2(f, z1).dy + partdiff`2(f, z2).dy) by LOPBAN_1:35
+        .= partdiff`1(f,z1).dx + partdiff`1(f,z2).dx
+          + partdiff`2(f,z1).dy + partdiff`2(f,z2).dy by RLVECT_1:def 3
+        .= partdiff`1(f,z1).dx + partdiff`2(f,z1).dy
+          + partdiff`1(f,z2).dx + partdiff`2(f,z2).dy by RLVECT_1:def 3
+        .= partdiff`1(f,z1).dx + partdiff`2(f,z1).dy
+          + (partdiff`1(f,z2).dx + partdiff`2(f,z2).dy) by RLVECT_1:def 3;
+
+        A4: partdiff`1(f,z1).dx + partdiff`2(f,z1).dy
+         = diff(f,z1).(dx,dy) by Th12
+        .= diff(f,z1).x by A2;
+
+        partdiff`1(f,z2).dx + partdiff`2(f,z2).dy
+         = diff(f,z2).(dx,dy) by Th12
+        .= diff(f,z2).x by A2;
+        hence thesis by A3,A4;
+      end;
+      hence diff(f, z1 + z2) = diff(f, z1) + diff (f, z2) by LOPBAN_1:35;
+    end;
+
+    A5:
+    now
+      let z1 be Point of [:E,F:], a be Real;
+
+      for x be VECTOR of [:E,F:]
+      holds diff(f, a * z1).x = a * diff(f, z1).x
+      proof
+        let x be VECTOR of [:E,F:];
+        consider dx be Point of E, dy be Point of F such that
+        A6: x = [dx,dy] by PRVECT_3:18;
+        A7: partdiff`1(f,z1).dx + partdiff`2(f,z1).dy
+         = diff(f,z1).(dx,dy) by Th12
+        .= diff(f,z1).x by A6;
+
+        thus diff(f, a * z1).x
+         = diff(f, a * z1).(dx,dy) by A6
+        .= partdiff`1(f, a * z1).dx + partdiff`2(f, a * z1).dy by Th12
+        .= (a * partdiff`1(f, z1)).dx + partdiff`2(f, a * z1).dy by Th7
+        .= (a * partdiff`1(f, z1)).dx + (a * partdiff`2(f, z1)).dy by Th8
+        .= a * partdiff`1(f,z1).dx + (a * partdiff`2(f,z1)).dy by LOPBAN_1:36
+        .= a * partdiff`1(f,z1).dx + a * partdiff`2(f,z1).dy by LOPBAN_1:36
+        .= a * (diff(f, z1).x) by A7,RLVECT_1:def 5;
+      end;
+      hence diff(f, a * z1) = a * diff(f, z1) by LOPBAN_1:36;
+    end;
+    now
+      let z1,z2 be Point of [:E,F:];
+      thus diff(f, z1 - z2)
+       = diff(f, z1 + (-1)*z2) by RLVECT_1:16
+      .= diff(f, z1) + diff(f, (-1) * z2) by A1
+      .= diff(f, z1) + (-1) * diff(f, z2) by A5
+      .= diff(f, z1) - diff(f, z2) by RLVECT_1:16;
+    end;
+    hence thesis by A1,A5;
+  end;
+
+theorem Th14:
+  for f be Lipschitzian BilinearOperator of E,F,G,
+      Z be Subset of [:E,F:]
+   st Z is open
+  holds
+    f is_differentiable_on Z
+  & f `| Z is_continuous_on Z
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G,
+        Z be Subset of [:E,F:];
+    assume
+    A1: Z is open;
+    consider K be Real such that
+    A2: 0 <= K
+    & for z be Point of [:E,F:]
+      holds
+        f is_differentiable_in z
+      & (for dx be Point of E, dy be Point of F
+          holds diff(f,z).(dx,dy) = f.(dx,z `2) + f.(z `1,dy))
+      & ||.diff(f,z).|| <= K * ||.z.|| by Th11;
+
+    A3: dom f = the carrier of [:E,F:] by FUNCT_2:def 1;
+
+    for x be Point of [:E,F:] st x in Z
+    holds f is_differentiable_in x by A2;
+    hence
+    A4: f is_differentiable_on Z by A1,A3,NDIFF_1:31;
+    set g1 = f `| Z;
+    A5: dom g1 = Z by A4,NDIFF_1:def 9;
+    A6: 0 + 0 < K + 1 by A2,XREAL_1:8;
+    A7: K + 0 < K + 1 by XREAL_1:8;
+
+    for t0 be Point of [:E,F:]
+    for r be Real
+     st t0 in Z & 0 < r
+    holds
+      ex s be Real
+      st 0 < s
+       & for t1 be Point of [:E,F:]
+          st t1 in Z & ||.t1 - t0.|| < s
+         holds ||.(g1/.t1) - (g1/.t0).|| < r
+    proof
+      let t0 be Point of [:E,F:];
+      let r0 be Real;
+      assume
+      A8: t0 in Z & 0 < r0;
+      set r = r0 / 2;
+      set s = r / (K+1);
+      take s;
+      A9: 0 < r & r < r0 by A8,XREAL_1:215,216;
+      hence 0 < s by A6,XREAL_1:139;
+      let t1 be Point of [:E,F:];
+      assume
+      A10: t1 in Z & ||.t1 - t0.|| < s; then
+      A11: g1/.t1 = diff(f,t1) by A4,NDIFF_1:def 9;
+
+      (g1/.t1) - (g1/.t0)
+       = diff(f,t1) - diff(f,t0) by A4,A8,A11,NDIFF_1:def 9
+      .= diff(f,t1-t0) by Th13;
+      then
+      A12: ||.(g1/.t1) - (g1/.t0).|| <= K * ||.t1 - t0.|| by A2;
+      0 <= ||.t1 - t0.|| by NORMSP_1:4;
+      then
+      A13: K * ||.t1-t0.|| <= (K+1) * ||.t1 - t0.|| by A7,XREAL_1:64;
+      (K+1) * ||.t1 - t0.|| <= (K+1) * s by A6,A10,XREAL_1:64;
+      then (K+1) * ||.t1 - t0.|| <= r by A6,XCMPLX_1:87;
+      then (K+1) * ||.t1 - t0.|| < r0 by A9,XXREAL_0:2;
+      then K * ||.t1 - t0.|| < r0 by A13,XXREAL_0:2;
+      hence ||.(g1/.t1) - (g1/.t0).|| < r0 by A12,XXREAL_0:2;
+    end;
+    hence
+    f `| Z is_continuous_on Z by A5,NFCONT_1:19;
+  end;
+
+begin :: Higher-Order Derivatives and Special Properties
+
+theorem Th15:
+  for f be Lipschitzian BilinearOperator of E,F,G
+  holds
+    f `| [#][:E,F:] is Lipschitzian LinearOperator of [:E,F:],
+      R_NormSpace_of_BoundedLinearOperators([:E,F:],G)
+  & f `| [#][:E,F:] is_differentiable_on [#][:E,F:]
+  & f `| [#][:E,F:] is_continuous_on the carrier of [:E,F:]
+  & for z be Point of [:E,F:]
+    holds diff(f `| [#][:E,F:], z) = f `| [#][:E,F:]
+  proof
+    let f be Lipschitzian BilinearOperator of E,F,G;
+    set Z = [#][:E,F:];
+    set B = R_NormSpace_of_BoundedLinearOperators([:E,F:],G);
+    A1: f is_differentiable_on Z
+      & f `| Z is_continuous_on Z by Th14;
+    set L = f `| [#][:E,F:];
+    A2: rng L c= the carrier of B;
+    dom L = Z by A1,NDIFF_1:def 9;
+    then reconsider L as Function of [:E,F:],B by A2,FUNCT_2:2;
+    for x, y be Element of [:E,F:]
+    holds L.(x + y) = L.x + L.y
+    proof
+      let x, y be Element of [:E,F:];
+
+      thus L.(x + y)
+       = L/.(x + y)
+      .= diff(f, x + y) by A1,NDIFF_1:def 9
+      .= diff(f, x) + diff(f, y) by Th13
+      .= L/.x + diff(f, y) by A1,NDIFF_1:def 9
+      .= L/.x + L/.y by A1,NDIFF_1:def 9
+      .= L.x + L.y;
+    end;
+    then
+    A3: L is additive;
+    for x be VECTOR of [:E,F:], a be Real
+    holds L.(a * x) = a * L.x
+    proof
+      let x be VECTOR of [:E,F:], a be Real;
+      thus L.(a * x)
+       = L/.(a * x)
+      .= diff(f, a * x) by A1,NDIFF_1:def 9
+      .= a * diff(f, x) by Th13
+      .= a * L/.x by A1,NDIFF_1:def 9
+      .= a * L.x;
+    end;
+    then reconsider L as LinearOperator of [:E,F:],B
+      by A3,LOPBAN_1:def 5;
+
+    consider K be Real such that
+    A4: 0 <= K
+      & for z be Point of [:E,F:]
+        holds
+          f is_differentiable_in z
+        & (for dx be Point of E, dy be Point of F
+           holds diff(f,z).(dx,dy) = f.(dx,z `2)+ f.(z `1,dy))
+        & ||.diff(f,z).|| <= K * ||.z.|| by Th11;
+
+    for y be VECTOR of [:E,F:] holds ||.L.y.|| <= K * ||.y.||
+    proof
+      let y be VECTOR of [:E,F:];
+      L.y
+       = L/.y
+      .= diff(f,y) by A1,NDIFF_1:def 9;
+      hence
+      ||.L.y.|| <= K * ||.y.|| by A4;
+    end;
+    then reconsider L as Lipschitzian LinearOperator of [:E,F:],B
+      by A4,LOPBAN_1:def 8;
+    for z be Point of [:E,F:]
+      holds diff(L,z) = L by NDIFF_7:26;
+    hence thesis by A1,NDIFF_1:def 9,NDIFF_7:26;
+  end;
+
+theorem Th16:
+  for L be Lipschitzian LinearOperator of E,F
+  holds
+    (diff(L,[#]E)).0 = L
+  & (diff(L,[#]E)).1 = [#]E --> L
+  & (diff(L,[#]E)).2 = [#]E --> ([#]E --> ([#]E --> 0.F))
+  & (diff(L,[#]E)).3 = [#]E --> ([#]E --> ([#]E --> ([#]E --> 0.F)))
+  proof
+    let L be Lipschitzian LinearOperator of E,F;
+
+    thus diff(L,[#]E).0
+     = L | [#]E by NDIFF_6:11
+    .= L;
+
+    A2: L is_differentiable_on [#]E by FUNCT_2:def 1,NDIFF_7:26;
+    then
+    A3: dom (L `| [#]E) = [#]E by NDIFF_1:def 9;
+    A4: L is Point of R_NormSpace_of_BoundedLinearOperators(E,F)
+        by LOPBAN_1:def 9;
+    A5: for z be object st z in dom (L `| [#]E)
+        holds (L `| [#]E).z = L
+    proof
+      let z be object;
+      assume
+      A6: z in dom(L `| [#]E);
+      then reconsider x = z as Point of E;
+      thus (L `| [#]E).z
+       = (L `| [#]E) /. x by A6,PARTFUN1:def 6
+      .= diff(L,x) by A2,NDIFF_1:def 9
+      .= L by NDIFF_7:26;
+    end;
+    then L `| [#]E = [#]E --> L by A3,FUNCOP_1:11;
+    then
+    A7: rng(L `| [#]E) = {L} by FUNCOP_1:8;
+    then
+    A8:
+    L `| [#]E is_differentiable_on [#]E
+    & for x be Point of E st x in [#]E
+      holds ((L `| [#]E) `| [#]E) /. x
+          = 0.(R_NormSpace_of_BoundedLinearOperators(E,
+                (R_NormSpace_of_BoundedLinearOperators(E,F))))
+      by A3,A4,NDIFF_1:33;
+
+    A9: 0.(R_NormSpace_of_BoundedLinearOperators(E,
+            (R_NormSpace_of_BoundedLinearOperators(E,F))))
+     = [#]E --> 0.(R_NormSpace_of_BoundedLinearOperators(E,F)) by LOPBAN_1:31
+    .= [#]E --> ([#]E --> 0.F) by LOPBAN_1:31;
+
+    A10: dom((L `| [#]E) `| [#]E) = [#]E by A8,NDIFF_1:def 9;
+    A11: for z be object st z in dom ((L `| [#]E) `| [#]E)
+         holds ((L `| [#]E) `| [#]E).z = [#]E --> ([#]E --> 0.F)
+    proof
+      let z be object;
+      assume
+      A12: z in dom (( L `| [#]E) `| [#]E );
+      then reconsider x = z as Point of E;
+      thus ((L `| [#]E) `| [#]E).z
+       = ((L `| [#]E) `| [#]E) /. x by A12,PARTFUN1:def 6
+      .= [#]E --> ([#]E --> 0.F) by A3,A4,A7,A9,NDIFF_1:33;
+    end;
+    thus diff(L,[#]E).1
+     = (L | [#]E) `| [#]E by NDIFF_6:11
+    .= [#]E --> L by A3,A5,FUNCOP_1:11;
+
+    thus
+    A13: diff(L,[#]E).2
+     = ((L | [#]E) `| [#]E) `| [#]E by NDIFF_6:11
+    .= [#]E --> ([#]E --> ([#]E --> 0.F)) by A10,A11,FUNCOP_1:11;
+
+    A14: diff_SP(2,E,F)
+     = R_NormSpace_of_BoundedLinearOperators(E,
+          R_NormSpace_of_BoundedLinearOperators(E,F)) by NDIFF_6:7;
+    then
+    reconsider L1 = diff(L,[#]E).2
+      as PartFunc of E, R_NormSpace_of_BoundedLinearOperators (E,
+        R_NormSpace_of_BoundedLinearOperators (E,F)) by NDIFF_6:12;
+
+    A15: diff(L,[#]E).3
+     = diff(L,[#]E).(2 + 1)
+    .= modetrans(diff(L,[#]E).2, E, diff_SP(2,E,F)) `| [#]E by NDIFF_6:def 5
+    .= L1 `| [#]E by A14,NDIFF_6:def 4;
+
+    A16: dom L1 = [#]E by A13,FUNCOP_1:13;
+    A17: rng L1 = {[#]E --> ([#]E --> 0.F)} by A13,FUNCOP_1:8;
+
+    then
+    A18: L1 is_differentiable_on [#]E
+       & for x be Point of E st x in [#]E
+         holds (L1 `| [#]E ) /. x
+           = 0.(R_NormSpace_of_BoundedLinearOperators(E,
+                  R_NormSpace_of_BoundedLinearOperators(E,
+                    R_NormSpace_of_BoundedLinearOperators(E,F))))
+        by A9,A16,NDIFF_1:33;
+
+    A19: dom(L1 `| [#]E) = [#]E by A18,NDIFF_1:def 9;
+    A20: 0.(R_NormSpace_of_BoundedLinearOperators(E,
+              R_NormSpace_of_BoundedLinearOperators(E,
+                R_NormSpace_of_BoundedLinearOperators(E,F))))
+     = [#]E --> ([#]E --> ([#]E --> 0.F)) by A9,LOPBAN_1:31;
+
+    for z be object st z in dom (L1 `| [#]E )
+    holds (L1 `| [#]E).z = [#]E --> ([#]E --> ([#]E --> 0.F))
+    proof
+      let z be object;
+      assume
+      A21: z in dom(L1 `| [#]E);
+      then reconsider x = z as Point of E;
+      thus (L1 `| [#]E).z
+       = (L1 `| [#]E) /. x by A21,PARTFUN1:def 6
+      .= [#]E --> ([#]E --> ([#]E --> 0.F)) by A9,A17,A16,A20,NDIFF_1:33;
+    end;
+    hence diff(L,[#]E).3
+      = [#]E --> ([#]E --> ([#]E --> ([#]E --> 0.F))) by A15,A19,FUNCOP_1:11;
+  end;
+
+theorem
+  for i be Nat
+  holds 0.diff_SP(i+1,E,F) = [#]E --> 0.diff_SP(i,E,F)
+  proof
+    let i be Nat;
+    diff_SP(i+1,E,F)
+     = R_NormSpace_of_BoundedLinearOperators(E,(diff_SP(i,E,F))) by NDIFF_6:10;
+    hence thesis by LOPBAN_1:31;
+  end;
+
+theorem Th18:
+  for L be Lipschitzian LinearOperator of E,F
+  holds
+    for i be Nat
+    holds diff(L,i+2,[#]E) = [#]E --> 0.diff_SP(i+2,E,F)
+  proof
+    let L be Lipschitzian LinearOperator of E,F;
+
+    defpred P[Nat] means
+    diff(L,$1+2,[#]E) = [#]E --> 0.diff_SP($1+2,E,F);
+
+    A1: P[0]
+    proof
+      A2: diff_SP(1,E,F)
+       = R_NormSpace_of_BoundedLinearOperators(E,F) by NDIFF_6:7;
+
+      diff_SP(2,E,F)
+       = diff_SP(1+1,E,F)
+      .= R_NormSpace_of_BoundedLinearOperators(E,(diff_SP(1,E,F)))
+          by NDIFF_6:10;
+      then
+      0.diff_SP(2,E,F)
+       = [#]E --> 0.(diff_SP(1,E,F)) by LOPBAN_1:31
+      .= [#]E --> ([#]E --> 0.F) by A2,LOPBAN_1:31;
+
+      hence diff(L,0+2,[#]E)
+       = [#]E --> 0.diff_SP(0+2,E,F) by Th16;
+    end;
+
+    A4: for i be Nat st P[i] holds P[i+1]
+    proof
+      let i be Nat;
+      assume
+      A5: P[i];
+      set L1 = diff(L,i+2,[#]E);
+      A6: dom L1 = [#]E by A5,FUNCOP_1:13;
+      A7: rng(L1) = {0.diff_SP(i+2,E,F)} by A5,FUNCOP_1:8;
+      then
+      L1 is_differentiable_on [#]E
+        & for x be Point of E st x in [#]E
+          holds (L1 `| [#]E ) /. x
+            = 0.R_NormSpace_of_BoundedLinearOperators(E, diff_SP(i+2,E,F))
+              by A6,NDIFF_1:33; then
+      A9: dom (L1`| [#]E ) = [#]E by NDIFF_1:def 9;
+
+      A10: for z be object st z in dom (L1 `| [#]E)
+           holds (L1 `| [#]E).z = 0.diff_SP((i+2)+1,E,F)
+      proof
+        let z be object;
+        assume
+        A11: z in dom(L1 `| [#]E);
+        then reconsider x = z as Point of E;
+        thus (L1 `| [#]E). z = (L1 `| [#]E) /. x by A11,PARTFUN1:def 6
+        .= 0.R_NormSpace_of_BoundedLinearOperators(E,diff_SP(i+2,E,F))
+            by A6,A7,NDIFF_1:33
+        .= 0.diff_SP((i+2)+1,E,F) by NDIFF_6:10;
+      end;
+      thus diff(L,(i+1)+2,[#]E)
+       = diff(L,(i+2)+1,[#]E)
+      .= diff(L,(i+2),[#]E) `| [#]E by NDIFF_6:13
+      .= [#]E --> 0.diff_SP((i+1)+2,E,F) by A9,A10,FUNCOP_1:11;
+    end;
+    for i be Nat holds P[i] from NAT_1:sch 2(A1,A4);
+    hence thesis;
+  end;
+
+theorem Th19:
+  for L be Lipschitzian LinearOperator of E,F
+  holds
+    for i be Nat
+    holds
+      diff(L,i+1,[#]E) is_differentiable_on [#]E
+    & diff(L,i+1,[#]E) `| [#]E = [#]E --> 0.diff_SP(i+2,E,F)
+    & diff(L,i+1,[#]E) `| [#]E is_continuous_on [#]E
+  proof
+    let L be Lipschitzian LinearOperator of E,F;
+
+    defpred P[Nat] means
+      diff(L,$1+1,[#]E) is_differentiable_on [#]E
+    & diff(L,$1+1,[#]E) `| [#]E = [#]E --> 0.diff_SP($1+2,E,F)
+    & diff(L,$1+1,[#]E) `| [#]E is_continuous_on [#]E;
+
+    A1: L is Point of R_NormSpace_of_BoundedLinearOperators(E,F)
+        by LOPBAN_1:def 9;
+
+    A2: P[0]
+    proof
+      A3: diff_SP(1,E,F)
+        = R_NormSpace_of_BoundedLinearOperators(E,F) by NDIFF_6:7;
+
+      diff_SP (2,E,F)
+       = diff_SP (1+1,E,F)
+      .= R_NormSpace_of_BoundedLinearOperators(E,(diff_SP(1,E,F)))
+          by NDIFF_6:10;
+      then
+      A4:
+      0.diff_SP(2,E,F)
+       = [#]E --> 0.(diff_SP(1,E,F)) by LOPBAN_1:31
+      .= [#]E --> ([#]E --> 0.F) by A3,LOPBAN_1:31;
+      set L1 = diff(L,0+1,[#]E);
+      A5: diff(L,0+1,[#]E) = [#]E --> L by Th16;
+      then
+      A6: dom(L1) = [#]E by FUNCOP_1:13;
+      rng(L1) = {L} by A5,FUNCOP_1:8;
+      hence L1 is_differentiable_on [#]E by A1,A3,A6,NDIFF_1:33;
+
+      thus
+      A7: diff(L,0+1,[#]E) `| [#]E
+       = diff(L,1+1,[#]E) by NDIFF_6:13
+      .= [#]E --> 0.diff_SP(0+2,E,F) by A4,Th16;
+      then
+      A8: dom(diff(L,0+1,[#]E) `| [#]E) = [#]E by FUNCOP_1:13;
+      reconsider r = 0.diff_SP((0+1)+1,E,F)
+        as Point of R_NormSpace_of_BoundedLinearOperators(E,diff_SP(0+1,E,F))
+        by NDIFF_6:10;
+      rng(diff(L,0 +1,[#]E) `| [#]E) = {r} by A7,FUNCOP_1:8;
+      hence diff(L,0+1,[#]E) `| [#]E is_continuous_on [#]E by A8,NFCONT_1:47;
+    end;
+
+    A9: for i be Nat st P[i] holds P[i+1]
+    proof
+      let i be Nat;
+      assume
+      A10: P[i];
+      set L1 = diff(L,(i+1)+1,[#]E);
+      A11: L1 = diff(L,i+1,[#]E) `| [#]E by NDIFF_6:13;
+      then
+      A12: dom L1 = [#]E by A10,FUNCOP_1:13;
+      rng(L1) = {0.diff_SP(i+2,E,F)} by A10,A11,FUNCOP_1:8;
+      hence L1 is_differentiable_on [#]E by A12,NDIFF_1:33;
+      thus
+      A13: diff(L,(i+1)+1,[#]E) `| [#]E
+       = diff(L,i+2+1,[#]E) by NDIFF_6:13
+      .= [#]E --> 0.diff_SP((i+1)+2,E,F) by Th18;
+      then
+      A14: dom(diff(L,(i+1)+1,[#]E) `| [#]E) = [#]E by FUNCOP_1:13;
+      R_NormSpace_of_BoundedLinearOperators(E,diff_SP(i+2,E,F))
+      = diff_SP((i+2)+1,E,F) by NDIFF_6:10;
+      then
+      reconsider r = 0.diff_SP((i+1)+2,E,F)
+        as Point of R_NormSpace_of_BoundedLinearOperators(E,diff_SP(i+2,E,F));
+      rng(diff(L,(i+1)+1,[#]E) `| [#]E) = {r} by A13,FUNCOP_1:8;
+      hence diff(L,(i+1)+1,[#]E) `| [#]E is_continuous_on [#]E
+        by A14,NFCONT_1:47;
+    end;
+
+    for i be Nat holds P[i] from NAT_1:sch 2(A2,A9);
+    hence thesis;
+  end;
+
+theorem Th20:
+  for L be Lipschitzian LinearOperator of E,F
+  holds
+    for i be Nat
+    holds
+      diff(L,i,[#]E) is_differentiable_on [#]E
+    & diff(L,i,[#]E) `| [#]E is_continuous_on [#]E
+  proof
+    let L be Lipschitzian LinearOperator of E,F;
+    let i be Nat;
+
+    per cases;
+    suppose
+      A1: i = 0;
+      then
+      A2: diff(L,i,[#]E)
+       = L | [#]E by NDIFF_6:11
+      .= L;
+
+      A3: diff(L,i,[#]E) `| [#]E
+       = diff(L,i+1,[#]E) by NDIFF_6:13
+      .= [#]E --> L by A1,Th16;
+
+      A4: diff_SP (0,E,F) = F by NDIFF_6:def 2;
+      hence diff (L,i,[#]E) is_differentiable_on [#]E
+        by A1,A2,FUNCT_2:def 1,NDIFF_7:26;
+
+      A5: dom(diff(L,i,[#]E) `| [#]E) = [#]E by A3,FUNCOP_1:13;
+      reconsider r = L as Point of
+        R_NormSpace_of_BoundedLinearOperators(E,diff_SP (0,E,F))
+        by A4,LOPBAN_1:def 9;
+      rng (diff(L,i,[#]E) `| [#]E) = {r} by A3,FUNCOP_1:8;
+      hence diff(L,i,[#]E) `| [#]E is_continuous_on [#]E
+        by A1,A5,NFCONT_1:47;
+    end;
+    suppose
+      i <> 0;
+      then ex j be Nat st i = j+1 by NAT_1:6;
+      hence thesis by Th19;
+    end;
+  end;
+
+theorem
+  for B be Lipschitzian BilinearOperator of E,F,G
+  holds
+    for i be Nat
+    holds
+      diff(B,i,[#][:E,F:]) is_differentiable_on [#][:E,F:]
+    & diff(B,i,[#][:E,F:]) `| [#][:E,F:] is_continuous_on [#][:E,F:]
+  proof
+    let B be Lipschitzian BilinearOperator of E,F,G;
+    reconsider L = B `| ([#][:E,F:]) as
+      Lipschitzian LinearOperator of [:E,F:],
+      R_NormSpace_of_BoundedLinearOperators([:E,F:],G) by Th15;
+
+    set G1 = R_NormSpace_of_BoundedLinearOperators([:E,F:],G);
+    defpred P[Nat] means
+      diff(B,$1+1,[#][:E,F:]) = diff(L,$1,[#][:E,F:])
+    & diff_SP($1+1,[:E,F:],G) = diff_SP($1,[:E,F:],G1);
+
+    A1: P[0]
+    proof
+      thus diff(B,0+1,[#][:E,F:])
+       = (B | [#][:E,F:]) `| [#][:E,F:] by NDIFF_6:11
+      .= L | [#][:E,F:]
+      .= diff(L,0,[#][:E,F:]) by NDIFF_6:11;
+
+      thus diff_SP((0+1),[:E,F:],G)
+       = G1 by NDIFF_6:7
+      .= diff_SP(0,[:E,F:],G1) by NDIFF_6:7;
+    end;
+
+    A2: for n be Nat st P[n] holds P[n+1]
+    proof
+      let n be Nat;
+      assume
+      A3: P[n];
+      A4: diff_SP((n + 1)+1,[:E,F:],G)
+       = R_NormSpace_of_BoundedLinearOperators([:E,F:],
+             diff_SP(n+1,[:E,F:],G)) by NDIFF_6:10
+      .= diff_SP(n + 1,[:E,F:],G1) by A3,NDIFF_6:10;
+
+      diff(B,(n+1)+1,[#][:E,F:])
+       = diff(B,(n+1),[#][:E,F:]) `| [#][:E,F:] by NDIFF_6:13
+      .= diff(L,n+1,[#][:E,F:]) by A3,NDIFF_6:13;
+      hence thesis by A4;
+    end;
+
+    A5: for n be Nat holds P[n] from NAT_1:sch 2(A1,A2);
+
+    let i be Nat;
+    per cases;
+    suppose
+      A6: i = 0; then
+      A7: diff_SP (i,[:E,F:],G) = G by NDIFF_6:def 2;
+      B | [#][:E,F:] is_differentiable_on [#][:E,F:] by Th14;
+
+      hence diff(B,i,[#][:E,F:]) is_differentiable_on [#][:E,F:]
+          by A6,A7,NDIFF_6:def 5;
+      B|[#][:E,F:] `| [#][:E,F:] is_continuous_on [#][:E,F:]
+          by Th14;
+      hence
+      diff(B,i,[#][:E,F:]) `| [#][:E,F:] is_continuous_on [#][:E,F:]
+          by A6,A7,NDIFF_6:def 5;
+    end;
+    suppose
+      i <> 0;
+      then consider j be Nat such that
+      A8: i = j+1 by NAT_1:6;
+
+      A9: diff(L,j,[#][:E,F:])
+        = diff(B,i,[#][:E,F:]) by A5,A8;
+      A10: diff_SP(j,[:E,F:],G1)
+         = diff_SP(i,[:E,F:],G) by A5,A8;
+
+      thus diff(B,i,[#][:E,F:]) is_differentiable_on [#][:E,F:]
+         & diff(B,i,[#][:E,F:])`| [#][:E,F:] is_continuous_on [#][:E,F:]
+        by A9,A10,Th20;
+    end;
+  end;

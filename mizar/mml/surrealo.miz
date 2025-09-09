@@ -1,0 +1,2527 @@
+:: Integration of Game Theoretic and Tree Theoretic Approaches to {C}onway 
+:: Numbers
+::  by Karol P\kak
+:: 
+:: Received December 12, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies RELAT_1, TARSKI, XBOOLE_0, LFUZZY_0, SUBSET_1, XXREAL_0, ARYTM_3,
+      FUNCT_1, ZFMISC_1, CARD_1, ORDINAL1, ARROW, ZFREFLE1, FINSET_1, NAT_1,
+      MATHMORP, GLIB_000, WAYBEL_3, SURREAL0, SURREALO;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, RELAT_1, FUNCT_1, RELSET_1,
+      ORDINAL1, FINSET_1, CARD_1, XCMPLX_0, XXREAL_0, ORDINAL7, SURREAL0;
+ constructors RELSET_1, ORDERS_5, ORDINAL7, SURREAL0;
+ registrations XBOOLE_0, RELAT_1, SUBSET_1, XTUPLE_0, ORDINAL1, ORDINAL3,
+      FUNCT_1, NAT_1, XREAL_0, CARD_1, FINSET_1, ORDINAL7, FOMODEL0, SURREAL0;
+ requirements BOOLE, SUBSET, NUMERALS, ARITHM;
+ definitions TARSKI, XBOOLE_0, RELAT_1, SURREAL0;
+ equalities ORDINAL1, SURREAL0;
+ expansions SURREAL0;
+ theorems RELAT_1, TARSKI, ZFMISC_1, FUNCT_1, XBOOLE_0, XBOOLE_1, NAT_1,
+      CARD_2, ORDINAL1, CARD_1, ORDINAL7, STIRL2_1, SURREAL0;
+ schemes NAT_1, ORDINAL1, CLASSES1, XBOOLE_0;
+
+begin :: Preorder of Surreal Numbers
+
+reserve A,B,C,O for Ordinal,
+        X for set,
+        o for object,
+        x,y,z,t,r,l for Surreal;
+
+definition
+  func 1_No -> Surreal equals
+    [{0_No},{}];
+  coherence
+  proof
+    A1:  {0_No}<<{};
+    set b = born 0_No;
+    A2: 0_No in Day b by SURREAL0:def 18;
+    for o be object st o in {0_No}\/{} ex O st O in succ b & o in Day O
+    proof
+      let o be object;
+      assume o in {0_No}\/{};
+      then o = 0_No by TARSKI:def 1;
+      hence thesis by A2,ORDINAL1:6;
+    end;
+    then [{0_No},{}] in Day succ b by A1,SURREAL0:46;
+    hence thesis;
+  end;
+end;
+
+theorem Th1:
+  y in L_x \/R_x implies born y in born x
+proof
+  assume A1: y in L_x \/R_x;
+  A2:x= [L_x,R_x];
+  x in Day born x by SURREAL0:def 18;
+  then consider O be Ordinal such that
+  A3: O in born x & y in Day O by SURREAL0:46,A1,A2;
+  born y c= O by A3,SURREAL0:def 18;
+  hence thesis by A3,ORDINAL1:12;
+end;
+
+theorem
+  L_x <> {x} <> R_x
+proof
+  A1:x in {x} by TARSKI:def 1;
+  thus L_x <> {x}
+  proof
+    assume L_x = {x};
+    then x in L_x \/R_x by A1,XBOOLE_0:def 3;
+    then born x in born x by Th1;
+    hence thesis;
+  end;
+  assume R_x = {x};
+  then x in L_x \/R_x by A1,XBOOLE_0:def 3;
+  then born x in born x by Th1;
+  hence thesis;
+end;
+
+::$N Preorder of Surreal Numbers - Reflexivity, Conway Ch.1 Th.0(iii)
+theorem Th3:
+  x <= x
+proof
+   defpred P[Ordinal] means for x be Surreal st x in Day $1 holds x <= x;
+   A1: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+   proof
+     let D be Ordinal such that A2:for C be Ordinal st C in D holds P[C];
+     let x be Surreal such that A3: x in Day D;
+     A4:x= [L_x,R_x];
+     assume not x<=x;
+     then per cases by SURREAL0:43;
+     suppose not L_x << {x};
+       then consider xl,r be Surreal such that
+       A5: xl in L_x & r in {x} & r <= xl;
+       xl in L_x\/R_x by A5,XBOOLE_0:def 3;
+       then consider O be Ordinal such that
+       A6: O in D & xl in Day O by A4,A3,SURREAL0:46;
+       x <= xl by A5,TARSKI:def 1;
+       then A7: L_x << {xl} by SURREAL0:43;
+       xl in {xl} by TARSKI:def 1;
+       hence thesis by A6,A2,A5,A7;
+     end;
+     suppose not {x} << R_x;
+       then consider l,xr be Surreal such that
+       A8: l in {x} & xr in R_x & xr <= l;
+       xr in L_x\/R_x by A8,XBOOLE_0:def 3;
+       then consider O be Ordinal such that
+       A9: O in D & xr in Day O by A4,A3,SURREAL0:46;
+       xr <= x by A8,TARSKI:def 1;
+       then A10: {xr} << R_x by SURREAL0:43;
+       xr in {xr} by TARSKI:def 1;
+       hence thesis by A9,A2,A8,A10;
+     end;
+   end;
+   A11:for D be Ordinal holds P[D] from ORDINAL1:sch 2(A1);
+   ex A be Ordinal st x in Day A by SURREAL0:def 14;
+   hence thesis by A11;
+end;
+
+::$N Preorder of Surreal Numbers - Transitivity, Conway Ch.1 Th.1
+theorem Th4:
+  x <= y & y <= z implies x <= z
+proof
+  defpred P[Ordinal] means
+     for x,y,z be Surreal st x <= y & y <= z &
+     born x (+) born y (+) born z c= $1 holds x <= z;
+  A1: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that A2:for C be Ordinal st C in D holds P[C];
+    let x,y,z be Surreal such that
+    A3:x <= y & y <= z and
+    A4:born x (+) born y (+) born z c= D;
+    per cases by A4,ORDINAL1:11,XBOOLE_0:def 8;
+    suppose born x (+) born y (+) born z in D;
+      hence thesis by A2,A3;
+    end;
+    suppose A5:born x (+) born y (+) born z = D;
+      assume not x <= z;
+      then per cases by SURREAL0:43;
+      suppose not L_x << {z};
+        then consider xl,r be Surreal such that
+        A6: xl in L_x & r in {z} & r <= xl;
+        A7: z <= xl by A6,TARSKI:def 1;
+        xl in L_x \/ R_x by A6,XBOOLE_0:def 3;
+        then born xl (+) born y in born x (+) born y by Th1,ORDINAL7:94;
+        then born xl (+) born y  (+) born z in D by A5,ORDINAL7:94;
+        then A8: born y  (+) born z (+) born xl in D by ORDINAL7:68;
+        L_x << {y} & y in {y} by A3,SURREAL0:43,TARSKI:def 1;
+        hence thesis by A6,A8, A7,A3,A2;
+      end;
+      suppose not {x} << R_z;
+        then consider l,zr be Surreal such that
+        A9: l in {x}& zr in R_z & zr <= l;
+        A10:  zr <= x by A9,TARSKI:def 1;
+        zr in L_z \/ R_z by A9,XBOOLE_0:def 3;
+        then born zr (+) born x in born z (+) born x by Th1,ORDINAL7:94;
+        then born zr (+) born x (+) born y in born z (+) born x (+) born y
+        by ORDINAL7:94;
+        then A11: born zr (+) born x (+) born y in D by A5,ORDINAL7:68;
+        {y} << R_z & y in {y} by A3,SURREAL0:43,TARSKI:def 1;
+        hence thesis by A9,A11,A2,A3,A10;
+      end;
+    end;
+  end;
+  A12:for D be Ordinal holds P[D] from ORDINAL1:sch 2(A1);
+  P[ born x (+) born y (+) born z] by A12;
+  hence thesis;
+end;
+
+theorem Th5:
+  for x holds L_x <<= {x} <<= R_x
+proof
+ defpred P[Ordinal] means
+     for x be Surreal st born x c= $1 holds L_x <<= {x} <<= R_x;
+  A1: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that A2:for C be Ordinal st C in D holds P[C];
+    let x be Surreal such that
+    A3:born x c= D;
+    per cases by A3,ORDINAL1:11,XBOOLE_0:def 8;
+    suppose born x in D;
+      hence thesis by A2;
+    end;
+    suppose A4: born x = D;
+      thus L_x <<= {x}
+      proof
+        given r,xl be Surreal such that
+        A5: r in {x} & xl in L_x  & not xl <= r;
+        not xl <= x by A5,TARSKI:def 1;
+        then per cases by SURREAL0:43;
+        suppose not L_xl << {x};
+          then consider xll,X be Surreal such that
+          A6: xll in L_xl & X in {x}  & X <= xll;
+          A7: x <= xll by A6,TARSKI:def 1;
+          A8:xl in {xl} by TARSKI:def 1;
+          xl in L_x \/ R_x by A5,XBOOLE_0:def 3;
+          then born xl in D by A4,Th1;
+          then L_xl <<= {xl} by A2;
+          then xll <= xl by A8,A6;
+          then x <= xl by A7,Th4;
+          then L_x << {xl} by SURREAL0:43;
+          hence thesis by Th3,A5,A8;
+        end;
+        suppose not {xl} << R_x;
+          then consider X,xr be Surreal such that
+          A9: X in {xl} & xr in R_x  & xr <= X;
+          A10: L_x << R_x by SURREAL0:45;
+          xr <= xl by A9,TARSKI:def 1;
+          hence thesis by A10,A9,A5;
+        end;
+      end;
+      thus {x} <<= R_x
+      proof
+        given xr,l be Surreal such that
+        A11: xr in R_x & l in {x} & not l <= xr;
+        not x <= xr by A11,TARSKI:def 1;
+        then per cases by SURREAL0:43;
+        suppose not {x} << R_xr;
+          then consider X,xrr be Surreal such that
+          A12: X in {x} & xrr in R_xr  & xrr <= X;
+          A13: xrr <= x by A12,TARSKI:def 1;
+          A14:xr in {xr} by TARSKI:def 1;
+          xr in L_x \/ R_x by A11,XBOOLE_0:def 3;
+          then born xr in D by A4,Th1;
+          then {xr} <<= R_xr by A2;
+          then xr <= xrr by A14,A12;
+          then xr <= x by A13,Th4;
+          then {xr} << R_x by SURREAL0:43;
+          hence thesis by A11,A14,Th3;
+        end;
+        suppose not L_x << {xr};
+          then consider xl,X be Surreal such that
+          A15: xl in L_x & X in {xr}  & X <= xl;
+          A16: L_x << R_x by SURREAL0:45;
+          xr <= xl by A15,TARSKI:def 1;
+          hence thesis by A16,A15,A11;
+        end;
+      end;
+    end;
+  end;
+  A17:for D be Ordinal holds P[D] from ORDINAL1:sch 2(A1);
+  let x be Surreal;
+  P[born x] by A17;
+  hence thesis;
+end;
+
+::$N Preorder of Surreal Numbers - Total, Conway Ch.1 Th.2(ii)
+theorem Th6:
+  not y <= x implies x <= y
+proof
+  assume A1:not y <= x & not x <=y;
+  then per cases by SURREAL0:43;
+  suppose not L_x << {y};
+    then consider xl,Y be Surreal such that
+    A2: xl in L_x & Y in {y} & Y <= xl;
+    L_x <<= {x} & x in {x} by Th5,TARSKI:def 1;
+    then A3: xl <= x by A2;
+    y <= xl by A2,TARSKI:def 1;
+    hence thesis by A1,A3,Th4;
+  end;
+  suppose not {x} << R_y;
+    then consider X,yr be Surreal such that
+    A4: X in {x} & yr in R_y & yr <= X;
+    {y} <<= R_y & y in {y} by Th5,TARSKI:def 1;
+    then A5: y <= yr by A4;
+    yr <= x by A4,TARSKI:def 1;
+    hence thesis by A1,A5,Th4;
+  end;
+end;
+
+theorem Th7:
+  A is finite implies Day A is finite
+proof
+  assume A1: A is finite;
+  defpred P[Nat] means Day $1 is finite;
+  A2:P[0] by SURREAL0:2;
+  A3:for n be Nat holds P[n] implies P[n+1]
+  proof
+let n be Nat;
+    assume A4:P[n];set n1=n+1;
+    Day n1 c= [:bool Day n,bool Day n:]
+    proof
+      let o1,o2 be object;
+      assume A5: [o1,o2] in Day n1;
+      reconsider o1,o2 as set by TARSKI:1;
+      A6: o1 c= o1 \/ o2 & o2 c= o1 \/ o2 by XBOOLE_1:7;
+      o1 \/ o2 c= Day n
+      proof
+        let a be object;
+        assume a in o1\/o2;
+        then consider O such that
+        A7: O in n1 & a in Day O by A5,SURREAL0:46;
+        A8: O in Segm n1 by A7;
+        then reconsider O as Nat;
+        O < n1 by A8,NAT_1:44;
+        then O <=n by NAT_1:13;
+        then Segm O c= Segm n by NAT_1:39;
+        then Day O c= Day n by SURREAL0:35;
+        hence thesis by A7;
+      end;
+      then o1 c= Day n & o2 c= Day n by A6,XBOOLE_1:1;
+      hence thesis by ZFMISC_1:87;
+    end;
+    hence thesis by A4;
+  end;
+  for n be Nat holds P[n] from NAT_1:sch 2(A2,A3);
+  hence thesis by A1;
+end;
+
+theorem
+  born x is finite implies L_x is finite & R_x is finite
+proof
+  assume born x is finite;
+  then A1: Day born x is finite by Th7;
+  A2: L_x \/ R_x c= Day born x
+  proof
+    let o;
+    assume A3:o in L_x \/ R_x;
+    then reconsider y=o as Surreal by SURREAL0:def 16;
+    born y in born x by A3,Th1;
+    then y in Day born y c= Day born x by SURREAL0:35,def 18,ORDINAL1:def 2;
+    hence thesis;
+  end;
+  L_x c= L_x \/ R_x & R_x c= L_x \/ R_x by XBOOLE_1:7;
+  hence thesis by A2,A1;
+end;
+
+definition
+  let x,y;
+  redefine pred x <= y;
+  reflexivity by Th3;
+  connectedness by Th6;
+end;
+
+notation
+  let x,y;
+  synonym y >= x for x <= y;
+end;
+
+notation
+  let x,y;
+  antonym y < x for x <= y;
+  antonym x > y for x <= y;
+end;
+
+begin :: Equivalence Relation of Preorder
+
+definition
+  let x,y;
+  pred x == y means
+    x <= y & y <= x;
+  reflexivity;
+  symmetry;
+end;
+
+theorem
+  x <= y & y < z implies x < z by Th4;
+
+theorem
+  x == y & y == z implies x == z by Th4;
+
+::$N Conway Ch.1 Th.2(i)
+theorem Th11:
+  L_x << {x} & {x} << R_x
+proof
+  thus L_x << {x}
+  proof
+    let xl,X be Surreal such that
+    A1: xl in L_x & X in {x} & xl >= X;
+    xl >= x by A1,TARSKI:def 1;
+    then L_x << {xl} & xl in {xl} by SURREAL0:43,TARSKI:def 1;
+    then not xl <= xl by A1;
+    hence thesis;
+  end;
+  let X,xr be Surreal such that
+  A2: X in {x} & xr in R_x & X >= xr;
+  xr <= x by A2,TARSKI:def 1;
+  then {xr} << R_x & xr in {xr} by SURREAL0:43,TARSKI:def 1;
+  then not xr <= xr by A2;
+  hence thesis;
+end;
+
+theorem Th12:
+  for S be non empty surreal-membered set st S is finite
+     ex Min,Max be Surreal st Min in S & Max in S &
+       for x st x in S holds Min <= x <= Max
+proof
+  defpred P[Nat] means
+  for S be non empty surreal-membered set st $1=card S
+    ex Min,Max be Surreal st Min in S & Max in S &
+  for x st x in S holds Min <= x <= Max;
+  A1: P[0];
+  A2: for n be Nat holds P[n] implies P[n+1]
+  proof
+    let n be Nat;
+    assume A3:P[n];
+    let S be non empty surreal-membered set such that A4:n+1=card S;
+    consider s be object such that
+    A5: s in S by XBOOLE_0:def 1;
+    reconsider s as Surreal by SURREAL0:def 16,A5;
+    set Ss=S\{s};
+    per cases;
+    suppose A6:Ss is empty;
+      take s,s;
+      thus s in S & s in S by A5;
+      let x be Surreal;assume x in S;
+      hence thesis by A6,ZFMISC_1:56;
+    end;
+    suppose A7:Ss is non empty;
+      card Ss =n by A4,A5,STIRL2_1:55;
+      then consider Min,Max be Surreal such that
+      A8:Min in Ss & Max in Ss &
+      for x st x in Ss holds Min <= x <= Max by A3,A7;
+      A9: Min <= Max by A8;
+      per cases;
+      suppose A10:Max < s;
+        take Min,s;
+        thus Min in S & s in S by A5,A8;
+        let x;
+        assume x in S;
+        then per cases by ZFMISC_1:56;
+        suppose x in Ss;
+          then Min <= x <= Max by A8;
+          hence thesis by A10,Th4;
+        end;
+        suppose x=s;
+          hence thesis by A9,A10,Th4;
+        end;
+      end;
+      suppose A11:s < Min;
+        take s,Max;
+        thus s in S & Max in S by A5,A8;
+        let x;
+        assume x in S;
+        then per cases by ZFMISC_1:56;
+        suppose x in Ss;
+          then Min <= x <= Max by A8;
+          hence thesis by A11,Th4;
+        end;
+        suppose x=s;
+          hence thesis by A9,A11,Th4;
+        end;
+      end;
+      suppose A12:Min <= s <= Max;
+        take Min,Max;
+        thus Min in S & Max in S by A8;
+        let x;assume x in S;
+        then x in Ss or x =s by ZFMISC_1:56;
+        hence thesis by A8,A12;
+      end;
+    end;
+  end;
+  A13:for n be Nat holds P[n] from NAT_1:sch 2(A1,A2);
+  let S be non empty surreal-membered set;
+  assume S is finite;
+  then card S is Nat;
+  hence thesis by A13;
+end;
+
+theorem Th13:
+  x < y implies
+     (ex xR be Surreal st xR in R_x & x < xR <= y)
+  or
+     (ex yL be Surreal st yL in L_y & x <= yL < y)
+proof
+  assume x < y;
+  then per cases by SURREAL0:43;
+  suppose not L_y << {x};
+    then consider l,r such that
+    A1: l in L_y & r in {x} & l >= r;
+    L_y << {y} & y in {y} by Th11,TARSKI:def 1;
+    then x <= l < y by A1,TARSKI:def 1;
+    hence thesis by A1;
+  end;
+  suppose not {y} << R_x;
+    then consider l,r such that
+    A2: l in {y} & r in R_x & l >= r;
+    {x} << R_x & x in {x} by Th11,TARSKI:def 1;
+    then x < r <= y by A2,TARSKI:def 1;
+    hence thesis by A2;
+  end;
+end;
+
+theorem Th14:
+  L_y << {x} << R_y
+    implies [L_x \/ L_y, R_x \/ R_y] is Surreal
+proof
+  assume A1: L_y << {x} << R_y;
+  consider A be Ordinal such that A2: x in Day A by SURREAL0:def 14;
+  consider B be Ordinal such that A3: y in Day B by SURREAL0:def 14;
+  set X=L_x \/ L_y, Y = R_x \/ R_y;
+  A4: x=[L_x,R_x]; then
+  A5:L_x << R_x by A2,SURREAL0:46;
+  A6: y=[L_y,R_y]; then
+  A7: L_y << R_y by A3,SURREAL0:46;
+  A8: x in {x} by TARSKI:def 1;
+  A9: X << Y
+  proof
+    let x1,y1 be Surreal;
+    assume x1 in X & y1 in Y;
+    then per cases by XBOOLE_0:def 3;
+    suppose x1 in L_x & y1 in R_x;
+      hence thesis by A5;
+    end;
+    suppose x1 in L_y & y1 in R_y;
+      hence thesis by A7;
+    end;
+    suppose A10: x1 in L_x & y1 in R_y;
+      then A11: x <= y1 & not x >= y1 by A8,A1;
+      L_x << {x} by Th11;
+      hence thesis by A8,A10,A11,Th4;
+    end;
+    suppose A12:x1 in L_y & y1 in R_x;
+      then A13: x1 <= x & not x1 >= x by A8,A1;
+      {x} << R_x by Th11;
+      hence thesis by A8,A12,A13,Th4;
+    end;
+  end;
+  for x be object st x in X \/ Y ex O be Ordinal st O in A\/B & x in Day O
+  proof
+    let z be object;
+    assume z in X \/ Y;
+    then z in X or z in Y by XBOOLE_0:def 3;
+    then per cases by XBOOLE_0:def 3;
+    suppose z in L_x or z in R_x;
+      then z in L_x \/ R_x by XBOOLE_0:def 3;
+      then consider O be Ordinal such that
+      A14: O in A & z in Day O by A4,A2,SURREAL0:46;
+      O in A\/B by A14,XBOOLE_0:def 3;
+      hence thesis by A14;
+    end;
+    suppose z in L_y or z in R_y;
+      then z in L_y \/ R_y by XBOOLE_0:def 3;
+      then consider O be Ordinal such that
+      A15: O in B & z in Day O by A3,A6,SURREAL0:46;
+      O in A\/B by A15,XBOOLE_0:def 3;
+      hence thesis by A15;
+    end;
+  end;
+  then [X,Y] in Day(A\/B) by SURREAL0:46,A9;
+  hence thesis;
+end;
+
+theorem Th15:
+  L_y << {x} << R_y & z = [L_x \/ L_y, R_x \/ R_y]
+    implies x == z
+proof
+  assume that
+  A1: L_y << {x} << R_y and
+  A2: z = [L_x \/ L_y, R_x \/ R_y];
+  A3: L_x << {x} << R_x by Th11;
+  A4: L_z << {z} << R_z by Th11;
+  A5:L_z << {x}
+  proof
+    let a,b be Surreal;
+    assume A6:a in L_z & b in {x};
+    then a in L_x or a in L_y by A2,XBOOLE_0:def 3;
+    hence a < b by A3,A6,A1;
+  end;
+  A7: {z} << R_x
+  proof
+    let a,b be Surreal;
+    assume A8: a in {z} & b in R_x;
+    then b in R_z by A2,XBOOLE_0:def 3;
+    hence a < b by A8,A4;
+  end;
+  A9: L_x << {z}
+  proof
+    let a,b be Surreal;
+    assume A10:a in L_x & b in {z};
+    then a in L_z by A2,XBOOLE_0:def 3;
+    hence a < b by A10,A4;
+  end;
+  {x} << R_z
+  proof
+    let a,b be Surreal;
+    assume A11:a in {x} & b in R_z;
+    then b in R_x or b in R_y by A2,XBOOLE_0:def 3;
+    hence a < b by A3,A11,A1;
+  end;
+  hence thesis by A7,A5,SURREAL0:43,A9;
+end;
+
+::$N The Simplicity Theorem for Surreal Numbers
+theorem Th16:
+  for x,y st L_y << {x} << R_y &
+    for z st L_y << {z} << R_y holds born x c= born z
+  holds x == y
+proof
+  let x,y be Surreal such that
+  A1: L_y << {x} << R_y  and
+  A2:for x1 be Surreal st L_y << {x1} << R_y holds born x c= born x1;
+  set X=L_x \/ L_y, Y = R_x \/ R_y;
+  A3:x in {x} by TARSKI:def 1;
+  reconsider z=[X,Y] as Surreal by Th14,A1;
+  A4: L_x << {x} << R_x by Th11;
+  A5: L_y << {y} << R_y by Th11;
+  A6: L_z << {z} << R_z by Th11;
+  A7: L_x << {z}
+  proof
+    let a,b be Surreal;
+    assume A8:a in L_x & b in {z};
+    then a in L_z by XBOOLE_0:def 3;
+    hence a < b by A8,A6;
+  end;
+  {x} << R_z
+  proof
+    let a,b be Surreal;
+    assume A9:a in {x} & b in R_z;
+    then b in R_x or b in R_y by XBOOLE_0:def 3;
+    hence a < b by A4,A9,A1;
+  end;
+  then A10:x <= z by A7,SURREAL0:43;
+  A11: L_y << {z}
+  proof
+    let a,b be Surreal;
+    assume A12:a in L_y & b in {z};
+    then a < z by A1,A3,A10,Th4;
+    hence thesis by A12,TARSKI:def 1;
+  end;
+  A13: x==z by Th15,A1;
+  A14: {y} << R_z
+  proof
+    let a,b be Surreal;
+    assume A15:a in {y} & b in R_z;
+    then per cases by XBOOLE_0: def 3;
+    suppose b in R_y;
+      hence thesis by A5,A15;
+    end;
+    suppose A16: b in R_x;
+      assume not a < b;
+      then b <= y by A15,TARSKI:def 1;
+      then
+      A17:{b} << R_y by SURREAL0:43;
+      L_y << {b}
+      proof
+        let c,d be Surreal;
+        assume A18:c in L_y & d in {b};
+        then c <= x by A3,A1;
+        then c < b by A4,A3,A16,Th4;
+        hence c < d by A18,TARSKI:def 1;
+      end;
+      then A19:born x c= born b by A17,A2;
+      A20: b in L_x \/ R_x by A16,XBOOLE_0:def 3;
+      then
+      A21: born b in born x by Th1;
+      born b c= born x by A20,Th1,ORDINAL1:def 2;
+      then born b = born x by A19,XBOOLE_0:def 10;
+      hence thesis by A21;
+    end;
+  end;
+  A22: {z} << R_y
+  proof
+    let a,b be Surreal;
+    assume A23:a in {z} & b in R_y;
+    then z < b by A1,A3,A13,Th4;
+    hence thesis by A23,TARSKI:def 1;
+  end;
+  L_z << {y}
+  proof
+    let b,a be Surreal;
+    assume A24:b in L_z & a in {y};
+    then per cases by XBOOLE_0: def 3;
+    suppose b in L_y;
+      hence thesis by A5,A24;
+    end;
+    suppose A25: b in L_x;
+      assume not b < a;
+      then y <= b by A24,TARSKI:def 1;
+      then A26: L_y << {b} by SURREAL0:43;
+      {b} << R_y
+      proof
+        let d,c be Surreal;
+        assume A27:d in {b} & c in R_y;
+        then x <= c by A3,A1;
+        then b < c by A4,A3,A25,Th4;
+        hence d < c by A27,TARSKI:def 1;
+      end;
+      then A28:born x c= born b by A26,A2;
+      A29: b in L_x \/ R_x by A25,XBOOLE_0:def 3;
+      then
+      A30: born b in born x by Th1;
+      born b c= born x by A29,Th1,ORDINAL1:def 2;
+      then born b = born x by A28,XBOOLE_0:def 10;
+      hence thesis by A30;
+    end;
+  end;
+  then z == y by A22,SURREAL0:43,A14,A11;
+  hence thesis by A13,Th4;
+end;
+
+theorem Th17:
+  X << {x} & x <= y implies X << {y}
+proof
+  assume A1: X << {x} & x <= y;
+  let l,r such that A2: l in X & r in {y};
+  x in {x} by TARSKI:def 1;
+  then l < y by A1,Th4,A2;
+  hence thesis by A2,TARSKI:def 1;
+end;
+
+theorem Th18:
+ {x} << X & y <= x implies {y} << X
+proof
+  assume A1:{x} << X & y <= x;
+  let l,r such that A2: l in {y} & r in X;
+  x in {x} by TARSKI:def 1;
+  then y < r by A2,A1,Th4;
+  hence thesis by A2,TARSKI:def 1;
+end;
+
+theorem
+  x==y implies [L_x\/L_y,R_x\/R_y] is Surreal
+proof
+  assume A1: x==y;
+  L_x << {x} << R_x by Th11;
+  then L_x << {y} << R_x by A1,Th17,Th18;
+  hence thesis by Th14;
+end;
+
+theorem
+  x==y & z = [L_x\/L_y,R_x\/R_y] implies x==z
+proof
+  assume A1: x==y & z = [L_x\/L_y,R_x\/R_y];
+  L_y << {y} << R_y by Th11;
+  then L_y << {x} << R_y by A1,Th17,Th18;
+  hence thesis by A1,Th15;
+end;
+
+theorem Th21:
+  {x} << {y} iff x < y
+proof
+  hereby assume A1: {x} << {y};
+    x in {x} & y in {y} by TARSKI:def 1;
+    hence x<y by A1;
+  end;
+  assume A2:x < y;
+  let l,r;
+  assume l in {x} & r in {y};
+  then l=x & r=y by TARSKI:def 1;
+  hence thesis by A2;
+end;
+
+theorem
+  [{x},{y}] is Surreal iff x < y
+proof
+  hereby assume [{x},{y}] is Surreal;
+    then reconsider xy=[{x},{y}] as Surreal;
+    x in L_xy << R_xy & y in {y} by SURREAL0:45,TARSKI:def 1;
+    hence x < y;
+  end;
+  assume A1:x < y;
+  consider M be Ordinal such that
+  A2: for o st o in {x}\/{y} ex A be Ordinal st A in M & o in Day A
+    by SURREAL0:47;
+  [{x},{y}] in Day M by A2,A1,Th21,SURREAL0:46;
+  hence thesis;
+end;
+
+theorem Th23:
+  for Max be Surreal st
+    (for y st y in L_x holds y <= Max) & Max in L_x holds
+       [{Max},R_x] is Surreal &
+       for y st y = [{Max},R_x] holds y == x & born y c= born x
+proof
+  let Max be Surreal such that
+  A1:(for y st y in L_x holds y <= Max) and A2: Max in L_x;
+  A3: L_x << R_x by SURREAL0:45;
+  A4: {Max} << R_x
+  proof
+    let l,r such that A5:l in {Max} & r in R_x;
+    l = Max by A5,TARSKI:def 1;
+    hence thesis by A3,A5,A2;
+  end;
+  for o be object st o in {Max} \/ R_x ex O st O in born x & o in Day O
+  proof
+    let o be object such that A6:o in {Max} \/ R_x;
+    o = Max or o in R_x by A6,ZFMISC_1:136;
+    then A7:o in L_x \/ R_x by A2,XBOOLE_0:def 3;
+    reconsider o as Surreal by SURREAL0:def 16,A6;
+    take born o;
+    thus thesis by SURREAL0:def 18,A7,Th1;
+  end;
+  then A8: [{Max},R_x] in Day born x by A4,SURREAL0:46;
+  hence [{Max},R_x] is Surreal;
+  let y such that A9: y = [{Max},R_x];
+  A10:x=[L_x,R_x] & y = [L_y,R_y];
+  A11:for x1 be Surreal st x1 in L_x ex y1 be Surreal st y1 in L_y & x1 <= y1
+  proof
+    let x1 be Surreal such that A12: x1 in L_x;
+    take Max;
+    thus thesis by A12,A1,A9,TARSKI:def 1;
+  end;
+  A13: for x1 be Surreal st x1 in R_y
+  ex y1 be Surreal st y1 in R_x & y1 <= x1 by A9;
+  A14:for x1 be Surreal st x1 in L_y ex y1 be Surreal st y1 in L_x & x1 <= y1
+  proof
+    let x1 be Surreal such that A15: x1 in L_y;
+    take Max;
+    thus thesis by A15,A2,A9,TARSKI:def 1;
+  end;
+  for x1 be Surreal st x1 in R_x ex y1 be Surreal st y1 in R_y & y1 <= x1
+  by A9;
+  hence thesis by SURREAL0:def 18,A9,A8,A13, A10,A14,SURREAL0:44,A11;
+end;
+
+theorem Th24:
+  for Min be Surreal st
+   (for y st y in R_x holds  Min <= y) & Min in R_x holds
+       [L_x,{Min}] is Surreal &
+       for y st y = [L_x,{Min}] holds y == x & born y c= born x
+proof
+  let Min be Surreal such that
+  A1:(for y st y in R_x holds Min <= y) and A2: Min in R_x;
+  A3: L_x << R_x by SURREAL0:45;
+  A4: L_x << {Min}
+  proof
+    let l,r such that A5:l in L_x & r in {Min} ;
+    r = Min by A5,TARSKI:def 1;
+    hence thesis by A3,A5,A2;
+  end;
+  for o be object st o in L_x \/ {Min} ex O st O in born x & o in Day O
+  proof
+    let o be object such that A6:o in L_x \/ {Min};
+     o = Min or o in L_x by A6,ZFMISC_1:136;
+    then A7:o in L_x \/ R_x by A2,XBOOLE_0:def 3;
+    reconsider o as Surreal by SURREAL0:def 16,A6;
+    take born o;
+    thus thesis by A7,Th1,SURREAL0:def 18;
+  end;
+  then A8: [L_x,{Min}] in Day born x by A4,SURREAL0:46;
+  hence [L_x,{Min}] is Surreal;
+  let y such that A9: y = [L_x,{Min}];
+  A10:x=[L_x,R_x] & y = [L_y,R_y];
+  A11:for x1 be Surreal st x1 in L_x ex y1 be Surreal st y1 in L_y & x1 <= y1
+  by A9;
+  A12: for x1 be Surreal st x1 in R_y ex y1 be Surreal st y1 in R_x & y1 <= x1
+  proof
+    let x1 be Surreal such that A13: x1 in R_y;
+    take Min;
+    thus thesis by A9,A13,A2,TARSKI:def 1;
+  end;
+  A14:for x1 be Surreal st x1 in L_y ex y1 be Surreal st y1 in L_x & x1 <= y1
+  by A9;
+  for x1 be Surreal st x1 in R_x ex y1 be Surreal st y1 in R_y & y1 <= x1
+  proof
+    let x1 be Surreal such that A15: x1 in R_x;
+    take Min;
+    thus thesis by A15,A1,A9,TARSKI:def 1;
+  end;
+  hence thesis by A10,A14,SURREAL0:44,A12,A11,SURREAL0:def 18,A9,A8;
+end;
+
+theorem
+  x <= y & z = [{x,y},X] & t = [{y},X] implies z==t
+proof
+  assume A1:x <= y & z = [{x,y},X] & t = [{y},X];
+  A2: for s be Surreal st s in L_z holds s <= y
+     by A1,TARSKI:def 2;
+  A3:y in L_z by A1,TARSKI:def 2;
+  t = [{y},R_z] by A1;
+  hence thesis by A2,A3,Th23;
+end;
+
+theorem
+  z = [{x,y},X] implies [{x},X] is Surreal
+proof
+  set b = born z;
+  assume A1:z = [{x,y},X];
+  A2: z in Day b by SURREAL0:def 18;
+  then A3:{x,y} << X & for o be object st o in {x,y} \/ X
+  ex O st O in b & o in Day O by A1,SURREAL0:46;
+  A4:{x} << X
+  proof
+    let l,r;
+    assume A5:l in {x} & r in X;
+    then l = x by TARSKI:def 1;
+    then l in {x,y} by TARSKI:def 2;
+    hence thesis by A3,A5;
+  end;
+  for o be object st o in {x} \/ X ex O st O in b & o in Day O
+  proof
+    let o be object;
+    assume o in {x} \/ X;
+    then o in {x} or o in X by XBOOLE_0:def 3;
+    then o =x or o in X by TARSKI:def 1;
+    then o in {x,y} or o in X by TARSKI:def 2;
+    then o in {x,y} \/ X by XBOOLE_0:def 3;
+    hence thesis by A2,A1,SURREAL0:46;
+  end;
+  then [{x},X] in Day b by A4,SURREAL0:46;
+  hence thesis;
+end;
+
+theorem
+  x <= y & z = [X,{x,y}] & t = [X,{x}] implies z==t
+proof
+  assume A1:x <= y & z = [X,{x,y}] & t = [X,{x}];
+  A2: for s be Surreal st s in R_z holds x <= s
+    by A1,TARSKI:def 2;
+  A3:  x in R_z by A1,TARSKI:def 2;
+  t = [L_z,{x}] by A1;
+  hence thesis by A2,A3,Th24;
+end;
+
+theorem
+  z = [X,{x,y}] implies [X,{x}] is Surreal
+proof
+  set b = born z;
+  assume A1:z = [X,{x,y}];
+  A2:z in Day b by SURREAL0:def 18;
+  then A3:X<<{x,y} & for o be object st o in X\/{x,y}
+    ex O st O in b & o in Day O by A1,SURREAL0:46;
+  A4:X<< {x}
+  proof
+    let l,r;
+    assume A5:l in X & r in {x};
+    then r = x by TARSKI:def 1;
+    then r in {x,y} by TARSKI:def 2;
+    hence thesis by A3,A5;
+  end;
+  for o be object st o in X \/ {x} ex O st O in b & o in Day O
+  proof
+    let o be object;
+    assume o in X \/ {x};
+    then o in {x} or o in X by XBOOLE_0:def 3;
+    then o =x or o in X by TARSKI:def 1;
+    then o in {x,y} or o in X by TARSKI:def 2;
+    then o in {x,y} \/ X by XBOOLE_0:def 3;
+    hence thesis by A2,A1,SURREAL0:46;
+  end;
+  then [X,{x}] in Day b by A4,SURREAL0:46;
+  hence thesis;
+end;
+
+definition
+  let X,Y be set;
+  pred X <=_ Y means :Def3:
+    for x be Surreal st x in X
+      ex y1,y2 be Surreal st y1 in Y & y2 in Y & y1 <= x <= y2;
+  reflexivity;
+end;
+
+definition
+  let X,Y be set;
+  pred X <==> Y means
+    X <=_ Y & Y <=_ X;
+  reflexivity;
+  symmetry;
+end;
+
+theorem Th29:
+  for X1,X2,Y1,Y2 be set st
+    X1 <==> X2 & Y1 <==> Y2 & x = [X1,Y1] & y = [X2,Y2]
+  holds x == y
+proof
+  let X1,X2,Y1,Y2 be set such that
+  A1:X1 <==> X2 & Y1 <==> Y2 & x = [X1,Y1] & y = [X2,Y2];
+  A2: now let x;
+    assume x in X1;
+    then ex y1,y2 be Surreal st y1 in X2&y2 in X2 & y1 <= x <= y2 by A1,Def3;
+    hence ex y be Surreal st y in X2 & x <= y;
+  end;
+  A3: now let x;
+    assume x in Y2;
+    then ex y1,y2 be Surreal st y1 in Y1 & y2 in Y1&y1 <= x <= y2 by A1,Def3;
+    hence ex y be Surreal st y in Y1 & y <= x;
+  end;
+  A4: now let x;
+    assume x in X2;
+    then ex y1,y2 be Surreal st y1 in X1 &y2 in X1 & y1 <= x <= y2 by A1,Def3;
+    hence ex y be Surreal st y in X1 & x <= y;
+  end;
+  now let x;
+    assume x in Y1;
+    then ex y1,y2 be Surreal st y1 in Y2 & y2 in Y2&y1 <= x <= y2 by A1,Def3;
+    hence ex y be Surreal st y in Y2 & y <= x;
+  end;
+  hence thesis by SURREAL0:44,A1,A2,A3,A4;
+end;
+
+theorem
+  for X,Y be set st X c= Y holds X <=_ Y;
+
+theorem
+  for X1,X2,Y1,Y2 be set st X1 <=_ X2 & Y1 <=_ Y2 holds
+     X1 \/ Y1 <=_ X2 \/ Y2
+proof
+  let X1,X2,Y1,Y2 be set such that
+  A1:  X1 <=_ X2 & Y1 <=_ Y2;
+  let x such that A2: x in X1\/Y1;
+  per cases by A2,XBOOLE_0:def 3;
+  suppose x in X1;
+    then consider x2,x3 be Surreal such that
+    A3:x2 in X2 & x3 in X2 & x2 <= x <= x3 by A1;
+    take x2,x3;
+    thus thesis by A3,XBOOLE_0:def 3;
+  end;
+  suppose x in Y1;
+    then consider y2,y3 be Surreal such that
+    A4:  y2 in Y2 & y3 in Y2 & y2 <= x <= y3 by A1;
+    take y2,y3;
+    thus thesis by A4,XBOOLE_0:def 3;
+  end;
+end;
+
+theorem
+  x == y implies {x} <=_ {y}
+proof
+  assume A1:x == y;
+  let z such that A2:z in {x};
+  take y,y;
+  thus thesis by A1,A2,TARSKI:def 1;
+end;
+
+begin :: Unique Multiple Properties Representative of Equivalence Class
+
+definition
+  let x be Surreal;
+  func born_eq x -> Ordinal means :Def5:
+    (ex y be Surreal st born y = it & y ==x ) &
+    for y be Surreal st y == x holds it c= born y;
+  existence
+  proof
+    defpred P[Ordinal] means ex y be Surreal st born y = $1 & y ==x;
+    P[born x];
+    then
+    A1:ex O be Ordinal st P[O];
+    consider A be Ordinal such that
+    A2:P[A] & for B be Ordinal st P[B] holds A c= B from ORDINAL1:sch 1(A1);
+    take A;
+    thus ex y be Surreal st born y = A & y ==x by A2;
+    let y be Surreal;
+    assume y == x;
+     hence thesis by A2;
+  end;
+  uniqueness
+  proof
+    let it1,it2 be Ordinal such that
+    A3: (ex y be Surreal st born y = it1 & y ==x ) &
+    for y be Surreal st y == x holds it1 c= born y and
+    A4:(ex y be Surreal st born y = it2 & y ==x ) &
+    for y be Surreal st y == x holds it2 c= born y;
+    it1 c= it2 c= it1 by A3,A4;
+    hence thesis by XBOOLE_0:def 10;
+  end;
+end;
+
+definition
+  let x be Surreal;
+  func born_eq_set x -> surreal-membered set means :Def6:
+    y in it iff y == x & y in Day born_eq x;
+  existence
+  proof
+    defpred P[object] means for y st y=$1 holds x==y;
+    consider X be set such that
+    A1: o in X iff o in Day born_eq x & P[o] from XBOOLE_0:sch 1;
+    X is surreal-membered
+    proof
+      let o;
+      thus thesis by A1;
+    end;
+    then reconsider X as surreal-membered set;
+    take X;
+    let y;
+    thus y in X implies y == x & y in Day born_eq x by A1;
+    assume A2:y == x & y in Day born_eq x;
+    then P[y];
+    hence thesis by A1,A2;
+  end;
+  uniqueness
+  proof
+    let IT1,IT2 be surreal-membered set such that
+    A3: y in IT1 iff y == x & y in Day born_eq x and
+    A4: y in IT2 iff y == x & y in Day born_eq x;
+    thus IT1 c= IT2
+    proof
+      let o;
+      assume A5:o in IT1;
+      then reconsider o as Surreal by SURREAL0:def 16;
+      o == x & o in Day born_eq x by A3,A5;
+      hence thesis by A4;
+    end;
+    let o;
+    assume A6:o in IT2;
+    then reconsider o as Surreal by SURREAL0:def 16;
+    o == x & o in Day born_eq x by A4,A6;
+    hence thesis by A3;
+  end;
+end;
+
+registration
+  let x be Surreal;
+  cluster born_eq_set x -> non empty;
+  coherence
+  proof
+    consider y be Surreal such that
+    A1:born y = born_eq x & y ==x by Def5;
+    y in Day born y by SURREAL0:def 18;
+    hence thesis by A1,Def6;
+  end;
+end;
+
+definition
+  let A be non empty surreal-membered set, x be Surreal;
+  attr x is A -smallest means :Def7:
+       x in A & for y st y in A & y == x holds
+          card (L_x) (+) card (R_x) c= card (L_y) (+) card (R_y);
+end;
+
+registration
+  let A be non empty surreal-membered set;
+  cluster A -smallest for Surreal;
+  existence
+  proof
+    consider x be object such that
+    A1:  x in A by XBOOLE_0:def 1;
+    reconsider x as Surreal by A1,SURREAL0:def 16;
+    defpred P[Ordinal] means ex y be Surreal st y in A & y ==x &
+    card (L_y) (+) card (R_y) =$1;
+    P[card (L_x) (+) card (R_x)] by A1;
+    then
+    A2:ex O be Ordinal st P[O];
+    consider O be Ordinal such that
+    A3:P[O] & for B be Ordinal st P[B] holds O  c= B
+    from ORDINAL1:sch 1(A2);
+    consider y be Surreal such that
+    A4:  y in A & y ==x & card (L_y) (+) card (R_y) =O by A3;
+    for z st z in A & z == y holds card (L_y) (+) card (R_y) c=
+    card (L_z) (+) card (R_z)
+    proof
+      let z;
+      assume A5:z in A & z == y;
+      then z==x by A4,Th4;
+      hence thesis by A5,A3,A4;
+    end;
+    hence thesis by A4,Def7;
+  end;
+end;
+
+theorem Th33:
+   x==y implies born_eq x = born_eq y
+proof
+  assume A1:x==y;
+  consider z be Surreal such that
+  A2:born z= born_eq x & z ==x by Def5;
+  z==y by A1,A2,Th4;
+  then A3: born_eq y c= born_eq x by A2,Def5;
+  consider t be Surreal such that
+  A4:born t= born_eq y & t ==y by Def5;
+  t==x by A1,A4,Th4;
+  then born_eq x c= born_eq y by A4,Def5;
+  hence thesis by A3,XBOOLE_0:def 10;
+end;
+
+Lm1:
+  x == y implies born_eq_set x c= born_eq_set y
+proof
+  assume A1:x==y;
+  let o;
+  assume A2:o in born_eq_set x;
+  then reconsider o as Surreal by SURREAL0:def 16;
+  A3: born_eq x = born_eq y by A1,Th33;
+  A4:o==x & o in Day born_eq x by A2,Def6;
+  then o==y by A1,Th4;
+  hence thesis by A3,A4,Def6;
+end;
+
+theorem Th34:
+  x == y implies born_eq_set x = born_eq_set y
+proof
+  assume x==y;
+  then born_eq_set x c= born_eq_set y c= born_eq_set x by Lm1;
+  hence thesis by XBOOLE_0:def 10;
+end;
+
+theorem
+  y in born_eq_set x implies born y = born_eq y = born_eq x
+proof
+  assume A1: y in born_eq_set x;
+  then y in Day born_eq x by Def6;
+  then A2:born y c= born_eq x by SURREAL0:def 18;
+  x==y by A1,Def6;
+  then A3:born_eq x = born_eq y by Th33;
+  born_eq y c= born y by Def5;
+  hence thesis by A2,A3,XBOOLE_0:def 10;
+end;
+
+theorem
+  [{},Day A] in Day succ A\Day A & [Day A,{}] in Day succ A\Day A
+proof
+  A1:{} << Day A <<{};
+  o in {}\/Day A implies ex O st O in succ A & o in Day O
+    by ORDINAL1:6;
+  then A2:[{},Day A] in Day (succ A) & [Day A,{}] in Day (succ A)
+    by A1,SURREAL0:46;
+  then reconsider eD=[{},Day A],De =[Day A,{}] as Surreal;
+  A3:eD <= eD & De <=De;
+  A4: eD in {eD} & De in {De} by TARSKI:def 1;
+  L_De << {De} & {eD} << R_eD by Th11;
+  then not eD in Day A & not De in Day A by A3,A4;
+  hence thesis by A2,XBOOLE_0:def 5;
+end;
+
+reserve n for Nat;
+
+definition
+  let A be set;
+  func made_of A -> surreal-membered set means :Def8:
+    o in it iff o is surreal & L_o\/R_o c= A;
+  existence
+  proof
+    defpred P[object] means $1 is surreal;
+    consider X be set such that
+    A1: for x be object holds
+      x in X iff x in [:bool A,bool A:] & P[x] from XBOOLE_0:sch 1;
+    X is surreal-membered by A1;
+    then reconsider X as surreal-membered set;
+    take X;
+    let o be object ;
+    thus o in X implies o is surreal & L_o\/R_o c= A
+    proof
+      assume A2: o in X;
+      then o in [:bool A,bool A:] & P[o] by A1;
+      then consider a,b be object such that
+      A3: a in bool A & b in bool A & o = [a,b] by ZFMISC_1:def 2;
+      reconsider a,b as set by TARSKI:1;
+      thus thesis by A1,A2,A3,XBOOLE_1:8;
+    end;
+    assume A4: o is surreal & L_o\/R_o c= A;
+    then reconsider O=o as Surreal;
+    A5:O=[L_o,R_o];
+    L_o c= L_o\/R_o & R_o c= L_o\/R_o by XBOOLE_1:7;
+    then L_o c= A & R_o c= A by A4,XBOOLE_1:1;
+    then o in [:bool A,bool A:] by A5,ZFMISC_1:def 2;
+    hence thesis by A4,A1;
+  end;
+  uniqueness
+  proof
+    let C1,C2 be surreal-membered set  such that
+    A6: o in C1 iff o is surreal & L_o\/R_o c= A  and
+    A7: o in C2 iff o is surreal & L_o\/R_o c= A;
+    now let x be object;
+      x in C1 iff x is surreal & L_x\/R_x c= A by A6;
+      hence x in C1 iff x in C2 by A7;
+    end;
+    hence thesis by TARSKI:2;
+  end;
+end;
+
+definition
+  let A be Ordinal;
+  func unique_No_op A -> Sequence means :Def9:
+    dom it = succ A &
+    for B be Ordinal st B in succ A holds it.B c= Day B &
+       for x holds x in it.B iff
+         x in union rng (it|B) or B=born_eq x &
+         ex Y be non empty surreal-membered set st
+             Y = born_eq_set x/\made_of union rng (it|B)
+           & x = the Y -smallest Surreal;
+  existence
+  proof
+    defpred P[Sequence,Surreal]  means
+    $2 in union rng $1 or (dom $1 = born_eq $2 &
+    ex Y be non empty surreal-membered set st
+    Y=born_eq_set $2/\made_of union rng $1 & $2 = the Y -smallest Surreal);
+    deffunc H(Sequence) = { e where e is Element of Day dom $1:
+      for x st x=e holds P[$1,x]};
+    consider IT be Sequence such that
+    A1:dom IT = succ A and
+    A2:for B be Ordinal,L1 be Sequence st B in succ A & L1=IT|B holds
+    IT.B = H(L1) from ORDINAL1:sch 4;
+    take IT;
+    thus dom IT = succ A by A1;
+    let B be Ordinal such that
+    A3: B in succ A;
+    set L1=IT|B;
+    A4:dom L1 = B by RELAT_1:62,A1,A3,ORDINAL1:def 2;
+    thus IT.B c= Day B
+    proof
+      let o;
+      assume o in IT.B;
+      then o in H(L1) by A3,A2;
+      then ex e be Element of Day dom L1 st o=e & for x st x=e holds P[L1,x];
+      hence thesis by A4;
+    end;
+    let x;
+    thus x in IT.B implies
+    x in union rng (IT|B) or B = born_eq x &
+    ex Y be non empty surreal-membered set st
+    Y=born_eq_set x/\made_of union rng (IT|B) & x = the Y -smallest Surreal
+    proof
+      assume A5:x in IT.B & not x in union rng (IT|B);
+      then x in H(L1) by A3,A2;
+      then consider e be Element of Day dom L1 such that
+      A6: x=e & for y st y=e holds P[L1,y];
+      thus thesis by A4,A6,A5;
+    end;
+    assume x in union rng (IT|B) or B = born_eq x &
+    ex Y be non empty surreal-membered set st
+    Y=born_eq_set x/\made_of union rng (IT|B) & x = the Y -smallest Surreal;
+    then per cases;
+    suppose A7: x in union rng (IT|B);
+      then consider Y be set such that
+      A8: x in Y & Y in rng (IT|B) by TARSKI:def 4;
+      consider C be object such that
+      A9:C in dom (IT|B) & (IT|B).C = Y by A8,FUNCT_1:def 3;
+      reconsider C as Ordinal by A9;
+      defpred M[Ordinal] means x in IT.$1 & $1 in B;
+      (IT|B).C = IT.C by A9,FUNCT_1:47;
+      then A10: ex C be Ordinal st M[C] by A9,A8;
+      consider D be Ordinal such that
+      A11: M[D] & for E be Ordinal st M[E] holds D c= E
+      from ORDINAL1:sch 1(A10);
+      IT.D = H(IT|D) by A2,A11,A3,ORDINAL1:10;
+      then consider d be Element of Day dom (IT|D) such that
+      A12: x=d & for y st y=d holds P[IT|D,y] by A11;
+      D in succ A by A11,A3,ORDINAL1:10;
+      then A13:dom (IT|D) = D by RELAT_1:62,A1,ORDINAL1:def 2;
+      A14:x in Day D by A12,A13;
+      A15: Day D c= Day B by SURREAL0:35,A11,ORDINAL1:def 2;
+      for y st y=x holds P[L1,y] by A7;
+      then x in H(L1) by A15,A14,A4;
+      hence thesis by A2,A3;
+    end;
+    suppose A16:B = born_eq x &
+      ex Y be non empty surreal-membered set st
+      Y=born_eq_set x/\made_of union rng (IT|B) & x = the Y -smallest Surreal;
+      consider Y be non empty surreal-membered set such that
+      A17:Y=born_eq_set x/\made_of union rng (IT|B)
+      & x = the Y -smallest Surreal by A16;
+      x in Y by A17,Def7;
+      then x in born_eq_set x by A17,XBOOLE_0:def 4;
+      then x in Day born_eq x by Def6;
+      then born_eq x c= born x c= born_eq x by Def5,SURREAL0:def 18;
+      then A18:born_eq x = born x by XBOOLE_0:def 10;
+      A19:x in Day dom L1 by A4,A16,A18,SURREAL0:def 18;
+      for y st y=x holds P[L1,y] by RELAT_1:62,A1,A3,ORDINAL1:def 2,A16;
+      then x in H(L1) by A19;
+      hence thesis by A3,A2;
+    end;
+  end;
+  uniqueness
+  proof
+    defpred P[Sequence,Ordinal,Surreal]  means
+    $3 in union rng $1 or ($2 = born_eq $3 &
+    ex Y be non empty surreal-membered set st
+    Y=born_eq_set $3/\made_of union rng $1 & $3 = the Y -smallest Surreal);
+    deffunc H(Sequence) = { e where e is Element of Day dom $1:
+    for x st x=e holds P[$1,dom $1,x]};
+    let S1,S2 be Sequence such that
+    A20:dom S1 = succ A and
+    A21:for B be Ordinal st B in succ A
+    holds S1.B c= Day B & for x holds x in S1.B iff P[S1|B,B,x] and
+    A22:dom S2 = succ A and
+    A23:for B be Ordinal st B in succ A holds S2.B c= Day B &
+    for x holds x in S2.B iff P[S2|B,B,x];
+    A24: dom S1 = succ A & for B be Ordinal,L1 be Sequence st B in succ A &
+    L1=S1|B holds S1.B = H(L1)
+    proof
+      thus dom S1 = succ A by A20;
+      let B be Ordinal,L1 be Sequence such that A25: B in succ A & L1=S1|B;
+      A26:dom L1 = B by RELAT_1:62,A20,A25,ORDINAL1:def 2;
+      A27: S1.B c= Day B by A21,A25;
+      thus S1.B c= H(L1)
+      proof
+        let o;
+        assume A28: o in S1.B;
+        then reconsider O=o as Surreal by A27;
+        for x st x=o holds P[S1|B,dom (S1|B),x] by A28,A21,A25,A26;
+        hence thesis by A25,A28,A27,A26;
+      end;
+      let o;
+      assume o in H(L1);
+      then consider e be Element of Day dom L1 such that
+      A29: o=e & for x st x=e holds P[L1,dom L1,x];
+      P[L1,dom L1,e] by A29;
+      hence thesis by A29,A21,A25,A26;
+    end;
+    A30:dom S2 = succ A & for B be Ordinal,L2 be Sequence st B in succ A &
+    L2=S2|B holds S2.B = H(L2)
+    proof
+      thus dom S2 = succ A by A22;
+      let B be Ordinal,L1 be Sequence such that A31: B in succ A & L1=S2|B;
+      A32:dom L1 = B by RELAT_1:62,A22,A31,ORDINAL1:def 2;
+      A33: S2.B c= Day B by A23,A31;
+      thus S2.B c= H(L1)
+      proof
+        let o;
+        assume A34: o in S2.B;
+        then reconsider O=o as Surreal by A33;
+        for x st x=o holds P[S2|B,dom (S2|B),x] by A34,A23,A31,A32;
+        hence thesis by A31,A34,A33,A32;
+      end;
+      let o;
+      assume o in H(L1);
+      then consider e be Element of Day dom L1 such that
+      A35: o=e & for x st x=e holds P[L1,dom L1,x];
+      P[L1,dom L1,e] by A35;
+      hence thesis by A35,A23,A31,A32;
+    end;
+    S1=S2 from ORDINAL1:sch 3(A24,A30);
+    hence thesis;
+  end;
+end;
+
+registration
+  let A be Ordinal,o;
+  cluster (unique_No_op A).o -> surreal-membered;
+  coherence
+  proof
+    let x be object;
+    assume A1:x in (unique_No_op A).o;
+    then A2: o in dom (unique_No_op A) by FUNCT_1:def 2;
+    then A3:o in succ A by Def9;
+    reconsider o as Ordinal by A2;
+    (unique_No_op A).o c= Day o by A3,Def9;
+    hence thesis by A1;
+  end;
+end;
+
+theorem  Th37:
+  A c= B implies (unique_No_op B)| succ A = unique_No_op A
+proof
+  assume A c= B;
+  then A1: A in succ B by ORDINAL1:22;
+  then A2:succ A c= succ B by ORDINAL1:21;
+  defpred P[Sequence,Ordinal,Surreal]  means
+  $3 in union rng $1 or ($2 = born_eq $3 &
+  ex Y be non empty surreal-membered set st
+  Y=born_eq_set $3/\made_of union rng $1 & $3 = the Y -smallest Surreal);
+  deffunc H(Sequence) = { e where e is Element of Day dom $1:
+  for x st x=e holds P[$1,dom $1,x]};
+  set S1=unique_No_op A,S = unique_No_op B,S2=S|succ A;
+  A3:dom S1 = succ A by Def9;
+  A4:dom S = succ B by Def9;
+  then A5:dom S2 = succ A by A1,ORDINAL1:21,RELAT_1:62;
+  A6: dom S1 = succ A & for B be Ordinal,L1 be Sequence st B in succ A &
+  L1=S1|B holds S1.B = H(L1)
+  proof
+    thus dom S1 = succ A by Def9;
+    let B be Ordinal,L1 be Sequence such that A7: B in succ A & L1=S1|B;
+    A8:dom L1 = B by RELAT_1:62,A3,A7,ORDINAL1:def 2;
+    A9: S1.B c= Day B by Def9,A7;
+    thus S1.B c= H(L1)
+    proof
+      let o;
+      assume A10: o in S1.B;
+      then reconsider O=o as Surreal by A9;
+      for x st x=o holds P[S1|B,dom (S1|B),x] by A10,Def9,A7,A8;
+      hence thesis by A10,A8,A9,A7;
+    end;
+    let o;
+    assume o in H(L1);
+    then consider e be Element of Day dom L1 such that
+    A11: o=e & for x st x=e holds P[L1,dom L1,x];
+    P[L1,dom L1,e] by A11;
+    hence thesis by A11,Def9,A7,A8;
+  end;
+  A12:dom S2 = succ A & for C be Ordinal,L2 be Sequence st C in succ A &
+  L2=S2|C holds S2.C = H(L2)
+  proof
+    thus dom S2 = succ A by A4,A1,ORDINAL1:21,RELAT_1:62;
+    let C be Ordinal,L1 be Sequence such that A13: C in succ A & L1=S2|C;
+    A14:dom L1 = C by RELAT_1:62,A5,A13,ORDINAL1:def 2;
+    A15: dom (S|C) = C by A13,A2,A4,RELAT_1:62,ORDINAL1:def 2;
+    A16: S.C= S2.C by A13,FUNCT_1:49;
+    A17: S.C c= Day C &
+    for x holds x in S.C iff P[S|C,C,x] by A13,A2,Def9;
+    A18: S2|C =(S|succ A)|C =S|C by A13,ORDINAL1:def 2,RELAT_1:74;
+    thus S2.C c= H(L1)
+    proof
+      let o;
+      assume A19:o in S2.C;
+      then reconsider O=o as Surreal by A16,A17;
+      for x st x=o holds P[S2|C,dom (S2|C),x] by A18,A16,A19,A15,A13,A2,Def9;
+      hence thesis by A17,A19,A16,A13,A14;
+    end;
+    let o;
+    assume o in H(L1);
+    then consider e be Element of Day dom L1 such that
+    A20: o=e & for x st x=e holds P[L1,dom L1,x];
+    P[S|C,dom (S|C),e] by A20,A13,A18;
+    hence thesis by A20,A16,A15,A13,A2,Def9;
+  end;
+  S1=S2 from ORDINAL1:sch 3(A6,A12);
+  hence thesis;
+end;
+
+theorem Th38:
+  x in (unique_No_op A).B implies born_eq x = born x c= B &
+     x in (unique_No_op A).born x &
+     not x in union rng ((unique_No_op A)|born x)
+proof
+  set M=unique_No_op A;
+  assume A1:x in M.B;
+  then B in dom M by FUNCT_1:def 2;
+  then A2:B in succ A by Def9;
+  defpred M[Ordinal] means x in M.$1 & $1 in succ A;
+  A3: ex C be Ordinal st M[C] by A1,A2;
+  consider D be Ordinal such that
+  A4: M[D] & for E be Ordinal st M[E] holds D c= E from ORDINAL1:sch 1(A3);
+  A5:not x in union rng (M|D)
+  proof
+    assume x in union rng (M|D);
+    then consider Z be set such that
+    A6: x in Z & Z in rng (M|D) by TARSKI:def 4;
+    consider E be object such that
+    A7:E in dom (M|D) & (M|D).E = Z by A6,FUNCT_1:def 3;
+    reconsider E as Ordinal by A7;
+    M[E] by A4,A7,FUNCT_1:47,A6,ORDINAL1:10;
+    hence thesis by A4,A7,ORDINAL1:5;
+  end;
+  then A8: D = born_eq x by A4,Def9;
+  consider Y be non empty surreal-membered set such that
+  A9:Y=born_eq_set x/\made_of union rng (M|D)
+  & x= the Y -smallest Surreal by A5,A4,Def9;
+  x in born_eq_set x/\made_of union rng (M|D) by A9,Def7;
+  then x in born_eq_set x by XBOOLE_0:def 4;
+  then x in Day born_eq x by Def6;
+  then born x c= born_eq x c= born x by Def5,SURREAL0:def 18;
+  then born x = born_eq x by XBOOLE_0:def 10;
+  hence thesis by A1,A2,A4,A5,A8;
+end;
+
+theorem  Th39:
+  O c= A c= B implies (unique_No_op A).O = (unique_No_op B).O
+proof
+  assume A1:O c= A c= B;
+  O in succ A by A1,ORDINAL1:6,12;
+  then ((unique_No_op B)| succ A).O = (unique_No_op B).O by FUNCT_1:49;
+  hence thesis by A1,Th37;
+end;
+
+theorem
+  A c= B & B in succ C implies (unique_No_op C).A c= (unique_No_op C).B
+proof
+  assume A1:A c= B & B in succ C;
+  set MC=unique_No_op C;
+  let o;
+  assume A2: o in (unique_No_op C).A;
+  then reconsider x=o as Surreal by SURREAL0:def 16;
+  set b=born x;
+  succ C =dom MC by Def9;
+  then A3:dom (MC|B) = B by RELAT_1:62,A1,ORDINAL1:def 2;
+  per cases;
+  suppose A=B;
+    hence thesis by A2;
+  end;
+  suppose A <>B;
+    then A4:A in B by ORDINAL1:11,A1,XBOOLE_0:def 8;
+    then MC.A = (MC|B).A by A3,FUNCT_1:47;
+    then MC.A in rng (MC|B) by A3,A4,FUNCT_1:def 3;
+    then o in union rng (MC|B) by A2,TARSKI:def 4;
+    then x in MC.B by A1,Def9;
+    hence thesis;
+  end;
+end;
+
+definition
+  let x be Surreal;
+  func Unique_No x -> Surreal means :Def10:
+    it == x & it in (unique_No_op born_eq x).born_eq x;
+  existence
+  proof
+    defpred P[Ordinal] means for z st born_eq z = $1 holds
+    ex y st y==z & y in (unique_No_op born_eq z).(born_eq z);
+    A1: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+    proof
+      let B be Ordinal such that A2: for C be Ordinal st C in B holds P[C];
+      let z such that A3:born_eq z = B;
+      set M=unique_No_op B;
+      consider X be Surreal such that
+      A4:born X=B & X==z by A3,Def5;
+      A5:born_eq X = born_eq z by A4,Th33;
+      defpred P[object,object] means
+      $1 is Surreal & $2 is Surreal &
+      for a,b be Surreal st a=$1 & b=$2 holds
+      b==a & b in M.born_eq a;
+      A6: for e being object st e in L_X \/ R_X ex u being object st P[e,u]
+      proof
+        let e1 be object;
+        assume A7:e1 in L_X \/ R_X;
+        then reconsider e=e1 as Surreal by SURREAL0:def 16;
+        A8:born e in born X by A7,Th1;
+        A9:born e in B by A4,A7,Th1;
+        consider E be Surreal such that
+        A10:   born E=born_eq e & E==e by Def5;
+        born E in B by A9,ORDINAL1:12,A10,Def5;
+        then consider y such that
+        A11:  y==E & y in (unique_No_op born_eq E).(born_eq E) by A2,A10,Th33;
+        take y;
+        thus e1 is Surreal & y is Surreal by A7,SURREAL0:def 16;
+        let a,b be Surreal; assume A12: a=e1 & b=y;
+        hence b==a by A10,A11,Th4;
+        A13:born_eq E = born E by Th33,A10;
+        born E in born_eq z by A8,A4,A3,A10,Def5,ORDINAL1:12;
+        then born E c= born_eq z by ORDINAL1:def 2;
+        hence b in M.born_eq a by A3,A11,A12,A10,A13,Th39;
+      end;
+      consider f be Function such that
+      A14:dom f = L_X \/ R_X and
+      A15: for e being object st e in L_X \/ R_X holds P[e,f.e]
+      from CLASSES1:sch 1(A6);
+      set fX1=f.:(L_X),fX2=f.:(R_X);
+      A16:fX1 << fX2
+      proof
+        let l,r be Surreal such that A17:l in fX1 & r in fX2;
+        consider xL be object such that
+        A18: xL in dom f & xL in L_X & l=f.xL by A17,FUNCT_1:def 6;
+        reconsider xL as Surreal by A18,SURREAL0:def 16;
+        consider xR be object such that
+        A19: xR in dom f & xR in R_X & r=f.xR by A17,FUNCT_1:def 6;
+        reconsider xR as Surreal by A19,SURREAL0:def 16;
+        L_X << R_X by SURREAL0:45;
+        then l==xL < xR by A19,A18,A14,A15;
+        then l < xR==r by Th4,A19,A14,A15;
+        hence l < r by Th4;
+      end;
+      for o be object st o in fX1 \/ fX2 ex O st O in B & o in Day O
+      proof
+        let o be object;
+        assume o in fX1 \/ fX2;
+        then o in f.:(L_X\/R_X) by RELAT_1:120;
+        then consider a be object such that
+        A20: a in dom f & a in L_X\/R_X & o=f.a by FUNCT_1:def 6;
+        reconsider a as Surreal by A20,SURREAL0:def 16;
+        reconsider fa=f.a as Surreal by A20,A15;
+        take O=born_eq a;
+        fa in M.born_eq a by A20,A15;
+        then born_eq fa = born fa c= born_eq a by Th38;
+        then A21: fa in Day born fa c= Day born_eq a by SURREAL0:35,def 18;
+        born_eq a c= born a in B by A4,A20,Th1,Def5;
+        hence thesis by A20,A21,ORDINAL1:12;
+      end;
+      then A22: [fX1,fX2] in Day B by A16,SURREAL0:46;
+      then reconsider fX=[fX1,fX2] as Surreal;
+      A23:X=[L_X,R_X];
+      A24: L_X <=_ fX1
+      proof
+        let o be Surreal;
+        assume A25:o in L_X;
+        then A26: o in L_X\/ R_X by XBOOLE_0:def 3;
+        then reconsider fo=f.o as Surreal by A15;
+        take fo,fo;
+        o==fo by A26,A15;
+        hence thesis by A25,A26,A14,FUNCT_1:def 6;
+      end;
+      A27: R_X <=_ fX2
+      proof
+        let o be Surreal;
+        assume A28:o in R_X;
+        then A29: o in L_X\/ R_X by XBOOLE_0:def 3;
+        then reconsider fo=f.o as Surreal by A15;
+        take fo,fo;
+        o==fo by A29,A15;
+        hence thesis by A28,A29,A14,FUNCT_1:def 6;
+      end;
+      A30: fX1 <=_ L_X
+      proof
+        let o be Surreal;
+        assume o in fX1;
+        then consider a be object such that
+        A31:a in dom f & a in L_X  & o=f.a by FUNCT_1:def 6;
+        reconsider a as Surreal by A31,SURREAL0:def 16;
+        take a,a;
+        a==o by A31,A14,A15;
+        hence thesis by A31;
+      end;
+      A32: fX2 <=_ R_X
+      proof
+        let o be Surreal;
+        assume o in fX2;
+        then consider a be object such that
+        A33:a in dom f & a in R_X & o=f.a by FUNCT_1:def 6;
+        reconsider a as Surreal by A33,SURREAL0:def 16;
+        take a,a;
+        a==o by A33,A14,A15;
+        hence thesis by A33;
+      end;
+      fX1 <==> L_X & fX2<==>R_X by A30,A32,A24,A27;
+      then fX == X by A23,Th29;
+      then A34:fX in born_eq_set X by A22,A3,A5,Def6;
+      L_fX \/ R_fX c= union rng (M|B)
+      proof
+        let o be object;
+        assume o in L_fX \/ R_fX;
+        then o in f.:(L_X\/R_X) by RELAT_1:120;
+        then consider a be object such that
+        A35: a in dom f & a in L_X\/R_X & o=f.a by FUNCT_1:def 6;
+        reconsider a as Surreal by A35,SURREAL0:def 16;
+        reconsider fa=f.a as Surreal by A35,A15;
+        succ B =dom M by Def9;
+        then B c= dom M by ORDINAL1:def 2,6;
+        then A36:dom (M|B) = B by RELAT_1:62;
+        A37: fa in M.born_eq a by A35,A15;
+        A38: born_eq a c= born a in B by A4,A35,Th1,Def5;
+        then A39: born_eq a in B by ORDINAL1:12;
+        M.born_eq a = (M|B).born_eq a by A38,ORDINAL1:12,FUNCT_1:49;
+        then M.born_eq a in rng (M|B) by A39,A36,FUNCT_1:def 3;
+        hence o in union rng (M|B) by A35,A37,TARSKI:def 4;
+      end;
+      then fX in made_of union rng (M|B) by Def8;
+      then reconsider Y= born_eq_set X/\made_of union rng (M|B)
+      as non empty surreal-membered set
+      by A34,XBOOLE_0:def 4;
+      set xx = the Y -smallest Surreal;
+      take xx;
+      xx in Y by Def7;
+      then xx in born_eq_set X by XBOOLE_0:def 4;
+      then A40: xx == X by Def6;
+      A41: born_eq z = born_eq xx by A40,Th33,A5;
+      A42:Y = born_eq_set xx/\made_of union rng (M|B) by Th34,A40;
+      B in succ B = dom M by Def9,ORDINAL1:6;
+      hence thesis by A40,A4,Th4,A3,A41,A42,Def9;
+    end;
+    for D be Ordinal holds P[D] from ORDINAL1:sch 2(A1);
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    set B=born_eq x,M=unique_No_op B;
+    let s1,s2 be Surreal such that
+    A43: s1 == x & s1 in M.B and
+    A44: s2 == x & s2 in M.B;
+    born s1= born_eq s1 = B =born_eq s2=born s2 by A43,A44,Th33,Th38;
+    then A45: not s1 in union rng (M|B) &
+    not s2 in union rng (M|B) by A43,A44,Th38;
+    A46: B in succ B by ORDINAL1:6;
+    consider Y1 be non empty surreal-membered set such that
+    A47: Y1 = born_eq_set s1/\made_of union rng (M|B)
+    & s1 = the Y1 -smallest Surreal by A43,A45,A46,Def9;
+    consider Y2 be non empty surreal-membered set such that
+    A48: Y2 = born_eq_set s2/\made_of union rng (M|B)
+    & s2 = the Y2 -smallest Surreal by A44,A45,A46,Def9;
+    s1==s2 by A43,A44,Th4;
+    then Y1=Y2 by A47,A48,Th34;
+    hence thesis by A47,A48;
+  end;
+end;
+
+theorem Th41:
+  x==y implies Unique_No x = Unique_No y
+proof
+  assume A1: x==y;
+  then A2:born_eq x = born_eq y by Th33;
+  Unique_No y == y by Def10;
+  then Unique_No y == x & Unique_No y in (unique_No_op born_eq x).born_eq x
+  by A2,Def10,A1,Th4;
+  hence thesis by Def10;
+end;
+
+theorem Th42:
+  0_No = Unique_No 0_No
+proof
+  set B=born_eq 0_No,C=Unique_No 0_No;
+  C in (unique_No_op B).B by Def10;
+  then A1: born C c= B by Th38;
+  B c= born 0_No ={} by Def5,SURREAL0:37;
+  then born C ={} by A1;
+  hence thesis by SURREAL0:37;
+end;
+
+definition
+  let x be Surreal;
+  attr x is uniq-surreal means :Def11:
+    x = Unique_No x;
+end;
+
+registration
+  cluster 0_No -> uniq-surreal;
+  coherence by Th42;
+  cluster uniq-surreal for Surreal;
+  existence by Th42;
+end;
+
+definition
+  mode uSurreal is uniq-surreal Surreal;
+end;
+
+theorem Th43:
+  x is uSurreal & o in L_x \/ R_x implies o is uSurreal
+proof
+  set B=born_eq x;
+  assume A1: x is uSurreal & o in L_x \/ R_x;
+  then x = Unique_No x by Def11;
+  then A2:x in (unique_No_op B).B by Def10;
+  L_x \/ R_x is surreal-membered;
+  then reconsider y=o as Surreal by A1;
+  A3: B in succ B by ORDINAL1:6;
+  A4: born_eq x = born x by A2,Th38; then
+  not x in union rng ((unique_No_op B)|B) by A2,Th38;
+  then consider Y be non empty surreal-membered set such that
+  A5:Y = born_eq_set x/\made_of union rng ((unique_No_op B)|B)
+  & x = the Y -smallest Surreal by A2,A3,Def9;
+  x in Y by A5,Def7;
+  then x in made_of union rng ((unique_No_op B)|B) by A5,XBOOLE_0:def 4;
+  then L_x \/ R_x c= union rng ((unique_No_op B)|B) by Def8;
+  then consider Z be set such that
+  A6:y in Z & Z in rng ((unique_No_op B)|B) by A1,TARSKI:def 4;
+  consider o be object such that
+  A7:o in dom ((unique_No_op B)|B) & ((unique_No_op B)|B).o=Z
+  by A6,FUNCT_1:def 3;
+  reconsider o as Ordinal by A7;
+  y in (unique_No_op B).o by A6,A7,FUNCT_1:47;
+  then A8:born_eq y = born y c= o &
+  y in (unique_No_op B).born y by Th38;
+  born y c= B by A4,A1,Th1,ORDINAL1:def 2;
+  then y in (unique_No_op born y).born y by A8,Th39;
+  then Unique_No y=y by Def10,A8;
+  hence thesis by Def11;
+end;
+
+theorem
+  L_x is non empty finite & x is uSurreal implies card (L_x)=1
+proof
+  assume A1: L_x is non empty finite & x is uSurreal;
+  then consider Min,Max be Surreal such that
+     A2:Min in L_x & Max in L_x and
+    A3: for y st y in L_x holds Min <= y <= Max by Th12;
+  reconsider c = card (L_x) as Nat by A1;
+  assume A4:card (L_x)<>1;
+  set B=born_eq x;
+  x = Unique_No x by Def11,A1;
+  then A5:x in (unique_No_op B).B by Def10;
+  A6: B in succ B by ORDINAL1:6;
+  A7: born_eq x = born x by A5,Th38;
+  then not x in union rng ((unique_No_op B)|B) by A5,Th38;
+  then consider Y be non empty surreal-membered set such that
+  A8:Y = born_eq_set x/\made_of union rng ((unique_No_op B)|B)
+  & x = the Y -smallest Surreal by A5,A6,Def9;
+  A9:for y st y in L_x holds y <= Max by A3;
+  then reconsider Mx=[{Max},R_x] as Surreal by A2,Th23;
+  A10: Mx==x & born Mx c= born x by A9,A2,Th23;
+  x in Y by A8,Def7;
+  then x in made_of union rng ((unique_No_op B)|B) by A8,XBOOLE_0:def 4;
+  then A11: L_x\/R_x c= union rng ((unique_No_op B)|B) by Def8;
+  L_Mx \/ R_Mx c= L_x\/R_x by XBOOLE_1:9,A2,ZFMISC_1:31;
+  then L_Mx \/ R_Mx c= union rng ((unique_No_op B)|B) by A11,XBOOLE_1:1;
+  then A12: Mx in made_of union rng ((unique_No_op B)|B) by Def8;
+  Mx in Day born Mx c= Day born x by A9,A2,Th23,SURREAL0:def 18,35;
+  then Mx in born_eq_set x by A7,A10,Def6;
+  then Mx in Y by A8,A12,XBOOLE_0:def 4;
+  then A13:card (L_x) (+) card (R_x) c= card (L_Mx) (+) card (R_Mx)
+  by A10,A8,Def7;
+  A14:card (L_Mx) = 1 by CARD_1:30;
+  1 in Segm c by A4,A1,NAT_1:25,NAT_1:44;
+  then card (L_Mx) (+) card (R_Mx) in card (L_x) (+) card (R_x)
+  by A14,ORDINAL7:94;
+  hence thesis by A13,ORDINAL1:12;
+end;
+
+theorem
+  R_x is non empty finite & x is uSurreal implies card (R_x)=1
+proof
+  assume A1: R_x is non empty finite & x is uSurreal;
+  then consider Min,Max be Surreal such that
+    A2:Min in R_x & Max in R_x and
+    A3: for y st y in R_x holds Min <= y <= Max by Th12;
+  reconsider c = card (R_x) as Nat by A1;
+  assume A4: card (R_x)<>1;
+  set B=born_eq x;
+  x = Unique_No x by Def11,A1;
+  then A5:x in (unique_No_op B).B by Def10;
+  A6: B in succ B by ORDINAL1:6;
+  A7: born_eq x = born x by A5,Th38;
+  then not x in union rng ((unique_No_op B)|B) by A5,Th38;
+  then consider Y be non empty surreal-membered set such that
+  A8:Y = born_eq_set x/\made_of union rng ((unique_No_op B)|B)
+  & x = the Y -smallest Surreal by A5,A6,Def9;
+  A9:for y st y in R_x holds Min <= y by A3;
+  then reconsider Mx=[L_x,{Min}] as Surreal by A2,Th24;
+  A10: Mx==x & born Mx c= born x by A9,A2,Th24;
+  x in Y by A8,Def7;
+  then x in made_of union rng ((unique_No_op B)|B) by A8,XBOOLE_0:def 4;
+  then A11: L_x\/R_x c= union rng ((unique_No_op B)|B) by Def8;
+  L_Mx \/ R_Mx c= L_x\/R_x by XBOOLE_1:9,A2,ZFMISC_1:31;
+  then L_Mx \/ R_Mx c= union rng ((unique_No_op B)|B) by A11,XBOOLE_1:1;
+  then A12: Mx in made_of union rng ((unique_No_op B)|B) by Def8;
+  Mx in Day born Mx c= Day born x by A9,A2,Th24,SURREAL0:def 18,35;
+  then Mx in born_eq_set x by A7,A10,Def6;
+  then Mx in Y by A8,A12,XBOOLE_0:def 4;
+  then A13:card (L_x) (+) card (R_x) c= card (L_Mx) (+) card (R_Mx) by A10,A8,
+  Def7;
+  A14:card (R_Mx) = 1 by CARD_1:30;
+  1 in Segm c by A4,A1,NAT_1:25,44;
+  then card (L_Mx) (+) card (R_Mx) in card (L_x) (+) card (R_x)
+  by A14,ORDINAL7:94;
+  hence thesis by A13,ORDINAL1:12;
+end;
+
+theorem
+  card (L_x) (+) card (R_x) = 0 iff x = 0_No
+proof
+  hereby assume card (L_x) (+) card (R_x) = 0;
+    then L_x={} & R_x={};
+    hence x = 0_No;
+  end;
+  thus thesis;
+end;
+
+theorem
+  card (L_x) (+) card (R_x) = 1 iff ex y be Surreal st
+    x= [{},{y}] or x = [{y},{}]
+proof
+  thus card (L_x) (+) card (R_x) = 1 implies ex y be Surreal st
+  x= [{},{y}] or x = [{y},{}]
+  proof
+    assume A1:card (L_x) (+) card (R_x) = 1;
+    then card (L_x) c= 1 & card (R_x) c= 1 by ORDINAL7:86;
+    then reconsider c1=card (L_x),c2=card (R_x) as Nat;
+    A2:c1+c2 = 1 by A1,ORDINAL7:76;
+    then per cases by NAT_1:11,25;
+    suppose A3: c1=0;
+      then consider y be object such that
+      A4:{y} = R_x by A2,CARD_2:42;
+      y in {y} by TARSKI:def 1;
+      then reconsider y as Surreal by A4,SURREAL0:def 16;
+      take y;
+      L_x = {} by A3;
+      hence thesis by A4;
+    end;
+    suppose A5:c1=1;
+      then consider y be object such that
+      A6:{y} = L_x by CARD_2:42;
+      y in {y} by TARSKI:def 1;
+      then reconsider y as Surreal by A6,SURREAL0:def 16;
+      take y;
+      R_x = {} by A5,A2;
+      hence thesis by A6;
+    end;
+  end;
+  given y be Surreal such that
+  A7: x= [{},{y}] or x = [{y},{}];
+  (card (L_x) =0 & card (R_x) =1) or (card (R_x) =0 & card (L_x) =1)
+  by A7,CARD_1:30;
+  then card (L_x) (+) card (R_x) = 1+0 by ORDINAL7:76;
+  hence thesis;
+end;
+
+definition
+  let X be set;
+  attr X is uniq-surreal-membered means :Def12:
+     o in X implies o is uSurreal;
+end;
+
+registration
+  cluster empty -> uniq-surreal-membered for set;
+  coherence;
+  let x be uSurreal;
+  cluster L_x \/ R_x -> uniq-surreal-membered;
+  coherence by Th43;
+  cluster {x} -> uniq-surreal-membered;
+  coherence by TARSKI:def 1;
+end;
+
+registration
+  let X,Y be uniq-surreal-membered set;
+  cluster X\/Y -> uniq-surreal-membered;
+  coherence
+  proof
+    let o;
+    assume o in X\/Y;
+    then o in X or o in Y by XBOOLE_0:def 3;
+    hence thesis by Def12;
+  end;
+end;
+
+registration
+  let x be Surreal;
+  cluster Unique_No x -> uniq-surreal;
+  coherence
+  proof
+    set c = Unique_No x;
+    born_eq c = born_eq x by Def10,Th33;
+    then c in (unique_No_op born_eq c).born_eq c by Def10;
+    hence thesis by Def10;
+  end;
+end;
+
+theorem Th48:
+  x is uSurreal implies born x = born_eq x
+proof
+  set B=born_eq x;
+  assume  x is uSurreal;
+  then x = Unique_No x by Def11;
+  then x in (unique_No_op B).B by Def10;
+  hence thesis by Th38;
+end;
+
+theorem
+  (for z st z in born_eq_set x & L_z\/R_z is uniq-surreal-membered & x<>z
+         holds card (L_x) (+) card (R_x) in card (L_z) (+) card (R_z)) &
+    x in born_eq_set x &
+    L_x\/R_x is uniq-surreal-membered
+  implies x is uSurreal
+proof
+  assume that A1: for z st z in born_eq_set x & L_z\/R_z
+  is uniq-surreal-membered
+  & x<>z holds card (L_x) (+) card (R_x) in card (L_z) (+) card (R_z) and
+  A2:  x in born_eq_set x &
+  L_x\/R_x is uniq-surreal-membered;
+  set c = Unique_No x;
+  set B=born_eq x;
+  A3: c in (unique_No_op B).B by Def10;
+  A4: B in succ B by ORDINAL1:6;
+  x in Day born_eq x by A2,Def6;
+  then born x c= born_eq x c= born x by SURREAL0:def 18,Def5;
+  then A5: born x = B by XBOOLE_0:def 10;
+  A6: x == c by Def10;
+  A7:born_eq c = B & born_eq_set c = born_eq_set x by Def10,Th33,Th34;
+  born_eq c = born c by A3,Th38;
+  then not c in union rng ((unique_No_op B)|B) by A3,Th38,A7;
+  then consider Y be non empty surreal-membered set such that
+  A8:Y = born_eq_set c/\made_of union rng ((unique_No_op B)|B)
+  & c = the Y -smallest Surreal by A3,A4,Def9;
+  c in Y by A8,Def7;
+  then A9: c in born_eq_set x & L_c\/R_c is uniq-surreal-membered
+  by A7,A8,XBOOLE_0:def 4;
+  A10: x in born_eq_set c by A2,Def10,Th34;
+  L_x\/ R_x c= union rng ((unique_No_op B)|B)
+  proof
+    let o;
+    assume A11: o in L_x\/ R_x;
+    then reconsider y=o as uSurreal by A2;
+    set C = born_eq y;
+    A12: born y = C by Th48;
+    y = Unique_No y by Def11;
+    then A13:y in (unique_No_op C).C by Def10;
+    A14: C in B by A5,A12,A11,Th1;
+    C c= B by A5,A12,A11,Th1,ORDINAL1:def 2;
+    then A15:(unique_No_op C).C = (unique_No_op B).C by Th39;
+    A16: ((unique_No_op B)|B).C = (unique_No_op B).C
+      by A5,A12,A11,Th1,FUNCT_1:49;
+    dom (unique_No_op B)=succ B by Def9;
+    then dom ((unique_No_op B)|B) = B by A4,RELAT_1:62,ORDINAL1:def 2;
+    then (unique_No_op C).C in rng ((unique_No_op B)|B)
+      by A15,A14,A16,FUNCT_1:def 3;
+    hence thesis by A13,TARSKI:def 4;
+  end;
+  then
+  x in made_of union rng ((unique_No_op B)|B) by Def8;
+  then x in Y by A8,A10,XBOOLE_0:def 4;
+  then card (L_c) (+) card (R_c) c= card (L_x) (+) card (R_x) by A8,A6,Def7;
+  hence thesis by A9,A1,ORDINAL1:5;
+end;
+
+theorem Th50:
+  x is uSurreal & y is uSurreal & x==y implies x=y
+proof
+  assume A1: x is uSurreal & y is uSurreal & x==y;
+  thus x = Unique_No x by A1,Def11
+  .= Unique_No y by A1,Th41
+  .=y by A1,Def11;
+end;
+
+theorem Th51:
+  for c be Surreal st born c = born_eq c &
+    L_c << {x} << R_c holds born c c= born x
+proof
+  let c be Surreal such that
+  A1: born c = born_eq c & L_c << {x} << R_c and
+  A2:not born c c= born x;
+  defpred P[Ordinal] means  ex y st L_c << {y} << R_c & born y = $1;
+  P[born x] by A1;
+  then A3:ex A st P[A];
+  consider A such that
+  A4: P[A] & for B st P[B] holds A c= B from ORDINAL1:sch 1(A3);
+  consider y such that
+  A5: L_c << {y} << R_c & born y = A by A4;
+  A c= born x in born c by A1,A2,ORDINAL1:16,A4;
+  then A6: born y in born c by A5,ORDINAL1:12;
+  for z st L_c << {z} << R_c holds born y c= born z by A4,A5;
+  then born_eq c = born_eq y by A5,Th16,Th33;
+  hence thesis by A1,ORDINAL1:5,A6,Def5;
+end;
+
+theorem
+  for c,x be uSurreal st L_c << {x} << R_c & x <> c holds born c in born x
+proof
+  let c,x be uSurreal such that
+  A1: L_c << {x} << R_c & x <> c and
+  A2:not born c in born x;
+  A3: born c = born_eq c by Th48;
+  then born c c= born x c= born c by A1,A2, Th51,ORDINAL1:16;
+  then A4:born c = born x by XBOOLE_0:def 10;
+  not x == c by A1,Th50;
+  then per cases;
+  suppose x < c;
+    then per cases by Th13;
+    suppose ex xR be Surreal st xR in R_x & x < xR <= c;
+      then consider xR be Surreal such that
+      A5:xR in R_x & x < xR <= c;
+      xR in L_x \/ R_x by A5,XBOOLE_0:def 3;
+      then A6: born xR in born x by Th1;
+      {c} << R_c & x <= xR by A5,Th11;
+      then L_c << {xR} << R_c by A1,A5,Th17,Th18;
+      then born c in born x by A3,Th51,A6,ORDINAL1:12;
+      hence thesis by A4;
+    end;
+    suppose ex cL be Surreal st cL in L_c & x <= cL < c;
+      then consider cL be Surreal such that
+      A7:cL in L_c & x <= cL < c;
+      L_c << {cL} & cL in {cL} by A1,TARSKI:def 1,A7,Th17;
+      hence thesis by A7,Th3;
+    end;
+  end;
+  suppose c < x;
+    then per cases by Th13;
+    suppose ex cR be Surreal st cR in R_c & c < cR <= x;
+      then consider cR be Surreal such that
+      A8:cR in R_c & c < cR <= x;
+      cR in {cR} << R_c by A1,A8,Th18,TARSKI:def 1;
+      hence thesis by A8,Th3;
+    end;
+    suppose ex xL be Surreal st xL in L_x & c <= xL < x;
+      then consider xL be Surreal such that
+      A9:xL in L_x & c <= xL < x;
+      xL in L_x \/ R_x by A9,XBOOLE_0:def 3;
+      then A10: born xL in born x by Th1;
+      L_c << {c} & xL <= x by A9,Th11;
+      then L_c << {xL} << R_c by A1,A9,Th17,Th18;
+      then born c in born x by A3,Th51,A10,ORDINAL1:12;
+      hence thesis by A4;
+    end;
+  end;
+end;
+
+theorem
+  born x = born_eq x & not born x is limit_ordinal implies
+    ex y,z be Surreal st x == z & (z = [L_y\/{y},R_y] or z = [L_y,R_y\/{y}])
+proof
+  assume A1: born x = born_eq x & not born x is limit_ordinal;
+  then consider B be Ordinal such that
+    A2: born x = succ B by ORDINAL1:29;
+  defpred L[object] means for z st z = $1 holds born z in B & z < x;
+  consider L be set such that
+    A3: o in L iff o in Day B & L[o] from XBOOLE_0:sch 1;
+  defpred R[object] means for z st z = $1 holds born z in B & x < z;
+  consider R be set such that
+    A4: o in R iff o in Day B & R[o] from XBOOLE_0:sch 1;
+A5:  L << R
+proof
+  let l,r such that A6:l in L & r in R;
+  l < x <= r by A3,A4,A6;
+  hence thesis by Th4;
+end;
+A7: for o be object st o in L \/ R
+    ex O st O in B & o in Day O
+proof
+  let o be object such that A8: o in L \/ R;
+  A9:o in L or o in R by A8,XBOOLE_0:def 3;
+  then o in Day B by A3,A4;
+  then reconsider o as Surreal;
+  born o in B & o in Day born o by A9,A3,A4,SURREAL0:def 18;
+  hence thesis;
+end;
+then A10:[L,R] in Day B by A5,SURREAL0:46;
+then reconsider LR=[L,R] as Surreal;
+A11: not LR == x
+proof
+  assume LR == x;
+  then born x = born_eq LR c= born LR c= B
+    by A1,A10,SURREAL0:def 18,Th33,Def5;
+  then succ B c= B c= succ B by A2,XBOOLE_1:1,7;
+  then succ B = B by XBOOLE_0:def 10;
+then B in B by ORDINAL1:6;
+hence thesis;
+end;
+per cases by A11;
+  suppose A12: LR < x;
+   A13: L\/{LR} << R
+proof
+  let l,r such that A14:l in L\/{LR} & r in R;
+l in L or l = LR by A14,ZFMISC_1:136;
+then l < x <= r by A12,A3,A4,A14;
+  hence thesis by Th4;
+end;
+ for o be object st o in L\/{LR} \/ R
+    ex O st O in succ B & o in Day O
+proof
+  let o be object such that A15: o in L\/{LR} \/ R;
+  o in L\/{LR} or o in R by A15,XBOOLE_0:def 3;
+  then A16:o in L or o=LR or o in R by ZFMISC_1:136;
+  then o = LR or o in Day B by A3,A4;
+  then reconsider o as Surreal;
+born o in B  or born o c= B by A10,A16,A3,A4,SURREAL0:def 18;
+then born o c= B by ORDINAL1:def 2;
+then born o in succ B & o in Day born o by ORDINAL1:22,SURREAL0:def 18;
+  hence thesis;
+end;
+then A17: [L\/{LR},R] in Day succ B by A13,SURREAL0:46;
+then reconsider L1R=[L\/{LR},R] as Surreal;
+take LR,L1R;
+
+not born L1R c= B
+proof
+  assume A18: born L1R c= B;
+LR in L\/{LR} by ZFMISC_1:136;
+then LR in L_L1R\/R_L1R by XBOOLE_0:def 3;
+then born LR in born L1R by Th1;
+then L[LR] by A12,A18;
+then LR in L = L_LR << {LR} & LR in {LR}
+by A3,A7,A5,SURREAL0:46,Th11,TARSKI:def 1;
+hence thesis by Th3;
+end;
+then A19:succ B c= born L1R c= succ B by A17,ORDINAL1:16,21,SURREAL0:def 18;
+for y be Surreal st y == L1R holds succ B c= born y
+proof
+  let y be Surreal such that A20: y == L1R;
+  assume A21:not succ B c= born y;
+  then A22:born y c= B by ORDINAL1:16,22;
+A23: L_L1R << {y} & {y} << R_L1R by A20,SURREAL0:43;
+LR in L\/{LR} & y in {y} by TARSKI:def 1,ZFMISC_1:136;
+then per cases by Th13,A23;
+  suppose ex xLR be Surreal st xLR in R_LR & LR < xLR <= y;
+then consider xLR be Surreal such that
+   A24: xLR in R_LR & LR < xLR <= y;
+xLR <= L1R by A20,A24,Th4;
+then L_xLR << {L1R} & {xLR} << R_L1R by SURREAL0:43;
+then xLR in {xLR} << R by TARSKI:def 1;
+hence thesis by Th3,A24;
+end;
+  suppose ex yL be Surreal st yL in L_y & LR <= yL < y;
+then consider yL be Surreal such that
+    A25: yL in L_y & LR <= yL < y;
+yL in L_y\/R_y by A25,XBOOLE_0:def 3;
+then A26:born yL in born y by Th1;
+ then A27: yL in Day born yL c= Day B
+   by A21,ORDINAL1:22,SURREAL0:def 18,SURREAL0:35;
+per cases;
+  suppose x==yL;
+then B in succ B in B by A2,A26,A22,A1,ORDINAL1:6,12,Def5;
+hence thesis;
+end;
+suppose yL < x;
+then L[yL] by A26,A22;
+then yL in L =L_LR << {LR} & LR in {LR} by A3,A27, TARSKI:def 1,Th11;
+hence thesis by A25;
+end;
+suppose x < yL;
+then R[yL] by A26,A22;
+then yL in R & L1R in {L1R} << R_L1R by A4,A27, TARSKI:def 1,Th11;
+then L1R <= yL < L1R by A25,A20,Th4;
+hence thesis;
+end;
+end;
+end;
+then A28: born_eq L1R = succ B by A19,XBOOLE_0:def 10,Def5;
+A29:L_L1R << {x}
+proof
+   let l,r such that A30:l in L_L1R & r in {x};
+l in L or l = LR by A30,ZFMISC_1:136;
+then l < x by A12,A3;
+  hence thesis by A30,TARSKI:def 1;
+end;
+A31: {L1R} << R_x
+proof
+   let l,r such that A32:l in {L1R} & r in R_x;
+A33:r in L_x\/R_x by A32,XBOOLE_0:def 3;
+then A34: born r c= B by Th1,A2,ORDINAL1:22;
+A35: x in {x} << R_x by Th11,TARSKI:def 1;
+A36:l=L1R by A32,TARSKI:def 1;
+assume A37:r <= l;
+not l <= r
+proof
+  assume l<=r;
+  then L1R == r by A37,A32,TARSKI:def 1;
+  then born_eq L1R = born_eq r c= born r in succ B by A2,A33,Th1,Th33,Def5;
+hence thesis by A28,ORDINAL1:12;
+end;
+then per cases by A36,Th13;
+suppose ex xR be Surreal st xR in R_r & r < xR <= L1R;
+then consider xR be Surreal such that
+     A38: xR in R_r & r < xR <= L1R;
+xR in L_r\/R_r by A38,XBOOLE_0:def 3;
+then A39:born xR in born r by Th1;
+then A40:xR in Day born xR c= Day B by A34,SURREAL0:35,def 18,ORDINAL1:def 2;
+r <= xR by A38;
+then R[xR] by A35,A32,Th4,A39,A34;
+then xR in R & L1R in {L1R} << R_L1R by TARSKI:def 1,Th11,A40,A4;
+hence thesis by A38;
+end;
+suppose ex yL be Surreal st yL in L_L1R & r <= yL < L1R;
+then consider yL be Surreal such that
+  A41: yL in L_L1R & r <= yL < L1R;
+per cases by A41,ZFMISC_1:136;
+   suppose yL in L;
+then yL <=x by A3;
+hence thesis by A35,A32,Th4,A41;
+   end;
+   suppose yL = LR;
+then LR <= x < LR by A12,A35,A32,A41,Th4;
+hence thesis;
+   end;
+end;
+end;
+A42:L_x << {L1R}
+proof
+   let r,l such that A43:r in L_x & l in {L1R};
+A44:r in L_x\/R_x by A43,XBOOLE_0:def 3;
+then A45: born r c= B by Th1,A2,ORDINAL1:22;
+A46:x in {x} & L_x << {x} by Th11,TARSKI:def 1;
+A47:l=L1R by A43,TARSKI:def 1;
+assume A48:l <= r;
+not r <= l
+proof
+  assume r<=l;
+  then L1R == r by A48,A43,TARSKI:def 1;
+  then born_eq L1R = born_eq r c= born r in succ B by A2,A44,Th1,Th33,Def5;
+hence thesis by A28,ORDINAL1:12;
+end;
+then per cases by A47,Th13;
+suppose ex xR be Surreal st xR in L_r & L1R <= xR < r;
+then consider xR be Surreal such that
+     A49: xR in L_r & L1R <= xR < r;
+xR in L_r\/R_r by A49,XBOOLE_0:def 3;
+then A50:born xR in born r by Th1;
+then A51:xR in Day born xR c= Day B by A45,ORDINAL1:def 2,SURREAL0:def 18,35;
+ xR <= r by A49;
+then L[xR] by A50,A45,A46,A43,Th4;
+then xR in L by A51,A3;
+then xR in L_L1R & L1R in {L1R} & L_L1R << {L1R}
+  by XBOOLE_0:def 3,TARSKI:def 1,Th11;
+hence thesis by A49;
+end;
+suppose ex yL be Surreal st yL in R_L1R & L1R < yL <= r;
+then consider yL be Surreal such that
+  A52: yL in R_L1R & L1R < yL <= r;
+x <= yL by A4,A52;
+hence thesis by A52,A46,A43,Th4;
+end;
+end;
+{x} << R_L1R
+proof
+   let l,r such that A53:l in {x} & r in R_L1R;
+   x < r by A4,A53;
+   hence thesis by A53,TARSKI:def 1;
+end;
+hence thesis by A31,SURREAL0:43,A29,A42;
+  end;
+  suppose A54: x < LR;
+   A55: L << R\/{LR}
+proof
+  let l,r such that A56:l in L & r in R\/{LR};
+r in R or r = LR by A56,ZFMISC_1:136;
+then l <= x < r by A54,A3,A4,A56;
+  hence thesis by Th4;
+end;
+ for o be object st o in L\/ (R \/{LR})
+    ex O st O in succ B & o in Day O
+proof
+  let o be object such that A57: o in L\/(R\/{LR});
+  o in L or o in R\/{LR} by A57,XBOOLE_0:def 3;
+  then A58:o in L or o=LR or o in R by ZFMISC_1:136;
+  then o = LR or o in Day B by A3,A4;
+  then reconsider o as Surreal;
+born o in B  or born o c= B by A10,A58,A3,A4,SURREAL0:def 18;
+then born o c= B by ORDINAL1:def 2;
+then born o in succ B & o in Day born o by ORDINAL1:22,SURREAL0:def 18;
+  hence thesis;
+end;
+then A59: [L,R\/{LR}] in Day succ B by A55,SURREAL0:46;
+then reconsider L1R=[L,R\/{LR}] as Surreal;
+take LR,L1R;
+not born L1R c= B
+proof
+  assume A60: born L1R c= B;
+LR in R\/{LR} by ZFMISC_1:136;
+then LR in L_L1R\/R_L1R by XBOOLE_0:def 3;
+then born LR in born L1R by Th1;
+then R[LR] by A54,A60;
+then LR in R = R_LR & {LR} << R_LR & LR in {LR}
+by A4,A7,A5,SURREAL0:46,Th11,TARSKI:def 1;
+hence thesis by Th3;
+end;
+then A61: succ B c= born L1R c= succ B by A59,ORDINAL1:16,21,SURREAL0:def 18;
+for y be Surreal st y == L1R holds succ B c= born y
+proof
+  let y be Surreal such that A62: y == L1R;
+  assume A63: not succ B c= born y;
+  then A64:born y c= B by ORDINAL1:16,22;
+A65: L_L1R << {y} & {y} << R_L1R by A62,SURREAL0:43;
+LR in R\/{LR} & y in {y} by TARSKI:def 1,ZFMISC_1:136;
+then per cases by A65,Th13;
+  suppose ex xLR be Surreal st xLR in L_LR & y <= xLR < LR;
+then consider xLR be Surreal such that
+   A66: xLR in L_LR & y <= xLR < LR;
+L1R <= xLR by A62,A66,Th4;
+then L_L1R << {xLR} & {L1R} << R_xLR by SURREAL0:43;
+then L << {xLR} & xLR in {xLR} by TARSKI:def 1;
+hence thesis by Th3,A66;
+end;
+  suppose ex yL be Surreal st yL in R_y & y < yL <= LR;
+then consider yL be Surreal such that
+    A67: yL in R_y & y < yL <= LR;
+yL in L_y\/R_y by A67,XBOOLE_0:def 3;
+then A68:born yL in born y by Th1;
+ then A69: yL in Day born yL c= Day B
+   by A63,ORDINAL1:22,SURREAL0:def 18,SURREAL0:35;
+per cases;
+  suppose x==yL;
+then B in succ B in B by A2,A68,A64,A1,Def5,ORDINAL1:6,12;
+hence thesis;
+end;
+suppose x < yL;
+then R[yL] by A68,A64;
+then yL in R =R_LR & {LR} << R_LR & LR in {LR}
+by A4,A69,TARSKI:def 1,Th11;
+hence thesis by A67;
+end;
+suppose yL < x;
+then L[yL] by A68,A64;
+then yL in L & L1R in {L1R} & L_L1R << {L1R}
+  by A3,A69,TARSKI:def 1,Th11;
+then L1R <= yL < L1R by A67,A62,Th4;
+hence thesis;
+end;
+end;
+end;
+then A70: born_eq L1R = succ B by A61,XBOOLE_0:def 10,Def5;
+A71:L_L1R << {x}
+proof
+   let l,r such that A72:l in L_L1R & r in {x};
+l < x by A3,A72;
+  hence thesis by A72,TARSKI:def 1;
+end;
+A73:{L1R} << R_x
+proof
+   let l,r such that A74:l in {L1R} & r in R_x;
+A75:r in L_x\/R_x by A74,XBOOLE_0:def 3;
+then A76: born r c= B by A2,Th1,ORDINAL1:22;
+A77: x in {x} << R_x by Th11,TARSKI:def 1;
+A78:l=L1R by A74,TARSKI:def 1;
+assume A79:r <= l;
+not l <= r
+proof
+  assume l<=r;
+  then L1R == r by A79,A74,TARSKI:def 1;
+  then born_eq L1R = born_eq r c= born r in succ B by A2,A75,Th1,Th33,Def5;
+hence thesis by A70,ORDINAL1:12;
+end;
+then per cases by A78,Th13;
+suppose ex xR be Surreal st xR in R_r & r < xR <= L1R;
+then consider xR be Surreal such that
+     A80: xR in R_r & r < xR <= L1R;
+xR in L_r\/R_r by A80,XBOOLE_0:def 3;
+then A81:born xR in born r by Th1;
+then A82:xR in Day born xR c= Day B by A76,SURREAL0:def 18,35,ORDINAL1:def 2;
+r <= xR by A80;
+then R[xR] by A81,A76,A77,A74,Th4;
+then xR in R by A82,A4;
+then xR in R\/{LR} & L1R in {L1R} << R_L1R
+by TARSKI:def 1,Th11,XBOOLE_0:def 3;
+hence thesis by A80;
+end;
+suppose ex yL be Surreal st yL in L_L1R & r <= yL < L1R;
+then consider yL be Surreal such that
+  A83: yL in L_L1R & r <= yL < L1R;
+yL <=x by A3,A83;
+hence thesis by A83,A77,A74,Th4;
+end;
+end;
+A84:L_x << {L1R}
+proof
+   let r,l such that A85:r in L_x & l in {L1R};
+A86:r in L_x\/R_x by A85,XBOOLE_0:def 3;
+then A87: born r c= B by A2,Th1,ORDINAL1:22;
+A88: x in {x} & L_x << {x} by Th11,TARSKI:def 1;
+A89:l=L1R by A85,TARSKI:def 1;
+assume A90:l <= r;
+not r <= l
+proof
+  assume r<=l;
+  then L1R == r by A90,A85,TARSKI:def 1;
+  then born_eq L1R = born_eq r c= born r in succ B by A2,A86,Th1,Th33,Def5;
+hence thesis by A70,ORDINAL1:12;
+end;
+then per cases by A89,Th13;
+suppose ex xR be Surreal st xR in L_r & L1R <= xR < r;
+then consider xR be Surreal such that
+     A91: xR in L_r & L1R <= xR < r;
+xR in L_r\/R_r by A91,XBOOLE_0:def 3;
+then A92:born xR in born r by Th1;
+then A93:xR in Day born xR c= Day B by A87,ORDINAL1:def 2,SURREAL0:def 18,35;
+ xR <= r by A91;
+then L[xR] by A92,A87,A88,A85,Th4;
+then xR in L_L1R & L1R in {L1R} & L_L1R << {L1R}
+  by A93,A3,TARSKI:def 1,Th11;
+hence thesis by A91;
+end;
+suppose ex yL be Surreal st yL in R_L1R & L1R < yL <= r;
+then consider yL be Surreal such that
+  A94: yL in R_L1R & L1R < yL <= r;
+per cases by A94,ZFMISC_1:136;
+   suppose yL in R;
+then x <= yL by A4;
+hence thesis by A94,A88,A85,Th4;
+   end;
+   suppose yL = LR;
+then LR <= x < LR by A54,A88,A85,A94,Th4;
+hence thesis;
+   end;
+end;
+end;
+{x} << R_L1R
+proof
+   let l,r such that A95:l in {x} & r in R_L1R;
+   r in R or r = LR by A95,ZFMISC_1:136;
+   then x < r by A54,A4;
+   hence thesis by A95,TARSKI:def 1;
+end;
+hence thesis by A73,SURREAL0:43,A71,A84;
+  end;
+end;
+
+

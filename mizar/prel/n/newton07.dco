@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<Constructors>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="XBOOLE_0"/>
+<ArticleID name="ZFMISC_1"/>
+<ArticleID name="SUBSET_1"/>
+<ArticleID name="RELAT_1"/>
+<ArticleID name="ORDINAL1"/>
+<ArticleID name="FUNCT_1"/>
+<ArticleID name="XTUPLE_0"/>
+<ArticleID name="FINSET_1"/>
+<ArticleID name="CARD_1"/>
+<ArticleID name="FINSEQ_1"/>
+</Signature>
+<ConstrCounts>
+<ConstrCount kind="K" nr="3"/>
+</ConstrCounts>
+<Constructor kind="K" nr="1" aid="NEWTON07" relnr="917">
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="15"/>
+<Adjective nr="16" value="false"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="4"/>
+<Adjective nr="19"/>
+<Adjective nr="35"/>
+</Cluster>
+</Typ>
+</Constructor>
+<Constructor kind="K" nr="2" aid="NEWTON07" relnr="918">
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="15"/>
+<Adjective nr="16" value="false"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="4"/>
+<Adjective nr="19"/>
+<Adjective nr="35"/>
+</Cluster>
+</Typ>
+</Constructor>
+<Constructor kind="K" nr="3" aid="NEWTON07" relnr="919">
+<ArgTypes>
+<Typ kind="M" nr="1">
+<Cluster>
+<Adjective nr="15"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="4"/>
+<Adjective nr="19"/>
+<Adjective nr="35"/>
+</Cluster>
+</Typ>
+</Constructor>
+</Constructors>

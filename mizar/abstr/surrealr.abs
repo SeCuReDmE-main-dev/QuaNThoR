@@ -1,0 +1,655 @@
+:: The Ring of {C}onway Numbers in {M}izar
+::  by Karol P\kak
+:: 
+:: Received December 12, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MCART_1, FACIRC_1, RELAT_1, TARSKI, XBOOLE_0, LFUZZY_0, EUCLID_3,
+      PARTFUN1, SUBSET_1, XXREAL_0, ARYTM_3, FUNCT_1, ZFMISC_1, CARD_1,
+      ORDINAL2, ORDINAL1, PBOOLE, MEMBER_1, ARROW, ZFREFLE1, VECTSP_1,
+      ORDINAL4, ARYTM_1, FUNCOP_1, MATHMORP, GLIB_000, WAYBEL_3, COHSP_1,
+      ORDINAL6, SURREAL0, SURREALO, SURREALR;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, XTUPLE_0, SUBSET_1, RELAT_1, FUNCT_1,
+      RELSET_1, PBOOLE, ORDINAL1, PARTFUN1, FUNCOP_1, ORDINAL2, CARD_1,
+      ORDINAL4, ORDINAL6, ORDINAL7, COHSP_1, SURREAL0, SURREALO;
+ constructors PBOOLE, RELSET_1, NEWTON, AFINSQ_1, ORDINAL6, ORDINAL7, COHSP_1,
+      SURREALO;
+ registrations XBOOLE_0, RELAT_1, SUBSET_1, XTUPLE_0, ORDINAL1, ORDINAL3,
+      FUNCT_1, NAT_1, ORDINAL6, FUNCOP_1, FOMODEL0, SURREAL0;
+ requirements BOOLE, SUBSET, NUMERALS;
+
+
+begin :: Preliminaries
+
+reserve A,B,C for Ordinal,
+        o for object,
+        x,y,z,t,r,l for Surreal,
+        X,Y for set;
+
+definition
+  let f be Function;
+  redefine attr f is Function-yielding means
+:: SURREALR:def 1
+    rng f is functional;
+end;
+
+registration
+  cluster c=-monotone Function-yielding for Sequence;
+end;
+
+registration
+  let f be c=-monotone Function;
+  let X be set;
+  cluster f|X -> c=-monotone;
+end;
+
+registration
+  let f be c=-monotone Function-yielding Sequence;
+  cluster union rng f -> Function-like Relation-like;
+end;
+
+theorem :: SURREALR:1
+  for f be c=-monotone Function-yielding Sequence
+    for o be object st o in dom union rng f
+      ex A st A in dom f & o in dom (f.A);
+
+theorem :: SURREALR:2
+  for f be c=-monotone Function-yielding Sequence
+    for A st A in dom f holds
+      dom (f.A) c= dom union rng f &
+  for o st o in dom (f.A) holds (f.A).o = (union rng f).o;
+
+theorem :: SURREALR:3
+  for f be c=-monotone Function-yielding Sequence
+    for A be Ordinal,X be set st
+        for o st o in X ex B be Ordinal st o in dom (f.B) & B in A
+       holds
+    (union rng (f|A)).:X = (union rng f).:X;
+
+begin :: Surreal Number Operators - Schemes
+
+scheme :: SURREALR:sch 1
+ MonoFvSExists{
+        O()->Ordinal,
+        D(Ordinal) -> set,
+        H(object,c=-monotone Function-yielding Sequence)->object}:
+  ex S be c=-monotone Function-yielding Sequence
+     st dom S = succ O() &
+       for A be Ordinal st A in succ O()
+         ex SA be ManySortedSet of D(A) st S.A = SA &
+           for o st o in D(A) holds SA.o = H(o,S|A)
+provided
+ for S be c=-monotone Function-yielding Sequence st
+      for A be Ordinal st A in dom S holds dom (S.A) = D(A)
+        for A be Ordinal,o st o in dom (S.A) holds H(o,S|A) = H(o,S)
+and
+ for A,B be Ordinal st A c= B holds D(A) c= D(B);
+
+scheme :: SURREALR:sch 2
+ MonoFvSUniq{
+        O()->Ordinal,
+        D(Ordinal) -> set,
+        S1,S2() -> c=-monotone Function-yielding Sequence,
+        H(object,c=-monotone Function-yielding Sequence)->object}:
+S1()|O() = S2()|O()
+provided
+ O() c= dom S1() & O() c= dom S2() and
+ for A be Ordinal st A in O()
+    ex SA be ManySortedSet of D(A) st S1().A = SA &
+        for o st o in D(A) holds SA.o = H(o,S1()|A) and
+ for A be Ordinal st A in O()
+    ex SA be ManySortedSet of D(A) st S2().A = SA &
+        for o st o in D(A) holds SA.o = H(o,S2()|A);
+
+begin :: The Opposite Surreal Number
+
+definition
+  let A;
+  func No_opposite_op A -> ManySortedSet of Day A means
+:: SURREALR:def 2
+    ex S be c=-monotone Function-yielding Sequence st
+      dom S = succ A & it = S.A &
+      for B st B in succ A
+         ex SB be ManySortedSet of Day B st S.B = SB &
+           for o st o in Day B holds
+             SB.o = [union rng (S|B).:R_o, union rng(S|B).:L_o];
+end;
+
+theorem :: SURREALR:4
+  for S be c=-monotone Function-yielding Sequence st
+    for B st B in dom S
+      ex SB be ManySortedSet of Day B st S.B = SB &
+         for o st o in Day B holds
+           SB.o = [union rng (S|B).:R_o, union rng(S|B).:L_o]
+    holds
+  for A st A in dom S holds No_opposite_op A = S.A;
+
+theorem :: SURREALR:5
+  for f be c=-monotone Function-yielding Sequence st
+     o in dom (f.B) & B in A
+  holds
+    o in dom union rng (f|A) &
+    (union rng (f|A)).o = (union rng f).o;
+
+theorem :: SURREALR:6
+  for f be c=-monotone Function-yielding Sequence
+    for A,B be Ordinal st o in dom (f.B) & B in A
+        holds
+     (union rng (f|A)).o = (union rng f).o;
+
+definition
+  let x;
+  func -x -> set equals
+:: SURREALR:def 3
+    (No_opposite_op born x).x;
+end;
+
+definition
+  let X be set;
+  func --X -> set means
+:: SURREALR:def 4
+    o in it iff ex x be Surreal st x in X & o = -x;
+end;
+
+theorem :: SURREALR:7
+  -x = [-- R_x, --L_x];
+
+registration
+  let x;
+  cluster -x -> surreal;
+end;
+
+registration
+  let X be set;
+  cluster --X -> surreal-membered;
+end;
+
+theorem :: SURREALR:8
+  L_(-x) = --R_x & R_(-x) = --L_x;
+
+::$N Conway Ch.1 Th.4(ii)
+theorem :: SURREALR:9
+  - -x = x;
+
+registration
+  let x;
+  reduce - - x to x;
+end;
+
+theorem :: SURREALR:10
+  x <= y iff -y <= -x;
+
+theorem :: SURREALR:11
+  for x be Surreal, D be Ordinal st x in Day D holds -x in Day D;
+
+theorem :: SURREALR:12
+  born x = born -x;
+
+theorem :: SURREALR:13
+  born_eq x = born_eq -x;
+
+theorem :: SURREALR:14
+  x in born_eq_set y implies -x in born_eq_set -y;
+
+theorem :: SURREALR:15
+  for X  be surreal-membered set
+    holds -- -- X = X;
+
+theorem :: SURREALR:16
+  card (--X) c= card X;
+
+theorem :: SURREALR:17
+  for X be surreal-membered set holds
+    card X = card --X;
+
+theorem :: SURREALR:18
+  for X,Y be surreal-membered set
+    holds X <<= Y iff --Y <<= --X;
+
+theorem :: SURREALR:19
+ for X,Y be surreal-membered set
+    holds X << Y iff --Y << --X;
+
+theorem :: SURREALR:20
+  for X1,X2 be set holds
+    --(X1\/X2)  = (-- X1) \/ (--X2);
+
+theorem :: SURREALR:21
+  {-x} = --{x};
+
+theorem :: SURREALR:22
+  -- {} = {};
+
+theorem :: SURREALR:23
+  - 0_No = 0_No;
+
+registration
+  reduce - 0_No to 0_No;
+end;
+
+theorem :: SURREALR:24
+  x==0_No iff -x == 0_No;
+
+definition
+  let A be Ordinal;
+  func Triangle A -> Subset of [:Day A,Day A:] means
+:: SURREALR:def 5
+     for x,y be Surreal holds
+         [x,y] in it iff born x (+) born y c= A;
+end;
+
+registration
+  let A be Ordinal;
+  cluster Triangle A -> non empty;
+end;
+
+theorem :: SURREALR:25
+  for A,B be Ordinal st A c= B holds Triangle A c= Triangle B;
+
+begin :: The Sum of Surreal Numbers
+
+definition
+  let A be Ordinal;
+  func No_sum_op A -> ManySortedSet of Triangle A means
+:: SURREALR:def 6
+    ex S be c=-monotone Function-yielding Sequence st
+      dom S = succ A & it = S.A &
+      for B be Ordinal st B in succ A
+         ex SB be ManySortedSet of Triangle B st S.B = SB &
+           for x be object st x in Triangle B holds
+             SB.x = [union rng (S|B).:([:L_L_x,{R_x}:]\/[:{L_x},L_R_x:] ),
+                      union rng(S|B).:([:R_L_x,{R_x}:]\/[:{L_x},R_R_x:] )];
+end;
+
+theorem :: SURREALR:26
+  for S be c=-monotone Function-yielding Sequence st
+    for B be Ordinal st B in dom S
+      ex SB be ManySortedSet of Triangle B st S.B = SB &
+        for x be object st x in Triangle B holds
+          SB.x = [union rng(S|B).:([:L_L_x,{R_x}:]\/[:{L_x},L_R_x:]),
+                  union rng(S|B).:([:R_L_x,{R_x}:]\/[:{L_x},R_R_x:])]
+     holds
+  for A be Ordinal st A in dom S holds No_sum_op A = S.A;
+
+definition
+  let x,y be Surreal;
+  func x + y -> set equals
+:: SURREALR:def 7
+    (No_sum_op (born x (+) born y)).[x,y];
+end;
+
+definition
+  let X,Y be set;
+  func X ++ Y -> set means
+:: SURREALR:def 8
+       o in it iff ex x,y be Surreal st x in X & y in Y & o = x + y;
+end;
+
+theorem :: SURREALR:27
+  for X be set holds X++{} = {};
+
+theorem :: SURREALR:28
+  for x,y be Surreal holds
+    x + y = [(L_x ++ {y})\/({x} ++ L_y), (R_x ++ {y}) \/({x} ++ R_y)];
+
+::$N Commutativity of Addition for Surreal Number, Conway Ch.1 Th.3 (ii)
+theorem :: SURREALR:29
+  x + y = y + x;
+
+definition
+  let x,y be Surreal;
+  redefine func x + y;
+  commutativity;
+end;
+
+theorem :: SURREALR:30
+  for X,Y be set holds X++Y = Y++X;
+
+definition
+  let X,Y be set;
+  redefine func X ++ Y;
+  commutativity;
+end;
+
+registration
+  let x,y;
+  cluster x + y  -> surreal;
+end;
+
+definition
+  let x,y be Surreal;
+  func x - y -> Surreal equals
+:: SURREALR:def 9
+     x + (-y);
+end;
+
+theorem :: SURREALR:31
+  born (x+y) c= born x (+) born y;
+
+registration
+  let X,Y be set;
+  cluster X ++ Y -> surreal-membered;
+end;
+
+::$N Transitive Law of Addition for Surreal Number, Conway Ch.1 Th.5
+theorem :: SURREALR:32
+  x <= y iff x+z <= y+z;
+
+theorem :: SURREALR:33
+  for X1,X2,Y be set holds
+    (X1\/X2) ++ Y = (X1 ++ Y) \/ (X2++Y);
+
+theorem :: SURREALR:34
+  for X,Y1,Y2 be set holds
+    X ++ (Y1\/Y2) = (X ++ Y1) \/ (X++Y2);
+
+theorem :: SURREALR:35
+  for X1,X2,Y1,Y2 be set st X1 <=_ X2 & Y1 <=_ Y2
+    holds X1++Y1 <=_ X2++Y2;
+
+theorem :: SURREALR:36
+  {x}++{y}={x+y};
+
+::$N Associativity of Addition for Surreal Number, Conway Ch.1 Th.3(iii)
+theorem :: SURREALR:37
+  (x+y)+z = x+(y+z);
+
+::$N Additive Identity for Surreal Number, Conway Ch.1 Th.3(i)
+theorem :: SURREALR:38
+  x + 0_No = x;
+
+registration
+  let x;
+  reduce x + 0_No to x;
+end;
+
+::$N Property of The Aditive Inverse for Surreal Number, Conway Ch.1 Th.4(iii)
+theorem :: SURREALR:39
+  x - x == 0_No;
+
+::$N Conway Ch.1 Th.4(i)
+theorem :: SURREALR:40
+  -(x+y) = -x + -y;
+
+theorem :: SURREALR:41
+  x+y <= z iff x <= z - y;
+
+theorem :: SURREALR:42
+  x+y < z iff x < z - y;
+
+theorem :: SURREALR:43
+  x <= y & z <= t implies x+z <= y+t;
+
+theorem :: SURREALR:44
+  x <= y & z < t implies x+z < y+t;
+
+theorem :: SURREALR:45
+  x < y iff 0_No < y - x;
+
+theorem :: SURREALR:46
+  x < y iff x - y < 0_No;
+
+theorem :: SURREALR:47
+  x - y == 0_No implies x == y;
+
+definition
+  let x be object;
+  assume x is surreal;
+  func -' x -> Surreal means
+:: SURREALR:def 10
+     for x1 be Surreal st x1=x holds it = - x1;
+end;
+
+registration
+  let a be Surreal, x be object;
+  identify -a with -' x when a = x;
+end;
+
+definition
+  let x,y be object;
+  assume x is surreal & y is surreal;
+  func x +' y -> Surreal means
+:: SURREALR:def 11
+     for x1,y1 be Surreal st x1=x & y1=y holds it = x1+y1;
+end;
+
+registration
+  let a,b be Surreal, x,y be object;
+  identify a+b with x+'y when a = x, b = y;
+end;
+
+begin :: The Product of Superreal Numbers
+
+definition
+  let A be Ordinal;
+  func No_mult_op A -> ManySortedSet of Triangle A  means
+:: SURREALR:def 12
+    ex S be c=-monotone Function-yielding Sequence st
+      dom S = succ A & it = S.A &
+      for B be Ordinal st B in succ A
+         ex SB be ManySortedSet of Triangle B st S.B = SB &
+           for x be object st x in Triangle B holds
+             SB.x = [ {(union rng (S|B).[xL,R_x]) +'
+                       (union rng (S|B).[L_x,yL]) +' -'
+                       (union rng (S|B).[xL,yL])
+                        where xL is Element of L_L_x, yL is Element of L_R_x:
+                        xL in L_L_x & yL in L_R_x}
+                    \/
+                      {(union rng (S|B).[xR,R_x]) +'
+                       (union rng (S|B).[L_x,yR]) +' -'
+                       (union rng (S|B).[xR,yR])
+                       where xR is Element of R_L_x, yR is Element of R_R_x:
+                       xR in R_L_x & yR in R_R_x}
+                    ,
+                       {(union rng (S|B).[xL,R_x]) +'
+                        (union rng (S|B).[L_x,yR]) +' -'
+                        (union rng (S|B).[xL,yR])
+                       where xL is Element of L_L_x, yR is Element of R_R_x:
+                       xL in L_L_x & yR in R_R_x}
+                    \/
+                       {(union rng (S|B).[xR,R_x]) +'
+                        (union rng (S|B).[L_x,yL]) +' -'
+                        (union rng (S|B).[xR,yL])
+                       where xR is Element of R_L_x, yL is Element of L_R_x:
+                       xR in R_L_x & yL in L_R_x}
+                     ];
+end;
+
+definition
+  let x,y be Surreal;
+  func x * y -> set equals
+:: SURREALR:def 13
+    (No_mult_op (born x (+) born y)).[x,y];
+end;
+
+theorem :: SURREALR:48
+  for S be c=-monotone Function-yielding Sequence st
+    for B be Ordinal st B in dom S
+      ex SB be ManySortedSet of Triangle B st S.B = SB &
+        for x be object st x in Triangle B holds
+          SB.x = [ {(union rng (S|B).[xL,R_x]) +'
+                       (union rng (S|B).[L_x,yL]) +' -'
+                       (union rng (S|B).[xL,yL])
+                        where xL is Element of L_L_x, yL is Element of L_R_x:
+                        xL in L_L_x & yL in L_R_x}
+                    \/
+                      {(union rng (S|B).[xR,R_x]) +'
+                       (union rng (S|B).[L_x,yR]) +' -'
+                       (union rng (S|B).[xR,yR])
+                       where xR is Element of R_L_x, yR is Element of R_R_x:
+                       xR in R_L_x & yR in R_R_x}
+                    ,
+                       {(union rng (S|B).[xL,R_x]) +'
+                        (union rng (S|B).[L_x,yR]) +' -'
+                        (union rng (S|B).[xL,yR])
+                       where xL is Element of L_L_x, yR is Element of R_R_x:
+                       xL in L_L_x & yR in R_R_x}
+                    \/
+                       {(union rng (S|B).[xR,R_x]) +'
+                        (union rng (S|B).[L_x,yL]) +' -'
+                        (union rng (S|B).[xR,yL])
+                       where xR is Element of R_L_x, yL is Element of L_R_x:
+                       xR in R_L_x & yL in L_R_x}
+                     ]
+        holds
+          for A be Ordinal st A in dom S holds No_mult_op A = S.A;
+
+definition
+  let x,y be Surreal;
+  let X,Y be set;
+  func comp(X,x,y,Y) -> set means
+:: SURREALR:def 14
+     o in it iff ex x1,y1 be Surreal st
+        o = (x1*y) +' (x*y1) +' -' (x1*y1) & x1 in X & y1 in Y;
+end;
+
+theorem :: SURREALR:49
+  for X be set holds comp(X,x,y,{}) = {};
+
+theorem :: SURREALR:50
+  for x,y be Surreal holds
+    x * y = [comp(L_x,x,y,L_y) \/ comp(R_x,x,y,R_y),
+             comp(L_x,x,y,R_y) \/ comp(R_x,x,y,L_y)];
+
+theorem :: SURREALR:51
+  (for x,y holds x*y is Surreal) &
+  (for x,y holds x*y = y*x)&
+  (for x1,x2,y,x1y,x2y be Surreal st x1 == x2 & x1y = x1*y & x2y = x2*y
+     holds  x1y == x2y) &
+  (for x1,x2,y1,y2,x1y2,x2y1,x1y1,x2y2 be Surreal st
+        x1y1=x1*y1 & x1y2=x1*y2 & x2y1=x2*y1 & x2y2=x2*y2 & x1 < x2 & y1 < y2
+     holds x1y2+x2y1 < x1y1+x2y2);
+
+registration
+  let a,b be Surreal;
+  cluster a * b -> surreal;
+end;
+
+::$N Commutativity of Multiplication for Surreal Number, Conway Ch.1 Th.7(iii)
+definition
+  let a,b be Surreal;
+  redefine func a * b;
+  commutativity;
+end;
+
+registration
+  let x,y be Surreal;
+  let X,Y be set;
+  cluster comp(X,x,y,Y) -> surreal-membered;
+end;
+
+definition
+  let x,y be Surreal;
+  let X,Y be set;
+  redefine func comp(X,x,y,Y) means
+:: SURREALR:def 15
+    o in it iff ex x1,y1 be Surreal st
+      o = x1*y + x*y1 - x1*y1 & x1 in X & y1 in Y;
+end;
+
+theorem :: SURREALR:52
+  comp({z},x,y,{t}) = { z*y + x*t - z*t};
+
+theorem :: SURREALR:53
+  for X,Y be set holds comp(X,x,y,Y) = comp(Y,y,x,X);
+
+::$N Conway Ch.1 Th.8(i)
+theorem :: SURREALR:54
+  for x1,x2,y be Surreal st x1 == x2 holds x1 * y == x2 * y;
+
+::$N Conway Ch.1 Th.8(iii)
+theorem :: SURREALR:55
+  for x1,x2,y1,y2 be Surreal st x1 < x2 & y1 < y2
+    holds x1*y2+x2*y1 < x1*y1+x2*y2;
+
+::$N Conway Ch.1 Th.7(i)
+theorem :: SURREALR:56
+  x * 0_No = 0_No;
+
+::$N Multiplicative Identity for Surreal Number, Conway Ch.1 Th.7(ii)
+theorem :: SURREALR:57
+  x * 1_No = x;
+
+registration
+  let x;
+  reduce x*0_No to 0_No;
+  reduce x*1_No to x;
+end;
+
+::$N Conway Ch.1 Th.7(in)
+theorem :: SURREALR:58
+   x * (-y) = -(x*y) & (-x) * y = -(x*y) & (-x) * (-y) = x*y;
+
+theorem :: SURREALR:59
+  for X,Y1,Y2 be set st Y1 c= Y2 holds comp(X,x,y,Y1) c= comp(X,x,y,Y2);
+
+theorem :: SURREALR:60
+  for X,Y1,Y2 be set holds
+      comp(X,x,y,Y1\/Y2) = comp(X,x,y,Y1)\/comp(X,x,y,Y2);
+
+theorem :: SURREALR:61
+  for X,Y be set st
+    for x st x in X ex y st y in Y & x==y holds X <=_ Y;
+
+theorem :: SURREALR:62
+  for X1,X2 be set st X1 <=_ X2 holds -- X1 <=_ -- X2;
+
+theorem :: SURREALR:63
+  for X1,X2 be set holds -- (X1++X2) = (--X1) ++ (--X2);
+
+theorem :: SURREALR:64
+  for X be surreal-membered set holds X ++ {0_No} = X;
+
+theorem :: SURREALR:65
+  x==y implies -x== -y;
+
+theorem :: SURREALR:66
+  for x1,x2,y1,y2 be Surreal st
+    x1==x2 & y1==y2 holds x1+y1 == x2+y2;
+
+::$N Distributivity of Multiplication Over Addition for Surreal Numbers, Conway Ch.1 Th.7(v)
+theorem :: SURREALR:67
+  x*(y+z) == x*y + x*z;
+
+theorem :: SURREALR:68
+  for X1,X2,Y be set holds
+    comp(X1\/X2,x,y,Y) = comp(X1,x,y,Y)\/comp(X2,x,y,Y);
+
+::$N Associativity of Multiplication for Surreal Numbers, Conway Ch.1 Th.7(iii)
+theorem :: SURREALR:69
+  (x*y)*z == x*(y*z);
+
+theorem :: SURREALR:70
+  0_No < x & y < z implies y*x < z*x;
+
+theorem :: SURREALR:71
+  x < 0_No & y < z implies z*x < y*x;
+
+::$N Conway Ch.1 Th.9
+theorem :: SURREALR:72
+  0_No < x*y iff (x < 0_No & y < 0_No) or (0_No < x & 0_No < y);
+
+theorem :: SURREALR:73
+  0_No < z & x*z < y*z implies x < y;
+
+theorem :: SURREALR:74
+  x*y < 0_No iff (x < 0_No & 0_No < y ) or (0_No < x & y < 0_No);
+
+theorem :: SURREALR:75
+  0_No <= x & y <= z implies y*x <= z*x;
+
+theorem :: SURREALR:76
+   (x+y)*(x+y) == x*x + y*y +(x*y + y*x);
+
+theorem :: SURREALR:77
+  x*y ==0_No iff x == 0_No or y == 0_No;

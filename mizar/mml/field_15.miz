@@ -1,0 +1,4958 @@
+:: Separable Polynomials and Separable Extensions
+::  by Christoph Schwarzweller
+:: 
+:: Received June 18, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ARYTM_3, VECTSP_1, ALGSTR_0, TARSKI, STRUCT_0, SUBSET_1, NAT_6,
+      SUPINF_2, MESFUNC1, C0SP1, POLYNOM1, TOPGEN_1, FUNCSDOM, EC_PF_1,
+      HURWITZ, CARD_1, RING_2, FUNCT_1, RELAT_1, NUMBERS, FOMODEL1, YELLOW_8,
+      QC_LANG1, ZFMISC_1, REALSET1, CAT_1, POLYNOM3, FINSEQ_1, UPROOTS,
+      ARYTM_1, AFINSQ_1, ALGNUM_1, XBOOLE_0, XXREAL_0, GLIB_000, NAT_1, INT_1,
+      INT_2, MOD_4, XCMPLX_0, MSSUBFAM, ALGSEQ_1, ABIAN, VECTSP_2, RATFUNC1,
+      RLVECT_5, CARD_3, GRAPH_1, NEWTON, PARTFUN1, FINSET_1, FUNCT_4, BINOP_1,
+      LATTICES, FUNCOP_1, GCD_1, RLVECT_1, UNIROOTS, GROUP_1, GROUP_2, GROUP_6,
+      PRE_POLY, POLYNOM2, POLYNOM5, RING_3, RING_5, FIELD_1, FIELD_4, FIELD_6,
+      FIELD_8, FIELD_9, FIELD_13, FIELD_14, FIELD_15;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, BINOP_1, RELAT_1, FINSET_1,
+      REALSET1, ORDINAL1, FUNCT_1, FUNCT_2, NUMBERS, CARD_1, PARTFUN1, FUNCT_4,
+      FUNCT_7, XCMPLX_0, XXREAL_0, XXREAL_2, NAT_1, NEWTON, NAT_6, UNIROOTS,
+      PRE_POLY, INT_1, INT_2, NAT_D, ABIAN, FINSEQ_1, ALGSEQ_1, STRUCT_0,
+      POLYNOM1, POLYNOM3, POLYNOM4, POLYNOM5, BINOM, ALGSTR_0, GCD_1, GROUP_1,
+      GROUP_2, GR_CY_1, MOD_4, UPROOTS, RLVECT_1, VECTSP_2, MATRLIN, HURWITZ,
+      VECTSP_1, C0SP1, EC_PF_1, RATFUNC1, ALGNUM_1, RING_2, RING_3, RING_4,
+      RING_5, FIELD_1, FIELD_4, FIELD_6, FIELD_7, FIELD_8, FIELD_9, FIELD_13,
+      FIELD_14;
+ constructors FINSOP_1, POLYNOM4, REALSET1, NAT_D, NAT_6, RATFUNC1, BINOM,
+      RINGCAT1, POLYDIFF, ALGSEQ_1, RECDEF_1, NEWTON, XXREAL_2, ALGNUM_1,
+      ABIAN, RING_5, VECTSP_9, RINGDER1, GR_CY_1, UNIROOTS, FIELD_8, FIELD_9,
+      FIELD_12, FIELD_13, FIELD_14;
+ registrations XBOOLE_0, ORDINAL1, RELSET_1, FUNCOP_1, XCMPLX_0, XXREAL_0,
+      XREAL_0, MEMBERED, STRUCT_0, FINSET_1, XXREAL_2, FUNCT_1, CARD_1,
+      REALSET1, RATFUNC1, MOD_4, ABIAN, RELAT_1, NEWTON, NAT_1, NAT_6, INT_1,
+      ALGSTR_0, ALGSTR_1, GROUP_1, GROUP_2, RLVECT_1, VECTSP_1, RINGCAT1,
+      RING_2, RING_3, RING_4, RING_5, PRE_POLY, POLYNOM3, POLYNOM4, POLYNOM5,
+      POLYDIFF, UPROOTS, UNIROOTS, EC_PF_1, FIELD_1, FIELD_4, FIELD_5, FIELD_6,
+      FIELD_7, FIELD_8, FIELD_9, FIELD_12, FIELD_13, FIELD_14;
+ requirements NUMERALS, SUBSET, BOOLE, REAL, ARITHM;
+ equalities BINOP_1, REALSET1, XCMPLX_0, STRUCT_0, ALGSTR_0, POLYNOM3,
+      POLYNOM5, BINOM, FIELD_9;
+ expansions STRUCT_0, TARSKI, POLYNOM5, FUNCT_2, FIELD_7, FIELD_8;
+ theorems GROUP_1, VECTSP_1, VECTSP_2, RLVECT_1, FUNCOP_1, FUNCT_2, STRUCT_0,
+      TARSKI, FUNCT_1, EC_PF_1, RING_3, RATFUNC1, NEWTON, RINGDER1, GCD_1,
+      INT_2, POLYNOM5, UPROOTS, RING_4, RING_5, HURWITZ, XREAL_1, INT_1,
+      ORDINAL1, XBOOLE_0, XCMPLX_1, FIELD_4, POLYNOM3, POLYNOM4, FUNCT_7,
+      ZFMISC_1, FIELD_1, XXREAL_0, NAT_1, NAT_2, BINOM, NAT_6, XREAL_0,
+      REALALG2, FIELD_6, ALGSTR_0, FUNCT_4, CARD_2, FIELD_7, FIELD_8, FINSEQ_1,
+      FIELD_5, FIELD_9, NAT_D, C0SP1, FIELD_14, FIELD_12, RING_2, REALALG3,
+      PARTFUN1, NORMSP_1, UNIROOTS, GROUP_2, POLYNOM2, RELAT_1, XBOOLE_1,
+      XXREAL_2, FIELD_13, POLYNOM1, NIVEN, ALGSEQ_1, GROUP_10, FIELD_10,
+      GR_CY_1, GR_CY_3, POLYDIFF, NEWTON02, WSIERP_1, GROUP_4;
+ schemes NAT_1, INT_1;
+
+begin :: Preliminaries
+
+registration
+let R be Ring;
+let k be non zero Nat;
+reduce (0.R)|^k to 0.R;
+reducibility
+  proof
+  defpred P[Nat] means (0.R)|^($1) = 0.R;
+  IA: P[1] by BINOM:8;
+  IS: now let k be non zero Nat;
+      assume IV: P[k];
+      (0.R)|^(k+1) = 0.R * (0.R)|^1 by IV,BINOM:10;
+      hence P[k+1];
+     end;
+  for k being non zero Nat holds P[k] from NAT_1:sch 10(IA,IS);
+  hence thesis;
+  end;
+end;
+
+registration
+let R be Ring;
+let k be Nat;
+reduce (1.R)|^k to 1.R;
+reducibility
+  proof
+  defpred P[Nat] means (1.R)|^($1) = 1.R;
+      (1.R)|^0 = 1_R by BINOM:8; then
+  IA: P[0];
+  IS: now let k be Nat;
+      assume IV: P[k];
+      (1.R)|^(k+1) = (1.R)|^k * (1.R)|^1 by BINOM:10
+                  .= 1.R * 1.R by IV,BINOM:8;
+      hence P[k+1];
+     end;
+  for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+  hence thesis;
+  end;
+end;
+
+registration
+let p be Prime;
+cluster finite p-characteristic for Field;
+existence
+proof
+take Z/p;
+thus thesis;
+end;
+end;
+
+registration
+let F be finite Field;
+cluster Char F -> prime;
+coherence
+proof
+now assume Char F = 0;
+  then F is 0-characteristic by RING_3:def 6;
+  hence contradiction;
+  end;
+hence thesis by RING_3:86;
+end;
+end;
+
+registration
+let R be non degenerated Ring;
+cluster monic -> non zero for Element of the carrier of Polynom-Ring R;
+coherence;
+end;
+
+definition
+let F be Field;
+let p be non constant Element of the carrier of Polynom-Ring F;
+let a be non zero Element of F;
+redefine func a * p -> non constant Element of the carrier of Polynom-Ring F;
+coherence
+proof
+reconsider q = a*p as Element of the carrier of Polynom-Ring F
+   by POLYNOM3:def 10;
+deg(a*p) = deg p by RING_5:4; then
+deg q > 0 by RING_4:def 4;
+hence thesis by RING_4:def 4;
+end;
+end;
+
+theorem Lm3b:
+for n being Nat, m being non zero Nat holds n/m is Nat iff m divides n
+proof
+let n be Nat, m be non zero Nat;
+thus n/m is Nat implies m divides n by WSIERP_1:17;
+H: n * 1 = n * (m/m) by XCMPLX_1:60;
+  assume m divides n; then
+  consider x being Nat such that A1: m * x = n by NAT_D:def 3;
+  m * (n/m) = m * x by A1,H;
+  hence n/m is Nat by XCMPLX_1:5;
+end;
+
+theorem
+for p being Prime
+for n,a,b being Nat
+st p divides a & not p divides b & n = a/b holds p divides n
+proof
+let p be Prime, n,a,b be Nat;
+assume that A0: p divides a & not p divides b and
+B2: n = a/b;
+per cases;
+suppose B1: b is non zero;
+consider x being Nat such that A1: p * x = a by A0,NAT_D:def 3;
+A2: p * (x/b) = (p * x) / b;
+consider u being Nat such that A3: b * u = p * x
+by B2,A1,Lm3b,B1,NAT_D:def 3;
+p divides u by A0,A3,NAT_D:def 3,NEWTON:80; then
+consider v being Nat such that A4: p * v = u by NAT_D:def 3;
+(b * v) * p = x * p & p <> 0 by A3,A4;
+then b divides x by XCMPLX_1:5,NAT_D:def 3;
+then x/b is Nat by B1,Lm3b;
+hence thesis by B2,A1,A2,NAT_D:def 3;
+end;
+suppose b is zero;
+  then n = 0 by B2;
+  hence thesis by INT_2:12;
+end;
+end;
+
+theorem gcdp:
+for p being Prime
+for n being non zero Nat st n < p holds n gcd p = 1
+proof
+let p be Prime, n be non zero Nat;
+assume A: n < p;
+1 * n = n & 1 * p = p; then
+B: 1 divides n & 1 divides p by NAT_D:def 3;
+now let m be Nat;
+  assume C: m divides n & m divides p; then
+  per cases by INT_2:def 4;
+  suppose m = 1;
+    hence m divides 1;
+    end;
+  suppose m = p;
+    hence m divides 1 by A,C,NAT_D:7;
+    end;
+  end;
+hence thesis by B,NAT_D:def 5;
+end;
+
+theorem CF1:
+for n being non zero Nat
+for p being Prime ex k,m being Nat st n = m * p|^k & not p divides m
+proof
+let n be non zero Nat, p be Prime;
+per cases;
+suppose AS: p divides n;
+  defpred P[Nat] means p|^($1) divides n;
+  A: now let k be Nat;
+     assume A0: P[k];
+     A2: p|^k <= n by A0,NAT_D:7;
+     now assume k > n; then
+       A3: p|^k > p|^n by NAT_6:2;
+       p > 1 by INT_2:def 4; then
+       p >= 1 + 1 by INT_1:7; then
+       p|^n > n by NEWTON:86;
+       hence contradiction by A2,A3,XXREAL_0:2;
+       end;
+     hence k <= n;
+     end;
+     p|^1 = p; then
+  B: ex k being Nat st P[k] by AS;
+  consider k being Nat such that
+  C: P[k] & for m being Nat st P[m] holds m <= k from NAT_1:sch 6(A,B);
+  p|^k divides n & p|^k is non zero by C,NEWTON:87; then
+  n/(p|^k) is Nat by Lm3b; then
+  consider m being Nat such that D: m = n/(p|^k);
+  take k, m;
+  E: p|^k > 0 by NEWTON:83;
+  thus F: n = n * 1 .= n * ((p|^k) / (p|^k)) by E,XCMPLX_1:60 .= m * p|^k by D;
+  now assume p divides m; then
+    consider l being Nat such that G: p * l = m by NAT_D:def 3;
+    H: k + 0 < k + 1 by XREAL_1:8;
+    n = l * (p * p|^k) by G,F .= l * p|^(k+1) by NEWTON:6;
+    hence contradiction by C,H,NAT_D:def 3;
+    end;
+  hence thesis;
+  end;
+suppose AS: not p divides n;
+  take 0, n;
+  thus n = n * 1 .= n * p|^0 by NEWTON:4;
+  thus not p divides n by AS;
+  end;
+end;
+
+registration
+let R be domRing;
+let a be non zero Element of R;
+let n be Nat;
+cluster a|^n -> non zero;
+coherence
+proof
+defpred P[Nat] means a|^($1) <> 0.R;
+    a|^0 = 1_R by BINOM:8; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    a|^(k+1) = (a|^k) * a|^1 by BINOM:10 .= (a|^k) * a by BINOM:8;
+    hence P[k+1] by IV,VECTSP_2:def 1;
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+end;
+
+theorem teven:
+for R being Ring
+for a being Element of R
+for n being even Nat holds (-a) |^ n = a |^ n
+proof
+let R be Ring, a be Element of R, n be even Nat;
+defpred P[Nat] means $1 is even implies (-a)|^($1) = a|^($1);
+A: now let k be Nat;
+   assume A2: for n being Nat st n < k holds P[n];
+   per cases;
+   suppose k is odd;
+     hence P[k];
+     end;
+   suppose A3: k is even;
+     now per cases by NAT_1:23;
+     case A4: k = 0;
+       then (-a)|^k = 1_R by BINOM:8 .= a|^k by A4,BINOM:8;
+       hence P[k];
+       end;
+     case k = 1;
+       then k = 2 * 0 + 1;
+       hence P[k];
+       end;
+     case k >= 2;
+       then k-2 in NAT by INT_1:5;
+       then reconsider k2 = k-2 as Nat;
+       A4: k2 + 2 = k; then
+       A5: k2 is even by A3;
+       (-a)|^k = (-a)|^(k2+2)
+              .= ((-a)|^k2) * ((-a)|^2) by BINOM:10
+              .= (a|^k2) * (-a)|^(1+1) by A2,A5,A4,NAT_1:16
+              .= (a|^k2) * ((-a)|^1 * (-a)|^1) by BINOM:10
+              .= (a|^k2) * ((-a) * (-a)|^1) by BINOM:8
+              .= (a|^k2) * ((-a) * (-a)) by BINOM:8
+              .= (a|^k2) * (a * a) by VECTSP_1:10
+              .= (a|^k2) * (a|^2) by RING_5:3
+              .= a|^k by A4,BINOM:10;
+       hence P[k];
+       end;
+     end;
+     hence P[k];
+     end;
+   end;
+for k being Nat holds P[k] from NAT_1:sch 4(A);
+hence thesis;
+end;
+
+theorem todd:
+for R being Ring
+for a being Element of R
+for n being odd Nat holds (-a) |^ n = -(a |^ n)
+proof
+let R be Ring, a be Element of R, n be odd Nat;
+defpred P[Nat] means $1 is odd implies (-a)|^($1) = -(a|^($1));
+A: now let k be Nat;
+   assume A2: for n being Nat st n < k holds P[n];
+   per cases;
+   suppose k is even;
+     hence P[k];
+     end;
+   suppose A3: k is odd;
+     now per cases by NAT_1:23;
+     case k = 0;
+       hence P[k];
+       end;
+     case A4: k = 1;
+       then (-a)|^k = -a by BINOM:8 .= -(a|^k) by A4,BINOM:8;
+       hence P[k];
+       end;
+     case k >= 2;
+       then k-2 in NAT by INT_1:5;
+       then reconsider k2 = k-2 as Nat;
+       A4: k2 + 2 = k; then
+       A5: k2 is odd by A3;
+       (-a)|^k = (-a)|^(k2+2)
+              .= ((-a)|^k2) * ((-a)|^2) by BINOM:10
+              .= (-(a|^k2)) * (-a)|^(1+1) by A2,A5,A4,NAT_1:16
+              .= (-(a|^k2)) * ((-a)|^1 * (-a)|^1) by BINOM:10
+              .= (-(a|^k2)) * ((-a) * (-a)|^1) by BINOM:8
+              .= (-(a|^k2)) * ((-a) * (-a)) by BINOM:8
+              .= (-(a|^k2)) * (a * a) by VECTSP_1:10
+              .= (-(a|^k2)) * (-(-(a|^2))) by RING_5:3
+              .= (a|^k2) * (-(a|^2)) by VECTSP_1:10
+              .= -((a|^k2) * (a|^2)) by VECTSP_1:8
+              .= -(a|^k) by A4,BINOM:10;
+       hence P[k];
+       end;
+     end;
+     hence P[k];
+     end;
+   end;
+for k being Nat holds P[k] from NAT_1:sch 4(A);
+hence thesis;
+end;
+
+theorem t2:
+for R being 2-characteristic Ring, a being Element of R holds -a = a
+proof
+let R be 2-characteristic Ring, a be Element of R;
+Char R = 2 by RING_3:def 6; then
+0.R * a = (2 '*' 1.R) * a by RING_3:def 5
+       .= 2 '*' (1.R * a) by REALALG2:5 .= a + a by RING_5:2;
+hence thesis by RLVECT_1:6;
+end;
+
+theorem Lm0x:
+for R being add-associative right_zeroed right_complementable
+            Abelian non empty doubleLoopStr
+for i being Integer holds i '*' 0.R = 0.R
+proof
+let R be add-associative right_zeroed right_complementable
+            Abelian non empty doubleLoopStr, i be Integer;
+defpred P[Integer] means ($1) '*' 0.R = 0.R;
+A2: P[0] by RING_3:59;
+A3: for u being Integer holds P[u] implies P[u - 1] & P[u + 1]
+   proof
+   let u be Integer;
+   assume A4: P[u];
+   set a = 0.R;
+   now let k be Integer;
+     assume k = u-1;
+     hence k'*'a
+         = u '*' a - 1 '*' a by RING_3:64
+        .= 0.R - 0.R by A4,RING_3:60
+        .= 0.R;
+     end;
+   hence P[u-1];
+   now let k be Integer;
+     assume k = u+1;
+     hence k'*'a
+         = u '*' a + 1 '*' a by RING_3:62
+        .= 0.R by A4,RING_3:60;
+     end;
+   hence P[u+1];
+   end;
+for i being Integer holds P[i] from INT_1:sch 4(A2,A3);
+hence thesis;
+end;
+
+registration
+let F be finite Field;
+cluster MultGroup F -> cyclic;
+coherence
+proof
+MultGroup F is finite Subgroup of MultGroup F by GROUP_2:54;
+hence thesis by GR_CY_3:38;
+end;
+end;
+
+theorem MGsub:
+for F being Field
+for E being FieldExtension of F holds MultGroup F is Subgroup of MultGroup E
+proof
+let F be Field, E be FieldExtension of F;
+set M1 = MultGroup E, M2 = MultGroup F;
+H0: F is Subfield of E by FIELD_4:7;
+H2: {0.E} = {0.F} by H0,EC_PF_1:def 1;
+    the carrier of F c= the carrier of E by H0,EC_PF_1:def 1;
+    then NonZero F c= NonZero E by H2,XBOOLE_1:33;
+    then NonZero F c= the carrier of M1 by UNIROOTS:def 1; then
+A: the carrier of M2 c= the carrier of M1 by UNIROOTS:def 1; then
+H3: [:the carrier of M2,the carrier of M2:] c=
+    [:the carrier of M1,the carrier of M1:] by ZFMISC_1:96;
+    the carrier of M2 c= the carrier of F by UNIROOTS:20; then
+H4: [:the carrier of M2,the carrier of M2:] c=
+    [:the carrier of F,the carrier of F:] by ZFMISC_1:96;
+   (the multF of M1)||the carrier of M2
+      = ((the multF of E)||the carrier of M1)||the carrier of M2
+        by UNIROOTS:def 1
+     .= (the multF of E)||the carrier of M2 by H3,FUNCT_1:51
+     .= ((the multF of E)||the carrier of F)||the carrier of M2
+        by H4,FUNCT_1:51
+     .= (the multF of F)||the carrier of M2 by H0,EC_PF_1:def 1
+     .= the multF of M2 by UNIROOTS:def 1;
+hence thesis by A,GROUP_2:def 5;
+end;
+
+theorem MG:
+for R being Skew-Field
+for n being Nat
+for a being Element of R
+for b being Element of MultGroup R st a = b holds a|^n = b|^n
+proof
+let R be Skew-Field, n be Nat, a be Element of R,
+    b be Element of MultGroup R;
+set M = MultGroup R;
+assume AS: a = b;
+defpred P[Nat] means
+  for a being Element of R, b being Element of M
+  st a = b holds a|^($1) = b|^($1);
+IA: P[0]
+    proof
+    now let a be Element of R, b be Element of M;
+      thus a|^0 = 1_R by BINOM:8 .= 1_M by UNIROOTS:17 .= b|^0 by GROUP_1:25;
+      end;
+    hence thesis;
+    end;
+IS: now let k be Nat;
+    assume A: P[k];
+    now let a be Element of R, b be Element of M;
+      assume B: a = b; then
+      C: a|^k = b|^k by A;
+      thus a|^(k+1)
+             = a|^k * a|^1 by BINOM:10
+            .= a|^k * a by BINOM:8
+            .= b|^k * b by B,C,UNIROOTS:16
+            .= b|^(k+1) by GROUP_1:34;
+      end;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis by AS;
+end;
+
+Th28:
+for L be non empty ZeroStr, a be Element of L
+holds (a|L).0 = a & for n be Nat st n <> 0 holds (a|L).n = 0.L
+proof
+let L be non empty ZeroStr, a be Element of L;
+H: a|L = 0_.(L)+*(0,a) by RING_4:def 5;
+0 in dom 0_.(L);
+hence (a|L).0 = a by H,FUNCT_7:31;
+let n be Nat;
+assume n <> 0;
+hence (a|L).n = (0_.(L)).n by H,FUNCT_7:32
+             .= 0.L by ORDINAL1:def 12,FUNCOP_1:7;
+end;
+
+theorem BBD:
+for R being Ring
+for p being Polynomial of R
+for a,b being Element of R holds (a + b) * p = a * p + b * p
+proof
+let R be Ring, p be Polynomial of R; let a,b be Element of R;
+now let o be object;
+  assume o in NAT; then
+  reconsider j = o as Element of NAT;
+  thus ((a + b) * p).o
+     = (a + b) * (p.j) by POLYNOM5:def 4
+    .= a * (p.j) + b * (p.j) by VECTSP_1:def 3
+    .= (a * p).j + b * (p.j) by POLYNOM5:def 4
+    .= (a * p).j + (b * p).j by POLYNOM5:def 4
+    .= (a * p + b * p).o by NORMSP_1:def 2;
+  end;
+hence thesis;
+end;
+
+theorem
+for R being Ring
+for p being Polynomial of R
+for a,b being Element of R holds (a * b) * p = a * (b * p)
+proof
+let R be Ring, p be Polynomial of R; let a,b be Element of R;
+now let o be object;
+  assume o in NAT; then
+  reconsider j = o as Element of NAT;
+  thus ((a * b) * p).o
+     = (a * b) * (p.j) by POLYNOM5:def 4
+    .= a * (b * (p.j)) by GROUP_1:def 3
+    .= a * ((b * p).j) by POLYNOM5:def 4
+    .= (a * (b * p)).o by POLYNOM5:def 4;
+  end;
+hence thesis;
+end;
+
+theorem
+for R being Ring
+for q being Element of the carrier of Polynom-Ring R
+for p being Polynomial of R
+for n being Nat st p = q holds (n * 1.R) * p = n * q
+proof
+let R be Ring, q be Element of the carrier of Polynom-Ring R;
+let p be Polynomial of R; let n be Nat;
+assume AS: p = q;
+defpred P[Nat] means
+   for q being Element of the carrier of Polynom-Ring R
+   for p being Polynomial of R
+   st p = q holds (($1) * 1.R) * p = ($1) * q;
+IA: P[0]
+    proof
+    now let q be Element of the carrier of Polynom-Ring R;
+        let p be Polynomial of R;
+      thus (0 * 1.R) * p
+         = 0.R * p by BINOM:12
+        .= 0_.(R) by POLYNOM5:26
+        .= 0.(Polynom-Ring R) by POLYNOM3:def 10
+        .= 0 * q by BINOM:12;
+      end;
+    hence thesis;
+    end;
+IS: now let k be Nat;
+    assume IV: P[k];
+    now let q be Element of the carrier of Polynom-Ring R;
+        let p be Polynomial of R;
+      assume AS: p = q; then
+      A: (k * 1.R) * p = k * q by IV;
+      thus ((k+1) * 1.R) * p
+         = (k * 1.R + 1 * 1.R) * p by BINOM:15
+        .= (k * 1.R + 1.R) * p by BINOM:13
+        .= (k * 1.R) * p + 1.R * p by BBD
+        .= k * q + q by AS,A,POLYNOM3:def 10
+        .= k * q + 1 * q by BINOM:13
+        .= (k+1) * q by BINOM:15;
+      end;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis by AS;
+end;
+
+theorem BBB:
+for R being Ring
+for q being Element of the carrier of Polynom-Ring R
+for p being Polynomial of R
+for n,j being Nat st p = n * q holds p.j = n * (q.j)
+proof
+let R be Ring, q be Element of the carrier of Polynom-Ring R;
+let p be Polynomial of R; let n,j be Nat;
+assume AS: p = n * q;
+defpred P[Nat] means
+   for q being Element of the carrier of Polynom-Ring R
+   for p being Polynomial of R for j being Nat
+   st p = ($1) * q holds p.j = ($1) * (q.j);
+IA: P[0]
+    proof
+    now let q be Element of the carrier of Polynom-Ring R;
+        let p be Polynomial of R; let j be Nat;
+      assume p = 0 * q;
+      then p = 0.(Polynom-Ring R) by BINOM:12
+            .= 0_.(R) by POLYNOM3:def 10;
+      hence p.j
+         = 0.R by ORDINAL1:def 12,FUNCOP_1:7
+        .= 0 * (q.j) by BINOM:12;
+      end;
+    hence thesis;
+    end;
+IS: now let k be Nat;
+    assume IV: P[k];
+    now let q be Element of the carrier of Polynom-Ring R;
+        let p be Polynomial of R; let j be Nat;
+      assume AS: p = (k+1) * q;
+      reconsider p1 = k * q, r = q as Polynomial of R by POLYNOM3:def 10;
+      p = k * q + 1 * q by AS,BINOM:15
+        .= k * q + q by BINOM:13
+        .= p1 + r by POLYNOM3:def 10;
+      hence p.j
+          = (p1.j) + (r.j) by NORMSP_1:def 2
+         .= k * (q.j) + (q.j) by IV
+         .= k * (q.j) + 1 * (q.j) by BINOM:13
+         .= (k+1) * (q.j) by BINOM:15;
+      end;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis by AS;
+end;
+
+theorem ll:
+for F being Field
+for a being Element of F, p being Polynomial of F
+for E being FieldExtension of F
+for b being Element of E, q being Polynomial of E
+st a = b & p = q holds a * p = b * q
+proof
+let F be Field, a be Element of F, p be Polynomial of F;
+let E be FieldExtension of F, b be Element of E, q be Polynomial of E;
+H: F is Subring of E by FIELD_4:def 1;
+assume AS: a = b & p = q;
+now let o be object;
+  assume o in NAT;
+  then reconsider i = o as Element of NAT;
+  (a * p).i = a * (p.i) by POLYNOM5:def 4
+           .= b * (q.i) by AS,H,FIELD_6:16
+           .= (b * q).i by POLYNOM5:def 4;
+  hence (a * p).o = (b * q).o;
+  end;
+hence thesis;
+end;
+
+theorem
+for F being Field
+for p being irreducible Element of the carrier of Polynom-Ring F
+for q being Element of the carrier of Polynom-Ring F
+st q divides p holds q is unital or q is_associated_to p
+proof
+let F be Field;
+let p be irreducible Element of the carrier of Polynom-Ring F;
+let q be Element of the carrier of Polynom-Ring F;
+assume AS: q divides p; then
+consider r being Polynomial of F such that  C: q *' r = p by RING_4:1;
+per cases;
+suppose q is zero;
+  hence thesis by C;
+  end;
+suppose D: q is non zero;
+per cases by AS,RING_4:41;
+suppose deg q < 1; then
+  deg q + 1 <= 1 by INT_1:7; then
+  (deg q + 1) - 1 <= 1 - 1 by XREAL_1:9; then
+  q is constant by RING_4:def 4;
+  hence thesis by D;
+  end;
+suppose A: deg q >= deg p;
+  deg q <= deg p by AS,RING_5:13; then
+  B: deg q = deg p by A,XXREAL_0:1;
+  r <> 0_.(F) by C; then
+  deg p = deg p + deg r by D,C,B,HURWITZ:23; then
+  reconsider r as constant Element of the carrier of Polynom-Ring F
+     by RING_4:def 4,POLYNOM3:def 10;
+  F: r is non zero by C;
+  q * r = p by C,POLYNOM3:def 10;
+  hence thesis by F,GCD_1:18;
+  end;
+end;
+end;
+
+theorem lemir:
+for F being Field
+for p being irreducible Element of the carrier of Polynom-Ring F
+for q being monic Element of the carrier of Polynom-Ring F
+st q divides p holds q = 1_.(F) or q = NormPolynomial p
+proof
+let F be Field;
+let p be irreducible Element of the carrier of Polynom-Ring F;
+let q be monic Element of the carrier of Polynom-Ring F;
+assume AS: q divides p; then
+per cases by RING_4:41;
+suppose deg q < 1; then
+  deg q + 1 <= 1 by INT_1:7; then
+  (deg q + 1) - 1 <= 1 - 1 by XREAL_1:9; then
+  consider a being Element of F such that
+  A: q = a|F by RING_4:def 4,RING_4:20;
+  1.F = LC q by RATFUNC1:def 7 .= a by A,RING_5:6;
+  hence thesis by A,RING_4:14;
+  end;
+suppose A: deg q >= deg p;
+  deg q <= deg p by AS,RING_5:13; then
+  B: deg q = deg p by A,XXREAL_0:1;
+  consider r being Polynomial of F such that
+  C: q *' r = p by AS,RING_4:1;
+  r <> 0_.(F) by C; then
+  deg p = deg p + deg r by C,B,HURWITZ:23; then
+  r is constant Element of the carrier of Polynom-Ring F
+     by RING_4:def 4,POLYNOM3:def 10; then
+  consider a being Element of F such that D: r = a|F by RING_4:20;
+  a = LC p
+    proof
+    reconsider lq = deg q as Element of NAT;
+    consider s being FinSequence of the carrier of F such that
+A2: len s = lq+1  and
+A3: (q*'r).lq = Sum s and
+A4: for k be Element of NAT st k in dom s
+    holds s.k = q.(k-'1) * r.(lq+1-'k) by POLYNOM3:def 9;
+A5: lq = len q - 1 by HURWITZ:def 2; then
+A6: len q - 1 = len q -' 1 by XREAL_0:def 2;
+    lq + 1 > 0; then
+    len q >= 0 + 1 by A5,INT_1:7; then
+    len q in Seg(len q) by FINSEQ_1:1; then
+A7: len q in dom s by A2,A5,FINSEQ_1:def 3; then
+A8: s/.(len q) = s.(len q) by PARTFUN1:def 6
+              .= q.lq * r.((lq+1)-'(len q)) by A4,A5,A6,A7
+              .= q.(deg q) * r.0 by A5,NAT_2:8
+              .= LC q * r.0 by FIELD_6:2
+              .= (1.F) * r.0 by RATFUNC1:def 7
+              .= a by D,Th28;
+    now let i be Element of NAT;
+      assume
+A9:   i in dom s & i <> len q; then
+A10:  s.i = q.(i-'1) * r.((lq+1)-'i) by A4;
+      i in Seg(len q) by A2,A5,A9,FINSEQ_1:def 3; then
+      i <= len q by FINSEQ_1:1; then
+      len q - i in NAT by INT_1:5; then
+      (lq+1)-'i = len q - i by A5,XREAL_0:def 2; then
+      (lq+1)-'i <> 0 by A9; then
+      r.((lq+1)-'i) = 0.F by D,Th28;
+      hence s/.i = 0.F by A9,A10,PARTFUN1:def 6;
+      end;
+    hence a = Sum s by A8,A7,POLYNOM2:3
+           .= LC p by A3,C,B,FIELD_6:2;
+    end; then
+  E: r = (LC p) * 1_.(F) by D,RING_4:16;
+  (LC p)" * p = q *' ((LC p)" * r) by C,RING_4:10
+             .= q *' (((LC p)" * (LC p)) * 1_.(F)) by E,RING_4:11
+             .= q *' ((1.F) * 1_.(F)) by VECTSP_1:def 10
+             .= q;
+  hence thesis by RING_4:23;
+  end;
+end;
+
+theorem R441:
+for F being Field
+for p being non zero Element of the carrier of Polynom-Ring F
+holds p is reducible iff
+      (p is Unit of Polynom-Ring F or
+       ex q being monic Element of the carrier of Polynom-Ring F
+                                 st q divides p & 1 <= deg q & deg q < deg p)
+proof
+let F be Field, p be non zero Element of the carrier of Polynom-Ring F;
+now assume p is reducible; then
+  per cases by RING_4:41;
+  suppose p = 0_.(F);
+    hence p is Unit of Polynom-Ring F or
+          ex q being monic Element of the carrier of Polynom-Ring F
+                                 st q divides p & 1 <= deg q & deg q < deg p;
+    end;
+  suppose p is Unit of Polynom-Ring F;
+    hence p is Unit of Polynom-Ring F or
+          ex q being monic Element of the carrier of Polynom-Ring F
+                                 st q divides p & 1 <= deg q & deg q < deg p;
+    end;
+  suppose ex q being Element of the carrier of Polynom-Ring F
+                         st q divides p & 1 <= deg q & deg q < deg p; then
+    consider q being Element of the carrier of Polynom-Ring F such that
+    A: q divides p & 1 <= deg q & deg q < deg p;
+    set r = NormPolynomial q;
+    q <> 0_.(F) by A,HURWITZ:20; then
+    C: q is non zero by UPROOTS:def 5;
+    deg r = deg q by REALALG3:11;
+    hence p is Unit of Polynom-Ring F or
+          ex q being monic Element of the carrier of Polynom-Ring F
+                st q divides p & 1 <= deg q & deg q < deg p by A,RING_4:25,C;
+    end;
+  end;
+hence thesis by RING_4:41;
+end;
+
+theorem
+for F being Field
+for p being non constant Element of the carrier of Polynom-Ring F
+holds p is reducible iff
+      ex q being monic Element of the carrier of Polynom-Ring F
+                                st q divides p & 1 <= deg q & deg q < deg p
+proof
+let F be Field, p be non constant Element of the carrier of Polynom-Ring F;
+now assume p is reducible; then
+  per cases by RING_4:41;
+  suppose p = 0_.(F);
+    hence ex q being monic Element of the carrier of Polynom-Ring F
+                                 st q divides p & 1 <= deg q & deg q < deg p;
+    end;
+  suppose p is Unit of Polynom-Ring F;
+    hence ex q being monic Element of the carrier of Polynom-Ring F
+                                 st q divides p & 1 <= deg q & deg q < deg p;
+    end;
+  suppose ex q being Element of the carrier of Polynom-Ring F
+                         st q divides p & 1 <= deg q & deg q < deg p; then
+    consider q being Element of the carrier of Polynom-Ring F such that
+    A: q divides p & 1 <= deg q & deg q < deg p;
+    set r = NormPolynomial q;
+    q <> 0_.(F) by A,HURWITZ:20; then
+    C: q is non zero by UPROOTS:def 5;
+    deg r = deg q by REALALG3:11;
+    hence ex q being monic Element of the carrier of Polynom-Ring F
+                st q divides p & 1 <= deg q & deg q < deg p by A,RING_4:25,C;
+    end;
+  end;
+hence thesis by RING_4:41;
+end;
+
+begin :: On Powers of Polynomials
+
+registration
+let R be domRing;
+let p be non zero Polynomial of R;
+let n be Nat;
+cluster p`^n -> non zero;
+coherence
+proof
+defpred P[Nat] means p`^($1) <> 0_.(R);
+p`^0 = 1_.(R) by POLYNOM5:15; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    now assume A: p`^(k+1) = 0_.(R);
+      p`^(k+1) = (p`^k) *' p by POLYNOM5:19;
+      hence contradiction by IV,A,UPROOTS:21;
+      end;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis by UPROOTS:def 5;
+end;
+end;
+
+registration
+let F be Field;
+let p be non constant Polynomial of F;
+let n be non zero Nat;
+cluster p`^n -> non constant;
+coherence
+proof
+defpred P[Nat] means p`^($1) is non constant;
+IA: P[1] by POLYNOM5:16;
+IS: now let k be Nat;
+    assume k >= 1;
+    assume IV: P[k];
+    p`^(k+1) = (p`^k) *' p & p <> 0_.(F) & p`^k <> 0_.(F)
+        by POLYNOM5:19; then
+    H4: deg(p`^(k+1)) = deg(p`^k) + deg p by HURWITZ:23;
+    deg(p`^k) > 0 & deg p > 0 by IV,RATFUNC1:def 2;
+    hence P[k+1] by H4,RATFUNC1:def 2;
+    end;
+I: for k being Nat st k >= 1 holds P[k] from NAT_1:sch 8(IA,IS);
+n >= 0 + 1 by INT_1:7;
+hence thesis by I;
+end;
+end;
+
+registration
+let F be Field;
+let p be non constant Element of the carrier of Polynom-Ring F;
+let n be non zero Nat;
+cluster p|^n -> non constant;
+coherence
+proof
+reconsider p1 = p as Polynomial of F;
+deg p1 > 0 by RING_4:def 4; then
+reconsider p1 as non constant Polynomial of F by RATFUNC1:def 2;
+defpred P[Nat] means p|^($1) is non constant;
+IA: P[1] by BINOM:8;
+IS: now let k be Nat;
+    assume k >= 1;
+    assume P[k];
+    p|^(k+1) = (p|^k) * (p|^1) by BINOM:10
+            .= (p|^k) * p by BINOM:8
+            .= (p`^k) *' p by POLYNOM3:def 10; then
+    p1`^(k+1) = (p1`^k) *' p & p1 <> 0_.(F) & p1`^k <> 0_.(F); then
+    deg(p1`^(k+1)) = deg(p1`^k) + deg p by HURWITZ:23;
+    hence P[k+1] by RATFUNC1:def 2,RING_4:def 4;
+    end;
+I: for k being Nat st k >= 1 holds P[k] from NAT_1:sch 8(IA,IS);
+n >= 0 + 1 by INT_1:7;
+hence thesis by I;
+end;
+end;
+
+t1: for R being domRing
+    for p being non zero Polynomial of R
+    for n being Nat holds deg(p`^n) = n * (deg p)
+proof
+let R be domRing, p be non zero Polynomial of R; let n be Nat;
+defpred P[Nat] means deg(p`^($1)) = ($1) * (deg p);
+H1: 1.R <> 0.R;
+deg(p`^0) = deg(1_.(R)) by POLYNOM5:15
+         .= deg((1.R)|R) by RING_4:14
+         .= 0 * (deg p) by H1,RING_4:21; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    H2: p <> 0_.(R) & p`^k <> 0_.(R);
+    deg(p`^(k+1)) = deg((p`^k) *' p) by POLYNOM5:19
+                 .= deg(p`^k) + (deg p) by H2,HURWITZ:23
+                 .= (k+1) * (deg p) by IV;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+registration
+let F be Field;
+let p be constant Element of the carrier of Polynom-Ring F;
+let n be non zero Nat;
+cluster p|^n -> constant;
+coherence
+proof
+per cases;
+suppose p is zero;
+  then p = 0_.(F) by UPROOTS:def 5 .= 0.(Polynom-Ring F) by POLYNOM3:def 10;
+  hence thesis;
+  end;
+suppose p is non zero;
+  then deg p <= 0 & deg(p`^n) = n * (deg p) by t1,RING_4:def 4;
+  hence thesis by RING_4:def 4;
+  end;
+end;
+end;
+
+registration
+let F be Field;
+let p be constant Element of the carrier of Polynom-Ring F;
+let n be non zero Nat;
+cluster p`^n -> constant;
+coherence
+proof
+p`^n = p|^n;
+then deg(p`^n) <= 0 by RING_4:def 4;
+hence thesis by RATFUNC1:def 2;
+end;
+end;
+
+theorem
+for R being domRing
+for p being Polynomial of R
+for n being Nat holds LC(p`^n) = (LC p)|^n
+proof
+let R be domRing, p be Polynomial of R; let n be Nat;
+per cases;
+suppose A: n is zero;
+LC(p`^0) = LC(1_.(R)) by POLYNOM5:15
+        .= LC((1.R)|R) by RING_4:14
+        .= 1_R by RING_5:6
+        .= (LC p)|^0 by BINOM:8;
+hence thesis by A;
+end;
+suppose A: n is non zero;
+defpred P[Nat] means LC(p`^($1)) = (LC p)|^($1);
+LC(p`^1) =  LC p by POLYNOM5:16 .= (LC p)|^1 by BINOM:8; then
+IA: P[1];
+IS: now let k be non zero Nat;
+    assume IV: P[k];
+    LC(p`^(k+1)) = LC((p`^k) *' p) by POLYNOM5:19
+                .= LC(p`^k) * (LC p) by NIVEN:46
+                .= ((LC p)|^k) * ((LC p)|^1) by IV,BINOM:8
+                .= (LC p)|^(k+1) by BINOM:10;
+    hence P[k+1];
+    end;
+for k being non zero Nat holds P[k] from NAT_1:sch 10(IA,IS);
+hence thesis by A;
+end;
+end;
+
+theorem
+for R being domRing
+for p being non zero Polynomial of R
+for n being Nat holds deg(p`^n) = n * (deg p) by t1;
+
+t3a:
+for R being Ring
+for p,q being Polynomial of R holds (p *' q).0 = (p.0) * (q.0)
+proof
+let L be Ring, p,q be Polynomial of L;
+consider r being FinSequence of the carrier of L such that
+A: len r = 0+1 & (p *' q).0 = Sum r &
+   for k being Element of NAT st k in dom r holds r.k = p.(k-'1) * q.(0+1-'k)
+   by POLYNOM3:def 9;
+B: r = <* r.1 *> by A,FINSEQ_1:40; then
+dom r = {1} by FINSEQ_1:2,FINSEQ_1:38; then
+1 in dom r by TARSKI:def 1; then
+r.1 = p.(1-'1) * q.(0+1-'1) by A
+   .= p.(1-'1) * q.0 by NAT_2:8 .= p.0 * q.0 by NAT_2:8;
+hence (p *' q).0 = p.0 * q.0 by B,A,RLVECT_1:44;
+end;
+
+theorem t3:
+for R being commutative Ring
+for p being Polynomial of R
+for n being non zero Nat holds (p `^ n).0 = (p.0) |^ n
+proof
+let R be commutative Ring, p be Polynomial of R; let n be non zero Nat;
+defpred P[Nat] means (p `^ ($1)).0 = (p.0) |^ ($1);
+    (p`^1).0 = p.0 by POLYNOM5:16 .= (p.0)|^1 by BINOM:8; then
+IA: P[1];
+IS: now let k be Nat;
+    assume k >= 1;
+    assume IV: P[k];
+    (p`^(k+1)).0
+        = ((p`^k) *' p).0 by POLYNOM5:19
+       .= (p`^k).0 * (p.0) by t3a
+       .= (p.0)|^k * (p.0)|^1 by IV,BINOM:8
+       .= (p.0)|^ (k+1) by BINOM:10;
+    hence P[k+1];
+    end;
+I: for k being Nat st k >= 1 holds P[k] from NAT_1:sch 8(IA,IS);
+n >= 0 + 1 by INT_1:7;
+hence thesis by I;
+end;
+
+t4b:
+for R being domRing
+for a being non zero Element of R holds <%0.R,a%> = a * <%0.R,1.R%>
+proof
+let R be domRing, a be non zero Element of R;
+set q = a * <%0.R,1.R%>;
+now let j be Nat;
+  H: j is Element of NAT by ORDINAL1:def 12;
+  j <= 1 implies j = 0 or ... or j = 1; then
+  per cases;
+  suppose A: j = 1;
+    hence <%0.R,a%>.j = a * 1.R by POLYNOM5:38
+                     .= a * (<%0.R,1.R%>).j by A,POLYNOM5:38
+                     .= q.j by A,POLYNOM5:def 4;
+    end;
+  suppose A: j = 0;
+    hence <%0.R,a%>.j = a * 0.R by POLYNOM5:38
+                     .= a * (<%0.R,1.R%>).j by A,POLYNOM5:38
+                     .= q.j by A,POLYNOM5:def 4;
+    end;
+  suppose j > 1; then
+    A: j >= 1 + 1 by INT_1:7;
+    hence <%0.R,a%>.j = a * 0.R by POLYNOM5:38
+                     .= a * (<%0.R,1.R%>).j by A,POLYNOM5:38
+                     .= q.j by H,POLYNOM5:def 4;
+    end;
+  end;
+hence thesis;
+end;
+
+theorem t4a:
+for R being domRing
+for a being non zero Element of R
+for n being Nat holds <%0.R,a%>`^n = (a|^n) * (<%0.R,1.R%>`^n)
+proof
+let R be domRing, a be non zero Element of R, n be Nat;
+defpred P[Nat] means <%0.R,a%>`^($1) = (a|^($1)) * (<%0.R,1.R%>`^($1));
+    <%0.R,a%>`^0 = (1_R) * (1_.(R)) by POLYNOM5:15
+                .= (a|^0) * (1_.(R)) by BINOM:8
+                .= (a|^0) * (<%0.R,1.R%>`^0) by POLYNOM5:15; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    <%0.R,a%>`^(k+1)
+        = (<%0.R,a%>`^k) *' <%0.R,a%> by POLYNOM5:19
+       .= ((a|^k) * (<%0.R,1.R%>`^k)) *' (a * <%0.R,1.R%>) by IV,t4b
+       .= a * (((a|^k) * (<%0.R,1.R%>`^k)) *' <%0.R,1.R%>) by RING_4:10
+       .= a * ((a|^k) * ((<%0.R,1.R%>`^k) *' <%0.R,1.R%>)) by RING_4:10
+       .= (a * (a|^k)) * ((<%0.R,1.R%>`^k) *' <%0.R,1.R%>) by RING_4:11
+       .= ((a|^k) * a|^1) * ((<%0.R,1.R%>`^k) *' <%0.R,1.R%>) by BINOM:8
+       .= (a|^(k+1)) * ((<%0.R,1.R%>`^k) *' <%0.R,1.R%>) by BINOM:10;
+    hence P[k+1] by POLYNOM5:19;
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+theorem
+for F being Field
+for a being Element of F
+for n being Nat holds (a|F)`^n = (a|^n)|F
+proof
+let F be Field, a be Element of F, n be Nat;
+defpred P[Nat] means (a|F)`^($1) = (a|^($1))|F;
+  (a|F)`^0
+    = 1_.(F) by POLYNOM5:15
+   .= (1_F)|F by RING_4:14
+   .= (a|^0)|F by BINOM:8; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    (a|F)`^(k+1)
+         = ((a|^k)|F) *' (a|F) by IV,POLYNOM5:19
+        .= ((a|^k) * a)|F by RING_4:18
+        .= ((a|^k) * (a|^1))|F by BINOM:8
+        .= (a|^(k+1))|F by BINOM:10;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+theorem DP3:
+for F being Field
+for a being non zero Element of F
+for n,m being Nat holds anpoly(a,m)`^n = anpoly(a|^n,n*m)
+proof
+let F be Field, a be non zero Element of F, n,m be Nat;
+defpred P[Nat] means
+  for m being Nat holds anpoly(a,m)`^($1) = anpoly(a|^($1),($1)*m);
+now let m be Nat;
+  thus anpoly(a,m)`^0
+     = 1_.(F) by POLYNOM5:15
+    .= (1_F)|F by RING_4:14
+    .= anpoly(1_F,0) by FIELD_1:7
+    .= anpoly(a|^0,0*m) by BINOM:8;
+  end; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    now let m be Nat;
+      thus anpoly(a,m)`^(k+1)
+         = (anpoly(a,m)`^k) *' anpoly(a,m) by POLYNOM5:19
+        .= anpoly(a|^k,k*m) *' anpoly(a,m) by IV
+        .= anpoly((a|^k)*a,k*m+m) by FIELD_1:10
+        .= anpoly((a|^k)*(a|^1),k*m+m) by BINOM:8
+        .= anpoly(a|^(k+1),(k+1)*m) by BINOM:10;
+      end;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+t4:
+for R being domRing
+for a being non zero Element of R
+for n being non zero Nat, m being Nat st m <> n holds (<%0.R,a%>`^n).m = 0.R
+proof
+let R be domRing;
+let a be non zero Element of R, n be non zero Nat, m be Nat;
+assume AS: m <> n;
+<%0.R,a%>`^n = (a|^n) * (<%0.R,1.R%>`^n) by t4a
+            .= (a|^n) * anpoly(1.R,n) by FIELD_1:12
+            .= anpoly((a|^n)*(1.R),n) by FIELD_1:9;
+hence thesis by AS,POLYDIFF:25;
+end;
+
+theorem Lm12a:
+for F being Field
+for a being Element of F
+for n being Nat holds deg((X-a)`^n) = n
+proof
+let F be Field, a be Element of F, n be Nat;
+defpred P[Nat] means deg((X-a)`^($1)) = $1;
+H: (X-a)`^0 = 1_.(F) by POLYNOM5:15;
+IA: P[0] by H,RATFUNC1:def 2;
+IS: now let k be Nat;
+    assume P[k]; then
+    H2: deg((X-a)`^k) = k & deg(X-a) = 1 by FIELD_5:def 1;
+    (X-a)`^(k+1) = ((X-a)`^k) *' (X-a) &
+       X-a <> 0_.(F) & (X-a)`^k <> 0_.(F) by POLYNOM5:19;
+    hence P[k+1] by H2,HURWITZ:23;
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+theorem Lm12b:
+for F being Field
+for a being Element of F
+for n being non zero Nat holds Roots((X-a)`^n) = {a}
+proof
+let F be Field, a be Element of F, n be non zero Nat;
+defpred P[Nat] means Roots((X-a)`^($1)) = {a};
+    (X-a)`^1 = (X-a) by POLYNOM5:16; then
+IA: P[1] by RING_5:18;
+IS: now let k be Nat;
+    assume k >= 1;
+    assume P[k]; then
+    H2: Roots((X-a)`^k) = {a} & Roots(X-a) = {a} by RING_5:18;
+    (X-a)`^(k+1) = ((X-a)`^k) *' (X-a) by POLYNOM5:19; then
+    Roots((X-a)`^(k+1)) = Roots((X-a)`^k) \/ Roots(X-a) by UPROOTS:23;
+    hence P[k+1] by H2;
+    end;
+I: for k being Nat st k >= 1 holds P[k] from NAT_1:sch 8(IA,IS);
+n >= 0 + 1 by INT_1:7;
+hence thesis by I;
+end;
+
+theorem ro0:
+for F being Field
+for a being Element of F, n being Nat holds multiplicity((X-a)`^n,a) = n
+proof
+let F be Field, a be Element of F, n be Nat;
+set p = (X-a)`^n, m = multiplicity(p,a);
+I: n + 0 < n + 1 by XREAL_1:6;
+(1_.(F)) *' p = p; then
+A: (X-a)`^n divides p by RING_4:1;
+deg((X-a)`^(n+1)) = n+1 & deg((X-a)`^n) = n by Lm12a;
+hence thesis by A,I,RING_5:13,FIELD_14:67;
+end;
+
+theorem caBR:
+for F being Field
+for a being Element of F, n being Nat holds card BRoots((X-a)`^n) = n
+proof
+let F be Field, a be Element of F, n be Nat;
+defpred P[Nat] means card BRoots((X-a)`^($1)) = ($1);
+    0 = deg((X-a)`^0) by Lm12a .= len((X-a)`^0) - 1 by HURWITZ:def 2; then
+IA: P[0] by UPROOTS:57;
+IS: now let k be Nat;
+    assume IV: P[k];
+    (X-a)`^(k+1) = ((X-a)`^k) *' (X-a) by POLYNOM5:19; then
+    card BRoots((X-a)`^(k+1))
+       = card BRoots((X-a)`^k) + card BRoots(X-a) by RING_5:41
+      .= k + 1 by IV,RING_5:40;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+theorem XYZ:
+for R being non degenerated comRing, S being comRingExtension of R
+for a being Element of R, b being Element of S
+for n being Element of NAT st a = b holds (X-b)`^n = (X-a)`^n
+proof
+let R be non degenerated comRing, S be comRingExtension of R,
+    a be Element of R, b being Element of S, n be Element of NAT;
+assume AS: a = b;
+defpred P[Nat] means (X-b)`^($1) = (X-a)`^($1);
+(X-b)`^0 = 1_.(S) by POLYNOM5:15
+        .= 1_.(R) by FIELD_4:14 .= (X-a)`^0 by POLYNOM5:15; then
+IA: P[0];
+IS: now let k be Nat;
+    assume P[k]; then
+    H: (X-a)`^k = (X-b)`^k & (X-b) = (X-a) by AS,FIELD_4:21;
+    (X-b)`^(k+1)
+        = ((X-b)`^k) *' (X-b) by POLYNOM5:19
+       .= ((X-a)`^k) *' (X-a) by H,FIELD_4:17
+       .= (X-a)`^(k+1) by POLYNOM5:19;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+ro00:
+for F being Field
+for p being non zero Polynomial of F
+for a being Element of F holds deg p >= multiplicity(p,a)
+proof
+let F be Field, p be non zero Polynomial of F; let a be Element of F;
+set m = multiplicity(p,a);
+(X-a)`^m divides p & deg((X-a)`^m) = m by FIELD_14:67,Lm12a;
+hence thesis by RING_5:13;
+end;
+
+theorem ro1:
+for F being Field
+for p being monic Polynomial of F
+for a being Element of F
+for n being Nat
+holds p divides (X-a)`^n iff ex l being Nat st l <= n & p = (X-a)`^l
+proof
+let F be Field, p be monic Polynomial of F; let a be Element of F, n be Nat;
+reconsider n as Element of NAT by ORDINAL1:def 12;
+A: now assume AS: p divides (X-a)`^n;
+   defpred P[Nat] means
+     for p being monic Polynomial of F
+     st deg p = $1 & p divides (X-a)`^n holds ex l being Nat st p = (X-a)`^l;
+   IA: P[0]
+       proof
+       now let p be monic Polynomial of F;
+         assume deg p = 0 & p divides (X-a)`^n;
+         then p = 1_.(F) by FIELD_14:16,RATFUNC1:def 2;
+         then p = (X-a)`^0 by POLYNOM5:15;
+         hence ex l being Nat st p = (X-a)`^l;
+         end;
+       hence thesis;
+       end;
+    IS: now let j be Element of NAT;
+        assume B0: 0 <= j & j < n;
+        assume IV: P[j];
+        now let p be monic Polynomial of F;
+          assume C: deg p = j+1 & p divides (X-a)`^n; then
+          consider q being Polynomial of F such that
+          A0: p *' q = (X-a)`^n by RING_4:1;
+          reconsider q as non zero Polynomial of F by A0;
+          A1: Roots((X-a)`^n) = { a } by B0,Lm12b;
+          per cases;
+          suppose Roots p = {a}; then
+            a in Roots p by TARSKI:def 1; then
+            a is_a_root_of p by POLYNOM5:def 10; then
+            consider q1 being Polynomial of F such that
+            B1: p = rpoly(1,a) *' q1 by HURWITZ:33;
+            q1 <> 0_.(F) & p <> 0_.(F) by B1; then
+            B2: deg p = deg rpoly(1,a) + deg q1 by B1,HURWITZ:23
+                     .= 1 + deg q1 by HURWITZ:27;
+            B3: q1 is monic by B1,FIELD_14:15;
+            q1 *' (rpoly(1,a) *' q) = p *' q by B1,POLYNOM3:33; then
+            consider l being Nat such that
+            B4: q1 = (X-a)`^l by B3,B2,C,IV,A0,RING_4:1;
+            p = (X-a)`^(l+1) by B4,B1,POLYNOM5:19;
+            hence ex l being Nat st p = (X-a)`^l;
+            end;
+          suppose Roots p <> {a}; then
+            Roots p c< {a} by A1,A0,FIELD_14:27,XBOOLE_0:def 8; then
+            card Roots p < card {a} by CARD_2:48; then
+            card Roots p < 1 by CARD_2:42; then
+            Roots p = {} by NAT_1:14; then
+            D: not a is_a_root_of p by POLYNOM5:def 10;
+            n = multiplicity(p*'q,a) by A0,ro0
+             .= multiplicity(p,a) + multiplicity(q,a) by UPROOTS:55
+             .= 0 + multiplicity(q,a) by D,NAT_1:14,UPROOTS:52; then
+            E: deg q >= n by ro00;
+            H: p <> 0_.(F) & q <> 0_.(F);
+            F: n = deg(p *' q) by A0,Lm12a .= deg p + deg q by H,HURWITZ:23;
+            then deg q <= n by NAT_1:11;
+            then deg q = n by E,XXREAL_0:1;
+            then p = 1_.(F) by F,RATFUNC1:def 2,FIELD_14:16;
+            then p = (X-a)`^0 by POLYNOM5:15;
+            hence ex l being Nat st p = (X-a)`^l;
+            end;
+          end;
+        hence P[j+1];
+        end;
+   I: for i being Element of NAT st 0 <= i & i <= n holds P[i]
+      from INT_1:sch 7(IA,IS);
+   deg((X-a)`^n) = n by Lm12a; then
+   A5: deg p <= n by AS,RING_5:13; then
+   consider l being Nat such that A6: p = (X-a)`^l by AS,I;
+   l <= n by A5,A6,Lm12a;
+   hence ex l being Nat st l <= n & p = (X-a)`^l by A6;
+   end;
+now assume ex l being Nat st l <= n & p = (X-a)`^l; then
+   consider l being Nat such that A0: l <= n & p = (X-a)`^l;
+   consider k being Nat such that A1: l + k = n by A0,NAT_1:10;
+   l is Element of NAT & k is Element of NAT by ORDINAL1:def 12; then
+   p *' ((X-a)`^k) = (X-a)`^n by A0,A1,FIELD_14:19;
+   hence p divides (X-a)`^n by RING_4:1;
+  end;
+hence thesis by A;
+end;
+
+theorem
+for R being non degenerated comRing
+for a,b being Element of R
+for n being Nat holds eval((X+a)`^n,b) = (a + b)|^n
+proof
+let R be non degenerated comRing, a,b be Element of R, n be Nat;
+defpred P[Nat] means eval((X+a)`^($1),b) = (a + b)|^($1);
+eval((X+a)`^0,b)
+   = eval(1_.(R),b) by POLYNOM5:15
+  .= 1_R by POLYNOM4:18
+  .= (a + b)|^0 by BINOM:8; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    eval((X+a)`^(k+1),b)
+        = eval(((X+a)`^k) *' (X+a),b) by POLYNOM5:19
+       .= ((a + b)|^k) * eval((X+a),b) by IV,POLYNOM4:24
+       .= ((a + b)|^k) * (b - -a) by HURWITZ:29
+       .= ((a + b)|^k) * ((a + b)|^1) by BINOM:8
+       .= (a + b)|^(k+1) by BINOM:10;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+theorem sp:
+for F being Field
+for a being Element of F
+for n being non zero Nat holds (X-a)`^n splits_in F
+proof
+let F be Field, a be Element of F, n be non zero Nat;
+defpred P[Nat] means (X-a)`^($1) splits_in F;
+H1: deg(X-a) = 1 & (X-a)`^1 = (X-a) by FIELD_5:def 1,POLYNOM5:16; then
+IA: P[1] by FIELD_4:29;
+IS: now let k be Nat;
+    assume k >= 1;
+    assume P[k]; then
+    H2: (X-a)`^k splits_in F & (X-a) splits_in F by H1,FIELD_4:29;
+    (X-a)`^(k+1) = ((X-a)`^k) *' (X-a) by POLYNOM5:19;
+    hence P[k+1] by H2,FIELD_8:12;
+    end;
+I: for k being Nat st k >= 1 holds P[k] from NAT_1:sch 8(IA,IS);
+n >= 0 + 1 by INT_1:7;
+hence thesis by I;
+end;
+
+theorem aXn:
+for F1 being Field,
+    F2 being F1-homomorphic Field
+for h being Homomorphism of F1,F2
+for a being Element of F1
+for n being Nat holds (PolyHom h).((X-a)`^n)= (X-(h.a))`^n
+proof
+let F1 be Field, F2 be F1-homomorphic Field, h be Homomorphism of F1,F2;
+let a be Element of F1, n be Nat;
+defpred P[Nat] means (PolyHom h).((X-a)`^($1))= (X-(h.a))`^($1);
+  (PolyHom h).((X-a)`^0)
+     = (PolyHom h).(1_.(F1)) by POLYNOM5:15
+    .= 1_.(F2) by FIELD_1:23
+    .= (X-(h.a))`^0 by POLYNOM5:15; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    reconsider p = (X-a)`^k, q = X-a
+        as Element of the carrier of Polynom-Ring F1 by POLYNOM3:def 10;
+    A: (PolyHom h).p = (X-(h.a))`^k &
+       (PolyHom h).q = X-(h.a) by IV,FIELD_13:25;
+    (PolyHom h).((X-a)`^(k+1))
+        = (PolyHom h).(((X-a)`^k) *' (X-a)) by POLYNOM5:19
+       .= (PolyHom h).(p * q) by POLYNOM3:def 10
+       .= (PolyHom h).p * (PolyHom h).q by FIELD_1:25
+       .= ((X-(h.a))`^k) *' (X-(h.a)) by A,POLYNOM3:def 10
+       .= (X-(h.a))`^(k+1) by POLYNOM5:19;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+begin :: The Rings R^p for Primes p
+
+registration
+let p be Prime;
+cluster -> non degenerated for p-characteristic commutative Ring;
+coherence
+proof
+let R be p-characteristic commutative Ring;
+Char R = p & p > 1 by RING_3:def 6,INT_2:def 4;
+hence thesis by REALALG2:23;
+end;
+end;
+
+theorem Lm0:
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being Element of R holds p * a = 0.R
+proof
+let p be Prime, R be p-characteristic commutative Ring, a be Element of R;
+B: Char R = p by RING_3:def 6;
+consider n being Nat such that
+A: (p = n & p '*' a = n*a) or (p = -n & p '*' a = -(n*a)) by RING_3:def 2;
+thus p * a
+   = p '*' (a * 1.R) by A
+  .= (p '*' 1.R) * a by REALALG2:5
+  .= 0.R * a by B,RING_3:def 5
+  .= 0.R;
+end;
+
+theorem Lm0a:
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being non zero Element of R
+for n being non zero Nat st n < p holds n * a <> 0.R
+proof
+let p be Prime, R be p-characteristic commutative Ring;
+let a be non zero Element of R, n be non zero Nat;
+assume AS: n < p;
+defpred P[Nat] means $1 <> 0 & ($1) * a = 0.R;
+P[p] by Lm0; then
+E: ex k being Nat st P[k];
+consider u being Nat such that
+D: P[u] & for v being Nat st P[v] holds u <= v from NAT_1:sch 5(E);
+Z: P[p] by Lm0; then
+Y: u <= p by D;
+now assume G0: u < p;
+  defpred Q[Nat] means ($1) * u <= p;
+  IA: Q[1] by Z,D;
+  IS: now let k be Nat;
+      assume 1 <= k;
+      assume Q[k];
+      then reconsider v = p - k * u as Element of NAT by INT_1:5;
+      G: now assume v = 0;
+         then u divides p by NAT_D:def 3;
+         then u = 1 by G0,INT_2:def 4;
+         hence contradiction by D,BINOM:13;
+         end;
+      consider m being Nat such that
+      G4: (v = m & v '*' a = m*a) or (v = -m & v '*' a = -(m*a))
+          by RING_3:def 2;
+      consider m1 being Nat such that
+      G5: (u = m1 & u '*' a = m1*a) or (u = -m1 & u '*' a = -(m1*a))
+          by RING_3:def 2;
+      consider m2 being Nat such that
+      G6: (p = m2 & p '*' a = m2*a) or (p = -m2 & p '*' a = -(m2*a))
+          by RING_3:def 2;
+      v * a = p '*' a - (k * u) '*' a by G4,G,RING_3:64
+           .= p '*' a - k '*' (u '*' a) by RING_3:65
+           .= p '*' a + -0.R by D,G5,Lm0x
+           .= 0.R by G6,Lm0;
+      then u + k * u <= p - k * u + k * u by G,D,XREAL_1:6;
+      hence Q[k+1];
+      end;
+  I: for k being Nat st k >= 1 holds Q[k] from NAT_1:sch 8(IA,IS);
+  G1: p >= 1 by INT_2:def 4;
+  u = 1
+     proof
+     G2: u >= 0 + 1 by D,INT_1:7;
+     now assume u > 1;
+       then u * p > 1 * p by XREAL_1:68;
+       hence contradiction by G1,I;
+       end;
+     hence thesis by G2,XXREAL_0:1;
+     end;
+  hence contradiction by D,BINOM:13;
+  end;
+then u = p by Y,XXREAL_0:1;
+hence n * a <> 0.R by D,AS;
+end;
+
+theorem Lm1:
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being Element of R, n being Nat holds (n * p) * a = 0.R
+proof
+let p be Prime, R be p-characteristic commutative Ring;
+let a be Element of R, n be Nat;
+defpred P[Nat] means (($1)*p) * a = 0.R;
+IA: P[0] by BINOM:12;
+IS: now let k be Nat;
+    assume IV: P[k];
+    ((k+1)*p) * a
+         = (k*p+p) * a
+        .= (k*p) * a + p * a by BINOM:15
+        .= 0.R by IV,Lm0;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+theorem Lm2:
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being Element of R, n being Nat st p divides n holds n * a = 0.R
+proof
+let p be Prime, R be p-characteristic commutative Ring;
+let a be Element of R, n be Nat;
+assume p divides n; then
+ex x being Nat st p * x = n by NAT_D:def 3;
+hence thesis by Lm1;
+end;
+
+theorem Lm2a:
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being non zero Element of R
+for n being Nat holds p divides n iff n * a = 0.R
+proof
+let p be Prime, R be p-characteristic commutative Ring;
+let a be non zero Element of R, n be Nat;
+A: now assume p divides n; then
+   ex x being Nat st p * x = n by NAT_D:def 3;
+   hence n * a = 0.R by Lm1;
+   end;
+now assume AS: n * a = 0.R;
+   now assume A: not p divides n;
+     set i = n div p, k = n mod p;
+     B: i * p + k = n & k < p by NAT_D:1,2;
+     C: (i * p + k) * a = (i * p) * a + k * a by BINOM:15
+                       .= 0.R + k * a by Lm1;
+     k <> 0 by B,A,NAT_D:3;
+     hence contradiction by AS,B,C,Lm0a;
+     end;
+   hence p divides n;
+   end;
+hence thesis by A;
+end;
+
+theorem fresh:
+for p being Prime
+for R being p-characteristic commutative Ring
+for a,b being Element of R holds (a + b)|^p = a|^p + b|^p
+proof
+let p be Prime, R be p-characteristic commutative Ring,
+    a,b be Element of R;
+set F = (a,b) In_Power p;
+len F = p + 1 by BINOM:def 7; then
+A0: F.1 = a|^p & F.(len F) = b|^p by BINOM:23,24;
+A1: now let i be Nat;
+    assume B0: 1 < i & i < len F; then
+    i in Seg(len F) by FINSEQ_1:1; then
+    B1: i in dom F by FINSEQ_1:def 3;
+    reconsider m = i - 1 as Nat by B0;
+    i - 1 < len F - 1 by B0,XREAL_1:9; then
+    B2: m < (p + 1) - 1 by BINOM:def 7; then
+    p - m in NAT by INT_1:5; then
+    reconsider l = p - m as Nat;
+    1 - 1 < m by B0,XREAL_1:9; then
+    B3: 0 + 1 <= m by INT_1:7;
+    thus F.i = F/.i by B1,PARTFUN1:def 6
+            .= (p choose m) * a|^l * b|^m by B1,BINOM:def 7
+            .= 0.R * b|^m by B3,B2,Lm2,NEWTON02:119
+            .= 0.R;
+   end;
+consider fp being sequence of the carrier of R such that
+A2: Sum F = fp.(len F) and
+A3: fp.0 = 0.R and
+A4: for j being Nat, v being Element of R
+    st j < len F & v = F.(j + 1)
+    holds fp.(j + 1) = fp.j + v by RLVECT_1:def 12;
+defpred P[Element of NAT] means
+  ($1 = 0 & fp.($1) = 0.R) or
+  (0 < $1 & $1 < len F & fp.($1) = a|^p) or
+  ($1 = len F & fp.($1) = a|^p + b|^p);
+IA: P[0] by A3;
+IS: now let j be Element of NAT;
+    assume C1: 0 <= j & j < len F;
+    assume C2: P[j];
+    per cases by XXREAL_0:1;
+    suppose D1: j = 0 & j < len F - 1; then
+      j < len F; then
+      D2: fp.(j+1) = fp.0 + a|^p by D1,A0,A4;
+      j + 1 < (len F - 1) + 1 by D1,XREAL_1:6;
+      hence P[j+1] by D2,A3;
+      end;
+    suppose j = 0 & j = len F - 1; then
+      0 + 1 = p + 1 by BINOM:def 7;
+      hence P[j+1];
+      end;
+    suppose j = 0 & j > len F - 1;
+      hence P[j+1] by C1;
+      end;
+    suppose D1: 0 < j & j < len F - 1; then
+      D3: j + 1 < len F - 1 + 1 by XREAL_1:6;
+      j + 1 > 0 + 1 by D1,XREAL_1:8;
+      then F.(j+1) = 0.R by D3,A1;
+      then fp.(j+1) = a|^p + 0.R by A4,C2,C1,A0;
+      hence P[j+1] by D3;
+      end;
+    suppose 0 < j & j = len F - 1;
+      hence P[j+1] by A0,A4,C2;
+      end;
+    suppose 0 < j & j > len F - 1;
+      then j >= len F - 1 + 1 by INT_1:7;
+      hence P[j+1] by C1;
+      end;
+    end;
+I: for j being Element of NAT st 0 <= j & j <= len F holds P[j]
+   from INT_1:sch 7(IA,IS);
+H: len F = p + 1 by BINOM:def 7;
+p is Element of NAT by ORDINAL1:def 12;
+hence (a+b)|^p = Sum((a,b) In_Power p) by BINOM:25
+              .= a|^p + b|^p by I,A2,H;
+end;
+
+theorem
+for p being Prime
+for R being p-characteristic commutative Ring
+for a,b being Element of R
+for i being Nat holds (a + b)|^(p|^i) = a|^(p|^i) + b|^(p|^i)
+proof
+let p be Prime, R be p-characteristic commutative Ring;
+let a,b be Element of R, i be Nat;
+defpred P[Nat] means (a + b)|^(p|^($1)) = a|^(p|^($1)) + b|^(p|^($1));
+(a + b)|^(p|^0)
+     = (a + b)|^1 by NEWTON:4
+    .= a + b by BINOM:8
+    .= a|^1 + b by BINOM:8
+    .= a|^(p|^0) + b by NEWTON:4
+    .= a|^(p|^0) + b|^1 by BINOM:8
+    .= a|^(p|^0) + b|^(p|^0) by NEWTON:4; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    (a + b)|^(p|^(k+1))
+        = (a + b)|^((p|^k)*p) by NEWTON:6
+       .= ((a + b)|^(p|^k))|^p by BINOM:11
+       .= (a|^(p|^k))|^p + (b|^(p|^k))|^p by IV,fresh
+       .= a|^((p|^k)*p) + (b|^(p|^k))|^p by BINOM:11
+       .= a|^((p|^k)*p) + b|^((p|^k)*p) by BINOM:11
+       .= a|^(p|^(k+1)) + b|^((p|^k)*p) by NEWTON:6
+       .= a|^(p|^(k+1)) + b|^(p|^(k+1)) by NEWTON:6;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+theorem fresh2:
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being Element of R holds -(a|^p) = (-a)|^p
+proof
+let p be Prime, R be p-characteristic commutative Ring, a be Element of R;
+(-a)|^p - -(a|^p) = (-a + a)|^p by fresh
+                 .= (0.R)|^p by RLVECT_1:5
+                 .= 0.R;
+hence thesis by RLVECT_1:21;
+end;
+
+definition
+let p be Prime;
+let R be p-characteristic commutative Ring;
+func R|^p -> strict doubleLoopStr means :deffp:
+  the carrier of it = the set of all a|^p where a is Element of R &
+  the addF of it = (the addF of R)||(the carrier of it) &
+  the multF of it = (the multF of R)||(the carrier of it) &
+  1.it = 1.R & 0.it = 0.R;
+existence
+proof
+set F = R;
+  now let o be object;
+    assume o in the set of all a|^p where a is Element of F;
+    then consider a being Element of F such that H: o = a|^p;
+    thus o in the carrier of F by H;
+    end; then
+  the set of all a|^p where a is Element of F c= the carrier of F; then
+reconsider M = the set of all a|^p where a is Element of F
+                                              as Subset of the carrier of F;
+set aM = (the addF of F)||M, mM = (the multF of F)||M;
+      dom(the addF of F) = [:the carrier of F,the carrier of F:]
+        by FUNCT_2:def 1; then
+  H2: dom aM = [:the carrier of F,the carrier of F:] /\ [:M,M:] by RELAT_1:61
+            .= [:M,M:] by ZFMISC_1:96,XBOOLE_1:28;
+      now let o be object;
+        assume o in rng aM; then
+        consider x being object such that
+        I1: x in [:M,M:] & aM.x = o by H2,FUNCT_1:def 3;
+        consider u,v being object such that
+        I2: u in M & v in M & x = [u,v] by I1,ZFMISC_1:def 2;
+        reconsider u,v as Element of F by I2;
+        consider a being Element of F such that I3: u = a|^p by I2;
+        consider b being Element of F such that I4: v = b|^p by I2;
+        [u,v] in [:M,M:] by I2,ZFMISC_1:def 2; then
+        aM.(u,v) = a|^p + b|^p by I3,I4,FUNCT_1:49 .= (a+b)|^p by fresh;
+        hence o in M by I2,I1;
+      end; then
+  rng aM c= M; then
+reconsider a = (the addF of F)||M as BinOp of M by H2,FUNCT_2:2;
+      dom(the multF of F) = [:the carrier of F,the carrier of F:]
+        by FUNCT_2:def 1; then
+  H2: dom mM = [:the carrier of F,the carrier of F:] /\ [:M,M:] by RELAT_1:61
+            .= [:M,M:] by ZFMISC_1:96,XBOOLE_1:28;
+      now let o be object;
+        assume o in rng mM; then
+        consider x being object such that
+        I1: x in [:M,M:] & mM.x = o by H2,FUNCT_1:def 3;
+        consider u,v being object such that
+        I2: u in M & v in M & x = [u,v] by I1,ZFMISC_1:def 2;
+        reconsider u,v as Element of F by I2;
+        consider a being Element of F such that I3: u = a|^p by I2;
+        consider b being Element of F such that I4: v = b|^p by I2;
+        [u,v] in [:M,M:] by I2,ZFMISC_1:def 2; then
+        mM.(u,v) = a|^p * b|^p by I3,I4,FUNCT_1:49 .= (a*b)|^p by BINOM:9;
+        hence o in M by I2,I1;
+      end; then
+  rng mM c= M; then
+reconsider m = (the multF of F)||M as BinOp of M by H2,FUNCT_2:2;
+  (1.F)|^p = 1.F; then
+  1.F in the set of all a|^p where a is Element of F; then
+reconsider e = 1.F as Element of M;
+  (0.F)|^p = 0.F; then
+  0.F in the set of all a|^p where a is Element of F; then
+reconsider o = 0.F as Element of M;
+take doubleLoopStr(# M,a,m,e,o #);
+thus thesis;
+end;
+uniqueness;
+end;
+
+registration
+let p be Prime;
+let R be p-characteristic commutative Ring;
+cluster R|^p -> non degenerated;
+coherence
+proof
+1.R = 1.(R|^p) & 0.R = 0.(R|^p) by deffp;
+hence thesis;
+end;
+end;
+
+theorem Lm11:
+for p being Prime
+for R being p-characteristic commutative Ring
+for a,b being Element of R
+for x,y being Element of R|^p st a = x & b = y holds a + b = x + y
+proof
+let p be Prime;
+let F be p-characteristic commutative Ring;
+let a,b being Element of F; let x,y be Element of F|^p such that
+A1: a = x & b = y;
+set M = the set of all a|^p where a is Element of F;
+A2: the carrier of F|^p = M by deffp; then
+A3: [x,y] in [:M,M:] & [a,b] in [:M,M:] by A1,ZFMISC_1:def 2;
+thus x + y = ((the addF of F)||(the carrier of F|^p)).(x,y) by deffp
+      .= a + b by A1,A2,A3,FUNCT_1:49;
+end;
+
+Lm10:
+for p being Prime,
+    R being p-characteristic commutative Ring
+for x being Element of R|^p holds x is Element of R
+proof
+let p be Prime, F be p-characteristic commutative Ring;
+let x be Element of F|^p;
+A: the carrier of F|^p = the set of all a|^p where a is Element of F by deffp;
+x in the carrier of F|^p;
+then consider a being Element of F such that B: x = a|^p by A;
+thus thesis by B;
+end;
+
+theorem Lm12:
+for p being Prime
+for R being p-characteristic commutative Ring
+for a,b being Element of R
+for x,y being Element of R|^p st a = x & b = y holds a * b = x * y
+proof
+let p be Prime;
+let F be p-characteristic commutative Ring;
+let a,b being Element of F; let x,y be Element of F|^p such that
+A1: a = x & b = y;
+set M = the set of all a|^p where a is Element of F;
+A2: the carrier of F|^p = M by deffp; then
+A3: [x,y] in [:M,M:] & [a,b] in [:M,M:] by A1,ZFMISC_1:def 2;
+thus x * y = ((the multF of F)||(the carrier of F|^p)).(x,y) by deffp
+      .= a * b by A1,A2,A3,FUNCT_1:49;
+end;
+
+registration
+let p be Prime;
+let R be p-characteristic commutative Ring;
+cluster R|^p -> Abelian add-associative right_zeroed right_complementable;
+coherence
+proof
+set F = R, Fp = F|^p;
+A1: 0.Fp = 0.F by deffp;
+A2: the carrier of Fp = the set of all a|^p where a is Element of F by deffp;
+now let x,y be Element of Fp;
+  reconsider a = x, b = y as Element of F by Lm10;
+  thus x+y = a+b by Lm11 .= y+x by Lm11;
+end;
+hence Fp is Abelian by RLVECT_1:def 2;
+now let x,y,z be Element of Fp;
+  reconsider a = x, b = y, c = z as Element of F by Lm10;
+  A3: y+z = b+c by Lm11;
+  x+y = a+b by Lm11;
+  hence x+y+z = a+b+c by Lm11
+             .= a+(b+c) by RLVECT_1:def 3
+             .= x+(y+z) by A3,Lm11;
+  end;
+hence Fp is add-associative by RLVECT_1:def 3;
+now let x be Element of Fp;
+  reconsider a = x as Element of F by Lm10;
+  thus x+0.Fp = a+0.F by A1,Lm11 .= x;
+  end;
+hence Fp is right_zeroed by RLVECT_1:def 4;
+now let x be Element of Fp;
+  reconsider a = x as Element of F by Lm10;
+  x in the carrier of F|^p; then
+  consider b being Element of F such that H: x = b|^p by A2;
+  -a = (-b)|^p by H,fresh2; then
+  -a in the set of all a|^p where a is Element of F; then
+  reconsider y = -a as Element of Fp by deffp;
+  x+y = a+(-a) by Lm11 .= 0.Fp by A1,RLVECT_1:5;
+  hence x is right_complementable by ALGSTR_0:def 11;
+  end;
+hence Fp is right_complementable by ALGSTR_0:def 16;
+end;
+end;
+
+registration
+let p be Prime;
+let R be p-characteristic commutative Ring;
+cluster R|^p -> commutative associative well-unital distributive;
+coherence
+proof
+set F = R, Fp = F|^p;
+A1: 1.Fp = 1.F & 0.Fp = 0.F by deffp;
+now let x,y be Element of Fp;
+  reconsider a = x, b = y as Element of F by Lm10;
+  thus x*y = a*b by Lm12 .= y*x by Lm12;
+  end;
+hence Fp is commutative by GROUP_1:def 12;
+now let x,y,z be Element of Fp;
+    reconsider a = x, b = y, c = z as Element of F by Lm10;
+A3: y*z = b*c by Lm12;
+    x*y = a*b by Lm12;
+    hence (x*y)*z = (a*b)*c by Lm12
+    .= a*(b*c) by GROUP_1:def 3
+    .= x*(y*z) by A3,Lm12;
+  end;
+hence Fp is associative by GROUP_1:def 3;
+now let x be Element of Fp;
+    reconsider a = x as Element of F by Lm10;
+    thus x * 1.Fp = a * 1.F by A1,Lm12 .= x;
+    thus 1.Fp * x = 1.F * a by A1,Lm12 .= x;
+  end;
+hence Fp is well-unital by VECTSP_1:def 6;
+now let x,y,z be Element of Fp;
+    reconsider a = x, b = y, c = z as Element of F by Lm10;
+A4: a*b = x*y & a*c = x*z by Lm12;
+A6: b*a = y*x & c*a = z*x by Lm12;
+A5: y+z = b+c by Lm11;
+    hence x*(y+z) = a*(b+c) by Lm12
+    .= a*b+a*c by VECTSP_1:def 7
+    .= x*y+x*z by A4,Lm11;
+    thus (y+z)*x = (b+c)*a by A5,Lm12
+    .= b*a+c*a by VECTSP_1:def 7
+    .= y*x+z*x by A6,Lm11;
+  end;
+hence Fp is distributive by VECTSP_1:def 7;
+end;
+end;
+
+registration
+let p be Prime;
+let F be p-characteristic Field;
+cluster F|^p -> almost_left_invertible;
+coherence
+proof
+set Fp = F|^p;
+A2: the carrier of Fp = the set of all a|^p where a is Element of F by deffp;
+now let x be Element of Fp such that
+A5: x <> 0.Fp;
+  reconsider a = x as Element of F by Lm10;
+  x in the carrier of F|^p; then
+  consider b being Element of F such that H: x = b|^p by A2;
+A6: b <> 0.F by H,A5,deffp;
+  (b")|^p in the set of all a|^p where a is Element of F; then
+  reconsider y = (b")|^p as Element of Fp by deffp;
+  take y;
+  thus y*x = ((b")|^p) *(b|^p) by H,Lm12
+  .= (b"*b)|^p by BINOM:9
+  .= (1.F)|^p by A6,VECTSP_1:def 10
+  .= 1.Fp by deffp;
+  end;
+hence thesis by VECTSP_1:def 9;
+end;
+end;
+
+registration
+let p be Prime;
+let R be p-characteristic commutative Ring;
+cluster R|^p -> p-characteristic;
+coherence
+proof
+set F = R, Fp = R|^p;
+A: the carrier of Fp = the set of all a|^p where a is Element of F by deffp;
+   now let o be object;
+     assume o in the carrier of Fp; then
+     consider b being Element of F such that H: o = b|^p by A;
+     thus o in the carrier of F by H;
+   end; then
+B: the carrier of Fp c= the carrier of F;
+   the addF of Fp = (the addF of F) || the carrier of Fp &
+   the multF of Fp = (the multF of F) || the carrier of Fp &
+   1.Fp = 1.F & 0.Fp = 0.F by deffp; then
+Fp is Subring of R by B,C0SP1:def 3;
+hence thesis;
+end;
+end;
+
+definition
+let p be Prime;
+let F be p-characteristic Field;
+redefine func F|^p -> strict Subfield of F;
+coherence
+proof
+set Fp = F|^p;
+A: the carrier of Fp = the set of all a|^p where a is Element of F by deffp;
+   now let o be object;
+     assume o in the carrier of Fp; then
+     consider b being Element of F such that H: o = b|^p by A;
+     thus o in the carrier of F by H;
+   end; then
+B: the carrier of Fp c= the carrier of F;
+   the addF of Fp = (the addF of F) || the carrier of Fp &
+   the multF of Fp = (the multF of F) || the carrier of Fp &
+   1.Fp = 1.F & 0.Fp = 0.F by deffp;
+hence thesis by B,EC_PF_1:def 1;
+end;
+end;
+
+begin :: The Polynomials X^n - a
+
+Lm10: for L be unital non empty doubleLoopStr,
+n be non zero Nat, a be Element of L holds
+(0_.(L) +* ((0,n) --> (-a,1.L))).0 = -a &
+(0_.(L) +* ((0,n) --> (-a,1.L))).n = 1.L
+proof
+let L be unital non empty doubleLoopStr, n be non zero Nat, a be Element of L;
+set t = 0_.(L) +* ((0,n) --> (-a,1.L)), f = (0,n) --> (-a,1.L);
+A2: for u being object holds u in {0,n} implies u in NAT by ORDINAL1:def 12;
+A3: dom f = {0,n} by FUNCT_4:62; then
+A4: dom(0_.(L)) \/ dom(f) = NAT by A2,TARSKI:def 3,XBOOLE_1:12;
+0 in dom f &
+0 in dom(0_.(L)) \/ dom(f) by A4,A3,TARSKI:def 2;
+hence t.0 = f.0 by FUNCT_4:def 1 .= -a by FUNCT_4:63;
+n in dom f &
+n in dom(0_.(L)) \/ dom(f) by A4,A3,TARSKI:def 2,ORDINAL1:def 12;
+hence t.n = f.n by FUNCT_4:def 1 .= 1.L by FUNCT_4:63;
+end;
+
+Lm11: for L being unital non empty doubleLoopStr, a be Element of L,
+i,n being Nat st i <> 0 & i <> n holds
+(0_.(L) +* ((0,n) --> (-a,1.L))).i = 0.L
+proof
+let L be unital non empty doubleLoopStr, a be Element of L;
+let i,n be Nat;
+assume that
+A1: i <> 0 and
+A2: i <> n;
+set t = 0_.(L) +* ((0,n) --> (-a,1.L)), f = (0,n) --> (-a,1.L);
+A4: for u being object holds u in {0,n} implies u in NAT
+    by ORDINAL1:def 12;
+A3: dom f = {0,n} by FUNCT_4:62; then
+A5: dom(0_.(L)) \/ dom(f) = NAT by A4,TARSKI:def 3,XBOOLE_1:12;
+A6: i in NAT by ORDINAL1:def 12;
+not i in dom f by A1,A2,A3,TARSKI:def 2;
+hence t.i = (0_.(L)).i by A5,A6,FUNCT_4:def 1
+         .= 0.L by ORDINAL1:def 12,FUNCOP_1:7;
+end;
+
+definition
+let R be unital non empty doubleLoopStr;
+let a be Element of R;
+let n be non zero Nat;
+func X^(n,a) -> sequence of R equals
+  0_.(R) +* ((0,n) --> (-a,1.R));
+coherence
+proof
+reconsider n as Element of NAT by ORDINAL1:def 12;
+set f = (0,n) --> (-a,1.R);
+set q = 0_.(R) +* f;
+A2: dom f = {0,n} by FUNCT_4:62;
+A5: now let xx be object;
+      assume xx in NAT;
+      then reconsider x = xx as Element of NAT;
+      per cases;
+      suppose x = 0;
+        then q.x = -a by Lm10;
+        hence q.xx in the carrier of R;
+      end;
+      suppose x = n;
+        then q.x = 1.R by Lm10;
+        hence q.xx in the carrier of R;
+      end;
+      suppose x <> 0 & x <> n;
+        then q.x = 0.R by Lm11;
+        hence q.xx in the carrier of R;
+      end;
+    end;
+for u being object holds u in {0,n} implies u in NAT by ORDINAL1:def 12;
+then dom(0_.(R)) \/ dom(f) = NAT by A2,TARSKI:def 3,XBOOLE_1:12;
+then dom q = NAT by FUNCT_4:def 1;
+hence thesis by A5,FUNCT_2:3;
+end;
+end;
+
+registration
+let R be unital non empty doubleLoopStr;
+let a be Element of R;
+let n be non zero Nat;
+cluster X^(n,a) -> finite-Support;
+coherence;
+end;
+
+Lm12: for R be unital non degenerated doubleLoopStr
+for a be Element of R, n be non zero Nat holds deg X^(n,a) = n
+proof
+let R be unital non degenerated doubleLoopStr, a be Element of R,
+    n be non zero Nat;
+set q = X^(n,a);
+A9: now let i be Nat;
+    assume i >= n+1;
+    then i <> n & i <> 0 by NAT_1:13;
+    hence q.i = 0.R by Lm11;
+    end;
+now let m be Nat;
+    assume m is_at_least_length_of q; then
+    X: for i being Nat st i >= m holds q.i = 0.R by ALGSEQ_1:def 2;
+    now assume Y: n+1 > m;
+      q.n = 1.R by Lm10;
+      hence contradiction by X,Y,NAT_1:13;
+      end;
+    hence n+1 <= m;
+    end;
+then len q = n+1 by A9,ALGSEQ_1:def 3,ALGSEQ_1:def 2;
+then deg q = (n+1) - 1 by HURWITZ:def 2;
+hence thesis;
+end;
+
+Lm13: for R be unital non degenerated doubleLoopStr,
+   a be Element of R, n be non zero Nat holds LC X^(n,a) = 1.R
+proof
+let R be unital non degenerated doubleLoopStr, a be Element of R,
+    n be non zero Nat;
+set q = X^(n,a);
+A: n = deg q by Lm12 .= len q - 1 by HURWITZ:def 2;
+then n + 1 = len q;
+then len q -' 1 = n by A,XREAL_1:233,NAT_1:11;
+then q.(len q -' 1) = 1.R by Lm10;
+hence thesis by RATFUNC1:def 6;
+end;
+
+registration
+let R be unital non degenerated doubleLoopStr;
+let a be Element of R;
+let n be non zero Nat;
+cluster X^(n,a) -> non constant monic;
+coherence
+proof
+deg X^(n,a) = n by Lm12;
+hence X^(n,a) is non constant by RATFUNC1:def 2;
+LC X^(n,a) = 1.R by Lm13;
+hence thesis by RATFUNC1:def 7;
+end;
+end;
+
+definition
+let R be non degenerated Ring;
+let a be Element of R;
+let n be non zero Nat;
+redefine func X^(n,a)
+                -> non constant monic Element of the carrier of Polynom-Ring R;
+coherence
+proof
+reconsider p = X^(n,a) as Element of the carrier of Polynom-Ring R
+   by POLYNOM3:def 10;
+deg X^(n,a) = n by Lm12;
+then p is non constant by RING_4:def 4;
+hence thesis;
+end;
+end;
+
+theorem
+for L being unital non degenerated doubleLoopStr
+for a being Element of L
+for n being non zero Nat
+holds X^(n,a).0 = -a & X^(n,a).n = 1.L &
+      for m being Nat st m <> 0 & m <> n holds X^(n,a).m = 0.L
+by Lm10,Lm11;
+
+theorem
+for R being unital non degenerated doubleLoopStr
+for n being non zero Nat
+for a being Element of R holds deg X^(n,a) = n by Lm12;
+
+theorem
+for R being unital non degenerated doubleLoopStr
+for n being non zero Nat
+for a being Element of R holds LC X^(n,a) = 1.R by Lm13;
+
+theorem teval:
+for R being non degenerated Ring
+for n being non zero Nat
+for a,x being Element of R holds eval(X^(n,a),x) = x|^n - a
+proof
+let R be non degenerated Ring, n be non zero Nat,
+    a,x be Element of R;
+set q = X^(n,a);
+consider F be FinSequence of R such that
+A3: eval(q,x) = Sum F and
+A4: len F = len q and
+A5: for j be Element of NAT st j in dom F holds
+      F.j = q.(j-'1) * (power R).(x,j-'1) by POLYNOM4:def 2;
+A: n = deg q by Lm12 .= len q - 1 by HURWITZ:def 2; then
+B: len q = n + 1;
+C: dom F = Seg(n+1) by A,A4,FINSEQ_1:def 3;
+D: 1 <= n + 1 by NAT_1:11;
+E: n+1-'1 = n+1-1 by NAT_1:11,XREAL_1:233;
+B1: F.(n+1) = q.n * (power R).(x,n+1-'1) by E,A5,D,C,FINSEQ_1:1
+           .= 1.R * (power R).(x,(n+1)-'1) by Lm10
+           .= x |^ n by E;
+B2: now let j be Element of NAT;
+    assume H0: 1 < j & j <= n;
+    reconsider j1 = j -' 1 as Element of NAT;
+    reconsider n1  = n - 1 as Element of NAT by INT_1:3;
+    n <= n + 1 by NAT_1:11;
+    then H1: j <= n + 1 by H0,XXREAL_0:2;
+    H4: j1 = j - 1 by H0,XREAL_1:233;
+    then H2: j1 <> 0 by H0;
+    j1 + 1 <= n1 + 1 by H4,H0;
+    then H3: j1 <> n by NAT_1:13;
+    thus F.j = q.(j1) * (power R).(x,j-'1) by A5,H1,C,H0,FINSEQ_1:1
+            .= 0.R * (power R).(x,j-'1) by H2,H3,Lm11
+            .= 0.R;
+    end;
+B3: F.1 = q.(1-'1) * (power R).(x,1-'1) by A5,C,D,FINSEQ_1:1
+            .= q.0 * (power R).(x,1-'1) by NAT_2:8
+            .= q.0 * (power R).(x,0) by NAT_2:8
+            .= (-a) * (power R).(x,0) by Lm10
+            .= (-a) * 1_R by GROUP_1:def 7
+            .= -a;
+B4: len F <> 0 by A,A4;
+consider fp being sequence of the carrier of R such that
+A6: Sum F = fp.(len F) and
+A7: fp.0 = 0.R and
+A8: for j being Nat, v being Element of R
+    st j < len F & v = F.(j + 1)
+    holds fp.(j + 1) = fp.j + v by RLVECT_1:def 12;
+defpred P[Element of NAT] means
+  ($1 = 0 & fp.($1) = 0.R) or
+  (0 < $1 & $1 < len F & fp.($1) = -a) or ($1 = len F & fp.($1) = x|^n - a);
+IA: P[0] by A7;
+IS: now let j be Element of NAT;
+    assume C1: 0 <= j & j < len F;
+    assume C2: P[j];
+    per cases;
+    suppose D1: j = 0 & j < len F - 1;
+      then D2: fp.(j+1) = fp.0 + (-a) by B3,A8,C1 .= -a by A7;
+      j + 1 < (len F - 1) + 1 by D1,XREAL_1:6;
+      hence P[j+1] by D2;
+      end;
+    suppose j = 0 & j >= len F - 1;
+      hence P[j+1] by A,A4;
+      end;
+    suppose D1: 0 < j & j < len F - 1;
+      then D3: j + 1 <= n by A,A4,INT_1:7;
+      j + 1 > 0 + 1 by D1,XREAL_1:8;
+      then F.(j+1) = 0.R by D3,B2;
+      then fp.(j+1) = (-a) + 0.R by C2,D1,C1,A8;
+      hence P[j+1] by D3,B,A4,XXREAL_0:2,NAT_1:16;
+      end;
+    suppose D1: 0 < j & j >= len F - 1;
+      j + 1 <= len F by INT_1:7,C1;
+      then D2: (j + 1) - 1 <= len F - 1 by XREAL_1:9;
+      then  j = n by A4,A,D1,XXREAL_0:1;
+      then fp.(j+1) = fp.j + x |^ n by B1,A8,C1;
+      hence P[j+1] by A4,A,B1,C2,D2,D1,XXREAL_0:1;
+      end;
+    end;
+I: for j being Element of NAT st 0 <= j & j <= len F holds P[j]
+   from INT_1:sch 7(IA,IS);
+thus eval(q,x) = x|^n - a by I,A6,A3,B4;
+end;
+
+theorem split1:
+for F being Field
+for n being non zero Nat
+for a,b being Element of F holds b is_a_root_of X^(n,a) iff b|^n = a
+proof
+let F be Field, n be non zero Nat, a,b be Element of F;
+A: now assume b is_a_root_of X^(n,a);
+   then 0.F = b|^n - a by teval;
+   hence b|^n = a by RLVECT_1:21;
+   end;
+now assume b|^n = a;
+  then 0.F = b|^n - a by RLVECT_1:15 .= eval(X^(n,a),b) by teval;
+  hence b is_a_root_of X^(n,a);
+  end;
+hence thesis by A;
+end;
+
+theorem split2:
+for F being Field, E being FieldExtension of F
+for n being non zero Nat
+for a being Element of F
+for b being Element of E st b = a holds X^(n,a) = X^(n,b)
+proof
+let F be Field, E be FieldExtension of F;
+let n be non zero Nat, a be Element of F, b be Element of E;
+assume AS: b = a;
+H1: F is Subring of E by FIELD_4:def 1; then
+H2: -b = -a by AS,FIELD_6:17;
+now let i be Nat;
+  per cases;
+  suppose A: i = 0;
+    hence X^(n,a).i = -b by H2,Lm10 .= X^(n,b).i by A,Lm10;
+    end;
+  suppose A: i = n;
+    hence X^(n,a).i = 1.F by Lm10
+                   .= 1.E by H1,C0SP1:def 3 .= X^(n,b).i by A,Lm10;
+    end;
+  suppose A: i <> 0 & i <> n;
+    hence X^(n,a).i = 0.F by Lm11
+                   .= 0.E by H1,C0SP1:def 3 .= X^(n,b).i by A,Lm11;
+    end;
+  end;
+hence X^(n,a) = X^(n,b);
+end;
+
+theorem
+for R being non degenerated commutative Ring
+for n being non trivial Nat
+for a being Element of R holds (Deriv R).(X^(n,a)) = n * X^(n-1,0.R)
+proof
+let R be non degenerated commutative Ring, n be non trivial Nat;
+let a be Element of R;
+set q = X^(n,a), D = (Deriv R).(X^(n,a));
+reconsider p = n * X^(n-1,0.R) as Polynomial of R by POLYNOM3:def 10;
+A: n <> 0 & n <> 1 by NAT_2:def 1;
+now let o be object;
+  assume o in NAT; then
+  reconsider j = o as Element of NAT;
+  per cases;
+  suppose C: j = 0;
+    hence D.o
+        = (0+1) * q.(0+1) by RINGDER1:def 8
+       .= 1 * (0.R) by A,Lm11
+       .= n * (0.R)
+       .= n * ((X^(n-1,0.R)).j) by C,Lm10
+       .= p.o by BBB;
+    end;
+  suppose C: j = n - 1;
+    hence D.o
+        = ((n-1)+1) * q.((n-1)+1) by RINGDER1:def 8
+       .= n * (1.R) by Lm10
+       .= n * (X^(n-1,0.R).j) by C,Lm10
+       .= p.o by BBB;
+    end;
+  suppose C: j <> 0 & j <> n - 1; then
+    D: j + 1 <> n;
+    thus D.o
+       = (j+1) * q.(j+1) by RINGDER1:def 8
+      .= (j+1) * 0.R by D,Lm11
+      .= n * 0.R
+      .= n * (X^(n-1,0.R).j) by C,Lm11
+       .= p.o by BBB;
+    end;
+  end;
+hence D = n * (X^(n-1,0.R)) by FUNCT_2:12;
+end;
+
+theorem
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being Element of R holds (Deriv R).(X^(p,a)) = 0_.(R)
+proof
+let p be Prime, R be p-characteristic commutative Ring, a be Element of R;
+set q = X^(p,a), D = (Deriv R).(X^(p,a));
+now let j be Nat;
+  B: D.j = (j+1) * q.(j+1) by RINGDER1:def 8;
+  per cases;
+  suppose j + 1 in Support q; then
+    q.(j+1) <> 0.R by POLYNOM1:def 3; then
+    j+1 = p or j+1 = 0 by Lm11;
+    hence D.j = 0.R by B,Lm2
+             .= (0_.(R)).j by ORDINAL1:def 12,FUNCOP_1:7;
+    end;
+  suppose not j + 1 in Support q;
+    hence D.j = (j + 1) * 0.R by B,POLYNOM1:def 4
+             .= (0_.(R)).j by ORDINAL1:def 12,FUNCOP_1:7;
+    end;
+  end;
+ hence D = 0_.(R);
+end;
+
+theorem split0:
+for p being Prime
+for F being p-characteristic Field
+for a,b being Element of F st b|^p = a holds X^(p,a) = (X-b)|^p
+proof
+let p be Prime, R be p-characteristic Field, a,b be Element of R;
+assume AS: b|^p = a;
+per cases;
+suppose C: p = 2; then
+  D: (X-b)|^p
+   = <%-b,1.R%>`^2 by RING_5:10
+  .= <%-b,1.R%> *' <%-b,1.R%> by POLYNOM5:17
+  .= <%(-b)*(-b),(-b)*(1.R)+(1.R)*(-b),(1.R)*(1.R)%> by FIELD_9:24
+  .= <%(-b)*(-b),b*(1.R)+(1.R)*(-b),1.R%> by C,t2
+  .= <%(-b)*(-b),0.R,1.R%> by RLVECT_1:5
+  .= <%b*b,0.R,1.R%> by VECTSP_1:10
+  .= <%b|^2,0.R,1.R%> by RING_5:3
+  .= <%-a,0.R,1.R%> by AS,C,t2;
+  now let j be Nat;
+    j <= 2 implies j = 0 or ... or j = 2; then
+    per cases;
+    suppose E: j = 0;
+      hence ((X-b)`^p).j = -a by D,FIELD_9:16 .= (X^(p,a)).j by E,Lm10;
+      end;
+    suppose E: j = 2;
+      hence ((X-b)`^p).j = 1.R by D,FIELD_9:16 .= (X^(p,a)).j by E,C,Lm10;
+      end;
+    suppose E: j = 1;
+      hence ((X-b)`^p).j = 0.R by D,FIELD_9:16 .= (X^(p,a)).j by E,C,Lm11;
+      end;
+    suppose E: j > 2;
+      then j >= 2 + 1 by INT_1:7;
+      hence ((X-b)`^p).j = 0.R by D,FIELD_9:16 .= (X^(p,a)).j by E,C,Lm11;
+      end;
+    end;
+  hence X^(p,a) = (X-b)`^p .= (X-b)|^p;
+  end;
+suppose H0: p <> 2;
+  p <= 2 implies p = 0 or ... or p = 2; then
+  H: p is 2_greater by H0,INT_2:def 4,NAT_6:def 1;
+  set q = X^(p,a);
+  reconsider q1 = <%0.R,1.R%>, q2 = <%-b%>
+              as Element of the carrier of Polynom-Ring R by POLYNOM3:def 10;
+  set r = q1`^p + q2`^p;
+  q2 = <%-b,0.R%> by POLYNOM5:43; then
+  A: q1 + q2 = <%0.R,1.R%> + <%-b,0.R%> by POLYNOM3:def 10
+            .= <%(0.R)+(-b),(1.R)+(0.R)%> by NIVEN:30
+            .= X-b by RING_5:10;
+  B: (q1 + q2)|^p = q1|^p + q2|^p by fresh;
+  now let j be Nat;
+  D0: r.j = (q1`^p).j + (q2`^p).j by NORMSP_1:def 2;
+  H1: j is Element of NAT by ORDINAL1:def 12;
+  per cases;
+  suppose j in Support q; then
+    q.j <> 0.R by POLYNOM1:def 3; then
+    per cases by Lm11;
+    suppose D: j = p; then
+      D4: j >= 1 by INT_2:def 4;
+      D1: (<%-b%>`^p).j = <%power(-b,p)%>.j by POLYNOM5:36
+                       .= 0.R by H1,D4,POLYNOM5:32;
+      D5: q1 = rpoly(1,-0.R) by RING_5:10;
+      D3: deg(<%0.R,1.R%>`^p) = p * (deg <%0.R,1.R%>) by t1
+                             .= p * 1 by D5,HURWITZ:27;
+      thus q.j = 1.R by D,Lm10
+              .= LC(<%0.R,1.R%>`^p) + (<%-b%>`^p).j by D1,D5,RATFUNC1:def 7
+              .= r.j by D0,D3,D,FIELD_6:2;
+      end;
+    suppose D: j = 0; then
+      D1: (<%0.R,1.R%>`^p).j = (<%0.R,1.R%>.0)|^p by t3
+                            .= (0.R)|^p by POLYNOM5:38
+                            .= 0.R;
+      thus q.j = -(b|^p) by D,AS,Lm10
+              .= (-b)|^p by H,todd
+              .= <%power(-b,p)%>.j by D,POLYNOM5:32
+              .= r.j by D0,D1,POLYNOM5:36;
+      end;
+    end;
+  suppose D: not j in Support q; then
+    D8: q.j = 0.R by H1,POLYNOM1:def 4;
+    per cases;
+    suppose D1: j = 0; then
+      D2: -a = 0.R by D8,Lm10;
+      D3: (<%-b%>`^p).0 = (<%-b%>.0)|^p by t3
+                       .= (-b)|^p by POLYNOM5:32
+                       .= 0.R by AS,D2,H,todd;
+      (<%0.R,1.R%>`^p).0 = (<%0.R,1.R%>.0)|^p by t3
+                        .= (0.R)|^p by POLYNOM5:38
+                        .= 0.R;
+      hence q.j = r.j by D0,D,D1,D3,POLYNOM1:def 4;
+      end;
+    suppose j = p;
+      hence q.j = r.j by D8,Lm10;
+      end;
+    suppose D2: j <> 0 & j <> p; then
+      D4: j >= 1 + 0 by INT_1:7;
+      (<%-b%>`^p).j = <%power(-b,p)%>.j by POLYNOM5:36
+                   .= 0.R by D4,H1,POLYNOM5:32;
+      hence q.j = r.j by D8,D0,D2,t4;
+      end;
+    end;
+  end;
+  hence X^(p,a) = r .= (X-b)|^p by B,A,POLYNOM3:def 10;
+  end;
+end;
+
+theorem pirred:
+for p being Prime
+for F being p-characteristic Field
+for a being Element of F
+st not ex b being Element of F st b|^p = a holds X^(p,a) is irreducible
+proof
+let p be Prime, F be p-characteristic Field, aF be Element of F;
+assume AS: not ex b being Element of F st b|^p = aF;
+consider E being FieldExtension of F such that
+A0: X^(p,aF) is_with_roots_in E by FIELD_5:30;
+    consider bE being Element of E such that
+A1: bE is_a_root_of X^(p,aF),E by A0,FIELD_4:def 3;
+    F is Subfield of E by FIELD_4:7; then
+    the carrier of F c= the carrier of E by EC_PF_1:def 1; then
+    reconsider aE = aF as Element of E;
+E: F is Subring of E & p is Element of NAT by ORDINAL1:def 12,FIELD_4:def 1;
+H: X^(p,aF) = X^(p,aE) by split2;
+   0.E = Ext_eval(X^(p,aF),bE) by A1,FIELD_4:def 2
+      .= eval(X^(p,aE),bE) by split2,FIELD_4:26; then
+   bE is_a_root_of X^(p,aE); then
+B: bE|^p = aE by split1; then
+U: bE|^p = aE & X^(p,aE) = (X-bE)|^p by split0;
+C: now assume bE in the carrier of F; then
+   reconsider bF = bE as Element of F;
+   bF|^p = aF by B,E,FIELD_6:19;
+   hence contradiction by AS;
+   end;
+   (0.F)|^p = 0.F; then
+D: aF <> 0.F by AS;
+now assume X^(p,aF) is reducible; then
+  consider qF being monic Element of the carrier of Polynom-Ring F such that
+  C1: qF divides X^(p,aF) & 1 <= deg qF & deg qF < deg X^(p,aF) by R441;
+  the carrier of Polynom-Ring F c= the carrier of Polynom-Ring E by FIELD_4:10;
+  then reconsider qE = qF as Element of the carrier of Polynom-Ring E;
+  LC qE = LC qF by FIELD_8:5
+       .= 1.F by RATFUNC1:def 7 .= 1.E by E,C0SP1:def 3; then
+  C2: qE is monic by RATFUNC1:def 7;
+  qE divides (X-bE)`^p by U,H,C1,FIELD_14:48; then
+  consider l being Nat such that C3: l <= p & qE = (X-bE)`^l by C2,ro1;
+  C4: l <> 0 & l < p
+      proof
+      now assume l = 0;
+        then qE = 1_.(E) by C3,POLYNOM5:15 .= 1_.(F) by FIELD_4:14;
+        hence contradiction by C1,RATFUNC1:def 2;
+        end;
+      hence l <> 0;
+      thus thesis by U,H,C3,C1,XXREAL_0:1;
+      end;
+  C5: bE|^l in the carrier of F
+      proof
+      D: qF.0 = ((X-bE).0)|^l by C3,C4,t3
+             .= (-power(E).(bE,0+1))|^l by HURWITZ:25
+             .= (-(power(E).(bE,0) * bE))|^l by GROUP_1:def 7
+             .= (-(1_E * bE))|^l by GROUP_1:def 7
+             .= (-bE)|^l;
+      per cases;
+      suppose l is even;
+        then qF.0 = bE|^l by D,teven;
+        hence thesis;
+        end;
+      suppose l is odd;
+        then reconsider c = -(bE|^l) as Element of F by D,todd;
+        -c = --(bE|^l) by E,FIELD_6:17;
+        hence thesis;
+        end;
+      end;
+  l gcd p = 1 by C4,gcdp; then
+  consider s,t being Integer such that C6: 1 = s * p + t * l by NAT_D:68;
+  set M1 = MultGroup E;
+  reconsider M2 = MultGroup F as Subgroup of M1 by MGsub;
+  H1: the carrier of E = (the carrier of M1) \/ {0.E} &
+      the carrier of F = (the carrier of M2) \/ {0.F} by UNIROOTS:15;
+  bE <> 0.F by C; then
+  bE <> 0.E & aE <> 0.E by D,E,C0SP1:def 3; then
+  not bE in {0.E} & not aE in {0.E} by TARSKI:def 1; then
+  reconsider b = bE, a = aE as Element of M1 by H1,XBOOLE_0:def 3;
+  H2: bE|^l = b|^l by MG;
+  bE <> 0.F by C; then
+  bE is non zero by E,C0SP1:def 3; then
+  bE|^l <> 0.F by E,C0SP1:def 3; then
+  not b|^l in {0.F} & not a in {0.F} by H2,D,TARSKI:def 1; then
+  reconsider x = b|^l, y = a as Element of M2 by H2,C5,H1,XBOOLE_0:def 3;
+  C7: b|^p = a by B,MG;
+  C8: a|^s = y|^s & x|^t = (b|^l)|^t by GROUP_4:2;
+  b = b|^(s * p + t * l) by C6,GROUP_1:26
+   .= b|^(s * p) * b|^(t * l) by GROUP_1:33
+   .= (b|^p) |^ s * b|^(t * l) by GROUP_1:35
+   .= a|^s * (b|^l)|^t by C7,GROUP_1:35
+   .= y|^s * x|^t by C8,GROUP_2:43;
+  hence contradiction by C,H1,XBOOLE_0:def 3;
+  end;
+hence thesis;
+end;
+
+begin :: More on Multiplicity of Roots
+
+theorem
+for F being Field
+for p being non zero Polynomial of F
+for a being Element of F holds deg p >= multiplicity(p,a) by ro00;
+
+theorem mulzero1:
+for F being Field,
+    p being non zero Polynomial of F
+for a being Element of F
+for n being Element of NAT
+holds (X-a)`^n divides p iff multiplicity(p,a) >= n
+proof
+let F be Field, p be non zero Polynomial of F;
+let a be Element of F, n be Element of NAT;
+set m = multiplicity(p,a);
+H: (X-a)`^m divides p & not (X-a)`^(m+1) divides p by FIELD_14:67;
+now assume B: (X-a)`^n divides p;
+   now assume m < n;
+     then m + 1 <= n by INT_1:7;
+     hence contradiction by H,B,FIELD_14:40;
+     end;
+   hence multiplicity(p,a) >= n;
+   end;
+hence thesis by H,FIELD_14:40;
+end;
+
+theorem mulzero:
+for F being Field,
+    E being FieldExtension of F
+for p being non zero Element of the carrier of Polynom-Ring F
+for a being Element of E
+holds a is_a_root_of p,E iff multiplicity(p,a) >= 1
+proof
+let F be Field, E be FieldExtension of F;
+let p be non zero Element of the carrier of Polynom-Ring F;
+let a be Element of E;
+the carrier of Polynom-Ring F c= the carrier of Polynom-Ring E
+  by FIELD_4:10; then
+reconsider q = p as Element of the carrier of Polynom-Ring E;
+p <> 0_.(F); then
+q <> 0_.(E) by FIELD_4:12; then
+reconsider q as non zero Element of the carrier of Polynom-Ring E
+   by UPROOTS:def 5;
+A: now assume multiplicity(p,a) >= 1; then
+   B: multiplicity(q,a) >= 1 by FIELD_14:def 6;
+   (X-a)`^multiplicity(q,a) divides q by FIELD_14:67; then
+   (X-a)`^1 divides q by B,FIELD_14:40; then
+   (X-a) divides q by POLYNOM5:16; then
+   0.E = eval(q,a) by RING_5:11 .= Ext_eval(p,a) by FIELD_4:26;
+   hence a is_a_root_of p,E by FIELD_4:def 2;
+   end;
+now assume a is_a_root_of p,E; then
+   0.E = Ext_eval(p,a) by FIELD_4:def 2 .= eval(q,a) by FIELD_4:26; then
+   (X-a) divides q by RING_5:11; then
+   (X-a)`^1 divides q by POLYNOM5:16; then
+   multiplicity(q,a) >= 1 by mulzero1;
+   hence multiplicity(p,a) >= 1 by FIELD_14:def 6;
+   end;
+hence thesis by A;
+end;
+
+multi3a:
+for F being Field,
+    p being non zero Polynomial of F
+for E being FieldExtension of F
+for a being Element of F holds multiplicity(p,a) <= multiplicity(p,@(a,E))
+proof
+let F be Field, p be non zero Polynomial of F;
+let E be FieldExtension of F, a be Element of F;
+reconsider q = p as Polynomial of E by FIELD_4:8;
+p <> 0_.(F); then
+q <> 0_.(E) by FIELD_4:12; then
+reconsider q as non zero Polynomial of E by UPROOTS:def 5;
+set np = multiplicity(p,a), nq = multiplicity(p,@(a,E));
+consider Q being finite non empty Subset of NAT such that
+A: Q = {k where k is Element of NAT : ex r being Polynomial of E
+        st q = (<%-@(a,E), 1.E%>`^k) *' r} & multiplicity(q,@(a,E)) = max Q
+   by UPROOTS:def 8;
+B: ((X-a)`^np) divides p by FIELD_14:67;
+D: (X-@(a,E))`^np is Element of the carrier of Polynom-Ring E &
+   q is Element of the carrier of Polynom-Ring E &
+   (X-a)`^np is Element of the carrier of Polynom-Ring F &
+   p is Element of the carrier of Polynom-Ring F by POLYNOM3:def 10;
+C: <%-@(a,E), 1.E%> = rpoly(1,@(a,E)) &X-a = rpoly(1,a) &
+    X-@(a,E) = rpoly(1,@(a,E))
+    & @(a,E) = a by FIELD_7:def 4,RING_5:10; then
+   X-a = X-@(a,E) by FIELD_4:21; then
+   (X-a)`^np = (X-@(a,E))`^np by FIELD_14:18; then
+   (X-@(a,E))`^np divides q by B,D,FIELD_14:48; then
+   consider r being Polynomial of E such that
+D: ((<%-@(a,E), 1.E%>)`^np) *' r = q by C,RING_4:1;
+   np in Q by D,A; then
+   np <= multiplicity(q,@(a,E)) by A,XXREAL_2:def 8;
+hence thesis by FIELD_14:def 6;
+end;
+
+multi3:
+for F being Field,
+    p being non zero Polynomial of F
+for E being FieldExtension of F
+for a being Element of F holds multiplicity(p,a) = multiplicity(p,@(a,E))
+proof
+let F be Field, p be non zero Polynomial of F;
+let E be FieldExtension of F, a be Element of F;
+reconsider q = p as Polynomial of E by FIELD_4:8;
+p <> 0_.(F); then
+q <> 0_.(E) by FIELD_4:12; then
+reconsider q as non zero Polynomial of E by UPROOTS:def 5;
+set np = multiplicity(p,a), nq = multiplicity(p,@(a,E));
+H: np <= nq by multi3a;
+  consider P being finite non empty Subset of NAT such that
+  A1: P = {k where k is Element of NAT : ex r being Polynomial of F
+           st p = (<%-a, 1.F%>`^k) *' r} & multiplicity(p,a) = max P
+      by UPROOTS:def 8;
+  multiplicity(p,@(a,E)) = multiplicity(q,@(a,E)) by FIELD_14:def 6; then
+  B: ((X-@(a,E))`^nq) divides q by FIELD_14:67;
+  D: (X-@(a,E))`^nq is Element of the carrier of Polynom-Ring E &
+     q is Element of the carrier of Polynom-Ring E &
+     (X-a)`^nq is Element of the carrier of Polynom-Ring F &
+     p is Element of the carrier of Polynom-Ring F by POLYNOM3:def 10;
+  C: <%-@(a,E), 1.E%> = rpoly(1,@(a,E)) & X-a = rpoly(1,a) &
+      X-@(a,E) = rpoly(1,@(a,E)) & <%-a, 1.F%> = rpoly(1,a) &
+      @(a,E) = a by FIELD_7:def 4,RING_5:10; then
+     X-a = X-@(a,E) by FIELD_4:21; then
+     (X-a)`^nq = (X-@(a,E))`^nq by FIELD_14:18; then
+     (X-a)`^nq divides p by B,D,FIELD_14:48; then
+     consider r being Polynomial of F such that
+  D: ((<%-a, 1.F%>)`^nq) *' r = p by C,RING_4:1;
+     nq in P by D,A1; then
+nq <= np by A1,XXREAL_2:def 8;
+hence thesis by H,XXREAL_0:1;
+end;
+
+multi3K:
+for F being Field,
+    p being non zero Polynomial of F
+for E being FieldExtension of F
+for K being E-extending FieldExtension of F
+for a being Element of E holds multiplicity(p,a) = multiplicity(p,@(a,K))
+proof
+let F be Field, p be non zero Polynomial of F; let E be FieldExtension of F;
+let K be E-extending FieldExtension of F, a be Element of E;
+consider pE being non zero Polynomial of E such that
+A: pE = p & multiplicity(p,a) = multiplicity(pE,a) by FIELD_14:def 6;
+reconsider K1 = K as FieldExtension of E;
+E is Subfield of K1 by FIELD_4:7; then
+the carrier of E c= the carrier of K1 by EC_PF_1:def 1; then
+reconsider a1 = a as Element of K1;
+consider pK being non zero Polynomial of K1 such that
+B: pK = pE & multiplicity(pE,a1) = multiplicity(pK,a1) by FIELD_14:def 6;
+C: @(a,K) = a1 by FIELD_7:def 4;
+thus multiplicity(p,a)
+   = multiplicity(p,@(a,K)) by A,B,C,multi3,FIELD_14:def 6;
+end;
+
+theorem sepsep:
+for F being Field,
+    p being non zero Polynomial of F
+for E being FieldExtension of F,
+    q being non zero Polynomial of E st q = p
+for K being E-extending FieldExtension of F
+for a being Element of K holds multiplicity(q,a) = multiplicity(p,a)
+proof
+let F be Field, p be non zero Polynomial of F;
+let E be FieldExtension of F, q be non zero Polynomial of E;
+assume AS: q = p;
+let K be E-extending FieldExtension of F, a be Element of K;
+reconsider r = q as Polynomial of K by FIELD_4:8;
+q <> 0_.(E); then
+r <> 0_.(K) by FIELD_4:12; then
+reconsider r as non zero Polynomial of K by UPROOTS:def 5;
+thus multiplicity(q,a) = multiplicity(r,a) by FIELD_14:def 6
+  .= multiplicity(p,a) by AS,FIELD_14:def 6;
+end;
+
+theorem sepsep1:
+for F being Field,
+    p being non zero Polynomial of F
+for E being FieldExtension of F,
+    q being non zero Polynomial of E st q = p
+for a being Element of E holds multiplicity(q,a) = multiplicity(p,a)
+proof
+let F be Field, p be non zero Polynomial of F;
+let E be FieldExtension of F, q be non zero Polynomial of E;
+assume AS: q = p;
+let a be Element of E;
+reconsider K = E as E-extending FieldExtension of F by FIELD_4:6;
+multiplicity(q,@(a,K)) = multiplicity(p,@(a,K)) by AS,sepsep
+                      .= multiplicity(p,a) by multi3K;
+hence thesis by multi3;
+end;
+
+theorem lems:
+for F being Field
+for p being non zero Polynomial of F
+for c being non zero Element of F
+for a being Element of F holds multiplicity(c*p,a) = multiplicity(p,a)
+proof
+let F be Field, p be non zero Polynomial of F;
+let c be non zero Element of F, a be Element of F;
+set n = multiplicity(p,a);
+(X-a)`^n divides p & not (X-a)`^(n+1) divides p by FIELD_14:67; then
+(X-a)`^n divides (c*p) & not (X-a)`^(n+1) divides (c*p) by RING_5:15;
+hence thesis by FIELD_14:67;
+end;
+
+theorem lems1:
+for F being Field
+for E being FieldExtension of F
+for p being non zero Polynomial of F
+for c being non zero Element of F
+for a being Element of E holds multiplicity(c*p,a) = multiplicity(p,a)
+proof
+let F be Field, E be FieldExtension of F, p be non zero Polynomial of F;
+let c be non zero Element of F, a be Element of E;
+set n = multiplicity(p,a);
+reconsider q = p as Polynomial of E by FIELD_4:8;
+p <> 0_.(F); then
+p <> 0_.(E) by FIELD_4:12; then
+reconsider q as non zero Polynomial of E by UPROOTS:def 5;
+F is Subfield of E & c <> 0.F by FIELD_4:7; then
+H: c <> 0.E &  @(c,E) = c by EC_PF_1:def 1,FIELD_7:def 4; then
+K: @(c,E) is non zero; then
+reconsider cq = @(c,E) * q as non zero Polynomial of E;
+I: @(c,E) * q = c * p by H,ll;
+multiplicity(q,a) = n by sepsep1; then
+(X-a)`^n divides q & not (X-a)`^(n+1) divides q by FIELD_14:67; then
+(X-a)`^n divides (@(c,E)*q) & not (X-a)`^(n+1) divides (@(c,E)*q)
+   by K,RING_5:15;
+then multiplicity(cq,a) = n by FIELD_14:67;
+hence thesis by I,sepsep1;
+end;
+
+theorem UP55:
+for F being Field
+for E being FieldExtension of F
+for p,q being non zero Polynomial of F
+for a being Element of E
+holds multiplicity(p*'q,a) = multiplicity(p,a) + multiplicity(q,a)
+proof
+let F be Field, E be FieldExtension of F;
+let p,q be non zero Polynomial of F; let a be Element of E;
+reconsider pE = p, qE = q as Polynomial of E by FIELD_4:8;
+p <> 0_.(F); then
+p <> 0_.(E) by FIELD_4:12; then
+reconsider pE as non zero Polynomial of E by UPROOTS:def 5;
+q <> 0_.(F); then
+q <> 0_.(E) by FIELD_4:12; then
+reconsider qE as non zero Polynomial of E by UPROOTS:def 5;
+pE *' qE = p *' q by FIELD_4:17;
+hence multiplicity(p*'q,a)
+    = multiplicity(pE*'qE,a) by sepsep1
+   .= multiplicity(pE,a) + multiplicity(qE,a) by UPROOTS:55
+   .= multiplicity(p,a) + multiplicity(qE,a) by sepsep1
+   .= multiplicity(p,a) + multiplicity(q,a) by sepsep1;
+end;
+
+theorem multiiso:
+for F being Field
+for p being non zero Polynomial of F
+for E1,E2 being FieldExtension of F
+for i being Function of E1,E2 st i is F-fixing isomorphism
+for a being Element of E1 holds multiplicity(p,a) = multiplicity(p,i.a)
+proof
+let F be Field, p be non zero Polynomial of F;
+let E1,E2 be FieldExtension of F; let i be Function of E1,E2;
+assume AS: i is F-fixing isomorphism;
+let a be Element of E1;
+set n = multiplicity(p,a);
+reconsider E2 as E1-isomorphic FieldExtension of F by AS,RING_3:def 4;
+reconsider i as Isomorphism of E1,E2 by AS;
+   p is Polynomial of E1 by FIELD_4:8; then
+reconsider q = p as Element of the carrier of Polynom-Ring E1
+   by POLYNOM3:def 10;
+   p <> 0_.(F); then
+   p <> 0_.(E1) by FIELD_4:12; then
+reconsider q as non zero Element of the carrier of Polynom-Ring E1
+   by UPROOTS:def 5;
+reconsider E3 = E2 as E1-homomorphic Field;
+reconsider h = i as additive Function of E1,E3;
+H: now assume I1: (PolyHom h).q = 0_.(E2);
+   I2: (PolyHom h).(0_.(E1)) = 0_.(E2) by FIELD_1:22;
+   0_.(E1) in the carrier of Polynom-Ring E1 by POLYNOM3:def 10;
+   hence contradiction by I1,I2,FUNCT_2:19;
+   end; then
+reconsider iq = (PolyHom h).q as non zero Polynomial of E2 by UPROOTS:def 5;
+reconsider r = q as non zero Element of the carrier of Polynom-Ring E1;
+reconsider hr = (PolyHom h).r as Polynomial of E3;
+reconsider hr as non zero Polynomial of E3 by H,UPROOTS:def 5;
+reconsider Xan = (X-a)`^n as Element of the carrier of Polynom-Ring E1
+   by POLYNOM3:def 10;
+reconsider Xan1 = (X-a)`^(n+1) as Element of the carrier of Polynom-Ring E1
+   by POLYNOM3:def 10;
+
+H: multiplicity(p,a) = multiplicity(q,a) by FIELD_14:def 6; then
+A: (X-a)`^n divides q & not (X-a)`^(n+1) divides q by FIELD_14:67;
+B: (PolyHom h).Xan divides (PolyHom h).r by H,FIELD_12:3,FIELD_14:67;
+C: now assume C1: (PolyHom h).Xan1 divides (PolyHom h).r;
+   reconsider E1 as E2-isomorphic FieldExtension of F by RING_3:74;
+   reconsider k = i" as Isomorphism of E2,E1 by RING_3:73;
+   reconsider E4 = E1 as E2-monomorphic E2-homomorphic Field;
+   reconsider j = k as Monomorphism of E2,E4;
+   reconsider iXan = (PolyHom h).Xan1, ir = (PolyHom h).r
+                               as Element of the carrier of Polynom-Ring E2;
+   C3: (PolyHom j).((PolyHom h).Xan1) = Xan1
+       proof
+       reconsider u = (PolyHom j).iXan as Polynomial of E1;
+       now let o be object;
+         assume o in NAT;
+         then reconsider m = o as Nat;
+         C4: dom h = the carrier of E1 by FUNCT_2:def 1;
+         u.m = j.(iXan.m) by FIELD_1:def 2
+            .= j.(h.(Xan1.m)) by FIELD_1:def 2 .= Xan1.m by C4,FUNCT_1:34;
+         hence u.o = Xan1.o;
+         end;
+       hence thesis by FUNCT_2:12;
+       end;
+   (PolyHom j).((PolyHom h).r) = r
+       proof
+       reconsider u = (PolyHom j).ir as Polynomial of E1;
+       now let o be object;
+         assume o in NAT;
+         then reconsider m = o as Nat;
+         C4: dom h = the carrier of E1 by FUNCT_2:def 1;
+         u.m = j.(ir.m) by FIELD_1:def 2
+            .= j.(h.(r.m)) by FIELD_1:def 2 .= r.m by C4,FUNCT_1:34;
+         hence u.o = r.o;
+         end;
+       hence thesis by FUNCT_2:12;
+       end;
+   hence contradiction by C3,C1,FIELD_12:3,A;
+   end;
+   (PolyHom h).Xan = (X-(h.a))`^n &
+   (PolyHom h).Xan1 = (X-(h.a))`^(n+1) by aXn; then
+D: multiplicity(hr,h.a) = n by B,C,FIELD_14:67;
+   (PolyHom h).p = p
+   proof
+   reconsider u = (PolyHom h).q as Polynomial of E3;
+   now let o be object;
+     assume o in rng u; then
+     consider v being object such that
+     E: v in dom u & u.v = o by FUNCT_1:def 3;
+     dom u = NAT by FUNCT_2:def 1; then
+     reconsider v as Nat by E;
+     u.v = h.(p.v) by FIELD_1:def 2 .= p.v by AS;
+     hence o in the carrier of F by E;
+     end; then
+   rng u c= the carrier of F; then
+   E: (PolyHom h).p is Function of NAT,the carrier of F by FUNCT_2:6;
+   now let o be object;
+     assume o in NAT;
+     then reconsider m = o as Nat;
+     u.m = h.(p.m) by FIELD_1:def 2 .= p.m by AS;
+     hence u.o = p.o;
+     end;
+   hence thesis by E,FUNCT_2:12;
+   end;
+hence thesis by D,FIELD_14:def 6;
+end;
+
+theorem
+for F being Field,
+    p being non zero Polynomial of F
+for E being FieldExtension of F
+for a being Element of F holds multiplicity(p,@(a,E)) = multiplicity(p,a)
+by multi3;
+
+theorem
+for F being Field,
+    p being non zero Polynomial of F
+for E being FieldExtension of F
+for K being E-extending FieldExtension of F
+for a being Element of E holds multiplicity(p,@(a,K)) = multiplicity(p,a)
+by multi3K;
+
+theorem multi4b:
+for F being Field,
+    p being non zero Polynomial of F
+for q being Polynomial of F
+for a being Element of F
+st p = ((X-a)`^multiplicity(p,a)) *' q holds eval(q,a) <> 0.F
+proof
+let F be Field, p be non zero Polynomial of F;
+let q be Polynomial of F; let a be Element of F;
+assume AS: p = ((X-a)`^multiplicity(p,a)) *' q;
+set n = multiplicity(p,a);
+now assume eval(q,a) = 0.F;
+  then consider r being Polynomial of F such that
+  A: q = rpoly(1,a) *' r by HURWITZ:33,POLYNOM5:def 7;
+  p = (((X-a)`^n) *' (X-a)) *' r by AS,A,POLYNOM3:33
+   .= ((X-a)`^(n+1)) *' r by POLYNOM5:19;
+  hence contradiction by FIELD_14:67,RING_4:1;
+  end;
+hence thesis;
+end;
+
+ABC1:
+for F being Field
+for p being non zero Polynomial of F
+st ex a being Element of F st multiplicity(p,a) > 1
+holds card(Roots p) < card(BRoots p)
+proof
+let F be Field, p be non zero Polynomial of F;
+H: card(Roots p) <= card(BRoots p) by RING_5:65;
+assume ex a being Element of F st multiplicity(p,a) > 1; then
+   consider a being Element of F such that B: multiplicity(p,a) > 1;
+   set n = multiplicity(p,a);
+   consider q being Polynomial of F such that
+   C: p = ((X-a)`^n) *' q by mulzero1,RING_4:1;
+   reconsider q as non zero Polynomial of F by C;
+   D: card(BRoots p) = card(BRoots((X-a)`^n)) + card(BRoots q) by C,RING_5:41;
+   J: 1 + card(Roots q) <= 1 + card(BRoots q) by RING_5:65,XREAL_1:6;
+   now assume E: card(Roots p) = card(BRoots p);
+     Roots((X-a)`^n) = {a} by B,Lm12b; then
+     F: card(Roots((X-a)`^n)) = 1 by CARD_2:42;
+     Roots p = Roots((X-a)`^n) \/ Roots q by C,UPROOTS:23; then
+     card(BRoots((X-a)`^n)) + card(BRoots q) <= 1 + card(Roots q)
+        by D,E,F,CARD_2:43; then
+     card(BRoots((X-a)`^n)) + card(BRoots q) <= 1 + card(BRoots q)
+        by J,XXREAL_0:2; then
+     card(BRoots((X-a)`^n)) <= 1 by XREAL_1:6;
+     hence contradiction by B,caBR;
+     end;
+hence card(Roots p) < card(BRoots p) by H,XXREAL_0:1;
+end;
+
+theorem ABC:
+for F being Field
+for p being non zero Polynomial of F
+holds card(Roots p) < card(BRoots p) iff
+      ex a being Element of F st multiplicity(p,a) > 1
+proof
+let F be Field, p be non zero Polynomial of F;
+now assume AS: not ex a being Element of F st multiplicity(p,a) > 1;
+per cases;
+suppose p is non with_roots; then
+  A: Roots p = {}; then
+  support(BRoots p) = {} by UPROOTS:def 9;
+  hence card(BRoots p) = card(Roots p) by A,RING_5:23;
+  end;
+suppose S: p is with_roots;
+  defpred P[Nat] means
+    for p being non zero with_roots Polynomial of F st deg p = $1 &
+    not ex a being Element of F st multiplicity(p,a) > 1
+    holds card(Roots p) = card(BRoots p);
+  IS: now let k be Nat;
+      assume IV: 1 <= k & for n being Nat st 1 <= n & n < k holds P[n];
+      now let p be non zero with_roots Polynomial of F;
+      assume A: deg p = k &
+                not ex a being Element of F st multiplicity(p,a) > 1;
+      consider q being (Ppoly of F,BRoots p),
+               r being non with_roots Polynomial of F such that
+      B: p = q *' r & Roots q = Roots p by RING_5:64;
+      reconsider r as non zero non with_roots Polynomial of F;
+      F: now assume ex a being Element of F st multiplicity(q,a) > 1; then
+         consider a being Element of F such that D: multiplicity(q,a) > 1;
+         multiplicity(p,a) = multiplicity(q,a) + multiplicity(r,a)
+            by B,UPROOTS:55; then
+         multiplicity(p,a) >= multiplicity(q,a) by NAT_1:11; then
+         multiplicity(p,a) > 1 by D,XXREAL_0:2;
+         hence contradiction by A;
+         end;
+      per cases;
+      suppose D0: r is constant;
+      reconsider r1 = r as Element of the carrier of Polynom-Ring F
+           by POLYNOM3:def 10;
+      deg r <= 0 by D0,RATFUNC1:def 2; then
+      reconsider r1 as constant Element of the carrier of Polynom-Ring F
+         by RING_4:def 4;
+      consider b being Element of F such that D1: r1 = b|F by RING_4:20;
+      b <> 0.F by D1; then
+      reconsider b as non zero Element of F by STRUCT_0:def 12;
+      r = b * 1_.(F) by D1,RING_4:16; then
+      p = b * ((1_.(F)) *' q) by B,RING_4:10
+       .= b * q; then
+      C1: BRoots p = BRoots q by RING_5:37;
+      C0: deg q = card(BRoots q) by RING_5:56;
+      now let a be Element of F;
+        assume a is_a_root_of q; then
+        multiplicity(q,a) >= 1 & multiplicity(q,a) <= 1 by F,UPROOTS:52;
+        hence multiplicity(q,a) = 1 by XXREAL_0:1;
+        end;
+      then q is Ppoly of F,(Roots q) by FIELD_14:30;
+      hence card(Roots p) = card(BRoots p) by B,C1,C0,RING_5:60;
+      end;
+      suppose r is non constant; then
+      C0: deg r >= 0 + 1 by INT_1:7,RATFUNC1:def 2;
+      C1: 0 + 1 <= deg q by INT_1:7,RATFUNC1:def 2;
+      q <> 0_.(F) & r <> 0_.(F); then
+      C3: deg p = deg q + deg r by B,HURWITZ:23;
+      D: now assume deg q >= k;
+         then k >= k + 1 & k <= k + 1 by A,C0,C3,NAT_1:11,XREAL_1:7;
+         then k = k + 1 by XXREAL_0:1;
+         hence contradiction;
+         end;
+      BRoots r = EmptyBag(the carrier of F) by RING_5:38; then
+      support(BRoots r) = {}; then
+      card(BRoots r) = 0 by RING_5:23; then
+      card(BRoots p) = card(BRoots q) + 0 by B,RING_5:41;
+      hence card(Roots p) = card(BRoots p) by D,B,F,C1,IV;
+      end;
+      end;
+      hence P[k];
+      end;
+  I: for k being Nat st 1 <= k holds P[k] from NAT_1:sch 9(IS);
+  deg p >= 0 + 1 by S,INT_1:7,RATFUNC1:def 2;
+  hence card(Roots p) = card(BRoots p) by S,AS,I;
+  end;
+end;
+hence thesis by ABC1;
+end;
+
+theorem ThsepsplB:
+for F being Field
+for p being non zero Polynomial of F
+for a being Element of F
+holds multiplicity(NormPolynomial p,a) = multiplicity(p,a)
+proof
+let F be Field, p be non zero Polynomial of F; let a be Element of F;
+set n = multiplicity(p,a);
+A: (X-a)`^n divides p & not (X-a)`^(n+1) divides p by FIELD_14:67;
+   p is Element of the carrier of Polynom-Ring F &
+   (X-a)`^n is Element of the carrier of Polynom-Ring F &
+   (X-a)`^(n+1) is Element of the carrier of Polynom-Ring F &
+   NormPolynomial p is Element of the carrier of Polynom-Ring F
+   by POLYNOM3:def 10; then
+(X-a)`^n divides (NormPolynomial p) &
+   not (X-a)`^(n+1) divides (NormPolynomial p) by A,RING_4:26;
+hence thesis by FIELD_14:67;
+end;
+
+theorem ThsepsplA:
+for F being Field
+for p being non constant Polynomial of F holds
+deg p = card(Roots p) iff
+(p splits_in F & for a being Element of F holds multiplicity(p,a) <= 1)
+proof
+let F be Field;
+let p be non constant Polynomial of F;
+A: now assume AS: deg p = card(Roots p);
+   H: card(BRoots p) <= deg p by RING_5:42;
+   deg p <= card(BRoots p) by AS,RING_5:65; then
+   consider c being Element of F, q being Ppoly of F such that
+   A: p = c * q by H,XXREAL_0:1,RING_5:66;
+   p <> 0_.(F);
+   then c is non zero  by A,POLYNOM5:26;
+   hence p splits_in F &
+         for a being Element of F holds multiplicity(p,a) <= 1
+      by AS,A,H,ABC,FIELD_4:def 5;
+   end;
+now assume AS: p splits_in F &
+   for a being Element of F holds multiplicity(p,a) <= 1;
+   set Np = NormPolynomial p;
+   deg p > 0 & deg p = len p - 1 by RATFUNC1:def 2,HURWITZ:def 2; then
+   V: len p <> 0;
+   U: p is non zero Element of the carrier of Polynom-Ring F
+      by POLYNOM3:def 10; then
+   W: Np = (LC p)" * p & LC p <> 0.F by RING_4:23; then
+   (LC p) * Np = (LC p * (LC p)") * p by RING_4:11
+              .= (1.F) * p by W,VECTSP_1:def 10 .= p; then
+   consider c being non zero Element of F, q being Ppoly of F such that
+   A: Np = c * q by AS,FIELD_8:9,FIELD_4:def 5;
+   c = c * (1.F) .= c * (LC q) by RATFUNC1:def 7
+    .= LC(c * q) by RING_5:5 .= 1.F by A,RATFUNC1:def 7; then
+   reconsider Np as Ppoly of F by A;
+   B: Roots Np = Roots p by V,POLYNOM5:61;
+   now let a be Element of F;
+     assume a is_a_root_of Np; then
+     a is_a_root_of p by V,POLYNOM5:59; then
+     multiplicity(p,a) >= 1 & multiplicity(p,a) <= 1 by AS,UPROOTS:52; then
+     multiplicity(p,a) = 1 by XXREAL_0:1;
+     hence multiplicity(Np,a) = 1 by ThsepsplB;
+     end; then
+   C: Np is Ppoly of F,(Roots Np) by FIELD_14:30;
+   thus deg p = deg Np by U,REALALG3:11 .= card(Roots p) by B,C,RING_5:60;
+   end;
+hence thesis by A;
+end;
+
+multi4d:
+for F being Field, p being Element of the carrier of Polynom-Ring F
+for a being Element of F, n being Element of NAT, q being Polynomial of F
+st q = n * p & eval(p,a) = 0.F holds eval(q,a) = 0.F
+proof
+let F be Field, p be Element of the carrier of Polynom-Ring F;
+let a be Element of F, n be Element of NAT, q be Polynomial of F;
+assume AS: q = n * p & eval(p,a) = 0.F;
+defpred P[Nat] means
+    for q being Polynomial of F holds q = ($1) * p implies eval(q,a) = 0.F;
+A: P[0]
+   proof
+   now let q be Polynomial of F;
+     assume q = 0 * p; then
+     q = 0.(Polynom-Ring F) by BINOM:12 .= 0_.(F) by POLYNOM3:def 10;
+     hence eval(q,a) = 0.F by POLYNOM4:17;
+     end;
+   hence thesis;
+   end;
+B: now let k be Nat;
+   assume B0: P[k];
+   now let q be Polynomial of F;
+     assume B1: q = (k+1) * p;
+     reconsider q1 = k * p as Polynomial of F by POLYNOM3:def 10;
+     q = k * p + 1 * p by B1,BINOM:15
+      .= k * p + p by BINOM:13 .= q1 + p by POLYNOM3:def 10;
+     hence eval(q,a) = eval(q1,a) + eval(p,a) by POLYNOM4:19
+        .= 0.F by B0,AS;
+     end;
+   hence P[k+1];
+   end;
+for k being Nat holds P[k] from NAT_1:sch 2(A,B);
+hence thesis by AS;
+end;
+
+theorem multi4:
+for F being Field
+for p being non zero Element of the carrier of Polynom-Ring F
+for a being Element of F st a is_a_root_of p
+holds (multiplicity(p,a) = 1 iff eval((Deriv F).p,a) <> 0.F) &
+      (multiplicity(p,a) > 1 iff eval((Deriv F).p,a) = 0.F)
+proof
+let F be Field, p be non zero Element of the carrier of Polynom-Ring F;
+let a be Element of F;
+assume H: a is_a_root_of p; then
+AS: multiplicity(p,a) >= 1 by UPROOTS:52;
+reconsider n = multiplicity(p,a) as non zero Element of NAT by H,UPROOTS:52;
+consider r1 being Polynomial of F such that
+H0: ((X-a)`^n) *' r1 = p by RING_4:1,FIELD_14:67;
+reconsider r = r1 as Element of the carrier of Polynom-Ring F
+  by POLYNOM3:def 10;
+set R = Polynom-Ring F;
+H4: r1 *' 1_.(F) = r * (1.R) &
+    (X-a) * ((Deriv F).r) = (X-a) *' ((Deriv F).r) by POLYNOM3:def 10;
+H5: (Deriv F).(X-a) = 1_.(F) by FIELD_14:61 .= 1.R by POLYNOM3:def 10;
+H6: (Deriv F).p
+       = (Deriv F).(((X-a)|^n) * r) by H0,POLYNOM3:def 10
+      .= r * ((Deriv F).((X-a)|^n))  + ((X-a)|^n) * ((Deriv F).r)
+         by RINGDER1:def 1
+      .= r * (n * ( ((X-a)|^(n-1)) * (Deriv F).(X-a))) +
+                                ((X-a)|^n) * ((Deriv F).r) by FIELD_14:63;
+A: now assume multiplicity(p,a) = 1; then
+   (Deriv F).p
+       = r * (((X-a)|^0) * (Deriv F).(X-a)) +
+                                  ((X-a)|^1) * ((Deriv F).r) by H6,BINOM:13
+      .= r * (1_R * (Deriv F).(X-a)) +
+                                  ((X-a)|^1) * ((Deriv F).r) by BINOM:8
+      .= r * (Deriv F).(X-a) + (X-a) * ((Deriv F).r) by BINOM:8
+      .= r1 *' 1_.(F) + (X-a) *' ((Deriv F).r) by H5,H4,POLYNOM3:def 10;
+   then eval((Deriv F).p, a)
+      = eval(r1 *' (1_.(F)),a) + eval((X-a) *' ((Deriv F).r),a) by POLYNOM4:19
+     .= eval(r1,a) + eval(X-a,a) * eval((Deriv F).r,a) by POLYNOM4:24
+     .= eval(r1,a) + (a - a) * eval((Deriv F).r,a) by HURWITZ:29
+     .= eval(r1,a) + 0.F * eval((Deriv F).r,a) by RLVECT_1:15
+     .= eval(r1,a);
+   hence eval((Deriv F).p, a) <> 0.F by multi4b,H0;
+   end;
+B: now assume I: multiplicity(p,a) <> 1;
+   reconsider n1 = n - 1 as Element of NAT by INT_1:3;
+   reconsider n1 as non zero Element of NAT by I;
+   B1: eval((X-a)`^n,a)
+        = (power F).(eval(rpoly(1,a),a),n) by POLYNOM5:22
+       .= (power F).(a-a,n) by HURWITZ:29
+       .= (0.F)|^n by RLVECT_1:5
+       .= 0.F;
+   B7: eval(((X-a)`^n) *' ((Deriv F).r),a)
+        = eval((X-a)`^n,a) * eval((Deriv F).r,a) by POLYNOM4:24
+       .= 0.F by B1;
+   B2: eval((X-a)`^n1,a)
+        = (power F).(eval(rpoly(1,a),a),n-1) by POLYNOM5:22
+       .= (power F).(a-a,n-1) by HURWITZ:29
+       .= (0.F)|^n1 by RLVECT_1:5
+       .= 0.F;
+   B3: eval( ((X-a)`^n1) *' ((Deriv F).(X-a)) ,a)
+        = eval((X-a)`^n1,a) * eval((Deriv F).(X-a),a) by POLYNOM4:24
+       .= 0.F by B2;
+   reconsider h1 = ((X-a)`^n1) *' ((Deriv F).(X-a)) as
+              Element of the carrier of Polynom-Ring F by POLYNOM3:def 10;
+   reconsider h = n * h1 as Polynomial of F by POLYNOM3:def 10;
+   B5: eval(h,a) = 0.F by B3,multi4d;
+   B6: eval(r1 *' h,a)
+        = eval(r1,a) * eval(h,a) by POLYNOM4:24
+       .= 0.F by B5;
+   B8: ((X-a)|^n) * ((Deriv F).r) = ((X-a)`^n) *' ((Deriv F).r)
+       by POLYNOM3:def 10;
+   h1 = ((X-a)|^n1) * ((Deriv F).(X-a)) by POLYNOM3:def 10; then
+   r1 *' h = r * (n * ( ((X-a)|^(n-1)) * (Deriv F).(X-a))) by POLYNOM3:def 10;
+   then (Deriv F).p = r1 *' h + ((X-a)`^n) *' ((Deriv F).r)
+      by B8,H6,POLYNOM3:def 10; then
+   eval((Deriv F).p,a)
+        = eval(r1 *' h,a) + eval(((X-a)`^n) *' ((Deriv F).r),a) by POLYNOM4:19;
+   hence eval((Deriv F).p,a) = 0.F by B6,B7;
+   end;
+hence multiplicity(p,a) = 1 iff eval((Deriv F).p,a) <> 0.F by A;
+thus thesis by A,B,AS,XXREAL_0:1;
+end;
+
+mm0:
+for F being Field
+for p being non zero Element of the carrier of Polynom-Ring F
+for q being Element of the carrier of Polynom-Ring F
+st p gcd q <> 1_.(F) holds deg(p gcd q) > 0
+proof
+let F be Field, p be non zero Element of the carrier of Polynom-Ring F;
+let q be Element of the carrier of Polynom-Ring F;
+assume AS: p gcd q <> 1_.(F);
+reconsider g = p gcd q as Element of the carrier of Polynom-Ring F
+   by POLYNOM3:def 10;
+now assume g is constant; then
+  consider a being Element of F such that A: g = a|F by RING_4:20;
+  now assume a <> 1.F;
+    then LC g <> 1.F by A,RING_5:6;
+    hence contradiction by RATFUNC1:def 7;
+    end;
+  hence contradiction by AS,A,RING_4:14;
+  end;
+hence thesis by RING_4:def 4;
+end;
+
+mm1:
+for F being Field
+for p,q being Polynomial of F
+for a being Element of F
+st q divides p & a is_a_root_of q holds a is_a_root_of p
+proof
+let F be Field, p,q be Polynomial of F; let a be Element of F;
+assume A: q divides p & a is_a_root_of q; then
+consider r being Polynomial of F such that
+B: p = q *' r by RING_4:1;
+eval(p,a) = 0.F * eval(r,a) by A,B,POLYNOM4:24;
+hence thesis;
+end;
+
+theorem
+for F being Field
+for p being non zero Element of the carrier of Polynom-Ring F
+holds (ex a being Element of F st multiplicity(p,a) > 1)
+      iff p gcd (Deriv F).p is with_roots
+proof
+let F be Field, p be non zero Element of the carrier of Polynom-Ring F;
+set g = p gcd (Deriv F).p;
+A: now assume ex a being Element of F st multiplicity(p,a) > 1; then
+   consider a being Element of F such that A1: multiplicity(p,a) > 1;
+   A2: a is_a_root_of p by A1,UPROOTS:52;
+       eval(p,a) = 0.F by POLYNOM5:def 7,A1,UPROOTS:52; then
+   A3: rpoly(1,a) divides p by RING_5:11;
+       eval((Deriv F).p,a) = 0.F by A1,A2,multi4; then
+       rpoly(1,a) divides (Deriv F).p by RING_5:11; then
+       eval(g,a) = 0.F by A3,RING_4:52,RING_5:11;
+   hence g is with_roots by POLYNOM5:def 7;
+   end;
+now assume g is with_roots; then
+   consider a being Element of F such that
+   B7: a is_a_root_of g;
+       a is_a_root_of p by B7,mm1,RING_4:52; then
+   B4: multiplicity(p,a) > 1 iff eval((Deriv F).p,a) = 0.F by multi4;
+       a is_a_root_of (Deriv F).p by B7,mm1,RING_4:52;
+   hence ex a being Element of F st multiplicity(p,a) > 1 by B4;
+   end;
+hence thesis by A;
+end;
+
+theorem lemsep3:
+for F being Field
+for p being non zero Element of the carrier of Polynom-Ring F
+for E being FieldExtension of F st p splits_in E
+holds (ex a being Element of E st multiplicity(p,a) > 1)
+      iff p gcd (Deriv F).p <> 1_.(F)
+proof
+let F be Field, p be non zero Element of the carrier of Polynom-Ring F;
+let E be FieldExtension of F;
+assume AS: p splits_in E;
+  the carrier of Polynom-Ring F c= the carrier of Polynom-Ring E
+    by FIELD_4:10; then
+  reconsider p1 = p as Element of the carrier of Polynom-Ring E;
+  p <> 0_.(F); then p1 <> 0_.(E) by FIELD_4:12; then
+reconsider p1 as non zero Element of the carrier of Polynom-Ring E
+   by UPROOTS:def 5;
+set g = p1 gcd (Deriv E).p1;
+A: now assume ex a being Element of E st multiplicity(p,a) > 1; then
+   consider a being Element of E such that A1: multiplicity(p,a) > 1;
+   A6: multiplicity(p1,a) = multiplicity(p,a) by FIELD_14:def 6; then
+   A2: a is_a_root_of p1 by A1,UPROOTS:52;
+       eval(p1,a) = 0.E by A6,A1,UPROOTS:52,POLYNOM5:def 7; then
+   A3: rpoly(1,a) divides p1 by RING_5:11;
+       eval((Deriv E).p1,a) = 0.E by A1,A2,A6,multi4; then
+       rpoly(1,a) divides (Deriv E).p1 by RING_5:11; then
+   A4: deg rpoly(1,a) <= deg(p1 gcd (Deriv E).p1) by A3,RING_4:52,RING_5:13;
+   A5: deg rpoly(1,a) = 1 by HURWITZ:27;
+       1_.E = (1.E)|E & 0.E <> 1.E by RING_4:14; then
+   A7: p1 gcd (Deriv E).p1 <> 1_.(E) by A4,A5,RING_4:21;
+   (Deriv E).p1 = (Deriv F).p & 1_.(F) = 1_.(E) by FIELD_14:66,FIELD_4:14;
+   hence p gcd (Deriv F).p <> 1_.(F) by A7,FIELD_14:45;
+   end;
+now assume B1: p gcd (Deriv F).p <> 1_.(F);
+   (Deriv E).p1 = (Deriv F).p & 1_.(F)=1_.(E) by FIELD_14:66,FIELD_4:14; then
+   p1 gcd (Deriv E).p1 <> 1_.(E) by B1,FIELD_14:45; then
+   B8: g divides p1 & g divides (Deriv E).p1 & deg g > 0 by mm0,RING_4:52; then
+   reconsider g as non constant Polynomial of E by RATFUNC1:def 2;
+   consider r being Polynomial of E such that
+   B2: p1 = g *' r by RING_4:52,RING_4:1;
+   consider b being non zero Element of E, q being Ppoly of E such that
+   M: p = b * q by AS,FIELD_4:def 5;
+   B10: p1 splits_in E by M,FIELD_4:def 5;
+   B9: E is FieldExtension of E by FIELD_4:6;
+   r is non zero & g is non constant Polynomial of E by B2; then
+   consider b being non zero Element of E, q being Ppoly of E such that
+   B5: g = b * q by B2,B10,B9,FIELD_13:7,FIELD_4:def 5;
+   consider a being Element of E such that
+   B3: a is_a_root_of q by POLYNOM5:def 8;
+       eval(b*q,a) = b * 0.E by B3,RING_5:7; then
+   B7: a is_a_root_of g by B5; then
+       a is_a_root_of p1 by mm1,RING_4:52; then
+   B9: multiplicity(p1,a) > 1 iff eval((Deriv E).p1,a) = 0.E by multi4;
+   multiplicity(p1,a) = multiplicity(p,a) by FIELD_14:def 6;
+   hence ex a being Element of E st multiplicity(p,a) > 1
+           by B7,B8,B9,POLYNOM5:def 7,mm1;
+   end;
+hence thesis by A;
+end;
+
+theorem lemsep1:
+for F being Field
+for p being irreducible Element of the carrier of Polynom-Ring F
+for E being FieldExtension of F st p splits_in E holds
+(ex a being Element of E st multiplicity(p,a) > 1) iff (Deriv F).p = 0_.(F)
+proof
+let F be Field, p be irreducible Element of the carrier of Polynom-Ring F;
+let E be FieldExtension of F;
+assume AS: p splits_in E;
+  the carrier of Polynom-Ring F c= the carrier of Polynom-Ring E
+    by FIELD_4:10; then
+  reconsider p1 = p as Element of the carrier of Polynom-Ring E;
+  deg p1 = deg p by FIELD_4:20; then
+reconsider p1 as non zero Element of the carrier of Polynom-Ring E
+   by RATFUNC1:def 2,RING_4:def 4;
+set g = p gcd (Deriv F).p;
+H: g is monic Element of the carrier of Polynom-Ring F by POLYNOM3:def 10;
+A: now assume A2: ex a being Element of E st multiplicity(p,a) > 1;
+   g = 1_.(F) or g = NormPolynomial p by RING_4:52,H,lemir; then
+   A4: deg g = deg p by AS,A2,lemsep3,REALALG3:11;
+   now assume (Deriv F).p <> 0_.(F); then
+     (Deriv F).p is non zero by UPROOTS:def 5; then
+     deg g <= deg((Deriv F).p) by RING_4:52,RING_5:13;
+     hence contradiction by A4,FIELD_14:64;
+     end;
+   hence (Deriv F).p = 0_.(F);
+   end;
+now assume (Deriv F).p = 0_.(F); then
+   B1: p gcd (Deriv F).p = NormPolynomial p by FIELD_14:46;
+   deg(NormPolynomial p) = deg p by REALALG3:11; then
+   p gcd (Deriv F).p <> 1_.(F) by B1,RATFUNC1:def 2,RING_4:def 4; then
+   consider a being Element of E such that
+   B2: multiplicity(p,a) > 1 by AS,lemsep3;
+   thus ex a being Element of E st multiplicity(p,a) > 1 by B2;
+   end;
+hence thesis by A;
+end;
+
+theorem DP0:
+for p being Prime
+for R being p-characteristic commutative Ring
+for f being Element of the carrier of Polynom-Ring R
+holds (Deriv R).f = 0_.(R) iff
+      for i being Nat st i in Support f holds p divides i
+proof
+let p be Prime, R be p-characteristic commutative Ring;
+let f be Element of the carrier of Polynom-Ring R;
+set q = (Deriv R).f;
+A: now assume
+   AS: for i being Nat st i in Support f holds p divides i;
+   now let j be Nat;
+     B: q.j = (j+1) * f.(j+1) by RINGDER1:def 8;
+     per cases;
+     suppose j + 1 in Support f;
+       hence q.j = 0.R by B,AS,Lm2
+                .= (0_.(R)).j by ORDINAL1:def 12,FUNCOP_1:7;
+       end;
+     suppose not j + 1 in Support f;
+       hence q.j = (j + 1) * 0.R by B,POLYNOM1:def 4
+                .= (0_.(R)).j by ORDINAL1:def 12,FUNCOP_1:7;
+       end;
+     end;
+   hence q = 0_.(R);
+   end;
+now assume AS: q = 0_.(R);
+  now assume ex j being Nat st j in Support f & not p divides j; then
+    consider j being Nat such that B: j in Support f & not p divides j;
+    C: f.j is non zero by B,POLYNOM1:def 3;
+    p * 0 = 0;
+    then j <> 0 by B,NAT_D:def 3;
+    then reconsider j1 = j - 1 as Nat;
+    j1 + 1 = j; then
+    q.j1 = j * f.j by RINGDER1:def 8; then
+    q.j1 <> 0.R by B,C,Lm2a;
+    hence contradiction by AS,ORDINAL1:def 12,FUNCOP_1:7;
+    end;
+  hence for i being Nat st i in Support f holds p divides i;
+  end;
+hence thesis by A;
+end;
+
+begin :: Separable Polynomials
+
+definition
+let F be Field;
+let p be non constant Element of the carrier of Polynom-Ring F;
+attr p is separable means
+  for a being Element of the SplittingField of p
+  st a is_a_root_of p,(the SplittingField of p) holds multiplicity(p,a) = 1;
+end;
+
+notation
+let F be Field;
+let p be non constant Element of the carrier of Polynom-Ring F;
+antonym p is inseparable for p is separable;
+end;
+
+ThSep01:
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F holds
+p is separable iff
+for a being Element of the SplittingField of p holds multiplicity(p,a) <= 1
+proof
+let F be Field;
+let p be non constant Element of the carrier of Polynom-Ring F;
+set E = the SplittingField of p;
+A: now assume B: p is separable;
+   thus for a being Element of the SplittingField of p
+        holds multiplicity(p,a) <= 1
+     proof
+     let a be Element of E;
+     per cases;
+     suppose a is_a_root_of p,E;
+       hence multiplicity(p,a) <= 1 by B;
+       end;
+     suppose not a is_a_root_of p,E;
+       hence multiplicity(p,a) <= 1 by mulzero;
+       end;
+     end;
+   end;
+now assume B: for a being Element of E holds multiplicity(p,a) <= 1;
+   now let a be Element of E;
+     assume a is_a_root_of p,E; then
+     C: multiplicity(p,a) >= 1 by mulzero;
+     multiplicity(p,a) <= 1 by B;
+     hence multiplicity(p,a) = 1 by C,XXREAL_0:1;
+     end;
+   hence p is separable;
+   end;
+hence thesis by A;
+end;
+
+registration
+let F be Field;
+cluster separable for non constant monic
+                                Element of the carrier of Polynom-Ring F;
+existence
+proof
+set a = the Element of F;
+take p = X-a;
+set K = the SplittingField of p;
+A: (Deriv F).(X-a) = 1_.(F) by FIELD_14:61;
+p splits_in K by FIELD_8:def 1; then
+for a being Element of K holds multiplicity(p,a) <= 1 by A,lemsep1;
+hence p is separable by ThSep01;
+end;
+cluster inseparable for non constant monic
+                                Element of the carrier of Polynom-Ring F;
+existence
+proof
+set a = the Element of F;
+reconsider p = (X-a)`^2 as Element of the carrier of Polynom-Ring F
+  by POLYNOM3:def 10;
+deg((X-a)`^2) = 2 by Lm12a; then
+reconsider p as non constant monic Element of the carrier of Polynom-Ring F
+  by RING_4:def 4;
+take p;
+set E = the SplittingField of p;
+F is Subfield of E by FIELD_4:7; then
+the carrier of F c= the carrier of E by EC_PF_1:def 1; then
+reconsider b = a as Element of E;
+reconsider q = (X-b)`^2 as Element of the carrier of Polynom-Ring E
+  by POLYNOM3:def 10;
+2 = multiplicity((X-b)`^2,b) by ro0
+ .= multiplicity((X-a)`^2,b) by XYZ,FIELD_14:def 6;
+hence thesis by ThSep01;
+end;
+end;
+
+theorem ThSep0:
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F holds
+p is separable iff
+(for E being FieldExtension of F st p splits_in E
+ for a being Element of E st a is_a_root_of p,E holds multiplicity(p,a) = 1)
+proof
+let F be Field, p be non constant Element of the carrier of Polynom-Ring F;
+A: now assume A1: for E being FieldExtension of F st p splits_in E
+    for a being Element of E st a is_a_root_of p,E holds multiplicity(p,a) = 1;
+   now let K be SplittingField of p, a be Element of K;
+     assume A2: a is_a_root_of p,K;
+     p splits_in K by FIELD_8:def 1;
+     hence multiplicity(p,a) = 1 by A1,A2;
+     end;
+    hence p is separable;
+    end;
+now assume B1: p is separable;
+  now let E be FieldExtension of F;
+    assume B2: p splits_in E;
+    let a be Element of E;
+    assume B3: a is_a_root_of p,E;
+    set K = the SplittingField of p;
+    H1: Roots(E,p) = {a where a is Element of E : a is_a_root_of p,E}
+        by FIELD_4:def 4;
+    reconsider E1 = E as FAdj(F,Roots(E,p))-extending FieldExtension of F
+        by FIELD_4:7;
+    consider a1 being Element of E1 such that
+    H6: a1 = a & a1 is_a_root_of p,E1 by B3;
+    a1 in Roots(E,p) &
+    Roots(E,p) is Subset of FAdj(F,Roots(E,p)) by H1,H6,FIELD_6:35; then
+    reconsider b = a1 as Element of FAdj(F,Roots(E,p));
+    id F is isomorphism; then
+    reconsider F1 = F as F-isomorphic Field by RING_3:def 4;
+    reconsider h = id F as Isomorphism of F,F1;
+    H2: FAdj(F,Roots(E,p)) is SplittingField of p by B2,FIELD_8:33;
+    (PolyHom h).p = p
+       proof
+       now let o be object;
+         assume o in NAT;
+         then reconsider m = o as Nat;
+         ((PolyHom h).p).m = h.(p.m) by FIELD_1:def 2 .= p.m;
+         hence ((PolyHom h).p).o = p.o;
+         end;
+       hence thesis;
+       end; then
+    consider f being Function of FAdj(F,Roots(E,p)),K such that
+    H3: f is h-extending isomorphism by H2,FIELD_8:57;
+    T: now let a be Element of F;
+       thus f.a = h.a by H3 .= a;
+       end; then
+    H4: f is F-fixing;
+    f.b is_a_root_of p,K
+       proof
+       reconsider K1 = K as FAdj(F,Roots(E,p))-homomorphic Field
+           by H3,RING_2:def 4;
+       reconsider f as Homomorphism of FAdj(F,Roots(E,p)),K1 by H3;
+       the carrier of Polynom-Ring F c=
+       the carrier of Polynom-Ring FAdj(F,Roots(E,p)) by FIELD_4:10; then
+       reconsider q = p as
+              Element of the carrier of Polynom-Ring FAdj(F,Roots(E,p));
+       eval(q,b) = Ext_eval(p,b) by FIELD_4:26
+                .= Ext_eval(p,a1) by FIELD_6:11
+                .= 0.E by H6,FIELD_4:def 2
+                .= 0.FAdj(F,Roots(E,p)) by EC_PF_1:def 1; then
+       b is_a_root_of q; then
+       H7: f.b is_a_root_of (PolyHom f).q by FIELD_1:33;
+       H8: (PolyHom f).q = q
+           proof
+           now let o be object;
+             assume o in NAT;
+             then reconsider m = o as Nat;
+             ((PolyHom f).q).m = f.(p.m) by FIELD_1:def 2 .= p.m by T;
+             hence ((PolyHom f).q).o = q.o;
+             end;
+           hence thesis;
+           end;
+       0.K = Ext_eval(p,f.b) by H7,H8,FIELD_4:26;
+       hence thesis by FIELD_4:def 2;
+       end; then
+    H5: multiplicity(p,f.b) = 1 by B1;
+    multiplicity(p,b) = multiplicity(p,@(b,E1)) by multi3K
+                     .= multiplicity(p,a) by H6,FIELD_7:def 4;
+    hence multiplicity(p,a) = 1 by H4,H5,H3,multiiso;
+    end;
+  hence for E being FieldExtension of F st p splits_in E
+    for a being Element of E st a is_a_root_of p,E holds multiplicity(p,a) = 1;
+  end;
+hence thesis by A;
+end;
+
+theorem ThSep1:
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F holds
+p is separable iff
+(ex E being FieldExtension of F st p splits_in E &
+ for a being Element of E st a is_a_root_of p,E holds multiplicity(p,a) = 1)
+proof
+let F be Field,
+    p be non constant Element of the carrier of Polynom-Ring F;
+A: now assume A1: p is separable;
+   set E = the SplittingField of p;
+   p splits_in E by FIELD_8:def 1;
+   hence ex E being FieldExtension of F st p splits_in E &
+   for a being Element of E st a is_a_root_of p,E holds multiplicity(p,a) = 1
+     by A1;
+   end;
+now assume ex E being FieldExtension of F st p splits_in E &
+   for a being Element of E st a is_a_root_of p,E holds multiplicity(p,a) = 1;
+   then consider E being FieldExtension of F such that
+   B1: p splits_in E & for a being Element of E
+                            st a is_a_root_of p,E holds multiplicity(p,a) = 1;
+   reconsider K = FAdj(F,Roots(E,p)) as SplittingField of p by B1,FIELD_8:33;
+   reconsider E as K-extending FieldExtension of F by FIELD_4:7;
+   B3: now let a be Element of K;
+       assume H0: a is_a_root_of p,K;
+       H1: Roots(E,p) = {a where a is Element of E : a is_a_root_of p,E} &
+           Roots(K,p) = {a where a is Element of K : a is_a_root_of p,K}
+           by FIELD_4:def 4; then
+       a in Roots(K,p) & Roots(K,p) c= Roots(E,p) by H0,FIELD_8:18; then
+       a in Roots(E,p); then
+       consider b being Element of E such that
+       B4: b = a & b is_a_root_of p,E by H1;
+       B5: @(a,E) is_a_root_of p,E by B4,FIELD_7:def 4;
+       multiplicity(p,a) = multiplicity(p,@(a,E)) by multi3K;
+       hence multiplicity(p,a) = 1 by B1,B5;
+       end;
+   set K1 = the SplittingField of p;
+    id F is isomorphism; then
+    reconsider F1 = F as F-isomorphic Field by RING_3:def 4;
+    reconsider h = id F as Isomorphism of F,F1;
+    (PolyHom h).p = p
+       proof
+       now let o be object;
+         assume o in NAT;
+         then reconsider m = o as Nat;
+         ((PolyHom h).p).m = h.(p.m) by FIELD_1:def 2 .= p.m;
+         hence ((PolyHom h).p).o = p.o;
+         end;
+       hence thesis;
+       end; then
+    consider f being Function of K1,K such that
+    H3: f is h-extending isomorphism by FIELD_8:57;
+    T: now let a be Element of F;
+        thus f.a = h.a by H3 .= a;
+      end; then
+    U: f is F-fixing;
+   now let a be Element of K1;
+     assume H0: a is_a_root_of p,K1;
+     H4: multiplicity(p,a) = multiplicity(p,f.a) by U,H3,multiiso;
+     f.a is_a_root_of p,K
+       proof
+       reconsider K2 = K as K1-homomorphic Field by H3,RING_2:def 4;
+       reconsider f as Homomorphism of K1,K2 by H3;
+       the carrier of Polynom-Ring F c=
+       the carrier of Polynom-Ring K1 by FIELD_4:10; then
+       reconsider q = p as Element of the carrier of Polynom-Ring K1;
+       eval(q,a) = Ext_eval(p,a) by FIELD_4:26
+                .= 0.K1 by H0,FIELD_4:def 2; then
+       a is_a_root_of q; then
+       H7: f.a is_a_root_of (PolyHom f).q by FIELD_1:33;
+       H8: (PolyHom f).q = q
+           proof
+           now let o be object;
+             assume o in NAT;
+             then reconsider m = o as Nat;
+             ((PolyHom f).q).m = f.(p.m) by FIELD_1:def 2 .= p.m by T;
+             hence ((PolyHom f).q).o = q.o;
+             end;
+           hence thesis;
+           end;
+       0.K = Ext_eval(p,f.a) by H7,H8,FIELD_4:26;
+       hence thesis by FIELD_4:def 2;
+       end;
+     hence multiplicity(p,a) = 1 by B3,H4;
+     end;
+   hence p is separable;
+   end;
+hence thesis by A;
+end;
+
+theorem ThSep02:
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F
+holds p is separable iff
+      for E being FieldExtension of F
+      for a being Element of E holds multiplicity(p,a) <= 1
+proof
+let F be Field, p be non constant Element of the carrier of Polynom-Ring F;
+A: now assume AS: p is separable;
+   now let E be FieldExtension of F, a be Element of E;
+     assume B: multiplicity(p,a) > 1;
+     the carrier of Polynom-Ring F c= the carrier of Polynom-Ring E
+        by FIELD_4:10; then
+     reconsider p1 = p as Element of the carrier of Polynom-Ring E;
+     deg p > 0 by RING_4:def 4; then
+     deg p1 > 0 by FIELD_4:20; then
+     reconsider p1 as non constant Element of the carrier of Polynom-Ring E
+        by RING_4:def 4;
+     consider K being FieldExtension of E such that
+     D: p1 splits_in K by FIELD_5:31;
+     reconsider K as E-extending FieldExtension of F;
+     multiplicity(p1,a) > 1 by B,FIELD_14:def 6; then
+     multiplicity(p1,@(a,K)) > 1 by multi3; then
+     E: multiplicity(p,@(a,K)) > 1 by sepsep;
+     H: @(a,K) = a by FIELD_7:def 4;
+     consider b being non zero Element of K, q being Ppoly of K such that
+     I: p1 = b * q by D,FIELD_4:def 5;
+     F: p splits_in K by I,FIELD_4:def 5;
+     E is Subfield of K by FIELD_4:7; then
+     0.K = 0.E by EC_PF_1:def 1
+        .= Ext_eval(p,a) by B,mulzero,FIELD_4:def 2
+        .= Ext_eval(p,@(a,K)) by H,FIELD_6:11;
+     hence contradiction by F,E,AS,ThSep0,FIELD_4:def 2;
+     end;
+   hence for E being FieldExtension of F
+         for a being Element of E holds multiplicity(p,a) <= 1;
+   end;
+now assume AS: for E being FieldExtension of F
+               for a being Element of E holds multiplicity(p,a) <= 1;
+  consider E being FieldExtension of F such that
+  B: p splits_in E by FIELD_5:31;
+  now let a be Element of E;
+    assume a is_a_root_of p,E; then
+    multiplicity(p,a) >= 1 & multiplicity(p,a) <= 1 by AS,mulzero;
+    hence multiplicity(p,a) = 1 by XXREAL_0:1;
+    end;
+  hence p is separable by B,ThSep1;
+  end;
+hence thesis by A;
+end;
+
+theorem ThSep03:
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F
+holds p is separable iff
+      (ex E being FieldExtension of F st p splits_in E &
+          for a being Element of E holds multiplicity(p,a) <= 1)
+proof
+let F be Field, p be non constant Element of the carrier of Polynom-Ring F;
+A: now assume AS: p is separable;
+   set K = the SplittingField of p;
+   B: p splits_in K by FIELD_8:def 1;
+   for a being Element of K holds multiplicity(p,a) <= 1 by AS,ThSep01;
+   hence ex E being FieldExtension of F st p splits_in E &
+   for a being Element of E holds multiplicity(p,a) <= 1 by B;
+   end;
+now assume ex E being FieldExtension of F st p splits_in E &
+          for a being Element of E holds multiplicity(p,a) <= 1; then
+  consider E being FieldExtension of F such that
+  AS: p splits_in E &
+      for a being Element of E holds multiplicity(p,a) <= 1;
+  now let a be Element of E;
+    assume a is_a_root_of p,E; then
+    multiplicity(p,a) >= 1 & multiplicity(p,a) <= 1 by AS,mulzero;
+    hence multiplicity(p,a) = 1 by XXREAL_0:1;
+    end;
+  hence p is separable by AS,ThSep1;
+  end;
+hence thesis by A;
+end;
+
+theorem Thsepspl:
+for F being Field
+for p being separable non constant Element of the carrier of Polynom-Ring F
+holds deg p = card(Roots p) iff p splits_in F
+proof
+let F be Field;
+let p be separable non constant Element of the carrier of Polynom-Ring F;
+deg p > 0 by RING_4:def 4; then
+K: p is non constant Polynomial of F by RATFUNC1:def 2;
+reconsider E = F as FieldExtension of F by FIELD_4:6;
+reconsider pE = p as non constant Element of the carrier of Polynom-Ring E;
+now assume B: p splits_in F; then
+   consider c being non zero Element of F, q being Ppoly of F such that
+   C: p = c * q by FIELD_4:def 5;
+   reconsider qE = q as Element of the carrier of Polynom-Ring E
+       by POLYNOM3:def 10;
+   H1: c * q = @(c,E) * qE by FIELD_7:def 4;
+   now let a be Element of F;
+     assume a is_a_root_of q; then
+     C3: eval(qE,@(a,E)) = 0.E by FIELD_7:def 4;
+     Ext_eval(p,@(a,E)) = eval(pE,@(a,E)) by FIELD_4:26
+                       .= @(c,E) * eval(qE,@(a,E)) by C,H1,POLYNOM5:30
+                       .= 0.E by C3;
+     hence 1 = multiplicity(p,@(a,E)) by B,ThSep0,FIELD_4:def 2
+            .= multiplicity(p,a) by multi3
+            .= multiplicity(q,a) by C,lems;
+     end; then
+   D: q is Ppoly of F,(Roots q) by FIELD_14:30;
+   thus deg p = deg q by C,RING_5:4
+             .= card(Roots q) by D,RING_5:60 .= card(Roots p) by C,RING_5:19;
+   end;
+hence thesis by K,ThsepsplA;
+end;
+
+theorem Thsepgcd:
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F
+holds p is separable iff p gcd (Deriv F).p = 1_.(F)
+proof
+let F be Field, p be non constant Element of the carrier of Polynom-Ring F;
+A: now assume AS: p is separable;
+   set K = the SplittingField of p;
+   B: p splits_in K by FIELD_8:def 1;
+   not ex a being Element of K st multiplicity(p,a) > 1 by AS,ThSep02;
+   hence p gcd (Deriv F).p = 1_.(F) by B,lemsep3;
+   end;
+now assume AS: p gcd (Deriv F).p = 1_.(F);
+  set K = the SplittingField of p;
+  p splits_in K by FIELD_8:def 1; then
+  for a being Element of K holds multiplicity(p,a) <= 1 by AS,lemsep3;
+  hence p is separable by ThSep01;
+  end;
+hence thesis by A;
+end;
+
+theorem main1:
+for F being Field,
+    p being non constant irreducible Element of the carrier of Polynom-Ring F
+holds p is separable iff (Deriv F).p <> 0_.(F)
+proof
+let F be Field,
+    p be non constant irreducible Element of the carrier of Polynom-Ring F;
+A: now assume AS: p is separable;
+   set K = the SplittingField of p;
+   B: p splits_in K by FIELD_8:def 1;
+   not ex a being Element of K st multiplicity(p,a) > 1 by AS,ThSep02;
+   hence (Deriv F).p <> 0_.(F) by B,lemsep1;
+   end;
+now assume AS: (Deriv F).p <> 0_.(F);
+  set K = the SplittingField of p;
+  p splits_in K by FIELD_8:def 1; then
+  for a being Element of K holds multiplicity(p,a) <= 1 by AS,lemsep1;
+  hence p is separable by ThSep01;
+  end;
+hence thesis by A;
+end;
+
+theorem lempp:
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F
+holds p is separable iff
+      for E being SplittingField of p
+      ex a being Element of E, q being Ppoly of E,Roots(E,p) st p = a * q
+proof
+let F be Field, p be non constant Element of the carrier of Polynom-Ring F;
+A: now assume AS: p is separable;
+   thus for E being SplittingField of p
+        ex a being Element of E, q being Ppoly of E,Roots(E,p) st p = a * q
+     proof
+     let E be SplittingField of p;
+     A: p splits_in E by FIELD_8:def 1; then
+     consider c being non zero Element of E, q being Ppoly of E such that
+     B: p = c * q by FIELD_4:def 5;
+     H: Roots(E,p) = {a where a is Element of E : a is_a_root_of p,E}
+        by FIELD_4:def 4;
+     I: c*q is Element of the carrier of Polynom-Ring E by POLYNOM3:def 10;
+     C: Roots q = Roots(c*q) by RING_5:19 .= Roots(E,p) by I,B,FIELD_7:13;
+     now let a be Element of E;
+       assume a is_a_root_of q;
+       then a in Roots(E,p) by C,POLYNOM5:def 10;
+       then consider a1 being Element of E such that
+       D: a1 =a & a1 is_a_root_of p,E by H;
+       multiplicity(p,a) = 1 by D,A,AS,ThSep0;
+       then multiplicity(c*q,a) = 1 by B,sepsep1;
+       hence multiplicity(q,a) = 1 by lems;
+       end;
+     then q is Ppoly of E,(Roots q) by FIELD_14:30;
+     hence thesis by C,B;
+     end;
+   end;
+now assume AS: for E being SplittingField of p ex a being Element of E,
+         q being Ppoly of E,Roots(E,p) st p = a * q;
+  set K = the SplittingField of p;
+  consider c being Element of K, q being Ppoly of K,Roots(K,p) such that
+  A: p = c * q by AS;
+  (0.K) * q = 0_.(K) by POLYNOM5:26 .= 0_.(F) by FIELD_4:12; then
+  reconsider c as non zero Element of K by A,STRUCT_0:def 12;
+  H: Roots(K,p) = {a where a is Element of K : a is_a_root_of p,K}
+     by FIELD_4:def 4;
+  I: c*q is Element of the carrier of Polynom-Ring K by POLYNOM3:def 10;
+  C: Roots q = Roots(c*q) by RING_5:19 .= Roots(K,p) by I,A,FIELD_7:13;
+  now let a be Element of K;
+    assume a is_a_root_of p,K;
+    then a in Roots(K,p) by H;
+    then a is_a_root_of q by C,POLYNOM5:def 10;
+    then multiplicity(q,a) = 1 by C,FIELD_14:30;
+    then multiplicity(c*q,a) = 1 by lems;
+    hence multiplicity(p,a) = 1 by A,sepsep1;
+    end;
+  hence p is separable;
+  end;
+hence thesis by A;
+end;
+
+theorem
+for F being Field,
+    p being non constant monic Element of the carrier of Polynom-Ring F
+holds p is separable iff
+      for E being SplittingField of p holds p is Ppoly of E,Roots(E,p)
+proof
+let F be Field,
+    p be non constant monic Element of the carrier of Polynom-Ring F;
+A: now assume AS: p is separable;
+   thus for E being SplittingField of p holds p is Ppoly of E,Roots(E,p)
+     proof
+     let E be SplittingField of p;
+     consider a being Element of E, q being Ppoly of E,Roots(E,p) such that
+     A: p = a * q by AS,lempp;
+     H: F is Subfield of E by FIELD_4:7;
+     a = a * 1.E
+      .= a * (LC q) by RING_5:50
+      .= LC(a * q) by RING_5:5
+      .= LC p by A,FIELD_8:5
+      .= 1.F by RATFUNC1:def 7
+      .= 1.E by H,EC_PF_1:def 1;
+     hence thesis by A;
+     end;
+   end;
+now assume AS:
+   for E being SplittingField of p holds p is Ppoly of E,Roots(E,p);
+   now let E be SplittingField of p;
+     reconsider q = p as Ppoly of E,Roots(E,p) by AS;
+     1.E * q = q;
+     hence ex a being Element of E,
+              q being Ppoly of E,Roots(E,p) st p = a * q;
+     end;
+   hence p is separable by lempp;
+   end;
+hence thesis by A;
+end;
+
+theorem
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F holds
+p is separable iff
+for E being FieldExtension of F st p splits_in E holds p is_square-free_over E
+proof
+let F be Field, p be non constant Element of the carrier of Polynom-Ring F;
+A: now assume AS: p is separable;
+   now assume ex E being FieldExtension of F
+        st p splits_in E & not p is_square-free_over E; then
+     consider E being FieldExtension of F such that
+     A: p splits_in E & not p is_square-free_over E;
+     consider q1 being non constant (Polynomial of E),
+              q2 being Polynomial of E such that
+     B: q2 = p & q1`^2 divides q2 by A,FIELD_14:def 2;
+     H2: q2 is Element of the carrier of Polynom-Ring E by POLYNOM3:def 10;
+     then deg p > 0 & deg p = deg q2 by B,FIELD_4:20,RING_4:def 4; then
+     reconsider q2 as non constant Polynomial of E by RATFUNC1:def 2;
+     H3: q1`^2 = q1 *' q1 by POLYNOM5:17; then
+     consider r being Polynomial of E such that
+     H0: (q1 *' q1) *' r = q2 by B,RING_4:1;
+     reconsider r as non zero Polynomial of E by H0;
+     H5: q2 = q1 *' (q1 *' r) by H0,POLYNOM3:33;
+     q1 is with_roots
+        proof
+        q1 <> 0_.(E); then
+        C0: len q1 <> 0 by POLYNOM4:5;
+        q1 is Element of the carrier of Polynom-Ring E by POLYNOM3:def 10; then
+        deg NormPolynomial(q1) = deg q1 & deg q1 > 0
+        by REALALG3:11,RATFUNC1:def 2;
+        then C4: NormPolynomial(q1) is non constant by RATFUNC1:def 2;
+        consider x being non zero Element of E, v being Ppoly of E such that
+        C1: p = x * v by A,FIELD_4:def 5;
+        C5: v is Element of the carrier of Polynom-Ring E &
+           x*v is Element of the carrier of Polynom-Ring E &
+           q1 is Element of the carrier of Polynom-Ring E &
+           p is Element of the carrier of Polynom-Ring E by C1,POLYNOM3:def 10;
+        now let a be Element of E;
+          assume a is_a_root_of v; then
+          D: 0.E = x * eval(v,a)
+                .= eval(x*v,a) by POLYNOM5:30
+                .= Ext_eval(p,a) by C1,C5,FIELD_4:26;
+          multiplicity(v,a) = multiplicity(x*v,a) by lems
+                           .= multiplicity(p,a) by C1,FIELD_14:def 6;
+          hence multiplicity(v,a) = 1 by D,AS,A,ThSep0,FIELD_4:def 2;
+          end; then
+        C2: v is Ppoly of E,(Roots v) by FIELD_14:30;
+        consider u being Polynomial of E such that
+        C7: x * v = q1 *' u by C1,B,H5;
+        C8: x <> 0.E;
+        q1 *' (x" * u) = x" * (x * v) by C7,RING_4:10
+                      .= (x" * x) * v by RING_4:11
+                      .= (1.E) * v by C8,VECTSP_1:def 10
+                      .= v; then
+        NormPolynomial(q1) divides v by C5,RING_4:25,RING_4:1; then
+        consider S being non empty finite Subset of E such that
+        C3: NormPolynomial(q1) is Ppoly of E,S & S c= (Roots v)
+            by C4,C2,FIELD_14:50;
+        thus thesis by C3,C0,POLYNOM5:60;
+        end; then
+     consider a being Element of E such that
+     C: a is_a_root_of q1;
+     H1: multiplicity(q1,a) >= 1 by C,UPROOTS:52;
+     q1`^2 = q1 *' q1 by POLYNOM5:17; then
+     multiplicity(q1`^2,a) = multiplicity(q1,a) + multiplicity(q1,a)
+        by UPROOTS:55; then
+     H5: multiplicity(q1`^2,a) >= 1 + 1 by H1,XREAL_1:7;
+     multiplicity(q1`^2,a) + multiplicity(r,a) >= multiplicity(q1`^2,a)
+         by NAT_1:11; then
+     multiplicity(q1`^2,a) + multiplicity(r,a) >= 2 by H5,XXREAL_0:2;
+     then multiplicity(q2,a) >= 1 + 1 by H3,H0,UPROOTS:55; then
+     D: multiplicity(q2,a) > 1 by NAT_1:13;
+     E: multiplicity(q2,a) = multiplicity(p,a) by B,FIELD_14:def 6;
+     eval(q2,a) = eval(q1*'q1,a) * eval(r,a) by H0,POLYNOM4:24
+               .= (0.E * eval(q1,a)) * eval(r,a) by C,POLYNOM4:24; then
+     Ext_eval(p,a) = 0.E by H2,B,FIELD_4:26;
+     hence p is inseparable by D,E,A,ThSep0,FIELD_4:def 2;
+     end;
+   hence for E being FieldExtension of F
+         st p splits_in E holds p is_square-free_over E by AS;
+   end;
+now assume p is inseparable; then
+  consider E being FieldExtension of F such that
+  A: p splits_in E & not for a being Element of E st a is_a_root_of p,E
+                     holds multiplicity(p,a) = 1 by ThSep0;
+  consider a being Element of E such that
+  B: a is_a_root_of p,E & not multiplicity(p,a) = 1 by A;
+  the carrier of Polynom-Ring F c= the carrier of Polynom-Ring E
+    by FIELD_4:10; then
+  reconsider q = p as Element of the carrier of Polynom-Ring E;
+  reconsider q as Polynomial of E;
+  deg p > 0 & deg p = deg q by FIELD_4:20,RING_4:def 4; then
+  reconsider q as non constant Polynomial of E by RATFUNC1:def 2;
+  eval(q,a) = Ext_eval(p,a) by FIELD_4:26
+           .= 0.E by B,FIELD_4:def 2; then
+  a is_a_root_of q; then
+  multiplicity(q,a) >= 1 by UPROOTS:52; then
+  multiplicity(q,a) > 1 by B,FIELD_14:def 6,XXREAL_0:1; then
+  multiplicity(q,a) >= 1 + 1 by INT_1:7; then
+  (X-a)`^2 divides q by mulzero1;
+  hence ex E being FieldExtension of F st
+        p splits_in E & not p is_square-free_over E by A,FIELD_14:def 2;
+  end;
+hence thesis by A;
+end;
+
+theorem
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F
+holds p is separable iff
+      ex E being FieldExtension of F st card Roots(E,p) = deg p
+proof
+let F be Field, p be non constant Element of the carrier of Polynom-Ring F;
+A: now assume AS: p is separable;
+   set K = the SplittingField of p;
+   the carrier of Polynom-Ring F c= the carrier of Polynom-Ring K
+     by FIELD_4:10; then
+   reconsider q = p as Element of the carrier of Polynom-Ring K;
+   deg p > 0 & deg p = deg q by RING_4:def 4,FIELD_4:20; then
+   reconsider q as non constant Element of the carrier of Polynom-Ring K
+     by RING_4:def 4;
+   p splits_in K by FIELD_8:def 1; then
+   consider c being non zero Element of K, r being Ppoly of K such that
+   H: p = c * r by FIELD_4:def 5;
+   now assume q is inseparable; then
+     consider E being FieldExtension of K such that
+     B: not for a being Element of E holds multiplicity(q,a) <= 1  by ThSep02;
+     consider a being Element of E such that
+     C: multiplicity(q,a) > 1 by B;
+     reconsider E as K-extending FieldExtension of F;
+     reconsider a as Element of E;
+     multiplicity(q,a) = multiplicity(p,a) by sepsep;
+     hence contradiction by C,AS,ThSep02;
+     end; then
+   D: card(Roots q) = deg q by H,FIELD_4:def 5,Thsepspl
+                   .= deg p by FIELD_4:20;
+   Roots q = Roots(K,p) by FIELD_7:13;
+   hence ex E being FieldExtension of F st card Roots(E,p) = deg p by D;
+   end;
+now assume ex E being FieldExtension of F st card Roots(E,p) = deg p; then
+   consider E being FieldExtension of F such that
+   AS: card Roots(E,p) = deg p;
+   the carrier of Polynom-Ring F c= the carrier of Polynom-Ring E
+     by FIELD_4:10; then
+   reconsider q = p as Element of the carrier of Polynom-Ring E;
+   reconsider q as Polynomial of E;
+   deg p > 0 & deg p = deg q by RING_4:def 4,FIELD_4:20; then
+   reconsider q as non constant Polynomial of E by RATFUNC1:def 2;
+   A: card(Roots q) = card Roots(E,p) by FIELD_7:13
+                   .= deg q by AS, FIELD_4:20;
+   consider c being non zero Element of E, r being Ppoly of E such that
+   H: q = c * r by FIELD_4:def 5,A,ThsepsplA;
+   now let a be Element of E;
+     multiplicity(q,a) = multiplicity(p,a) by FIELD_14:def 6;
+     hence multiplicity(p,a) <= 1 by A,ThsepsplA;
+     end;
+   hence p is separable by H,FIELD_4:def 5,ThSep03;
+   end;
+hence thesis by A;
+end;
+
+theorem
+for F being Field
+for p being non constant Element of the carrier of Polynom-Ring F
+for a being non zero Element of F
+holds a * p is separable iff p is separable
+proof
+let F be Field, p be non constant Element of the carrier of Polynom-Ring F;
+let c be non zero Element of F;
+A: now assume AS: p is separable;
+   now let E be FieldExtension of F;
+     F is Subfield of E & c <> 0.F by FIELD_4:7; then
+     H: c <> 0.E & @(c,E) = c by EC_PF_1:def 1,FIELD_7:def 4; then
+     K: @(c,E) is non zero;
+     reconsider pE = p as Polynomial of E by FIELD_4:8;
+     I: @(c,E) * pE = c * p by H,ll;
+     assume (c*p) splits_in E; then
+     consider b being non zero Element of E, r being Ppoly of E such that
+     J: c * p = b * r by FIELD_4:def 5;
+     @(c,E) * pE splits_in E by I,J,FIELD_4:def 5; then
+     consider b being non zero Element of E, r being Ppoly of E such that
+     J: pE = b * r by K,FIELD_8:9,FIELD_4:def 5;
+     A: p splits_in E by J,FIELD_4:def 5;
+     thus for a being Element of E
+          st a is_a_root_of (c*p),E holds multiplicity(c*p,a) = 1
+       proof
+       let a be Element of E;
+       assume a is_a_root_of (c*p),E;
+       then 0.E = Ext_eval(c*p,a) by FIELD_4:def 2
+               .= @(c,E) * Ext_eval(p,a) by FIELD_7:def 4,REALALG3:16;
+       then Ext_eval(p,a) = 0.E by H,VECTSP_2:def 1;
+       then multiplicity(p,a) = 1 by AS,A,ThSep0,FIELD_4:def 2;
+       hence multiplicity(c*p,a) = 1 by lems1;
+       end;
+     end;
+   hence c*p is separable by ThSep0;
+   end;
+now assume AS: c * p is separable;
+   now let E be FieldExtension of F;
+     F is Subfield of E & c <> 0.F by FIELD_4:7; then
+     H: c <> 0.E &  @(c,E) = c by EC_PF_1:def 1,FIELD_7:def 4; then
+     K: @(c,E) is non zero;
+     assume p splits_in E; then
+     consider b being non zero Element of E, r being Ppoly of E such that
+     J: p = b * r by FIELD_4:def 5;
+     c * p = @(c,E) * (b * r) by H,J,ll
+          .= (@(c,E) * b) * r by RING_4:11; then
+     A: (c*p) splits_in E by K,FIELD_4:def 5;
+     thus for a being Element of E
+          st a is_a_root_of p,E holds multiplicity(p,a) = 1
+       proof
+       let a be Element of E;
+       assume B: a is_a_root_of p,E;
+       Ext_eval(c*p,a)
+            = @(c,E) * Ext_eval(p,a) by REALALG3:16,FIELD_7:def 4
+           .= @(c,E) * 0.E by B,FIELD_4:def 2;
+       then multiplicity(c*p,a) = 1 by AS,A,ThSep0,FIELD_4:def 2;
+       hence multiplicity(p,a) = 1 by lems1;
+       end;
+     end;
+  hence p is separable by ThSep0;
+  end;
+hence thesis by A;
+end;
+
+theorem ThSepPR:
+for F being Field
+for p,q being non constant Element of the carrier of Polynom-Ring F
+for r being Element of the carrier of Polynom-Ring F
+st p = q *' r holds p is separable implies q is separable
+proof
+let F be Field, p,q be non constant Element of the carrier of Polynom-Ring F;
+let r be Element of the carrier of Polynom-Ring F;
+assume A: p = q *' r;
+assume B: p is separable;
+reconsider r as non zero Polynomial of F by A;
+now assume q is inseparable; then
+  consider E being FieldExtension of F such that
+  D: not for a being Element of E holds multiplicity(q,a) <= 1 by ThSep02;
+  consider a being Element of E such that
+  E: multiplicity(q,a) > 1 by D;
+  F: multiplicity(p,a) = multiplicity(q,a) + multiplicity(r,a) by A,UP55;
+  multiplicity(q,a) + multiplicity(r,a) >= multiplicity(q,a) by NAT_1:11;
+  then multiplicity(p,a) > 1 by F,E,XXREAL_0:2;
+  hence contradiction by B,ThSep02;
+  end;
+hence thesis;
+end;
+
+theorem YY:
+for F being Field
+for E being FieldExtension of F
+for p being non constant Element of the carrier of Polynom-Ring F
+for q being non constant Element of the carrier of Polynom-Ring E
+st p = q holds p is separable iff q is separable
+proof
+let F be Field, E be FieldExtension of F;
+let p be non constant Element of the carrier of Polynom-Ring F;
+let q be non constant Element of the carrier of Polynom-Ring E;
+assume AS: p = q;
+A: now assume p is separable; then
+   B: p gcd (Deriv F).p = 1_.(F) by Thsepgcd;
+   (Deriv E).q = (Deriv F).p by AS,FIELD_14:66; then
+   q gcd (Deriv E).q = 1_.(F) by AS,B,FIELD_14:45 .= 1_.(E) by FIELD_4:14;
+   hence q is separable by Thsepgcd;
+   end;
+now assume q is separable; then
+   B: q gcd (Deriv E).q = 1_.(E) by Thsepgcd;
+   (Deriv E).q = (Deriv F).p by AS,FIELD_14:66; then
+   p gcd (Deriv F).p = 1_.(E) by AS,B,FIELD_14:45 .= 1_.(F) by FIELD_4:14;
+   hence p is separable by Thsepgcd;
+   end;
+hence thesis by A;
+end;
+
+registration
+let F be Field;
+let a be Element of F;
+cluster X-a -> separable irreducible;
+coherence
+proof
+(Deriv F).(X-a) = 1_.(F) by FIELD_14:61;
+hence thesis by main1;
+end;
+end;
+
+registration
+let F be Field;
+let a be Element of F;
+let n be non trivial Nat;
+cluster (X-a)|^n -> inseparable reducible;
+coherence
+proof
+reconsider E = F as FieldExtension of F by FIELD_4:6;
+reconsider b = a as Element of E;
+reconsider n1 = n - 1 as Nat;
+set p = (X-a)`^n;
+reconsider q = (X-b)`^n as Polynomial of E;
+reconsider q as non constant Polynomial of E;
+reconsider p = (X-a)`^n as Element of the carrier of Polynom-Ring F
+   by POLYNOM3:def 10;
+deg((X-a)`^n) > 0 by RATFUNC1:def 2; then
+reconsider p as non constant Element of the carrier of Polynom-Ring F
+   by RING_4:def 4;
+H1: Roots(E,p) = Roots(q) by FIELD_7:13 .= {b} by Lm12b;
+H2: Roots(E,p) = {a where a is Element of E : a is_a_root_of p,E}
+    by FIELD_4:def 4;
+    b in Roots(E,p) by H1,TARSKI:def 1; then
+    consider c being Element of E such that
+H7: b = c & c is_a_root_of p,E by H2;
+   n >= 1 + 1 by NAT_2:29; then
+E: n + 1 > n & n > 1 by NAT_1:13;
+F: n = multiplicity(q,b) by ro0
+    .= multiplicity(p,b) by FIELD_14:def 6;
+   n1 + 1 = n; then
+   p = ((X-a)`^n1) *' (X-a) by POLYNOM5:19;
+hence thesis by F,E,sp,H7,ThSep0;
+end;
+end;
+
+registration
+let F be 0-characteristic Field;
+cluster -> separable for irreducible Element of the carrier of Polynom-Ring F;
+coherence
+proof
+let p be irreducible Element of the carrier of Polynom-Ring F;
+A: (Deriv F).p <> 0_.(F) by FIELD_14:69;
+now let E being SplittingField of p, a be Element of E;
+  the carrier of Polynom-Ring F c= the carrier of Polynom-Ring E
+    by FIELD_4:10; then
+  reconsider p1 = p as Element of the carrier of Polynom-Ring E;
+  deg p1 = deg p by FIELD_4:20; then
+  reconsider p1 as non zero Element of the carrier of Polynom-Ring E
+    by RING_4:def 4,RATFUNC1:def 2;
+  B: p splits_in E by FIELD_8:def 1;
+  assume a is_a_root_of p,E; then
+  0.E = Ext_eval(p,a) by FIELD_4:def 2 .= eval(p1,a) by FIELD_4:26; then
+  multiplicity(p1,a) >= 1 by UPROOTS:52,POLYNOM5:def 7; then
+  C: multiplicity(p,a) >= 1 by FIELD_14:def 6;
+  multiplicity(p,a) <= 1 by A,B,lemsep1;
+  hence multiplicity(p,a) = 1 by C,XXREAL_0:1;
+  end;
+hence thesis;
+end;
+end;
+
+theorem contr:
+for p being Prime
+for F being p-characteristic Field
+for a being Element of F
+st not a in F|^p holds X^(p,a) is irreducible inseparable
+proof
+let p be Prime, F be p-characteristic Field, a be Element of F;
+assume A0: not a in F|^p;
+the carrier of F|^p = the set of all a|^p where a is Element of F by deffp;
+then not ex b being Element of F st b|^p = a by A0;
+hence X^(p,a) is irreducible by pirred;
+consider E being FieldExtension of F such that
+A2: X^(p,a) is_with_roots_in E by FIELD_5:30;
+consider b being Element of E such that
+A3: b is_a_root_of X^(p,a),E by A2,FIELD_4:def 3;
+F is Subfield of E by FIELD_4:7; then
+the carrier of F c= the carrier of E by EC_PF_1:def 1; then
+reconsider aE = a as Element of E;
+A4: X^(p,a) = X^(p,aE) by split2;
+0.E = Ext_eval(X^(p,a),b) by A3,FIELD_4:def 2
+   .= eval(X^(p,aE),b) by split2,FIELD_4:26; then
+b is_a_root_of X^(p,aE); then
+b|^p = aE by split1; then
+X^(p,aE) = (X-b)|^p by split0 .= (X-b)`^p; then
+p = multiplicity(X^(p,aE),b) by ro0
+ .= multiplicity(X^(p,a),b) by A4,FIELD_14:def 6;
+hence thesis by INT_2:def 4,ThSep02;
+end;
+
+begin :: Perfect Fields
+
+definition
+let F be Field;
+attr F is perfect means :dpf:
+  for p being irreducible Element of the carrier of Polynom-Ring F
+  holds p is separable;
+end;
+
+registration
+cluster -> perfect for 0-characteristic Field;
+coherence;
+end;
+
+theorem DP1:
+for p being Prime
+for F being p-characteristic Field
+for q being Element of the carrier of Polynom-Ring F
+st for i being Nat st i in Support q
+   holds p divides i & ex a being Element of F st a|^p = q.i
+ex r being Element of the carrier of Polynom-Ring F st r|^p = q
+proof
+let p be Prime, F be p-characteristic Field;
+let q be Element of the carrier of Polynom-Ring F;
+assume AS: for i being Nat st i in Support q
+           holds p divides i & ex a being Element of F st a|^p = q.i;
+per cases;
+suppose q is zero; then
+  H: q = 0_.(F) by UPROOTS:def 5 .= 0.(Polynom-Ring F) by POLYNOM3:def 10;
+  then q|^p = 0.(Polynom-Ring F);
+  hence thesis by H;
+  end;
+suppose q is non zero; then
+reconsider q as non zero Element of the carrier of Polynom-Ring F;
+defpred P[Nat] means
+ for q being non zero Element of the carrier of Polynom-Ring F
+ st deg q = $1 * p & for i being Nat st i in Support q
+    holds p divides i & ex a being Element of F st a|^p = q.i
+ ex r being Element of the carrier of Polynom-Ring F st r|^p = q;
+IS: now let k be Nat;
+    assume IV: for n being Nat st n < k holds P[n];
+    now let q be non zero Element of the carrier of Polynom-Ring F;
+      assume A1: deg q = k * p & for i being Nat st i in Support q
+         holds p divides i & ex a being Element of F st a|^p = q.i;
+      H: q <> 0_.(F); then
+      len q <> 0 by POLYNOM4:5; then
+      K: len q -' 1 = len q - 1 by XREAL_0:def 2;
+      consider r being Polynomial of F such that
+      A2: len r < len q & q = r + LM q &
+          for n be Element of NAT st n < len q-1 holds r.n = q.n
+          by H,POLYNOM4:5,POLYNOM4:16;
+      LC q is non zero; then
+      J: q.(len q - 1) <> 0.F by K,RATFUNC1:def 6; then
+      q.(deg q) <> 0.F by HURWITZ:def 2; then
+      deg q in Support q by POLYNOM1:def 4; then
+      consider b being Element of F such that
+      A4: b|^p = q.(deg q) by A1;
+      reconsider r1 = anpoly(b,k) as
+            Element of the carrier of Polynom-Ring F by POLYNOM3:def 10;
+      K: b is non zero by A4,J,HURWITZ:def 2;
+      A5: LM q = anpoly(b|^p,k*p) by A4,A1,FIELD_1:11
+            .= anpoly(b,k)`^p by K,DP3
+            .= r1|^p;
+      per cases;
+      suppose r is zero;
+        hence
+           ex r being Element of the carrier of Polynom-Ring F st r|^p = q
+           by A2,A5;
+        end;
+      suppose r is non zero; then
+        reconsider r as non zero Element of the carrier of Polynom-Ring F
+          by POLYNOM3:def 10;
+        r <> 0_.(F); then
+        len r <> 0 by POLYNOM4:5; then
+        K: len r -' 1 = len r - 1 by XREAL_0:def 2;
+        H: now let i be Element of NAT;
+           assume i in Support r; then
+           H1: r.i <> 0.F by POLYNOM1:def 4;
+           now assume H2: i >= len q - 1;
+               len q - 1 > len r - 1 by A2,XREAL_1:9;
+               then i > len r - 1 by H2,XXREAL_0:2;
+               then i >= len r - 1 + 1 by INT_1:7;
+               hence contradiction by H1,ALGSEQ_1:8;
+               end;
+           hence r.i = q.i by A2;
+           hence i in Support q by H1,POLYNOM1:def 4;
+           end;
+        LC r is non zero; then
+        r.(len r - 1) <> 0.F by K,RATFUNC1:def 6; then
+        r.(deg r) <> 0.F by HURWITZ:def 2; then
+        deg r in Support r by POLYNOM1:def 4; then
+        deg r in Support q by H; then
+        consider k1 being Nat such that
+        A6: deg r = p * k1 by A1,NAT_D:def 3;
+        len r - 1 < len q - 1 by A2,XREAL_1:9; then
+        deg r < len q - 1 by HURWITZ:def 2; then
+        deg r < deg q by HURWITZ:def 2; then
+        (p * k1) / p < (p * k) / p by A1,A6,XREAL_1:74; then
+        k1 * (p / p) < (p * k) / p; then
+        k1 * 1 < k * (p / p) by XCMPLX_1:60; then
+        A7: k1 < k * 1 by XCMPLX_1:60;
+        now let i be Nat;
+            assume K: i in Support r; then
+            L: i in Support q by H;
+            hence p divides i by A1;
+            consider a being Element of F such that
+            M: a|^p = q.i by L,A1;
+            r.i = a|^p by M,K,H;
+            hence ex a being Element of F st a|^p = r.i;
+            end; then
+        consider r2 being Element of the carrier of Polynom-Ring F such that
+        A8: r2|^p = r by A6,A7,IV;
+        (r1 + r2)|^p = r1|^p + r2|^p by fresh
+                    .= q by A2,A5,A8,POLYNOM3:def 10;
+        hence
+           ex r being Element of the carrier of Polynom-Ring F st r|^p = q;
+        end;
+      end;
+    hence P[k];
+    end;
+I: for k being Nat holds P[k] from NAT_1:sch 4(IS);
+LC q is non zero; then
+q.(len q -' 1) <> 0.F by RATFUNC1:def 6; then
+len q -' 1 in Support q by POLYNOM1:def 4; then
+consider k being Nat such that H: len q -' 1 = p * k by AS,NAT_D:def 3;
+q <> 0_.(F); then
+len q <> 0 by POLYNOM4:5; then
+len q -' 1 = len q - 1 by XREAL_0:def 2; then
+deg q = len q -' 1 by HURWITZ:def 2;
+hence thesis by AS,H,I;
+end;
+end;
+
+theorem Fpp:
+for p being Prime
+for F being p-characteristic Field holds F is perfect iff F == F|^p
+proof
+let p be Prime, F be p-characteristic Field;
+A: now assume A1: not F == F|^p;
+   set a = the Element of (the carrier of F) \ (the carrier of F|^p);
+   A2: the carrier of F|^p c= the carrier of F by EC_PF_1:def 1;
+       now assume B: the carrier of F|^p = the carrier of F;
+       then the addF of F|^p = (the addF of F)||(the carrier of F) &
+            the multF of F|^p = (the multF of F)||(the carrier of F) &
+            1.(F|^p) = 1.F & 0.(F|^p) = 0.F by deffp;
+       hence contradiction by B,A1;
+       end; then
+   the carrier of F|^p c< the carrier of F by A2,XBOOLE_0:def 8; then
+   A3: (the carrier of F) \ (the carrier of F|^p) <> {} by XBOOLE_1:105; then
+   reconsider a as Element of F by XBOOLE_0:def 5;
+   not a in F|^p by A3,XBOOLE_0:def 5;
+   then X^(p,a) is irreducible inseparable by contr;
+   hence F is non perfect;
+   end;
+now assume A0: F == F|^p;
+   now assume F is non perfect; then
+     consider q being irreducible
+                          Element of the carrier of Polynom-Ring F such that
+     A1: q is inseparable;
+     consider E being FieldExtension of F such that
+     A2: q splits_in E &
+         ex a being Element of E st a is_a_root_of q,E & multiplicity(q,a) <> 1
+         by A1,ThSep0;
+     consider a being Element of E such that
+     A3: a is_a_root_of q,E & multiplicity(q,a) <> 1 by A2;
+     multiplicity(q,a) >= 1 by A3,mulzero; then
+     multiplicity(q,a) > 1 by A3,XXREAL_0:1; then
+     A4: (Deriv F).q = 0_.(F) by A2,lemsep1;
+     now let i be Nat;
+       assume i in Support q;
+       hence p divides i by A4,DP0;
+       q.i in the carrier of F|^p by A0; then
+       q.i in the set of all a|^p where a is Element of F by deffp;
+       hence ex a being Element of F st a|^p = q.i;
+       end; then
+     consider r being Element of the carrier of Polynom-Ring F such that
+     A5: r|^p = q by DP1;
+     reconsider r as non constant Element of the carrier of Polynom-Ring F
+         by A5;
+     H: r|^((p-1)+1) = (r|^(p-1)) * r|^1 by BINOM:10
+                    .= (r|^(p-1)) * r by BINOM:8
+                    .= (r`^(p-1)) *' r by POLYNOM3:def 10;
+     A6: 0 + 1 <= deg r by INT_1:7,RING_4:def 4;
+     r <> 0_.(F) & r`^(p-1) <> 0_.(F); then
+     K: deg q = deg(r`^(p-1)) + deg r by A5,H,HURWITZ:23
+             .= (p-1) * (deg r) + deg r by t1
+             .= p * (deg r);
+     now assume deg r >= deg q;
+       then deg q >= p * (deg q) by K,XREAL_1:64;
+       then (deg q) / (deg q) >= (p * (deg q)) / (deg q) by XREAL_1:64;
+       then L: 1 >= (p * (deg q)) / (deg q) by K,A6,XCMPLX_1:60;
+       (p * (deg q)) / (deg q) = p * ((deg q) / (deg q))
+                              .= p * 1 by K,A6,XCMPLX_1:60;
+       hence contradiction by L,INT_2:def 4;
+       end;
+     hence contradiction by H,A5,A6,RING_4:1,RING_4:40;
+     end;
+   hence F is perfect;
+   end;
+hence thesis by A;
+end;
+
+theorem CF:
+for F being Field holds
+F is finite iff ex n being non zero Nat st card F = (Char F)|^n
+proof
+let F1 be Field;
+now assume F1 is finite; then
+  reconsider F = F1 as finite Field;
+  set p = Char F;
+  H: F is p-characteristic by RING_3:def 6;
+  set M = multMagma(#the carrier of F,the addF of F#);
+  M is Group-like associative
+    proof
+    ex e being Element of M st
+    for h being Element of M holds h * e = h & e * h = h &
+      ex g being Element of M st h * g = e & g * h = e
+      proof
+      reconsider z = 0.F as Element of M;
+      take z;
+      now let h be Element of M;
+        reconsider j = h as Element of F;
+        j + 0.F = j & 0.F + j = j;
+        hence h * z = h & z * h = h;
+        thus ex g being Element of M st h * g = z & g * h = z
+          proof
+          reconsider g = -j as Element of M;
+          take g;
+          thus h * g = j + (-j) .= z by RLVECT_1:5;
+          thus g * h = (-j) + j .= z by RLVECT_1:5;
+          end;
+        end;
+      hence thesis;
+      end;
+    hence M is Group-like by GROUP_1:def 2;
+    now let x,y,z be Element of M;
+      reconsider a = x, b = y, c = z as Element of F;
+      thus (x * y) * z
+         = (a + b) + c
+        .= a + (b + c) by RLVECT_1:def 3
+        .= x * (y * z);
+      end;
+    hence M is associative by GROUP_1:def 3;
+    end; then
+  reconsider M as finite Group;
+  H1: 1_M = 0.F
+      proof
+      reconsider z = 0.F as Element of M;
+      now let h be Element of M;
+        reconsider j = h as Element of F;
+        j + 0.F = j & 0.F + j = j;
+        hence h * z = h & z * h = h;
+        end;
+      hence thesis by GROUP_1:def 4;
+      end;
+  H2: now let a be Element of F, b be Element of M, n be non zero Nat;
+      assume AS: a = b;
+      defpred P[Nat] means
+        for a being Element of F, b being Element of M
+        holds a = b implies b |^ ($1) = ($1) * a;
+      IA: P[1]
+          proof
+          now let a be Element of F, b be Element of M;
+            assume a = b;
+            hence b |^ 1 = a by GROUP_1:26 .= 1 * a by BINOM:13;
+            end;
+          hence thesis;
+          end;
+      IS: now let k be Nat;
+          assume k >= 1;
+          assume B: P[k];
+          now let a be Element of F, b be Element of M;
+            assume C: a = b; then
+            D: b|^k = k * a by B;
+            thus b |^ (k+1)
+             = b|^k * b by GROUP_1:34
+            .= (k * a) + (1 * a) by D,C,BINOM:13
+            .= (k+1) * a by BINOM:15;
+            end;
+          hence P[k+1];
+          end;
+      I: for k being Nat st k >= 1 holds P[k] from NAT_1:sch 8(IA,IS);
+      n >= 0 + 1 by INT_1:7;
+      hence b |^ n = n * a by I,AS;
+      end;
+  reconsider e = 1.F as Element of M;
+  ord e = p
+      proof
+      B0: p is Element of NAT by ORDINAL1:def 12;
+      B1: e |^ p = p * 1.F by H2
+                .= p '*' 1.F by RING_3:def 2
+                .= 1_M by H1,RING_3:def 5; then
+      B2: not e is being_of_order_0 by GROUP_1:def 10;
+      now let m be Nat;
+        assume B4: e |^ m = 1_M & m <> 0;
+        m '*' 1.F = m * 1.F by RING_3:def 2 .= 0.F by B4,H2,H1;
+        hence p <= m by B4,RING_3:def 5;
+        end;
+      hence thesis by B0,B1,B2,GROUP_1:def 11;
+      end; then
+  A: p divides (card M) by GR_CY_1:8;
+  B: now let q be Prime;
+     assume E: p <> q & q divides (card M); then
+     consider b being Element of M such that C: ord b = q by GROUP_10:11;
+     reconsider a = b as Element of F;
+     q > 1 by INT_2:def 4; then
+     D: a is non zero by H1,C,GROUP_1:42;
+     q * a = b |^ q by H2 .= 0.F by C,GROUP_1:41,H1;
+     then p divides q & p > 1 by H,D,Lm2a,INT_2:def 4;
+     hence contradiction by E,INT_2:def 4;
+     end;
+  ex n being Nat st card F = p|^n
+     proof
+     consider k,m being Nat such that
+     C: card F = m * p|^k & not p divides m by CF1;
+     m <= 1 implies m = 0 or ... or m = 1; then
+     per cases;
+     suppose m = 0 or m = 1;
+       hence ex n being Nat st card F = p|^n by C;
+       end;
+     suppose m > 1;
+       then m >= 1 + 1 by INT_1:7;
+       then ex q being Element of NAT st q is prime & q divides m by INT_2:31;
+       hence ex n being Nat st card F = p|^n by B,C,INT_2:2;
+       end;
+     end;
+  then consider n being Nat such that F: card F = p|^n;
+  now assume n is zero; then
+    card F = 1 & p > 1 by F,NEWTON:4,INT_2:def 4;
+    hence contradiction by A,NAT_D:7;
+    end;
+  hence ex n being non zero Nat st card F1 = (Char F1)|^n by F;
+  end;
+hence thesis;
+end;
+
+theorem Fpp1:
+for p being Prime
+for F being finite p-characteristic Field
+for a being Element of F ex b being Element of F st b|^p = a
+proof
+let p be Prime, F be finite p-characteristic Field, a be Element of F;
+set M = MultGroup F;
+Char F = p by RING_3:def 6; then
+consider n being non zero Nat such that A: card F = p|^n by CF;
+reconsider n1 = n - 1 as Element of NAT by INT_1:3;
+H: the carrier of F = (the carrier of M) \/ {0.F} by UNIROOTS:15;
+per cases;
+suppose a <> 0.F;
+  then not a in {0.F} by TARSKI:def 1;
+  then reconsider b = a as Element of M by H,XBOOLE_0:def 3;
+  card M = p|^n - 1 by A,UNIROOTS:18; then
+  b|^(p|^n - 1) = 1_M by GR_CY_1:9; then
+  (1_M) * b
+       = b|^(p|^n - 1) * b|^1 by GROUP_1:26
+      .= b|^(p|^n - 1 + 1) by GROUP_1:33
+      .= a|^(p|^(n1+1)) by MG
+      .= a|^(p|^n1 * p) by NEWTON:6
+      .= (a|^(p|^n1))|^p by BINOM:11; then
+  a = (a|^(p|^n1))|^p by GROUP_1:def 4;
+  hence ex b being Element of F st b|^p = a;
+  end;
+suppose C: a = 0.F;
+  (0.F)|^p = 0.F;
+  hence ex b being Element of F st b|^p = a by C;
+  end;
+end;
+
+registration
+cluster -> perfect for finite Field;
+coherence
+proof
+let F be finite Field;
+set p = Char F;
+reconsider F as p-characteristic finite Field by RING_3:def 6;
+H: the carrier of F|^p = the set of all a|^p where a is Element of F by deffp;
+now let o be object;
+  assume o in the carrier of F; then
+  reconsider a = o as Element of F;
+  consider b being Element of F such that I: b|^p = a by Fpp1;
+  thus o in the carrier of F|^p by I,H;
+  end; then
+A: the carrier of F c= the carrier of F|^p; then
+J: [:the carrier of F,the carrier of F:]
+        c= [:the carrier of F|^p,the carrier of F|^p:] by ZFMISC_1:96;
+B: (the addF of F|^p) || the carrier of F
+       = (the addF of F)||(the carrier of F|^p) || the carrier of F
+         by deffp
+      .= (the addF of F)||(the carrier of F) by J,FUNCT_1:51;
+C: (the multF of F|^p) || the carrier of F
+       = (the multF of F)||(the carrier of F|^p) || the carrier of F
+         by deffp
+      .= (the multF of F)||(the carrier of F) by J,FUNCT_1:51;
+1.F = 1.(F|^p) & 0.F = 0.(F|^p) by deffp; then
+F == F|^p by A,B,C,EC_PF_1:def 1;
+hence thesis by Fpp;
+end;
+end;
+
+registration
+cluster -> perfect for algebraic-closed Field;
+coherence
+proof
+let F be algebraic-closed Field;
+now let p be irreducible Element of the carrier of Polynom-Ring F;
+  B: deg p = 1 by FIELD_12:21;
+  now let a being Element of the SplittingField of p;
+    assume A: multiplicity(p,a) > 1;
+    set K = the SplittingField of p;
+    reconsider q = p as Polynomial of K by FIELD_4:8;
+    p <> 0_.(F); then
+    q <> 0_.(the SplittingField of p) by FIELD_4:12; then
+    reconsider q as non zero Polynomial of K by UPROOTS:def 5;
+    D: deg q >= multiplicity(q,a) by ro00;
+    reconsider q1 = q as Element of the carrier of Polynom-Ring K
+       by POLYNOM3:def 10;
+    deg q1 = deg p by FIELD_4:20;
+    hence contradiction by D,B,A,FIELD_14:def 6;
+    end;
+  hence p is separable by ThSep01;
+  end;
+hence thesis;
+end;
+end;
+
+begin :: Separable Extensions
+
+definition
+let F be Field;
+let E be FieldExtension of F;
+let a be Element of E;
+attr a is F-separable means :defsep:
+  ex b being F-algebraic Element of E st b = a & MinPoly(b,F) is separable;
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+cluster non zero F-separable for Element of E;
+existence
+proof
+set a = the non zero Element of F;
+H: F is Subfield of E by FIELD_4:7; then
+the carrier of F c= the carrier of E by EC_PF_1:def 1; then
+reconsider b = a as Element of E;
+0.F = 0.E by H,EC_PF_1:def 1; then
+reconsider b as non zero Element of E by STRUCT_0:def 12;
+A: X-a = X-b by FIELD_4:21;
+Ext_eval(X-a,b) = eval(X-b,b) by FIELD_4:21,FIELD_4:26
+               .= b - b by HURWITZ:29 .= 0.E by RLVECT_1:15; then
+reconsider b as F-algebraic Element of E by FIELD_6:43;
+MinPoly(b,F) is separable by A,FIELD_6:54;
+hence thesis by defsep;
+end;
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+cluster F-separable -> F-algebraic for Element of E;
+coherence;
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+let a be F-separable Element of E;
+cluster MinPoly(a,F) -> separable;
+coherence
+proof
+ex b being F-algebraic Element of E st b = a & MinPoly(b,F) is separable
+  by defsep;
+hence thesis;
+end;
+end;
+
+definition
+let F be Field;
+let E be FieldExtension of F;
+attr E is F-separable means :defsepF:
+  E is F-algebraic &
+  for a being Element of E holds a is F-separable;
+end;
+
+notation
+let F be Field;
+let E be FieldExtension of F;
+antonym E is F-inseparable for E is F-separable;
+end;
+
+registration
+let F be Field;
+cluster F-finite F-separable for FieldExtension of F;
+existence
+proof
+reconsider E = F as FieldExtension of F by FIELD_4:6;
+deg(E,F) = 1 by FIELD_7:8; then
+A: VecSp(E,F) is finite-dimensional by FIELD_4:def 7; then
+E is F-finite by FIELD_4:def 8; then
+reconsider E as F-algebraic FieldExtension of F;
+take E;
+now let a be Element of E;
+  MinPoly(a,F) = X-a by FIELD_6:54;
+  hence a is F-separable;
+  end;
+hence thesis by A,FIELD_4:def 8;
+end;
+end;
+
+registration
+let F be Field;
+cluster F-separable -> F-algebraic for FieldExtension of F;
+coherence;
+end;
+
+registration
+let F be Field;
+let E be F-separable FieldExtension of F;
+cluster -> F-separable for Element of E;
+coherence by defsepF;
+end;
+
+theorem
+for F being Field
+for K being FieldExtension of F
+for E being K-extending FieldExtension of F
+st E is F-separable holds E is K-separable & K is F-separable
+proof
+let F be Field, K be FieldExtension of F;
+let E be K-extending FieldExtension of F;
+assume AS: E is F-separable; then
+A: E is K-algebraic & K is F-algebraic by FIELD_7:40;
+now let a be Element of E;
+  reconsider b = a as K-algebraic Element of E by AS;
+  reconsider c = a as F-algebraic Element of E by AS;
+  set f = MinPoly(c,F), g = MinPoly(b,K);
+  f is Polynomial of K by FIELD_4:8; then
+  reconsider f1 = f as Element of the carrier of Polynom-Ring K
+                                                        by POLYNOM3:def 10;
+  deg f > 0 by RING_4:def 4; then
+  deg f1 > 0 by FIELD_4:20; then
+  reconsider f1 = f as non constant Element of the carrier of Polynom-Ring K
+    by RING_4:def 4;
+  K: f1 is separable by AS,YY;
+  0.E = Ext_eval(f,c) by FIELD_6:51 .= Ext_eval(f1,b) by FIELD_7:15; then
+  consider r being Polynomial of K such that
+  H: g *' r = f1 by RING_4:1,FIELD_6:53;
+  g is non constant Element of the carrier of Polynom-Ring K &
+  r is Element of the carrier of Polynom-Ring K by POLYNOM3:def 10; then
+  g is separable by H,K,ThSepPR;
+  hence a is K-separable;
+  end;
+hence E is K-separable by AS,FIELD_7:40;
+now let a be Element of K;
+  reconsider b = a as F-algebraic Element of K by A;
+  K is Subfield of E by FIELD_4:7; then
+  the carrier of K c= the carrier of E by EC_PF_1:def 1; then
+  reconsider c = b as F-algebraic Element of E by AS;
+  MinPoly(b,F) = MinPoly(c,F) by FIELD_10:10;
+  hence a is F-separable by AS;
+  end;
+hence K is F-separable by AS,FIELD_7:40;
+end;
+
+registration
+let F be perfect Field;
+cluster -> F-separable for F-algebraic FieldExtension of F;
+coherence
+proof
+let E be F-algebraic FieldExtension of F;
+now let a be Element of E;
+  MinPoly(a,F) is separable by dpf;
+  hence a is F-separable;
+  end;
+hence thesis;
+end;
+end;
+
+registration
+let F be perfect Field;
+cluster F-normal F-separable for FieldExtension of F;
+existence
+proof
+set p = the non constant Element of the carrier of Polynom-Ring F;
+set K = the SplittingField of p;
+take K;
+thus thesis;
+end;
+end;
+
+registration
+let F be perfect Field;
+let p be non constant Element of the carrier of Polynom-Ring F;
+cluster -> F-normal F-separable for SplittingField of p;
+coherence;
+end;

@@ -10,10 +10,10 @@ from google_proofreader import GoogleProofreader
 
 # Set up Mizar environment variables for local installation
 import os
-# Go up to parent directory of project to find mizar folder
+# Set correct Mizar path - it's in the project root directory
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-parent_dir = os.path.dirname(project_root)
-mizar_path = os.path.join(parent_dir, 'mizar')
+mizar_path = os.path.join(project_root, 'mizar')
+mizar_path = os.path.abspath(mizar_path)  # Ensure absolute path
 os.environ['MIZFILES'] = mizar_path
 os.environ['PATH'] = os.environ.get('PATH', '') + f';{mizar_path}'
 
@@ -46,20 +46,42 @@ def verify_mizar():
 
     try:
         # Try different Mizar commands based on what's available
+        local_verifier = os.path.join(mizar_path, 'verifier.exe')
         local_mizf = os.path.join(mizar_path, 'mizf.bat')
-        mizar_commands = [local_mizf, 'mizf', '/mizar/verifymain', '/usr/local/bin/mizf']
+        mizar_commands = [local_verifier, local_mizf, 'mizf', '/mizar/verifymain', '/usr/local/bin/mizf']
         process = None
         
         for cmd in mizar_commands:
+            print(f"Trying command: {cmd}")
             try:
-                process = subprocess.run(
-                    [cmd, temp_filename],
-                    capture_output=True,
-                    text=True,
-                    timeout=30
-                )
+                if cmd == local_mizf:
+                    # Use mizf.bat with environment variable
+                    env = os.environ.copy()
+                    env['mizfiles'] = mizar_path
+                    # Get relative path from mizar directory to temp file
+                    relative_temp = os.path.relpath(temp_filename, mizar_path)
+                    process = subprocess.run(
+                        [cmd, relative_temp],
+                        capture_output=True,
+                        text=True,
+                        timeout=30,
+                        env=env,
+                        cwd=mizar_path
+                    )
+                else:
+                    process = subprocess.run(
+                        [cmd, temp_filename],
+                        capture_output=True,
+                        text=True,
+                        timeout=30
+                    )
+                print(f"Command {cmd} succeeded")
                 break
-            except FileNotFoundError:
+            except FileNotFoundError as e:
+                print(f"FileNotFoundError for {cmd}: {e}")
+                continue
+            except Exception as e:
+                print(f"Exception for {cmd}: {e}")
                 continue
         
         if process is None:

@@ -1,0 +1,2429 @@
+:: Application of Complex Classes to Number Theory
+::  by Rafa{\l} Ziobro
+:: 
+:: Received May 11, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ABIAN, NUMBERS, NAT_1, INT_1, ARYTM_3, XXREAL_0, CARD_1, ARYTM_1,
+      INT_2, COMPLEX1, RELAT_1, PYTHTRIP, SQUARE_1, REAL_1, XCMPLX_0, ORDINAL1,
+      NEWTON, POWER, NEWTON05, SUBSET_1, ZFMISC_1, MOEBIUS1, COMPLEX3;
+ notations ORDINAL1, XCMPLX_0, XREAL_0, NUMBERS, XXREAL_0, POWER, INT_1, INT_2,
+      NEWTON, ABIAN, COMPLEX1, PYTHTRIP, NEWTON05, SUBSET_1, NAT_D, PEPIN,
+      MOEBIUS1, COMPLEX3;
+ constructors NAT_D, ABIAN, NEWTON03, PYTHTRIP, PEPIN, NEWTON05, EC_PF_2,
+      MOEBIUS1, SERIES_1, COMPLEX3;
+ registrations ABIAN, ORDINAL1, XXREAL_0, XREAL_0, NAT_1, INT_1, NEWTON,
+      XCMPLX_0, WSIERP_1, NAT_6, PYTHTRIP, NEWTON01, NEWTON02, NEWTON03,
+      NEWTON05, COMPLEX3;
+ requirements REAL, NUMERALS, SUBSET, ARITHM;
+ definitions COMPLEX3;
+ equalities SQUARE_1;
+ expansions INT_1, INT_2, NEWTON03, ABIAN, ORDINAL1, COMPLEX3;
+ theorems INT_2, NAT_1, INT_1, EULER_1, NEWTON, XCMPLX_1, GR_CY_3, XREAL_1,
+      XXREAL_0, NAT_D, WSIERP_1, COMPLEX1, POWER, INT_4, NEWTON01, INT_6,
+      NAT_6, PEPIN, INT_5, PYTHTRIP, NAT_3, ABIAN, NEWTON02, NEWTON03,
+      ORDINAL1, NEWTON05, GROUP_17, NAT_2, MOEBIUS1, RADIX_1, COMPLEX3,
+      PELLS_EQ, PRE_FF, NUMBER03;
+
+begin
+
+:: different registrations for COMPLEX3
+
+registration
+  let a be weightless Complex;
+  cluster |.a.| -> weightless;
+  coherence by COMPLEX3:def 3;
+end;
+
+registration
+  let a be light Complex;
+  cluster |.a.| -> light;
+  coherence by COMPLEX3:def 2;
+end;
+
+registration
+  let a be heavy Complex;
+  cluster |.a.| -> heavy;
+  coherence by COMPLEX3:def 1;
+end;
+
+registration
+  let a be heavy positive Real, b be negative Real;
+  cluster a - b -> heavy;
+  coherence
+  proof
+    a + (-b) is heavy;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be heavy negative Real, b be positive Real;
+  cluster a - b -> heavy;
+  coherence
+  proof
+    a + (-b) is heavy;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be non light positive Real, b be negative Real;
+  cluster a - b -> heavy;
+  coherence
+  proof
+    a + (-b) is heavy;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be non light negative Real, b be positive Real;
+  cluster a - b -> heavy;
+  coherence
+  proof
+    a + (-b) is heavy;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be non heavy Real, b be heavy negative Real;
+  cluster a - b -> positive;
+  coherence
+  proof
+    a + (-b) is positive;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be light Real, b be non light negative Real;
+  cluster a - b -> positive;
+  coherence
+  proof
+    a + (-b) is positive;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be non heavy Real, b be non light negative Real;
+  cluster a - b -> non negative;
+  coherence
+  proof
+    a + (-b) is non negative;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be non heavy Real, b be heavy positive Real;
+  cluster a - b -> negative;
+  coherence
+  proof
+    a + (-b) is negative;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be light Real, b be non light positive Real;
+  cluster a - b -> negative;
+  coherence
+  proof
+    a + (-b) is negative;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be non heavy Real, b be non light positive Real;
+  cluster a - b -> non positive;
+  coherence
+  proof
+    a + (-b) is non positive;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be light positive Real, b be light positive Real;
+  cluster a - b -> light;
+  coherence
+  proof
+    a + (-b) is light;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be non heavy positive Real, b be non heavy positive Real;
+  cluster a - b -> non heavy;
+  coherence
+  proof
+    a + (-b) is non heavy;
+    hence thesis;
+  end;
+end;
+
+:: non integer numbers
+
+registration
+  let a be Real;
+  cluster frac a -> light non negative;
+  coherence by INT_1:43;
+  reduce frac (frac a) to frac a;
+  reducibility
+  proof
+    frac a = frac ([\a/] + frac a) by INT_1:42
+    .= frac (frac a) by INT_1:66;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be integer Real;
+  cluster frac a -> zero;
+  coherence by INT_1:45;
+end;
+
+registration
+  cluster weightless for even Integer;
+  existence
+  proof
+    2*0 is weightless;
+    hence thesis;
+  end;
+  cluster weightless for odd Integer;
+  existence
+  proof
+    2*0 + 1 is weightless;
+    hence thesis;
+  end;
+  cluster heavy for Integer;
+  existence
+  proof
+    -4 is heavy;
+    hence thesis;
+  end;
+  cluster non weightless -> heavy for Integer;
+  coherence
+  proof
+    let n be Integer;
+    assume n is non weightless;
+    then n <> 1 & n <> -1 & (n is positive or n is negative);
+    then (n >= 0+1 & n <> 1) or (n <= -1 & n <> -1) by INT_1:7,INT_1:8; then
+    n < -1 or n > 1 by XXREAL_0:1;
+    hence thesis by COMPLEX3:1;
+  end;
+  cluster heavy for odd Integer;
+  existence
+  proof
+    2*1 + 1 is heavy & 2*1 + 1 is odd;
+    hence thesis;
+  end;
+  cluster heavy for even Integer;
+  existence
+  proof
+    2*1 is heavy & 2*1 is even;
+    hence thesis;
+  end;
+  cluster heavy for positive Integer;
+  existence
+  proof
+    2*1 is heavy;
+    hence thesis;
+  end;
+  cluster heavy for negative Integer;
+  existence
+  proof
+    2*(-1) is heavy by COMPLEX3:1;
+    hence thesis;
+  end;
+end;
+
+theorem N0344:
+  for a,b be non weightless Integer holds a,b are_coprime implies
+    not a divides b & not b divides a
+  proof
+    let a,b be non weightless Integer;
+    assume
+    A1: a,b are_coprime;
+    |.a.| in NAT by INT_1:3; then
+    reconsider x = |.a.| as non trivial Nat;
+    |.b.| in NAT by INT_1:3; then
+    reconsider y = |.b.| as non trivial Nat;
+    x,y are_coprime by A1,INT_2:34; then
+    not x divides y & not y divides x by NEWTON03:44;
+    hence thesis by INT_2:16;
+  end;
+
+registration
+  cluster non integer for Real;
+  existence
+  proof
+    1/2 < 0+1; then
+    not 1/2 is integer by INT_1:7;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be non integer Complex;
+  cluster -a -> non integer;
+  coherence
+  proof
+    assume not thesis; then
+    (-1)*(-a) is integer;
+    hence contradiction;
+  end;
+end;
+
+registration
+  let a be non integer Real;
+  cluster frac a -> light positive;
+  coherence by INT_1:46;
+end;
+
+registration
+  let a be non integer Complex;
+  let b be non zero Integer;
+  cluster a + b -> non integer;
+  coherence
+  proof
+    assume not thesis; then
+    (a + b) - b is integer;
+    hence contradiction;
+  end;
+  cluster a - b -> non integer;
+  coherence
+  proof
+    assume not thesis; then
+    (a - b) + b is integer;
+    hence contradiction;
+  end;
+  cluster a/b -> non integer;
+  coherence
+  proof
+    assume not thesis; then
+    (a/b)*b is integer;
+    hence contradiction by XCMPLX_1:87;
+  end;
+end;
+
+registration
+  let b be light positive Real;
+  cluster [/b\] -> weightless positive;
+  coherence
+  proof
+    b < 1 & 1 + 0 < 1 + b by COMPLEX3:1; then
+    [/b\] = 1 by INT_1:def 7;
+    hence thesis;
+  end;
+  cluster [\b/] -> zero;
+  coherence
+  proof
+    b - 1 < 1 - 1;
+    hence thesis by INT_1:def 6;
+  end;
+  reduce frac b to b;
+  reducibility
+  proof
+    b - [\b/] = b;
+    hence thesis by INT_1:def 8;
+  end;
+  let a be Integer;
+  reduce [\a + b/] to a;
+  reducibility
+  proof
+    A1: b < 1 by COMPLEX3:1;
+    a + 0 < a + b by XREAL_1:6; then
+    (a + b) - 1 < (a + b) - b < a + b by A1,XREAL_1:15;
+    hence thesis by INT_1:def 6;
+  end;
+  reduce [/a - b\] to a;
+  reducibility
+  proof
+    0 < b < 1 by COMPLEX3:1; then
+    (a - b) + 0 < (a - b) + b < (a - b) + 1 by XREAL_1:6;
+    hence thesis by INT_1:def 7;
+  end;
+  reduce frac (a + b) to b;
+  reducibility
+  proof
+    frac (a + b) = (a + b) - [\a + b/] by INT_1:def 8
+    .= b;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be positive Real;
+  cluster [\a/] -> non negative;
+  coherence by INT_1:54,COMPLEX3:2;
+  cluster [/a\] -> positive;
+  coherence by INT_1:31,INT_1:30;
+end;
+
+registration
+  let a be heavy positive Real;
+  cluster [\a/] -> positive;
+  coherence by INT_1:54,COMPLEX3:2;
+end;
+
+registration
+  let a be negative Real;
+  cluster [\a/] -> negative;
+  coherence by INT_1:def 6;
+  cluster [/a\] -> non positive;
+  coherence by INT_1:65,XXREAL_0:def 7;
+end;
+
+registration
+  let a be heavy negative Real;
+  cluster [/a\] -> negative;
+  coherence by INT_1:65,COMPLEX3:2;
+end;
+
+registration
+  let a be Integer, b be light negative Real;
+  reduce [\a - b/] to a;
+  reducibility
+  proof
+    a - b = a + (-b);
+    hence thesis;
+  end;
+  reduce [/a + b\] to a;
+  reducibility
+  proof
+    a + b = a - (-b);
+    hence thesis;
+  end;
+end;
+
+:: inequalities in rounding products and fractions
+
+theorem PI1:
+  for a,b be positive Real holds [\a/]*[\b/] <= [\a/]*b <= a*b
+  proof
+    let a,b be positive Real;
+    [\a/] <= a & [\b/] <= b by INT_1:def 6;
+    hence thesis by XREAL_1:64;
+  end;
+
+theorem
+  for a,b be positive Real holds [\a/]*[\b/] <= [\a*b/]
+  proof
+    let a,b be positive Real;
+    [\a/]*[\b/] <= [\a/]*b <= a*b by PI1; then
+    [\a/]*[\b/] <= a*b by XXREAL_0:2;
+    hence thesis by INT_1:54;
+  end;
+
+theorem
+  for a,b be positive Real holds [\a/]/b <= a/b
+  proof
+    let a,b be positive Real;
+    [\a/] <= a by INT_1:def 6;
+    hence thesis by XREAL_1:72;
+  end;
+
+theorem
+  for a be positive Real, b be heavy positive Real holds a/[\b/] >= a/b
+  proof
+    let a be positive Real, b be heavy positive Real;
+    [\b/] <= b by INT_1:def 6;
+    hence thesis by XREAL_1:118;
+  end;
+
+theorem INT162:
+  for a be Integer, b be non zero Integer holds b divides a iff a mod b = 0
+  proof
+    let a be Integer, b be non zero Integer;
+    a,0 are_congruent_mod b iff a mod b = 0 mod b by NAT_D:64;
+    hence thesis;
+  end;
+
+theorem
+  for a be positive Real, n being Nat holds [\n*a/] >= n*[\a/]
+  proof
+    let a be positive Real;
+    let n be Nat;
+    per cases;
+    suppose n = 0;
+      hence thesis;
+    end;
+    suppose
+A0:   n <> 0;
+A1:   a - 1 <= [\a/] <= a & n*a - 1 <= [\n*a/] <= n*a by INT_1:def 6; then
+A2:   (n*a - 1) + 1 <= [\n*a/] + 1 by XREAL_1:6;
+      per cases by A1,XXREAL_0:1;
+      suppose [\a/] = a;
+        hence thesis;
+      end;
+      suppose [\a/] < a; then
+        n*[\a/] < n*a by A0,XREAL_1:68; then
+        n*[\a/] < [\n*a/] + 1 by A2,XXREAL_0:2;
+        hence thesis by INT_1:7;
+      end;
+    end;
+  end;
+
+registration
+  let a be Integer;
+  cluster a mod 1 -> zero;
+  coherence by INT_2:12,INT162;
+  cluster a mod (-1) -> zero;
+  coherence by INT_2:12,INT162;
+  cluster a mod 0 -> zero;
+  coherence by INT_1:def 10;
+  let b be weightless Integer;
+  cluster a mod b -> zero;
+  coherence
+  proof
+    b is zero or b is positive or b is negative; then
+    b = 0 or b = 1 or b = -1 by COMPLEX3:1;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be Integer, b be non zero Nat;
+  cluster a |^b mod a -> zero;
+  coherence
+  proof
+    A1: a|^b/a is integer by NEWTON02:6,NEWTON05:1;
+    a|^b div a = [\a|^b/a/] by INT_1:def 9; then
+    a = 0 or (a|^b div a)*a = a|^b by A1,XCMPLX_1:87; then
+    a = 0 or a|^b mod a = a|^b - a|^b by INT_1:def 10;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be Integer, b be non negative Integer;
+  cluster a mod b -> natural;
+  coherence by INT_1:3,INT_1:57;
+end;
+
+registration
+  let a be odd Integer, b be non zero even Integer;
+  cluster a mod b -> odd;
+  coherence
+  proof
+    a = (a div b)*b + (a mod b) by INT_1:59;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be even Integer, b be non zero even Integer;
+  cluster a mod b -> even;
+  coherence
+  proof
+    a = (a div b)*b + (a mod b) by INT_1:59;
+    hence thesis;
+  end;
+end;
+
+registration let a be even Integer;
+  cluster a|^4 mod 8 -> zero;
+  coherence
+  proof
+    A1: 2|^(2+1) = 2|^(1 + 1)*2 by NEWTON:6 .= (2|^1*2)*2 by NEWTON:6;
+    A2: 2|^3 divides a|^3 by NEWTON02:15,ABIAN:def 1;
+    a|^(3 + 1) = a|^3*a by NEWTON:6; then
+    a|^3 divides a|^(3 + 1); then
+    8 divides a|^4 by A1,A2,INT_2:9;
+    hence thesis by INT_1:62;
+  end;
+end;
+
+:: square
+
+registration
+  cluster odd for square Nat;
+  existence
+  proof
+    2*0 + 1*1 is odd & 2*0 + 1*1 is square;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a,b be odd Integer;
+  cluster (a|^2 - b|^2)/2 -> even;
+  coherence
+  proof
+    a - b is even & a + b is even; then
+    2*2 divides (a - b)*(a + b) by NEWTON03:5; then
+    2*2 divides 2*((a|^2 - b|^2)/2) by NEWTON01:1;
+    hence thesis by INT_4:7;
+  end;
+  cluster (a|^2 + b|^2)/2 -> odd;
+  coherence
+  proof
+    (a|^2 - b|^2)/2 + b|^2  is odd;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be square Integer;
+  cluster 2-root a -> natural;
+  coherence
+  proof
+    consider k be Nat such that
+    A1: a = k^2 by PYTHTRIP:def 3;
+    2-root (k|^2) = k;
+    hence thesis by A1,NEWTON:81;
+  end;
+  reduce (2-root a)*(2-root a) to a;
+  reducibility
+  proof
+    (2-root a)*(2-root a) = (2-root a)|^2 by NEWTON:81;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be even square Integer;
+  cluster 2-root a -> even;
+  coherence
+  proof
+    assume not thesis; then
+    (2-root a)|^2 is odd;
+    hence contradiction;
+  end;
+  cluster a/2 -> even;
+  coherence
+  proof
+    (2-root a)*((2-root a)/2) is even; then
+    ((2-root a)*(2-root a))/2 is even;
+    hence thesis;
+  end;
+  let b be odd square Integer;
+  cluster a - b -> non square;
+  coherence
+  proof
+    assume not thesis; then
+    reconsider c = a - b as odd square Integer;
+    c + b = a;
+    hence contradiction;
+  end;
+end;
+
+registration
+  let a be odd square Integer;
+  cluster 2-root a -> odd;
+  coherence
+  proof
+    assume
+    not thesis; then
+    (2-root a)|^2 is even;
+    hence contradiction;
+  end;
+  let b be odd square Integer;
+  cluster (a + b)/2 -> odd;
+  coherence
+  proof
+    reconsider a,b as odd square Element of NAT by ORDINAL1:def 12;
+    4 divides 2*4 & 2*4 divides a - b by NEWTON03:19; then
+    4 divides (a - b) by INT_2:9; then
+    not 2*2 divides a|^1 + b|^1 by NEWTON03:20; then
+    not 2*2 divides 2*((a + b)/2);
+    hence thesis by INT_4:7;
+  end;
+  cluster (a - b)/2 -> even;
+  coherence
+  proof
+    2-root a is natural; then
+    reconsider sa = 2-root a as odd Nat;
+    2-root b is natural; then
+    reconsider sb = 2-root b as odd Nat;
+    (sa|^2 - sb|^2)/2 is even;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be non negative Real;
+  cluster 2-root a -> non negative;
+  coherence by POWER:7;
+end;
+
+registration
+  cluster even for square Integer;
+  existence
+  proof
+    2 divides 2*2;
+    hence thesis;
+  end;
+  cluster odd for square Integer;
+  correctness
+  proof
+    2*0 + 1 is odd & 1|^2 is square;
+    hence thesis;
+  end;
+  cluster even for square Nat;
+  existence
+  proof
+    2*2 is even;
+    hence thesis;
+  end;
+end;
+
+registration
+  let n be non zero Nat;
+  reduce n-root 1 to 1;
+  reducibility by POWER:6,NAT_1:14;
+  reduce n-root 0 to 0;
+  reducibility by POWER:5,NAT_1:14;
+end;
+
+registration
+  let a be positive Real, n be non zero Nat;
+  cluster n-root a -> positive;
+  coherence
+  proof
+    n >= 1 by NAT_1:14; then
+    n-root a > n-root 0 by POWER:17;
+    hence thesis;
+  end;
+end;
+
+theorem SFS:
+  for a be Nat holds a is square & a is square-free iff a = 1
+  proof
+    let a be Nat;
+    A1: a is square & a is square-free implies a = 1
+    proof
+      assume
+      B1: a is square & a is square-free; then
+      reconsider k = 2-root a as Element of NAT by INT_1:3;
+      a < 2
+      proof
+        assume a >= 2; then
+        consider p be Element of NAT such that
+        C1: p is prime & p divides a by INT_2:31;
+        not p|^2 divides k|^2 by B1,C1,MOEBIUS1:def 1;
+        hence contradiction by NAT_3:5,WSIERP_1:14,C1;
+      end;
+      hence thesis by B1,MOEBIUS1:21,NAT_1:23;
+    end;
+    1*1 is square-free square by MOEBIUS1:22;
+    hence thesis by A1;
+  end;
+
+registration
+  cluster square-free square for Nat;
+  existence
+  proof
+    1 is square-free & 1 is square by SFS;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be even square Integer;
+  cluster a/4 -> square integer;
+  coherence
+  proof
+    reconsider k = 2-root a as Integer;
+    reconsider l = k/2 as Integer;
+    a = (2*l)*(2*l)
+     .= (2*2)*(l*l);
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be non zero square Integer;
+  cluster 2*a -> non square;
+  coherence by INT_2:28;
+  cluster a + a -> non square;
+  coherence
+  proof
+    2*a = a + a;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be Integer, b,c be non zero Nat;
+  reduce (a mod b) mod (b*c) to a mod b;
+  reducibility
+  proof
+    a mod b in NAT by INT_1:3; then
+    reconsider x = a mod b as Nat;
+    A1: b*c >= b*1 by XREAL_1:64,NAT_1:14;
+    (a mod b) < b by NAT_D:62; then
+    (a mod b) < b*c by A1,XXREAL_0:2;
+    hence thesis by NAT_D:24;
+  end;
+end;
+
+registration
+  let b be non trivial Nat;
+  reduce 1 mod b to 1;
+  reducibility by NEWTON03:def 1, PEPIN:5;
+  let a be Nat;
+  reduce (a*b + 1) mod b to 1;
+  reducibility
+  proof
+    (a*b + 1) mod b = ((a*b mod b) + (1 mod b)) mod b by NAT_D:66
+    .= (0 + (1 mod b)) mod b by NAT_D:71;
+    hence thesis;
+  end;
+  let n be Nat;
+  reduce (a*b+1)|^n mod b to 1;
+  reducibility
+  proof
+    (a*b + 1)|^n mod b = ((a*b + 1) mod b)|^n mod b by GR_CY_3:30
+    .= 1;
+    hence thesis;
+  end;
+end;
+
+registration
+  let b be non trivial Nat, n be even Nat;
+  reduce (b - 1)|^n mod b to 1;
+  reducibility
+  proof
+    reconsider m = n/2 as Nat;
+    (b - 1)|^(2*m) mod b = ((b - 1)|^2)|^m mod b by NEWTON:9
+    .= ((b - 1)*(b - 1))|^m mod b by NEWTON:81
+    .= (b*(b - 2) + 1)|^m mod b
+    .= 1;
+    hence thesis;
+  end;
+end;
+
+registration
+  let b be non trivial Nat, n be odd Nat;
+  reduce (b - 1)|^n mod b to b - 1;
+  reducibility
+  proof
+    reconsider m = n - 1 as even Nat;
+    (b - 1)|^(m+1) mod b = ((b - 1)*(b - 1)|^m) mod b by NEWTON:6
+    .= (((b - 1) mod b)*((b - 1)|^m mod b)) mod b by NAT_D:67
+    .= (b - 1) mod ((b-1)+1);
+    hence thesis;
+  end;
+end;
+
+theorem MOP:
+  for a be Nat, p be Prime holds
+    a|^(p - 1) mod p = 0 or a|^(p - 1) mod p = 1
+  proof
+    let a be Nat, p be Prime;
+    reconsider k = p - 1 as non zero Nat;
+    per cases;
+    suppose
+      B1: k + 1 divides a;
+      a|^1 divides a|^k by NEWTON:89,NAT_1:14; then
+      p divides a|^k by B1,INT_2:9;
+      hence thesis by INT_1:62;
+    end;
+    suppose
+      B1: not k + 1 divides a; then
+      reconsider a as non zero Nat by INT_2:12;
+      k + 1 divides a|^k - 1 by B1,NEWTON02:157; then
+      B2: (a|^k - 1) mod p = 0 by INT_1:62; then
+      ((a|^k - 1) + 1) mod p = ((a|^k - 1) mod p) + 1 by NAT_D:70;
+      hence thesis by B2;
+    end;
+  end;
+
+registration
+  let a be Nat;
+  cluster a mod 2 -> square;
+  coherence
+  proof
+    a mod 2 = 0*0 or a mod 2 = 1*1 by NAT_D:12;
+    hence thesis;
+  end;
+  cluster a|^2 mod 3 -> square;
+  coherence
+  proof
+    a mod 3 < 2 + 1 by NAT_D:1; then
+    a mod 3 <= 2 by NAT_1:13; then
+    a mod 3 = 0 or ... or a mod 3 = 2; then
+    a|^2 mod 3 = 0|^2 mod 3 or a|^2 mod 3 = 1|^2 mod 3 or
+    a|^2 mod 3 = 2|^2 mod 3 by GR_CY_3:30; then
+    A1: a|^2 mod 3 = 0 mod 3 or a|^2 mod 3 = 1 mod 3 or
+    a|^2 mod 3 = (2*2) mod 3 by NEWTON:81;
+    1 mod (1+2) = 1*(3*1 + 1) mod 3; then
+    a|^2 mod 3 = 0*0 or a|^2 mod 3 = 1*1 by A1;
+    hence thesis;
+  end;
+  cluster a|^2 mod 4 -> square;
+  coherence
+  proof
+    a mod 4 < 3 + 1 by NAT_D:1; then
+    a mod 4 <= 3 by NAT_1:13; then
+    a mod 4 = 0 or ... or a mod 4 = 3; then
+    a|^2 mod 4 = 0|^2 mod 4 or a|^2 mod 4 = 1|^2 mod 4 or
+    a|^2 mod 4 = 2|^2 mod 4 or a|^2 mod 4 = 3|^2 mod 4
+      by GR_CY_3:30; then
+    A1: a|^2 mod 4 = 0 mod 4 or a|^2 mod 4 = 1 mod 4 or
+    a|^2 mod 4 = 2*2 mod 4 or a|^2 mod 4 = 3*3 mod 4
+      by NEWTON:81;
+    1 mod (1+3) = 1*(4*2 + 1) mod 4; then
+    a|^2 mod 4 = 0*0 or a|^2 mod 4 = 1*1 by A1;
+    hence thesis;
+  end;
+  cluster a|^2 mod 5 -> square;
+  coherence
+  proof
+    a mod 5 < 4 + 1 by NAT_D:1; then
+    a mod 5 <= 4 by NAT_1:13; then
+    a mod 5 = 0 or ... or a mod 5 = 4; then
+    a|^2 mod 5 = 0|^2 mod 5 or a|^2 mod 5 = 1|^2 mod 5 or
+    a|^2 mod 5 = 2|^2 mod 5 or a|^2 mod 5 = 3|^2 mod 5 or
+    a|^2 mod 5 = 4|^2 mod 5 by GR_CY_3:30; then
+    A1: a|^2 mod 5 = 0 mod 5 or a|^2 mod 5 = 1 mod 5 or
+    a|^2 mod 5 = 2*2 mod 5 or a|^2 mod 5 = 3*3 mod 5 or
+    a|^2 mod 5 = 4*4 mod 5 by NEWTON:81;
+    1 mod (1+4) = 1*(5*3 + 1) mod 5 &
+    (4+5) mod 5 = (4 + (5 mod 5)) mod 5 by NEWTON02:88; then
+    a|^2 mod 5 = 0*0 or a|^2 mod 5 = 1*1 or a|^2 mod 5 = 2*2 by A1;
+    hence thesis;
+  end;
+  cluster a|^2 mod 8 -> square;
+  coherence
+  proof
+    a mod 8 < 7 + 1 by NAT_D:1; then
+    a mod 8 <= 7 by NAT_1:13; then
+    a mod 8 = 0 or ... or a mod 8 = 7; then
+    a|^2 mod 8 = 0|^2 mod 8 or a|^2 mod 8 = 1|^2 mod 8 or
+    a|^2 mod 8 = 2|^2 mod 8 or a|^2 mod 8 = 3|^2 mod 8 or
+    a|^2 mod 8 = 4|^2 mod 8 or a|^2 mod 8 = 5|^2 mod 8 or
+    a|^2 mod 8 = 6|^2 mod 8 or a|^2 mod 8 = 7|^2 mod 8
+      by GR_CY_3:30; then
+    A1: a|^2 mod 8 = 0*0 mod 8 or a|^2 mod 8 = 1*1 mod 8 or
+    a|^2 mod 8 = 2*2 mod 8 or a|^2 mod 8 = 3*3 mod 8 or
+    a|^2 mod 8 = 4*4 mod 8 or a|^2 mod 8 = 5*5 mod 8 or
+    a|^2 mod 8 = 6*6 mod 8 or a|^2 mod 8 = 7*7 mod 8 by NEWTON:81;
+    1 mod (1+7) = 1*(8*1 + 1) mod 8 &
+    1 mod (1+7) = 1*(8*3 + 1) mod 8 & 1 mod (1+7) = 1*(8*6 + 1) mod 8 &
+    (4+8*4) mod 8 = (4 + (8*4 mod 8)) mod 8 & (0 + 2*8) mod 8 = 0 &
+    (0 + 4*8) mod 8 = 0 by NEWTON02:88; then
+    a|^2 mod 8 = 0 mod 8 or a|^2 mod 8 = 1 mod (1+7) or
+    a|^2 mod 8 = 4 mod (4+4) by A1; then
+    a|^2 mod 8 = 0*0 or a|^2 mod 8 = 1*1 or a|^2 mod 8 = 2*2;
+    hence thesis;
+  end;
+  let p be prime Nat;
+  cluster a|^(p - 1) mod p -> square;
+  coherence
+  proof
+    a|^(p - 1) mod p = 0*0 or a|^(p - 1) mod p = 1*1 by MOP;
+    hence thesis;
+  end;
+end;
+
+theorem FRA:
+  for a be non integer Real holds (frac a) + (frac (-a)) = 1
+  proof
+    let a be non integer Real;
+    frac a = a - [\ a/] & frac (-a) = -a - [\-a/] by INT_1:def 8; then
+    (frac a) + (frac (-a)) = -[\a/1/] - [\-a/]
+    .= ([\(-a)/1/] + 1) - [\-a/1/] by INT_1:63;
+    hence thesis;
+  end;
+
+registration
+  let a be non integer Real;
+  cluster (frac a) + (frac (-a)) -> non zero trivial;
+  coherence
+  proof
+    (frac a) + (frac (-a)) = 1 by FRA;
+    hence thesis by NAT_2:def 1;
+  end;
+end;
+
+theorem
+  for a be non integer Real holds -1 < frac a - frac (-a) < 1
+  proof
+    let a be non integer Real;
+    2*0 < 2*(frac a) < 2*1 by XREAL_1:68,INT_1:43; then
+    0 - 1 < 2*(frac a) - 1 < 2 - 1 by XREAL_1:9; then
+    -1 < 2*(frac a) - (frac a + frac (-a)) < 1 by FRA;
+    hence thesis;
+  end;
+
+EFR:
+  for a be non integer Real holds frac a = frac -a implies 2*a is odd Integer
+  proof
+    let a be non integer Real;
+    assume frac a = frac -a; then
+    2*[\a/] + 1 = 2*[\a/] + (frac a + frac a) by FRA
+    .= 2*([\a/] + frac a)
+    .= 2*([\a/] + (a - [\a/])) by INT_1:def 8
+    .= 2*a;
+    hence thesis;
+  end;
+
+theorem
+  for a be non integer Real holds frac a = frac -a iff 2*a is odd Integer
+  proof
+    let a be non integer Real;
+    2*a is odd Integer implies frac a = frac -a
+    proof
+      assume 2*a is odd Integer; then
+      reconsider n = (2*a - 1)/2 as Integer;
+      a = n + 1/2 & -a = -(n+1) + 1/2 & 1/(1+1) is light;
+      hence thesis;
+    end;
+    hence thesis by EFR;
+  end;
+
+theorem FR1:
+  for a,b be Real holds
+    frac (a*b) = frac ((a*frac b) + (b*frac a) - (frac a)*(frac b))
+  proof
+    let a,b be Real;
+    a = [\a/] + frac a & b = [\b/] + frac b by INT_1:42; then
+    frac (a*b) = frac ([\a/]*[\b/] +
+      ((a*frac b) + (b*frac a) - (frac a)*(frac b)))
+    .= frac ((a*frac b) + (b*frac a) - (frac a)*(frac b)) by INT_1:66;
+    hence thesis;
+  end;
+
+theorem FR2:
+  for a,b be Real holds
+    frac (a*b) = frac (([\a/]*frac b) + ([\b/]*frac a) + (frac a)*(frac b))
+  proof
+    let a,b be Real;
+    a = [\a/] + frac a & b = [\b/] + frac b by INT_1:42; then
+    frac (a*b) =
+       frac ([\a/]*[\b/] + (([\a/]*frac b) + ([\b/]*frac a) +
+         (frac a)*(frac b)))
+    .= frac (([\a/]*frac b) + ([\b/]*frac a) + (frac a)*(frac b)) by INT_1:66;
+    hence thesis;
+  end;
+
+theorem FR3:
+  for a be Real, b be Integer holds frac (a*b) = frac (b*frac a)
+  proof
+    let a be Real, b be Integer;
+    frac (a*b) = frac (([\a/]*frac b) + ([\b/]*frac a) + (frac a)*(frac b))
+      by FR2;
+    hence thesis;
+  end;
+
+theorem
+  for a be Real holds frac (a*a) = frac ((2*a*frac a) - (frac a)*(frac a))
+  proof
+    let a be Real;
+    frac (a*a) = frac ((a*frac a) + (a*frac a) - (frac a)*(frac a)) by FR1;
+    hence thesis;
+  end;
+
+theorem
+  for a be Real holds frac (a*a) = frac ((2*[\a/]*frac a) + (frac a)*(frac a))
+  proof
+    let a be Real;
+    frac (a*a) = frac (([\a/]*frac a) + ([\a/]*frac a) + (frac a)*(frac a))
+      by FR2;
+    hence thesis;
+  end;
+
+theorem
+  for a be positive Real st frac a = 1/2 holds frac (2*a) = 0
+  proof
+    let a be positive Real such that
+    A1: frac a = 1/2;
+    frac (2*a) = frac (2*frac a) by FR3;
+    hence thesis by A1;
+  end;
+
+theorem
+  for a be positive Real holds 1/2 > frac a implies frac (2*a) = 2*(frac a)
+  proof
+    let a be positive Real;
+    assume
+    A1: 1/2 > frac a;
+    per cases;
+    suppose
+      frac a is zero; then
+      reconsider a as Integer;
+      frac (2*a) = 0;
+      hence thesis;
+    end;
+    suppose frac a is positive; then
+      reconsider a as non integer Real;
+      reconsider b = frac a as light positive Real;
+      2*(1/2) > 2*(frac a) by A1,XREAL_1:68; then
+      reconsider c = 2*b as light positive Real by COMPLEX3:1;
+      c = frac (2*(frac a));
+      hence thesis by FR3;
+    end;
+  end;
+
+theorem
+  for a be positive Real holds 1/2 < frac a implies frac (2*a) < frac a
+  proof
+    let a be positive Real;
+    assume
+    A1: 1/2 < frac a; then
+    reconsider a as non integer Real;
+    A2: frac a < 1 by COMPLEX3:1; then
+    2*(1/2) < 2*(frac a) < 2*1 by A1,XREAL_1:68; then
+    1 - 1 < 2*frac a - 1 < 2 - 1 by XREAL_1:9; then
+    reconsider  y = (2*(frac a)) - 1 as light positive Real by COMPLEX3:1;
+    (frac a) + (frac a) < (frac a) + 1 by XREAL_1:6,A2; then
+    A5: 2*(frac a) - 1 < ((frac a) + 1) - 1 by XREAL_1:9;
+    frac (y + 1) = y;
+    hence thesis by A5,FR3;
+  end;
+
+theorem DIV:
+  for a be Integer, b be non zero Integer st
+    not b divides a holds (a div b) + ((-a) div b) = -1
+  proof
+    let a be Integer, b be non zero Integer such that
+    A1: not b divides a;
+    reconsider a as non zero Integer by A1,INT_2:12;
+    A2: a div b = [\a/b/] & (-a) div b = [\(-a)/b/] by INT_1:def 9;
+    (a/b)*b = a by XCMPLX_1:87; then
+    not a/b is Integer by A1; then
+    -[\a/b/] = [\(-a)/b/] + 1 by INT_1:63; then
+    [\a/b/] + [\(-a)/b/] = -1;
+    hence thesis by A2;
+  end;
+
+theorem MOD:
+  for a be Integer, b be non zero Integer holds
+    not b divides a iff (a mod b) + ((-a) mod b) = b
+  proof
+    let a be Integer, b be non zero Integer;
+    A2: a mod b = a - (a div b)*b & (-a) mod b = -a - ((-a) div b)*b
+      by INT_1:def 10;
+    thus not b divides a implies (a mod b) + ((-a) mod b) = b
+    proof
+      assume not b divides a; then
+      (-b)*(-1) = (-b)*((a div b) + ((-a) div b)) by DIV
+      .= (a - (a div b)*b) + (-a - ((-a) div b)*b);
+      hence thesis by A2;
+    end;
+    b divides a implies (a mod b) + (-a mod b) = 0
+    proof
+      assume b divides a; then
+      a mod b = 0 & -a mod b = 0 by INT162,INT_2:10;
+      hence thesis;
+    end;
+    hence thesis;
+  end;
+
+theorem
+  for a,b be Integer holds
+    (a mod b) + ((-a) mod b) = 0 or (a mod b) + ((-a) mod b) = b
+  proof
+    let a,b be Integer;
+    per cases;
+    suppose b is zero; then
+      reconsider b as zero Integer;
+      a mod b = 0 & (-a) mod b = 0;
+      hence thesis;
+    end;
+    suppose not b is zero; then
+      reconsider b as non zero Integer;
+      per cases;
+      suppose
+        b divides a; then
+        (a mod b) = 0 & ((-a) mod b ) = 0 by INT162,INT_2:10;
+        hence thesis;
+      end;
+      suppose
+        not b divides a;
+        hence thesis by MOD;
+      end;
+    end;
+  end;
+
+theorem
+  for a be even Integer, b be odd Integer holds
+    a div b is odd iff a mod b is odd
+  proof
+    let a be even Integer, b be odd Integer;
+    thus a div b is odd implies a mod b is odd
+    proof
+      assume a div b is odd; then
+      a - b*(a div b) is odd;
+      hence thesis by INT_1:def 10;
+    end;
+    assume a mod b is odd; then
+    a - b*(a div b) is odd by INT_1:def 10;
+    hence thesis;
+  end;
+
+theorem
+  for a,b be odd Integer holds a mod b is odd iff a div b is even
+  proof
+    let a,b be odd Integer;
+    thus a mod b is odd implies a div b is even
+    proof
+      assume a mod b is odd; then
+      a - (a div b)*b is odd by INT_1:def 10;
+      hence thesis;
+    end;
+    assume a div b is even; then
+    a - (a div b)*b is odd;
+    hence thesis by INT_1:def 10;
+  end;
+
+theorem MOO:
+  for a be Integer, b be odd Integer st
+    not b divides a holds a mod b is odd iff (-a) mod b is even
+  proof
+    let a be Integer, b be odd Integer such that
+    A1: not b divides a;
+    (a mod b) + ((-a) mod b) is odd by A1,MOD;
+    hence thesis;
+  end;
+
+theorem DIM:
+  for a be non zero Integer, b be Integer holds
+    a divides b iff a divides (b mod a)
+  proof
+    let a be non zero Integer, b be Integer;
+    A1: a divides b implies a divides (b mod a)
+    proof
+      assume
+      a divides b; then
+      b mod a = 0 by INT162;
+      hence thesis by INT_2:12;
+    end;
+    a divides (b mod a) implies a divides b
+    proof
+      assume
+      B1: a divides (b mod a);
+      per cases;
+      suppose b is zero;
+        hence thesis by INT_2:12;
+      end;
+      suppose
+        not b is zero; then
+        reconsider b as non zero Integer;
+        |.b mod a.| < |.a.| by PELLS_EQ:2; then
+        b mod a = 0 by B1,INT_4:6;
+        hence thesis by INT162;
+      end;
+    end;
+    hence thesis by A1;
+  end;
+
+theorem
+  for a be non weightless Integer, b be non weightless odd Integer st
+    a,b are_coprime holds (b + a) mod b <> (b - a) mod b
+  proof
+    let a be non weightless Integer, b be non weightless odd Integer such that
+    A1: a,b are_coprime;
+    A1a: not b divides a by A1,N0344; then
+    reconsider t = a mod b as non zero Integer by INT162;
+    A2: not b divides t by A1a,DIM;
+    A3: (b + a) mod b = ((b mod b) + (a mod b)) mod b by NAT_D:66
+    .= t mod b;
+    A4: (b - a) mod b = ((b mod b) - (a mod b)) mod b by INT_6:7
+    .= (-t) mod b;
+    t mod b is odd iff (-t) mod b is even by A2,MOO;
+    hence thesis by A3,A4;
+  end;
+
+theorem
+  for a be Integer, b be even Integer st
+    not b divides a holds a mod b is odd implies (-a) mod b is odd
+  proof
+    let a be Integer, b be even Integer such that
+    A1: not b divides a;
+    per cases;
+    suppose b is zero;
+      hence thesis;
+    end;
+    suppose not b is zero; then
+      reconsider b as non zero Integer;
+      a mod b + ((-a) mod b) is even by A1,MOD;
+      hence thesis;
+    end;
+  end;
+
+theorem
+  for a,b be non zero Integer holds
+    b mod a = (-b) mod a implies a is even or a divides b
+  proof
+    let a,b be non zero Integer;
+    assume
+    A1: b mod a = -b mod a;
+    assume not thesis; then
+    b mod a is odd iff -b mod a is even by MOO;
+    hence thesis by A1;
+  end;
+
+theorem COM:
+  for a,b be Nat st a,b are_coprime holds
+    for n be non trivial Nat holds max (a mod n, b mod n) > 0
+  proof
+    let a,b be Nat such that
+    A1: a,b are_coprime;
+    assume not thesis; then
+    consider m be non trivial Nat such that
+    A2: max (a mod m, b mod m) <= 0;
+    a mod m = 0 & b mod m = 0 by A2; then
+    m divides a & m divides b by INT_1:62;
+    hence contradiction by A1,PYTHTRIP:def 1,NAT_2:def 1;
+  end;
+
+theorem SM3:
+  for s be square Integer holds s mod 3 is trivial Nat
+  proof
+    let s be square Integer;
+    2-root s is integer; then
+    reconsider a = 2-root s as integer number;
+    a|^2,0 are_congruent_mod 3 or a|^2,1 are_congruent_mod 3 by NAT_6:15; then
+    a|^2 mod 3 = 0 mod 3 or a|^2 mod 3 = 1 mod (1 + 2) by NAT_D:64;
+    hence thesis by NAT_2:def 1;
+  end;
+
+theorem ESS:
+  for a,b be square Nat holds (a + b)/2 is square implies a mod 3 = b mod 3
+  proof
+    let a,b be square Nat;
+    assume (a + b)/2 is square; then
+    reconsider s = (a + b)/2 as square Nat;
+    A2: (a + b) mod 3 = (2*s) mod 3
+    .= ((2 mod (2+1))*(s mod 3)) mod 3 by NAT_D:67
+    .= (2*(s mod 3)) mod 3;
+    A3: a mod 3 is trivial & b mod 3 is trivial &
+      s mod 3 is trivial by SM3; then
+    per cases by NAT_2:def 1;
+    suppose
+      s mod 3 = 1; then
+      B2: 2 mod (2 + 1) = ((a mod 3) + (b mod 3)) mod 3 by A2,NAT_D:66;
+      per cases by A3,NAT_2:def 1;
+      suppose
+        a mod 3 = 0; then
+        not ((a mod 3) + (b mod 3)) mod 3 = 2 by A3;
+        hence thesis by B2;
+      end;
+      suppose
+        C1: a mod 3 = 1;
+        per cases by A3,NAT_2:def 1;
+        suppose b mod 3 = 0;
+          hence thesis by C1,B2;
+        end;
+        suppose b mod 3 = 1;
+          hence thesis by C1;
+        end;
+      end;
+    end;
+    suppose
+      B1: s mod 3 = 0;
+      B3: a mod 3 = 1 & b mod 3 = 1 implies
+      ((a mod 3) + (b mod 3)) mod 3 = 2 mod (2 + 1);
+      B4: a mod 3 = 1 & b mod 3 = 0 implies
+      ((a mod 3) + (b mod 3)) mod 3 = 1 mod (1 + 2);
+      a mod 3 = 0 & b mod 3 = 1 implies
+      ((a mod 3) + (b mod 3)) mod 3 = 1 mod (1 + 2); then
+      a mod 3 = 0 & b mod 3 = 0 by B1,A2,NAT_D:66,B3,B4,A3,NAT_2:def 1;
+      hence thesis;
+    end;
+  end;
+
+theorem
+  for a,b be odd Nat st a,b are_coprime holds
+    (a|^2 + b|^2)/2 is square implies not 3 divides a*b
+  proof
+    let a,b be odd Nat such that
+    A1: a,b are_coprime;
+    assume
+    A2: (a|^2 + b|^2)/2 is square; then
+    A3: a|^2 mod 3 = b|^2 mod 3 by ESS;
+    a|^2,b|^2 are_coprime & 3 is non trivial by A1,WSIERP_1:11; then
+    A4: max (a|^2 mod 3, b|^2 mod 3) > 0 by COM;
+    a|^2 mod 3 is trivial by SM3; then
+    per cases by NAT_2:def 1;
+    suppose
+      a|^2 mod 3 = 0;
+      hence thesis by A3,A4;
+    end;
+    suppose
+      B1: a|^2 mod 3 = 1; then
+      b|^2 mod 3 = 1 by A2,ESS; then
+      B2: not 3 divides a|^2 & not 3 divides b|^2 by B1,INT_1:62;
+      a divides a|^2 & b divides b|^2 by NAT_3:3; then
+      B3: not 3 divides a & not 3 divides b by B2,INT_2:9; then
+      a,3 are_coprime & b,3 are_coprime by PEPIN:41,GROUP_17:5;
+      hence thesis by B3,EULER_1:13;
+    end;
+  end;
+
+theorem
+  for a,b be Integer holds a div b = (-a) div (-b)
+  proof
+    let a,b be Integer;
+    a div b = [\a/b/] by INT_1:def 9
+    .= [\(-a)/(-b)/] by XCMPLX_1:191
+    .= (-a) div (-b) by INT_1:def 9;
+    hence thesis;
+  end;
+
+theorem
+  for a,b be square Nat st a,b are_coprime holds
+    (a - b)/2 is square implies b mod 3 = 1
+  proof
+    let a,b be square Nat such that
+    A1: a,b are_coprime;
+    assume (a - b)/2 is square; then
+    reconsider s = (a - b)/2 as square Nat;
+    A2: (a + -b) mod 3 = (2*s) mod 3
+    .= ((2 mod (2+1))*(s mod 3)) mod 3 by NAT_D:67
+    .= (2*(s mod 3)) mod 3;
+    A3: a mod 3 is trivial & b mod 3 is trivial & s mod 3 is trivial by SM3;
+    A4: not 3 is trivial;
+    per cases by A3,NAT_2:def 1;
+    suppose
+      s mod 3 = 1; then
+      B2: 2 mod (2 + 1) = ((a mod 3) - (b mod 3)) mod 3 by A2,INT_6:7;
+      per cases by A3,NAT_2:def 1;
+      suppose
+        C1: a mod 3 = 0;
+        max (a mod 3, b mod 3) > 0 by A1,A4,COM; then
+        not b mod 3 = 0 by C1;
+        hence thesis by A3,NAT_2:def 1;
+      end;
+      suppose
+        C1: a mod 3 = 1;
+        per cases by A3,NAT_2:def 1;
+        suppose b mod 3 = 0;
+          hence thesis by C1,B2;
+        end;
+        suppose b mod 3 = 1;
+          hence thesis;
+        end;
+      end;
+    end;
+    suppose
+      B1: s mod 3 = 0;
+      2*s, b*1 are_coprime by NEWTON02:5,A1; then
+      max (b mod 3, s mod 3) > 0 by NEWTON01:41,A4,COM; then
+      b mod 3 > 0 by B1;
+      hence thesis by A3,NAT_2:def 1;
+    end;
+  end;
+
+theorem
+  for a be odd Nat holds 3 divides 2|^a + 1
+  proof
+    let a be odd Nat;
+    reconsider n = (a - 1)/2 as Nat;
+    3 divides 2|^(2*n + 1) - 2 by NEWTON02:173; then
+    3 divides ((2|^(2*n + 1) - 2) + 3) by WSIERP_1:4;
+    hence thesis;
+  end;
+
+theorem N0141:
+  for a,b,c,d be Integer holds a*b gcd c*d = 1 implies a gcd c = 1
+  proof
+    let a,b,c,d be Integer;
+    |.a.| in NAT by INT_1:3; then
+    reconsider k = |.a.| as Nat;
+    |.b.| in NAT by INT_1:3; then
+    reconsider m = |.b.| as Nat;
+    |.c.| in NAT by INT_1:3; then
+    reconsider l = |.c.| as Nat;
+    |.d.| in NAT by INT_1:3; then
+    reconsider n = |.d.| as Nat;
+    assume a*b gcd c*d = 1; then
+    1 = |.a*b.| gcd |.c*d.| by INT_2:34
+    .= |.a.|*|.b.| gcd |.c*d.| by COMPLEX1:65
+    .= |.a.|*|.b.| gcd |.c.|*|.d.| by COMPLEX1:65; then
+    k*m, l*n are_coprime; then
+    k,l are_coprime by NEWTON01:41;
+    hence thesis by INT_2:34;
+  end;
+
+theorem ::: WSIERP_1:11
+  for a,b be Integer, m,n be non zero Nat holds
+    a,b are_coprime iff a|^m, b|^n are_coprime
+  proof
+    let a,b be Integer, m,n be non zero Nat;
+    L1: a,b are_coprime implies a|^m,b|^n are_coprime
+    proof
+      assume a,b are_coprime; then
+      a,b|^n are_coprime by WSIERP_1:10;
+      hence thesis by WSIERP_1:10;
+    end;
+    a|^m,b|^n are_coprime implies a,b are_coprime
+    proof
+      assume
+      A1: a|^m,b|^n are_coprime;
+      reconsider k = m - 1 as Nat;
+      reconsider l = n - 1 as Nat;
+      a|^(k+1) = a*a|^k & b|^(l + 1) = b*b|^l by NEWTON:6;
+      hence thesis by A1,N0141;
+    end;
+    hence thesis by L1;
+  end;
+
+theorem N02193:
+  for a,b be square Nat st a,b are_coprime holds not 3 divides a + b
+  proof
+    let a,b be square Nat such that
+    A1: a,b are_coprime;
+    consider x be Nat such that
+    A2: a = x^2 by PYTHTRIP:def 3;
+    consider y be Nat such that
+    A3: b = y^2 by PYTHTRIP:def 3;
+    A4: x^2 = x|^2 & y^2 = y|^2 by NEWTON:81;
+    1 = 2-root (1|^2)
+    .= 2-root ((x gcd y)|^2) by A1,A2,A3,A4,NEWTON03:4
+    .= x gcd y; then
+    x,y are_coprime;
+    hence thesis by A2,A3,A4,NEWTON02:193;
+  end;
+
+theorem
+  for a,b be odd square Nat st a,b are_coprime holds not 3 divides (a + b)/2
+  proof
+    let a,b be odd square Nat such that
+    A1: a,b are_coprime;
+    (a + b)/2*2 = a + b; then
+    (a + b)/2 divides a + b;
+    hence thesis by A1,N02193,INT_2:9;
+  end;
+
+:: the uniqueness of coprime factorization
+
+theorem
+  for a,b,c,d be Nat st a,c are_coprime & b,d are_coprime holds
+    a*b = c*d implies a = d & b = c
+  proof
+    let a,b,c,d be Nat such that
+    A1: a,c are_coprime & b,d are_coprime;
+    assume
+    A3: a*b = c*d;
+    per cases;
+    suppose a = 0; then
+      reconsider a as zero Nat;
+      B2: a gcd c = 1 by A1;
+      c*d = a*b by A3
+      .= 0; then
+      reconsider d as zero Nat by B2;
+      d gcd b = 1 by A1; then
+      b = 1;
+      hence thesis by A3,B2;
+    end;
+    suppose not a = 0; then
+      reconsider a as non zero Nat;
+      a divides c*d by A3; then
+      B1: a divides d by A1,INT_2:25;
+      d divides a*b by A3; then
+      B2: d divides a by A1,INT_2:25;
+      B3: not a = -d; then
+      a*b = a*c by A3,B1,B2,INT_2:11;
+      hence thesis by B1,B2,B3,INT_2:11,XCMPLX_1:5;
+    end;
+  end;
+
+:: may be proved the other way
+
+theorem CDN:
+  for a,b,c be Nat st a,b are_coprime holds
+    c divides a*b implies (a gcd c)*(b gcd c) = c
+  proof
+    let a,b,c be Nat such that
+    A1: a,b are_coprime;
+    assume
+    A2: c divides a*b;
+    |.c.| = c gcd (a*b) by A2
+    .= (c gcd a)*(c gcd b) by A1,NEWTON03:35;
+    hence thesis;
+  end;
+
+theorem
+  for a,b,c,d be Nat st a,b are_coprime holds
+    a*b = c*d implies a*b = (a gcd c)*(b gcd c)*(a gcd d)*(b gcd d)
+  proof
+    let a,b,c,d be Nat such that
+    A1: a,b are_coprime;
+    assume
+    A2: a*b = c*d; then
+    c divides a*b & d divides a*b; then
+    (a gcd c)*(b gcd c) = c & (a gcd d)*(b gcd d) = d by A1,CDN;
+    hence thesis by A2;
+  end;
+
+theorem
+  for a,b,c,d be positive Real holds a*b = c*d & a*c = b*d implies a = d
+  proof
+    let a,b,c,d be positive Real;
+    assume a*b = c*d & a*c = b*d; then
+    (a*b)*(a*c) = (c*d)*(b*d); then
+    (a*a)*(b*c) = (d*d)*(b*c); then
+    a*a = d*d by XCMPLX_1:5; then
+    (a >= d & d >= a) by XREAL_1:96;
+    hence thesis by XXREAL_0:1;
+  end;
+
+theorem SDC:
+  for a,b be Integer st a,b are_coprime holds (a - b)*(a + b) gcd a*b = 1
+  proof
+    let a,b be Integer such that
+    A1: a,b are_coprime;
+    a gcd b = a gcd (b - 1*a) & a gcd b = a gcd (b + 1*a) by NEWTON02:5; then
+    -(a - b) gcd a = 1 & (a + b) gcd a = 1 by A1; then
+    (a-b),a are_coprime & (a + b),a are_coprime by NEWTON02:1; then
+    A2: (a - b)*(a + b),a are_coprime by INT_2:26;
+    b gcd a = b gcd (a - 1*b) & b gcd a = b gcd (a + 1*b) by NEWTON02:5; then
+    (a - b),b are_coprime & (a + b),b are_coprime by A1; then
+    (a - b)*(a + b), b are_coprime by INT_2:26; then
+    (a - b)*(a + b), a*b are_coprime by A2,INT_2:26;
+    hence thesis;
+  end;
+
+theorem
+  for a be odd Integer, b be even Integer st a,b are_coprime holds
+  (a - b)*(a + b) gcd 2*a*b = 1
+  proof
+    let a be odd Integer, b be even Integer such that
+    A1: a,b are_coprime;
+    reconsider d = a - b as odd Integer;
+    reconsider s = a + b as odd Integer;
+    A2: s*d,a*b are_coprime by A1,SDC;
+    s*d,2 are_coprime by NEWTON03:def 5; then
+    (s*d), 2*(a*b) are_coprime by A2,INT_2:26;
+    hence thesis;
+  end;
+
+theorem SCP: ::: NEWTON02:48
+  for a be even Integer, b be Integer st a,b are_coprime holds
+    (a + b),(a - b) are_coprime
+  proof
+    let a be even Integer, b be Integer such that
+    A1: a,b are_coprime;
+    a gcd b is odd by A1; then
+    reconsider b as odd Integer;
+    A2: a + b, 2 are_coprime by NEWTON03:def 5;
+    (1*b + a) gcd b = a gcd b by NEWTON02:5; then
+    a + b, b are_coprime by A1; then
+    A3: (a + b),2*b are_coprime by A2,INT_2:26;
+    (a + b) gcd (a - b) = (a + b) gcd ((a - b) - 1*(a + b)) by NEWTON02:5
+    .= (a + b) gcd (-2*b)
+    .= (a + b) gcd (2*b) by NEWTON02:1;
+    hence thesis by A3;
+  end;
+
+theorem
+  for a be even Integer, b be Integer, n be non zero Nat st
+    a,b are_coprime holds b|^n + a|^n, b|^n - a|^n are_coprime
+  proof
+    let a be even Integer, b be Integer, n be non zero Nat such that
+    A1: a,b are_coprime;
+    A2: a|^n, b|^n are_coprime by A1,WSIERP_1:11;
+    (a|^n + b|^n), (a|^n - b|^n) are_coprime by A2,SCP; then
+    1 = (a|^n + b|^n) gcd -(b|^n - a|^n)
+    .= (a|^n + b|^n) gcd (b|^n - a|^n) by NEWTON02:1;
+    hence thesis;
+  end;
+
+theorem RMI:
+  for a,b be Nat, c,d be non zero Nat holds
+    a mod (c*d) = b mod (c*d) implies a mod c = b mod c
+  proof let a,b be Nat, c,d be non zero Nat;
+    assume a mod (c*d) = b mod (c*d); then
+    a mod (c*d) mod c = b mod c by RADIX_1:3;
+    hence thesis by RADIX_1:3;
+  end;
+
+theorem MRS:
+  for a,b be non zero Nat holds (a - b) mod 2*b = (a + b) mod 2*b
+  proof
+    let a,b be non zero Nat;
+    ((a - b) + 2*b) mod (2*b) =
+       (((a - b) mod (2*b)) + ((2*b) mod (2*b))) mod (2*b) by NAT_D:66;
+    hence thesis;
+  end;
+
+theorem
+  for a,b be non zero Nat st a|^2 - b|^2 in NAT holds
+    (a|^2 - b|^2) mod (2*b) = (a|^2 + b|^2) mod (2*b)
+  proof
+    let a,b be non zero Nat such that
+    A1: a|^2 - b|^2 in NAT;
+    A2: b|^2 = b*b by NEWTON:81;
+    (a|^2 - b|^2) mod 2*b|^2 = (a|^2 + b|^2) mod 2*b|^2 by MRS; then
+    (a|^2 - b|^2) mod ((2*b)*b) = (a|^2 + b|^2) mod ((2*b)*b) by A2;
+    hence thesis by A1,RMI;
+  end;
+
+theorem
+  for a,b be non zero Nat holds (a - b)|^2 mod (4*a*b) = (a + b)|^2 mod (4*a*b)
+  proof
+    let a,b be non zero Nat;
+    A1: (a - b)|^2 = (a-b)*(a - b) & (a + b)|^2 = (a+b)*(a+b) by NEWTON:81;
+    ((a - b)|^2 + (4*a*b)) mod (4*a*b) =
+      (((a - b)|^2 mod (4*a*b)) + ((4*a*b) mod (4*a*b))) mod (4*a*b)
+        by NAT_D:66;
+    hence thesis by A1;
+  end;
+
+theorem
+  for a,b be odd Nat holds ((a - b)/2)|^2 mod (a*b) = ((a + b)/2)|^2 mod (a*b)
+  proof
+    let a,b be odd Nat;
+    A1: ((a - b)/2)|^2 = ((a - b)/2)*((a -b)/2) &
+    ((a + b)/2)|^2 = ((a + b)/2)*((a + b)/2) by NEWTON:81;
+    (((a - b)/2)|^2 + a*b) mod (a*b) =
+    ((((a - b)/2)|^2 mod (a*b)) + ((a*b) mod (a*b))) mod (a*b) by NAT_D:66;
+    hence thesis by A1;
+  end;
+
+theorem
+  for a,b,c be Nat st a|^2 + b|^2 = c|^2 holds
+    b|^2 mod a = c|^2 mod a & a|^2 mod b = c|^2 mod b
+  proof
+    let a,b,c be Nat such that
+    A1: a|^2 + b|^2 = c|^2;
+    A2: (a|^2 + b|^2) mod a = ((a|^2 mod a) + (b|^2 mod a)) mod a by NAT_D:66
+    .= b|^2 mod a;
+    (a|^2 + b|^2) mod b = ((a|^2 mod b) + (b|^2 mod b)) mod b by NAT_D:66
+    .= a|^2 mod b;
+    hence thesis by A1,A2;
+  end;
+
+theorem MT:
+  for a be Nat, b be non trivial Nat,c be non zero Nat holds
+    a mod (b*c) = 1 implies a mod b = 1
+  proof
+    let a be Nat, b be non trivial Nat, c be non zero Nat;
+    reconsider k = b - 1 as non zero Nat;
+    per cases;
+    suppose c is trivial; then
+      c = 1 by NAT_2:def 1;
+      hence thesis;
+    end;
+    suppose c is non trivial; then
+    reconsider l = c - 1 as non zero Nat;
+    assume a mod (b*c) = 1; then
+    a mod (b*c) = 1 mod (b*c); then
+    A2: b*c divides a - 1 by INT_4:23;
+    b divides b*c; then
+    b divides (a - 1) by A2,INT_2:9; then
+    a mod b = 1 mod (1 + k) by INT_4:23;
+    hence thesis;
+  end;
+end;
+
+theorem
+  for a be Nat, b be non zero Nat, m,n be non zero Nat st m >= n holds
+    a mod b|^m = 1 implies a mod b|^n = 1
+  proof
+    let a be Nat, b be non zero Nat, m,n be non zero Nat such that
+    A1: m >= n;
+    assume
+    A2: a mod b|^m = 1;
+    m - n >= n - n by A1,XREAL_1:9; then
+    m - n in NAT by INT_1:3; then
+    reconsider k = m - n as Nat;
+    reconsider b as non trivial Nat by A2;
+    1 = a mod b|^(n + k) by A2
+    .= a mod (b|^n*b|^k) by NEWTON:8;
+    hence thesis by MT;
+  end;
+
+theorem
+  for i be Integer holds (i|^2) mod 4 = 0 or (i|^2) mod 4 = 1
+  proof
+    let i be Integer;
+    A1: i|^2 mod 4 = (i*i) mod 4 by NEWTON:81
+    .= ((i mod 4)*(i mod 4)) mod 4 by NAT_D:67;
+    i mod (3+1) = 0 or ... or i mod (3+1) = 3 by NUMBER03:11; then
+    per cases;
+    suppose
+      i mod (3+1) = 0;
+      hence thesis by A1;
+    end;
+    suppose
+      i mod (3+1) = 1;
+      hence thesis by A1;
+    end;
+    suppose
+      i mod (3+1)= 2;
+      hence thesis by A1;
+    end;
+    suppose
+      i mod (3+1) = 3; then
+      (i|^2) mod 4 = (2*4 + 1) mod 4 by A1
+      .= 1 mod (1 + 3)
+      .= 1;
+      hence thesis;
+    end;
+  end;
+
+theorem MOS8:
+  for i be Integer holds
+    (i|^2) mod 8 = 0 or (i|^2) mod 8 = 1 or (i|^2) mod 8 = 4
+  proof
+    let i be Integer;
+    A1: i|^2 mod 8 = (i*i) mod 8 by NEWTON:81
+    .= ((i mod 8)*(i mod 8)) mod 8 by NAT_D:67;
+    i mod (7+1) = 0 or ... or i mod (7+1) = 7 by NUMBER03:11; then
+    per cases;
+    suppose
+      i mod (7+1) = 0;
+      hence thesis by A1;
+    end;
+    suppose
+      i mod (7+1) = 1;
+      hence thesis by A1;
+    end;
+    suppose
+      i mod (7+1)= 2; then
+      (i|^2) mod (7+1) = 4 mod (4 + 4) by A1
+      .= 4;
+      hence thesis;
+    end;
+    suppose
+      i mod (7+1) = 3; then
+      (i|^2) mod 8 = (1*8 + 1) mod 8 by A1
+      .= 1 mod (1 + 7)
+      .= 1;
+      hence thesis;
+    end;
+    suppose
+      i mod (7+1) = 4; then
+      (i|^2) mod 8 = (2*8 + 0) mod 8 by A1
+      .= 0;
+      hence thesis;
+    end;
+    suppose
+      i mod (7+1) = 5; then
+      (i|^2) mod 8 = (3*8 + 1) mod 8 by A1
+      .= 1 mod (1 + 7)
+      .= 1;
+      hence thesis;
+    end;
+    suppose
+      i mod (7+1)= 6; then
+      (i|^2) mod 8 = (4*8 + 4) mod 8 by A1
+      .= 4 mod (4 + 4) by NAT_D:21
+      .= 4;
+      hence thesis;
+    end;
+    suppose
+      i mod (7+1) = 7; then
+      (i|^2) mod 8 = (6*8 + 1) mod 8 by A1
+      .= 1 mod (1 + 7)
+      .= 1;
+      hence thesis;
+    end;
+  end;
+
+theorem MOQ8:
+  for i be Integer holds (i|^4) mod 8 = 0 or (i|^4) mod 8 = 1
+  proof
+    let i be Integer;
+    A1: i|^(2+2) mod 8 = (i|^2*i|^2) mod 8 by NEWTON:8
+    .= ((i|^2 mod 8)*(i|^2 mod 8)) mod 8 by NAT_D:67;
+    per cases by MOS8;
+    suppose
+      i|^2 mod 8 = 0;
+      hence thesis by A1;
+    end;
+    suppose
+      i|^2 mod 8 = 1;
+      hence thesis by A1;
+    end;
+    suppose
+      i|^2 mod 8 = 4; then
+      i|^(2+2) mod 8 = (2*8 + 0) mod 8 by A1
+      .= 0;
+      hence thesis;
+    end;
+  end;
+
+theorem SDM:
+  for a,b be odd Integer holds (a + b) mod 4 = 2 or (a - b) mod 4 = 2
+  proof
+    let a,b be odd Integer;
+    A1: a + b mod (2*2) is even & (a - b) mod (2*2) is even;
+    A2: ((a + b) mod (3 + 1) = 0 or ... or (a + b) mod (3 + 1) = 3) &
+    ((a - b) mod (3 + 1) = 0 or ... or (a - b) mod (3 + 1) = 3)
+      by NUMBER03:11;
+    per cases by A1,A2;
+    suppose
+      (a + b) mod 4 = 0; then
+      4 divides (a + b) by INT_1:62; then
+      not 4 divides (a - b) by NEWTON03:73;
+      hence thesis by A1,A2,INT_1:62;
+    end;
+    suppose
+      (a + b) mod 4 = 2;
+      hence thesis;
+    end;
+  end;
+
+theorem SDO:
+  for a,b be odd Integer holds (a + b) mod 4 = 0 or (a - b) mod 4 = 0
+  proof
+    let a,b be odd Integer;
+    per cases by SDM;
+    suppose
+      (a + b) mod 4 = 2; then
+      not 4 divides (a + b) by INT162; then
+      4 divides (a - b) by NEWTON03:73;
+      hence thesis by INT162;
+    end;
+    suppose
+      (a - b) mod 4 = 2; then
+      not 4 divides (a - b) by INT162; then
+      4 divides (a + b) by NEWTON03:73;
+      hence thesis by INT162;
+    end;
+  end;
+
+theorem
+  for a,b be odd Integer holds max ((a + b) mod 4, (a - b) mod 4) = 2
+  proof
+    let a,b be odd Integer;
+    A1: a + b mod (2*2) is even & (a - b) mod (2*2) is even;
+    ((a + b) mod (3 + 1) = 0 or ... or (a + b) mod (3 + 1) = 3) &
+    ((a - b) mod (3 + 1) = 0 or ... or (a - b) mod (3 + 1) = 3)
+      by NUMBER03:11;
+    hence thesis by A1,XXREAL_0:def 10,SDM;
+  end;
+
+theorem
+  for a,b be odd Integer holds min ((a + b) mod 4, (a - b) mod 4) = 0
+  proof
+    let a,b be odd Integer;
+    ((a + b) mod (3 + 1) = 0 or ... or (a + b) mod (3 + 1) = 3) &
+    ((a - b) mod (3 + 1) = 0 or ... or (a - b) mod (3 + 1) = 3)
+      by NUMBER03:11;
+    hence thesis by SDO;
+  end;
+
+theorem MO5:
+  for a,b be Nat st a,b are_coprime holds
+    (a|^4 + b|^4) mod 5 = 1 or (a|^4 + b|^4) mod 5 = 2
+  proof
+    let a,b be Nat such that
+    A1: a,b are_coprime;
+    A3: not 5 divides a or not 5 divides b by A1,PEPIN:59,PYTHTRIP:def 2;
+    (a|^(5 -1) mod 5 = 0 or a|^(5-1) mod 5 = 1) &
+      (b|^(5-1) mod 5 = 0 or b|^(5-1) mod 5 = 1) by PEPIN:59,MOP; then
+    per cases;
+    suppose
+      a|^4 mod 5 = 0 & b|^4 mod 5 = 0; then
+      B1: 5 divides a|^4 & 5 divides b|^4 by INT_1:62;
+      a|^4 divides a|^(4 + 1) & b|^4 divides b|^(4 + 1) by NEWTON:89; then
+      5 divides a|^5 & 5 divides b|^5 by B1,INT_2:9;
+      hence thesis by A3,PEPIN:59,NEWTON02:160;
+    end;
+    suppose
+      a|^4 mod 5 = 0 & b|^4 mod 5 = 1; then
+      (a|^4 + b|^4) mod 5 = (0 + 1) mod (1 + 4) by NAT_D:66;
+      hence thesis;
+    end;
+    suppose
+      a|^4 mod 5 = 1 & b|^4 mod 5 = 0; then
+      (a|^4 + b|^4) mod 5 = (1 + 0) mod (1 + 4) by NAT_D:66;
+      hence thesis;
+    end;
+    suppose
+      a|^4 mod 5 = 1 & b|^4 mod 5 = 1; then
+      (a|^4 + b|^4) mod 5 = (1 + 1) mod (2 + 3) by NAT_D:66;
+      hence thesis;
+    end;
+  end;
+
+theorem R3: :: REAL_3:3
+  for a,b be Integer holds a mod b = b*frac (a/b)
+  proof
+    let a,b be Integer;
+    per cases;
+    suppose
+      b is zero;
+      hence thesis;
+    end;
+    suppose
+      not b is zero; then
+      reconsider b as non zero Integer;
+      a mod b = a - (a div b)*b by INT_1:def 10
+      .= a - [\a/b/]*b by INT_1:def 9
+      .= a/b*b - [\a/b/]*b by XCMPLX_1:87
+      .= (a/b - [\a/b/])*b
+      .= b*(frac (a/b)) by INT_1:def 8;
+      hence thesis;
+    end;
+  end;
+
+theorem
+  for a be Integer, b be non zero Integer holds frac (b*frac (a/b)) = 0
+  proof
+    let a be Integer, b be non zero Integer;
+    frac (b*frac (a/b)) = frac (b*(a/b)) by FR3
+    .= frac a by XCMPLX_1:87;
+    hence thesis;
+  end;
+
+registration
+  let a be heavy positive Real;
+  cluster 1/a -> light positive;
+  coherence
+  proof
+    a > 1 implies 1/a < 1 by XREAL_1:189;
+    hence thesis by COMPLEX3:1;
+  end;
+end;
+
+theorem
+  for b,c be positive Nat holds c*frac (1/(b + c)) < 1
+  proof
+    let b,c be positive Nat;
+    c*frac (1/(b + c)) = c/(b + c) by XCMPLX_1:99;
+    hence thesis by COMPLEX3:1;
+  end;
+
+registration
+  let a be Integer;
+  reduce a div 1 to a;
+  reducibility by PRE_FF:2;
+end;
+
+registration
+  let a be non zero Integer;
+  reduce 1*a div a to 1;
+  reducibility by INT_1:49;
+end;
+
+registration
+  let a be heavy positive Integer;
+  cluster 1 div a -> zero;
+  coherence
+  proof
+    reconsider b = 1/a as light positive Real;
+    1 div a = [\1/a/] by INT_1:def 9
+    .= 0;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be heavy positive Integer, b be Integer;
+  cluster b div (a*b) -> zero;
+  coherence
+  proof
+    per cases;
+    suppose b = 0;
+      hence thesis;
+    end;
+    suppose
+      B1: b <> 0;
+      b div (b*a) = (b div b) div a by PRE_FF:5
+      .= 1 div a by B1,INT_1:49;
+      hence thesis;
+    end;
+  end;
+  reduce b mod (a*b) to b;
+  reducibility
+  proof
+    b = 0 or b mod (a*b) = b - (b div (a*b))*(a*b) by INT_1:def 10;
+    hence thesis;
+  end;
+end;
+
+theorem
+  for a,b,c be Integer holds (a*b) mod (a*c) = a*(b mod c)
+  proof
+    let a,b,c be Integer;
+    per cases;
+    suppose a = 0;
+      hence thesis;
+    end;
+    suppose a <> 0; then
+      reconsider a as non zero Integer;
+      per cases;
+      suppose c = 0; then
+        (a*b) mod (a*c) = 0 & b mod c = 0;
+        hence thesis;
+      end;
+      suppose c <> 0; then
+        reconsider c as non zero Integer;
+        (a*b) mod (a*c) = a*b - ((a*b) div (a*c))*(a*c) by INT_1:def 10
+        .= a*b - [\a*b/(a*c)/]*(a*c) by INT_1:def 9
+        .= a*(b - [\a*b/(a*c)/]*c)
+        .= a*(b - [\(b/c)/]*c) by XCMPLX_1:91
+        .= a*(b - (b div c)*c) by INT_1:def 9;
+        hence thesis by INT_1:def 10;
+      end;
+    end;
+  end;
+
+theorem CMI:
+  for a,b be non zero Integer, c be Integer holds c mod (a*b) mod a = c mod a
+  proof
+    let a,b be non zero Integer;
+    let c be Integer;
+    A1: c mod (a*b) = (a*b)*frac (c/(a*b)) by R3; then
+    reconsider t = (a*b)*frac (c/(a*b)) as Integer;
+    (c mod (a*b)) mod a = a* frac (a*(b*frac (c/(a*b)))/a) by A1,R3
+    .= a*frac (b*frac (c/(a*b))) by XCMPLX_1:89
+    .= a*frac (b*(c/(a*b))) by FR3
+    .= a*frac ((b*c)/(a*b)) by XCMPLX_1:74
+    .= a*(frac (c/a)) by XCMPLX_1:91;
+    hence thesis by R3;
+  end;
+
+theorem
+  for a be Integer, b be non zero Integer, n be non zero Nat holds
+    a mod b|^n mod b = a mod b
+  proof
+    let a be Integer, b be non zero Integer, n be non zero Nat;
+    reconsider m = n - 1 as Nat;
+    a mod b|^n = a mod b|^(m + 1)
+    .= a mod (b*b|^m) by NEWTON:6;
+    hence thesis by CMI;
+  end;
+
+theorem MFR:
+  for a be non zero Nat, b be Nat holds
+    b mod a < [/a/2\] implies frac (b/a) < 1/2
+  proof
+    let a be non zero Nat, b be Nat;
+    assume
+    A1: b mod a < [/a/2\];
+    A2: a/2 <= [/a/2\] <= a/2 + 1 by INT_1:def 7;
+    per cases;
+    suppose a is even; then
+      reconsider c = a/2 as non zero Nat;
+      B1: (a/2)/a = (1/2)*(a/a) by XCMPLX_1:104
+      .= 1/2*1 by XCMPLX_1:60;
+      a*frac (b/a) < c by A1,R3; then
+      a*frac (b/a) < a*(c/a) by XCMPLX_1:87;
+      hence thesis by B1,XREAL_1:64;
+    end;
+    suppose a is odd; then
+      reconsider c = (a + 1)/2 as non zero Nat;
+      a - 1 < a - 0 by XREAL_1:10; then
+      (a - 1)/2 < a/2 by XREAL_1:74; then
+      ((a - 1)/2)/a < (a/2)/a by XREAL_1:74; then
+      ((a + 1)/2 - 1)/a < 1/2*(a/a) by XCMPLX_1:104; then
+      B0: (c - 1)/a < 1/2*1 by XCMPLX_1:60;
+      B1: a/2 - 1/2 < a/2 - 0 & a/2 + 0 < a/2 + 1/2 &
+        (a/2 + 1) + 0 < (a/2 + 1) + 1/2 by XREAL_1:10,XREAL_1:6; then
+      c - 1 < [/a/2\] by A2,XXREAL_0:2; then
+      B2: (c - 1) + 1 <= [/a/2\] by INT_1:7;
+      [/a/2\] < c + 1 by B1,A2,XXREAL_0:2; then
+      [/a/2\] <= c by INT_1:7; then
+      b mod a < (c - 1) + 1 by A1,B2,XXREAL_0:1; then
+      b mod a <= c - 1 by INT_1:7; then
+      a*frac (b/a) <= c - 1 by R3; then
+      a*frac (b/a) <= a*((c-1)/a) by XCMPLX_1:87; then
+      frac (b/a) <= (c - 1)/a by XREAL_1:68;
+      hence thesis by B0,XXREAL_0:2;
+    end;
+  end;
+
+theorem :: MF2:
+  for a be non zero Nat, b be Nat holds
+    b mod a < [/a/2\] implies (2*b) mod a = 2*(b mod a)
+  proof
+    let a be non zero Nat, b be Nat;
+    assume
+    A1: b mod a < [/a/2\];
+    per cases;
+    suppose
+      B1: b mod a = 0; then
+      B2: a divides b by INT162;
+      b divides 2*b;
+      hence thesis by B1,B2,INT162,INT_2:9;
+    end;
+    suppose
+      b mod a > 0; then
+      a*frac (b/a) > 0 by R3; then
+      0 < frac (b/a) < 1/2 by A1,MFR; then
+      0 < 2*frac(b/a) < 2*(1/2) by XREAL_1:68; then
+      reconsider t = 2*frac(b/a) as light positive Real by COMPLEX3:1;
+      (2*b) mod a = a* frac ((2*b)/a) by R3
+      .= a * frac (2*(b/a)) by XCMPLX_1:74
+      .= a*frac (2*frac(b/a)) by FR3
+      .= a*t
+      .= 2*(a*(frac(b/a)))
+      .= 2*(b mod a) by R3;
+      hence thesis;
+    end;
+  end;
+
+theorem MOD8:
+  for a be odd square Integer holds a mod 8 = 1
+  proof
+    let a be odd square Integer;
+    (a - (2*0+1)|^2) mod 8 + (1 mod (1+7)) = 1 mod (1 + 7) by NEWTON05:22; then
+    ((a - 1)+1) mod 8 = 1 by NAT_D:66;
+    hence thesis;
+  end;
+
+registration let a be square Integer;
+  cluster a mod 3 -> square;
+  coherence by SM3;
+  cluster a mod 4 -> square;
+  coherence
+  proof
+    reconsider i = 2-root a as Integer;
+    i^2 mod 4 = 0*0 or i^2 mod 4 = 1*1 by PYTHTRIP:3,PYTHTRIP:4;
+    hence thesis;
+  end;
+  cluster a mod 8 -> square;
+  coherence
+  proof
+    per cases;
+    suppose a is odd; then
+      a mod 8 = 1*1 by MOD8;
+      hence thesis;
+    end;
+    suppose a is even; then
+      reconsider k = a/4 as Nat;
+      per cases;
+      suppose k is odd; then
+        reconsider m = (k - 1)/2 as Nat;
+        (2*m + 1) mod 2 = 1; then
+        (4*k) mod (4*2) = 4*1 by INT_4:20
+        .= (2*2);
+        hence thesis;
+      end;
+      suppose k is even; then
+        k mod 2 = 0; then
+        (4*k) mod (4*2) = 4*0 by INT_4:20
+        .= 0*0;
+        hence thesis;
+      end;
+    end;
+  end;
+end;
+
+theorem
+  for a be Integer holds a|^4 mod 8 is trivial Nat
+  proof
+    let a be Integer;
+    a|^4 mod 8 = 0 or a|^4 mod 8 = 1 by MOQ8;
+    hence thesis by NAT_2:def 1;
+  end;
+
+theorem
+  for a be odd Integer holds a|^4 mod 8 = 1
+  proof
+    let a be odd Integer;
+    2|^(2+1) = 2|^(1 + 1)*2 by NEWTON:6 .= (2|^1*2)*2 by NEWTON:6;
+    hence thesis by MOQ8;
+  end;
+
+theorem
+  for i be Integer holds (i|^4) mod 5 = 0 or (i|^4) mod 5 = 1
+  proof
+    let i be Integer;
+    A1: i|^2 mod 5 = (i*i) mod 5 by NEWTON:81
+    .= ((i mod 5)*(i mod 5)) mod 5 by NAT_D:67;
+    A2: (i|^(2+2)) mod 5 = ((i|^2)*(i|^2)) mod 5 by NEWTON:8
+    .= ((((i mod 5)*(i mod 5))mod 5)* (((i mod 5)*(i mod 5))mod 5)) mod 5
+       by A1,NAT_D:67
+    .= (((i mod 5)*(i mod 5))*((i mod 5)*(i mod 5))) mod 5 by NAT_D:67
+    .= ((i mod 5)*(i mod 5)*(i mod 5)*(i mod 5)) mod 5;
+    i mod (4+1) = 0 or ... or i mod (4+1) = 4 by NUMBER03:11; then
+    per cases;
+    suppose
+      i mod (4+1) = 0;
+      hence thesis by A2;
+    end;
+    suppose
+      i mod (4+1) = 1;
+      hence thesis by A2;
+    end;
+    suppose
+      i mod (4+1)= 2; then
+       (i|^4) mod (4+1)= (5*3 + 1) mod 5 by A2
+      .= 1 mod (1 + 4)
+      .= 1;
+      hence thesis;
+    end;
+    suppose
+      i mod (4+1) = 3; then
+       (i|^4) mod (4+1) = (5*16 + 1) mod 5 by A2
+      .= 1 mod (1 + 4)
+      .= 1;
+      hence thesis;
+    end;
+    suppose
+      i mod (4+1) = 4; then
+       (i|^4) mod (4+1) = (51*5 + 1) mod 5 by A2
+      .= 1 mod (1 + 4)
+      .= 1;
+      hence thesis;
+    end;
+  end;
+
+theorem
+  for a,b be odd Nat st a,b are_coprime holds
+    ((a|^4 + b|^4)/2) mod 5 = 3 or ((a|^4 + b|^4)/2) mod 5 = 1
+  proof
+    let a,b be odd Nat such that
+    A1: a,b are_coprime;
+    reconsider n = (a|^4 + b|^4)/2 as Nat;
+    A2: (a|^4 + b|^4) mod 5 = (2*n) mod (4+1)
+    .= ((2 mod (2+3))*(n mod 5)) mod 5 by NAT_D:67
+    .= (2*(n mod 5)) mod 5;
+    n mod (4+1) = 0 or ... or n mod (4+1) = 4 by NUMBER03:11; then
+    per cases;
+    suppose
+      n mod (4+1) = 0;
+      hence thesis by A1,A2,MO5;
+    end;
+    suppose
+      n mod (4+1) = 1;
+      hence thesis;
+    end;
+    suppose
+      n mod (4+1)= 2;
+      hence thesis by A1,A2,MO5;
+    end;
+    suppose
+      n mod (4+1) = 3;
+      hence thesis;
+    end;
+    suppose
+      n mod (4+1) = 4; then
+      (a|^4 + b|^4) mod 5 = (1*5 + 3) mod 5 by A2
+      .= 3 mod (3 + 2) by NAT_D:21
+      .= 3;
+      hence thesis by A1,MO5;
+    end;
+  end;
+
+theorem :: MOD5:
+  for a,b be Nat st a,b are_coprime holds (a|^4 - b|^4) mod 5 is square
+  proof
+    let a,b be Nat such that
+    A1: a,b are_coprime;
+    A3: not 5 divides a or not 5 divides b by A1,PEPIN:59,PYTHTRIP:def 2;
+    (a|^(5 -1) mod 5 = 0 or a|^(5-1) mod 5 = 1) &
+    (b|^(5-1) mod 5 = 0 or b|^(5-1) mod 5 = 1) by PEPIN:59,MOP; then
+    per cases;
+    suppose
+      a|^4 mod 5 = 0 & b|^4 mod 5 = 0; then
+      B1: 5 divides a|^4 & 5 divides b|^4 by INT_1:62;
+      a|^4 divides a|^(4 + 1) & b|^4 divides b|^(4 + 1) by NEWTON:89; then
+      5 divides a|^5 & 5 divides b|^5 by B1,INT_2:9;
+      hence thesis by A3,PEPIN:59,NEWTON02:160;
+    end;
+    suppose
+      B1: a|^4 mod 5 = 0 & b|^4 mod 5 = 1; then
+      (-b|^4) mod 5 = (1*5 - (1 mod (1+4))) mod (4+1) by NEWTON02:86
+      .= 4; then
+      (a|^4 + (-b|^4)) mod 5 = (0 + 4) mod (4 + 1) by B1,NAT_D:66
+      .= 2*2;
+      hence thesis;
+    end;
+    suppose
+      B1: a|^4 mod 5 = 1 & b|^4 mod 5 = 0; then
+      (-b|^4) mod 5 = (1*5 - (0 mod 5)) mod 5 by NEWTON02:86
+      .= 0; then
+      (a|^4 + (-b|^4)) mod 5 = (1 + 0) mod (1 + 4) by B1,NAT_D:66
+      .= 1*1;
+      hence thesis;
+    end;
+    suppose
+      B1: a|^4 mod 5 = 1 & b|^4 mod 5 = 1; then
+      (-b|^4) mod 5 = (1*5 - (1 mod (1+4))) mod (4+1) by NEWTON02:86
+      .= 4; then
+      (a|^4 + (-b|^4)) mod 5 = (1 + 4) mod 5 by B1,NAT_D:66;
+      hence thesis;
+    end;
+  end;
+
+theorem GRCY330:
+  for a,b be Integer, n be Nat holds a|^n mod b = (a mod b)|^n mod b
+  proof
+    let a,b be Integer, n be Nat;
+    a mod b = (a mod b) mod b;
+    hence thesis by INT_5:13;
+  end;
+
+theorem
+  for a be Integer, b be non zero Integer holds a|^2 mod b = (b-a)|^2 mod b
+  proof
+    let a be Integer, b be non zero Integer;
+    reconsider x = -a as Integer;
+    (b - a)|^2 mod b = ((x + 1*b) mod b)|^2 mod b by GRCY330
+    .= (x mod b)|^2 mod b by NAT_D:61
+    .= ((-a)|^(2*1)) mod b by GRCY330
+    .= a|^2 mod b by POWER:1;
+    hence thesis;
+  end;
+
+theorem
+  for a,b be Integer, c be odd Integer holds
+    (a + b) mod c = (a - b) mod c implies c divides b
+  proof
+    let a,b be Integer, c be odd Integer;
+    A1: 2|^1,c are_coprime by NEWTON03:def 5;
+    assume (a + b) mod c = (a - b) mod c; then
+    0 mod c = (((a + b) mod c) - ((a - b) mod c)) mod c
+    .= ((a + b) - (a - b)) mod c by INT_6:7
+    .= (2*b) mod c;
+    hence thesis by A1,INT_2:25,INT162;
+  end;
+
+theorem
+  for k be Integer holds
+    (ex a,b be Integer st a|^2 - b|^2 = k) iff k mod 4 <> 2
+  proof
+    let k be Integer;
+    L1: (ex a,b be Integer st a|^2 - b|^2 = k) implies k mod 4 <> 2
+    proof
+      assume ex a,b be Integer st a|^2 - b|^2 = k; then
+      consider a,b be Integer such that
+      A1: a|^2 - b|^2 = k;
+      A2: (a - b)*(a + b) = k by A1,NEWTON01:1;
+      parity (a - b) = parity (a + b) by NEWTON05:53; then
+      (a - b is odd & a + b is odd) or (a - b is even & a + b is even); then
+      k is odd or 2*2 divides k by A2,NEWTON02:2; then
+      k mod 2*2 is odd or k mod 2*2 = 0 by INT_1:62;
+      hence thesis;
+    end;
+    k mod 4 <> 2 implies (ex a,b be Integer st a|^2 - b|^2 = k)
+    proof
+      assume
+      A1: k mod 4 <> 2;
+      k mod (3+1) = 0 or ... or k mod (3+1) = 3 by NUMBER03:11; then
+      per cases by A1;
+      suppose k mod 4 = 0; then
+        4 divides k by INT_1:62; then
+        reconsider m = k/4 as Integer;
+        (m+1)|^2 - (m - 1)|^2 = ((m + 1)+(m-1))*((m+1)-(m-1)) by NEWTON01:1
+        .= 4*m;
+        hence thesis;
+      end;
+      suppose k mod 4 = 1 or k mod 4 = 3; then
+        k mod (2*2) = 2*0 + 1 or k mod (2*2) = 2*1 + 1; then
+        k is odd; then
+        reconsider m = (k-1)/2 as Integer;
+        (m + 1)|^2 - m|^2 = (m+1+m)*(m+1 - m) by NEWTON01:1
+        .= 2*m + 1;
+        hence thesis;
+      end;
+    end;
+    hence thesis by L1;
+  end;

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<Definientia>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="RELAT_1"/>
+<ArticleID name="XBOOLE_0"/>
+<ArticleID name="ZFMISC_1"/>
+<ArticleID name="SUBSET_1"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="ORDINAL1"/>
+<ArticleID name="XCMPLX_0"/>
+<ArticleID name="NUMBERS"/>
+<ArticleID name="XREAL_0"/>
+<ArticleID name="COMPLEX1"/>
+<ArticleID name="INT_1"/>
+<ArticleID name="INT_2"/>
+<ArticleID name="XTUPLE_0"/>
+<ArticleID name="FUNCT_1"/>
+<ArticleID name="PARTFUN1"/>
+<ArticleID name="MCART_1"/>
+<ArticleID name="FUNCT_2"/>
+<ArticleID name="XXREAL_0"/>
+<ArticleID name="BINOP_1"/>
+<ArticleID name="NAT_1"/>
+<ArticleID name="NUMBER12"/>
+</Signature>
+<Definiens constrkind="K" constrnr="141" aid="NUMBER12" defnr="1">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="15"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="15"/>
+</Cluster>
+</Typ>
+<Essentials>
+<Int x="1"/>
+<Int x="2"/>
+</Essentials>
+<DefMeaning kind="e">
+<Func kind="K" nr="46">
+<Func kind="K" nr="42">
+<Func kind="K" nr="42">
+<LocusVar nr="1"/>
+<Func kind="K" nr="131">
+<LocusVar nr="1"/>
+<Num nr="1"/>
+</Func>
+</Func>
+<Func kind="K" nr="131">
+<LocusVar nr="1"/>
+<Num nr="2"/>
+</Func>
+</Func>
+<Num nr="6"/>
+</Func>
+</DefMeaning>
+</Definiens>
+<Definiens constrkind="V" constrnr="42" aid="NUMBER12" defnr="2">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="15"/>
+</Cluster>
+</Typ>
+<Essentials>
+<Int x="1"/>
+</Essentials>
+<DefMeaning kind="m">
+<Not>
+<For>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="15"/>
+</Cluster>
+</Typ>
+<Not>
+<Pred kind="R" nr="1">
+<LocusVar nr="1"/>
+<Func kind="K" nr="141">
+<Var nr="1"/>
+</Func>
+</Pred>
+</Not>
+</For>
+</Not>
+</DefMeaning>
+</Definiens>
+<Definiens constrkind="K" constrnr="142" aid="NUMBER12" defnr="3">
+<Typ kind="M" nr="1">
+<Cluster>
+<Adjective nr="21"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster/>
+<Func kind="K" nr="16">
+<Func kind="K" nr="37"/>
+</Func>
+</Typ>
+<Essentials>
+<Int x="1"/>
+<Int x="2"/>
+</Essentials>
+<DefMeaning kind="e">
+<Fraenkel>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="15"/>
+<Adjective nr="23"/>
+</Cluster>
+</Typ>
+<Var nr="1"/>
+<Pred kind="R" nr="17">
+<Var nr="1"/>
+<LocusVar nr="1"/>
+</Pred>
+</Fraenkel>
+</DefMeaning>
+</Definiens>
+</Definientia>

@@ -1,0 +1,2590 @@
+:: Surreal Numbers: A Study of Square Roots
+::  by Karol P\kak
+:: 
+:: Received April 10, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MCART_1, FACIRC_1, RELAT_1, TARSKI, XBOOLE_0, SUBSET_1, XXREAL_0,
+      ARYTM_3, FUNCT_1, CARD_1, ORDINAL1, PBOOLE, CARD_3, ARROW, VECTSP_1,
+      NUMBERS, NAT_1, ARYTM_1, GLIB_000, WAYBEL_3, COHSP_1, PETRI_DF, SURREAL0,
+      SURREALR, SURREALS, SQUARE_1, MEMBER_1, FUNCOP_1;
+ notations TARSKI, XBOOLE_0, XTUPLE_0, SUBSET_1, RELAT_1, FUNCT_1, PBOOLE,
+      ORDINAL1, CARD_3, NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, COHSP_1, SURREAL0,
+      SURREALO, SURREALR, SURREALI;
+ constructors RELSET_1, NEWTON, NAT_1, CARD_3, COHSP_1, SURREALO, SURREALR,
+      SURREALI, PBOOLE;
+ registrations XBOOLE_0, RELAT_1, XTUPLE_0, ORDINAL1, FUNCT_1, NAT_1, XREAL_0,
+      SURREAL0, SURREALR, SURREALI, SUBSET_1, FUNCOP_1;
+ requirements BOOLE, SUBSET, NUMERALS, ARITHM, REAL;
+ definitions TARSKI, XBOOLE_0, SURREAL0;
+ equalities SURREAL0, SURREALO, SURREALR;
+ expansions SURREAL0, SURREALO, SURREALI;
+ theorems TARSKI, ZFMISC_1, FUNCT_1, XBOOLE_0, XBOOLE_1, XTUPLE_0, NAT_1,
+      ORDINAL1, PARTFUN1, CARD_5, ABCMIZ_1, SURREAL0, SURREALO, SURREALR,
+      SURREALI, ENUMSET1;
+ schemes NAT_1, ORDINAL1, FUNCT_1, SURREALR;
+
+begin :: Surreal Numbers Without Negative Options
+
+ reserve n,m for Nat,
+      o for object,
+      p for pair object,
+      x,y,z for Surreal;
+
+definition
+   let x be object;
+   func NonNegativePart x -> pair set means :Def1:
+        (o in L_it iff ex l be Surreal st o= l & l in L_x & 0_No <= l) &
+        (o in R_it iff ex r be Surreal st o= r & r in R_x & 0_No <= r);
+   existence
+   proof
+     set L = {l where l is Element of L_x: l in L_x & l is surreal &
+              for ll be Surreal st ll=l holds 0_No <= ll};
+     set R = {r where r is Element of R_x: r in R_x & r is surreal &
+              for rr be Surreal st rr=r holds 0_No <= rr};
+     reconsider IT=[L,R] as pair set by TARSKI:1;
+     take IT;
+     let o;
+     thus o in L_IT implies ex l be Surreal st o = l & l in L_x & 0_No <=l
+     proof
+       assume o in L_IT;
+       then consider l be Element of L_x such that
+A1:    o = l & l in L_x & l is surreal & for ll be Surreal st ll=l
+       holds 0_No <= ll;
+       reconsider l as Surreal by A1;
+       take l;
+       thus thesis by A1;
+     end;
+     thus (ex l be Surreal st o = l & l in L_x & 0_No <= l) implies o in L_IT
+     proof
+       given l be Surreal such that
+A2:    o = l & l in L_x & 0_No <= l;
+       for ll be Surreal st ll=l holds 0_No <= ll by A2;
+       hence thesis by A2;
+     end;
+     thus o in R_IT implies ex r be Surreal st o = r & r in R_x & 0_No <= r
+     proof
+       assume o in R_IT;
+       then consider r be Element of R_x such that
+A3:    o = r & r in R_x & r is surreal &
+       for rr be Surreal st rr=r holds 0_No <= rr;
+       reconsider r as Surreal by A3;
+       take r;
+       thus thesis by A3;
+     end;
+     given r be Surreal such that
+A4:  o = r & r in R_x & 0_No <= r;
+     for rr be Surreal st rr=r holds 0_No <= rr by A4;
+     hence thesis by A4;
+   end;
+   uniqueness
+   proof
+     let s1,s2 be pair set such that
+A5:  (o in L_s1 iff ex l be Surreal st o = l & l in L_x & 0_No<=l) &
+        (o in R_s1 iff ex r be Surreal st o = r & r in R_x & 0_No<=r) and
+A6:  (o in L_s2 iff ex l be Surreal st o = l & l in L_x & 0_No<=l) &
+        (o in R_s2 iff ex r be Surreal st o = r & r in R_x & 0_No<=r);
+     now let o;
+       o in R_s1 iff ex r be Surreal st o = r & r in R_x & 0_No<=r by A5;
+       hence o in R_s1 iff o in R_s2 by A6;
+     end;
+     then
+A7:  R_s1 = R_s2 by TARSKI:2;
+     now let o;
+       o in L_s1 iff ex l be Surreal st o = l & l in L_x & 0_No<=l by A5;
+       hence o in L_s1 iff o in L_s2 by A6;
+     end;
+     then L_s1 = L_s2 by TARSKI:2;
+     hence thesis by A7,XTUPLE_0:2;
+   end;
+end;
+
+registration
+  let x be object;
+  cluster L_NonNegativePart x -> surreal-membered for set;
+  coherence
+  proof
+    now let o;
+      assume o in L_NonNegativePart x;
+      then ex l be Surreal st o= l & l in L_x & 0_No <= l by Def1;
+      hence o is surreal;
+    end;
+    hence thesis;
+  end;
+  cluster R_NonNegativePart x -> surreal-membered for set;
+  coherence
+  proof
+    now let o;
+      assume o in R_NonNegativePart x;
+      then ex r be Surreal st o= r & r in R_x & 0_No <= r by Def1;
+      hence o is surreal;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem Th1:
+  L_NonNegativePart o c= L_o & R_NonNegativePart o c= R_o
+proof
+  thus L_NonNegativePart o c= L_o
+  proof
+    let a be object;
+    assume a in L_NonNegativePart o;
+    then ex l be Surreal st a= l & l in L_o & 0_No <= l by Def1;
+    hence thesis;
+  end;
+  let a be object;
+  assume a in R_NonNegativePart o;
+  then ex r be Surreal st a= r & r in R_o & 0_No <= r by Def1;
+  hence thesis;
+end;
+
+registration
+  let x be Surreal;
+  cluster NonNegativePart x -> surreal;
+  coherence
+  proof
+    set NN = NonNegativePart x;
+    consider M be Ordinal such that
+A1: for o st o in L_NN \/ R_NN
+      ex A be Ordinal st A in M & o in Day A by SURREAL0:47;
+    L_NN << R_NN
+    proof
+      let l,r be Surreal such that
+A2:   l in L_NN & r in R_NN;
+A3:   L_NN c= L_x & R_NN c= R_x by Th1;
+      L_x << R_x by SURREAL0:45;
+      hence thesis by A3,A2;
+    end;
+    then [L_NN,R_NN] in Day M by A1,SURREAL0:46;
+    hence thesis;
+  end;
+end;
+
+theorem Th2:
+  (x in L_NonNegativePart o iff x in L_o & 0_No <= x) &
+  (x in R_NonNegativePart o iff x in R_o & 0_No <= x)
+proof
+A1: x in L_NonNegativePart o implies x in L_o & 0_No <= x
+  proof
+    assume x in L_NonNegativePart o;
+    then ex l be Surreal st x= l & l in L_o & 0_No <= l by Def1;
+    hence thesis;
+  end;
+  x in R_NonNegativePart o implies x in R_o & 0_No <= x
+  proof
+    assume x in R_NonNegativePart o;
+    then ex l be Surreal st x= l & l in R_o & 0_No <= l by Def1;
+    hence thesis;
+  end;
+  hence thesis by A1,Def1;
+end;
+
+theorem Th3:
+  born NonNegativePart x c= born x
+proof
+  set NN = NonNegativePart x;
+  for o be object st o in L_NN \/ R_NN
+    ex O be Ordinal st O in born x & o in Day O
+  proof
+    let o be object such that
+A1: o in L_NN \/ R_NN;
+    reconsider o as Surreal by A1,SURREAL0:def 16;
+    o in L_NN c= L_x or o in R_NN c= R_x by A1,Th1,XBOOLE_0:def 3;
+    then o in L_x\/R_x by XBOOLE_0:def 3;
+    then born o in born x & o in Day born o
+    by SURREALO:1,SURREAL0:def 18;
+    hence thesis;
+  end;
+  then [L_NN,R_NN] in Day born x by SURREAL0:45,SURREAL0:46;
+  hence thesis by SURREAL0:def 18;
+end;
+
+theorem Th4:
+  0_No <= x implies 0_No <= NonNegativePart x
+proof
+  set NN=NonNegativePart x;
+  assume
+A1: 0_No <= x;
+A2: L_0_No << {NN};
+  {0_No} << R_NN
+  proof
+    let l,r be Surreal such that
+A3: l in {0_No} & r in R_NN;
+    consider R be Surreal such that
+A4: R=r & R in R_x & 0_No <= R by A3,Def1;
+    x in {x} << R_x by TARSKI:def 1,SURREALO:11;
+    then 0_No < R by A4,A1,SURREALO:4;
+    hence l < r by A3,A4,TARSKI:def 1;
+  end;
+  hence thesis by A2,SURREAL0:43;
+end;
+
+theorem
+  0_No <= x implies NonNegativePart x == x
+proof
+  set NN = NonNegativePart x;
+  assume
+A1: 0_No <= x;
+  then
+A2: 0_No <= NN by Th4;
+A3: L_NN << {x}
+  proof
+    let l,r be Surreal such that
+A4: l in L_NN & r in {x};
+    L_NN c= L_x << {x} by Th1,SURREALO:11;
+    hence thesis by A4;
+  end;
+A5: {NN} << R_x
+  proof
+    let l,r be Surreal such that
+A6: l in {NN} & r in R_x;
+    x in {x} << R_x by TARSKI:def 1,SURREALO:11;
+    then 0_No <= r by A6,A1,SURREALO:4;
+    then
+A7: r in R_NN by A6,Def1;
+    assume r <= l;
+    then r <= NN by A6,TARSKI:def 1;
+    then r in {r} << R_NN by TARSKI:def 1,SURREAL0:43;
+    hence thesis by A7,SURREALO:3;
+  end;
+A8: L_x << {NN}
+  proof
+    let l,r be Surreal such that
+A9: l in L_x & r in {NN};
+    assume
+A10:r <= l;
+    then NN <= l by A9,TARSKI:def 1;
+    then 0_No <= l by A2,SURREALO:4;
+    then
+A11:l in L_NN by A9,Def1;
+    L_NN << {NN} by SURREALO:11;
+    hence thesis by A10,A9,A11;
+  end;
+  {x} << R_NN
+  proof
+    let l,r be Surreal such that
+A12: l in {x} & r in R_NN;
+    R_NN c= R_x & {x} << R_x by Th1,SURREALO:11;
+    hence thesis by A12;
+  end;
+  hence thesis by A5,A8, A3,SURREAL0:43;
+end;
+
+begin :: Square Root Construction
+
+definition
+  let lamb be object;
+  let X,Y be set;
+  func sqrt(lamb,X,Y) -> surreal-membered set means :Def2:
+    o in it iff ex x,y st x in X & y in Y &
+      not x + y == 0_No & o = (lamb +'(x * y)) * (x+y)";
+  existence
+  proof
+    defpred P[object,object] means
+      $1 is Surreal & $2 is Surreal & $1 in X & $2 in Y & not $1+'$2==0_No;
+    set S = {(lamb +'(x1 *' y1)) * (x1+'y1)"
+      where x1 is Element of X,y1 is Element of Y:P[x1,y1]};
+    S is surreal-membered
+    proof
+      let o;
+      assume o in S;
+      then ex x1 be Element of X,y1 be Element of Y st
+      o= (lamb +'(x1 *' y1)) * (x1+'y1)" &P[x1,y1];
+      hence thesis;
+    end;
+    then reconsider S as surreal-membered set;
+    take S;
+    let o;
+    thus o in S implies ex x1,y1 be Surreal st x1 in X & y1 in Y &
+      not x1 + y1 == 0_No & o = (lamb +'(x1 * y1)) * (x1+y1)"
+    proof
+      assume o in S;
+      then consider x1 be Element of X,y1 be Element of Y such that
+A1:   o= (lamb +'(x1 *' y1)) * (x1+'y1)" &P[x1,y1];
+      reconsider x1,y1 as Surreal by A1;
+      take x1,y1;
+      thus thesis by A1;
+    end;
+    thus thesis;
+  end;
+  uniqueness
+  proof
+    let D1,D2 be surreal-membered set such that
+A2: o in D1 iff ex x1,y1 be Surreal st x1 in X & y1 in Y &
+      not x1 + y1 == 0_No & o = (lamb +'(x1 * y1)) * (x1+y1)" and
+A3: o in D2 iff ex x1,y1 be Surreal st x1 in X & y1 in Y &
+    not x1 + y1 == 0_No & o = (lamb +'(x1 * y1)) * (x1+y1)";
+    now let o;
+      o in D1 iff ex x1,y1 be Surreal st x1 in X & y1 in Y &
+      not x1 + y1 == 0_No & o = (lamb +'(x1 * y1)) * (x1+y1)" by A2;
+      hence o in D1 iff o in D2 by A3;
+    end;
+    hence thesis by TARSKI:2;
+  end;
+end;
+
+definition
+  let x0 be pair object;
+  let x be object;
+  func transitions_of(x0,x) -> Function means :Def3:
+    dom it = NAT & it.0 = x0 &
+      for n holds it.n is pair &
+         (it.(n+1))`1 = L_(it.n) \/ sqrt(x,L_(it.n),R_(it.n)) &
+         (it.(n+1))`2 = R_(it.n) \/ sqrt(x,L_(it.n),L_(it.n)) \/
+             sqrt(x,R_(it.n),R_(it.n));
+  existence
+  proof
+    deffunc G(object,object)= [L_$2 \/ sqrt(x,L_$2,R_$2),
+      R_$2 \/ sqrt(x,L_$2,L_$2) \/ sqrt(x,R_$2,R_$2)];
+    consider f be Function such that
+A1: dom f = NAT & f.0 = x0 & for n holds f.(n+1) = G(n,f.n)
+      from NAT_1:sch 11;
+    take f;
+    thus dom f = omega & f.0 = x0 by A1;
+    let k be Nat;
+    thus f.k is pair
+    proof
+      per cases;
+      suppose k=0;
+        hence thesis by A1;
+      end;
+      suppose k>0;
+        then reconsider k1=k-1 as Nat by NAT_1:20;
+        f.(k1+1) = G(k1,f.k1) by A1;
+        hence thesis;
+      end;
+    end;
+    f.(k+1) = G(k,f.k) by A1;
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    let T1,T2 be Function such that
+A2: dom T1 = omega & T1.0 = x0 and
+A3: for k being Nat holds T1.k is pair &
+      (T1.(k+1))`1 = L_(T1.k) \/ sqrt(x,L_(T1.k),R_(T1.k)) &
+      (T1.(k+1))`2 = R_(T1.k) \/ sqrt(x,L_(T1.k),L_(T1.k)) \/
+      sqrt(x,R_(T1.k),R_(T1.k))
+    and
+A4: dom T2 = omega & T2.0 = x0 and
+A5: for k being Nat holds T2.k is pair &
+      (T2.(k+1))`1 = L_(T2.k) \/ sqrt(x,L_(T2.k),R_(T2.k)) &
+      (T2.(k+1))`2 = R_(T2.k) \/ sqrt(x,L_(T2.k),L_(T2.k)) \/
+      sqrt(x,R_(T2.k),R_(T2.k));
+    defpred P[Nat] means T1.$1 = T2.$1;
+A6: P[0] by A2,A4;
+A7: for n be Nat st P[n] holds P[n+1]
+    proof
+      let n be Nat such that
+A8:   P[n];
+A9:   T1.(n+1) is pair & T2.(n+1) is pair by A3,A5;
+      R_(T1.(n+1)) = R_(T1.n) \/ sqrt(x,L_(T1.n),L_(T1.n)) \/
+       sqrt(x,R_(T1.n),R_(T1.n)) by A3;
+      then A10:(T1.(n+1))`2 = R_(T2.(n+1)) by A5,A8;
+      L_(T1.(n+1)) = L_(T1.n) \/ sqrt(x,L_(T1.n),R_(T1.n)) by A3;
+      then (T1.(n+1))`1 = (T2.(n+1))`1 by A5,A8;
+      hence thesis by A9,A10,XTUPLE_0:2;
+    end;
+    for n be Nat holds P[n] from NAT_1:sch 2(A6,A7);
+    then for o st o in dom T1 holds T1.o=T2.o by A2;
+    hence thesis by A2,A4,FUNCT_1:2;
+  end;
+end;
+
+definition
+  let x0 be pair object;
+  let x be object;
+  func sqrtL(x0,x) -> Function means :Def4:
+    dom it = NAT &
+    for k being Nat holds it.k = ((transitions_of (x0,x)).k)`1;
+  existence
+  proof
+    deffunc F(object) = ((transitions_of (x0,x)).$1)`1;
+    consider f be Function such that
+    A1: dom f = NAT and
+    A2: for x be object st x in NAT holds f.x = F(x) from FUNCT_1:sch 3;
+    take f;
+    thus thesis by A1,A2,ORDINAL1:def 12;
+  end;
+  uniqueness
+  proof
+    let D1,D2 be Function such that
+    A3: dom D1 = NAT &
+       for k being Nat holds D1.k = ((transitions_of (x0,x)).k)`1 and
+    A4: dom D2 = NAT &
+       for k being Nat holds D2.k = ((transitions_of (x0,x)).k)`1;
+    for o st o in dom D1 holds D1.o=D2.o
+    proof
+      let o;
+      assume o in dom D1;
+      then reconsider a=o as Nat by A3;
+      thus D1.o = ((transitions_of (x0,x)).a)`1 by A3
+      .= D2.o by A4;
+    end;
+    hence thesis by A3,A4,FUNCT_1:2;
+  end;
+end;
+
+definition
+  let x0 be pair object;
+  let x be object;
+  func sqrtR(x0,x) -> Function means :Def5:
+    dom it = NAT &
+    for k being Nat holds it.k = ((transitions_of (x0,x)).k)`2;
+  existence
+  proof
+    deffunc F(object) = ((transitions_of (x0,x)).$1)`2;
+    consider f be Function such that
+A1: dom f = NAT and
+A2: for x be object st x in NAT holds f.x = F(x) from FUNCT_1:sch 3;
+    take f;
+    thus thesis by A1,A2,ORDINAL1:def 12;
+  end;
+  uniqueness
+  proof
+    let D1,D2 be Function such that
+A3: dom D1 = NAT &
+       for k being Nat holds D1.k = ((transitions_of (x0,x)).k)`2 and
+A4: dom D2 = NAT &
+       for k being Nat holds D2.k = ((transitions_of (x0,x)).k)`2;
+    for o st o in dom D1 holds D1.o=D2.o
+    proof
+      let o;
+      assume o in dom D1;
+      then reconsider a=o as Nat by A3;
+      thus  D1.o = ((transitions_of (x0,x)).a)`2 by A3
+      .= D2.o by A4;
+    end;
+    hence thesis by A3,A4,FUNCT_1:2;
+  end;
+end;
+
+theorem Th6:
+  sqrtL(p,o).0 = L_p & sqrtR(p,o).0=R_p
+proof
+  sqrtL(p,o).0 = L_((transitions_of(p,o)).0) &
+  (sqrtR(p,o)).0 = R_((transitions_of(p,o)).0) by Def4,Def5;
+  hence thesis by Def3;
+end;
+
+theorem Th7:
+  n <= m implies
+     sqrtL(p,o).n c= sqrtL(p,o).m &
+     sqrtR(p,o).n c= sqrtR(p,o).m
+proof
+  defpred P[Nat] means sqrtL(p,o).n c= sqrtL(p,o).(n+$1) &
+     sqrtR(p,o).n c= sqrtR(p,o).(n+$1);
+A1:P[0];
+A2:for k be Nat st P[k] holds P[k+1]
+  proof
+    set T=transitions_of(p,o);
+    let k be Nat such that
+A3: P[k];
+    set nk=n+k;
+A4: sqrtL(p,o).(nk+1) = (T.(nk+1))`1 &
+    sqrtR(p,o).(nk+1) = (T.(nk+1))`2 by Def4,Def5;
+A5: sqrtL (p,o).nk = L_(T.nk) & sqrtR(p,o).nk = R_(T.nk) by Def4,Def5;
+    (T.(nk+1))`1 = L_(T.nk) \/ sqrt(o,L_(T.nk),R_(T.nk)) &
+    (T.(nk+1))`2 = R_(T.nk) \/ sqrt(o,L_(T.nk),L_(T.nk)) \/
+    sqrt(o,R_(T.nk),R_(T.nk)) by Def3;
+    then (T.(nk+1))`1 = L_(T.nk) \/ sqrt(o,L_(T.nk),R_(T.nk)) &
+    (T.(nk+1))`2 = R_(T.nk) \/ (sqrt(o,L_(T.nk),L_(T.nk)) \/
+    sqrt(o,R_(T.nk),R_(T.nk))) by XBOOLE_1:4;
+    then L_(T.nk) c= L_(T.(nk+1)) & R_(T.nk) c= R_(T.(nk+1)) by XBOOLE_1:7;
+    hence thesis by A4,A5,A3,XBOOLE_1:1;
+  end;
+A6:for k be Nat holds P[k] from NAT_1:sch 2(A1,A2);
+  assume n<=m;
+  then reconsider mn=m-n as Nat by NAT_1:21;
+  m=n+mn;
+  hence thesis by A6;
+end;
+
+theorem Th8:
+  sqrtL(p,o).(n+1) = sqrtL(p,o).n \/ sqrt(o,sqrtL(p,o).n,sqrtR(p,o).n)
+  & sqrtR(p,o).(n+1) = sqrtR(p,o).n \/
+     sqrt(o,sqrtL(p,o).n,sqrtL(p,o).n) \/
+     sqrt(o,sqrtR(p,o).n,sqrtR(p,o).n)
+proof
+  set T=transitions_of(p,o);
+A1: sqrtL(p,o).(n+1) = (T.(n+1))`1 & sqrtR(p,o).(n+1) = (T.(n+1))`2
+    by Def4,Def5;
+  sqrtL(p,o).n = (T.n)`1 & sqrtR(p,o).n = (T.n)`2 by Def4,Def5;
+  hence thesis by Def3,A1;
+end;
+
+theorem Th9:
+  L_p is surreal-membered & R_p is surreal-membered implies
+    sqrtL(p,o).n is surreal-membered & sqrtR(p,o).n is surreal-membered
+proof
+  assume
+A1: L_p is surreal-membered & R_p is surreal-membered;
+  defpred P[Nat] means
+  sqrtL(p,o).$1 is surreal-membered & sqrtR(p,o).$1 is surreal-membered;
+A2:P[0] by A1,Th6;
+A3:for n st P[n] holds P[n+1]
+  proof
+    let n such that
+A4: P[n];
+    sqrtL(p,o).(n+1) = sqrtL(p,o).n \/ sqrt(o,sqrtL(p,o).n,sqrtR(p,o).n)
+    & sqrtR(p,o).(n+1) = sqrtR(p,o).n \/
+    sqrt(o,sqrtL(p,o).n,sqrtL(p,o).n) \/ sqrt(o,sqrtR(p,o).n,sqrtR(p,o).n)
+    by Th8;
+    hence thesis by A4;
+  end;
+  for n holds P[n] from NAT_1:sch 2(A2,A3);
+  hence thesis;
+end;
+
+theorem Th10:
+  L_p is surreal-membered & R_p is surreal-membered implies
+    Union sqrtL(p,o) is surreal-membered & Union sqrtR(p,o) is surreal-membered
+proof
+  assume
+A1:L_p is surreal-membered & R_p is surreal-membered;
+  thus Union sqrtL(p,o) is surreal-membered
+  proof
+    let a be object;
+    assume a in Union sqrtL(p,o);
+    then consider n be object such that
+A2: n in dom sqrtL(p,o) & a in sqrtL(p,o).n by CARD_5:2;
+    dom sqrtL(p,o) = NAT by Def4;
+    then reconsider n as Nat by A2;
+    sqrtL(p,o).n is surreal-membered by A1,Th9;
+    hence thesis by A2;
+  end;
+  let a be object;
+  assume a in Union sqrtR(p,o);
+  then consider n be object such that
+A3: n in dom sqrtR(p,o) & a in sqrtR(p,o).n by CARD_5:2;
+  dom sqrtR(p,o)=NAT by Def5;
+  then reconsider n as Nat by A3;
+  sqrtR(p,o).n is surreal-membered by A1,Th9;
+  hence thesis by A3;
+end;
+
+theorem Th11:
+  for X1,X2,Y1,Y2 be set st X1 c= X2 & Y1 c= Y2 holds
+    sqrt(o,X1,Y1) c= sqrt(o,X2,Y2)
+proof
+  let X1,X2,Y1,Y2 be set such that A1:X1 c= X2 & Y1 c= Y2;
+  let a be object;
+  assume a in sqrt(o,X1,Y1);
+  then ex x1,y1 be Surreal st x1 in X1 & y1 in Y1 & not x1 + y1 == 0_No &
+  a = (o +'(x1 * y1)) * (x1+y1)" by Def2;
+  hence thesis by A1,Def2;
+end;
+
+theorem
+  Union sqrtL(p,o) = L_p\/sqrt(o,Union sqrtL(p,o),Union sqrtR(p,o))
+proof
+  defpred P[Nat] means
+  sqrtL(p,o).$1 c= (L_p)\/sqrt(o,Union sqrtL(p,o),Union sqrtR(p,o));
+  sqrtL(p,o).0 = L_p by Th6;
+  then
+A1: P[0] by XBOOLE_1:7;
+A2: P[n] implies P[n+1]
+  proof
+    assume
+A3: P[n];
+    let a be object;
+    assume
+A4: a in sqrtL(p,o).(n+1);
+    sqrtL(p,o).(n+1) = sqrtL(p,o).n \/ sqrt(o,sqrtL(p,o).n,sqrtR(p,o).n)
+    by Th8;
+    then per cases by XBOOLE_0:def 3,A4;
+    suppose a in sqrtL(p,o).n;
+      hence thesis by A3;
+    end;
+    suppose
+A5:   a in sqrt(o,sqrtL(p,o).n,sqrtR(p,o).n);
+      sqrtL(p,o).n c= Union sqrtL(p,o) & sqrtR(p,o).n c= Union sqrtR(p,o)
+      by ABCMIZ_1:1;
+      then sqrt(o,sqrtL(p,o).n,sqrtR(p,o).n) c=
+        sqrt(o,Union sqrtL(p,o),Union sqrtR(p,o)) by Th11;
+      hence thesis by A5,XBOOLE_0:def 3;
+    end;
+  end;
+A6: P[n] from NAT_1:sch 2(A1,A2);
+  thus Union sqrtL(p,o)
+    c= (L_p)\/sqrt(o,Union sqrtL(p,o),Union sqrtR(p,o))
+  proof
+    let a be object;
+    assume a in Union sqrtL(p,o);
+    then consider n be object such that
+A7: n in dom sqrtL(p,o) & a in sqrtL(p,o).n by CARD_5:2;
+    n in NAT by A7,Def4;
+    then reconsider n as Nat;
+    sqrtL(p,o).n c= (L_p)\/sqrt(o,Union sqrtL(p,o),Union sqrtR(p,o)) by A6;
+    hence thesis by A7;
+  end;
+A8: sqrt(o,Union sqrtL(p,o),Union sqrtR(p,o)) c= Union sqrtL(p,o)
+  proof
+    let a be object;
+    assume a in sqrt(o,Union sqrtL(p,o),Union sqrtR(p,o));
+    then consider x1,y1 be Surreal such that
+A9: x1 in Union sqrtL(p,o) & y1 in Union sqrtR(p,o) &
+    not x1 + y1 == 0_No & a = (o +'(x1 * y1)) * (x1+y1)" by Def2;
+    consider n be object such that
+A10: n in dom sqrtL(p,o) & x1 in sqrtL(p,o).n by A9,CARD_5:2;
+    consider m be object such that
+A11: m in dom sqrtR(p,o) & y1 in sqrtR(p,o).m by A9,CARD_5:2;
+    n in NAT & m in NAT by A11,A10,Def4,Def5;
+    then reconsider n,m as Nat;
+    set nm=n+m;
+    m <= nm & n <= nm by NAT_1:11;
+    then sqrtL(p,o).n c= sqrtL(p,o).nm & sqrtR(p,o).m c= sqrtR(p,o).nm
+    by Th7;
+    then
+A12:a in sqrt(o,sqrtL(p,o).nm,sqrtR(p,o).nm) by A9,A10,A11,Def2;
+    sqrtL(p,o).(nm+1) = sqrtL(p,o).nm \/ sqrt(o,sqrtL(p,o).nm,sqrtR(p,o).nm)
+    by Th8;
+    then
+A13:a in sqrtL(p,o).(nm+1) by A12,XBOOLE_0:def 3;
+    nm+1 in NAT;
+    then nm+1 in dom sqrtL(p,o) by Def4;
+    hence thesis by A13,CARD_5:2;
+  end;
+  L_p = sqrtL(p,o).0 by Th6;
+  then L_p c= Union sqrtL(p,o) by ABCMIZ_1:1;
+  hence thesis by A8,XBOOLE_1:8;
+end;
+
+theorem
+  Union sqrtR(p,o)
+    = R_p \/ sqrt(o,Union sqrtL(p,o),Union sqrtL(p,o)) \/
+       sqrt(o,Union sqrtR(p,o),Union sqrtR(p,o))
+proof
+  defpred P[Nat] means
+  sqrtR(p,o).$1 c= (R_p)\/sqrt(o,Union sqrtL(p,o),Union sqrtL(p,o))\/
+       sqrt(o,Union sqrtR(p,o),Union sqrtR(p,o));
+  sqrtR(p,o).0 = R_p by Th6;
+  then
+A1: P[0] by XBOOLE_1:7,10;
+A2: P[n] implies P[n+1]
+  proof
+    assume
+A3: P[n];
+    let a be object;
+    assume
+A4: a in sqrtR(p,o).(n+1);
+    sqrtR(p,o).(n+1) = sqrtR(p,o).n \/ sqrt(o,sqrtL(p,o).n,sqrtL(p,o).n)\/
+      sqrt(o,sqrtR(p,o).n,sqrtR(p,o).n) by Th8;
+    then a in sqrtR(p,o).n \/ sqrt(o,sqrtL(p,o).n,sqrtL(p,o).n) or a in
+    sqrt(o,sqrtR(p,o).n,sqrtR(p,o).n) by XBOOLE_0:def 3,A4;
+    then per cases by XBOOLE_0:def 3;
+    suppose a in sqrtR(p,o).n;
+      hence thesis by A3;
+    end;
+    suppose
+A5:   a in sqrt(o,sqrtL(p,o).n,sqrtL(p,o).n);
+      sqrtL(p,o).n c= Union sqrtL(p,o) by ABCMIZ_1:1;
+      then sqrt(o,sqrtL(p,o).n,sqrtL(p,o).n) c=
+      sqrt(o,Union sqrtL(p,o),Union sqrtL(p,o)) by Th11;
+      then a in R_p\/sqrt(o,Union sqrtL(p,o),Union sqrtL(p,o))
+      by A5,XBOOLE_0:def 3;
+      hence thesis by XBOOLE_0:def 3;
+    end;
+    suppose
+A6:   a in sqrt(o,sqrtR(p,o).n,sqrtR(p,o).n);
+      sqrtR(p,o).n c= Union sqrtR(p,o) by ABCMIZ_1:1;
+      then sqrt(o,sqrtR(p,o).n,sqrtR(p,o).n) c=
+      sqrt(o,Union sqrtR(p,o),Union sqrtR(p,o)) by Th11;
+      hence thesis by A6,XBOOLE_0:def 3;
+    end;
+  end;
+A7: P[n] from NAT_1:sch 2(A1,A2);
+  thus Union sqrtR(p,o)
+    c= (R_p)\/sqrt(o,Union sqrtL(p,o),Union sqrtL(p,o))\/
+       sqrt(o,Union sqrtR(p,o),Union sqrtR(p,o))
+  proof
+    let a be object;
+    assume a in Union sqrtR(p,o);
+    then consider n be object such that
+A8: n in dom sqrtR(p,o) & a in sqrtR(p,o).n by CARD_5:2;
+    n in NAT by A8,Def5;
+    then reconsider n as Nat;
+    sqrtR(p,o).n c= (R_p)\/sqrt(o,Union sqrtL(p,o),Union sqrtL(p,o))\/
+       sqrt(o,Union sqrtR(p,o),Union sqrtR(p,o)) by A7;
+    hence thesis by A8;
+  end;
+A9: sqrt(o,Union sqrtL(p,o),Union sqrtL(p,o)) c= Union sqrtR(p,o)
+  proof
+    let a be object;
+    assume a in sqrt(o,Union sqrtL(p,o),Union sqrtL(p,o));
+    then consider x1,y1 be Surreal such that
+A10: x1 in Union sqrtL(p,o) & y1 in Union sqrtL(p,o) &
+    not x1 + y1 == 0_No & a = (o +'(x1 * y1)) * (x1+y1)" by Def2;
+    consider n be object such that
+A11: n in dom sqrtL(p,o) & x1 in sqrtL(p,o).n by A10,CARD_5:2;
+    consider m be object such that
+A12: m in dom sqrtL(p,o) & y1 in sqrtL(p,o).m by A10,CARD_5:2;
+    n in NAT & m in NAT by A12,A11,Def4;
+    then reconsider n,m as Nat;
+    set nm=n+m;
+    m <= nm & n <= nm by NAT_1:11;
+    then sqrtL(p,o).n c= sqrtL(p,o).nm & sqrtL(p,o).m c= sqrtL(p,o).nm by Th7;
+    then a in sqrt(o,sqrtL(p,o).nm,sqrtL(p,o).nm) by A10,A11,A12,Def2;
+    then
+A13:a in sqrtR(p,o).nm \/ sqrt(o,sqrtL(p,o).nm,sqrtL(p,o).nm)
+    by XBOOLE_0:def 3;
+    sqrtR(p,o).(nm+1) = sqrtR(p,o).nm \/ sqrt(o,sqrtL(p,o).nm,sqrtL(p,o).nm)
+    \/ sqrt(o,sqrtR(p,o).nm,sqrtR(p,o).nm) by Th8;
+    then
+A14:a in sqrtR(p,o).(nm+1) by A13,XBOOLE_0:def 3;
+    nm+1 in NAT;
+    then nm+1 in dom sqrtR(p,o) by Def5;
+    hence thesis by A14,CARD_5:2;
+  end;
+A15: sqrt(o,Union sqrtR(p,o),Union sqrtR(p,o)) c= Union sqrtR(p,o)
+  proof
+    let a be object;
+    assume a in sqrt(o,Union sqrtR(p,o),Union sqrtR(p,o));
+    then consider x1,y1 be Surreal such that
+A16: x1 in Union sqrtR(p,o) & y1 in Union sqrtR(p,o) &
+    not x1 + y1 == 0_No & a = (o +'(x1 * y1)) * (x1+y1)" by Def2;
+    consider n be object such that
+A17: n in dom sqrtR(p,o) & x1 in sqrtR(p,o).n by A16,CARD_5:2;
+    consider m be object such that
+A18: m in dom sqrtR(p,o) & y1 in sqrtR(p,o).m by A16,CARD_5:2;
+    n in NAT & m in NAT by A18,A17,Def5;
+    then reconsider n,m as Nat;
+    set nm=n+m;
+    m <= nm & n <= nm by NAT_1:11;
+    then sqrtR(p,o).n c= sqrtR(p,o).nm & sqrtR(p,o).m c= sqrtR(p,o).nm by Th7;
+    then
+A19:a in sqrt(o,sqrtR(p,o).nm,sqrtR(p,o).nm) by A16,A17,A18,Def2;
+    sqrtR(p,o).(nm+1) = sqrtR(p,o).nm \/ sqrt(o,sqrtL(p,o).nm,sqrtL(p,o).nm)
+    \/ sqrt(o,sqrtR(p,o).nm,sqrtR(p,o).nm) by Th8;
+    then
+A20:a in sqrtR(p,o).(nm+1) by A19,XBOOLE_0:def 3;
+    nm+1 in NAT;
+    then nm+1 in dom sqrtR(p,o) by Def5;
+    hence thesis by A20,CARD_5:2;
+  end;
+  R_p = sqrtR(p,o).0 by Th6;
+  then R_p c= Union sqrtR(p,o) by ABCMIZ_1:1;
+  then (R_p)\/sqrt(o,Union sqrtL(p,o),Union sqrtL(p,o)) c= Union sqrtR(p,o)
+  by A9,XBOOLE_1:8;
+  hence thesis by XBOOLE_1:8,A15;
+end;
+
+begin :: The Square Root of a Surreal Number
+
+definition
+  let A be Ordinal;
+  func No_sqrt_op A -> ManySortedSet of Day A means :Def6:
+    ex S be c=-monotone Function-yielding Sequence st
+      dom S = succ A & it = S.A &
+      for B be Ordinal st B in succ A
+         ex SB be ManySortedSet of Day B st S.B = SB &
+           for x be object st x in Day B holds
+    SB.x = [Union sqrtL(
+                        [(union rng (S|B)).: L_NonNegativePart x,
+                         (union rng (S|B)).: R_NonNegativePart x],x),
+            Union sqrtR(
+                        [(union rng (S|B)).: L_NonNegativePart x,
+                         (union rng (S|B)).: R_NonNegativePart x],x)];
+  existence
+  proof
+    deffunc D(Ordinal) = Day $1;
+A1: for A,B be Ordinal st A c= B holds D(A) c= D(B) by SURREAL0:35;
+    deffunc H(object,c=-monotone Function-yielding Sequence)=
+      [Union sqrtL( [(union rng $2).: L_NonNegativePart $1,
+      (union rng $2).:R_NonNegativePart $1],$1),
+      Union sqrtR( [(union rng $2).: L_NonNegativePart $1,
+      (union rng $2).:R_NonNegativePart $1],$1)];
+A2: for S be c=-monotone Function-yielding Sequence st
+      for A be Ordinal st A in dom S holds dom (S.A) = D(A)
+        for A be Ordinal,o st o in dom (S.A) holds H(o,S|A) = H(o,S)
+    proof
+      let S be c=-monotone Function-yielding Sequence such that
+A3:   for A be Ordinal st A in dom S holds dom (S.A) = D(A);
+      let A be Ordinal,o such that
+A4:   o in dom (S.A);
+      S.A <>{} by A4;
+      then
+A5:   A in dom S by FUNCT_1:def 2;
+      then
+A6:   dom (S.A) = D(A) by A3;
+      then reconsider x=o as Surreal by A4;
+      set Nx= NonNegativePart x;
+A7:   born x c= A by SURREAL0:def 18,A6,A4;
+      born Nx c= born x by Th3;
+      then
+A8:   born Nx c= A by A7,XBOOLE_1:1;
+A9:   for a be object st a in L_Nx
+        ex B be Ordinal st a in dom (S.B) & B in A
+      proof
+        let a be object such that
+A10:    a in L_Nx;
+        reconsider a as Surreal by A10,SURREAL0:def 16;
+        set b=born a;
+        a in L_Nx\/R_Nx by XBOOLE_0:def 3,A10;
+        then
+A11:    b in born Nx by SURREALO:1;
+A12:    a in Day b by SURREAL0:def 18;
+        dom (S.b) = D(b) by A3,A11,A8,A5,ORDINAL1:10;
+        hence thesis by A12,A11,A8;
+      end;
+A13:  for a be object st a in R_Nx
+        ex B be Ordinal st a in dom (S.B) & B in A
+      proof
+        let a be object such that
+A14:    a in R_Nx;
+        reconsider a as Surreal by A14,SURREAL0:def 16;
+        set b=born a;
+        a in L_Nx\/R_Nx by XBOOLE_0:def 3,A14;
+        then
+A15:    b in born Nx by SURREALO:1;
+A16:    a in Day b by SURREAL0:def 18;
+        dom (S.b) = D(b) by A3,A15,A8,A5,ORDINAL1:10;
+        hence thesis by A15,A8,A16;
+      end;
+A17:  (union rng S).: (L_Nx) = (union rng (S|A)).: (L_Nx) by A9,SURREALR:3;
+      (union rng S).: (R_Nx) = (union rng (S|A)).: (R_Nx) by A13,SURREALR:3;
+      hence H(o,S|A) = H(o,S) by A17;
+    end;
+    consider S be c=-monotone Function-yielding Sequence such that
+A18:dom S = succ A and
+A19:for B be Ordinal st B in succ A
+        ex SB be ManySortedSet of D(B) st S.B = SB &
+          for o st o in D(B) holds SB.o = H(o,S|B) from SURREALR:sch 1(A2,A1);
+    consider SA be ManySortedSet of D(A) such that
+A20: S.A = SA & for o st o in D(A) holds SA.o = H(o,S|A) by A19,ORDINAL1:6;
+    take SA,S;
+    thus thesis by A18,A20,A19;
+  end;
+  uniqueness
+  proof
+    let dA1,dA2 be ManySortedSet of Day A;
+    deffunc D(Ordinal) = Day $1;
+    deffunc H(object,c=-monotone Function-yielding Sequence)=
+      [Union sqrtL( [(union rng $2).: L_NonNegativePart $1,
+      (union rng $2).:R_NonNegativePart $1],$1),
+      Union sqrtR( [(union rng $2).: L_NonNegativePart $1,
+      (union rng $2).:R_NonNegativePart $1],$1)];
+    given S1 be c=-monotone Function-yielding Sequence such that
+A21:  dom S1 = succ A & dA1 = S1.A & for B be Ordinal st B in succ A
+        ex SB be ManySortedSet of Day B st S1.B = SB &
+        for x be object st x in Day B holds SB.x = H(x,S1|B);
+    given S2 be c=-monotone Function-yielding Sequence such that
+A22:  dom S2 = succ A & dA2 = S2.A & for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of Day B st S2.B = SB &
+      for x be object st x in Day B holds SB.x = H(x,S2|B);
+A23: succ A c= dom S1 & succ A c= dom S2 by A21,A22;
+A24: for B be Ordinal st B in succ A
+        ex SB be ManySortedSet of D(B) st S1.B = SB &
+        for o st o in D(B) holds SB.o = H(o,S1|B) by A21;
+A25: for B be Ordinal st B in succ A
+        ex SB be ManySortedSet of D(B) st S2.B = SB &
+        for o st o in D(B) holds SB.o = H(o,S2|B) by A22;
+    S1| (succ A) = S2|(succ A) from SURREALR:sch 2(A23,A24,A25);
+    then S1| (succ A) = S2 by A22;
+    hence thesis by A21,A22;
+  end;
+end;
+
+theorem Th14:
+  for S be c=-monotone Function-yielding Sequence st
+    for B be Ordinal st B in dom S
+      ex SB be ManySortedSet of Day B st S.B = SB &
+         for o st o in Day B holds
+  SB.o = [ Union sqrtL(
+                       [(union rng (S|B)).: L_NonNegativePart o,
+                        (union rng (S|B)).:R_NonNegativePart o],o),
+           Union sqrtR(
+                       [(union rng (S|B)).: L_NonNegativePart o,
+                        (union rng (S|B)).:R_NonNegativePart o],o)]
+  holds
+    for A be Ordinal st A in dom S holds No_sqrt_op A = S.A
+proof
+  deffunc D(Ordinal) = Day $1;
+  deffunc H(object,c=-monotone Function-yielding Sequence)=
+  [Union sqrtL( [(union rng $2).: L_NonNegativePart $1,
+  (union rng $2).:R_NonNegativePart $1],$1),
+  Union sqrtR( [(union rng $2).: L_NonNegativePart $1,
+  (union rng $2).:R_NonNegativePart $1],$1)];
+  let S1 be c=-monotone Function-yielding Sequence such that
+A1:for B be Ordinal st B in dom S1
+    ex SB be ManySortedSet of D(B) st S1.B = SB &
+         for x be object st x in D(B) holds SB.x = H(x,S1|B);
+  let A be Ordinal such that
+A2: A in dom S1;
+A3:succ A c= dom S1 by A2,ORDINAL1:21;
+  consider S2 be c=-monotone Function-yielding Sequence such that
+A4:dom S2 = succ A & S2.A = No_sqrt_op A &
+      for B be Ordinal st B in succ A
+         ex SB be ManySortedSet of D(B) st S2.B = SB &
+           for x be object st x in D(B) holds
+             SB.x = H(x,S2|B) by Def6;
+A5: for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of D(B) st S1.B = SB &
+        for x be object st x in D(B) holds SB.x = H(x,S1|B) by A1,A3;
+A6: for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of D(B) st S2.B = SB &
+      for x be object st x in D(B) holds SB.x = H(x,S2|B) by A4;
+A7: succ A c= dom S1 & succ A c= dom S2 by A2,ORDINAL1:21,A4;
+A8: S1|succ A = S2|succ A from SURREALR:sch 2(A7,A5,A6);
+  A in succ A by ORDINAL1:8;
+  hence thesis by A4,A8,FUNCT_1:49;
+end;
+
+definition
+  let o be object such that
+A1: o is Surreal;
+  func sqrt o -> set means :Def7:
+    for x st x = o holds it = (No_sqrt_op born x).x;
+  existence
+  proof
+    reconsider x=o as Surreal by A1;
+    take (No_sqrt_op born x).x;
+    thus thesis;
+  end;
+  uniqueness
+  proof
+    let s1,s2 be set such that
+A2: for x st x =o holds s1 = (No_sqrt_op born x).x and
+A3: for x st x =o holds s2 = (No_sqrt_op born x).x;
+    reconsider x=o as Surreal by A1;
+    s1 = (No_sqrt_op born x).x by A2;
+    hence thesis by A3;
+  end;
+end;
+
+definition
+  let x be Surreal;
+  redefine func sqrt x -> set equals
+    (No_sqrt_op born x).x;
+  coherence;
+  compatibility by Def7;
+end;
+
+definition
+  let x be object;
+  func sqrt_0 x -> pair set means :Def9:
+    (o in L_it iff ex l be Surreal st o = sqrt l & l in L_NonNegativePart x)&
+    (o in R_it iff ex r be Surreal st o = sqrt r & r in R_NonNegativePart x);
+  existence
+  proof
+    set NN=NonNegativePart x;
+    set L = {sqrt l where l is Element of L_NN: l in L_NN};
+    set R = {sqrt r where r is Element of R_NN: r in R_NN};
+    reconsider IT=[L,R] as pair set by TARSKI:1;
+    take IT;
+    let o;
+    thus o in L_IT implies ex l be Surreal st o = sqrt l & l in L_NN
+    proof
+      assume o in L_IT;
+      then consider l be Element of L_NN such that
+A1:   o = sqrt l & l in L_NN;
+      reconsider l as Surreal by A1,SURREAL0:def 16;
+      take l;
+      thus thesis by A1;
+    end;
+    thus (ex l be Surreal st o = sqrt l & l in L_NN) implies o in L_IT;
+    thus o in R_IT implies ex r be Surreal st o = sqrt r & r in R_NN
+    proof
+      assume o in R_IT;
+      then consider r be Element of R_NN such that
+A2:   o = sqrt r & r in R_NN;
+      reconsider r as Surreal by A2,SURREAL0:def 16;
+      take r;
+      thus thesis by A2;
+    end;
+    thus thesis;
+  end;
+  uniqueness
+  proof
+    set NN=NonNegativePart x;
+    let s1,s2 be pair set such that
+A3: (o in L_s1 iff ex l be Surreal st o = sqrt l & l in L_NN) &
+       (o in R_s1 iff ex r be Surreal st o = sqrt r & r in R_NN) and
+A4: (o in L_s2 iff ex l be Surreal st o = sqrt l & l in L_NN) &
+        (o in R_s2 iff ex r be Surreal st o = sqrt r & r in R_NN);
+    now let o;
+      o in R_s1 iff ex r be Surreal st o = sqrt r & r in R_NN by A3;
+      hence o in R_s1 iff o in R_s2 by A4;
+    end;
+    then
+A5: R_s1 = R_s2 by TARSKI:2;
+    now let o;
+      o in L_s1 iff ex l be Surreal st o = sqrt l & l in L_NN by A3;
+      hence o in L_s1 iff o in L_s2 by A4;
+    end;
+    then L_s1 = L_s2 by TARSKI:2;
+    hence thesis by A5,XTUPLE_0:2;
+  end;
+end;
+
+theorem Th15:
+  sqrt x = [Union sqrtL(sqrt_0 x,x),Union sqrtR (sqrt_0 x,x)]
+proof
+  set A=born x,Nx=NonNegativePart x;
+  consider S be c=-monotone Function-yielding Sequence such that
+A1:dom S = succ A & No_sqrt_op A = S.A and
+A2:for B be Ordinal st B in succ A
+       ex SB be ManySortedSet of Day B st S.B = SB &
+       for o be object st o in Day B holds
+         SB.o = [Union sqrtL([(union rng (S|B)).: L_NonNegativePart o,
+                              (union rng (S|B)).: R_NonNegativePart o],o),
+                 Union sqrtR([(union rng (S|B)).: L_NonNegativePart o,
+                              (union rng (S|B)).: R_NonNegativePart o],o)]
+            by Def6;
+  set UA=union rng (S|A);
+  consider SB be ManySortedSet of Day A such that
+A3:S.A = SB and
+A4:for o st o in Day A holds
+  SB.o = [Union sqrtL([UA.: L_NonNegativePart o,UA.: R_NonNegativePart o],o),
+          Union sqrtR([UA.: L_NonNegativePart o,UA.:R_NonNegativePart o],o)]
+    by A2,ORDINAL1:6;
+  x in Day A by SURREAL0:def 18;
+  then
+A5: sqrt x = [Union sqrtL([UA.: L_Nx,UA.: R_Nx],x),
+              Union sqrtR([UA.: L_Nx,UA.: R_Nx],x)] by A4,A1,A3;
+A6: UA.: L_Nx c= L_(sqrt_0 x)
+  proof
+    let y be object such that
+A7: y in UA.: L_Nx;
+    consider o be object such that
+A8: o in dom UA & o in L_Nx & UA.o = y by A7,FUNCT_1:def 6;
+    reconsider o as Surreal by SURREAL0:def 16,A8;
+    set b = born o;
+A9: o in L_x by Th2,A8;
+A10:o in Day b by SURREAL0:def 18;
+A11:o in L_x \/ R_x by A9,XBOOLE_0:def 3;
+    then
+A12: b in A by SURREALO:1;
+A13: b in succ A by A11,SURREALO:1,ORDINAL1:8;
+    then ex SB be ManySortedSet of Day b st S.b = SB &
+      for o be object st o in Day b holds
+      SB.o = [Union sqrtL([(union rng (S|b)).: L_NonNegativePart o,
+                           (union rng (S|b)).: R_NonNegativePart o],o),
+              Union sqrtR([(union rng (S|b)).: L_NonNegativePart o,
+                           (union rng (S|b)).: R_NonNegativePart o],o)] by A2;
+    then
+A14: o in dom (S.b) by A10,PARTFUN1:def 2;
+    then
+A15: UA.o = (union rng S).o by A12,SURREALR:5;
+A16: No_sqrt_op b = S.b by A1,A2,Th14,A13;
+    y = sqrt o by A8,A15,A13,A1,A14,SURREALR:2,A16;
+    hence thesis by Def9,A8;
+  end;
+A17: L_(sqrt_0 x) c= UA.: L_Nx
+  proof
+    let y be object;
+    assume y in L_(sqrt_0 x);
+    then consider o be Surreal such that
+A18:y = sqrt o & o in L_Nx by Def9;
+    set b =born o;
+A19: o in L_x by Th2,A18;
+A20:o in Day b by SURREAL0:def 18;
+A21: o in L_x \/ R_x by A19,XBOOLE_0:def 3;
+    then
+A22: b in A by SURREALO:1;
+A23: b in succ A by SURREALO:1,A21,ORDINAL1:8;
+    then ex SB be ManySortedSet of Day b st S.b = SB &
+    for o be object st o in Day b holds
+    SB.o = [Union sqrtL([(union rng (S|b)).: (L_NonNegativePart o),
+                        (union rng (S|b)).: R_NonNegativePart o],o),
+            Union sqrtR([(union rng (S|b)).: (L_NonNegativePart o),
+                         (union rng (S|b)).: R_NonNegativePart o],o)] by A2;
+    then
+A24: o in dom (S.b) by A20,PARTFUN1:def 2;
+    then
+A25: UA.o = (union rng S).o by A22,SURREALR:5;
+A26: b in dom S by SURREALO:1,A21,ORDINAL1:8, A1;
+A27: No_sqrt_op b = S.b by A1,A2,Th14,A23;
+A28: y = (union rng S).o by A18,A24,A26,SURREALR:2,A27;
+    o in dom UA by SURREALR:5,A22,A24;
+    hence thesis by A18,A28,A25,FUNCT_1:def 6;
+  end;
+A29: UA.: (R_Nx) c= R_(sqrt_0 x)
+  proof
+    let y be object such that
+A30:y in UA.: R_Nx;
+    consider o be object such that
+A31:o in dom UA & o in (R_Nx) & UA.o = y by A30,FUNCT_1:def 6;
+    reconsider o as Surreal by A31,SURREAL0:def 16;
+    set b =born o;
+A32: o in R_x by Th2,A31;
+A33: o in Day b by SURREAL0:def 18;
+A34: o in L_x \/ R_x by A32,XBOOLE_0:def 3;
+    then
+A35: b in A by SURREALO:1;
+A36: b in succ A by A34,SURREALO:1,ORDINAL1:8;
+    then ex SB be ManySortedSet of Day b st S.b = SB &
+    for o be object st o in Day b holds
+    SB.o = [Union sqrtL([(union rng (S|b)).: (L_NonNegativePart o),
+                         (union rng (S|b)).: R_NonNegativePart o],o),
+            Union sqrtR([(union rng (S|b)).: (L_NonNegativePart o),
+                         (union rng (S|b)).: R_NonNegativePart o],o)] by A2;
+    then
+A37: o in dom (S.b) by A33,PARTFUN1:def 2;
+A38: b in dom S by A34,SURREALO:1,ORDINAL1:8, A1;
+A39: No_sqrt_op b = S.b by A1,A2,Th14,A36;
+    (S.b).o = (union rng S).o by A37,A38,SURREALR:2;
+    then y = sqrt o by A39,A31,A37,A35,SURREALR:5;
+    hence thesis by Def9,A31;
+  end;
+A40: R_(sqrt_0 x) c= UA.: (R_Nx)
+  proof
+    let y be object;
+    assume y in R_(sqrt_0 x);
+    then consider o be Surreal such that
+A41:y = sqrt o & o in R_Nx by Def9;
+    set b =born o;
+A42: o in R_x by Th2,A41;
+A43: o in Day b by SURREAL0:def 18;
+A44: o in L_x \/ R_x by A42,XBOOLE_0:def 3;
+    then
+A45: b in A by SURREALO:1;
+A46: b in succ A by A44,ORDINAL1:8,SURREALO:1;
+    then ex SB be ManySortedSet of Day b st S.b = SB &
+    for o be object st o in Day b holds
+    SB.o = [Union sqrtL([(union rng (S|b)).: (L_NonNegativePart o),
+                         (union rng (S|b)).: R_NonNegativePart o],o),
+            Union sqrtR([(union rng (S|b)).: (L_NonNegativePart o),
+                         (union rng (S|b)).: R_NonNegativePart o],o)] by A2;
+    then
+A47: o in dom (S.b) by A43,PARTFUN1:def 2;
+    then
+A48: UA.o = (union rng S).o by A45,SURREALR:5;
+A49: b in dom S by A44,ORDINAL1:8,SURREALO:1,A1;
+A50: No_sqrt_op b = S.b by A1,A2,Th14,A46;
+A51: y = (union rng S).o by A41,A47,A49,SURREALR:2,A50;
+    o in dom UA by SURREALR:5,A45,A47;
+    hence thesis by A41,A51,A48,FUNCT_1:def 6;
+  end;
+A52:UA.: L_Nx = L_(sqrt_0 x) by A6,A17,XBOOLE_0:def 10;
+  UA.: (R_Nx) = R_(sqrt_0 x) by A29,A40,XBOOLE_0:def 10;
+  hence thesis by A5, A52;
+end;
+
+theorem
+  Union sqrtL(p,o) = {} implies L_p={}
+proof
+  assume Union sqrtL(p,o) = {};
+  then sqrtL(p,o).0 c= {} by ABCMIZ_1:1;
+  hence thesis by Th6;
+end;
+
+theorem Th17:
+  for x1,x2,y,z be Surreal st not x2 == 0_No & y = x1*x2" holds
+     (y*y < z iff x1*x1 < z*(x2*x2)) &
+     (z < y*y iff z*(x2*x2) < x1*x1)
+proof
+  let x1,x2,y,z be Surreal such that
+A1:not x2 == 0_No & y = x1*x2";
+  x2*x2" == 1_No by A1,SURREALI:33;
+  then (x2*x2") * (x2*x2") == 1_No * (x2*x2") == 1_No * 1_No = 1_No
+  by SURREALR:54;
+  then
+A2: (x2*x2") * (x2*x2") == 1_No by SURREALO:4;
+  (x2"* x2") * (x2*x2) == x2"* (x2" * (x2*x2)) == x2"* (x2" * x2*x2)
+  by SURREALR:54,69;
+  then (x2"* x2") * (x2*x2) == x2"* ((x2" * x2)*x2) == x2"* x2*(x2" * x2)
+  by SURREALO:4,SURREALR:69;
+  then (x2"* x2") * (x2*x2) == x2"* x2*(x2" * x2) by SURREALO:4;
+  then
+A3: (x2"* x2") * (x2*x2) == 1_No by A2,SURREALO:4;
+  y*y == x1*(x2"* (x2"*x1)) == x1*(x1* (x2"* x2"))
+  by SURREALR:54,69,A1;
+  then y*y == x1*(x1* (x2"* x2")) == (x1*x1)* (x2"* x2")
+  by SURREALO:4,SURREALR:69;
+  then y*y == (x1*x1)* (x2"* x2") by SURREALO:4;
+  then y*y * (x2*x2) == (x1*x1)* (x2"* x2") * (x2*x2) ==
+  (x1*x1)* ((x2"* x2") * (x2*x2)) by SURREALR:54,69;
+  then y*y * (x2*x2) == (x1*x1)* ((x2"* x2") * (x2*x2)) ==
+  (x1*x1)* 1_No = (x1*x1) by A3,SURREALO:4,SURREALR:54;
+  then
+A4:y*y * (x2*x2) == x1*x1 by SURREALO:4;
+A5: 0_No < x2*x2 by A1,SURREALR:72;
+  thus y*y < z implies x1*x1 < z*(x2*x2)
+  proof
+    assume y*y < z;
+    then y*y*(x2*x2) < z*(x2*x2) by A5,SURREALR:70;
+    hence thesis by A4,SURREALO:4;
+  end;
+  A6: 0_No <= x2*x2 by A1,SURREALR:72;
+  thus x1*x1 < z*(x2*x2) implies y*y < z
+  proof
+    assume x1*x1 < z*(x2*x2);
+    then y*y * (x2*x2) < z*(x2*x2) by A4,SURREALO:4;
+    hence thesis by A6,SURREALR:75;
+  end;
+  thus z < y*y implies z*(x2*x2) < x1*x1
+  proof
+    assume z < y*y;
+    then z*(x2*x2) < (y*y)*(x2*x2) by A5,SURREALR:70;
+    hence thesis by A4,SURREALO:4;
+  end;
+  assume z*(x2*x2) < x1*x1;
+  then z*(x2*x2) < y*y * (x2*x2) by A4,SURREALO:4;
+  hence thesis by A6,SURREALR:75;
+end;
+
+Lm1:z*((x+y)*(x+y)) == z*(x*x) + z*(y*y) +(z*(x*y) + z*(y*x))
+proof
+  z*((x+y)*(x+y)) == z*(x*x + y*y +(x*y + y*x)) == z*(x*x + y*y) +z*(x*y + y*x)
+  by SURREALR:67,54,76;
+  then
+A1:z*((x+y)*(x+y)) == z*(x*x + y*y) +z*(x*y + y*x)
+  by SURREALO:4;
+  z*(x*x + y*y) == z*(x*x) + z*(y*y) &
+  z*(x*y + y*x) == z*(x*y) + z*(y*x) by SURREALR:67;
+  then z*(x*x + y*y) +z*(x*y + y*x) ==
+  (z*(x*x) + z*(y*y)) + (z*(x*y) + z*(y*x)) by SURREALR:66;
+  hence thesis by A1,SURREALO:4;
+end;
+
+Lm2:x*x + (y * z)*(y * z) - (x*(y*y) + x*(z*z)) == (x- (y*y))*(x- (z*z))
+proof
+  (y * z)*(y * z) == z*(y*(y*z)) == z* (y*y*z) by SURREALR:54,69;
+  then (y * z)*(y * z) == z *(y*y)*z == (z*z) *(y*y)
+  by SURREALO:4,SURREALR:69;
+  then (y * z)*(y * z) == (z*z) *(y*y) by SURREALO:4;
+  then x*x + (y * z)*(y * z) == x*x + (z*z) *(y*y) by SURREALR:66;
+  then
+A1:x*x + (y * z)*(y * z) - (x*(y*y) + x*(z*z)) == x*x + (z*z) *(y*y)
+  - (x*(y*y) + x*(z*z)) by SURREALR:66;
+  x* (x- (z*z)) == x* x +(x*- (z*z)) &
+  (-(y*y))*(x- (z*z)) == (-(y*y))*x + (-(y*y))*(-(z*z)) by SURREALR:67;
+  then (x+ - (y*y))*(x- (z*z))== x* (x- (z*z)) +(-(y*y))*(x- (z*z))==
+  (x* x +(x*- (z*z))) + ((-(y*y))*x + (-(y*y))*(-(z*z)))
+  by SURREALR:67,66;
+  then
+A2: (x+ - (y*y))*(x- (z*z))==
+  (x* x +(x*- (z*z))) + ((-(y*y))*x + (-(y*y))*(-(z*z)))
+  by SURREALO:4;
+  (-(y*y))*(-(z*z)) = (y*y)*(z*z) & x*- (z*z) = -(x*(z*z))
+  & (-(y*y))*x = -(x*(y*y)) by SURREALR:58;
+  then (x* x +(x*- (z*z))) + ((-(y*y))*x + (-(y*y))*(-(z*z)))
+   = (x* x + -(x*(z*z))) + -((y*y)*x) + (y*y)*(z*z) by SURREALR:37
+  .= (x* x + (-(x*(z*z)) + -((y*y)*x))) + (y*y)*(z*z) by SURREALR:37
+  .= x* x + (y*y)*(z*z) + (-(x*(z*z)) + -((y*y)*x)) by SURREALR:37
+  .= x* x + (y*y)*(z*z) + -((x*(z*z)) + ((y*y)*x)) by SURREALR:40;
+  hence thesis by A2,A1,SURREALO:4;
+end;
+
+theorem Th18:
+  x <= 0_No implies Union sqrtL(sqrt_0 x,o) = {}
+proof
+  assume
+A1: x<=0_No;
+  defpred P[Nat] means sqrtL(sqrt_0 x,o).$1={};
+A2:P[0]
+  proof
+    assume sqrtL(sqrt_0 x,o).0<>{};
+    then consider a be object such that
+A3: a in sqrtL(sqrt_0 x,o).0 by XBOOLE_0:def 1;
+    a in L_sqrt_0 x by A3,Th6;
+    then consider l be Surreal such that
+A4: a = sqrt l & l in L_NonNegativePart x by Def9;
+A5: l in L_x & 0_No <= l by A4,Th2;
+    L_x << {x} & x in {x} by TARSKI:def 1,SURREALO:11;
+    hence thesis by A5,A1,SURREALO:4;
+  end;
+A6:P[n] implies P[n+1]
+  proof
+    assume
+A7: P[n];
+    assume sqrtL(sqrt_0 x,o).(n+1)<>{};
+    then consider y be object such that
+A8: y in sqrtL(sqrt_0 x,o).(n+1) by XBOOLE_0:def 1;
+    y in sqrtL(sqrt_0 x,o).n \/ sqrt(o,sqrtL(sqrt_0 x,o).n,sqrtR(sqrt_0 x,o).n)
+    by A8,Th8;
+    then per cases by XBOOLE_0:def 3;
+    suppose y in sqrtL(sqrt_0 x,o).n;
+      hence thesis by A7;
+    end;
+    suppose y in sqrt(o,sqrtL(sqrt_0 x,o).n,sqrtR(sqrt_0 x,o).n);
+      then ex x1,y1 be Surreal st
+      x1 in sqrtL(sqrt_0 x,o).n & y1 in sqrtR(sqrt_0 x,o).n &
+      not x1 + y1 == 0_No & y = (o +'(x1 * y1)) * (x1+y1)" by Def2;
+      hence thesis by A7;
+    end;
+  end;
+A9:P[n] from NAT_1:sch 2(A2,A6);
+  assume Union sqrtL(sqrt_0 x,o) <>{};
+  then consider a be object such that
+A10:a in Union sqrtL(sqrt_0 x,o) by XBOOLE_0:def 1;
+  consider n be object such that
+A11:n in dom sqrtL(sqrt_0 x,o) & a in sqrtL(sqrt_0 x,o).n by A10,CARD_5:2;
+  dom sqrtL(sqrt_0 x,o)=NAT by Def4;
+  then reconsider n as Nat by A11;
+  sqrtL(sqrt_0 x,o).n ={} by A9;
+  hence thesis by A11;
+end;
+
+theorem Th19:
+  0_No <= x implies
+     (y = sqrt x implies
+        0_No <= y & y*y == x &
+        (x==0_No implies y==0_No) &
+        (0_No < x implies 0_No < y)) &
+     (y in L_sqrt x implies 0_No <= y & y*y < x) &
+     (y in R_sqrt x implies 0_No < y & x < y*y) & sqrt x is surreal
+proof
+  defpred O[Ordinal] means
+  for x st born x = $1 & 0_No <= x holds sqrt x is surreal &
+  (for y st y = sqrt x holds 0_No <= y & y*y == x &
+  (x==0_No implies y==0_No) &
+  (0_No < x implies 0_No < y))&
+  (for y st y in L_sqrt x holds 0_No <= y & y*y < x) &
+  (for y st y in R_sqrt x holds 0_No < y & x < y*y);
+A1: for D be Ordinal st for C be Ordinal st C in D holds O[C] holds O[D]
+  proof
+    let D be Ordinal such that
+A2: for C be Ordinal st C in D holds O[C];
+    let x such that
+A3: born x = D & 0_No <= x;
+    set S=sqrt x,S0=sqrt_0 x;
+A4: S = [Union sqrtL(S0,x),Union sqrtR (S0,x)] by Th15;
+    defpred P[Nat] means
+      (for y st y in sqrtL(S0,x).$1 holds 0_No <= y & y*y < x) &
+      (for y st y in sqrtR(S0,x).$1 holds 0_No < y & x < y*y);
+    set Nx=NonNegativePart x;
+A5:P[0]
+    proof
+      thus for y st y in sqrtL(S0,x).0 holds 0_No <= y & y*y < x
+      proof
+        let y such that
+A6:     y in sqrtL(S0,x).0;
+        y in L_S0 by A6,Th6;
+        then consider l be Surreal such that
+A7:     y = sqrt l & l in L_Nx  by Def9;
+A8:     l in L_x & 0_No <= l  by Th2,A7;
+A9:     L_x << {x} & x in {x} by SURREALO:11,TARSKI:def 1;
+        l in L_x\/R_x by A8,XBOOLE_0:def 3;
+        then born l in D by A3,SURREALO:1;
+        then 0_No <= y & y*y == l by A2,A8,A7;
+        hence thesis by A9,A8,SURREALO:4;
+      end;
+      let y such that
+A10:  y in sqrtR(S0,x).0;
+      y in R_S0 by A10,Th6;
+      then consider r be Surreal such that
+A11:  y = sqrt r & r in R_Nx by Def9;
+A12:  r in R_x & 0_No <= r by A11,Th2;
+      then r in L_x\/R_x by XBOOLE_0:def 3;
+      then
+A13:  born r in D by A3,SURREALO:1;
+      then
+A14:  0_No <= y & y*y == r by A2,A11,A12;
+A15:  x in {x} << R_x by SURREALO:11,TARSKI:def 1;
+      then 0_No < r by A3,A12,SURREALO:4;
+      hence thesis by A15,A12,A13,A2,A11,A14,SURREALO:4;
+    end;
+A16:P[n] implies P[n+1]
+    proof
+      assume
+A17:  P[n];
+      thus for y st y in sqrtL(S0,x).(n+1) holds 0_No <= y & y*y < x
+      proof
+        let y such that
+A18:    y in sqrtL(S0,x).(n+1);
+        y in sqrtL(S0,x).n \/ sqrt(x,sqrtL(S0,x).n,sqrtR(S0,x).n) by A18,Th8;
+        then per cases by XBOOLE_0:def 3;
+        suppose y in sqrtL(S0,x).n;
+          hence thesis by A17;
+        end;
+        suppose y in sqrt(x,sqrtL(S0,x).n,sqrtR(S0,x).n);
+          then consider L1,R1 be Surreal such that
+A19:      L1 in sqrtL(S0,x).n & R1 in sqrtR(S0,x).n &
+          not L1 + R1 == 0_No & y = (x +'(L1 * R1)) * (L1+R1)" by Def2;
+A20:      0_No <= L1 & 0_No <= R1 by A19,A17;
+          then 0_No+0_No <= L1+R1 by SURREALR:43;
+          then
+A21:      0_No <= (L1+R1)" by A19,SURREALI:40;
+          0_No * R1 <= L1*R1 by A20,SURREALR:75;
+          then 0_No+0_No <= x + L1*R1 by A3,SURREALR:43;
+          then
+A22:      0_No* (L1+R1)" <= (x +'(L1*R1)) * (L1+R1)" by A21,SURREALR:75;
+          L1*L1 < x < R1*R1 by A19,A17;
+          then 0_No < x- (L1*L1) & x- (R1*R1) < 0_No by SURREALR:45,46;
+          then
+A23:      (x- (L1*L1))*(x- (R1*R1)) < 0_No by SURREALR:74;
+          x*x + (L1 * R1)*(L1 * R1) - (x*(L1*L1) + x*(R1*R1)) ==
+          (x- (L1*L1))*(x- (R1*R1)) by Lm2;
+          then x*x + (L1 * R1)*(L1 * R1) - (x*(L1*L1) + x*(R1*R1)) < 0_No
+          by A23,SURREALO:4;
+          then
+A24:      x*x + (L1 * R1)*(L1 * R1) < x*(L1*L1) + x*(R1*R1) by SURREALR:46;
+A25:      x*((L1+R1)*(L1+R1)) ==
+          x*(L1*L1) + x*(R1*R1) +(x*(L1*R1) + x*(R1*L1)) by Lm1;
+A26:      (x +(L1 * R1))*(x +(L1 * R1)) ==
+          x*x + (L1 * R1)*(L1 * R1) +(x*(L1 * R1) + (L1 * R1)*x)
+          by SURREALR:76;
+          x*x + (L1 * R1)*(L1 * R1) +(x*(L1 * R1) + (L1 * R1)*x)
+          < x*(L1*L1) + x*(R1*R1)+(x*(L1 * R1) + (L1 * R1)*x)
+          by A24,SURREALR:44;
+          then x*x + (L1 * R1)*(L1 * R1) +(x*(L1 * R1) + x*(L1 * R1)) <
+          x*((L1+R1)*(L1+R1)) by A25,SURREALO:4;
+          then (x +(L1 * R1))*(x +(L1 * R1)) < x * ((L1+R1)*(L1+R1))
+          by A26,SURREALO:4;
+          hence thesis by A22,A19,Th17;
+        end;
+      end;
+      let y such that
+A27:  y in sqrtR(S0,x).(n+1);
+      y in sqrtR(S0,x).n \/ sqrt(x,sqrtL(S0,x).n,sqrtL(S0,x).n)
+      \/ sqrt(x,sqrtR(S0,x).n,sqrtR(S0,x).n) by A27,Th8;
+      then y in sqrtR(S0,x).n \/ sqrt(x,sqrtL(S0,x).n,sqrtL(S0,x).n) or
+      y in sqrt(x,sqrtR(S0,x).n,sqrtR(S0,x).n) by XBOOLE_0:def 3;
+      then per cases by XBOOLE_0:def 3;
+      suppose y in sqrtR(S0,x).n;
+        hence thesis by A17;
+      end;
+      suppose y in sqrt(x,sqrtL(S0,x).n,sqrtL(S0,x).n);
+        then consider L1,R1 be Surreal such that
+A28:    L1 in sqrtL(S0,x).n & R1 in sqrtL(S0,x).n &
+        not L1 + R1 == 0_No &
+        y = (x +'(L1 * R1)) * (L1+R1)" by Def2;
+A29:    0_No <= L1 & 0_No <= R1 by A28,A17;
+        then 0_No+0_No <= L1+R1 by SURREALR:43;
+        then
+A30:    0_No < (L1+R1)" by A28,SURREALI:40;
+A31:    sqrtL(S0,x).n c= Union sqrtL(S0,x) by ABCMIZ_1:1;
+        0_No * R1 <= L1*R1 by A29,SURREALR:75;
+        then
+A32:    0_No+0_No < x + L1*R1 by A31,Th18,A28,SURREALR:44;
+        0_No < x- (L1*L1) & 0_No < x- (R1*R1) by A28,A17,SURREALR:45;
+        then
+A33:    0_No < (x- (L1*L1))*(x- (R1*R1)) by SURREALR:72;
+        x*x + (L1 * R1)*(L1 * R1) - (x*(L1*L1) + x*(R1*R1)) ==
+        (x- (L1*L1))*(x- (R1*R1)) by Lm2;
+        then 0_No < x*x + (L1 * R1)*(L1 * R1) - (x*(L1*L1) + x*(R1*R1))
+        by A33,SURREALO:4;
+        then
+A34:    x*(L1*L1) + x*(R1*R1) < x*x + (L1 * R1)*(L1 * R1) by SURREALR:45;
+A35:    x*((L1+R1)*(L1+R1)) ==
+        x*(L1*L1) + x*(R1*R1) +(x*(L1*R1) + x*(R1*L1)) by Lm1;
+A36:    (x +(L1 * R1))*(x +(L1 * R1)) ==
+        x*x + (L1 * R1)*(L1 * R1) +(x*(L1 * R1) + (L1 * R1)*x) by SURREALR:76;
+        x*(L1*L1) + x*(R1*R1)+(x*(L1 * R1) + (L1 * R1)*x)
+        < x*x + (L1 * R1)*(L1 * R1) +(x*(L1 * R1) + (L1 * R1)*x)
+        by A34,SURREALR:44;
+        then x*((L1+R1)*(L1+R1))
+        < x*x + (L1 * R1)*(L1 * R1) +(x*(L1 * R1) + x*(L1 * R1))
+        by A35,SURREALO:4;
+        then x * ((L1+R1)*(L1+R1)) < (x +(L1 * R1))*(x +(L1 * R1))
+        by A36,SURREALO:4;
+        hence thesis by A32,A28,Th17,A30,SURREALR:72;
+      end;
+      suppose y in sqrt(x,sqrtR(S0,x).n,sqrtR(S0,x).n);
+        then consider L1,R1 be Surreal such that
+A37:    L1 in sqrtR(S0,x).n & R1 in sqrtR(S0,x).n &
+        not L1 + R1 == 0_No & y = (x +'(L1 * R1)) * (L1+R1)" by Def2;
+A38:    0_No < L1 & 0_No < R1 by A37,A17;
+        0_No < L1 & 0_No <= R1 by A37,A17;
+        then 0_No+0_No < L1+R1 by SURREALR:44;
+        then
+A39:    0_No < (L1+R1)" by A37,SURREALI:40;
+        0_No < L1*R1 by A38,SURREALR:72;
+        then
+A40:    0_No+0_No < x + L1*R1 by A3,SURREALR:44;
+        x < L1*L1 & x < R1*R1 by A37,A17;
+        then x- (L1*L1)<0_No & x-(R1*R1)<0_No by SURREALR:46;
+        then
+A41:    0_No < (x- (L1*L1))*(x- (R1*R1)) by SURREALR:72;
+        x*x + (L1 * R1)*(L1 * R1) - (x*(L1*L1) + x*(R1*R1)) ==
+        (x- (L1*L1))*(x- (R1*R1)) by Lm2;
+        then 0_No < x*x + (L1 * R1)*(L1 * R1) - (x*(L1*L1) + x*(R1*R1))
+        by A41,SURREALO:4;
+        then
+A42:    x*(L1*L1) + x*(R1*R1) < x*x + (L1 * R1)*(L1 * R1) by SURREALR:45;
+A43:    x*((L1+R1)*(L1+R1)) ==
+        x*(L1*L1) + x*(R1*R1) +(x*(L1*R1) + x*(R1*L1)) by Lm1;
+A44:    (x +(L1 * R1))*(x +(L1 * R1)) ==
+        x*x + (L1 * R1)*(L1 * R1) +(x*(L1 * R1) + (L1 * R1)*x) by SURREALR:76;
+        x*(L1*L1) + x*(R1*R1)+(x*(L1 * R1) + (L1 * R1)*x)
+        < x*x + (L1 * R1)*(L1 * R1) +(x*(L1 * R1) + (L1 * R1)*x)
+        by A42,SURREALR:44;
+        then x*((L1+R1)*(L1+R1))
+        <x*x + (L1 * R1)*(L1 * R1) +(x*(L1 * R1) + x*(L1 * R1))
+        by A43,SURREALO:4;
+        then x * ((L1+R1)*(L1+R1)) < (x +(L1 * R1))*(x +(L1 * R1))
+        by A44,SURREALO:4;
+        hence thesis by A40,A37,A39,SURREALR:72,Th17;
+      end;
+    end;
+A45:for n holds P[n] from NAT_1:sch 2(A5,A16);
+A46:for y st y in L_sqrt x holds 0_No <= y & y*y < x
+    proof
+      let y;
+      assume y in L_sqrt x;
+      then consider n be object such that
+A47:  n in dom sqrtL(S0,x) & y in sqrtL(S0,x).n by A4,CARD_5:2;
+      dom sqrtL(S0,x)=NAT by Def4;
+      then reconsider n as Nat by A47;
+      P[n] by A45;
+      hence thesis by A47;
+    end;
+A48:for y st y in R_sqrt x holds 0_No < y & x < y*y
+    proof
+      let y;
+      assume y in R_sqrt x;
+      then consider n be object such that
+A49:  n in dom sqrtR(S0,x) & y in sqrtR(S0,x).n by A4,CARD_5:2;
+      dom sqrtR(S0,x)=NAT by Def5;
+      then reconsider n as Nat by A49;
+      P[n] by A45;
+      hence thesis by A49;
+    end;
+A50: L_S0 is surreal-membered
+    proof
+      let o;
+      assume o in L_S0;
+      then consider l be Surreal such that
+A51:  o = sqrt l & l in L_Nx by Def9;
+A52:  l in L_x & 0_No <= l by Th2,A51;
+      then l in L_x \/ R_x by XBOOLE_0:def 3;
+      then born l in D by A3,SURREALO:1;
+      hence thesis by A51,A52,A2;
+    end;
+    R_S0 is surreal-membered
+    proof
+      let o;
+      assume o in R_S0;
+      then consider r be Surreal such that
+A53:  o = sqrt r & r in R_Nx by Def9;
+A54:  r in R_x & 0_No<= r by Th2,A53;
+      then r in L_x \/ R_x by XBOOLE_0:def 3;
+      then born r in D by A3,SURREALO:1;
+      hence thesis by A53,A54,A2;
+    end;
+    then Union sqrtL(S0,x) is surreal-membered &
+    Union sqrtR(S0,x) is surreal-membered by A50,Th10;
+    then consider M be Ordinal such that
+A55:for o st o in Union sqrtL(S0,x)\/Union sqrtR (S0,x)
+      ex A be Ordinal st A in M & o in Day A by SURREAL0:47;
+    Union sqrtL(S0,x) << Union sqrtR (S0,x)
+    proof
+      let l,r be Surreal such that
+A56:  l in Union sqrtL(S0,x) & r in Union sqrtR (S0,x) & r <= l;
+      consider n be object such that
+A57:  n in dom sqrtL(S0,x) & l in sqrtL(S0,x).n by A56,CARD_5:2;
+      consider k be object such that
+A58:  k in dom sqrtR(S0,x) & r in sqrtR(S0,x).k by A56,CARD_5:2;
+      dom sqrtL(S0,x)=NAT=dom sqrtR(S0,x) by Def4,Def5;
+      then reconsider n,k as Nat by A57,A58;
+A59:  P[n] & P[k] by A45;
+      then
+A60:  0_No <= l & l*l < x & 0_No <= r & x < r * r by A57,A58;
+      then r*r <= r*l <= l*l by A56,SURREALR:75;
+      then r*r <= l*l by SURREALO:4;
+      then x <= l*l by A60,SURREALO:4;
+      hence thesis by A57,A59;
+    end;
+    then [Union sqrtL(S0,x),Union sqrtR (S0,x)] in Day M by A55,SURREAL0:46;
+    then reconsider S as Surreal by Th15;
+A61: for y st y = sqrt x holds 0_No <= y & y*y == x
+    proof
+      let y such that
+A62:  y = sqrt x;
+A63:  L_0_No << {y};
+      {0_No} << R_y
+      proof
+        let l,r be Surreal such that
+A64:    l in {0_No} & r in R_y;
+        consider n be object such that
+A65:    n in dom sqrtR(S0,x) & r in sqrtR(S0,x).n by CARD_5:2,A4,A62,A64;
+        dom sqrtR(S0,x)=NAT by Def5;
+        then reconsider n as Nat by A65;
+        r in sqrtR(S0,x).n by A65;
+        then 0_No < r by A45;
+        hence thesis by A64,TARSKI:def 1;
+      end;
+      hence
+A66:  0_No <= y by A63,SURREAL0:43;
+A67:  y * y = [comp(L_y,y,y,L_y) \/ comp(R_y,y,y,R_y),
+              comp(L_y,y,y,R_y) \/ comp(R_y,y,y,L_y)] by SURREALR:50;
+A68:  L_(y*y) << {x}
+      proof
+        let a,b be Surreal such that
+A69:    a in L_(y*y) & b in {x};
+        per cases by XBOOLE_0:def 3,A67,A69;
+        suppose a in comp(L_y,y,y,L_y);
+          then consider x1,y1 be Surreal such that
+A70:      a = x1*y + y*y1 - x1*y1 & x1 in L_y & y1 in L_y
+          by SURREALR:def 15;
+          consider n be object such that
+A71:      n in dom sqrtL(S0,x) & x1 in sqrtL(S0,x).n
+          by A70,A4,A62,CARD_5:2;
+          dom sqrtL(S0,x)=NAT by Def4;
+          then reconsider n as Nat by A71;
+          consider m be object such that
+A72:      m in dom sqrtL(S0,x) & y1 in sqrtL(S0,x).m
+          by A70,A4,A62,CARD_5:2;
+          dom sqrtL(S0,x)=NAT by Def4;
+          then reconsider n,m as Nat by A72;
+          set nm=n+m;
+A73:      n<=nm & m <= nm by NAT_1:11;
+          then
+A74:      sqrtL(S0,x).n c= sqrtL(S0,x).nm &
+            sqrtL(S0,x).m c= sqrtL(S0,x).nm by Th7;
+A75:      sqrtL(S0,x).n c= Union sqrtL(S0,x) by ABCMIZ_1:1;
+          set X=x +(x1 * y1);
+A76:      0_No <= x1 & 0_No <= y1 by A73,A71,A72,A45;
+          per cases;
+          suppose x1 == 0_No & y1 == 0_No;
+            then x1*y == 0_No*y & y*y1 == y*0_No & x1*y1 == 0_No*x1
+            by SURREALR:54;
+            then x1*y + y*y1 == 0_No +0_No & - (x1*y1) == -0_No
+            by SURREALR:65,66;
+            then a == 0_No +0_No by A70,SURREALR:66;
+            then a < x by A75,A71,Th18,SURREALO:4;
+            hence thesis by A69,TARSKI:def 1;
+          end;
+          suppose
+A77:        not x1 ==0_No or not y1 ==0_No;
+            then 0_No+0_No < x1 +y1 by A76,SURREALR:44;
+            then
+A78:        not x1+y1 == 0_No;
+            then X * (x1+y1)" in sqrt(x, sqrtL(S0,x).nm, sqrtL(S0,x).nm)
+            by A74,A71,A72,Def2;
+            then X * (x1+y1)" in sqrtR(S0,x).nm \/
+            sqrt(x, sqrtL(S0,x).nm, sqrtL(S0,x).nm) by XBOOLE_0:def 3;
+            then X * (x1+y1)" in sqrtR(S0,x).nm \/
+            sqrt(x, sqrtL(S0,x).nm, sqrtL(S0,x).nm) \/
+            sqrt(x, sqrtR(S0,x).nm, sqrtR(S0,x).nm) by XBOOLE_0:def 3;
+            then
+A79:        X * (x1+y1)" in sqrtR(S0,x).(nm+1) c= Union sqrtR(S0,x)
+            by Th8,ABCMIZ_1:1;
+A80:        y in {y} << R_y by TARSKI:def 1,SURREALO:11;
+            then
+A81:        y < X * (x1+y1)" by A79,A62,A4;
+A82:        y <= X * (x1+y1)" by A80,A79,A62,A4;
+A83:        (x1+y1) * (x1+y1)" ==1_No by A78,SURREALI:33;
+A84:        x1*y + y* y1 < x1*(X * (x1+y1)") + y1*(X * (x1+y1)")
+            proof
+              per cases by A73,A71,A72,A45,A77;
+              suppose 0_No < x1;
+                then x1*y < x1*(X * (x1+y1)") & y1*y <= y1*(X * (x1+y1)")
+                by A76,A81,A82,SURREALR:70,75;
+                hence thesis by SURREALR:44;
+              end;
+              suppose 0_No < y1;
+                then x1*y <= x1*(X * (x1+y1)") & y1*y < y1*(X * (x1+y1)")
+                by A76,A81,A82,SURREALR:70,75;
+                hence thesis by SURREALR:44;
+              end;
+            end;
+            x1*(X * (x1+y1)") + y1*(X * (x1+y1)") == (x1+y1) * (X * (x1+y1)")
+            ==((x1+y1) * (x1+y1)") * X by SURREALR:67,69;
+            then x1*(X * (x1+y1)") + y1*(X * (x1+y1)")
+            ==((x1+y1) * (x1+y1)") * X
+            == 1_No *X by A83,SURREALR:54,SURREALO:4;
+            then x1*(X * (x1+y1)") + y1*(X * (x1+y1)") == 1_No * X
+              by SURREALO:4;
+            then x1*y + y* y1 < X by A84,SURREALO:4;
+            then
+A85:        x1*y + y* y1 + -x1*y1 < X +-(x1*y1) by SURREALR:44;
+            (x1 * y1) -(x1*y1) == 0_No by SURREALR:39;
+            then X +-(x1*y1) = x+((x1 * y1) +-(x1*y1)) == x+0_No
+            by SURREALR:37,66;
+            then a < x by A70,A85,SURREALO:4;
+            hence thesis by A69,TARSKI:def 1;
+          end;
+        end;
+        suppose a in comp(R_y,y,y,R_y);
+          then consider x1,y1 be Surreal such that
+A86:      a = x1*y + y*y1 - x1*y1 & x1 in R_y & y1 in R_y
+          by SURREALR:def 15;
+          consider n be object such that
+A87:      n in dom sqrtR(S0,x) & x1 in sqrtR(S0,x).n
+          by A86,A4,A62,CARD_5:2;
+          dom sqrtR(S0,x)=NAT by Def5;
+          then reconsider n as Nat by A87;
+          consider m be object such that
+A88:      m in dom sqrtR(S0,x) & y1 in sqrtR(S0,x).m
+          by A86,A4,A62,CARD_5:2;
+          dom sqrtR(S0,x)=NAT by Def5;
+          then reconsider n,m as Nat by A88;
+          set nm=n+m;
+A89:      n<=nm & m <= nm by NAT_1:11;
+          then
+A90:      sqrtR(S0,x).n c= sqrtR(S0,x).nm&sqrtR(S0,x).m c= sqrtR(S0,x).nm
+          by Th7;
+          set X=x +(x1 * y1);
+A91:      0_No < x1 & 0_No <= y1 by A89,A87,A88,A45;
+          then 0_No+0_No < x1 +y1 by SURREALR:44;
+          then
+A92:      not x1+y1 == 0_No;
+          then X * (x1+y1)" in sqrt(x, sqrtR(S0,x).nm, sqrtR(S0,x).nm)
+          by A87,A88,A90,Def2;
+          then X * (x1+y1)" in sqrtR(S0,x).nm \/
+          sqrt(x, sqrtL(S0,x).nm, sqrtL(S0,x).nm) \/
+          sqrt(x, sqrtR(S0,x).nm, sqrtR(S0,x).nm) by XBOOLE_0:def 3;
+          then
+A93:      X * (x1+y1)" in sqrtR(S0,x).(nm+1) c= Union sqrtR(S0,x)
+          by Th8,ABCMIZ_1:1;
+A94:      y in {y} << R_y by TARSKI:def 1,SURREALO:11;
+          then
+A95:      y < X * (x1+y1)" by A93,A62,A4;
+A96:      y <= X * (x1+y1)" by A93,A94,A62,A4;
+A97:      (x1+y1) * (x1+y1)" ==1_No by A92,SURREALI:33;
+          x1*y < x1*(X * (x1+y1)") & y1*y <= y1*(X * (x1+y1)")
+          by A91,A95,A96,SURREALR:70,75;
+          then
+A98:      x1*y + y* y1 < x1*(X * (x1+y1)") + y1*(X * (x1+y1)")
+          by SURREALR:44;
+          x1*(X * (x1+y1)") + y1*(X * (x1+y1)") == (x1+y1) * (X * (x1+y1)")
+          ==((x1+y1) * (x1+y1)") * X by SURREALR:67,69;
+          then x1*(X * (x1+y1)") + y1*(X * (x1+y1)") ==((x1+y1) * (x1+y1)") * X
+          == 1_No *X by A97,SURREALR:54,SURREALO:4;
+          then x1*(X * (x1+y1)") + y1*(X * (x1+y1)") == 1_No * X
+          by SURREALO:4;
+          then x1*y + y* y1 < X by A98,SURREALO:4;
+          then
+A99:      x1*y + y* y1 + -x1*y1 < X +-(x1*y1) by SURREALR:44;
+          (x1 * y1) -(x1*y1) == 0_No by SURREALR:39;
+          then X +-(x1*y1) = x+((x1 * y1) +-(x1*y1)) == x+0_No
+          by SURREALR:37,66;
+          then a < x by A86,A99,SURREALO:4;
+          hence thesis by A69,TARSKI:def 1;
+        end;
+      end;
+A100:{y*y} << R_x
+      proof
+        let a,b be Surreal such that
+A101:   a in {y*y} & b in R_x;
+A102:   x in {x} << R_x by TARSKI:def 1,SURREALO:11;
+        then
+A103:   0_No < b by A101,A3,SURREALO:4;
+A104:   0_No <= b by A102,A101,A3,SURREALO:4;
+        b in L_x \/R_x by A101,XBOOLE_0:def 3;
+        then
+A105:   born b in born x by SURREALO:1;
+        then reconsider sb=sqrt b as Surreal by A104,A2,A3;
+A106:   0_No < sb & sb * sb == b by A103,A104,A105,A2,A3;
+        b in R_NonNegativePart x by A101,A104,Def1;
+        then
+A107:   sb in R_S0 = sqrtR(S0,x).0 c= Union sqrtR(S0,x)
+        by Th6,Def9,ABCMIZ_1:1;
+        y in {y}<< R_y by TARSKI:def 1,SURREALO:11;
+        then y < sb & y <= sb by A107,A62,A4;
+        then y*y <= sb*y < sb*sb by A106,A66,SURREALR:75,70;
+        then y*y < sb*sb by SURREALO:4;
+        then y*y < b by A106,SURREALO:4;
+        hence thesis by A101,TARSKI:def 1;
+      end;
+A108: L_x << {y*y}
+      proof
+        let b,a be Surreal such that
+A109:   b in L_x & a in {y*y};
+        per cases;
+        suppose
+A110:     b < 0_No;
+          0_No*y <= y*y by A66,SURREALR:75;
+          then b < y*y by A110,SURREALO:4;
+          hence thesis by A109,TARSKI:def 1;
+        end;
+        suppose
+A111:     0_No <= b;
+          b in L_x \/R_x by A109,XBOOLE_0:def 3;
+          then
+A112:     born b in born x by SURREALO:1;
+          then reconsider sb=sqrt b as Surreal by A111,A2,A3;
+          b in L_NonNegativePart x by A109,A111,Def1;
+          then
+A113:     sb in L_S0 = sqrtL(S0,x).0 c= Union sqrtL(S0,x)
+          by Th6,Def9,ABCMIZ_1:1;
+A114:     0_No <= sb & sb * sb == b by A111,A112,A2,A3;
+A115:     y in {y} & L_y << {y} by TARSKI:def 1,SURREALO:11;
+          then
+A116:     sb < y & sb <= y by A113,A62,A4;
+          0_No < y by A114,A113,A62,A4,A115,SURREALO:4;
+          then sb*sb <= sb*y < y*y by A116,A114,SURREALR:75,70;
+          then sb*sb < y*y by SURREALO:4;
+          then b < y*y by A114,SURREALO:4;
+          hence thesis by A109,TARSKI:def 1;
+        end;
+      end;
+      {x} << R_(y*y)
+      proof
+        let b,a be Surreal such that
+A117:   b in {x} & a in R_(y*y);
+        comp(L_y,y,y,R_y) = comp(R_y,y,y,L_y) by SURREALR:53;
+        then consider x1,y1 be Surreal such that
+A118:   a = x1*y + y*y1 - x1*y1 & x1 in L_y & y1 in R_y
+        by A67,A117,SURREALR:def 15;
+        consider n be object such that
+A119:   n in dom sqrtL(S0,x) & x1 in sqrtL(S0,x).n
+        by A118,A4,A62,CARD_5:2;
+        dom sqrtL(S0,x)=NAT by Def4;
+        then reconsider n as Nat by A119;
+        consider m be object such that
+A120:   m in dom sqrtR(S0,x) & y1 in sqrtR(S0,x).m
+        by A118,A4,A62,CARD_5:2;
+        dom sqrtR(S0,x)=NAT by Def5;
+        then reconsider n,m as Nat by A120;
+        set nm=n+m;
+A121:   n<=nm & m <= nm by NAT_1:11;
+        then
+A122:   sqrtL(S0,x).n c= sqrtL(S0,x).nm &
+        sqrtR(S0,x).m c= sqrtR(S0,x).nm by Th7;
+        set X=x +(x1 * y1);
+A123:   0_No <= x1 & 0_No < y1 by A121,A119,A120,A45;
+        then 0_No+0_No < x1 +y1 by SURREALR:44;
+        then
+A124:   not x1+y1 == 0_No;
+        then X * (x1+y1)" in sqrt(x, sqrtL(S0,x).nm, sqrtR(S0,x).nm)
+        by A122,A119,A120,Def2;
+        then X * (x1+y1)" in sqrtL(S0,x).nm \/
+        sqrt(x, sqrtL(S0,x).nm, sqrtR(S0,x).nm) by XBOOLE_0:def 3;
+        then
+A125:   X * (x1+y1)" in sqrtL(S0,x).(nm+1) c= Union sqrtL(S0,x)
+        by Th8,ABCMIZ_1:1;
+A126:   y in {y} & L_y << {y} by TARSKI:def 1,SURREALO:11;
+        then
+A127:   X * (x1+y1)" < y by A125,A62,A4;
+A128:   X * (x1+y1)" <= y by A126,A125,A62,A4;
+A129:   (x1+y1) * (x1+y1)" ==1_No by A124,SURREALI:33;
+        x1*(X * (x1+y1)") <=x1*y & y1*(X * (x1+y1)")<y1*y
+        by A123,A127,A128,SURREALR:70,75;
+        then
+A130:   x1*(X * (x1+y1)") + y1*(X *(x1+y1)") < x1*y + y* y1
+        by SURREALR:44;
+        x1*(X * (x1+y1)") + y1*(X * (x1+y1)") == (x1+y1) * (X * (x1+y1)")
+        ==((x1+y1) * (x1+y1)") * X by SURREALR:67,69;
+        then x1*(X * (x1+y1)") + y1*(X * (x1+y1)") ==((x1+y1) * (x1+y1)") * X
+        == 1_No *X by A129,SURREALR:54,SURREALO:4;
+        then x1*(X * (x1+y1)") + y1*(X * (x1+y1)") == 1_No * X by SURREALO:4;
+        then X < x1*y + y* y1 by A130,SURREALO:4;
+        then
+A131:   X +-(x1*y1) < x1*y + y* y1 + -x1*y1  by SURREALR:44;
+        (x1 * y1) -(x1*y1) == 0_No by SURREALR:39;
+        then X +-(x1*y1) = x+((x1 * y1) +-(x1*y1)) == x+0_No
+        by SURREALR:37,66;
+        then x < a by A118,A131,SURREALO:4;
+        hence thesis by A117,TARSKI:def 1;
+      end;
+      hence thesis by A68,A100,SURREAL0:43,A108;
+    end;
+A132: for y st y = sqrt x holds
+    (x==0_No implies y==0_No) & (0_No < x implies 0_No < y)
+    proof
+      let y such that
+A133: y = sqrt x;
+      thus x==0_No implies y==0_No
+      proof
+        assume
+A134:   x==0_No;
+        0_No <= y by A133,A61;
+        then
+A135:   L_y << {0_No} << R_y by A134,A133,A4,Th18,SURREAL0:43;
+        for z st L_y << {z} << R_y holds born 0_No c= born z
+        proof
+          let z such that L_y << {z} << R_y;
+          born 0_No = {} by SURREAL0:37;
+          hence thesis;
+        end;
+        hence thesis by SURREALO:16,A135;
+      end;
+      assume
+A136: 0_No < x & y <= 0_No;
+      then
+A137: y == 0_No & y*y == x by A133,A61;
+      then y*0_No == y*y by SURREALR:54;
+      hence thesis by A136,A137,SURREALO:4;
+    end;
+    S is Surreal;
+    hence thesis by A46,A48,A61,A132;
+  end;
+  for D be Ordinal holds O[D] from ORDINAL1:sch 2(A1);
+  hence thesis;
+end;
+
+theorem Th20:
+  x <= 0_No implies sqrt x is surreal
+proof
+  assume
+A1: x <= 0_No;
+A2: L_sqrt_0 x is surreal-membered
+  proof
+    let o;
+    assume o in L_sqrt_0 x;
+    then consider l be Surreal such that
+A3: o = sqrt l & l in L_NonNegativePart x by Def9;
+    0_No <= l by A3,Th2;
+    hence thesis by A3,Th19;
+  end;
+  R_sqrt_0 x is surreal-membered
+  proof
+    let o;
+    assume o in R_sqrt_0 x;
+    then consider l be Surreal such that
+A4: o = sqrt l & l in R_NonNegativePart x by Def9;
+    0_No <= l by A4,Th2;
+    hence thesis by A4,Th19;
+  end;
+  then Union sqrtR(sqrt_0 x,x) is surreal-membered &
+    Union sqrtL(sqrt_0 x,x) is surreal-membered by A2,Th10;
+  then consider M be Ordinal such that
+A5:for o st o in Union sqrtL(sqrt_0 x,x)\/Union sqrtR(sqrt_0 x,x)
+          ex A be Ordinal st A in M & o in Day A by SURREAL0:47;
+  Union sqrtL(sqrt_0 x,x) <<Union sqrtR(sqrt_0 x,x) by A1,Th18;
+  then [Union sqrtL(sqrt_0 x,x),Union sqrtR(sqrt_0 x,x)] in Day M
+  by A5,SURREAL0:46;
+  hence sqrt x is surreal by Th15;
+end;
+
+registration
+  let x;
+  cluster sqrt x -> surreal;
+  coherence
+  proof
+    x <=0_No or 0_No <= x;
+    hence thesis by Th19,Th20;
+  end;
+end;
+
+registration
+  let x;
+  cluster sqrt_0 x -> surreal;
+  coherence
+  proof
+    set S0=sqrt_0 x;
+A1: S0 = [L_S0,R_S0];
+A2: sqrt x = [L_sqrt x,R_sqrt x];
+A3: sqrt x = [Union sqrtL(S0,x),Union sqrtR (S0,x)] by Th15;
+A4: L_S0 = sqrtL(S0,x).0 c= Union sqrtL(S0,x) &
+    R_S0 = sqrtR(S0,x).0 c= Union sqrtR(S0,x) by Th6,ABCMIZ_1:1;
+    then L_S0 c= L_sqrt x & R_S0 c= R_sqrt x by A3;
+    then
+A5: L_S0 is surreal-membered & R_S0 is surreal-membered
+    by SURREAL0:def 16;
+    L_S0 <=_ L_sqrt x & R_S0 <=_ R_sqrt x by A4,A3;
+    hence thesis by A5,A1,A2,SURREALI:37;
+  end;
+end;
+
+begin :: Selected Square Root Properties
+
+theorem Th21:
+  0_No <= x implies 0_No <= sqrt x & sqrt x * sqrt x == x by Th19;
+
+theorem
+  0_No == x implies sqrt x == 0_No by Th19;
+
+theorem
+  0_No <= x implies
+     (y in L_sqrt x implies 0_No <= y & y*y < x) &
+     (y in R_sqrt x implies 0_No < y & x < y*y) by Th19;
+
+theorem
+  x < 0_No & (for y st y in R_x holds y < 0_No)
+      implies
+    sqrt x = 0_No
+proof
+  assume that
+A1:x < 0_No and
+A2:for y st y in R_x holds y < 0_No;
+  defpred P[Nat] means
+  sqrtR(sqrt_0 x,x).$1={};
+A3:P[0]
+  proof
+    assume sqrtR(sqrt_0 x,x).0<>{};
+    then consider a be object such that
+A4: a in sqrtR(sqrt_0 x,x).0 by XBOOLE_0:def 1;
+    a in R_sqrt_0 x by A4,Th6;
+    then consider r be Surreal such that
+A5: a = sqrt r & r in R_NonNegativePart x by Def9;
+    r in R_x & 0_No <= r by A5,Th2;
+    hence thesis by A2;
+  end;
+A6:P[n] implies P[n+1]
+  proof
+    assume
+A7: P[n];
+    assume sqrtR(sqrt_0 x,x).(n+1)<>{};
+    then consider y be object such that
+A8: y in sqrtR(sqrt_0 x,x).(n+1) by XBOOLE_0:def 1;
+    y in sqrtR(sqrt_0 x,x).n \/ sqrt(x,sqrtL(sqrt_0 x,x).n,sqrtL(sqrt_0 x,x).n)
+    \/ sqrt(x,sqrtR(sqrt_0 x,x).n,sqrtR(sqrt_0 x,x).n) by A8,Th8;
+    then y in sqrtR(sqrt_0 x,x).n
+     \/ sqrt(x,sqrtL(sqrt_0 x,x).n,sqrtL(sqrt_0 x,x).n)
+    or y in sqrt(x,sqrtR(sqrt_0 x,x).n,sqrtR(sqrt_0 x,x).n) by XBOOLE_0:def 3;
+    then per cases by XBOOLE_0:def 3;
+    suppose y in sqrtR(sqrt_0 x,x).n;
+      hence thesis by A7;
+    end;
+    suppose y in sqrt(x,sqrtL(sqrt_0 x,x).n,sqrtL(sqrt_0 x,x).n);
+      then consider x1,y1 be Surreal such that
+A9:   x1 in sqrtL(sqrt_0 x,x).n & y1 in sqrtL(sqrt_0 x,x).n &
+      not x1 + y1 == 0_No & y = (x +'(x1 * y1)) * (x1+y1)" by Def2;
+      x <=0_No by A1;
+      then sqrtL(sqrt_0 x,x).n c= Union sqrtL(sqrt_0 x,x) ={}
+      by ABCMIZ_1:1,Th18;
+      hence thesis by A9;
+    end;
+    suppose y in sqrt(x,sqrtR(sqrt_0 x,x).n,sqrtR(sqrt_0 x,x).n);
+      then ex x1,y1 be Surreal st
+      x1 in sqrtR(sqrt_0 x,x).n & y1 in sqrtR(sqrt_0 x,x).n &
+      not x1 + y1 == 0_No & y = (x +'(x1 * y1)) * (x1+y1)" by Def2;
+      hence thesis by A7;
+    end;
+  end;
+A10:P[n] from NAT_1:sch 2(A3,A6);
+A11:Union sqrtR(sqrt_0 x,x)={}
+  proof
+    assume Union sqrtR(sqrt_0 x,x) <>{};
+    then consider a be object such that
+A12:a in Union sqrtR(sqrt_0 x,x) by XBOOLE_0:def 1;
+    consider n be object such that
+A13:n in dom sqrtR(sqrt_0 x,x) & a in sqrtR(sqrt_0 x,x).n by A12,CARD_5:2;
+    dom sqrtR(sqrt_0 x,x)=NAT by Def5;
+    then reconsider n as Nat by A13;
+    sqrtR(sqrt_0 x,x).n ={} by A10;
+    hence thesis by A13;
+  end;
+  x <= 0_No by A1;
+  then Union sqrtL(sqrt_0 x,x)={} by Th18;
+  hence thesis by A11,Th15;
+end;
+
+theorem Th25:
+  (for y st y in L_NonNegativePart x \/ R_NonNegativePart x holds y==0_No)
+     implies
+  sqrt x = sqrt_0 x
+proof
+  assume
+A1: for y st y in L_NonNegativePart x \/ R_NonNegativePart x holds y==0_No;
+  defpred P[Nat] means sqrtL(sqrt_0 x,x).$1=L_sqrt_0 x &
+                       sqrtR(sqrt_0 x,x).$1=R_sqrt_0 x;
+A2:P[0] by Th6;
+A3:P[n] implies P[n+1]
+  proof
+    assume
+A4: P[n];
+    set S0=sqrt_0 x;
+    set n1=n+1;
+    sqrtL(S0,x).0 c= sqrtL(S0,x).n1 by Th7;
+    then
+A5: L_S0 c= sqrtL(S0,x).n1 by Th6;
+    sqrtL(S0,x).n1 c= L_S0
+    proof
+      let o such that
+A6:   o in sqrtL(S0,x).n1 & not o in L_S0;
+      o in sqrtL(S0,x).n \/ sqrt(x,sqrtL(S0,x).n,sqrtR(S0,x).n) by A6,Th8;
+      then o in sqrt(x,sqrtL(S0,x).n,sqrtR(S0,x).n) by A4,A6,XBOOLE_0:def 3;
+      then consider x1,y1 be Surreal such that
+A7:   x1 in sqrtL(S0,x).n & y1 in sqrtR(S0,x).n &
+      not x1 + y1 == 0_No & o = (x +'(x1 * y1)) * (x1+y1)" by Def2;
+      consider l be Surreal such that
+A8:   x1 = sqrt l & l in L_NonNegativePart x by A4,A7,Def9;
+      l in L_NonNegativePart x\/R_NonNegativePart x by A8,XBOOLE_0:def 3;
+      then l==0_No by A1;
+      then
+A9:   x1 == 0_No by A8,Th19;
+      consider r be Surreal such that
+A10:   y1 = sqrt r & r in R_NonNegativePart x by A4,A7,Def9;
+      r in L_NonNegativePart x\/R_NonNegativePart x by A10,XBOOLE_0:def 3;
+      then r==0_No by A1;
+      then y1 == 0_No by A10,Th19;
+      then x1+y1 == 0_No + 0_No by A9,SURREALR:66;
+      hence thesis by A7;
+    end;
+    hence sqrtL(S0,x).n1 = L_S0 by A5,XBOOLE_0:def 10;
+    sqrtR(S0,x).0 c= sqrtR(S0,x).n1 by Th7;
+    then A11:R_S0 c= sqrtR(S0,x).n1 by Th6;
+    sqrtR(S0,x).n1 c= R_S0
+    proof
+      let o such that
+A12:  o in sqrtR(S0,x).n1 & not o in R_S0;
+      o in sqrtR(S0,x).n \/ sqrt(x,sqrtL(S0,x).n,sqrtL(S0,x).n)\/
+      sqrt(x,sqrtR(S0,x).n,sqrtR(S0,x).n) by A12,Th8;
+      then o in sqrtR(S0,x).n \/ sqrt(x,sqrtL(S0,x).n,sqrtL(S0,x).n) or
+      o in sqrt(x,sqrtR(S0,x).n,sqrtR(S0,x).n) by XBOOLE_0:def 3;
+      then per cases by A4,A12,XBOOLE_0:def 3;
+      suppose o in sqrt(x,sqrtL(S0,x).n,sqrtL(S0,x).n);
+        then consider x1,y1 be Surreal such that
+A13:    x1 in sqrtL(S0,x).n & y1 in sqrtL(S0,x).n &
+        not x1 + y1 == 0_No & o = (x +'(x1 * y1)) * (x1+y1)" by Def2;
+        consider l be Surreal such that
+A14:    x1 = sqrt l & l in L_NonNegativePart x by Def9,A4,A13;
+        l in L_NonNegativePart x\/R_NonNegativePart x by A14,XBOOLE_0:def 3;
+        then l==0_No by A1;
+        then
+A15:    x1 == 0_No by A14,Th19;
+        consider r be Surreal such that
+A16:    y1 = sqrt r & r in L_NonNegativePart x by Def9,A4,A13;
+        r in L_NonNegativePart x\/R_NonNegativePart x by A16,XBOOLE_0:def 3;
+        then r==0_No by A1;
+        then y1 == 0_No by A16,Th19;
+        then x1+y1 == 0_No + 0_No by A15,SURREALR:66;
+        hence thesis by A13;
+      end;
+      suppose o in sqrt(x,sqrtR(S0,x).n,sqrtR(S0,x).n);
+        then consider x1,y1 be Surreal such that
+A17:    x1 in sqrtR(S0,x).n & y1 in sqrtR(S0,x).n &
+        not x1 + y1 == 0_No & o = (x +'(x1 * y1)) * (x1+y1)" by Def2;
+        consider l be Surreal such that
+A18:    x1 = sqrt l & l in R_NonNegativePart x by Def9,A4,A17;
+        l in L_NonNegativePart x\/R_NonNegativePart x by A18,XBOOLE_0:def 3;
+        then l==0_No by A1;
+        then
+A19:    x1 == 0_No by A18,Th19;
+        consider r be Surreal such that
+A20:    y1 = sqrt r & r in R_NonNegativePart x by Def9,A4,A17;
+        r in L_NonNegativePart x\/R_NonNegativePart x by A20,XBOOLE_0:def 3;
+        then r==0_No by A1;
+        then y1 == 0_No by A20,Th19;
+        then x1+y1 == 0_No + 0_No by A19,SURREALR:66;
+        hence thesis by A17;
+      end;
+    end;
+    hence thesis by A11,XBOOLE_0:def 10;
+  end;
+A21:P[n] from NAT_1:sch 2(A2,A3);
+A22:sqrt x = [Union sqrtL(sqrt_0 x,x),Union sqrtR (sqrt_0 x,x)] by Th15;
+A23:L_sqrt x = L_sqrt_0 x
+  proof
+    thus L_sqrt x c= L_sqrt_0 x
+    proof
+      let o;
+      assume o in L_sqrt x;
+      then consider n be object such that
+A24:  n in dom sqrtL(sqrt_0 x,x) & o in sqrtL(sqrt_0 x,x).n
+      by A22,CARD_5:2;
+      dom sqrtL(sqrt_0 x,x)=NAT by Def4;
+      then reconsider n as Nat by A24;
+      sqrtL(sqrt_0 x,x).n = L_sqrt_0 x by A21;
+      hence thesis by A24;
+    end;
+    thus thesis by A2,A22,ABCMIZ_1:1;
+  end;
+  R_sqrt x = R_sqrt_0 x
+  proof
+    thus R_sqrt x c= R_sqrt_0 x
+    proof
+      let o;
+      assume o in R_sqrt x;
+      then consider n be object such that
+A25:  n in dom sqrtR(sqrt_0 x,x) & o in sqrtR(sqrt_0 x,x).n
+      by A22,CARD_5:2;
+      dom sqrtR(sqrt_0 x,x)=NAT by Def5;
+      then reconsider n as Nat by A25;
+      sqrtR(sqrt_0 x,x).n = R_sqrt_0 x by A21;
+      hence thesis by A25;
+    end;
+    thus thesis by A2,A22,ABCMIZ_1:1;
+  end;
+  hence thesis by A23, XTUPLE_0:2;
+end;
+
+registration
+  reduce sqrt 0_No to 0_No;
+  reducibility
+  proof
+    set S0 = sqrt_0 0_No;
+A1: L_S0 ={}
+    proof
+      assume L_S0 <>{};
+      then consider o such that
+A2:   o in L_S0 by XBOOLE_0:def 1;
+      consider l be Surreal such that
+A3:   o = sqrt l & l in L_NonNegativePart 0_No by A2,Def9;
+      l in L_0_No by A3,Th2;
+      hence thesis;
+    end;
+A4: R_S0 ={}
+    proof
+      assume R_S0 <>{};
+      then consider o such that
+A5:   o in R_S0 by XBOOLE_0:def 1;
+      consider r be Surreal such that
+A6:   o = sqrt r & r in R_NonNegativePart 0_No by A5,Def9;
+      r in R_0_No by A6,Th2;
+      hence thesis;
+    end;
+    for y st y in L_NonNegativePart 0_No \/R_NonNegativePart 0_No holds y==0_No
+    proof
+      let y;
+      assume y in L_NonNegativePart 0_No \/R_NonNegativePart 0_No;
+      then y in L_NonNegativePart 0_No or y in R_NonNegativePart 0_No
+      by XBOOLE_0:def 3;
+      then y in L_ 0_No or y in R_0_No by Th2;
+      hence thesis;
+    end;
+    hence thesis by A1,A4,Th25;
+  end;
+  reduce sqrt 1_No to 1_No;
+  reducibility
+  proof
+    set S0 = sqrt_0 1_No;
+    0_No in L_1_No & 0_No <= 0_No by TARSKI:def 1;
+    then 0_No in L_NonNegativePart 1_No by Def1;
+    then
+A7: sqrt 0_No in L_S0 by Def9;
+    L_S0 c= {0_No}
+    proof
+      let o;
+      assume o in L_S0;
+      then consider l be Surreal such that
+A8:   o = sqrt l & l in L_NonNegativePart 1_No by Def9;
+      l in L_1_No by A8,Th2;
+      then l =0_No by TARSKI:def 1;
+      hence thesis by A8,TARSKI:def 1;
+    end;
+    then
+A9: L_S0 ={0_No} by A7,ZFMISC_1:33;
+A10:R_S0 ={}
+    proof
+      assume R_S0 <>{};
+      then consider o such that
+A11:  o in R_S0 by XBOOLE_0:def 1;
+      consider r be Surreal such that
+A12:  o = sqrt r & r in R_NonNegativePart 1_No by A11,Def9;
+      r in R_1_No by A12,Th2;
+      hence thesis;
+    end;
+    for y st y in L_NonNegativePart 1_No \/R_NonNegativePart 1_No holds y==0_No
+    proof
+      let y;
+      assume y in L_NonNegativePart 1_No \/R_NonNegativePart 1_No;
+      then y in L_NonNegativePart 1_No or y in R_NonNegativePart 1_No
+      by XBOOLE_0:def 3;
+      then y in L_ 1_No or y in R_1_No by Th2;
+      hence thesis by TARSKI:def 1;
+    end;
+    hence thesis by A10,A9,Th25;
+  end;
+  reduce sqrt - 1_No to - 1_No;
+  reducibility
+  proof
+A13: -1_No = [-- R_1_No, -- L_1_No] by SURREALR:7
+    .= [{}, {-0_No}] by SURREALR:21,22;
+    set S0 = sqrt_0 -1_No;
+    0_No in R_-1_No by A13,TARSKI:def 1;
+    then 0_No in R_NonNegativePart -1_No by Def1;
+    then
+A14: sqrt 0_No in R_S0 by Def9;
+    R_S0 c= {0_No}
+    proof
+      let o;
+      assume o in R_S0;
+      then consider r be Surreal such that
+A15:  o = sqrt r & r in R_NonNegativePart -1_No by Def9;
+      r in R_-1_No by A15,Th2;
+      then r =0_No by A13,TARSKI:def 1;
+      hence thesis by A15,TARSKI:def 1;
+    end;
+    then
+A16:R_S0 ={0_No} by A14,ZFMISC_1:33;
+A17:L_S0 ={}
+    proof
+      assume L_S0 <>{};
+      then consider o such that
+A18:  o in L_S0 by XBOOLE_0:def 1;
+      consider l be Surreal such that
+A19:  o = sqrt l & l in L_NonNegativePart -1_No by A18,Def9;
+      l in L_-1_No by A19,Th2;
+      hence thesis by A13;
+    end;
+    for y st y in L_NonNegativePart -1_No\/R_NonNegativePart -1_No
+    holds y==0_No
+    proof
+      let y;
+      assume y in L_NonNegativePart -1_No \/R_NonNegativePart -1_No;
+      then y in L_NonNegativePart -1_No or y in R_NonNegativePart -1_No
+      by XBOOLE_0:def 3;
+      then y in L_ -1_No or y in R_-1_No by Th2;
+      hence thesis by A13,TARSKI:def 1;
+    end;
+    hence thesis by A17,Th25,A13,A16;
+  end;
+end;
+
+theorem
+  0_No <= x <= y implies sqrt x <= sqrt y
+proof
+  assume that
+A1:0_No <= x <= y and
+A2:sqrt y < sqrt x;
+A3:0_No <= sqrt x & sqrt x * sqrt x == x by A1,Th19;
+  0_No <= y by A1,SURREALO:4;
+  then
+A4: 0_No <= sqrt y & sqrt y * sqrt y == y by Th19;
+  0_No < sqrt x by A4,A2,SURREALO:4;
+  then sqrt y* sqrt x < sqrt x * sqrt x by A2,SURREALR:70;
+  then
+A5: sqrt y* sqrt x < x by A3,SURREALO:4;
+  sqrt y <= sqrt x by A2;
+  then sqrt y* sqrt y <= sqrt x * sqrt y by A4,SURREALR:75;
+  then y <= sqrt x * sqrt y by A4,SURREALO:4;
+  hence thesis by A1,A5,SURREALO:4;
+end;
+
+theorem Th27:
+  0_No <= x < y implies sqrt x < sqrt y
+proof
+  assume that
+A1:0_No <= x < y and
+A2: sqrt y <= sqrt x;
+A3:0_No <= sqrt x & sqrt x * sqrt x == x by A1,Th19;
+  0_No <= y by A1,SURREALO:4;
+  then
+A4: 0_No <= sqrt y & sqrt y * sqrt y == y by Th19;
+  sqrt y* sqrt x <= sqrt x * sqrt x by A3,A2,SURREALR:75;
+  then
+A5: sqrt y* sqrt x <= x by A3,SURREALO:4;
+  sqrt y* sqrt y <= sqrt x * sqrt y by A2,A4,SURREALR:75;
+  then y <= sqrt x * sqrt y by A4,SURREALO:4;
+  hence thesis by A1,A5,SURREALO:4;
+end;
+
+theorem Th28:
+  0_No <= x == y*y implies y == sqrt x or y == - sqrt x
+proof
+  set s = sqrt x;
+  assume
+A1: 0_No <= x == y*y;
+  then
+A2: s*s ==x by Th19;
+  (s + -y)*s == s*s + (-y)*s & (s + -y)*y == s*y + (-y)*y by SURREALR:67;
+  then (s + -y)*(s + y) == (s + -y)*s + (s + -y)*y ==
+  s*s + (-y)*s + (s*y + (-y)*y) by SURREALR:67,66;
+  then A3: (s + -y)*(s + y) == s*s + (-y)*s + (s*y + (-y)*y)
+  by SURREALO:4;
+  (-y)*s + s*y == (-(s*y)) + (s*y) = s*y - s*y == 0_No by SURREALR:39,58;
+  then
+A4: (-y)*s + s*y == 0_No by SURREALO:4;
+A5: s*s + (-y)*y == s*s +- (y*y) by SURREALR:58;
+A6: -(y*y) == -x by A1,SURREALR:65;
+  s*s + (-y)*s + (s*y + (-y)*y)
+   = s*s + ((-y)*s + (s*y + (-y)*y)) by SURREALR:37
+  .= s*s + (((-y)*s + s*y) + (-y)*y) by SURREALR:37
+  .= s*s + (-y)*y + ((-y)*s + s*y) by SURREALR:37;
+  then s*s + (-y)*s + (s*y + (-y)*y) == s*s +- (y*y) +0_No
+  by A4,A5,SURREALR:66;
+  then (s + -y)*(s + y) == s*s +- (y*y) == x - x
+  by SURREALR:66,A3,A6,SURREALO:4,A2;
+  then (s + -y)*(s + y) ==x - x ==0_No by SURREALO:4,SURREALR:39;
+  then (s + -y)*(s + y) == 0_No by SURREALO:4;
+  then s  - y == 0_No or s - (- y) == 0_No by SURREALR:72,74;
+  then s == y or s == - y by SURREALR:47;
+  then s == y or - s == - - y by SURREALR:10;
+  hence thesis;
+end;
+
+registration
+  let x be positive Surreal;
+  cluster sqrt x -> positive;
+  coherence
+  proof
+    sqrt 0_No < sqrt x by Th27,SURREALI:def 8;
+    hence thesis;
+  end;
+end;
+
+theorem Th29:
+  0_No <= x implies sqrt (x*x) == x
+proof
+  set S=sqrt (x*x);
+  assume that
+A1: 0_No <= x and
+A2: not S == x;
+A3: 0_No * x <= x*x by A1,SURREALR:75;
+  0_No * x <= x*x by A1,SURREALR:75;
+  then
+A4: x == S or x == -S by Th28;
+  then - 0_No <= -S by A2,A1,SURREALO:4;
+  then
+A5: S==0_No by A3,Th19,SURREALR:10;
+  then -S == -0_No by SURREALR:10;
+  then x == -0_No by A4,A2,SURREALO:4;
+  hence thesis by A2,A5,SURREALO:4;
+end;
+
+theorem
+  0_No < x implies (sqrt x)" == sqrt (x")
+proof
+  assume
+A1: 0_No < x;
+  then reconsider a = x as positive Surreal by SURREALI:def 8;
+  set S=sqrt a,T = sqrt (a");
+A2:not S ==0_No & not T == 0_No by SURREALI:def 8;
+A3:0_No <= a" by SURREALI:def 8;
+  0_No <= x by A1;
+  then S*S*(T*T) == a*(T*T) == a*a" by A3,Th21,SURREALR:54;
+  then
+A4: (S*S)*(T*T) == a*a" by SURREALO:4;
+  not a == 0_No by A1;
+  then a*a" == 1_No by SURREALI:33;
+  then
+A5: (S*S)*(T*T) == 1_No by A4,SURREALO:4;
+A6: 0_No <= 1_No by SURREALI:def 8;
+A7:-1_No <= -0_No by SURREALR:10,SURREALI:def 8;
+  (S*S)*(T*T) == (S*S)*T*T == S*(S*T)*T by SURREALR:69,54;
+  then (S*S)*(T*T) == S*(S*T)*T == (S*T)*(S*T)
+  by SURREALO:4,SURREALR:69;
+  then (S*S)*(T*T) == (S*T)*(S*T) by SURREALO:4;
+  then (S*T)*(S*T) == 1_No by A5,SURREALO:4;
+  then S*T == sqrt 1_No or S*T == - sqrt 1_No by A6,Th28;
+  hence thesis by A2,A7,SURREALI:def 8,42,SURREALO:4;
+end;
+
+begin :: Square Root of Negative Surreal Numbers - Outside the Defined Range
+
+theorem Th31:
+  for x be Surreal st 0_No < x
+    ex y be Surreal st -1_No == y & sqrt y < -x &
+        y = [{},{0_No,(sqrt(x*x+1_No)-x) *(sqrt(x*x+1_No)-x)}]
+proof
+  let x be Surreal such that
+A1: 0_No < x;
+  reconsider p=x as positive Surreal by A1,SURREALI:def 8;
+A2: -1_No = [-- R_1_No, -- L_1_No] by SURREALR:7
+  .= [{}, {-0_No}] by SURREALR:21,22;
+A3:0_No <= x by A1;
+  then
+A4: x*0_No <= x*x by SURREALR:75;
+A5: x*x+0_No < x*x+1_No by SURREALR:44,SURREALI:def 8;
+  then x == sqrt (x*x) < sqrt (x*x+1_No) by A4, Th27,A3,Th29;
+  then x < sqrt (x*x+1_No) by SURREALO:4;
+  then 0_No < sqrt (x*x+1_No)-x by SURREALR:45;
+  then reconsider Y = sqrt (x*x+1_No)+-x as positive Surreal by SURREALI:def 8;
+  set YY=Y*Y;
+  {0_No}\/{YY} is surreal-membered;
+  then reconsider Y0 = {0_No,YY} as surreal-membered set by ENUMSET1:1;
+  consider M be Ordinal such that
+A6: o in {}\/Y0 implies ex A be Ordinal st A in M & o in Day A
+  by SURREAL0:47;
+  {} << Y0;
+  then [{},Y0] in Day M by A6,SURREAL0:46;
+  then reconsider y = [{},Y0] as Surreal;
+  take y;
+A7: 0_No <= YY by SURREALI:def 8;
+A8:for z be Surreal st z in R_y holds 0_No <= z by A7,TARSKI:def 2;
+A9: -1_No = [L_y,{0_No}] by A2;
+  0_No in R_y by TARSKI:def 2;
+  hence
+A10: -1_No == y by A9,A8,SURREALO:24;
+  sqrt (YY) +sqrt (YY) is positive;
+  then
+A11:not sqrt (YY) +sqrt (YY) ==0_No;
+  YY in R_y by TARSKI:def 2;
+  then YY in R_NonNegativePart y by A7,Def1;
+  then sqrt (YY) in R_sqrt_0 y by Def9;
+  then sqrt (YY) in sqrtR(sqrt_0 y, y).0 by Th6;
+  then
+A12: (y + (sqrt (YY))*(sqrt (YY))) * ( sqrt (YY) +sqrt (YY))" in
+  sqrt(y,sqrtR(sqrt_0 y, y).0,sqrtR(sqrt_0 y, y).0) by A11,Def2;
+  sqrt y = [Union sqrtL(sqrt_0 y,y),Union sqrtR (sqrt_0 y,y)] by Th15;
+  then
+A13: {sqrt y} << R_sqrt y = Union sqrtR(sqrt_0 y, y) & sqrt y in {sqrt y}
+  by TARSKI:def 1,SURREALO:11;
+  sqrtR(sqrt_0 y,y).(0+1) = sqrtR(sqrt_0 y,y).0 \/
+    sqrt(y,sqrtL(sqrt_0 y,y).0,sqrtL(sqrt_0 y,y).0) \/
+    sqrt(y,sqrtR(sqrt_0 y,y).0,sqrtR(sqrt_0 y,y).0) by Th8;
+  then
+A14: (y + (sqrt (YY))*(sqrt (YY))) * ( sqrt (YY) +sqrt (YY))" in
+  sqrtR(sqrt_0 y, y).1 c= Union sqrtR(sqrt_0 y, y)
+    by ABCMIZ_1:1,XBOOLE_0:def 3,A12;
+  set TWO=1_No + 1_No;
+A15: not 0_No == Y" & not 0_No == Y & not TWO == 0_No by SURREALI:def 8;
+  then
+A16: Y" " == Y & Y * Y"==1_No & TWO*TWO" == 1_No by SURREALI:44,33;
+  0_No <= Y by SURREALI:def 8;
+  then sqrt YY == Y by Th29;
+  then sqrt (YY) +sqrt (YY) == Y + Y = 1_No *Y + 1_No *Y ==
+   (1_No + 1_No)*Y by SURREALR:66,67;
+  then sqrt (YY) +sqrt (YY) == (1_No + 1_No)*Y by SURREALO:4;
+  then ( sqrt (YY) +sqrt (YY))" == ((1_No + 1_No)*Y)" == TWO"*(Y")
+  by A11,A15,SURREALI:43,45;
+  then
+A17:( sqrt (YY) +sqrt (YY))" == TWO"* Y" by SURREALO:4;
+A18:(sqrt (YY))*(sqrt (YY)) == YY by A7,Th19;
+A19: YY == sqrt (x*x+1_No) * sqrt (x*x+1_No) +
+  (-x)*(-x) + (sqrt (x*x+1_No)*(-x) + (-x)*sqrt (x*x+1_No)) by SURREALR:76;
+  0_No <= x*x+1_No by A4,A5,SURREALO:4;
+  then sqrt (x*x+1_No)*sqrt (x*x+1_No) == x*x+1_No & (-x)*(-x) = x*x
+  by Th19,SURREALR:58;
+  then
+A20: sqrt (x*x+1_No) * sqrt (x*x+1_No) + (-x)*(-x) == x*x + 1_No +x*x
+  = 1_No + (x*x+x*x) by SURREALR:37,66;
+  x*x = 1_No*(x*x);
+  then x*x+x*x == TWO*(x*x) by SURREALR:67;
+  then 1_No + (x*x+x*x) == 1_No+TWO*(x*x) by SURREALR:66;
+  then
+A21: sqrt (x*x+1_No) * sqrt (x*x+1_No) + (-x)*(-x) == 1_No + TWO*(x*x)
+  by A20,SURREALO:4;
+  1_No*(sqrt (x*x+1_No)*(-x)) = sqrt (x*x+1_No)*(-x);
+  then sqrt (x*x+1_No)*(-x) +
+  sqrt (x*x+1_No)*(-x) == TWO*(sqrt (x*x+1_No)*(-x)) by SURREALR:67;
+  then sqrt (x*x+1_No) * sqrt (x*x+1_No) + (-x)*(-x) +(sqrt (x*x+1_No)*(-x)+
+      (-x)*sqrt (x*x+1_No))== 1_No + TWO*(x*x) +TWO*(sqrt (x*x+1_No)*(-x))
+  by A21,SURREALR:66;
+  then YY == 1_No + TWO*(x*x) +TWO*(sqrt (x*x+1_No)*(-x))
+  by A19,SURREALO:4;
+  then
+A22:(sqrt (YY))*(sqrt (YY)) ==
+  1_No + TWO*(x*x) +TWO*(sqrt (x*x+1_No)*(-x))
+  = 1_No + (TWO*(x*x) +TWO*(sqrt (x*x+1_No)*(-x)))
+  by A18,SURREALO:4,SURREALR:37;
+A23: 1_No - 1_No == 0_No by SURREALR:39;
+  x*x = (-x)*(-x) by SURREALR:58;
+  then TWO*(x*x) +TWO*(sqrt (x*x+1_No)*(-x)) ==
+     TWO*(x*x +sqrt (x*x+1_No)*(-x)) == TWO *((-x) * Y) by SURREALR:54,67;
+  then TWO*(x*x) +TWO*(sqrt (x*x+1_No)*(-x)) == TWO *((-x) * Y)
+  by SURREALO:4;
+  then 1_No+ (TWO*(x*x) +TWO*(sqrt (x*x+1_No)*(-x))) == 1_No+
+  TWO *((-x) * Y) by SURREALR:66;
+  then (sqrt (YY))*(sqrt (YY)) == 1_No +TWO *((-x) * Y)
+  by A22,SURREALO:4;
+  then y+ (sqrt (YY))*(sqrt (YY)) == -1_No + (1_No +TWO *((-x) * Y))
+  = (1_No - 1_No) +TWO *((-x) * Y) == 0_No + TWO *((-x) * Y)
+  by A23,A10,SURREALR:66,37;
+  then y+ (sqrt (YY))*(sqrt (YY)) == TWO *((-x) * Y)
+  by SURREALO:4;
+  then (y + (sqrt (YY))*(sqrt (YY))) * ( sqrt (YY) +sqrt (YY))" ==
+  (TWO *((-x) * Y)) * (sqrt (YY) +sqrt (YY))"==
+  (TWO *((-x) * Y)) * (TWO"* Y") by A17,SURREALR:54;
+  then
+A24: (y + (sqrt (YY))*(sqrt (YY))) * ( sqrt (YY) +sqrt (YY))" ==
+  (TWO *((-x) * Y)) * (TWO"* Y") by SURREALO:4;
+  (TWO *((-x) * Y)) * (TWO"* Y") == (-x) * (TWO * Y) * (TWO"* Y")
+  == (-x) * ((TWO * Y) * (TWO"* Y")) by SURREALR:69,54;
+  then
+A25: (TWO *((-x) * Y)) * (TWO"* Y") == (-x) * ((TWO * Y) * (TWO"* Y"))
+  by SURREALO:4;
+  (TWO * Y) * (TWO"* Y") == (TWO*Y) * TWO"* Y" == Y* (TWO * TWO")* Y"
+  by SURREALR:69,54;
+  then (TWO * Y) * (TWO"* Y") == Y* (TWO * TWO")* Y" == (TWO * TWO")* (Y*Y")
+  by SURREALR:69,SURREALO:4;
+  then (TWO * Y) * (TWO"* Y") == (TWO * TWO")* (Y*Y") == (TWO * TWO")* 1_No
+  by A16,SURREALR:54,SURREALO:4;
+  then (TWO * Y) * (TWO"* Y") == TWO * TWO" by SURREALO:4;
+  then (TWO * Y) * (TWO"* Y") == 1_No by A16,SURREALO:4;
+  then (-x) * ((TWO * Y) * (TWO"* Y")) == (-x)*1_No by SURREALR:54;
+  then (TWO *((-x) * Y)) * (TWO"* Y") == (-x)*1_No by A25,SURREALO:4;
+  then (y + (sqrt (YY))*(sqrt (YY))) * (sqrt (YY) +sqrt (YY))" == -x
+  by A24,SURREALO:4;
+  hence thesis by A14,A13,SURREALO:4;
+end;
+
+theorem
+  ex x,y be Surreal st x == y < 0_No & sqrt x < sqrt y
+proof
+  consider y be Surreal such that
+A1: -1_No == y & sqrt y < -1_No &
+  y = [{},{0_No,(sqrt(1_No*1_No+1_No)-1_No) *(sqrt(1_No*1_No+1_No)-1_No)}]
+    by Th31,SURREALI:def 8;
+  take y, -1_No;
+  -1_No < -0_No by SURREALI:def 8,SURREALR:10;
+  hence thesis by A1;
+end;

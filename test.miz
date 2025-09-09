@@ -1,0 +1,16 @@
+environ
+
+begin
+
+theorem T1: 1 = 1;
+proof
+::> *396
+  thus 1 = 1;
+end;
+
+end.
+::>,216,203
+::>
+::> 203: Unknown token, maybe an illegal character used in an identifier
+::> 216: Unexpected "end"
+::> 396: Formula expected

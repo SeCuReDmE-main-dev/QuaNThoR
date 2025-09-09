@@ -1,0 +1,2546 @@
+:: Formal Proof of Transcendence of the Number $e$. {P}art {I}
+::  by Yasushige Watase
+::
+:: Received November 17, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ARYTM_3, VECTSP_1, TARSKI, NAT_1, MESFUNC1, VECTSP_2, STRUCT_0,
+      SUBSET_1, SUPINF_2, POLYNOM1, POLYNOM3, HURWITZ, FINSEQ_1, ALGSEQ_1,
+      FUNCT_1, RELAT_1, CARD_1, XBOOLE_0, NUMBERS, MSSUBFAM, CARD_3, AFINSQ_1,
+      PARTFUN1, XXREAL_0, XCMPLX_0, ORDINAL4, NEWTON, ARYTM_1, FUNCOP_1, INT_1,
+      INT_2, RINGDER1, FUNCT_7, REAL_1, REALSET1, RAT_1, INT_3, FOMODEL1,
+      C0SP1, FIELD_4, CARD_FIL, GROUP_4, IDEAL_1, GROUP_1, RING_3, POLYNOM5,
+      FINSEQ_3, POLYFORM, LTLAXIO1, CALCUL_2, FIELD_1, FUNCT_4, CAT_1,
+      ORDINAL2, UPROOTS, PARTFUN3, FDIFF_1, MSAFREE2, SIN_COS, VALUED_0,
+      VALUED_1, QC_LANG1, FCONT_1, XXREAL_1, ALGNUM_1, GAUSSINT, RATFUNC1,
+      FINSET_1, DIOPHAN2, POLYNOM4, PREPOWER, POLYNOM2, YELLOW_8, IRRAT_1,
+      RING_2, GCD_1, E_TRANS1, RLVECT_1, ALGSTR_0, LATTICES;
+ notations TARSKI, XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, RELSET_1,
+      PARTFUN1, FUNCT_2, FUNCOP_1, FINSET_1, NUMBERS, XCMPLX_0, XXREAL_0,
+      XREAL_0, NAT_1, INT_1, RAT_1, VALUED_0, NAT_D, FINSEQ_1, VALUED_1,
+      RFUNCT_1, RVSUM_1, NEWTON, RCOMP_1, FCONT_1, FDIFF_1, FUNCT_7, SIN_COS,
+      IRRAT_1, TAYLOR_1, PARTFUN3, WSIERP_1, STRUCT_0, GROUP_1, VECTSP_1,
+      VECTSP_2, GROUP_4, POLYNOM1, ALGSEQ_1, GCD_1, BINOM, POLYNOM3, POLYNOM4,
+      RLVECT_1, POLYNOM5, UPROOTS, INT_3, RING_1, C0SP1, HURWITZ, IDEAL_1,
+      VECTSP11, RATFUNC1, GAUSSINT, RING_2, RING_3, RING_4, ALGNUM_1, POLYDIFF,
+      DIOPHAN2, FIELD_1, FIELD_4, RINGDER1, BASEL_2;
+ constructors RELSET_1, REALSET1, NAT_D, BINOP_2, FINSEQOP, NEWTON, RCOMP_1,
+      FCONT_1, WSIERP_1, FUNCT_7, LIMFUNC1, SIN_COS, TAYLOR_1, PARTFUN3,
+      GROUP_4, ALGSEQ_1, GCD_1, BINOM, POLYNOM4, VECTSP11, RATFUNC1, RING_3,
+      ALGNUM_1, POLYDIFF, DIOPHAN2, FIELD_4, RINGDER1, BASEL_2;
+ registrations XXREAL_0, XREAL_0, CARD_1, ORDINAL1, RELSET_1, FUNCT_1, NAT_1,
+      INT_1, POLYDIFF, FINSEQ_1, STRUCT_0, RLVECT_1, VECTSP_1, ALGSTR_1,
+      RING_3, RING_4, RING_5, POLYNOM3, POLYNOM4, POLYNOM5, RATFUNC1, FUNCOP_1,
+      RELAT_1, FDIFF_1, FUNCT_2, RINGDER1, GAUSSINT, INT_3, RAT_1, NEWTON04,
+      XCMPLX_0, VALUED_1, MEMBERED, FINSET_1, VALUED_0, NEWTON, RCOMP_1,
+      RVSUM_4, NUMBERS, RVSUM_3, NIVEN, RING_2, BORSUK_5, SIN_COS, FIELD_14,
+      FIELD_4, XBOOLE_0;
+ requirements NUMERALS, SUBSET, BOOLE, REAL, ARITHM;
+ definitions TARSKI;
+ equalities FINSEQ_1, XCMPLX_0, POLYNOM3, HURWITZ, RLVECT_1, STRUCT_0,
+      VECTSP_1, VALUED_1, POLYDIFF, INT_3, BASEL_2;
+ expansions STRUCT_0, VECTSP_1, TARSKI, FUNCT_2, FINSEQ_1, FUNCT_1, RING_4,
+      XBOOLE_0, ALGSEQ_1, FDIFF_1;
+ theorems RLVECT_1, POLYDIFF, PARTFUN1, FUNCT_2, FUNCT_1, POLYNOM4, ALGSEQ_1,
+      XCMPLX_0, NUMBER08, ZFMISC_1, IDEAL_1, SIN_COS, RFUNCT_1, LIMFUNC1,
+      BINOM, POLYNOM3, NAT_1, INT_1, FINSEQ_1, XREAL_1, UPROOTS, XXREAL_0,
+      POLYNOM5, FINSEQ_2, FINSEQ_3, FINSEQ_5, FINSEQ_4, VECTSP11, RELAT_1,
+      FINSEQOP, POLYNOM1, FVSUM_1, NAT_D, NEWTON, RING_2, TARSKI, ORDINAL1,
+      INT_6, RAT_1, RINGDER1, SUBSET_1, XBOOLE_0, FUNCOP_1, XCMPLX_1, C0SP1,
+      FIELD_4, RING_4, REALALG2, LIOUVIL2, ALGNUM_1, POLYALGX, XREAL_0,
+      XBOOLE_1, TAYLOR_1, XXREAL_1, VALUED_1, FIELD_14, FDIFF_1, INTEGRA7,
+      INTEGRA8, VALUED_2, FCONT_1, ROLLE, RING_3, GAUSSINT, DIOPHAN2, RVSUM_3,
+      FUNCT_7, TOPREALC, SIN_COS2, STRUCT_0, POLYALG1, VECTSP_1, GCD_1,
+      FIELD_8, FIELD_9, TARSKI_0, REALALG3, FIELD_6, RING_5, GROUP_4;
+ schemes NAT_1, FINSEQ_1, FINSEQ_2;
+
+begin :: Preliminaries
+
+ reserve n,k for Nat;
+ reserve L for comRing;
+ reserve R for domRing;
+ reserve x0 for positive Real;
+
+Lm23A:
+  dom (exp_R^) = REAL & (exp_R)"{0} = {}
+    proof
+A1:  {0,+infty} misses ].0,+infty.[ by XXREAL_1:86;
+     0 in {0,+infty} by TARSKI:def 2; then
+     not 0 in ].0,+infty.[ by A1,XBOOLE_0:def 4; then
+A3:  not 0 in rng exp_R by TAYLOR_1:16,LIMFUNC1:def 3; then
+A4:  (exp_R)"{0} = {} by FUNCT_1:72;
+     dom (exp_R^) = dom (exp_R) \ (exp_R)"{0} by RFUNCT_1:def 2
+     .= REAL by A4,FUNCT_2:def 1;
+     hence thesis by A3,FUNCT_1:72;
+   end;
+
+definition
+  func exp_R1 -> Function of REAL,REAL equals
+  exp_R^;
+  coherence by Lm23A,FUNCT_2:def 1;
+end;
+
+Lm24:
+    exp_R^ is_differentiable_on REAL &
+    exp_R^ is differentiable Function of REAL, REAL &
+    exp_R is differentiable
+    proof
+A1:   exp_R^ is Function of REAL, REAL by Lm23A,FUNCT_2:def 1;
+      (for x be set st x in REAL holds exp_R.x <> 0) by SIN_COS:54; then
+      exp_R^ is_differentiable_on REAL by SIN_COS:66,INTEGRA7:9; then
+      for x be Real holds exp_R^ is_differentiable_in x by XREAL_0:def 1;
+      hence thesis by Lm23A,A1,POLYDIFF:def 2, SIN_COS:65;
+    end;
+
+registration
+  cluster exp_R1 -> differentiable for Function of REAL,REAL;
+  coherence by Lm24;
+end;
+
+registration
+  cluster exp_R -> differentiable for Function of REAL,REAL;
+  coherence by Lm24;
+end;
+
+Lm26:
+    exp_R/exp_R = REAL --> 1
+    proof
+A1:   (dom (exp_R) \ (exp_R)"{0}) = REAL by FUNCT_2:def 1,Lm23A;
+A2:   dom (exp_R/exp_R)
+      = dom exp_R /\ (dom (exp_R) \ (exp_R)"{0}) by RFUNCT_1:def 1
+      .= REAL /\ (dom (exp_R) \ (exp_R)"{0}) by FUNCT_2:def 1
+      .= REAL by A1;
+reconsider f = exp_R/exp_R as Function of REAL, REAL by A2,FUNCT_2:def 1;
+reconsider g = (REAL --> 1) as Function of REAL, REAL
+by XREAL_0:def 1,FUNCOP_1:45;
+      for x be object st x in REAL holds f.x = g.x
+      proof
+        let x be object;
+        assume
+A3:     x in REAL; then
+A4:     exp_R.x <> 0 by SIN_COS:54;
+        reconsider r = exp_R.x as Real;
+        (exp_R/exp_R).x = r*r" by A2,A3,RFUNCT_1:def 1
+        .= 1 by A4,XCMPLX_0:def 7 .= (REAL --> 1).x by A3,FUNCOP_1:7;
+        hence thesis;
+      end;
+      hence thesis by FUNCT_2:12;
+    end;
+
+Lm27:
+    for f be Function of REAL,REAL holds f - f = REAL --> 0
+    proof
+      let f be Function of REAL,REAL;
+reconsider g = REAL --> 0 as Function of REAL, REAL
+by XREAL_0:def 1,FUNCOP_1:45;
+A1:   dom (f-f) = REAL by FUNCT_2:def 1;
+      for x be object st x in REAL holds (f - f).x = g.x
+      proof
+        let x be object;
+        assume
+A2:     x in REAL; then
+        (f - f).x = f.x - f.x by A1,VALUED_1:13
+        .= (REAL --> 0).x by A2,FUNCOP_1:7;
+        hence thesis;
+      end;
+      hence thesis;
+    end;
+
+Lm28:
+     exp_R1`| = - exp_R1
+     proof
+reconsider g = exp_R1 as differentiable Function of REAL,REAL;
+reconsider f1 = exp_R as differentiable Function of REAL,REAL;
+A1:   REAL-->1 = f1(#)g by Lm26,RFUNCT_1:31;
+reconsider h = (REAL-->1) as constant Function of REAL,REAL
+by XREAL_0:def 1,FUNCOP_1:45;
+reconsider f1dg = f1(#)(g`|) as Function of REAL,REAL;
+A2:   (REAL --> 0) = (f1(#)g)`| by A1,POLYDIFF:11
+      .= g(#)(f1`|) + f1(#)(g`|) by POLYDIFF:16;
+A3:   (REAL --> 0) - g(#)(f1`|)
+      = (- g(#)(f1`|)) + (dom( - g(#)(f1`|)) --> 0) by FUNCT_2:def 1
+      .= (- g(#)(f1`|)) by POLYDIFF:6;
+A4:   - g(#)f1 = f1(#)(g`|) + (g(#)(f1`|) - g(#)(f1`|))
+      by INTEGRA8:32, RFUNCT_1:8,A2,A3
+      .= f1(#)(g`|) + (REAL --> 0) by Lm27
+      .= f1dg + ((dom f1dg) --> 0) by FUNCT_2:def 1
+      .= (g`|)(#)f1 by POLYDIFF:6;
+A5:    dom(- g) = REAL by Lm23A,VALUED_1:def 5;
+       (- g) = 1(#)(- g) by RFUNCT_1:21
+       .= (- g)(#)(f1/f1) by A5,Lm26,POLYDIFF:5
+       .= ((- g)(#)f1)/f1 by RFUNCT_1:36
+       .= ((g`|)(#)f1)/f1 by A4,VALUED_2:25
+       .= (g`|)(#)(REAL --> 1) by Lm26,RFUNCT_1:36
+       .= (dom(g`|) --> 1) (#) (g`|) by FUNCT_2:def 1
+       .= 1 (#) (g`|) by POLYDIFF:5 .= g`| by RFUNCT_1:21;
+      hence thesis;
+    end;
+
+Lm29:
+  (exp_R^)|[.0,x0.] is continuous
+  proof
+    for r be Real st r in dom ((exp_R^)|[.0,x0.]) holds (exp_R^)|[.0,x0.]
+    is_continuous_in r
+    proof
+      let r be Real;
+      assume
+A1:   r in dom ((exp_R^)|[.0,x0.]);
+A2:   dom ((exp_R^)|[.0,x0.]) = [.0,x0.] by Lm23A,RELAT_1:62;
+      exp_R.r <> 0 by SIN_COS:54; then
+      exp_R^ is_continuous_in r by FCONT_1:10,A1,SIN_COS:47,FCONT_1:def 2;
+      hence thesis by A1,A2,FCONT_1:1;
+    end;
+    hence thesis by FCONT_1:def 2;
+  end;
+
+Lm31:
+   exp_R^ is_differentiable_on ].0,x0.[
+   proof
+     set F = exp_R^;
+     set Z = ].0,x0.[;
+     for x be Real st x in Z holds F is_differentiable_in x by Lm24;
+     hence thesis by Lm23A,FDIFF_1:9;
+   end;
+
+Lm35:
+ for f be Function of REAL,REAL holds 0(#)f = REAL --> 0
+ proof
+   let f be Function of REAL,REAL;
+   for x be Element of REAL holds (0(#)f).x = (REAL --> 0).x
+   proof
+     let x be Element of REAL;
+     (0(#)f).x = 0 * f.x by RFUNCT_1:57;
+     hence (0(#)f).x = (REAL --> 0).x;
+   end;
+   hence 0(#)f = REAL --> 0;
+ end;
+
+theorem Lm11:
+  for n,m be Nat,b be Element of R holds
+    (n*m)*b = n*(m*b)
+   proof
+     let n,m be Nat,b be Element of R;
+     defpred P[Nat] means ($1*m)*b = $1*(m*b);
+A1:  for n be Nat st P[n] holds P[n+1]
+     proof
+       let n be Nat;
+       assume
+A2:    P[n];
+       ((n+1)*m)*b = ((n*m) + (1*m))*b
+         .= (n*m)*b + m*b by BINOM:15
+         .= n*(m*b) + 1*(m*b) by A2,BINOM:13
+         .= (n+1)*(m*b) by BINOM:15;
+       hence thesis;
+     end;
+     (0*m)*b = 0.R by BINOM:12
+       .= 0*(m*b) by BINOM:12; then
+A3:  P[0];
+     for n be Nat holds P[n] from NAT_1:sch 2(A3,A1);
+     hence thesis;
+   end;
+
+Lm20:
+   for z being Real, e being Element of F_Real st z = e holds n*z = n*e
+   proof
+     let z be Real,e be Element of F_Real such that
+A1:  z=e;
+     defpred P[Nat] means $1*z = $1 * e;
+     0*z = 0.F_Real .= 0*e by BINOM:12; then
+A2:  P[0];
+A3:  for i being Nat st P[i] holds P[i+1]
+     proof
+       let i be Nat; assume
+A4:    P[i];
+       (1+i)*e = 1*e +(i*e) by BINOM:15
+       .= z+(i*z) by A1,A4,BINOM:13;
+       hence thesis;
+     end;
+     for i being Nat holds P[i] from NAT_1:sch 2(A2,A3);
+     hence thesis;
+   end;
+
+theorem
+  for F,G be FinSequence of F_Real
+  st len F = len G & (for i being Nat st i in dom F holds F.i <= G.i) holds
+  Sum F <= Sum G
+   proof
+     let F,G be FinSequence of F_Real;
+     assume
+A1:  len F = len G & for i being Nat st i in dom F holds F.i <= G.i;
+     Sum F <= Sum G
+     proof
+       defpred P[Nat] means
+       for F1,G1 be FinSequence of F_Real st
+       len F1 = $1 & len F1 = len G1 &
+       (for i be Nat st i in dom F1 holds F1.i <= G1.i) holds Sum F1 <= Sum G1;
+A2:    P[0]
+       proof
+         let F1,G1 be FinSequence of F_Real;
+         assume
+A3:      len F1 = 0 & len F1 = len G1 &
+         for i be Nat st i in dom F1 holds F1.i <= G1.i;
+         Sum F1 <= Sum G1
+         proof
+           F1 = <*>the carrier of F_Real & G1 = <*>the carrier of F_Real by A3;
+           hence thesis;
+         end;
+         hence thesis;
+       end;
+A5:    for n be Nat st P[n] holds P[n+1]
+       proof
+         let n be Nat;
+         assume
+A6:      P[n];
+         for F1,G1 be FinSequence of F_Real st
+         len F1 = n+1 & len F1 = len G1 &
+         (for i be Nat st i in dom F1 holds F1.i <= G1.i)
+         holds Sum F1 <= Sum G1
+         proof
+           let F1,G1 be FinSequence of F_Real;
+           assume
+A7:        len F1 = n+1 & len F1 = len G1 &
+           for i be Nat st i in dom F1 holds F1.i <= G1.i;
+           Sum F1 <= Sum G1
+           proof
+             reconsider F0 = F1| n as FinSequence of F_Real;
+             reconsider G0 = G1| n as FinSequence of F_Real;
+             n+1 in Seg (n+1) by FINSEQ_1:4; then
+A8:          n+1 in dom F1 & n+1 in dom G1 by A7,FINSEQ_1:def 3;
+A9:          len F0 = n & len G0 = n by FINSEQ_1:59,A7,NAT_1:11; then
+A10:         dom F0 = Seg n & dom G0 = Seg n by FINSEQ_1:def 3;
+             dom F1 = Seg (n+1) & dom G1 = Seg (n+1) by A7,FINSEQ_1:def 3; then
+A11:         dom F0 c= dom F1 & dom G0 c= dom G1 by A10,FINSEQ_1:5,NAT_1:11;
+             F1.(n+1) in rng F1 by A8,FUNCT_1:3; then
+             reconsider Fn1 = F1.(n+1) as Element of F_Real;
+             G1.(n+1) in rng G1 by A8,FUNCT_1:3; then
+             reconsider Gn1 = G1.(n+1) as Element of F_Real;
+             F1 = F0^<* F1/.(len F1) *> by FINSEQ_5:21,A7
+             .= F0^<* Fn1 *> by A7,A8,PARTFUN1:def 6; then
+A14:         Sum F1 = Sum F0 + Fn1 by FVSUM_1:71;
+             G1 = G0^<* G1/.(len G1) *> by FINSEQ_5:21,A7
+             .= G0^<* Gn1 *> by A7,A8,PARTFUN1:def 6; then
+A15:         Sum G1 = Sum G0 + Gn1 by FVSUM_1:71;
+             for i be Nat st i in dom F0 holds F0.i <= G0.i
+             proof
+               let i be Nat;
+               assume
+A16:           i in dom F0;
+A17:           F0.i = (F1|(dom F0)).i by A9,FINSEQ_1:def 3
+               .= F1.i by A16,FUNCT_1:49;
+               G0.i = G1.i by A10,A16,FUNCT_1:49;
+               hence thesis by A11,A16,A17,A7;
+             end; then
+A19:         Sum F0 <= Sum G0 by A6,A9;
+             Fn1 <= Gn1 by A7,A8;
+             hence thesis by A14,A15,A19,XREAL_1:7;
+           end;
+           hence thesis;
+         end;
+         hence thesis;
+       end;
+       for n being Nat holds P[n] from NAT_1:sch 2(A2,A5);
+       hence Sum F <= Sum G by A1;
+     end;
+     hence thesis;
+   end;
+
+::$N Generalization of ZMATRLIN:42 ::: TODO
+theorem Th13:
+  for I be Ideal of L
+  for F be FinSequence of L
+    st for i being Nat st i in dom F holds F.i in I holds Sum F in I
+    proof
+      let I be Ideal of L;
+      defpred P[Nat] means
+      for F being FinSequence of L st len F = $1 &
+      for i being Nat st i in dom F holds F.i in I holds Sum F in I;
+A1:   P[0]
+      proof
+        let F be FinSequence of L;
+        assume len F = 0 &
+        for i being Nat st i in dom F holds F.i in I; then
+        F = <*> the carrier of L; then
+        Sum F = 0.L by RLVECT_1:43;
+        hence Sum F in I by IDEAL_1:2;
+      end;
+A3:   for n being Nat st P[n] holds P[n+1]
+      proof
+        let n be Nat;
+        assume
+A4:     P[n];
+        let F be FinSequence of L;
+        assume
+A5:     len F = n+1 &
+        for i being Nat st i in dom F holds F.i in I;
+        reconsider F0 = F| n as FinSequence of L;
+        n+1 in Seg (n+1) by FINSEQ_1:4; then
+        n+1 in dom F by A5,FINSEQ_1:def 3; then
+        reconsider af = F.(n+1) as Element of I by A5;
+A6:     len F0 = n by FINSEQ_1:59,A5,NAT_1:11; then
+A7:     dom F0 = Seg n by FINSEQ_1:def 3;
+A8:     len F = (len F0) + 1 by A5,FINSEQ_1:59,NAT_1:11;
+A9:     F0 = F | dom F0 by A6,FINSEQ_1:def 3;
+A10:    for i being Nat st i in dom F0 holds F0.i in I
+        proof
+          let i be Nat;
+          assume
+A11:      i in dom F0;
+          dom F = Seg (n+1) by A5,FINSEQ_1:def 3; then
+          dom F0 c= dom F by A7,FINSEQ_1:5,NAT_1:11; then
+          F.i in I by A5,A11;
+          hence thesis by A11,FUNCT_1:47;
+        end;
+        reconsider i1 = Sum F0 as Element of I by A6,A4,A10;
+        reconsider i2 = af as Element of I;
+        Sum F = i1 + i2 by A5,A8,A9,RLVECT_1:38;
+        hence Sum F in I by IDEAL_1:def 1;
+      end;
+A12:  for n being Nat holds P[n] from NAT_1:sch 2(A1,A3);
+      let F be FinSequence of L;
+      assume
+A13:  for i being Nat st i in dom F holds F.i in I;
+      len F is Nat;
+      hence Sum F in I by A12,A13;
+    end;
+
+theorem :::
+  for a be Element of L, p be non empty FinSequence of the carrier of L
+    st (for j be Nat st j in dom p holds a divides p/.j)
+    holds a divides Sum p
+    proof
+      let a be Element of L, p be non empty FinSequence of the carrier of L;
+      assume
+A1:   for j be Nat st j in dom p holds a divides p/.j;
+      for i being Nat st i in dom p holds p.i in {a}-Ideal
+      proof
+        let i be Nat;
+        assume
+A3:     i in dom p; then
+        p.i = p/.i by PARTFUN1:def 6;
+        hence thesis by A1,A3,RING_2:18;
+      end;
+      hence thesis by RING_2:18,Th13;
+    end;
+
+definition ::: Newton symbol
+  let k,j be Nat;
+  func eta(k,j) -> Element of NAT equals
+  k! / ((k-'j)!);
+  coherence
+  proof
+    (k-'j)! divides k! by NAT_D:35,NUMBER08:6; then
+    consider l being Nat such that
+A1: k! = ((k-'j)!) * l by NAT_D:def 3;
+    k! / ((k-'j)!) is Nat by A1,XCMPLX_1:89;
+    hence thesis by ORDINAL1:def 12;
+  end;
+end;
+
+theorem Th17:
+  for k,j be Nat st j <= k holds (j!)*(k choose j) = eta(k,j)
+  proof
+    let k,j be Nat;
+    assume
+A1: j <= k; then
+    0 <= k - j by XREAL_1:48; then
+    reconsider kj1 = k - j as Nat by INT_1:3,ORDINAL1:def 12;
+    (j!)*(k choose j)
+     = (j!)*((k!)/((j!) * (kj1!))) by A1,NEWTON:def 3
+    .= ((j!)*(k!))/((j!) * (kj1!))
+    .= (k!)/(kj1!) by XCMPLX_1:91
+    .= eta(k,j) by A1,XREAL_1:233;
+    hence thesis;
+  end;
+
+Lm13:
+  for i,n be Nat holds
+    (i+1)*(eta(i+1+n,n)) = eta(i+(n+1),n+1)
+    proof
+      let i,n be Nat;
+      (i+1)*(eta(i+1+n,n)) = (i+1)* ((i+1+n)!)/((i+1)!)
+      .=(i+1)* ((i+1+n)!)/((i+1)*(i!)) by NEWTON:15
+      .= eta((i+(n+1)),n+1) by XCMPLX_1:91;
+      hence thesis;
+    end;
+
+registration
+  let R be (INT.Ring)-extending comRing;
+  let i be Integer;
+  reduce In(i,R) to i;
+  reducibility
+  proof
+    INT.Ring is Subring of R by FIELD_4:def 1; then
+    the carrier of INT.Ring c= the carrier of R by C0SP1:def 3; then
+    i in the carrier of R by INT_1:def 2;
+    hence thesis by SUBSET_1:def 8;
+  end;
+end;
+
+theorem Lm1:
+  for n be Nat,
+      f be Element of the carrier of Polynom-Ring F_Rat holds
+    n*f = In(n,F_Rat)*f
+   proof
+     set R = F_Rat,
+     PR = Polynom-Ring F_Rat;
+     let n be Nat,
+     f be Element of the carrier of Polynom-Ring F_Rat;
+     defpred P[Nat] means $1*f = In($1,F_Rat)*f;
+A1:  P[0]
+     proof
+       In(0,F_Rat)*f = 0_.R by POLYNOM5:26,GAUSSINT:def 14
+       .= 0.PR by POLYNOM3:def 10;
+       hence thesis by BINOM:12;
+     end;
+A2:  for k be Nat holds P[k] implies P[k+1]
+     proof
+       let k be Nat;
+       assume
+A3:    P[k];
+       reconsider r = In(k,F_Rat) as Element of R;
+A4:    In(k+1,F_Rat) = r+1.R by GAUSSINT:def 14;
+A5:    In(k,F_Rat)*f + f = r*f + 1.R*f
+       .= In(k+1,F_Rat) *f by A4,POLYALG1:7;
+       In(k,F_Rat)*f + f
+        = k*f + f by A3,POLYNOM3:def 10
+       .= k*f + 1*f by BINOM:13 .= (k+1)*f by BINOM:15;
+       hence thesis by A5;
+     end;
+     for k be Nat holds P[k] from NAT_1:sch 2(A1,A2);
+     hence thesis;
+   end;
+
+theorem Lm2:
+  for n be Nat, f,g be Element of L st
+    f divides g holds f divides n*g
+  proof
+    let n be Nat, f,g be Element of L;
+    assume f divides g; then
+    consider h be Element of L such that
+A2: g = f*h by GCD_1:def 1;
+    n in NAT by ORDINAL1:def 12; then
+    n*g = f*(n*h) by A2,BINOM:19;
+    hence thesis by GCD_1:def 1;
+  end;
+
+registration
+  cluster INT -valued for FinSequence of F_Rat;
+  existence
+  proof
+    take <*>the carrier of F_Rat;
+    thus thesis;
+  end;
+end;
+
+registration
+  cluster 0_.F_Rat -> INT -valued;
+  coherence by GAUSSINT:def 14;
+end;
+
+registration
+  cluster 1_.F_Rat -> INT -valued;
+  coherence
+  proof
+A1: rng 1_.F_Rat c= rng 0_.F_Rat \/ {1.F_Rat} by FUNCT_7:100;
+A2: {1.F_Rat} c= INT by ZFMISC_1:31,GAUSSINT:def 14;
+    rng 0_.F_Rat c= INT by RELAT_1:def 19; then
+    rng 0_.F_Rat \/ {1.F_Rat} c= INT by A2,XBOOLE_1:8; then
+    rng 1_.F_Rat c= INT by A1;
+    hence thesis by RELAT_1:def 19;
+  end;
+end;
+
+registration
+  cluster monic INT -valued for Polynomial of F_Rat;
+  existence
+  proof
+    take 1_.F_Rat;
+    thus thesis;
+  end;
+end;
+
+theorem Th3:
+  for f be Element of the carrier of Polynom-Ring R holds
+    rng f = f.:(Support f) \/ {0.R}
+     proof
+       let f be Element of the carrier of Polynom-Ring R;
+A1:    dom f = NAT by FUNCT_2:def 1;
+A2:    rng f = f.:(dom f) by RELAT_1:113
+       .= f.:(Support f \/ (NAT \ (Support f))) by A1,XBOOLE_1:45
+       .= f.:(Support f) \/ f.:(NAT \ (Support f)) by RELAT_1:120;
+A3:    for y be object st y in f.:(NAT \ (Support f)) holds y in {0.R}
+       proof
+         let y be object;
+         assume y in f.:(NAT \ (Support f)); then
+         consider x being object such that
+A5:      x in dom f & x in NAT \ (Support f) & y = f.x by FUNCT_1:def 6;
+         f.x = 0.R
+         proof
+           assume f.x <> 0.R; then
+           x in Support f by A5,POLYNOM1:def 4;
+           hence contradiction by A5, XBOOLE_0:def 5;
+         end;
+         hence thesis by TARSKI:def 1,A5;
+       end;
+       for y be object st y in {0.R} holds y in f.:(NAT \ (Support f))
+       proof
+         let y be object;
+         assume
+A9:      y in {0.R};
+         0.R in f.:(NAT \ (Support f))
+         proof
+A10:       f.(len f) = 0.R by ALGSEQ_1:8; then
+           not len f in (Support f) by POLYNOM1:def 4; then
+           len f in NAT \ (Support f) by XBOOLE_0:def 5;
+           hence thesis by A10,A1,FUNCT_1:def 6;
+         end;
+         hence thesis by A9,TARSKI:def 1;
+       end;
+       hence thesis by A2,A3,TARSKI_0:2;
+     end;
+
+Lm9:
+  for f be Element of the carrier of Polynom-Ring F_Rat holds
+    TRANQN.:(rng f) is non empty finite Subset of NAT
+  proof
+    let f be Element of the carrier of Polynom-Ring F_Rat;
+reconsider fS = f.:(Support f) as Subset of RAT by GAUSSINT:def 14;
+A1: Support f is finite by POLYALGX:3;
+    {0.F_Rat} c= RAT by GAUSSINT:def 14; then
+A3: fS \/ {0.F_Rat} is non empty finite Subset of RAT by A1,XBOOLE_1:8;
+A4: rng f is non empty finite Subset of RAT by A3,Th3;
+    dom TRANQN = RAT by FUNCT_2:def 1; then
+    reconsider TfS = TRANQN.:(rng f) as non empty Subset of NAT
+      by GAUSSINT:def 14;
+    TfS is finite by A4;
+    hence thesis;
+  end;
+
+definition
+  let f be Element of the carrier of Polynom-Ring F_Rat;
+  func denomi-set(f) -> non empty finite Subset of NAT equals
+  TRANQN.:(rng f);
+  coherence by Lm9;
+end;
+
+definition
+  let f be Element of the carrier of Polynom-Ring F_Rat;
+  func denomi-seq(f) -> non empty FinSequence of NAT equals
+  canFS denomi-set(f);
+  coherence
+  proof
+    reconsider TfS = denomi-set f as non empty finite Subset of NAT;
+    rng canFS TfS c= NAT by ORDINAL1:def 12;
+    hence thesis by FINSEQ_1:def 4;
+  end;
+end;
+
+Lm10:
+   for f be Element of the carrier of Polynom-Ring F_Rat,
+   i be Nat st i in dom denomi-seq(f) holds
+   (denomi-seq f).i in NAT & (denomi-seq f).i <> 0
+   proof
+     let f be Element of the carrier of Polynom-Ring F_Rat;
+     let i be Nat;
+     assume
+A1:  i in dom denomi-seq(f);
+reconsider TfS = denomi-set(f) as non empty finite Subset of NAT;
+     rng (canFS(TfS)) = TRANQN.:(rng f) by FUNCT_2:def 3; then
+     (canFS(TfS)).i in TRANQN.:(rng f) by A1,FUNCT_1:3; then
+     consider x be object such that
+A2:  x in dom TRANQN & x in rng f &
+     (canFS(TfS)).i = TRANQN.x by FUNCT_1:def 6;
+     reconsider r = x as Rational by A2;
+     TRANQN.x = denominator(r) by DIOPHAN2:def 4;
+     hence thesis by A2,ORDINAL1:def 12;
+   end;
+
+theorem
+  for f be Element of the carrier of Polynom-Ring F_Rat holds
+    Product denomi-seq(f) is non zero
+   proof
+     let f be Element of the carrier of Polynom-Ring F_Rat;
+     reconsider denomf = denomi-seq(f) as real-valued FinSequence;
+A1:  for n being Nat st n in dom denomf holds denomf.n > 0
+     proof
+       let n be Nat;
+       assume n in dom denomf; then
+       (denomi-seq(f)).n in NAT & (denomi-seq(f)).n <> 0 by Lm10;
+       hence thesis;
+     end;
+     reconsider denomf as positive-yielding real-valued FinSequence
+       by A1,RVSUM_3:def 1;
+     Product denomf is non zero;
+     hence thesis;
+   end;
+
+theorem
+  for f be Element of the carrier of Polynom-Ring F_Rat, i be Nat
+    holds
+    denominator (f.i) in denomi-set(f) & ex z be Integer st
+    z*(denominator (f.i)) = Product(denomi-seq(f))
+    proof
+      let f be Element of the carrier of Polynom-Ring F_Rat;
+      let i be Nat;
+      dom f = NAT by FUNCT_2:def 1; then
+A2:   f.i in rng f by FUNCT_1:3,ORDINAL1:def 12;
+      f.i in RAT by RAT_1:def 2; then
+      f.i in dom TRANQN by FUNCT_2:def 1; then
+A4:   TRANQN.(f.i) in TRANQN.:(rng f) by A2,FUNCT_1:def 6; then
+      denominator(f.i) in denomi-set(f) by DIOPHAN2:def 4; then
+      denominator(f.i) in rng (denomi-seq(f)) by FUNCT_2:def 3; then
+      consider j be object such that
+A6:   j in dom(denomi-seq(f)) & (denomi-seq(f)).j = denominator(f.i)
+      by FUNCT_1:def 3;
+      ex z being Integer st z * (denomi-seq(f)).j = Product(denomi-seq(f))
+      by A6,INT_6:10;
+      hence thesis by DIOPHAN2:def 4,A4,A6;
+    end;
+
+theorem
+  for K,L be Field, w be Element of L st K is Subring of L &
+    w is_integral_over K holds Ann_Poly(w,K) is maximal
+   proof
+     let K,L be Field;
+     let w be Element of L;
+     assume
+A1:  K is Subring of L & w is_integral_over K; then
+     consider g be Element of Polynom-Ring K such that
+A2:  g <> 0_.K & {g}-Ideal = Ann_Poly(w,K) & g = NormPolynomial(g)
+       by ALGNUM_1:33;
+A3:  g <> 0.Polynom-Ring K by A2,POLYNOM3:def 10;
+reconsider g1 = g as non zero Element of Polynom-Ring K by A3,STRUCT_0:def 12;
+     Ann_Poly(w,K) is prime by A1,ALGNUM_1:32; then
+     g1 is prime by A2,RING_2:24;
+     hence thesis by A2,RING_2:26;
+   end;
+
+theorem
+  for f be Element of Polynom-Ring F_Rat, n be non zero Nat
+    st f is irreducible holds n*f is irreducible
+   proof
+     let f be Element of Polynom-Ring F_Rat, n be non zero Nat;
+     assume
+A1:  f is irreducible;
+reconsider f0 = f as Element of the carrier of Polynom-Ring F_Rat;
+reconsider n0 = In(n,F_Rat) as Element of F_Rat;
+reconsider n1 = n as Element of NAT by ORDINAL1:def 12;
+A2:   n0 <> 0.F_Rat by GAUSSINT:def 14;
+A3:   {n1*f}-Ideal c= {f}-Ideal by Lm2, RING_2:19;
+A4:   n0*f0 = n*f by Lm1;
+reconsider nf = n*f as Element of the carrier of Polynom-Ring F_Rat;
+      (n0")*nf = ((n0")*n0)*f0 by A4,RING_4:11
+      .= (1.F_Rat)*f0 by A2,VECTSP_1:def 10 .= f; then
+A5:   f = @((n0"|F_Rat)*'~nf) by FIELD_8:2
+      .= (@(n0"|F_Rat)) * (@(~nf)) by POLYNOM3:def 10
+      .= (@(n0"|F_Rat)) * nf; then
+      {f}-Ideal = {nf}-Ideal by A3,RING_2:19,GCD_1:def 1; then
+A7:   {nf}-Ideal is maximal by A1,RING_2:26;
+      reconsider nf0 = n*f as non zero Element
+        of Polynom-Ring F_Rat by A5,A1;
+      nf0 is irreducible by A7,RING_2:26;
+      hence thesis;
+    end;
+
+theorem
+  for x be Element of F_Real st x is irrational holds
+  for g be non zero Polynomial of F_Rat st Ext_eval(g,x) = 0 holds deg g >= 2
+   proof
+     let x be Element of F_Real;
+     assume
+A1:  x is irrational;
+     let g be non zero Polynomial of F_Rat;
+     assume
+A2:  Ext_eval(g,x) = 0;
+     assume not deg g >= 2; then
+     consider y,z being Element of F_Rat such that
+A4:  g = <%y,z%> by FIELD_9:13;
+A5:  0 = In(y,F_Real)+In(z,F_Real)*x by ALGNUM_1:22,LIOUVIL2:4,A4,A2;
+     per cases;
+     suppose
+       z = 0; then
+       g = 0_.F_Rat by A5,GAUSSINT:def 14,A4,POLYNOM5:42;
+       hence contradiction;
+     end;
+     suppose
+       z <> 0;
+       hence contradiction by A1,A5;
+     end;
+   end;
+
+begin :: Some Properties of Algebraic Numbers
+
+theorem
+  for g be Polynomial of F_Rat st deg g >= 2 & @g is irreducible holds
+    g.0 <> 0.F_Rat
+    proof
+      set PRat = (Polynom-Ring F_Rat);
+      let g be Polynomial of F_Rat;
+      assume
+A1:   deg g >= 2 & @g is irreducible; then
+      g is non zero Polynomial of F_Rat; then
+      NormPolynomial(g) is monic; then
+A4:   NormPolynomial(@g) is monic;
+A5:   NormPolynomial(@g) is irreducible by A1,RING_4:28;
+reconsider g1 = NormPolynomial(@g) as Polynomial of F_Rat;
+A6:   @g1 is irreducible by A5;
+      deg g1 = deg g by REALALG3:11; then
+A8:   deg g1 >= 2 by A1;
+A9:   g1.0 <> 0.F_Rat
+      proof
+        assume g1.0 = 0.F_Rat; then
+        eval(g1,0.F_Rat) = 0.F_Rat by POLYNOM5:31; then
+A12:    @g1 = @(<%-0.F_Rat,1.F_Rat%>*'poly_quotient(g1,0.F_Rat))
+        by POLYNOM5:def 7,UPROOTS:50
+        .= (@<%-0.F_Rat,1.F_Rat%>)* (@poly_quotient(g1,0.F_Rat))
+        by POLYNOM3:def 10;
+        @<%-0.F_Rat,1.F_Rat%> divides @g1 by A12,GCD_1:def 1; then
+A14:    (@<%-0.F_Rat,1.F_Rat%> is Unit of PRat or
+        @<%-0.F_Rat,1.F_Rat%> is_associated_to @g1) by A6,RING_2:def 9;
+        deg <%-0.F_Rat,1.F_Rat %> = 2 - 1 by POLYNOM5:40 .= 1; then
+A16:    deg <%-0.F_Rat,1.F_Rat %> = 1;
+        g1 is monic by A4; then
+        deg g1 = 1 by RING_4:30,37,A14,A16;
+        hence contradiction by A8;
+      end;
+reconsider g0 = g as non zero Element of the carrier of PRat by A1;
+      NormPolynomial (@g) = (LC g0)" * g0 by RING_4:23; then
+      g1.0 = (LC g0)" * g.0 by POLYNOM5:def 4; then
+      g.0 <> 0.F_Rat by A9;
+      hence thesis;
+   end;
+
+begin :: Construction Polynomial Transformation 'F'.
+
+theorem Th12:
+  for L be non degenerated domRing, n be non zero Nat,
+    a be non zero Element of L st Char L = 0 holds n*a <> 0.L
+    proof
+      let L be non degenerated domRing;
+      let n be non zero Nat, a be non zero Element of L;
+      n*a = n'*'a by RING_3:def 2;
+      hence thesis by REALALG2:25;
+    end;
+
+theorem Th15:
+  for R be comRing
+  for f be Element of the carrier of Polynom-Ring R holds
+  for i be Nat st i >= 1 & i is_at_least_length_of f & f.(i-1) <> 0.R holds
+    len f = i
+  proof
+    let R be comRing;
+    let f be Element of the carrier of Polynom-Ring R;
+    for i be Nat st i >= 1 & i is_at_least_length_of f & f.(i-1) <> 0.R
+    holds len f = i
+    proof
+      let i be Nat;
+      assume
+A1:   i >= 1 & i is_at_least_length_of f & f.(i-1) <> 0.R; then
+A2:   len f <= i by ALGSEQ_1:def 3;
+   for n,m be Nat st n -1 < m <= n holds n = m
+      proof
+        let n,m be Nat;
+        assume
+A4:     n -1 < m <= n; then
+        n-1 +1 < m + 1 by XREAL_1:8; then
+        n <= m by NAT_1:13;
+        hence thesis by A4,XXREAL_0:1;
+      end;
+      hence thesis by A2,A1,ALGSEQ_1:8;
+    end;
+    hence thesis;
+  end;
+
+theorem
+  for R be domRing
+  for f be Element of the carrier of Polynom-Ring R st len f > 1 & Char R = 0
+    holds len ((Der1 R).f) = (len f)-1
+    proof
+      let R be domRing;
+      let f be Element of the carrier of Polynom-Ring R;
+      reconsider n = 0 as Nat;
+      assume
+A1:   len f > 1 & Char R = 0; then
+A2:   (len f) - 1 > 1 - 1 by XREAL_1:14;
+      reconsider lf1 = (len f) - 1 as Nat by A1;
+      lf1 +0 > 0 by A2; then
+A4:   lf1 >= 1 by NAT_1:19;
+      reconsider lf2 = lf1 - 1 as Nat by A2;
+A5:   lf1 + 1 = len f;
+      for i be Nat st i>= lf1 holds ((Der1 R).f).i = 0.R
+      proof
+        let i be Nat;
+        assume i>= lf1; then
+        i + 1 >= lf1 +1 by XREAL_1:6; then
+A8:     f.(i+1) = 0.R by ALGSEQ_1:8;
+        ((Der1 R).f).i = (i+1)*(f.(i+1)) by RINGDER1:def 8 .= 0.R by A8;
+        hence thesis;
+      end; then
+A9:   lf1 is_at_least_length_of ((Der1 R).f);
+A10:  ((Der1 R).f).lf2 = (lf2+1)*(f.(lf2+1)) by RINGDER1:def 8 .= lf1*f.lf1;
+      reconsider flf1 = f.lf1 as Element of R;
+      flf1 is non zero by A5,ALGSEQ_1:10;
+      hence thesis by Th15,A4,A9,A10,A1,Th12;
+    end;
+
+Lm12:
+    for L be domRing
+    for y be Element of the carrier of L, D be Derivation of L holds
+    (D|^1).y = D.y
+    proof
+      let L be domRing;
+      let y be Element of the carrier of L, D be Derivation of L;
+A1:   D|^0 = id L by VECTSP11:18;
+      (D|^1).y = (D|^(0+1)).y
+      .= D.((D|^0).y) by RINGDER1:9
+      .= D.y by A1;
+      hence thesis;
+    end;
+
+theorem Th18:
+  for L be domRing, D be Derivation of L holds
+  for f be Element of the carrier of L, j,n be Nat
+    holds (D|^n).(j*f) = j*((D|^n).f)
+    proof
+      let L be domRing, D be Derivation of L;
+      for f be Element of the carrier of L, j,n be Nat
+      holds (D|^n).(j*f) = j*((D|^n).f)
+      proof
+        let f be Element of the carrier of L, j,n be Nat;
+        defpred P[Nat] means (D|^$1).(j*f) = j*((D|^$1).f);
+A1:     P[0]
+        proof
+A2:       (D|^0).(j*f) = (id L).(j*f) by VECTSP11:18 .= j*f;
+          j*((D|^0).f) = j*((id L).f) by VECTSP11:18 .= j*f;
+          hence thesis by A2;
+        end;
+A3:     for n be Nat st P[n] holds P[n+1]
+        proof
+          let n be Nat;
+          assume P[n]; then
+          (D|^(n+1)).(j*f) = D.(j*((D|^n).f)) by RINGDER1:9
+          .= j*D.((D|^n).f) by RINGDER1:6
+          .= j*(D|^(n+1)).f by RINGDER1:9;
+          hence thesis;
+        end;
+        for n be Nat holds P[n] from NAT_1:sch 2(A1,A3);
+        hence thesis;
+      end;
+      hence thesis;
+    end;
+
+theorem Th19:
+  for k be Nat, f be Element of the carrier of Polynom-Ring INT.Ring
+    st ((Der1(INT.Ring))|^1).(f|^1) = 1.Polynom-Ring INT.Ring holds
+    for j be Nat st 1 <= j <= k holds
+    ((Der1(INT.Ring))|^j).(f|^k) = (eta(k,j))*(f|^(k-'j))
+    proof
+      set L = Polynom-Ring INT.Ring;
+      set D = Der1(INT.Ring);
+      let k be Nat, f be Element of the carrier of L;
+      assume
+A1:   (D|^1).(f|^1) = 1.L;
+A2:   D.f = (D|^1).f by VECTSP11:19 .= 1.L by A1,BINOM:8;
+      defpred P[Nat] means
+      for j be Nat st 1 <= j <= $1 holds
+      (D|^j).(f|^$1) = (eta($1,j))*(f|^($1-'j));
+A3:   for k be Nat st for n be Nat st n < k holds P[n] holds P[k]
+      proof
+        let k be Nat;
+        assume
+A4:     for n be Nat st n < k holds P[n];
+        for l be Nat st 1<= l <= k holds (D|^l).(f|^k)=(eta(k,l))*(f|^(k-'l))
+        proof
+         let l be Nat;
+         assume
+A5:      1 <= l <= k; then
+         reconsider k1 = k-1 as Nat;
+A6:      k -' 1 = k1 by A5,XXREAL_0:2,XREAL_1:233;
+A7:      (D|^1).(f|^k) = D.(f|^(k1+1)) by VECTSP11:19
+         .= (k1+1)*((f|^k1)*1.L) by A2,RINGDER1:7
+         .= k*(f|^(k-'1));
+A8:      eta(k,1) = ((k1 +1)*(k1!))/(k1!) by NEWTON:15 .= k by XCMPLX_1:89;
+         reconsider l1 = l-1 as Nat by A5;
+A9:      (D|^l).(f|^k) = (D|^(l1+1)).(f|^k)
+         .= ((D|^l1)*(D|^1)).(f|^k) by VECTSP11:20
+         .= (D|^l1).(k*(f|^k1)) by A7,A6,FUNCT_2:15
+         .= k*(D|^l1).(f|^k1) by Th18;
+A10:     k1 < k - 0 by XREAL_1:15;
+A11:     k1 -' l1 = (k-1) - (l - 1) by A5,XREAL_1:9,XREAL_1:233 .= k - l
+         .= k-'l by A5,XREAL_1:233; then
+A12:     k*(eta(k1,l1)) = ((k1+1)*(k1!))/((k-'l)!)
+         .= eta(k,l) by NEWTON:15;
+reconsider s = (eta(k1,l1)), k as Element of NAT by ORDINAL1:def 12;
+         reconsider t = f|^(k1-'l1) as Element of L;
+         per cases;
+           suppose
+             1 <= l1; then
+             1 <= l1 <= k1 by A5,XREAL_1:9; then
+             k*(D|^l1).(f|^k1) = k*(s*t) by A10,A4
+             .= (eta(k,l))*(f|^(k-'l)) by A11,A12,Lm11;
+             hence thesis by A9;
+           end;
+           suppose
+             1 > l1; then
+             l1 = 0 by NAT_1:14;
+             hence thesis by A7,A8;
+           end;
+         end;
+         hence thesis;
+       end;
+       for k be Nat holds P[k] from NAT_1:sch 4(A3);
+       hence thesis;
+     end;
+
+theorem Th20:
+  for k be Nat,f be Element of the carrier of Polynom-Ring INT.Ring
+    st ((Der1(INT.Ring))|^1).(f|^1) = 1.Polynom-Ring INT.Ring holds
+     ((Der1(INT.Ring))|^k).(f|^k) = (k!)*(1.Polynom-Ring INT.Ring)
+     proof
+       set L = Polynom-Ring INT.Ring;
+       set D = Der1(INT.Ring);
+       let k be Nat, f be Element of the carrier of L;
+       assume
+A1:    (D|^1).(f|^1) = 1.L;
+A2:    f|^0 = 1_L by BINOM:8 .= 1.L;
+A3:    (eta(k,k)) = (k!)/(0!) by XREAL_1:232 .= k! by NEWTON:12;
+       per cases;
+         suppose
+           k <> 0; then
+           1 <= k <= k by NAT_1:14; then
+           (D|^k).(f|^k) = (k!)*(f|^(k -'k)) by A3,Th19,A1
+           .= (k!)*(1.L) by A2,XREAL_1:232;
+           hence thesis;
+         end;
+         suppose
+A5:        k = 0;
+           D|^0 = id L by VECTSP11:18;
+           hence thesis by A2,A5,NEWTON:12,BINOM:13;
+         end;
+       end;
+
+theorem
+  for j be Nat st j > k holds
+  for f be Element of the carrier of Polynom-Ring INT.Ring
+    st ((Der1(INT.Ring))|^1).(f|^1) = 1.Polynom-Ring INT.Ring holds
+     ((Der1(INT.Ring))|^j).(f|^k) = 0.Polynom-Ring INT.Ring
+     proof
+       set L = Polynom-Ring INT.Ring;
+       set D = Der1(INT.Ring);
+       let j be Nat;
+       assume
+A1:    j > k;
+       for f be Element of the carrier of L
+       st (D|^1).(f|^1) = 1.Polynom-Ring INT.Ring holds (D|^j).(f|^k) = 0.L
+       proof
+         let f be Element of the carrier of L;
+         assume
+A2:      (D|^1).(f|^1) = 1.L;
+A3:      j - k > k -k by A1,XREAL_1:8; then
+         j-k in NAT by INT_1:3; then
+         reconsider l = j - k as Nat;
+         reconsider l1 = l-1 as Nat by A3,NAT_1:14;
+         l + k = j; then
+         (D|^j).(f|^k) = ((D|^l)*(D|^k)).(f|^k) by VECTSP11:20
+         .= (D|^l).((D|^k).(f|^k)) by FUNCT_2:15
+         .= (D|^(l1+1)).((k!)*(1.L)) by A2,Th20
+         .= ((D|^l1)*(D|^1)).((k!)*(1.L)) by VECTSP11:20
+         .= (D|^l1).((D|^1).((k!)*(1.L))) by FUNCT_2:15
+         .= (D|^l1).(D.((k!)*(1.L))) by Lm12
+         .= (D|^l1).((k!)*(D.(1.L))) by RINGDER1:6
+         .= (D|^l1).((k!)*0.L) by RINGDER1:5
+         .= (D|^l1).(0*1.L) by BINOM:12
+         .= 0*((D|^l1).1.L) by Th18
+         .= 0.L by BINOM:12;
+         hence thesis;
+       end;
+       hence thesis;
+     end;
+
+theorem Th22:
+  for R be domRing
+  for f be Element of the carrier of Polynom-Ring R, k be Nat holds
+  for i be Nat holds (((Der1 R)|^k).f).i = (eta(i+k,k))*(f.(i+k))
+    proof
+      let R be domRing;
+      let f be Element of the carrier of Polynom-Ring R, k be Nat;
+      set D = Der1 R;
+      set PR = Polynom-Ring R;
+      defpred P[Nat] means for i be Nat holds
+      for i be Nat holds ((D|^$1).f).i = (eta((i+$1),$1))*(f.(i+$1));
+A1:   for k be Nat holds P[k] implies P[k+1]
+      proof
+        let k be Nat;
+        assume
+A2:     P[k];
+        set fk = ((Der1 R)|^k).f;
+A3:     D.fk = (D|^(k+1)).f by RINGDER1:9;
+        for i be Nat holds (D.fk).i = (eta(i+(k+1),k+1))*(f.(i+(k+1)))
+        proof
+         let i be Nat;
+reconsider m1 = i+1, m2 = eta((i+1)+k,k) as Element of NAT;
+         reconsider fk1 = f.((i+1)+k) as Element of R;
+         (D.fk).i = (i+1)*(fk.(i+1)) by RINGDER1:def 8
+         .= m1*(m2 * fk1) by A2
+         .= (i+1)*(eta((i+1)+k,k)) * fk1 by Lm11
+         .= (eta(i+(1+k),k+1))*fk1 by Lm13;
+         hence thesis;
+       end;
+       hence thesis by A3;
+     end;
+     for i be Nat holds ((D|^0).f).i = (eta((i+0),0))*(f.(i+0))
+     proof
+       let i be Nat;
+A5:    eta((i+0),0) = 1 by XCMPLX_1:60;
+       ((D|^0).f).i = ((id PR).f).i by VECTSP11:18
+       .= eta((i+0),0)*(f.i) by A5,BINOM:13;
+       hence thesis;
+     end; then
+A6:  P[0];
+     for k be Nat holds P[k] from NAT_1:sch 2(A6,A1);
+     hence thesis;
+   end;
+
+theorem Th23:
+  for h be Function of R,R, s be FinSequence of the carrier of R
+   st h is additive holds h.(Sum s) = Sum(h*s)
+   proof
+     let h be Function of R,R, s be FinSequence of the carrier of R;
+     assume
+A1:  h is additive;
+     defpred P[Nat] means
+     for h being Function of R,R, s being FinSequence of R holds
+     len s = $1 & h is additive implies h.(Sum s) = Sum (h*s);
+A2:  P[0]
+     proof
+       let h be Function of R,R;
+       let s be FinSequence of R;
+       assume that
+A3:    len s = 0 and
+A4:    h is additive;
+       Sum s = 0.R by A3,RLVECT_1:75; then
+A5:    h.(Sum s) = 0.R by A4,RING_2:6;
+       dom h = the carrier of R by FUNCT_2:def 1; then
+       rng s c= dom h; then
+       dom(h*s) = dom s by RELAT_1:27 .= Seg len s by FINSEQ_1:def 3; then
+       h*s = <*>the carrier of R by A3;
+       hence thesis by A5,RLVECT_1:43;
+     end;
+A6:  for n be Nat st P[n] holds P[n+1]
+     proof
+       let n;
+       assume
+A7:    P[n];
+       let h be Function of R,R;
+       let s be FinSequence of R;
+       assume that
+A8:    len s = n+1 and
+A9:    h is additive;
+       set s0=s|n;
+       dom s = Seg(n+1) by A8,FINSEQ_1:def 3; then
+       s.(n+1) in rng s by FUNCT_1:3,FINSEQ_1:4; then
+       reconsider v=s.(n+1) as Element of R;
+A10:   n = len s0 by A8,FINSEQ_1:59,NAT_1:11;
+       1 <= n+1 <= len s by A8,NAT_1:11; then
+A11:   s/.len s = s.(n+1) by A8,FINSEQ_4:15; then
+A12:   s = (s|n)^<*v*> by A8,FINSEQ_5:21;
+A13:   h*s = h*((s|n)^<*v*>) by A11,A8,FINSEQ_5:21
+         .= (h*s0)^<*h.v*> by FINSEQOP:8;
+       h.(Sum s) = h.(Sum s0 + Sum<*v*>) by A12,RLVECT_1:41
+         .= h.(Sum s0 + v) by RLVECT_1:44
+         .= h.(Sum s0) + h.v by A9
+         .= Sum(h*s0) + h.v by A7,A9,A10
+         .= Sum(h*s0) + Sum <*h.v*> by RLVECT_1:44
+         .= Sum(h*s) by A13,RLVECT_1:41;
+       hence thesis;
+     end;
+A14: for n be Nat holds P[n] from NAT_1:sch 2(A2,A6);
+     len s is Nat;
+     hence thesis by A1,A14;
+   end;
+
+Lm14:
+   for R be comRing, S being RingExtension of R,
+   f be Element of the carrier of Polynom-Ring R
+   holds f is Element of the carrier of Polynom-Ring S
+   proof
+     let R be comRing, S being RingExtension of R,
+     f be Element of the carrier of Polynom-Ring R;
+     the carrier of Polynom-Ring R c=
+     the carrier of Polynom-Ring S by FIELD_4:10;
+     hence thesis;
+   end;
+
+theorem Th24:
+  for R be domRing
+  for f be Element of the carrier of Polynom-Ring R, j be Nat
+  st len f > j & Char R = 0
+  holds len (((Der1(R))|^j).f) = (len f)-j
+   proof
+     let R be domRing;
+     let f be Element of the carrier of Polynom-Ring R,j be Nat;
+     assume
+A1:  len f > j & Char R = 0;
+     reconsider lf1 = (len f) - 1 as Nat by A1;
+A2:  (len f) - j > j - j by A1,XREAL_1:14;
+     (len f) - j in NAT by A2,INT_1:3; then
+     reconsider lfj = (len f) - j as Nat;
+     lfj + 0 > 0 by A2; then
+A4:  lfj >= 1 by NAT_1:19;
+     reconsider lfj2 = lfj - 1 as Nat by A2;
+A5:  lf1 + 1 = len f;
+     reconsider lfjcoef = ((lfj2 + j) choose lfj2)*(j!) as Nat;
+A6:  eta(lfj2+j,j) = ((lfj2+j) choose j)*(j!) by Th17,XREAL_1:38;
+     reconsider l = lfj2 + j as Nat;
+     lfj2 = l -j & j <= l by XREAL_1:38; then
+     (lfj2+j) choose j = l choose lfj2 by NEWTON:20; then
+A9:  (((Der1(R))|^j).f).lfj2 = lfjcoef *f.lf1 by A6,Th22;
+reconsider lfjcoef = ((lfj2 + j) choose lfj2)*(j!) as Nat;
+     reconsider flf1 = f.lf1 as Element of R;
+     for k being Element of R holds k <> 0.R implies k is non zero;
+     then
+A11: flf1 is non zero Element of R by A5,ALGSEQ_1:10;
+     reconsider m1 = j! as Nat;
+     reconsider m2 = (lfj2 + j) choose lfj2 as Nat;
+A12: for i be Nat st i >= lfj holds (((Der1 R)|^j).f).i =0.R
+     proof
+       let i be Nat;
+       assume i >= lfj; then
+       i + j >= len f -j + j by XREAL_1:6; then
+A15:   f.(i+j) = 0.R by ALGSEQ_1:8;
+       reconsider l = i+j as Nat;
+       (((Der1 R)|^j).f).i = (eta(i+j,j))*(f.(i+j)) by Th22 .= 0.R by A15;
+       hence thesis;
+     end;
+     lfj is_at_least_length_of ((Der1 R)|^j).f by A12;
+     hence thesis by Th15,A4,A9,A1,A11,Th12;
+   end;
+
+definition
+  let p be Element of the carrier of Polynom-Ring INT.Ring;
+  func ^p -> Element of the carrier of Polynom-Ring F_Real equals
+  p;
+  coherence by Lm14;
+end;
+
+definition
+  let F be FinSequence of the carrier of Polynom-Ring INT.Ring;
+  func ^F -> FinSequence of the carrier of Polynom-Ring F_Real means :Def7:
+  dom it = dom F & for i be Nat st i in dom F holds it.i = ^(F/.i);
+   existence
+   proof
+     deffunc G(Nat) = ^(F/.$1);
+     ex z being FinSequence of the carrier of Polynom-Ring F_Real
+     st len z = len F & for j being Nat st j in dom z holds
+     z.j = G(j) from FINSEQ_2:sch 1; then
+     consider z being FinSequence of the carrier of Polynom-Ring F_Real
+     such that
+A1:  len z = len F and
+A2:  for j being Nat st j in dom z holds z.j = G(j);
+     take z;
+     thus dom z = dom F by A1,FINSEQ_3:29;
+     hence thesis by A2;
+   end;
+   uniqueness
+   proof
+     let it1, it2 be FinSequence of the carrier of Polynom-Ring F_Real
+     such that
+A3:  dom it1 = dom F and
+A4:  for i being Nat st i in dom F holds it1.i = ^(F/.i) and
+A5:  dom it2 = dom F and
+A6:  for i being Nat st i in dom F holds it2.i = ^(F/.i);
+     for n being Nat st n in dom it1 holds it1.n = it2.n
+     proof
+       let n be Nat;
+       assume
+A7:    n in dom it1;
+       reconsider n as Element of NAT by ORDINAL1:def 12;
+       it1.n = ^(F/.n) by A3,A4,A7 .= it2.n by A3,A6,A7;
+       hence thesis;
+     end;
+     hence thesis by A3,A5;
+   end;
+ end;
+
+definition
+  let L be comRing,
+      F be FinSequence of the carrier of Polynom-Ring L,
+      x be Element of L;
+  func eval(F,x) -> FinSequence of the carrier of L means :Def8:
+  dom it = dom F & for i be Nat st i in dom F holds it.i = eval(~(F/.i),x);
+   existence
+   proof
+     deffunc G(Nat) = eval(~(F/.$1),x);
+     ex z being FinSequence of the carrier of L
+     st len z = len F & for j being Nat st j in dom z holds
+     z.j = G(j) from FINSEQ_2:sch 1; then
+     consider z being FinSequence of the carrier of L such that
+A1:  len z = len F and
+A2:  for j being Nat st j in dom z holds z.j = G(j);
+     take z;
+     thus dom z = dom F by A1,FINSEQ_3:29;
+     hence thesis by A2;
+   end;
+   uniqueness
+   proof
+     let it1, it2 be FinSequence of the carrier of L such that
+A3:  dom it1 = dom F and
+A4:  for i being Nat st i in dom F holds it1.i = eval(~(F/.i),x) and
+A5:  dom it2 = dom F and
+A6:  for i being Nat st i in dom F holds it2.i = eval(~(F/.i),x);
+     for n being Nat st n in dom it1 holds it1.n = it2.n
+     proof
+       let n be Nat;
+       assume
+A7:    n in dom it1;
+       reconsider n as Element of NAT by ORDINAL1:def 12;
+       it1.n = eval(~(F/.n),x) by A3,A4,A7 .= it2.n by A3,A6,A7;
+       hence thesis;
+     end;
+     hence thesis by A3,A5;
+   end;
+ end;
+
+Lm15:
+  for L being comRing, f,g being Element of Polynom-Ring L,
+  x being Element of L holds
+  eval(~(f+g),x) = eval(~f,x) + eval(~g,x)
+   proof
+     let L be comRing, f,g be Element of Polynom-Ring L,
+     x be Element of L;
+     f is Polynomial of L & g is Polynomial of L by POLYNOM3:def 10; then
+     consider p,q be Polynomial of L such that
+A1:  p = f & q = g;
+A2:  f+g = p+q by A1,POLYNOM3:def 10;
+A3:  eval(~f,x) = eval(p,x) & eval(~g,x) = eval(q,x) by A1;
+     eval(~(f+g),x) = eval(~f,x) + eval(~g,x) by A2,A3,POLYNOM4:19;
+     hence thesis;
+   end;
+
+theorem Th25:
+  for N0 be Nat
+  for L being comRing,
+    F be FinSequence of the carrier of Polynom-Ring L, x be Element of L
+    st len F = N0+1 holds
+    eval(F,x) = (eval(F|N0,x))^<*eval(~(F/.(len F)),x)*>
+    proof
+      let N0 be Nat;
+      let L be comRing,
+      F be FinSequence of the carrier of Polynom-Ring L,
+      x be Element of L;
+      assume
+A1:   len F = N0+1; then
+A2:   dom F = Seg(N0+1) by FINSEQ_1:def 3; then
+A3:   Seg (N0+1) = dom eval(F,x) by Def8
+      .= Seg len eval(F,x) by FINSEQ_1:def 3;
+A4:   len(F|N0) = min(N0,len F) by FINSEQ_2:21 .= N0 by A1;
+A5:   Seg len eval(F|N0,x) = dom eval(F|N0,x) by FINSEQ_1:def 3
+      .= dom (F|N0) by Def8 .= Seg N0 by A4,FINSEQ_1:def 3; then
+A6:   len eval(F|N0,x) = N0 by FINSEQ_1:6;
+      len <* eval(~(F/.(N0+1)),x)*> = 1 by FINSEQ_1:39; then
+A7:   len (eval(F|N0,x)^<*eval(~(F/.(N0+1)),x)*>) = N0+1 by A6,FINSEQ_1:22;
+      for k be Nat st 1 <= k & k <= len eval(F,x) holds
+      eval(F,x).k = (eval(F|N0,x)^<* eval(~(F/.(len F)),x)*>).k
+      proof
+        let k be Nat;
+        assume 1 <= k & k <= len eval(F,x); then
+        k in Seg (N0+1) by A3; then
+A8:     k in Seg N0 \/ {N0+1} by FINSEQ_1:9;
+A9:     Seg N0 c= Seg(N0 + 1) by FINSEQ_3:18;
+        per cases by A8,XBOOLE_0:def 3;
+          suppose
+A10:        k in Seg N0; then
+A11:        k in dom (F|N0) by A4,FINSEQ_1:def 3; then
+A12:        k in dom eval(F|N0,x) by Def8;
+A13:        k in dom (F|Seg N0) by A10,A4,FINSEQ_1:def 3;
+A14:        (F|N0)/.k = (F|Seg N0).k by A11,PARTFUN1:def 6
+            .= F.k by A13,FUNCT_1:47 .= F/.k by A2,A10,A9,PARTFUN1:def 6;
+            ((eval(F|N0,x))^<* eval(~(F/.(N0+1)),x) *>).k
+            = (eval(F|N0,x)).k by A12,FINSEQ_1:def 7
+            .= eval(~(F/.k),x) by A14,A11,Def8
+            .= eval(F,x).k by Def8,A2,A10,A9;
+            hence thesis by A1;
+          end;
+          suppose k in {N0+1}; then
+A15:         k = N0+1 by TARSKI:def 1;
+             N0+1 = len eval(F|N0,x) + 1 by A5,FINSEQ_1:6;
+             hence thesis by A1,Def8,A2,FINSEQ_1:4,A15;
+           end;
+         end;
+         hence thesis by A1,A3,A7,FINSEQ_1:6;
+       end;
+
+theorem Th26:
+  for L being comRing,
+      F be FinSequence of the carrier of Polynom-Ring L,
+      x be Element of L holds
+    eval(~Sum F,x) = Sum eval(F,x)
+    proof
+      let L be comRing,
+          F be FinSequence of the carrier of Polynom-Ring L,
+          x be Element of L;
+      per cases;
+        suppose
+A1:       len F = 0; then
+A2:       F = <*>(the carrier of Polynom-Ring L);
+          0.Polynom-Ring L = 0_.L by POLYNOM3:def 10; then
+A4:       eval(~Sum F,x) = eval(0_.L,x) by A2,RLVECT_1:43 .= 0.L
+          by POLYNOM4:17;
+          Seg len F = dom F by FINSEQ_1:def 3
+          .= dom eval(F,x) by Def8
+          .= Seg(len eval(F,x)) by FINSEQ_1:def 3; then
+          eval(F,x) = <*>(the carrier of L) by A1;
+          hence thesis by A4,RLVECT_1:43;
+        end;
+        suppose
+A5:       len F <> 0;
+          for k be non zero Nat holds
+          len F = k implies eval(~Sum F,x) = Sum eval(F,x)
+          proof
+            let k be non zero Nat;
+            defpred P[Nat] means
+            for F be FinSequence of the carrier of Polynom-Ring L st
+            len F = $1 holds eval(~Sum F,x) = Sum eval(F,x);
+A6:         P[1]
+            proof
+              for F be FinSequence of the carrier of Polynom-Ring L st
+              len F = 1 holds eval(~Sum F,x) = Sum eval(F,x)
+              proof
+                let F be FinSequence of the carrier of Polynom-Ring L;
+                assume
+A7:             len F = 1; then
+                dom F = Seg 1 by FINSEQ_1:def 3; then
+A8:             1 in dom F; then
+                F.1 in rng F by FUNCT_1:3; then
+                reconsider o = F.1 as Element of Polynom-Ring L;
+                F = <*o*> by A7,FINSEQ_1:40; then
+A9:             Sum F = F.1 by BINOM:3 .= F/.1 by A8,PARTFUN1:def 6;
+A10:            dom eval(F,x) = dom F by Def8 .= Seg 1 by A7,FINSEQ_1:def 3;
+                set o1 = eval(F,x).1;
+                set o = eval(F,x)/.1;
+A11:            1 in dom eval(F,x) by A10;
+A12:            dom eval(F,x) = dom F by Def8;
+                eval(F,x) = <* o1 *> by A10,FINSEQ_1:def 8 .= <* o *>
+                  by A11,PARTFUN1:def 6; then
+                Sum eval(F,x) = eval(F,x).1 by BINOM:3
+                  .= eval(~Sum F,x) by A9,A11,A12,Def8;
+                hence thesis;
+              end;
+              hence thesis;
+            end;
+A13:        for k be non zero Nat holds P[k] implies P[k+1]
+            proof
+              let k be non zero Nat;
+              assume
+A14:          P[k];
+              for F be FinSequence of the carrier of Polynom-Ring L
+              st len F = k+1 holds eval(~Sum F,x) = Sum eval(F,x)
+              proof
+                let F be FinSequence of the carrier of Polynom-Ring L;
+                assume
+A15:            len F = k+1; then
+                consider G be FinSequence of Polynom-Ring L,
+                d be Element of Polynom-Ring L such that
+A16:            F = G^<*d*> by FINSEQ_2:19;
+                (F|k)^<* F/.len F *> = G^<*d*> by A16,A15,FINSEQ_5:21; then
+A17:            G = (F|k) & d = F/.len F by FINSEQ_2:17;
+A18:            k+ 1 = len G + 1 by FINSEQ_2:16,A16,A15;
+                Sum F = Sum G + d by A16,FVSUM_1:71; then
+                eval(~Sum F,x) = eval(~Sum G,x) + eval(~d,x) by Lm15
+                .= Sum(eval(F|k,x)) + eval(~(F/.len F),x) by A18,A14,A17
+                .= Sum(eval(F|k,x)^<* eval(~(F/.(len F)),x) *>) by FVSUM_1:71
+                .= Sum(eval(F,x)) by A15,Th25;
+                hence thesis;
+              end;
+              hence P[k + 1];
+            end;
+            for k being non zero Nat holds P[k] from NAT_1:sch 10(A6,A13);
+            hence thesis;
+          end;
+          hence thesis by A5;
+        end;
+      end;
+
+theorem Th27:
+  for p,q being Element of the carrier of Polynom-Ring INT.Ring
+   holds ^(p + q) = ^p + ^q & ^(p * q) = (^p) * (^q)
+   proof
+     let p,q be Element of the carrier of Polynom-Ring INT.Ring;
+A3:  ^(p + q) = ~(p + q)
+     .= ~p + ~q by POLYNOM3:def 10
+     .= ~^p + ~^q by FIELD_4:15 .= ~(^p + ^q) by POLYNOM3:def 10
+     .= ^p + (^q);
+     ^(p * q) = ~(p * q)
+     .= ~p *' ~q by POLYNOM3:def 10
+     .= (~^p) *' (~^q) by FIELD_4:17 .= ~(^p * (^q)) by POLYNOM3:def 10
+     .= (^p) * (^q);
+     hence thesis by A3;
+   end;
+
+definition
+  let f be Element of the carrier of Polynom-Ring (INT.Ring);
+  func 'G'(f) -> FinSequence of the carrier of Polynom-Ring (INT.Ring)
+  means  :Def9:
+  len it = len f & for i be Nat st i in dom it holds
+  it.i = ((Der1(INT.Ring))|^(i-'1)).f;
+  existence
+  proof
+    deffunc F(Nat) = ((Der1(INT.Ring))|^($1-'1)).f;
+    consider z being FinSequence such that
+A1: len z = len f & for k being Nat st k in dom z holds z.k = F(k)
+      from FINSEQ_1:sch 2;
+    take z;
+    z is FinSequence of the carrier of Polynom-Ring (INT.Ring)
+    proof
+      rng z c= the carrier of Polynom-Ring (INT.Ring)
+      proof
+        let y be object;
+        assume y in rng z; then
+        consider i be object such that
+A3:     i in dom z and
+A4:     y = z.i by FUNCT_1:def 3;
+        dom z = Seg len z by FINSEQ_1:def 3; then
+        consider i0 be Nat such that
+A5:     i0 = i and 1 <= i0 and i0 <= len z by A3;
+        reconsider i as Nat by A5;
+        z.i = ((Der1(INT.Ring))|^(i-'1)).f by A1,A3;
+        hence thesis by A4;
+      end;
+       hence thesis by FINSEQ_1:def 4;
+    end;
+    hence thesis by A1;
+  end;
+  uniqueness
+  proof
+    let z1,z2 be FinSequence of Polynom-Ring (INT.Ring) such that
+A7: len z1 = len f and
+A8: for i be Nat st i in dom z1 holds
+    z1.i = ((Der1(INT.Ring))|^(i-'1)).f and
+A9: len z2 = len f and
+A10:for j be Nat st j in dom z2 holds
+    z2.j = ((Der1(INT.Ring))|^(j-'1)).f;
+A11:dom z1 = Seg len z1 by FINSEQ_1:def 3.= dom z2 by A7,A9,FINSEQ_1:def 3;
+    for x be Nat st x in dom z1 holds z1.x = z2.x
+    proof
+      let x be Nat;
+      assume
+A12:  x in dom z1;
+      hence z1.x = ((Der1(INT.Ring))|^(x-'1)).f by A8
+      .= z2.x by A10,A11,A12;
+    end;
+    hence thesis by A11;
+  end;
+end;
+
+theorem Th28:
+   for F be FinSequence of the carrier of Polynom-Ring INT.Ring,
+   x be Element of INT.Ring, x1 be Element of F_Real st x = x1 holds
+   eval(^F,x1) = eval(F,x)
+   proof
+     set PRI = Polynom-Ring INT.Ring;
+     set PRR = Polynom-Ring F_Real;
+     let F be FinSequence of the carrier of Polynom-Ring INT.Ring,
+         x be Element of INT.Ring, x1 be Element of F_Real;
+     assume
+A1:  x = x1;
+A2:  dom eval(^F,x1) = dom ^F by Def8 .= dom F by Def7;
+A3:  dom eval(^F,x1) = dom ^F by Def8;
+     for i be Nat st i in dom eval(^F,x1) holds
+     (eval(^F,x1)).i = (eval(F,x)).i
+     proof
+       let i be Nat;
+       assume
+A4:    i in dom eval(^F,x1); then
+       F.i in rng F by A2,FUNCT_1:3; then
+       reconsider Fi = F.i as Element of the carrier of PRI;
+A5:    (^F)/.i = (^F).i by A3,A4,PARTFUN1:def 6
+       .= ^(F/.i) by A4,A2,Def7 .= ^Fi by A4,A2,PARTFUN1:def 6;
+       reconsider rFi = (^F)/.i as Element of the carrier of PRR;
+A7:    F.i = F/.i by A4,A2,PARTFUN1:def 6;
+A8:    (eval(^F,x1)).i = eval(~rFi,x1) by A4,A3,Def8 .= eval(rFi,x1);
+       (eval(F,x)).i = eval(~(F/.i),x) by A4,A2,Def8 .= eval(Fi,x) by A7;
+       hence thesis by A8,A1,A5,FIELD_4:27;
+     end;
+     hence thesis by A2,Def8;
+   end;
+
+Lm16:
+   for F be FinSequence of the carrier of Polynom-Ring INT.Ring
+   st len F = k+1 holds ^(F|k) = (^F)|k
+   proof
+     let F be FinSequence of the carrier of Polynom-Ring INT.Ring;
+     set PRI = Polynom-Ring INT.Ring;
+     assume
+A1:  len F = k+1;
+     reconsider Fk = F|k as FinSequence of the carrier of PRI;
+A2:  k < k+1 by NAT_1:13;
+     k <= len F by A1,NAT_1:13; then
+     len (F|k) = k by FINSEQ_1:59; then
+A3:  dom(F|k) = Seg k by FINSEQ_1:def 3;
+A4:  Seg len F = dom F by FINSEQ_1:def 3
+     .= dom ^F by Def7 .= Seg len ^F by FINSEQ_1:def 3;
+     k <= len ^F by A2, A1,A4,FINSEQ_1:6; then
+     len ((^F)|k) = k by FINSEQ_1:59; then
+A5:  dom ((^F)|k) = Seg k by FINSEQ_1:def 3 .= dom(^(F|k)) by Def7,A3;
+     for i be Nat st i in dom  ^(F|k) holds  (^(F|k)).i = ((^F)|k).i
+     proof
+       let i be Nat;
+       assume
+A6:    i in dom ^(F|k); then
+A7:    i in dom (F|k) by Def7;
+A8:    i in Seg k by A3,A6,Def7; then
+       1 <= i <= k by FINSEQ_1:1; then
+       1 <= i <= k+1 by NAT_1:13; then
+       i in Seg (k+1); then
+A9:    i in dom F by A1,FINSEQ_1:def 3; then
+reconsider Fi = F.i as Element of the carrier of PRI by FINSEQ_2:11;
+A10:   Fk/.i = (F|k).i by A7,PARTFUN1:def 6 .= F.i by A8,FUNCT_1:49;
+A11:   F/.i = Fi by A9,PARTFUN1:def 6;
+       ((^F)|k).i = (^F).i by A8,FUNCT_1:49 .= ^Fi by A11, A9,Def7;
+       hence thesis by A10,Def7,A7;
+     end;
+     hence thesis by A5;
+   end;
+
+theorem Th29:
+  for F be FinSequence of the carrier of Polynom-Ring INT.Ring holds
+    Sum ^F = ^(Sum F)
+   proof
+     let F be FinSequence of the carrier of Polynom-Ring INT.Ring;
+     set L = INT.Ring;
+     set PRI = Polynom-Ring INT.Ring;
+A1:  Seg len ^F = dom ^F by FINSEQ_1:def 3
+     .= dom F by Def7 .= Seg len F by FINSEQ_1:def 3;
+     per cases;
+       suppose
+A2:      len F = 0; then
+         F = <*>(the carrier of Polynom-Ring L); then
+A4:      Sum F = 0.Polynom-Ring L by RLVECT_1:43;
+         ^F = <*>(the carrier of Polynom-Ring F_Real) by A2,A1; then
+         Sum ^F = 0.Polynom-Ring F_Real by RLVECT_1:43;
+         hence thesis by A4,FIELD_4:11;
+       end;
+       suppose
+A6:      len F <> 0;
+         for k be non zero Nat holds
+         len F = k implies Sum ^F = ^(Sum F)
+         proof
+           let k be non zero Nat;
+           defpred P[Nat] means
+           for F be FinSequence of the carrier of Polynom-Ring L st
+           len F = $1 holds Sum ^F = ^(Sum F);
+A7:        P[1]
+           proof
+             for F be FinSequence of the carrier of Polynom-Ring L st
+             len F = 1 holds Sum ^F = ^(Sum F)
+             proof
+               let F be FinSequence of the carrier of Polynom-Ring L;
+               assume
+A8:            len F = 1; then
+               dom F = Seg 1 by FINSEQ_1:def 3; then
+A9:            1 in dom F; then
+               F.1 in rng F by FUNCT_1:3; then
+    reconsider F1 = F.1 as Element of Polynom-Ring L;
+A10:           Seg len ^F = dom ^F by FINSEQ_1:def 3
+               .= dom F by Def7 .= Seg len F by FINSEQ_1:def 3;
+A11:           F = <*F1*> by A8,FINSEQ_1:40;
+               F/.1 = F1 by A9,PARTFUN1:def 6; then
+A13:           (^F).1 = ^F1 by A9,Def7;
+reconsider RF1 = ^F1 as Element of Polynom-Ring F_Real;
+reconsider RF = ^F as FinSequence of the carrier of Polynom-Ring F_Real;
+A14:           RF = <* ^F1 *> by A13,A8,A10,FINSEQ_1:6,FINSEQ_1:40;
+               Sum RF = ^F1 by BINOM:3,A14;
+               hence thesis by BINOM:3,A11;
+             end;
+             hence thesis;
+           end;
+A15:       for k be non zero Nat holds P[k] implies P[k+1]
+           proof
+             let k be non zero Nat;
+             assume
+A16:         P[k];
+             for F be FinSequence of the carrier of Polynom-Ring L
+             st len F = k+1 holds Sum ^F = ^(Sum F)
+             proof
+               let F be FinSequence of the carrier of Polynom-Ring L;
+               assume
+A17:           len F = k+1; then
+               consider G be FinSequence of Polynom-Ring L,
+               d be Element of Polynom-Ring L such that
+A18:           F = G^<*d*> by FINSEQ_2:19;
+A19:           Seg len F = dom F by FINSEQ_1:def 3
+               .= dom ^F by Def7 .= Seg len ^F by FINSEQ_1:def 3;
+               dom F = Seg (k+1) by A17,FINSEQ_1:def 3; then
+A20:           dom ^F = Seg(k+1) by Def7;
+               (F|k)^<* F/.len F *> = G^<*d*> by A18,A17,FINSEQ_5:21; then
+A21:           G = (F|k) & d = F/.len F by FINSEQ_2:17;
+A22:           k+ 1 = len G + 1 by FINSEQ_2:16,A18,A17;
+reconsider RF = ^F as FinSequence of the carrier of Polynom-Ring F_Real;
+               len F in Seg len F by A17,FINSEQ_1:3; then
+A23:           len F in dom F by FINSEQ_1:def 3;
+reconsider Fl = F/.len F as Element of the carrier of PRI;
+A24:           len RF = len F by A19,FINSEQ_1:6;
+               len RF in dom F by A19,FINSEQ_1:6,A23; then
+               len RF in dom RF by Def7; then
+A25:           RF/.(len RF) = RF.(len RF) by PARTFUN1:def 6
+               .= (^F).(len F) by A19,FINSEQ_1:6
+               .= ^Fl by A23,Def7;
+               Sum F = Sum G + d by A18,FVSUM_1:71; then
+               ^Sum F = ^Sum G + ^d by Th27
+               .= Sum(^(F|k)) + ^(F/.len F) by A22,A16,A21
+               .= Sum((^F)|k) + ^Fl by A17,Lm16
+               .= Sum(((^F)|k)^<* ^Fl *>) by FVSUM_1:71
+               .= Sum(RF|(k+1)) by A24,A17,FINSEQ_5:82,A25
+               .= Sum ^F by A20;
+               hence thesis;
+             end;
+             hence P[k + 1];
+           end;
+           for k being non zero Nat holds P[k] from NAT_1:sch 10(A7,A15);
+           hence thesis;
+         end;
+         hence thesis by A6;
+       end;
+     end;
+
+theorem
+  for x0 be Element of INT.Ring, x be Element of F_Real,
+  F be FinSequence of the carrier of Polynom-Ring INT.Ring st x = x0 holds
+  (Eval(~^(Sum F))).x = Sum eval(F,x0)
+  proof
+    set PRI = Polynom-Ring INT.Ring;
+    set PRR = Polynom-Ring F_Real;
+    let x0 be Element of INT.Ring, x be Element of F_Real,
+        F be FinSequence of the carrier of Polynom-Ring INT.Ring;
+    assume
+A1: x = x0;
+    reconsider erFx = eval(^F,x) as FinSequence of F_Real;
+    reconsider eIFx = eval(F,x0) as FinSequence of INT.Ring;
+A2: erFx = eIFx by A1,Th28;
+    (Eval(~^(Sum F))).x
+      = eval(~^(Sum F),x) by POLYNOM5:def 13
+     .= eval(~(Sum ^F),x) by Th29
+     .= Sum eval(^F,x) by Th26
+     .= In(Sum eIFx,F_Real) by A2,LIOUVIL2:5,ALGNUM_1:10;
+    hence thesis;
+  end;
+
+Lm17:
+   for f be Element of the carrier of Polynom-Ring INT.Ring st len f > 0 holds
+   ('G'(f)).(len f) is constant Element of
+   the carrier of Polynom-Ring (INT.Ring)
+   proof
+     set DR = Der1(INT.Ring);
+     let f be Element of the carrier of Polynom-Ring INT.Ring;
+     assume
+A1:  len f > 0;
+     len ('G'(f)) = len f by Def9; then
+A2:  dom ('G'(f)) = Seg len f by FINSEQ_1:def 3;
+     reconsider j1 = (len f)-'1 as Nat;
+A3:  (len f)-'1 = (len f)-1 by A1,NAT_1:14,XREAL_1:233; then
+     len(((Der1(INT.Ring))|^j1).f)
+     = len f - ((len f)-'1) by RING_3:76,XREAL_1:44,Th24 .= 1 by A3;
+     then (DR|^j1).f is constant;
+     hence thesis by A1,A2,FINSEQ_1:3,Def9;
+   end;
+
+Lm18:
+   for f be Element of the carrier of Polynom-Ring INT.Ring st len f > 0 holds
+   Del('G'(f),1) = ((Der1(INT.Ring))*('G'(f)))|(len f -' 1)
+   proof
+     set DR = Der1(INT.Ring);
+     set PRF = Polynom-Ring F_Real;
+     set PRI = Polynom-Ring (INT.Ring);
+     let f be Element of the carrier of Polynom-Ring INT.Ring;
+     assume
+A1:  len f > 0; then
+A2:  1 <= len f by NAT_1:14;
+     reconsider l1 = len f -' 1 as Nat;
+A3:  l1 = len f - 1 by A1,NAT_1:14,XREAL_1:233;
+A4:  len ('G'(f)) = len f by Def9; then
+A5:  dom ('G'(f)) = Seg len f by FINSEQ_1:def 3; then
+A7:  1 in dom ('G'(f)) by A2;
+     rng 'G'(f) c= the carrier of PRI; then
+     rng 'G'(f) c= dom DR by FUNCT_2:def 1; then
+     len (DR*('G'(f))) = len('G'(f)) by FINSEQ_2:29 .= len f by Def9; then
+A11: l1 <= len(DR*('G'(f))) by A3,XREAL_1:44;
+A8:  len ('G'(f)) = l1 +1 by A3,Def9; then
+A9:  len Del('G'(f),1) = l1 by A7,FINSEQ_3:109;
+A10: len f - 1 < len f by XREAL_1:44;
+A12: dom ((DR*('G'(f)))|l1) = Seg len((DR*('G'(f)))|l1) by FINSEQ_1:def 3
+     .= Seg l1 by A11,FINSEQ_1:59;
+     for i be Nat st i in dom Del('G'(f),1) holds
+     (Del('G'(f),1)).i = ((DR*('G'(f)))|l1).i
+     proof
+       let i be Nat;
+       assume i in dom Del('G'(f),1); then
+A14:   i in Seg len (Del('G'(f),1)) by FINSEQ_1:def 3; then
+A15:   1 <= i <= l1 by A9,FINSEQ_1:1;
+       reconsider i1 = i+1 as Nat;
+A16:   1 <= i1 by XREAL_1:38;
+       i1 <= l1 +1 by A15,XREAL_1:6; then
+A18:   i1 in dom ('G'(f)) by A5,A3,A16;
+A19:   (Del('G'(f),1)).i = ('G'(f)).(i+1) by A7,A8,A15,FINSEQ_3:111
+       .= (DR|^((i+1)-'1)).f by A18,Def9
+       .= (DR|^i).f;
+A20:   i in Seg l1 by A5,A2,A8,FINSEQ_3:109,A14,FINSEQ_1:1;
+       Seg l1 c= Seg len f by A3,A10,FINSEQ_1:5; then
+       i in Seg len f by A20; then
+A21:   i in dom (('G'(f))) by A4,FINSEQ_1:def 3;
+A22:   i-'1+1 = i-1 + 1 by A15,XREAL_1:233 .= i;
+       ((DR*('G'(f)))|l1).i = (DR*('G'(f))).i by A20,FUNCT_1:49
+       .= DR.(('G'(f)).i) by A21,FUNCT_1:13
+       .= DR.((DR|^(i-'1)).f) by A21,Def9
+       .= (DR|^i).f by A22,RINGDER1:9;
+       hence thesis by A19;
+     end;
+     hence thesis by A9,A12,FINSEQ_1:def 3;
+   end;
+
+Lm19:
+    for f be Element of the carrier of Polynom-Ring INT.Ring
+    st len f > 0 holds
+    Sum ('G'(f)) - f = (Der1(INT.Ring)).(Sum ('G'(f))) &
+    (Sum 'G'(f)) -f = (Der1(INT.Ring)).((Sum 'G'(f))) &
+    (Sum 'G'(f)) = (Der1(INT.Ring)).((Sum 'G'(f))) + f
+    proof
+      set DR = Der1(INT.Ring);
+      set PRF = Polynom-Ring F_Real;
+      set PRI = Polynom-Ring INT.Ring;
+      let f be Element of the carrier of Polynom-Ring INT.Ring;
+      assume
+A1:   len f > 0;
+A2:   1 <= len f by A1,NAT_1:14;
+      reconsider l1 = len f -' 1 as Nat;
+A3:   l1 = len f - 1 by A1,NAT_1:14,XREAL_1:233;
+A4:   len ('G'(f)) = len f by Def9; then
+      dom ('G'(f)) = Seg len f by FINSEQ_1:def 3; then
+A8:   1 in dom 'G'(f) by A2;
+      rng 'G'(f) c= the carrier of PRI; then
+      rng 'G'(f) c= dom DR by FUNCT_2:def 1; then
+A6:   len (DR*('G'(f))) = len('G'(f)) by FINSEQ_2:29 .= len f by Def9; then
+A7:   dom (DR*('G'(f))) = Seg len f by FINSEQ_1:def 3;
+reconsider Gf = 'G'(f) as non empty FinSequence of the carrier of PRI by A1,A4;
+A9:   ('G'(f)).1 = (DR|^(1-'1)).f by A8,Def9
+      .= (DR|^0).f by XREAL_1:232
+      .= (id PRI).f by VECTSP11:18 .= f;
+      Gf = <*Gf.1*>^Del(Gf,1) by FINSEQ_5:86; then
+A10:  Sum Gf = Sum(<*Gf/.1*>^Del(Gf,1)) by A8,PARTFUN1:def 6
+      .= Sum(<*Gf/.1*>) + Sum(Del(Gf,1)) by RLVECT_1:41
+      .= Gf/.1 + Sum(Del(Gf,1)) by RLVECT_1:44
+      .= f + Sum(Del(Gf,1)) by A9,A8,PARTFUN1:def 6;
+A12:  (l1+1) in dom (DR*('G'(f))) by A7,A3,FINSEQ_1:3;
+      (l1+1) in Seg len f by A3,FINSEQ_1:3; then
+A13:  len f in dom ('G'(f)) by A4,FINSEQ_1:def 3,A3;
+      reconsider Gff = ('G'(f)).(len f) as
+       constant Element of the carrier of Polynom-Ring INT.Ring by Lm17,A1;
+A14:   (DR*('G'(f)))/.(len f) = (DR*('G'(f))).(len f) by A3,A12,PARTFUN1:def 6
+       .= DR.Gff by A13,FUNCT_1:13
+       .= 0_.INT.Ring by FIELD_14:60 .= 0.PRI by POLYNOM3:def 10;
+       DR*('G'(f)) = (DR*('G'(f)))|(l1+1) by A3,A6
+       .= ((DR*('G'(f)))|l1)^<*(DR*('G'(f))).(l1+1)*>
+       by A6,A3, XREAL_1:44,FINSEQ_5:83; then
+       Sum (DR*('G'(f)))
+       = Sum (((DR*('G'(f)))|l1)^<* (DR*('G'(f)))/.(l1+1) *>)
+       by PARTFUN1:def 6,A3,A7,FINSEQ_1:3
+       .= Sum ((DR*('G'(f)))|l1) + Sum(<* (DR*('G'(f)))/.(len f) *>)
+       by A3,RLVECT_1:41
+       .= Sum ((DR*('G'(f)))|l1) + 0.PRI by A14,RLVECT_1:44
+       .= Sum ((DR*('G'(f)))|l1); then
+A17:   DR.(Sum ('G'(f))) = Sum ((DR*('G'(f)))|l1) by Th23;
+A18:   Sum Gf - f
+        = Sum(Del(Gf,1)) + (f +(- f)) by RLVECT_1:def 3,A10
+       .= Sum(Del(Gf,1)) + 0.PRI by RLVECT_1:def 10
+       .= DR.(Sum ('G'(f))) by A17,Lm18,A1;
+       DR.((Sum 'G'(f))) +f
+       = (Sum 'G'(f)) + ((-f) + f) by A18,RLVECT_1:def 3
+       .= (Sum 'G'(f)) + 0.PRI by RLVECT_1:def 10;
+       hence thesis by A18;
+    end;
+
+::$INSERT The Definition below corresponds to the Transformation (1) in \cite{HURWITZ:1893}
+definition
+  let f be Element of the carrier of Polynom-Ring INT.Ring;
+  func 'F'(f) -> Function of REAL,REAL equals
+  Eval ~^(Sum 'G'(f));
+  coherence;
+end;
+
+Lm21: :: adjust to Derivation
+   for q be Element of the carrier of Polynom-Ring F_Real
+   holds (Der1(F_Real)).(@(LM(~q))) =
+   0_.F_Real +* (len ~q-'2,(~q.(len ~q-'1))*(len ~q-'1))
+   proof
+     let q be Element of the carrier of Polynom-Ring F_Real;
+     reconsider p = q as Polynomial of F_Real;
+     set R = F_Real;
+     set DR = Der1(R);
+     set l = LM(p);
+     set m = len p-'1;
+     set k = len p-'2;
+     reconsider a = (p.m)*m as Element of R;
+     set f = 0_.R +* (k,a);
+A2:  dom(0_.R +* (k,a)) = NAT by FUNCT_2:def 1
+     .= dom (DR.(@l)) by FUNCT_2:def 1;
+     for x be object st x in dom (DR.(@l)) holds (DR.(@l)).x = f.x
+     proof
+       let x be object;
+       assume
+A4:    x in dom (DR.(@l)); then
+       reconsider n = x as Nat;
+A5:    n in dom 0_.R by A4;
+       (DR.(@l)).n = f.n
+       proof
+        per cases by NAT_1:53;
+          suppose
+A6:         len p = 0 or len p = 1;
+A7:         k = 0
+            proof
+              assume
+A8:           k <> 0;
+              len p - 2 < 0 by A6;
+              hence contradiction by A8,XREAL_0:def 2;
+            end;
+            per cases;
+              suppose
+A10:            n = 0;
+                len p - 1 <= 0 or len p - 1 = 0 by A6; then
+A11:            len p -'1 = 0 by XREAL_0:def 2;
+                n in dom 0_.R by A10; then
+A13:            f.n = (p.(len p-'1))*0 by A11,A7,A10,FUNCT_7:31
+                .= 0.R by BINOM:12;
+                l.(0+1) = 0.R by A11,POLYNOM4:def 1; then
+                (DR.(@l)).n = 1*0.R by A10,RINGDER1:def 8 .= 0.R;
+                hence thesis by A13;
+              end;
+              suppose
+                n <> 0; then
+A16:            f.n = (NAT-->0.R).n by A7,FUNCT_7:32
+                .= 0.R by A4,FUNCOP_1:7;
+                len p - 1 <= 0 or len p - 1 = 0 by A6; then
+                n+1 <> len p -'1 by XREAL_0:def 2; then
+A19:            l.(n+1) = 0.R by POLYNOM4:def 1;
+                (DR.(@l)).n = (n+1)*(l.(n+1)) by RINGDER1:def 8
+                .= 0.R by A19;
+                hence thesis by A16;
+              end;
+            end;
+          suppose
+A20:        len p > 1; then
+A21:        len p - 1 > 1-1 by XREAL_1:14;
+            per cases;
+              suppose
+A22:            m = n+1;
+A23:            k = m-'1 by NAT_D:45;
+                (DR.(@l)).n = (len p-'1)*(l.(len p-'1)) by A22,RINGDER1:def 8
+                .= (len p-'1)*p.(len p-'1) by POLYNOM4:def 1
+                .= (p.(len p-'1))*(len p-'1) by BINOM:18;
+                hence thesis by A5,A22,A23,FUNCT_7:31;
+              end;
+             suppose
+A24:           m <> n+1; then
+A25:           l.(n+1) = 0.R by POLYNOM4:def 1;
+A26:           len p-2 <> n by A21,A24,XREAL_0:def 2;
+               len p-2 > 1-2 by A20,XREAL_1:14; then
+               len p-2 >= -1+1 by INT_1:7; then
+               k = len p-2 by XREAL_0:def 2; then
+A27:           f.n = (NAT-->0.R).n by A26,FUNCT_7:32
+               .= 0.R by A4,FUNCOP_1:7;
+               (DR.(@l)).n = (n+1)*(l).(n+1) by RINGDER1:def 8
+               .= 0.R by A25;
+               hence thesis by A27;
+             end;
+           end;
+         end;
+         hence thesis;
+       end;
+      hence thesis by A2;
+    end;
+
+Lm22:
+   for p be Element of the carrier of Polynom-Ring F_Real holds
+   Eval(LM(~p))`| = Eval(~((Der1(F_Real)).(@LM(~p))))
+   proof
+     let p be Element of the carrier of Polynom-Ring F_Real;
+     set F = F_Real;
+     set DR = Der1 F_Real;
+     set l = Leading-Monomial(~p);
+     set m = len (~p)-'1;
+     set k = len (~p)-'2;
+     reconsider f = FPower(~p.m,m) as Function of REAL,REAL;
+     reconsider a = (~p.m)*m as Element of F;
+     len ~p <= 2-1 or len ~p >= 2 by INT_1:52; then
+     per cases by NAT_1:25;
+       suppose
+A1:      len ~p = 0 or len ~p = 1; then
+A2:      ~p = 0_.F_Real or ~p = <%~p.0%> by ALGSEQ_1:def 5;
+         len (LM ~p) = 0 or len (LM ~p) = 1 by A1,POLYNOM4:15; then
+         deg (LM ~p) = -1 or deg (LM ~p) = 0; then
+         @(LM ~p) is constant; then
+         DR.(@(LM ~p)) = 0_.F_Real by FIELD_14:60; then
+         Eval(~(DR.(@(LM ~p)))) = REAL --> 0 by POLYDIFF:52;
+         hence thesis by A2,POLYDIFF:54;
+       end;
+       suppose
+A4:      2 <= len ~p; then
+A5:      k = len ~p - 2 by XREAL_1:233 .= (len ~p -1) -1
+         .= m - 1 by A4,XXREAL_0:2,XREAL_1:233;
+A6:      Eval(l) = ~p.m (#) #Z m by POLYDIFF:59;
+reconsider c1 = (~p).m as Real;
+reconsider c2 = m as Nat;
+reconsider h = #Z k as real-valued Function;
+A7:      (~p).m (#) (( #Z m)`|) = ((~p).m) (#)(m (#) #Z k) by A5,POLYDIFF:13
+         .= c1 (#)(m (#) FPower(1.F_Real,k)) by POLYDIFF:40
+         .= (c1*m) (#) FPower(1.F_Real,k) by RFUNCT_1:17;
+         (m*(~p).m) (#) #Z k = (m*(~p).m) (#) FPower(1.F_Real,k) by POLYDIFF:40
+         .= (c1*m) (#) FPower(1.F_Real,k) by Lm20; then
+A8:      (m*(~p).m) (#) #Z k = Eval(l)`| by A6,A7,POLYDIFF:19;
+         (Der1(F_Real)).(@(LM(~p))) = seq(k,a) by Lm21;
+         then Eval( ~(DR.(@(LM(~p))))) = ((~p.m)*m) (#) #Z k by POLYDIFF:60;
+         hence thesis by A8,BINOM:18;
+       end;
+     end;
+
+begin :: Construct the equation (2) in \cite{HURWITZ:1893}.
+
+theorem Th31:
+::: adjust POLYDIFF:61 to derivation
+   for p be Element of the carrier of Polynom-Ring F_Real holds
+   (Eval(~p))`| = Eval(~((Der1(F_Real)).p))
+   proof
+     let p be Element of the carrier of Polynom-Ring F_Real;
+     set DR = Der1 F_Real;
+     set f = (Eval(~p))`|;
+     set g = Eval(~((Der1(F_Real)).p));
+     defpred P[Nat] means
+     for p be Element of the carrier of Polynom-Ring F_Real
+     st len ~p <= $1 holds (Eval(~p))`| = Eval(~(DR.p));
+A1:  P[0]
+     proof
+       let p be Element of the carrier of Polynom-Ring F_Real;
+       assume len ~p <= 0; then
+A3:    len (~p) = 0; then
+A4:    p = 0_.F_Real by POLYNOM4:5;
+A5:    ~p = 0_.F_Real by A3,POLYNOM4:5;
+       ~(DR.p) = 0_.F_Real by A4,FIELD_14:58;
+       hence thesis by POLYDIFF:52,A5,POLYDIFF:54;
+     end;
+A7:  P[n] implies P[n+1]
+     proof
+       assume
+A8:    P[n];
+       let p be Element of the carrier of Polynom-Ring F_Real such that
+A9:    len ~p <= n+1;
+       set m = len (~p)-'1;
+       set q = @((~p)||m);
+A11:   now
+        per cases;
+          suppose
+            ~p <> 0_.F_Real;
+            hence len (~q) < n+1 by A9,XXREAL_0:2,POLYDIFF:36;
+          end;
+          suppose ~p = 0_.F_Real;
+            hence len (~q) < n+1 by POLYNOM4:3;
+          end;
+        end;
+        set l = Leading-Monomial(~p);
+A13:    DR is additive;
+A14:    ~(DR.(@(l+ (~q)))) = DR.(@(~q) + @l) by POLYNOM3:def 10
+       .= ~(DR.(@(~q)) + DR.(@l)) by A13
+       .= ~(DR.(@LM(~p))) + ~(DR.q) by POLYNOM3:def 10;
+A15:   @(~q + l) = @(~p) = p by POLYDIFF:37;
+A16:   Eval(LM(~p))`| = Eval(~(DR.(@LM(~p)))) by Lm22;
+       (Eval(~p))`| = (Eval(~q+LM(~p)))`| by POLYDIFF:37
+       .= (Eval(~q)+Eval(LM(~p)))`| by POLYDIFF:55
+       .= (Eval(~q))`| + (Eval(LM(~p)))`| by POLYDIFF:14
+       .= Eval(~(DR.(@LM(~p)))) + Eval(~(DR.q)) by A8,A11,NAT_1:13, A16
+       .= Eval(~(DR.p)) by A14,A15,POLYDIFF:55;
+       hence thesis;
+     end;
+A17: P[n] from NAT_1:sch 2(A1,A7);
+     len ~p = len ~p;
+     hence thesis by A17;
+   end;
+
+Lm23: :::
+    for f be Element of the carrier of Polynom-Ring INT.Ring
+    holds dom 'F'(f) = REAL &
+    dom ((exp_R^)(#) 'F'(f)) = REAL
+    proof
+       let f be Element of the carrier of Polynom-Ring INT.Ring;
+A1:    {0,+infty} misses ].0,+infty.[ by XXREAL_1:86;
+       0 in {0,+infty} by TARSKI:def 2; then
+       not 0 in ].0,+infty.[ by A1,XBOOLE_0:def 4; then
+       not 0 in rng exp_R by TAYLOR_1:16,LIMFUNC1:def 3; then
+A4:    (exp_R)"{0} = {} by FUNCT_1:72;
+A5:    dom 'F'(f) = REAL by FUNCT_2:def 1;
+       dom (exp_R^) = dom (exp_R) \ (exp_R)"{0} by RFUNCT_1:def 2
+       .= REAL by A4,FUNCT_2:def 1; then
+       dom (exp_R^) /\ dom 'F'(f) = REAL by A5;
+       hence thesis by FUNCT_2:def 1,VALUED_1:def 4;
+    end;
+
+definition
+  let f be Element of the carrier of Polynom-Ring INT.Ring;
+  func Phi(f) -> Function of REAL,REAL equals
+  (exp_R1)(#)('F'(f));
+  coherence;
+end;
+
+Lm25:
+   for f be Element of the carrier of Polynom-Ring INT.Ring holds
+   'F'(f) is_differentiable_on REAL
+   proof
+     let f be Element of the carrier of Polynom-Ring INT.Ring;
+     'F'(f) is_differentiable_on dom 'F'(f) by FDIFF_1:def 8;
+     hence thesis by Lm23;
+   end;
+
+registration
+  let f be Element of the carrier of Polynom-Ring INT.Ring;
+  cluster 'F'(f) -> differentiable for Function of REAL,REAL;
+  coherence;
+end;
+
+Lm30:
+  for f be Element of the carrier of Polynom-Ring INT.Ring holds
+    ('F'(f))|[.0,x0.] is continuous
+    proof
+      let f be Element of the carrier of Polynom-Ring INT.Ring;
+      set F = 'F'(f);
+A1:   dom F = REAL by Lm23;
+      for r be Real st r in dom (F|[.0,x0.]) holds
+      F|[.0,x0.] is_continuous_in r
+      proof
+        let r be Real;
+        assume
+A2:     r in dom (F|[.0,x0.]);
+        dom (F|[.0,x0.]) = [.0,x0.] by A1,RELAT_1:62;
+        hence thesis by A1,FCONT_1:def 2,1,A2;
+      end;
+      hence thesis by FCONT_1:def 2;
+    end;
+
+theorem Th32:
+  for f be Element of the carrier of Polynom-Ring INT.Ring holds
+    ((exp_R1)(#)('F'(f)))|[.0,x0.] is continuous
+    proof
+      let f be Element of the carrier of Polynom-Ring INT.Ring;
+      set f1 = (exp_R^), f2 = 'F'(f);
+      dom f1 = REAL & dom f2 = REAL by Lm23,Lm23A; then
+A3:   dom (f2|[.0,x0.]) = [.0,x0.] by RELAT_1:62;
+A2:   dom (f1|[.0,x0.]) = [.0,x0.] by Lm23A, RELAT_1:62;
+A4:   (f1(#)f2)|[.0,x0.] = f1|[.0,x0.] (#) f2|[.0,x0.] by RFUNCT_1:45;
+      for r be Real st r in dom ((f1(#)f2)|[.0,x0.]) holds
+      (f1(#)f2)|[.0,x0.] is_continuous_in r
+      proof
+        let r be Real;
+        assume
+A5:     r in dom ((f1(#)f2)|[.0,x0.]);
+A6:     dom ((f1(#)f2)|[.0,x0.])
+        = dom (f1|[.0,x0.] (#) f2|[.0,x0.]) by RFUNCT_1:45
+        .= dom (f1|[.0,x0.]) /\ dom (f2|[.0,x0.]) by VALUED_1:def 4
+        .= [.0,x0.] by A2,A3; then
+A7:     f1|[.0,x0.] is_continuous_in r by A2,A5,Lm29,FCONT_1:def 2;
+A8:     f2|[.0,x0.] is_continuous_in r by A5,A6,A3,Lm30,FCONT_1:def 2;
+        r in dom (f1|[.0,x0.]) /\ dom (f2|[.0,x0.]) by A2,A3,A5,A6;
+        hence thesis by A4,A7,A8,FCONT_1:7;
+      end;
+      hence thesis by FCONT_1:def 2;
+    end;
+
+Lm32:
+  for f be Element of the carrier of Polynom-Ring INT.Ring holds
+    'F'(f) is_differentiable_on ].0,x0.[
+    proof
+      let f be Element of the carrier of Polynom-Ring INT.Ring;
+      set F = 'F'(f);
+      set Z = ].0,x0.[;
+A1:   dom F = REAL by Lm23;
+      F is_differentiable_on REAL by Lm25; then
+      for x be Real st x in Z holds F is_differentiable_in x;
+      hence thesis by A1,FDIFF_1:9;
+    end;
+
+theorem Th33:
+  for f be Element of the carrier of Polynom-Ring INT.Ring holds
+    (exp_R1)(#)('F'(f)) is_differentiable_on ].0,x0.[
+     proof
+       let f be Element of the carrier of Polynom-Ring INT.Ring;
+       set f1 = exp_R^, f2 = 'F'(f);
+       set Z = ].0,x0.[;
+A1:    dom f1 = REAL & dom f2 = REAL by Lm23A,Lm23;
+A2:    f1 is_differentiable_on Z by Lm31;
+A3:    f2 is_differentiable_on Z by Lm32;
+       dom (f1(#)f2) = dom f1 /\ dom f2 by VALUED_1:def 4 .= REAL by A1;
+       hence thesis by A2,A3,FDIFF_1:21;
+     end;
+
+Lm33:
+    for f be Element of the carrier of Polynom-Ring INT.Ring holds
+    ex s be Real st 0 < s & s < 1 &
+    ((exp_R1)(#)('F'(f))).x0
+    = ((exp_R1)(#)('F'(f))).0 + x0*diff((exp_R1)(#)('F'(f)),s*x0)
+    proof
+      let f be Element of the carrier of Polynom-Ring INT.Ring;
+      [.0,x0.] c= REAL; then
+A1:   [.0,x0.] c= dom ((exp_R1)(#)('F'(f))) by FUNCT_2:def 1;
+A2:   ((exp_R1)(#)('F'(f)))|[.0,x0.] is continuous by Th32;
+      ((exp_R1)(#)('F'(f))) is_differentiable_on ].0,x0.[ by Th33; then
+      ex s be Real st
+      0 < s & s < 1 & ((exp_R1)(#)('F'(f))).(0+x0)
+      = ((exp_R1)(#)('F'(f))).0 + x0*diff((exp_R1)(#)('F'(f)),0+s*x0)
+        by A1,A2,ROLLE:4;
+      hence thesis;
+    end;
+
+Lm34:
+    for f be Element of the carrier of Polynom-Ring INT.Ring st len f > 0
+    holds 'F'(f) - Eval(~(^f)) = ('F'(f))`|
+    proof
+      set DR = Der1(F_Real);
+      let f be Element of the carrier of Polynom-Ring INT.Ring;
+      assume len f > 0; then
+A2:   ^(Sum 'G'(f)) = ^((Der1(INT.Ring)).((Sum 'G'(f))) + f) by Lm19
+      .= ^((Der1(INT.Ring)).((Sum 'G'(f)))) + (^f) by Th27;
+      ^((Der1(INT.Ring)).(Sum 'G'(f)))
+      = ((Der1(F_Real)).(^(Sum 'G'(f)))) by FIELD_14:66; then
+A4:   Eval(~^(Sum 'G'(f))) = Eval(~((Der1(F_Real)).^(Sum 'G'(f))) + ~(^f))
+      by A2,POLYNOM3:def 10
+      .= Eval(~((Der1(F_Real)).^(Sum 'G'(f)))) + Eval(~(^f)) by POLYDIFF:55
+      .= ('F'(f))`| + Eval(~(^f)) by Th31;
+A5:   Eval(~(^f)) - Eval(~(^f))
+       = Eval(~(^f)-(~(^f))) by POLYDIFF:57
+      .= REAL --> 0 by POLYDIFF:52,POLYNOM3:29;
+A6:   dom(('F'(f))`|) = REAL by FUNCT_2:def 1;
+      'F'(f) - Eval(~(^f))
+      = ('F'(f))`| + (REAL --> 0) by A5,A4,RFUNCT_1:8
+      .= ('F'(f))`| by A6,POLYDIFF:6;
+      hence thesis;
+    end;
+
+Lm36:
+   for f be Element of the carrier of Polynom-Ring INT.Ring st len f > 0 holds
+   ((exp_R1)(#)('F'(f)))`|REAL = -(exp_R1(#)Eval(~(^f)))
+   proof
+     let f be Element of the carrier of Polynom-Ring INT.Ring;
+     assume
+A1:  len f > 0;
+     reconsider t = (exp_R1)(#) ('F'(f)) as Function of REAL,REAL;
+     set e1 = exp_R1;
+     set fhw = 'F'(f);
+A2:  (-1)(#)((e1(#)fhw)) + 1(#)(e1(#) fhw)
+     = t(#)(-1 + 1) by TOPREALC:2 .= REAL -->0 by Lm35;
+     dom Eval(~(^f)) = REAL by FUNCT_2:def 1; then
+     dom (exp_R^) /\ dom (Eval(~(^f))) = REAL by Lm23A; then
+     dom ((exp_R1)(#)(Eval(~(^f)))) = REAL by VALUED_1:def 4; then
+A4:  dom (-((exp_R1)(#)(Eval(~(^f))))) = REAL by VALUED_1:def 5;
+     ((exp_R1)(#)('F'(f)))`|REAL
+     = (e1(#)fhw)`|
+    .= (e1`|)(#)fhw + e1(#)(fhw`|) by POLYDIFF:16
+    .= (-e1)(#) fhw + (e1)(#)(fhw-Eval(~(^f))) by Lm28,A1,Lm34
+    .= (-e1)(#) fhw + ((e1)(#) fhw - (e1)(#)Eval(~(^f))) by RFUNCT_1:15
+    .= (-1)(#)(e1)(#) fhw + (e1)(#) fhw - (e1)(#)Eval(~(^f)) by RFUNCT_1:23
+    .= (-1)(#)(e1)(#) fhw + 1(#)(e1)(#) fhw - (e1)(#)Eval(~(^f)) by RFUNCT_1:21
+    .= ((-1)(#)((e1)(#) fhw) + 1(#)(e1)(#) fhw)
+       - (e1)(#)Eval(~(^f)) by RFUNCT_1:12
+    .= -((e1)(#)Eval(~(^f))) + (REAL --> 0) by A2,RFUNCT_1:12
+    .= -(exp_R1(#)Eval(~(^f))) by A4,POLYDIFF:6;
+     hence thesis;
+   end;
+
+::$N The following theorem corresponds to the equation (2) in \cite{HURWITZ:1893}.
+theorem
+  for f be Element of the carrier of Polynom-Ring INT.Ring,
+    x0 be positive Real st len f > 0 holds
+    ex s be Real st 0 < s & s < 1 &
+    ('F'(f)).x0 - (exp_R.x0)*(('F'(f)).0)
+    = -x0*(exp_R.(x0*(1-s)))*(Eval(~(^f))).(s*x0)
+    proof
+      let f be Element of the carrier of Polynom-Ring INT.Ring,
+          x0 be positive Real;
+      assume
+A1:   len f > 0;
+      set PHI = (exp_R1)(#)('F'(f));
+      consider s be Real such that
+A2:   0 < s & s < 1 and
+A3:   (PHI).x0 = (PHI).0 + x0*diff(PHI,s*x0) by Lm33;
+A4:   (PHI).x0 = (exp_R1.x0)*('F'(f)).x0 by VALUED_1:5;
+A5:   (PHI).0 = (exp_R1.0)*('F'(f)).0 by VALUED_1:5
+      .= (exp_R.0)"*('F'(f)).0 by RFUNCT_1:59
+      .= 1"*('F'(f)).0 by SIN_COS:51,def 23
+      .= ('F'(f)).0;
+reconsider PHi = PHI as differentiable Function of REAL,REAL;
+A6:   diff(PHI,s*x0) = (PHi`|).(s*x0) by POLYDIFF:10
+      .=( -(exp_R1(#)Eval(~(^f)))).(s*x0) by A1,Lm36
+      .= -((exp_R1(#)Eval(~(^f))).(s*x0)) by VALUED_1:8
+      .= -(exp_R1.(s*x0)*(Eval(~(^f))).(s*x0)) by VALUED_1:5;
+A7:   x0 in dom (exp_R^) by Lm23A,XREAL_0:def 1;
+A8:   exp_R.x0 <> 0 by SIN_COS:54;
+A9:   x0*s in dom (exp_R^) by Lm23A,XREAL_0:def 1;
+      reconsider x1 = x0*s as Real;
+      reconsider r = exp_R.x0 as Real;
+A10:  exp_R1.(s*x0)
+      = 1/exp_R.x1 by A9,RFUNCT_1:59 .= 1/exp_R(x1) by SIN_COS:def 23
+      .= exp_R(-x1) by TAYLOR_1:4 .= exp_R.(-x1) by SIN_COS:def 23;
+      ('F'(f)).x0 - (exp_R.x0)*(('F'(f)).0)
+      = (1*('F'(f)).x0) - (exp_R.x0)*(('F'(f)).0)
+      .= (r*r")*('F'(f)).x0 - (exp_R.x0)*(('F'(f)).0) by A8,XCMPLX_0:def 7
+      .= ((exp_R.x0)*(exp_R1.x0))*('F'(f)).x0
+         - (exp_R.x0)*(('F'(f)).0) by A7,RFUNCT_1:59
+      .= (exp_R.x0)*(PHI.x0 - PHI.0) by A5,A4
+      .= -x0*(exp_R.x0 * exp_R.(-(s*x0)))*(Eval(~(^f))).(s*x0) by A10,A6,A3
+      .= -x0*(exp_R.(x0+(-(s*x0))))*(Eval(~(^f))).(s*x0) by SIN_COS2:12
+      .= -x0*(exp_R.(x0*(1-s)))*(Eval(~(^f))).(s*x0);
+      hence thesis by A2;
+    end;
+
+:::  Prepare calculation of the following Function
+:::  f_0(p,x) = \frac{1}{(p-1)!}x^{p-1}(1-x)^{p}(2-x)^{p}\cdots (n-x)^{p}
+
+::$N Ring Extended version of FIELD_13:13.
+theorem Th37:
+   for F being domRing, E being RingExtension of F
+   for p being Polynomial of F for q being Polynomial of E
+   for a being Element of F, b being Element of E
+   st p = q & a = b holds a * p = b * q
+   proof
+     let F be domRing, E be RingExtension of F;
+     let p be Polynomial of F; let q be Polynomial of E;
+     let a be Element of F, b be Element of E;
+     assume A1: p = q & a = b; then
+A2:  (a|F) = (b|E) by FIELD_6:23;
+     thus a * p = (a|F) *' p by FIELD_8:2
+          .= (b|E) *' q by A2,A1,FIELD_4:17
+          .= b * q by FIELD_8:2;
+   end;
+
+::$N Ring Extension version of REALALG3:16.
+theorem
+   for F being domRing, E being domRingExtension of F
+   for p being Polynomial of F
+   for a being Element of F, x,b being Element of E st b = a
+   holds Ext_eval(a*p,x) = b * Ext_eval(p,x)
+   proof
+     let F be domRing, E be domRingExtension of F, p be Polynomial of F;
+     let a be Element of F, x,b being Element of E;
+     assume A1: b = a;
+     reconsider p1 = p as Element of the carrier of Polynom-Ring F
+     by POLYNOM3:def 10;
+     the carrier of Polynom-Ring F c= the carrier of Polynom-Ring E
+     by FIELD_4:10; then
+     reconsider q1 = p1 as Element of the carrier of Polynom-Ring E;
+     reconsider q0 = q1 as Polynomial of E;
+A2:  a * p1 is Element of the carrier of Polynom-Ring F by POLYNOM3:def 10;
+     b * q1 is Element of the carrier of Polynom-Ring E by POLYNOM3:def 10;
+       then
+     Ext_eval(a*p1,x) = eval(b*q1,x) by A2,FIELD_4:26,A1,Th37
+     .= b * eval(q0,x) by RING_5:7
+     .= b * Ext_eval(p1,x) by FIELD_4:26;
+     hence thesis;
+   end;
+
+Lm37:
+    for L being non degenerated comRing, f,g being Element of Polynom-Ring L,
+    x being Element of L holds
+    eval(~(f*g),x) = eval(~f,x) * eval(~g,x)
+    proof
+      let L be non degenerated comRing, f,g be Element of Polynom-Ring L,
+          x be Element of L;
+      f is Polynomial of L & g is Polynomial of L by POLYNOM3:def 10; then
+      consider p,q be Polynomial of L such that
+A1:   p = f & q = g;
+A2:   f*g = p*'q by A1,POLYNOM3:def 10;
+      eval(~f,x) = eval(p,x) & eval(~g,x) = eval(q,x) by A1;
+      then eval(~(f*g),x) = eval(~f,x) * eval(~g,x) by A2,POLYNOM4:24;
+      hence thesis;
+    end;
+
+theorem Th39:
+  for L being non degenerated comRing,
+    F be non empty FinSequence of the carrier of Polynom-Ring L,
+    x be Element of L
+    holds eval(~(Product F),x) = Product eval(F,x)
+    proof
+      let L be non degenerated comRing;
+      let F be non empty FinSequence of Polynom-Ring L,
+          x be Element of L;
+      for k be non zero Nat holds
+      len F = k implies eval(~Product F,x) = Product eval(F,x)
+      proof
+        let k be non zero Nat;
+        defpred P[Nat] means
+        for F be FinSequence of the carrier of Polynom-Ring L st
+        len F = $1 holds eval(~Product F,x) = Product eval(F,x);
+A1:     P[1]
+        proof
+          for F be FinSequence of the carrier of Polynom-Ring L st
+          len F = 1 holds eval(~Product F,x) = Product eval(F,x)
+          proof
+            let F be FinSequence of the carrier of Polynom-Ring L;
+            assume
+A2:         len F = 1; then
+            dom F = Seg 1 by FINSEQ_1:def 3; then
+A3:         1 in dom F; then
+            F.1 in rng F by FUNCT_1:3; then
+            reconsider o = F.1 as Element of Polynom-Ring L;
+            F = <*o*> by A2,FINSEQ_1:40; then
+A4:         Product F = F.1 by GROUP_4:9 .= F/.1 by A3,PARTFUN1:def 6;
+A5:         dom eval(F,x) = dom F by Def8 .= Seg 1 by A2,FINSEQ_1:def 3;
+            set o1 = eval(F,x).1;
+            set o = eval(F,x)/.1;
+A6:         1 in dom eval(F,x) by A5;
+A7:         dom eval(F,x) = dom F by Def8;
+            eval(F,x) = <* o1 *> by A5,FINSEQ_1:def 8
+            .= <* o *> by A6,PARTFUN1:def 6; then
+            Product eval(F,x) = eval(F,x).1 by GROUP_4:9
+            .= eval(~Product F,x) by A4,A6,A7,Def8;
+            hence thesis;
+          end;
+          hence thesis;
+        end;
+A8:     for k be non zero Nat holds P[k] implies P[k+1]
+        proof
+          let k be non zero Nat;
+          assume
+A9:       P[k];
+          for F be FinSequence of the carrier of Polynom-Ring L
+          st len F = k+1 holds eval(~Product F,x) = Product eval(F,x)
+          proof
+            let F be FinSequence of the carrier of Polynom-Ring L;
+            assume
+A10:        len F = k+1; then
+            consider G be FinSequence of Polynom-Ring L,
+            d be Element of Polynom-Ring L such that
+A11:        F = G^<*d*> by FINSEQ_2:19;
+            (F|k)^<* F/.len F *> = G^<*d*> by A11,A10,FINSEQ_5:21; then
+A12:        G = (F|k) & d = F/.len F by FINSEQ_2:17;
+A13:        k+ 1 = len G + 1 by FINSEQ_2:16,A11,A10;
+            Product F = Product G * d by A11,GROUP_4:6; then
+            eval(~Product F,x) = eval(~Product G,x) * eval(~d,x) by Lm37
+            .= Product(eval(F|k,x)) * eval(~(F/.len F),x) by A13,A9,A12
+            .= Product(eval(F|k,x)^<* eval(~(F/.(len F)),x) *>) by GROUP_4:6
+            .= Product(eval(F,x)) by A10,Th25;
+            hence thesis;
+           end;
+           hence P[k + 1];
+         end;
+         for k being non zero Nat holds P[k] from NAT_1:sch 10(A1,A8);
+         hence thesis;
+       end;
+       hence thesis;
+     end;
+
+Lm38:
+    for F be non empty FinSequence of the carrier of Polynom-Ring INT.Ring
+    holds
+    Product ^F = ^(Product F)
+    proof
+      let F be non empty FinSequence of the carrier of Polynom-Ring INT.Ring;
+      set L = INT.Ring;
+      set PRI = Polynom-Ring INT.Ring;
+      for k be non zero Nat holds
+      len F = k implies Product ^F = ^(Product F)
+      proof
+        let k be non zero Nat;
+        defpred P[Nat] means
+        for F be FinSequence of the carrier of Polynom-Ring L st
+        len F = $1 holds Product ^F = ^(Product F);
+A1:     P[1]
+        proof
+          for F be FinSequence of the carrier of Polynom-Ring L st
+          len F = 1 holds Product ^F = ^(Product F)
+          proof
+            let F be FinSequence of the carrier of Polynom-Ring L;
+            assume
+A2:         len F = 1; then
+            dom F = Seg 1 by FINSEQ_1:def 3; then
+A3:         1 in dom F; then
+            F.1 in rng F by FUNCT_1:3; then
+            reconsider F1 = F.1 as Element of Polynom-Ring L;
+A4:         Seg len ^F = dom ^F by FINSEQ_1:def 3
+            .= dom F by Def7 .= Seg len F by FINSEQ_1:def 3;
+A5:         F = <*F1*> by A2,FINSEQ_1:40;
+A6:         ^(Product F) = ^F1 by A5,GROUP_4:9;
+A7:         F/.1 = F1 by A3,PARTFUN1:def 6;
+A8:         (^F).1 = ^F1 by A7,A3,Def7;
+reconsider RF1 = ^F1 as Element of Polynom-Ring F_Real;
+reconsider RF = ^F as FinSequence of the carrier of Polynom-Ring F_Real;
+            RF = <* ^F1 *> by A8,A2,A4,FINSEQ_1:6,FINSEQ_1:40;
+            hence thesis by A6,GROUP_4:9;
+          end;
+          hence thesis;
+        end;
+A10:    for k be non zero Nat holds P[k] implies P[k+1]
+        proof
+          let k be non zero Nat;
+          assume
+A11:      P[k];
+          for F be FinSequence of the carrier of Polynom-Ring L
+          st len F = k+1 holds Product ^F = ^(Product F)
+          proof
+            let F be FinSequence of the carrier of Polynom-Ring L;
+            assume
+A12:        len F = k+1; then
+            consider G be FinSequence of Polynom-Ring L,
+                     d be Element of Polynom-Ring L such that
+A13:        F = G^<*d*> by FINSEQ_2:19;
+A14:        Seg len F = dom F by FINSEQ_1:def 3
+            .= dom ^F by Def7 .= Seg len ^F by FINSEQ_1:def 3;
+            dom F = Seg (k+1) by A12,FINSEQ_1:def 3; then
+A15:        dom ^F = Seg(k+1) by Def7;
+            (F|k)^<* F/.len F *> = G^<*d*> by A13,A12,FINSEQ_5:21; then
+A16:        G = (F|k) & d = F/.len F by FINSEQ_2:17;
+A17:        k+ 1 = len G + 1 by FINSEQ_2:16,A13,A12;
+reconsider RF = ^F as FinSequence of the carrier of Polynom-Ring F_Real;
+            len F in Seg len F by A12,FINSEQ_1:3; then
+A18:        len F in dom F by FINSEQ_1:def 3;
+reconsider Fl = F/.len F as Element of the carrier of PRI;
+A19:        len RF = len F by A14,FINSEQ_1:6;
+            len RF in dom F by A14,FINSEQ_1:6,A18; then
+            len RF in dom RF by Def7; then
+A20:        RF/.(len RF) = RF.(len RF) by PARTFUN1:def 6
+            .= (^F).(len F) by A14,FINSEQ_1:6
+            .= ^Fl by A18,Def7;
+            Product F = Product G * d by A13,GROUP_4:6; then
+            ^Product F = ^Product G * (^d) by Th27
+            .= Product(^(F|k)) * (^(F/.len F)) by A17,A11,A16
+            .= Product((^F)|k) * (^Fl) by A12,Lm16
+            .= Product(((^F)|k)^<* ^Fl *>) by GROUP_4:6
+            .= Product(RF|(k+1)) by A19,A12,FINSEQ_5:82,A20
+            .= Product ^F by A15;
+            hence thesis;
+          end;
+          hence P[k + 1];
+        end;
+        for k being non zero Nat holds P[k] from NAT_1:sch 10(A1,A10);
+        hence thesis;
+      end;
+      hence thesis;
+    end;
+
+theorem
+  for F be non empty FinSequence of the carrier of Polynom-Ring INT.Ring,
+      x be Element of F_Real
+    holds eval(~(^(Product F)),x) = Product eval(^F,x)
+    proof
+       let F be non empty FinSequence of the carrier of Polynom-Ring INT.Ring,
+           x be Element of F_Real;
+A1:    Seg len F = dom F by FINSEQ_1:def 3 .= dom ^F by Def7
+       .= Seg len ^F by FINSEQ_1:def 3;
+reconsider F2 = ^F as non empty FinSequence of the carrier of
+Polynom-Ring F_Real by A1;
+       eval(~(^(Product F)),x) = eval(~(Product F2),x) by Lm38
+       .= Product eval(F2,x) by Th39;
+       hence thesis;
+    end;

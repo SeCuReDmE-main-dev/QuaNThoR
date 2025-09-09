@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<Constructors>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="XTUPLE_0"/>
+<ArticleID name="XBOOLE_0"/>
+<ArticleID name="ZFMISC_1"/>
+<ArticleID name="SUBSET_1"/>
+<ArticleID name="RELAT_1"/>
+<ArticleID name="FUNCT_1"/>
+<ArticleID name="MCART_1"/>
+<ArticleID name="PARTFUN1"/>
+<ArticleID name="FUNCT_2"/>
+<ArticleID name="ORDINAL1"/>
+<ArticleID name="FINSET_1"/>
+<ArticleID name="CARD_1"/>
+<ArticleID name="FINSEQ_1"/>
+<ArticleID name="XREAL_0"/>
+<ArticleID name="INT_1"/>
+<ArticleID name="GLIB_000"/>
+<ArticleID name="RELAT_2"/>
+<ArticleID name="FUNCOP_1"/>
+<ArticleID name="FUNCT_7"/>
+<ArticleID name="ABIAN"/>
+<ArticleID name="GLIB_001"/>
+<ArticleID name="GLIB_006"/>
+<ArticleID name="GLIB_014"/>
+</Signature>
+<ConstrCounts>
+<ConstrCount kind="V" nr="6"/>
+</ConstrCounts>
+<Constructor kind="V" nr="1" aid="GLPACY00" relnr="242">
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="10">
+<Func kind="K" nr="88"/>
+</Adjective>
+<Adjective nr="12"/>
+<Adjective nr="31"/>
+<Adjective nr="46"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="10">
+<Func kind="K" nr="88"/>
+</Adjective>
+<Adjective nr="12"/>
+<Adjective nr="31"/>
+<Adjective nr="46"/>
+</Cluster>
+</Typ>
+</Constructor>
+<Constructor kind="V" nr="2" aid="GLPACY00" relnr="243">
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="12"/>
+<Adjective nr="57"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="12"/>
+<Adjective nr="57"/>
+</Cluster>
+</Typ>
+</Constructor>
+<Constructor kind="V" nr="3" aid="GLPACY00" relnr="244">
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="89"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="89"/>
+</Cluster>
+</Typ>
+</Constructor>
+<Constructor kind="V" nr="4" aid="GLPACY00" relnr="245">
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="10">
+<Func kind="K" nr="88"/>
+</Adjective>
+<Adjective nr="12"/>
+<Adjective nr="31"/>
+<Adjective nr="46"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="10">
+<Func kind="K" nr="88"/>
+</Adjective>
+<Adjective nr="12"/>
+<Adjective nr="31"/>
+<Adjective nr="46"/>
+</Cluster>
+</Typ>
+</Constructor>
+<Constructor kind="V" nr="5" aid="GLPACY00" relnr="246">
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="12"/>
+<Adjective nr="57"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="7"/>
+<Adjective nr="12"/>
+<Adjective nr="57"/>
+</Cluster>
+</Typ>
+</Constructor>
+<Constructor kind="V" nr="6" aid="GLPACY00" relnr="247">
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="89"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="89"/>
+</Cluster>
+</Typ>
+</Constructor>
+</Constructors>

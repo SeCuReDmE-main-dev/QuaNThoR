@@ -1,0 +1,677 @@
+:: Tarski Geometry Axioms. {P}art {V } -- Half-planes and Planes
+::  by Roland Coghetto and Adam Grabowski
+::
+:: Received December 18, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies INCSP_1, GTARSKI1, GTARSKI2, GTARSKI3, XXREAL_0, XBOOLE_0,
+      TARSKI, SUBSET_1, STRUCT_0, GTARSKI4, GTARSKI5, RVSUM_1, PROJDES1,
+      PROB_1;
+ notations TARSKI, XBOOLE_0, SUBSET_1, STRUCT_0, GTARSKI1, GTARSKI2, GTARSKI3,
+      GTARSKI4;
+ constructors GTARSKI4;
+ registrations STRUCT_0, GTARSKI1, GTARSKI3;
+ requirements BOOLE, SUBSET;
+
+
+begin
+
+theorem :: GTARSKI5:1
+  for S being satisfying_CongruenceIdentity
+              satisfying_BetweennessIdentity
+              TarskiGeometryStruct
+  for a,b,c being POINT of S st a,b <= c,c holds a = b;
+
+begin
+
+definition
+  let S be non empty TarskiGeometryStruct;
+  let a,b be POINT of S;
+  let A be Subset of S;
+  pred between a,A,b means
+:: GTARSKI5:def 1
+  A is_line & not a in A & not b in A & ex t being POINT of S st t in A &
+  between a,t,b;
+end;
+
+theorem :: GTARSKI5:2
+  for S being non empty satisfying_BetweennessIdentity TarskiGeometryStruct
+  for a being POINT of S for A being Subset of S holds not between a,A,a;
+
+definition
+  let S be non empty TarskiGeometryStruct;
+  let a,b,p,q be POINT of S;
+  pred between a,p,q,b means
+:: GTARSKI5:def 2
+  p <> q & between a,Line(p,q),b;
+end;
+
+reserve S for non empty satisfying_CongruenceIdentity
+              satisfying_SegmentConstruction
+              satisfying_BetweennessIdentity
+              satisfying_Pasch
+              TarskiGeometryStruct;
+
+reserve a,b for POINT of S;
+reserve A for Subset of S;
+
+::$N 9.2 Satz
+theorem :: GTARSKI5:3
+  between a,A,b implies between b,A,a;
+
+reserve S for non empty satisfying_Tarski-model
+              TarskiGeometryStruct;
+
+reserve a,b,c,m,r,s for POINT of S;
+reserve A for Subset of S;
+
+theorem :: GTARSKI5:4
+  between a,b,c & A is_line & a in A & c in A implies b in A;
+
+theorem :: GTARSKI5:5
+  between a,b,c & a <> b & A is_line & a in A & b in A implies c in A;
+
+theorem :: GTARSKI5:6
+  between a,A,c & m in A & Middle a,m,c & r in A implies
+  (for b st r out a,b & between r,b,a holds between b,A,c);
+
+::$N 9.3 Lemma
+theorem :: GTARSKI5:7
+  between a,A,c & m in A & Middle a,m,c & r in A implies
+  (for b st r out a,b holds between b,A,c);
+
+definition
+  let S be non empty satisfying_Tarski-model TarskiGeometryStruct;
+  let a,b be POINT of S;
+  let A be Subset of S;
+  pred are_orthogonal A,a,b means
+:: GTARSKI5:def 3
+  are_lorthogonal A,a,a,b;
+end;
+
+definition
+  let S be non empty TarskiGeometryStruct;
+  let K be Subset of S;
+  pred K is_half_line means
+:: GTARSKI5:def 4
+ex p,a being POINT of S st p <> a &
+    K = halfline(p,a);
+end;
+
+theorem :: GTARSKI5:8
+  for a,b,c,d,e being POINT of S st b <> c & c <> d & between b,c,d &
+  (between a,b,c or between b,a,c) & (between c,d,e or between c,e,d) holds
+  between a,c,e;
+
+reserve S         for non empty satisfying_Lower_Dimension_Axiom
+                                satisfying_Tarski-model
+                                TarskiGeometryStruct,
+        a,b,c,d,m,p,q,r,s,x for POINT of S,
+        A,A9,E              for Subset of S;
+
+theorem :: GTARSKI5:9
+  r <> s & s,c <= r,a & between a,A,c & r in A & are_orthogonal A,r,a &
+  s in A & are_orthogonal A,s,c implies ((Middle r,m,s implies
+  (for u be POINT of S holds (r out u,a iff s out reflection(m,u),c))) &
+  (for u,v be POINT of S st r out u,a & s out v,c holds between u,A,v));
+
+::$N 9.4 Lemma
+theorem :: GTARSKI5:10
+  between a,A,c & r in A & are_orthogonal A,r,a & s in A &
+  are_orthogonal A,s,c implies ((Middle r,m,s implies
+  (for u being POINT of S holds ((r out u,a iff s out reflection(m,u),c)))) &
+  (for u,v being POINT of S st r out u,a & s out v,c holds between u,A,v));
+
+theorem :: GTARSKI5:11
+  for a,b being POINT of S st a <> b holds a out b,b;
+
+::$N Satz 9.5 (Gupta 1965)
+theorem :: GTARSKI5:12
+  between a,A,c & r in A implies (for b holds r out a,b implies between b,A,c);
+
+::$N Satz 9.6 (Satz von Pash, Exterior form - Gupta 1965)
+theorem :: GTARSKI5:13
+  between a,c,p & between b,q,c implies ex x st between a,x,b & between p,q,x;
+
+::$N 9.7 Definition
+definition
+  let S be non empty TarskiGeometryStruct;
+  let A be Subset of S;
+  let a,b be POINT of S;
+  pred A out a,b means
+:: GTARSKI5:def 5
+    ex c being POINT of S st between a,A,c & between b,A,c;
+end;
+
+definition
+  let S be non empty TarskiGeometryStruct;
+  let a,b,p,q be POINT of S;
+  pred p,q out a,b means
+:: GTARSKI5:def 6
+p <> q & Line(p,q) out a,b;
+end;
+
+::$N 9.8 Satz
+theorem :: GTARSKI5:14
+  between a,A,c implies (between b,A,c iff A out a,b);
+
+::$N 9.9 Satz
+theorem :: GTARSKI5:15
+  between a,A,b implies not A out a,b;
+
+::$N 9.10 Lemma
+theorem :: GTARSKI5:16
+  A is_line & not a in A implies ex c st between a,A,c;
+
+::$N 9.11 Satz
+theorem :: GTARSKI5:17
+  A is_line & not a in A implies A out a,a;
+
+::$N 9.12 Satz
+theorem :: GTARSKI5:18
+  A out a,b implies A out b,a;
+
+::$N 9.13 Satz
+theorem :: GTARSKI5:19
+  A out a,b & A out b,c implies A out a,c;
+
+::$N 9.14 Definition
+definition
+  let S be non empty TarskiGeometryStruct;
+  let A be Subset of S;
+  let a be POINT of S;
+  func half-plane(A,a) -> Subset of S equals
+:: GTARSKI5:def 7
+    {x where x is POINT of S: A out x,a};
+end;
+
+::$N 9.15 Definition
+definition
+  let S be non empty TarskiGeometryStruct;
+  let p,q,a be POINT of S;
+  assume not Collinear p,q,a;
+  func half-plane(p,q,a) -> set equals
+:: GTARSKI5:def 8
+  half-plane(Line(p,q),a);
+end;
+
+theorem :: GTARSKI5:20
+  A is_line & not a in A implies a in half-plane(A,a);
+
+theorem :: GTARSKI5:21
+  A is_line & not a in A & not b in A & b in half-plane(A,a) implies
+  a in half-plane(A,b);
+
+theorem :: GTARSKI5:22
+  b in half-plane(A,a) implies half-plane(A,b) c= half-plane(A,a);
+
+theorem :: GTARSKI5:23
+  A is_line & not a in A & not b in A &
+  b in half-plane(A,a) implies half-plane(A,b) = half-plane(A,a);
+
+definition
+  let S be non empty TarskiGeometryStruct;
+  let A be Subset of S;
+  let a,b be POINT of S;
+  pred A,a is_opposite-half-plane b means
+:: GTARSKI5:def 9
+between a,A,b;
+end;
+
+theorem :: GTARSKI5:24
+  A out a,b implies A is_line & not a in A & not b in A;
+
+::$N 9.17 Satz
+theorem :: GTARSKI5:25
+  A out a,b & between a,c,b implies A out c,a;
+
+::$N 9.18 Satz
+theorem :: GTARSKI5:26
+  A is_line & p in A & Collinear a,b,p implies
+  (between a,A,b iff between a,p,b & not a in A & not b in A);
+
+theorem :: GTARSKI5:27
+  A is_line & p in A & p out a,b & not a in A implies
+  between b,A,reflection(p,a);
+
+theorem :: GTARSKI5:28
+  A is_line & p in A & not a in A implies between a,A,reflection(p,a);
+
+::$N 9.19 Satz
+theorem :: GTARSKI5:29
+  A is_line & p in A & Collinear a,b,p implies
+  (A out a,b iff (p out a,b & not a in A));
+
+::$N 9.20 Definition
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+            satisfying_Tarski-model TarskiGeometryStruct;
+  let A be Subset of S;
+  let r be POINT of S;
+  assume that
+ A is_line and
+ not r in A;
+  func Plane(A,r) -> Subset of S means
+:: GTARSKI5:def 10
+
+  ex r9 being POINT of S st between r,A,r9 &
+  it = half-plane(A,r) \/ A \/ half-plane(A,r9);
+end;
+
+theorem :: GTARSKI5:30
+  A is_line & not r in A implies half-plane(A,r) c= Plane(A,r);
+
+theorem :: GTARSKI5:31
+  A is_line & not r in A implies A c= Plane(A,r) & r in Plane(A,r);
+
+theorem :: GTARSKI5:32
+  A is_line & not r in A implies
+  Plane(A,r) = {x where x is POINT of S: A out x,r or x in A or between r,A,x};
+
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let p,q,r be POINT of S;
+  assume not Collinear p,q,r;
+  func Plane(p,q,r) -> Subset of S equals
+:: GTARSKI5:def 11
+
+    Plane(Line(p,q),r);
+end;
+
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let E be Subset of S;
+  pred E is_plane means
+:: GTARSKI5:def 12
+  ex p,q,r being POINT of S st not Collinear p,q,r & E = Plane(p,q,r);
+end;
+
+theorem :: GTARSKI5:33
+  between a,A,b implies b in Plane(A,a);
+
+::$N 9.21 Satz
+theorem :: GTARSKI5:34
+  A is_line & not r in A & s in Plane(A,r) & not s in A implies
+  Plane(A,r) = Plane(A,s);
+
+theorem :: GTARSKI5:35
+  A,A9 Is p & A,A9 Is q implies p = q;
+
+theorem :: GTARSKI5:36
+  A is_line & a in A & p in A implies reflection(p,a) in A;
+
+::$N 9.22 Lemma
+theorem :: GTARSKI5:37
+  A,A9 Is p & r in A9 & r <> p implies A9 c= Plane(A,r);
+
+theorem :: GTARSKI5:38
+  A is_line & A9 is_line & A <> A9 implies ex r being POINT of S st
+  not r in A & r in A9;
+
+::$N 9.23 Definition
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let A,A9 be Subset of S;
+  assume that
+ A is_line and
+ A9 is_line and
+ A <> A9 and
+ A /\ A9 is non empty;
+  func Plane(A,A9) -> Subset of S means
+:: GTARSKI5:def 13
+
+  ex r being POINT of S st not r in A & r in A9 & it = Plane(A,r);
+end;
+
+theorem :: GTARSKI5:39
+  for S being non empty TarskiGeometryStruct
+  for A,B being Subset of S
+  for x being POINT of S st A,B Is x holds B,A Is x;
+
+theorem :: GTARSKI5:40
+  A,A9 Is p implies A c= Plane(A9,A) & A9 c= Plane(A,A9);
+
+theorem :: GTARSKI5:41
+  A,A9 Is p implies ex r being POINT of S st (not r in A & r in A9 &
+  Plane(A,A9) = Plane(A,r) & A9 = Line(r,p) & ex r9 being POINT of S st
+  (between r,p,r9 & p <> r9 & Collinear r,p,r9 & not r9 in A &
+  Plane(A,r) = Plane(A,r9)));
+
+theorem :: GTARSKI5:42
+  A,A9 Is p implies Plane(A,A9) c= Plane(A9,A);
+
+::$N 9.24 Satz
+theorem :: GTARSKI5:43
+  A,A9 Is p implies A c= Plane(A,A9) & A9 c= Plane(A,A9) &
+  Plane(A,A9) = Plane(A9,A);
+
+theorem :: GTARSKI5:44
+  a in E & b in E & a <> b & not Collinear p,q,r & E = Plane(p,q,r) &
+  c in Line(p,q) & not c in Line(a,b) & not b in Line(p,q) implies
+  Line(a,b) c= E & ex c st not Collinear a,b,c & E = Plane(a,b,c);
+
+theorem :: GTARSKI5:45
+  a in E & b in E & a <> b & not Collinear p,q,r & E = Plane(p,q,r) &
+  not b in Line(p,q) & Line(p,q) <> Line(a,b) implies
+  Line(a,b) c= E & ex c st not Collinear a,b,c & E = Plane(a,b,c);
+
+::$N Satz 9.25
+theorem :: GTARSKI5:46
+  E is_plane & a in E & b in E & a <> b implies Line(a,b) c= E &
+  ex c st not Collinear a,b,c & E = Plane(a,b,c);
+
+::$N Satz 9.26
+theorem :: GTARSKI5:47
+  not Collinear a,b,c & E is_plane & a in E & b in E & c in E implies
+  E = Plane(a,b,c);
+
+theorem :: GTARSKI5:48
+  A is_line & not a in A implies a in Plane(A,a);
+
+::$N 9.27.(1) Satz
+theorem :: GTARSKI5:49
+  not Collinear a,b,c implies ex E being Subset of S st Plane(a,b,c) = E &
+  E is_plane & a in E & b in E & c in E;
+
+::$N 9.27.(2) Satz
+theorem :: GTARSKI5:50
+  A is_line & not c in A implies ex E being Subset of S st (E is_plane &
+  A c= E & c in E) & Plane(A,c) = E;
+
+::$N 9.27.(3) Satz
+theorem :: GTARSKI5:51
+  A,A9 Is p implies ex E being Subset of S st E is_plane & A c= E &
+  A9 c= E & Plane(A,A9) = E;
+
+::$N 9.28 Folgerung
+theorem :: GTARSKI5:52
+  not Collinear a,b,c implies for E1,E2 being Subset of S st E1 is_plane &
+  a in E1 & b in E1 & c in E1 & E2 is_plane & a in E2 & b in E2 & c in E2
+  holds E1 = E2;
+
+::$N 9.29 Folgerung
+theorem :: GTARSKI5:53
+  not Collinear a,b,c implies
+  Plane(a,b,c) = Plane(b,c,a) & Plane(a,b,c) = Plane(c,a,b) &
+  Plane(a,b,c) = Plane(b,a,c) & Plane(a,b,c) = Plane(a,c,b) &
+  Plane(a,b,c) = Plane(c,b,a);
+
+::$N 9.30 Folgerung
+theorem :: GTARSKI5:54
+  A is_line implies for E1,E2 being Subset of S st E1 is_plane &
+  E2 is_plane & A c= E1 & A c= E2 & E1 <> E2 holds (for x being POINT of S
+  holds (x in E1 & x in E2) iff x in A);
+
+theorem :: GTARSKI5:55
+  p,q out s,r implies s <> p & s <> q & r <> p & r <> q & p <> q;
+
+theorem :: GTARSKI5:56
+  not between a,Line(b,c),a;
+
+theorem :: GTARSKI5:57
+  between a,A,b implies a <> b;
+
+theorem :: GTARSKI5:58
+  for S being satisfying_CongruenceIdentity
+  satisfying_SegmentConstruction satisfying_BetweennessIdentity
+  satisfying_Pasch satisfying_Lower_Dimension_Axiom
+  TarskiGeometryStruct holds ex p,q being POINT of S st p <> q;
+
+::$N 9.31 Satz
+theorem :: GTARSKI5:59
+  p,q out s,r & p,r out s,q implies between q,Line(p,s),r;
+
+::$N 9.32.(i) Definition
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+       satisfying_Tarski-model TarskiGeometryStruct;
+  let A be Subset of S;
+  pred A are_coplanar means
+:: GTARSKI5:def 14
+  ex E being Subset of S st E is_plane & A c= E;
+end;
+
+::$N 9.32.(ii) Definition
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+       satisfying_Tarski-model TarskiGeometryStruct;
+  let a,b,c,d be POINT of S;
+  pred a,b,c,d are_coplanar means
+:: GTARSKI5:def 15
+  ex E being Subset of S st E is_plane &
+    a in E & b in E & c in E & d in E;
+end;
+
+theorem :: GTARSKI5:60
+  a,b,c,d are_coplanar implies a,b,d,c are_coplanar &
+  a,c,b,d are_coplanar & a,c,d,b are_coplanar &
+  a,d,c,b are_coplanar & a,d,b,c are_coplanar &
+  b,a,c,d are_coplanar & b,a,d,c are_coplanar &
+  b,c,a,d are_coplanar & b,c,d,a are_coplanar &
+  b,d,a,c are_coplanar & b,d,c,a are_coplanar &
+  c,a,b,d are_coplanar & c,a,d,b are_coplanar &
+  c,b,a,d are_coplanar & c,b,d,a are_coplanar &
+  d,a,b,c are_coplanar & d,a,c,b are_coplanar &
+  d,b,a,c are_coplanar & d,b,c,a are_coplanar;
+
+theorem :: GTARSKI5:61
+  a,a,a,a are_coplanar;
+
+theorem :: GTARSKI5:62
+  a,a,a,b are_coplanar;
+
+theorem :: GTARSKI5:63
+  a,a,b,c are_coplanar;
+
+theorem :: GTARSKI5:64
+  Collinear a,b,x & Collinear c,d,x & a <> x & c <> x implies
+  a,b,c,d are_coplanar;
+
+theorem :: GTARSKI5:65
+  Collinear b,a,x & Collinear c,d,x & b <> x & c <> x implies
+  a,b,c,d are_coplanar;
+
+theorem :: GTARSKI5:66
+  Collinear a,b,x & Collinear c,d,x & b <> x & c <> x implies
+  a,b,c,d are_coplanar;
+
+theorem :: GTARSKI5:67
+  Collinear a,b,x & Collinear c,d,x &
+  ((b <> x & c <> x) or (b <> x & d <> x) or (a <> x & c <> x) or
+  (a <> x & d <> x)) implies a,b,c,d are_coplanar;
+
+::$N 9.33 Satz
+theorem :: GTARSKI5:68
+  a,b,c,d are_coplanar iff ex x st
+  (Collinear a,b,x & Collinear c,d,x) or
+  (Collinear a,c,x & Collinear b,d,x) or
+  (Collinear a,d,x & Collinear b,c,x);
+
+theorem :: GTARSKI5:69
+  not Collinear a,b,c implies Plane(a,b,c) is_plane & a in Plane(a,b,c) &
+  b in Plane(a,b,c) & c in Plane(a,b,c) & (for u,v being POINT of S st
+  u in Plane(a,b,c) & v in Plane(a,b,c) & u <> v holds
+  Line(u,v) c= Plane(a,b,c));
+
+::$N 9.34 Satz
+theorem :: GTARSKI5:70
+  not Collinear a,b,c implies (for E being Subset of S st a in E & b in E &
+  c in E & (for u,v being POINT of S st u in E & v in E & u <> v holds
+  Line(u,v) c= E) holds Plane(a,b,c) c= E);
+
+::$N 9.37 Definition n = 2
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let a,b be POINT of S;
+  let A be Subset of S;
+  pred between2 a,A,b means
+:: GTARSKI5:def 16
+    A is_plane & not a in A & not b in A & ex t being POINT of S st t in A &
+    between a,t,b;
+end;
+
+::$N 9.38 Satz (n = 2)
+theorem :: GTARSKI5:71
+  between2 a,A,b implies between2 b,A,a;
+
+theorem :: GTARSKI5:72
+  between a,p,c & p out a,b implies between b,p,c;
+
+::$N 9.39 Satz (n = 2)
+theorem :: GTARSKI5:73
+  between2 a,A,c & r in A implies
+  (for b st r out a,b holds between2 b,A,c);
+
+::$N 9.40 Definition n = 2
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let a,b be POINT of S;
+  let A be Subset of S;
+  pred A out2 a,b means
+:: GTARSKI5:def 17
+  ex c being POINT of S st between2 a,A,c & between2 b,A,c;
+end;
+
+::$N 9.41 Satz (n = 2)
+theorem :: GTARSKI5:74
+  between2 a,A,c implies (between2 b,A,c iff A out2 a,b);
+
+::$N 9.9 Satz (Version n = 2)
+theorem :: GTARSKI5:75
+  between2 a,A,b implies not A out2 a,b;
+
+::$N 9.10 Lemma (Version n = 2)
+theorem :: GTARSKI5:76
+  A is_plane & not a in A implies ex c st between2 a,A,c;
+
+::$N 9.11 Satz (Version n = 2)
+theorem :: GTARSKI5:77
+  A is_plane & not a in A implies A out2 a,a;
+
+::$N 9.12 Satz (Version n = 2)
+theorem :: GTARSKI5:78
+  A out2 a,b implies A out2 b,a;
+
+::$N 9.13 Satz (Version n = 2)
+theorem :: GTARSKI5:79
+  A out2 a,b & A out2 b,c implies A out2 a,c;
+
+::$N 9.43 Definition (n = 2)
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let A be Subset of S;
+  let a be POINT of S;
+  assume that
+  A is_plane and
+  not a in A;
+  func half-space3(A,a) -> Subset of S equals
+:: GTARSKI5:def 18
+
+    {x where x is POINT of S: A out2 x,a};
+end;
+
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let p,q,a be POINT of S;
+  assume not Collinear p,q,a;
+  func half-space3(p,q,a) -> set equals
+:: GTARSKI5:def 19
+  half-space3(Line(p,q),a);
+end;
+
+theorem :: GTARSKI5:80
+  A is_plane & not a in A implies a in half-space3(A,a);
+
+theorem :: GTARSKI5:81
+  A is_plane & not a in A & not b in A & b in half-space3(A,a) implies
+  a in half-space3(A,b);
+
+theorem :: GTARSKI5:82
+  A is_plane & not a in A & not b in A &
+  b in half-space3(A,a) implies half-space3(A,b) c= half-space3(A,a);
+
+theorem :: GTARSKI5:83
+  A is_plane & not a in A & not b in A &
+  b in half-space3(A,a) implies half-space3(A,b) = half-space3(A,a);
+
+::$N 9.44 Definition (n = 2)
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+        satisfying_Tarski-model TarskiGeometryStruct;
+  let A be Subset of S;
+  let r be POINT of S;
+  assume that
+ A is_plane and
+ not r in A;
+  func space3(A,r) -> Subset of S means
+:: GTARSKI5:def 20
+
+  ex r9 being POINT of S st between2 r,A,r9 &
+  it = half-space3(A,r) \/ A \/ half-space3(A,r9);
+end;
+
+theorem :: GTARSKI5:84
+  A is_plane & not r in A implies half-space3(A,r) c= space3(A,r);
+
+theorem :: GTARSKI5:85
+  A is_plane & not r in A implies A c= space3(A,r) & r in space3(A,r);
+
+theorem :: GTARSKI5:86
+  A is_plane & not r in A implies
+  space3(A,r) = {x where x is POINT of S :
+     A out2 x,r or x in A or between2 r,A,x};
+
+::$N 9.44 Definition (n = 2)
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+        satisfying_Tarski-model TarskiGeometryStruct;
+  let p0,p1,p2,r be POINT of S;
+  assume not p0,p1,p2,r are_coplanar;
+  func space3(p0,p1,p2,r) -> Subset of S equals
+:: GTARSKI5:def 21
+
+  space3(Plane(p0,p1,p2),r);
+end;
+
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+        satisfying_Tarski-model TarskiGeometryStruct;
+  let E be Subset of S;
+  pred E is_space3 means
+:: GTARSKI5:def 22
+  ex r being POINT of S,
+     A being Subset of S st
+    A is_plane & not r in A & E = space3(A,r);
+end;
+
+theorem :: GTARSKI5:87
+  A is_plane & not Collinear a,b,c & a in A & b in A & c in A &
+  not d in A implies not a,b,c,d are_coplanar;
+
+theorem :: GTARSKI5:88
+  E is_space3 implies ex a,b,c,d st not a,b,c,d are_coplanar &
+  E = space3(a,b,c,d);

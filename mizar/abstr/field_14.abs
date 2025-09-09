@@ -1,0 +1,677 @@
+:: Simple Extensions
+::  by Christoph Schwarzweller and Agnieszka Rowi\'nska-Schwarzweller
+:: 
+:: Received December 18, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ARYTM_3, ARYTM_1, FUNCT_1, RELAT_1, VECTSP_1, STRUCT_0, SUBSET_1,
+      SUPINF_2, XXREAL_0, UPROOTS, ZFMISC_1, NUMBERS, MESFUNC1, XCMPLX_0,
+      INT_3, QC_LANG1, PRE_POLY, IDEAL_1, VECTSP_2, CAT_1, GCD_1, CARD_3,
+      TARSKI, SGRAPH1, XBOOLE_0, NEWTON, FINSEQ_1, MOEBIUS1, FUNCOP_1,
+      FUNCSDOM, EC_PF_1, REALSET1, GLIB_000, GROUP_1, INT_1, YELLOW_8, HURWITZ,
+      NAT_1, C0SP1, POLYNOM2, INT_2, FUNCT_4, CARD_1, AFINSQ_1, FOMODEL1,
+      FINSET_1, ALGSEQ_1, PARTFUN1, ORDINAL4, FIELD_4, FIELD_6, FIELD_7,
+      FIELD_9, RING_3, RING_5, POLYNOM1, POLYNOM3, RATFUNC1, RING_4, CARD_FIL,
+      ALGSTR_0, CQC_LANG, ORDINAL1, RING_2, POLYNOM5, ALGNUM_1, FIELD_12,
+      RINGDER1, FIELD_8, FIELD_14, PARTFUN3, REAL_1;
+ notations TARSKI, XBOOLE_0, SUBSET_1, ZFMISC_1, REALSET1, CARD_1, FINSET_1,
+      XREAL_0, FUNCT_1, FINSEQ_1, ALGSEQ_1, RELSET_1, PARTFUN1, ORDINAL1,
+      FUNCT_2, FUNCT_4, FUNCOP_1, WSIERP_1, XCMPLX_0, XXREAL_0, NAT_1, INT_1,
+      INT_3, NEWTON, UPROOTS, NUMBERS, STRUCT_0, BINOM, GCD_1, ALGSTR_0,
+      PARTFUN3, VALUED_0, GROUP_1, VECTSP_1, VECTSP_2, PRE_POLY, TERMORD,
+      POLYNOM3, POLYNOM4, HURWITZ, POLYNOM5, RLVECT_1, RATFUNC1, C0SP1,
+      IDEAL_1, RING_2, RING_3, RING_4, RING_5, RINGDER1, EC_PF_1, ALGNUM_1,
+      FIELD_1, FIELD_4, FIELD_6, FIELD_7, FIELD_8, FIELD_9, FIELD_12;
+ constructors BINOM, REALSET1, NAT_D, RATFUNC1, RECDEF_1, FUNCT_4, ALGSEQ_1,
+      NEWTON, POLYNOM4, RING_5, RINGDER1, ALGNUM_1, WSIERP_1, FIELD_8, FIELD_9,
+      FIELD_12, PARTFUN3;
+ registrations XBOOLE_0, ORDINAL1, XXREAL_0, XREAL_0, VECTSP_1, STRUCT_0,
+      RLVECT_1, INT_1, VECTSP_2, NAT_1, RELSET_1, ALGSTR_1, SUBSET_1, ALGSTR_0,
+      FINSEQ_1, FUNCT_1, CARD_1, FINSET_1, INT_3, POLYNOM5, VALUED_0, FIELD_1,
+      FUNCOP_1, FIELD_4, FIELD_5, FIELD_6, FIELD_7, RINGDER1, POLYNOM3, NEWTON,
+      UPROOTS, RATFUNC1, PRE_POLY, RING_2, RING_3, RING_4, RING_5, FIELD_9,
+      FIELD_10, FIELD_12, FIELD_13;
+ requirements REAL, NUMERALS, SUBSET, BOOLE, ARITHM;
+
+
+begin :: Preliminaries
+
+registration
+let n be non zero natural number;
+cluster n - 1 -> natural;
+end;
+
+registration
+let n be Element of NAT;
+cluster n -' 1 -> natural;
+end;
+
+registration
+let R be Ring;
+let n be Nat;
+reduce n * 0.R to 0.R;
+end;
+
+registration
+  cluster -> nonnegative-yielding for FinSequence of NAT;
+end;
+
+theorem :: FIELD_14:1
+for f being FinSequence of NAT, i,j being Nat
+st i in dom f & j in dom f & i <> j holds Sum f >= f.i + f.j;
+
+definition
+let F be Field,
+    E be FieldExtension of F;
+let a,b be F-algebraic Element of E;
+redefine func {a,b} -> F-algebraic Subset of E;
+end;
+
+registration
+let F be Field;
+let K be FieldExtension of F;
+let E be K-extending FieldExtension of F;
+cluster -> K-algebraic for F-algebraic Element of E;
+end;
+
+registration
+let F be Field;
+let E be F-finite FieldExtension of F;
+cluster -> F-algebraic for Subset of E;
+end;
+
+registration
+let F be Field;
+let K be F-finite FieldExtension of F;
+cluster K-extending F-finite for FieldExtension of F;
+end;
+
+registration
+let F be Field,
+    E be FieldExtension of F,
+    K be FieldExtension of E;
+cluster K-extending E-extending for FieldExtension of F;
+end;
+
+theorem :: FIELD_14:2
+for F being Field
+for E being FieldExtension of F
+for T1,T2,T3 being Subset of E
+st FAdj(F,T1) = FAdj(F,T2) holds FAdj(F,T1\/T3) = FAdj(F,T2\/T3);
+
+theorem :: FIELD_14:3
+for R being Ring
+for S being RingExtension of R
+for a being Element of R, b being Element of S
+for n being Element of NAT st a = b holds n * a = n * b;
+
+definition
+let F be Field;
+let E be FieldExtension of F;
+func IntermediateFields(E,F) -> set means
+:: FIELD_14:def 1
+  for x being object holds
+  x in it iff (ex K being strict Field st K = x &
+               F is Subfield of K & K is Subfield of E);
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+cluster IntermediateFields(E,F) -> non empty Field-membered;
+end;
+
+theorem :: FIELD_14:4
+for F being Field
+for E being FieldExtension of F
+for K being strict Field holds
+K in IntermediateFields(E,F) iff (F is Subfield of K & K is Subfield of E);
+
+theorem :: FIELD_14:5
+for F being Field
+for E being FieldExtension of F
+for K being F-extending FieldExtension of E
+holds IntermediateFields(E,F) c= IntermediateFields(K,F);
+
+
+begin :: More on Bags
+
+definition
+let Z be non empty set;
+let B be bag of Z;
+redefine func card B -> Element of NAT;
+end;
+
+theorem :: FIELD_14:6
+for Z being non empty set, B1,B2 being bag of Z
+holds B1 divides B2 iff ex B3 being bag of Z st B2 = B1 + B3;
+
+theorem :: FIELD_14:7
+for Z being non empty set
+for B1,B2 being bag of Z st B1 divides B2 holds card B1 <= card B2;
+
+theorem :: FIELD_14:8
+for Z being non empty set
+for B being bag of Z, o being object holds B.o <= card B;
+
+theorem :: FIELD_14:9
+for Z being non empty set
+for B being bag of Z
+for o1,o2 being object st B.o1 = card B & o2 <> o1 holds B.o2 = 0;
+
+theorem :: FIELD_14:10
+for R being domRing
+for B1 being bag of the carrier of R
+holds card B1 = 1 iff ex a being Element of R st B1 = Bag{a};
+
+theorem :: FIELD_14:11
+for F being Field
+for B1,B2 being non zero bag of the carrier of F
+st B2 divides B1 & card B1 = 1 holds B2 = B1;
+
+theorem :: FIELD_14:12
+for Z being non empty set
+for B1,B2 being bag of Z
+st B2 divides B1 & B1 -' B2 is zero holds B2 = B1;
+
+theorem :: FIELD_14:13
+for F being Field
+for S1,S2 being non empty finite Subset of F
+holds Bag S1 divides Bag S2 iff S1 c= S2;
+
+theorem :: FIELD_14:14
+for F being Field
+for B being non zero bag of the carrier of F
+for S1 being non empty finite Subset of F
+holds B divides Bag S1 iff
+      ex S2 being non empty finite Subset of F st B = Bag S2 & S2 c= S1;
+
+
+begin :: More on Polynomials
+
+registration
+let R be domRing;
+let p,q be non constant Element of the carrier of Polynom-Ring R;
+cluster p * q -> non constant;
+end;
+
+theorem :: FIELD_14:15
+for F being Field
+for p being monic Polynomial of F
+for r being Polynomial of F st p *' r is monic holds r is monic;
+
+theorem :: FIELD_14:16
+for R being domRing
+for p being Polynomial of R holds p is monic constant iff p = 1_.R;
+
+theorem :: FIELD_14:17
+for R being domRing
+for a being Element of R
+for m being non zero Nat holds rpoly(1,a)`^m is Ppoly of R;
+
+theorem :: FIELD_14:18
+for F being Field,
+    p being Polynomial of F
+for E being FieldExtension of F,
+    q being Polynomial of E
+for n being Element of NAT st q = p holds q`^n = p`^n;
+
+theorem :: FIELD_14:19
+for F being Field,
+    p being Polynomial of F
+for i,j being Element of NAT holds p`^(i+j) = (p`^i) *' (p`^j);
+
+theorem :: FIELD_14:20
+for F being Field
+for a being Element of F, p being Ppoly of F,{a} holds p = rpoly(1,a);
+
+theorem :: FIELD_14:21
+for F being Field
+for B1,B2 being non zero bag of the carrier of F
+for p being Ppoly of F,B1
+for q being Ppoly of F,B2 st B1 = B2 holds p = q;
+
+theorem :: FIELD_14:22
+for F being Field,
+    E being FieldExtension of F
+for p being Element of the carrier of Polynom-Ring F
+for q being Element of the carrier of Polynom-Ring E
+st q = p holds Coeff q = Coeff p;
+
+theorem :: FIELD_14:23
+for F being Field
+for p,q being non zero Polynomial of F
+for a being Element of F holds multiplicity(p,a) <= multiplicity(p*'q,a);
+
+theorem :: FIELD_14:24
+for F being Field
+for E being FieldExtension of F
+for p,q being Polynomial of F
+for p1,q1 being Polynomial of E
+st p1 = p & q1 = q holds Subst(p1,q1) = Subst(p,q);
+
+theorem :: FIELD_14:25
+for F being Field
+for p,q being Polynomial of F
+for E being FieldExtension of F
+for a being Element of E
+holds Ext_eval(Subst(p,q),a) = Ext_eval(p,Ext_eval(q,a));
+
+theorem :: FIELD_14:26
+for F being Field
+for a,b being Element of F
+for E being FieldExtension of F
+for x being Element of E holds Ext_eval(<%a,b%>,x) = @(a,E) + @(b,E) * x;
+
+theorem :: FIELD_14:27
+for R being non degenerated comRing
+for p,q being Polynomial of R holds Roots p c= Roots(p *' q);
+
+theorem :: FIELD_14:28
+for R being domRing,
+    S1,S2 being non empty finite Subset of R
+for p being Ppoly of R,S1
+for q being Ppoly of R,S2 st S1 /\ S2 = {} holds p *' q is Ppoly of R,(S1\/S2);
+
+theorem :: FIELD_14:29
+for F being Field
+for p,q being non zero Polynomial of F st
+for a being Element of F st a is_a_root_of p*'q holds multiplicity(p*'q,a) = 1
+holds Roots p /\ Roots q = {};
+
+theorem :: FIELD_14:30
+for F being Field,
+    p being Ppoly of F
+holds p is Ppoly of F,(Roots p) iff
+      for a being Element of F st a is_a_root_of p holds multiplicity(p,a) = 1;
+
+theorem :: FIELD_14:31
+for F being Field
+for S being non empty finite Subset of F
+for p being Ppoly of F,S
+for q being non zero with_roots Polynomial of F
+st p *' q is Ppoly of F,(S \/ Roots q) holds q is Ppoly of F,(Roots q);
+
+theorem :: FIELD_14:32
+for F being Field,
+    S being non empty finite Subset of F
+for a being Element of F, p being Ppoly of F,(S \/ {a})
+for q being non constant Polynomial of F
+st p = rpoly(1,a) *' q & not a in S holds q is Ppoly of F,S;
+
+theorem :: FIELD_14:33
+for F being Field,
+    S1,S2 being non empty finite Subset of F
+for p being Ppoly of F,S1
+for a being Element of F, q being non constant Polynomial of F
+st p = rpoly(1,a) *' q & S2 = S1 \ {a} holds q is Ppoly of F,S2;
+
+
+begin :: On Divisibility and Polynomial GCDs
+
+definition
+let R,S be non degenerated comRing;
+let p be Polynomial of R;
+pred p is_square-free_over S means
+:: FIELD_14:def 2
+  not ex q1 being non constant (Polynomial of S),
+         q2 being Polynomial of S st q2 = p & q1`^2 divides q2;
+end;
+
+definition
+let R be non degenerated comRing;
+let p be Polynomial of R;
+attr p is square-free means
+:: FIELD_14:def 3
+p is_square-free_over R;
+end;
+
+registration
+let R be domRing;
+cluster square-free for non constant Polynomial of R;
+cluster non square-free for non constant Polynomial of R;
+end;
+
+theorem :: FIELD_14:34
+for R being non degenerated comRing
+for p being Polynomial of R holds
+p is square-free iff
+not ex q being non constant Polynomial of R st q`^2 divides p;
+
+theorem :: FIELD_14:35
+for F being Field
+for p being monic Polynomial of F st p divides 1_.F holds p = 1_.F;
+
+theorem :: FIELD_14:36
+for F being Field
+for p,q being non zero Polynomial of F holds BRoots(p) divides BRoots(p *' q);
+
+theorem :: FIELD_14:37
+for R being domRing
+for p,q being Polynomial of R holds q divides p implies Roots q c= Roots p;
+
+theorem :: FIELD_14:38
+for F being Field
+for p,q being Polynomial of F
+for r being non zero Polynomial of F st r*'q divides r*'p holds q divides p;
+
+theorem :: FIELD_14:39
+for F being Field
+for p,q being Polynomial of F
+for r being monic Polynomial of F holds (r*'p) gcd (r*'q) = r *' (p gcd q);
+
+theorem :: FIELD_14:40
+for F being Field,
+    p,q being Polynomial of F
+for n,k being Element of NAT st q`^n divides p & k <= n holds q`^k divides p;
+
+theorem :: FIELD_14:41
+for F being Field,
+    E being FieldExtension of F
+for p being Element of the carrier of Polynom-Ring F,
+    q being Element of the carrier of Polynom-Ring E
+st q = p holds q is irreducible implies p is irreducible;
+
+theorem :: FIELD_14:42
+for R being gcdDomain
+for a being Element of R holds a is a_gcd of a,0.R;
+
+theorem :: FIELD_14:43
+for R being EuclidianRing
+for a,b being Element of R
+for g being a_gcd of a,b ex r,s being Element of R st g = a * r + b * s;
+
+theorem :: FIELD_14:44
+for R being EuclidianRing
+for a,b being Element of R
+for g being a_gcd of a,b holds {g}-Ideal = {a,b}-Ideal;
+
+theorem :: FIELD_14:45
+for F being Field,
+    E being FieldExtension of F
+for p,q being Element of the carrier of Polynom-Ring F
+for p1,q1 being Element of the carrier of Polynom-Ring E
+st p1 = p & q1 = q holds p1 gcd q1 = p gcd q;
+
+theorem :: FIELD_14:46
+for F being Field
+for p being Element of the carrier of Polynom-Ring F
+holds p gcd 0_.(F) = NormPolynomial p;
+
+theorem :: FIELD_14:47
+for F being Field
+for p being Element of the carrier of Polynom-Ring F
+for q being non zero Element of the carrier of Polynom-Ring F
+st q divides p holds p gcd q = NormPolynomial q;
+
+theorem :: FIELD_14:48
+for F being Field,
+    E being FieldExtension of F
+for p,q being Element of the carrier of Polynom-Ring F
+for p1,q1 being Element of the carrier of Polynom-Ring E
+st p1 = p & q1 = q holds q1 divides p1 iff q divides p;
+
+theorem :: FIELD_14:49
+for F being Field
+for B1 being non zero bag of the carrier of F
+for p being Ppoly of F,B1
+for q being non constant monic Polynomial of F
+holds q divides p iff
+      ex B2 being non zero bag of the carrier of F
+                                    st q is Ppoly of F,B2 & B2 divides B1;
+
+theorem :: FIELD_14:50
+for F being Field
+for S1 being non empty finite Subset of F
+for p being Ppoly of F,S1
+for q being non constant monic Polynomial of F holds
+q divides p iff
+ex S2 being non empty finite Subset of F st q is Ppoly of F,S2 & S2 c= S1;
+
+theorem :: FIELD_14:51
+for F being Field,
+    p being Ppoly of F
+for q being monic Polynomial of F
+for a being Element of F
+holds q divides rpoly(1,a) *' p iff
+  (q divides p or
+   ex r being Polynomial of F st r divides p & q = rpoly(1,a) *' r);
+
+theorem :: FIELD_14:52
+for F being Field
+for p being Ppoly of F
+for q being Polynomial of F
+holds (Roots p) /\ (Roots q) = {} iff p gcd q = 1_.F;
+
+theorem :: FIELD_14:53
+for F being Field
+for S1,S2 being non empty finite Subset of F
+for p1 being Ppoly of F,S1
+for p2 being Polynomial of F
+st S2 = S1 /\ (Roots p2) holds p1 gcd p2 is Ppoly of F,S2;
+
+definition
+let R be domRing,
+    p be Polynomial of R;
+func Divisors p
+        -> non empty Subset of the carrier of Polynom-Ring R equals
+:: FIELD_14:def 4
+  { q where q is Element of the carrier of Polynom-Ring R : q divides p };
+func MonicDivisors p
+           -> non empty Subset of the carrier of Polynom-Ring R equals
+:: FIELD_14:def 5
+  { q where q is monic Element of
+                            the carrier of Polynom-Ring R : q divides p };
+end;
+
+theorem :: FIELD_14:54
+for F being Field
+for a being Element of F holds MonicDivisors rpoly(1,a) = { 1_.F, rpoly(1,a) };
+
+theorem :: FIELD_14:55
+for F being Field,
+    p being non zero Element of the carrier of Polynom-Ring F
+for a being non zero Element of F
+holds MonicDivisors p = MonicDivisors (a * p);
+
+theorem :: FIELD_14:56
+for F being Field,
+    E being FieldExtension of F
+for p being Polynomial of F for q being Polynomial of E
+st q = p holds MonicDivisors p c= MonicDivisors q;
+
+registration
+let F be Field,
+    p be non zero Polynomial of F;
+cluster MonicDivisors p -> finite;
+end;
+
+theorem :: FIELD_14:57
+for F being Field, p being non zero Polynomial of F
+holds card(MonicDivisors p) <= 2|^(deg p);
+
+
+begin :: Formal Derivation of Polynomials and Multiplicity of Roots
+
+notation
+let R be Ring;
+synonym Deriv R for Der1 R;
+end;
+
+registration
+let R be domRing;
+cluster Deriv R -> derivation;
+end;
+
+theorem :: FIELD_14:58
+for R being non degenerated comRing
+holds (Deriv R).(1_.R) = 0_.R & (Deriv R).(0_.R) = 0_.R;
+
+theorem :: FIELD_14:59
+for R being Ring
+for p being Element of the carrier of Polynom-Ring R
+for a being Element of R
+holds (Deriv R).(a*p) = a * (Deriv R).p;
+
+theorem :: FIELD_14:60
+for R being non degenerated comRing
+for p being constant Element of the carrier of Polynom-Ring R
+holds (Deriv R).p = 0_.R;
+
+theorem :: FIELD_14:61
+for R being Ring
+for a being Element of R holds (Deriv R).(X-a) = 1_.(R);
+
+theorem :: FIELD_14:62
+for R being non degenerated comRing
+for p being Element of the carrier of Polynom-Ring R
+holds (Deriv R).(p|^0) = 0_.(R);
+
+theorem :: FIELD_14:63
+for R being domRing
+for p being Element of the carrier of Polynom-Ring R
+for n being non zero Element of NAT
+holds (Deriv R).(p|^n) = n * ((p|^(n-1)) * (Deriv R).p);
+
+theorem :: FIELD_14:64
+for R being non degenerated comRing
+for p being non zero Element of the carrier of Polynom-Ring R
+holds deg (Deriv R).p < deg p;
+
+theorem :: FIELD_14:65
+for F being Field
+for p being non zero Element of the carrier of Polynom-Ring F
+holds p gcd (Deriv F).p = 1_.(F) implies p is square-free;
+
+theorem :: FIELD_14:66
+for R being non degenerated comRing
+for p being Element of the carrier of Polynom-Ring R
+for S being comRingExtension of R
+for q being Element of the carrier of Polynom-Ring S
+st q = p holds (Deriv S).q = (Deriv R).p;
+
+definition
+let R be non degenerated comRing,
+    S be comRingExtension of R;
+let p be non zero Polynomial of R;
+let a be Element of S;
+func multiplicity(p,a) -> Element of NAT means
+:: FIELD_14:def 6
+  ex q being non zero Polynomial of S st q = p & it = multiplicity(q,a);
+end;
+
+theorem :: FIELD_14:67
+for F being Field,
+    p being non zero Polynomial of F
+for a being Element of F
+for n being Element of NAT holds
+n = multiplicity(p,a) iff ((X-a)`^n divides p & not (X-a)`^(n+1) divides p);
+
+theorem :: FIELD_14:68
+for F being 0-characteristic Field
+for p being non zero Element of the carrier of Polynom-Ring F
+holds deg (Deriv F).p = deg p - 1;
+
+theorem :: FIELD_14:69
+for F being 0-characteristic Field
+for p being Element of the carrier of Polynom-Ring F
+holds (Deriv F).p = 0_.(F) iff p is constant;
+
+theorem :: FIELD_14:70
+for F being 0-characteristic Field
+for p being irreducible Element of the carrier of Polynom-Ring F
+holds p gcd (Deriv F).p = 1_.(F);
+
+theorem :: FIELD_14:71
+for F being 0-characteristic Field,
+    p being irreducible Element of the carrier of Polynom-Ring F
+for E being FieldExtension of F
+for a being Element of E st a is_a_root_of p,E holds multiplicity(p,a) = 1;
+
+
+begin :: Simple Extensions
+
+definition
+let F be Field;
+let E be FieldExtension of F;
+attr E is F-simple means
+:: FIELD_14:def 7
+  ex a being Element of E st E == FAdj(F,{a});
+end;
+
+definition
+let F be Field;
+let E be FieldExtension of F;
+let a be Element of E;
+attr a is F-primitive means
+:: FIELD_14:def 8
+   E == FAdj(F,{a});
+end;
+
+registration
+let F be Field;
+cluster F-simple F-finite for FieldExtension of F;
+end;
+
+registration
+let F be Field;
+let E be F-simple FieldExtension of F;
+cluster F-primitive for Element of E;
+end;
+
+definition
+let F be Field;
+let E be FieldExtension of F;
+let a be Element of E;
+func deg(a,F) -> Integer equals
+:: FIELD_14:def 9
+  deg(FAdj(F,{a}),F);
+end;
+
+theorem :: FIELD_14:72
+for F being Field
+for E being F-finite FieldExtension of F
+for a being Element of E holds deg(a,F) divides deg(E,F);
+
+theorem :: FIELD_14:73
+for F being Field
+for E being F-finite FieldExtension of F
+holds E is F-simple iff ex a being Element of E st deg(a,F) = deg(E,F);
+
+theorem :: FIELD_14:74
+for F be Field
+for E be F-finite FieldExtension of F
+for a being Element of E holds a is F-primitive iff deg(a,F) = deg(E,F);
+
+theorem :: FIELD_14:75
+for F being Field,
+    K being F-finite FieldExtension of F,
+    E being F-finite F-extending FieldExtension of K
+for a being K-algebraic Element of E
+st E == FAdj(F,{a}) holds E == FAdj(K,{a}) & K == FAdj(F,Coeff MinPoly(a,K));
+
+theorem :: FIELD_14:76
+for F being infinite Field
+for E being F-finite FieldExtension of F
+holds E is F-simple iff IntermediateFields(E,F) is finite;
+
+theorem :: FIELD_14:77
+for F being 0-characteristic Field,
+    E being FieldExtension of F
+for a,b being F-algebraic Element of E
+ex x being Element of F st FAdj(F,{a,b}) = FAdj(F,{a+@(x,E)*b});
+
+registration
+let F be 0-characteristic Field;
+cluster -> F-simple for F-finite FieldExtension of F;
+end;

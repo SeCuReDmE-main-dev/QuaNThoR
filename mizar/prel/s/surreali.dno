@@ -1,0 +1,367 @@
+<?xml version="1.0"?>
+<Notations>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="XBOOLE_0"/>
+<ArticleID name="ZFMISC_1"/>
+<ArticleID name="SUBSET_1"/>
+<ArticleID name="RELAT_1"/>
+<ArticleID name="XTUPLE_0"/>
+<ArticleID name="FUNCT_1"/>
+<ArticleID name="ORDINAL1"/>
+<ArticleID name="PARTFUN1"/>
+<ArticleID name="SURREAL0"/>
+<ArticleID name="SURREALI"/>
+</Signature>
+<Vocabularies>
+<Vocabulary>
+<ArticleID name="RELAT_1"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="1"/>
+<SymbolCount kind="O" nr="14"/>
+<SymbolCount kind="R" nr="0"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="5"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="XXREAL_0"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="1"/>
+<SymbolCount kind="O" nr="5"/>
+<SymbolCount kind="R" nr="3"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="3"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="ARYTM_3"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="0"/>
+<SymbolCount kind="O" nr="11"/>
+<SymbolCount kind="R" nr="4"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="0"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="ARYTM_0"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="1"/>
+<SymbolCount kind="L" nr="1"/>
+<SymbolCount kind="M" nr="0"/>
+<SymbolCount kind="O" nr="2"/>
+<SymbolCount kind="R" nr="0"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="0"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="REALALG1"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="5"/>
+<SymbolCount kind="O" nr="10"/>
+<SymbolCount kind="R" nr="0"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="12"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="INTEGRA1"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="1"/>
+<SymbolCount kind="O" nr="13"/>
+<SymbolCount kind="R" nr="0"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="4"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="PETRI_DF"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="2"/>
+<SymbolCount kind="O" nr="6"/>
+<SymbolCount kind="R" nr="2"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="4"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="NORMSP_1"/>
+<SymbolCount kind="G" nr="1"/>
+<SymbolCount kind="K" nr="1"/>
+<SymbolCount kind="L" nr="1"/>
+<SymbolCount kind="M" nr="1"/>
+<SymbolCount kind="O" nr="0"/>
+<SymbolCount kind="R" nr="0"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="1"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="SURREALI"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="0"/>
+<SymbolCount kind="O" nr="4"/>
+<SymbolCount kind="R" nr="0"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="1"/>
+</Vocabulary>
+</Vocabularies>
+<Pattern kind="V" nr="1" aid="SURREALI" constrkind="V" constrnr="31">
+<Format kind="V" symbolnr="30" argnr="2"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="4"/>
+<Adjective nr="12"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+<Int x="2"/>
+</Visible>
+</Pattern>
+<Pattern kind="V" nr="2" aid="SURREALI" constrkind="V" constrnr="32">
+<Format kind="V" symbolnr="7" argnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="29"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="1" aid="SURREALI" constrkind="K" constrnr="77">
+<Format kind="O" symbolnr="30" argnr="2" leftargnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+<Int x="2"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="2" aid="SURREALI" constrkind="K" constrnr="78">
+<Format kind="O" symbolnr="43" argnr="4" leftargnr="0"/>
+<ArgTypes>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="4"/>
+<Adjective nr="12"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+<Int x="2"/>
+<Int x="3"/>
+<Int x="4"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="3" aid="SURREALI" constrkind="K" constrnr="79">
+<Format kind="O" symbolnr="44" argnr="4" leftargnr="0"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="4"/>
+<Adjective nr="12"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+<Int x="2"/>
+<Int x="3"/>
+<Int x="4"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="4" aid="SURREALI" constrkind="K" constrnr="80">
+<Format kind="O" symbolnr="58" argnr="2" leftargnr="0"/>
+<ArgTypes>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="4"/>
+<Adjective nr="12"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+<Int x="2"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="5" aid="SURREALI" constrkind="K" constrnr="81">
+<Format kind="O" symbolnr="62" argnr="2" leftargnr="0"/>
+<ArgTypes>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="4"/>
+<Adjective nr="12"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+<Int x="2"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="6" aid="SURREALI" constrkind="K" constrnr="82">
+<Format kind="O" symbolnr="63" argnr="2" leftargnr="0"/>
+<ArgTypes>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="4"/>
+<Adjective nr="12"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+<Int x="2"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="7" aid="SURREALI" constrkind="K" constrnr="83">
+<Format kind="K" symbolnr="2" argnr="1" rightsymbolnr="2"/>
+<ArgTypes>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="8" aid="SURREALI" constrkind="K" constrnr="84">
+<Format kind="O" symbolnr="33" argnr="1" leftargnr="0"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="19"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="9" aid="SURREALI" constrkind="K" constrnr="85">
+<Format kind="O" symbolnr="64" argnr="1" leftargnr="0"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="19"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="10" aid="SURREALI" constrkind="K" constrnr="86">
+<Format kind="O" symbolnr="32" argnr="1" leftargnr="0"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="29"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="11" aid="SURREALI" constrkind="K" constrnr="87">
+<Format kind="O" symbolnr="65" argnr="1" leftargnr="0"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="29"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="12" aid="SURREALI" constrkind="K" constrnr="88">
+<Format kind="O" symbolnr="12" argnr="1" leftargnr="1"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="29"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+</Visible>
+</Pattern>
+<Pattern kind="K" nr="13" aid="SURREALI" constrkind="K" constrnr="89">
+<Format kind="O" symbolnr="44" argnr="3" leftargnr="0"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="29"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+<Int x="3"/>
+<Int x="2"/>
+</Visible>
+</Pattern>
+</Notations>

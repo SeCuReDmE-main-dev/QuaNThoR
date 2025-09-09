@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ReductionRegistrations>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="XBOOLE_0"/>
+<ArticleID name="ZFMISC_1"/>
+<ArticleID name="SUBSET_1"/>
+</Signature>
+<Reduction aid="SUBSET_1" nr="1">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="1" value="false"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster/>
+<LocusVar nr="1"/>
+</Typ>
+<Func kind="K" nr="23">
+<LocusVar nr="2"/>
+<LocusVar nr="1"/>
+</Func>
+<LocusVar nr="2"/>
+</Reduction>
+<Reduction aid="SUBSET_1" nr="2">
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="1" value="false"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="1" value="false"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster/>
+<LocusVar nr="1"/>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster/>
+<LocusVar nr="2"/>
+</Typ>
+<Func kind="K" nr="23">
+<Func kind="K" nr="4">
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+</Func>
+<Func kind="K" nr="11">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+</Func>
+</Func>
+<Func kind="K" nr="4">
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+</Func>
+</Reduction>
+</ReductionRegistrations>

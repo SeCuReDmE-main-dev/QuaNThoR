@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<Notations>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="RELAT_1"/>
+<ArticleID name="ORDINAL1"/>
+<ArticleID name="NUMBER11"/>
+</Signature>
+<Vocabularies>
+<Vocabulary>
+<ArticleID name="NUMBER11"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="0"/>
+<SymbolCount kind="O" nr="0"/>
+<SymbolCount kind="R" nr="1"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="0"/>
+</Vocabulary>
+</Vocabularies>
+<Pattern kind="R" nr="1" aid="NUMBER11" constrkind="R" constrnr="7">
+<Format kind="R" symbolnr="1" argnr="2" leftargnr="0"/>
+<ArgTypes>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="12"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="2">
+<Cluster>
+<Adjective nr="12"/>
+</Cluster>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="1"/>
+<Int x="2"/>
+</Visible>
+</Pattern>
+</Notations>

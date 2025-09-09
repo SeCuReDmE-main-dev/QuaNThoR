@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<Formats>
+<Vocabularies>
+<Vocabulary>
+<ArticleID name="FIELD_6"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="0"/>
+<SymbolCount kind="O" nr="8"/>
+<SymbolCount kind="R" nr="0"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="2"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="WELLORD1"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="0"/>
+<SymbolCount kind="O" nr="3"/>
+<SymbolCount kind="R" nr="4"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="2"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="VECTSP13"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="0"/>
+<SymbolCount kind="O" nr="10"/>
+<SymbolCount kind="R" nr="0"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="0"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="ROBBINS1"/>
+<SymbolCount kind="G" nr="4"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="1"/>
+<SymbolCount kind="O" nr="13"/>
+<SymbolCount kind="R" nr="0"/>
+<SymbolCount kind="U" nr="1"/>
+<SymbolCount kind="V" nr="6"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="RADIX_1"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="0"/>
+<SymbolCount kind="O" nr="13"/>
+<SymbolCount kind="R" nr="1"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="0"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="RING_3"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="2"/>
+<SymbolCount kind="O" nr="9"/>
+<SymbolCount kind="R" nr="2"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="3"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="ENS_1"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="0"/>
+<SymbolCount kind="O" nr="10"/>
+<SymbolCount kind="R" nr="0"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="1"/>
+</Vocabulary>
+</Vocabularies>
+<Format kind="O" symbolnr="27" argnr="3" leftargnr="0"/>
+<Format kind="O" symbolnr="16" argnr="1" leftargnr="0"/>
+<Format kind="O" symbolnr="12" argnr="2" leftargnr="0"/>
+<Format kind="O" symbolnr="13" argnr="2" leftargnr="0"/>
+<Format kind="O" symbolnr="14" argnr="2" leftargnr="1"/>
+<Format kind="O" symbolnr="15" argnr="3" leftargnr="1"/>
+<Format kind="O" symbolnr="8" argnr="2" leftargnr="0"/>
+<Format kind="R" symbolnr="4" argnr="2" leftargnr="2"/>
+<Format kind="O" symbolnr="47" argnr="2" leftargnr="1"/>
+<Format kind="O" symbolnr="17" argnr="1" leftargnr="0"/>
+<Format kind="O" symbolnr="48" argnr="2" leftargnr="1"/>
+<Format kind="O" symbolnr="18" argnr="2" leftargnr="0"/>
+<Format kind="O" symbolnr="19" argnr="2" leftargnr="0"/>
+<Format kind="O" symbolnr="57" argnr="2" leftargnr="0"/>
+<Format kind="O" symbolnr="20" argnr="2" leftargnr="0"/>
+<Format kind="O" symbolnr="21" argnr="1" leftargnr="0"/>
+</Formats>

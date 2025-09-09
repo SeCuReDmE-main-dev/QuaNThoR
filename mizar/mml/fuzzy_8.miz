@@ -1,0 +1,2542 @@
+:: Symmetrical Piecewise Linear Functions Composed by Absolute Value Function
+::  by Takashi Mitsuishi
+:: 
+:: Received December 18, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, XXREAL_1, CARD_1, RELAT_1, TARSKI,
+      FUNCT_1, XXREAL_0, PARTFUN1, ARYTM_1, ARYTM_3, COMPLEX1, MEASURE5,
+      FUZNUM_1, REAL_1, ORDINAL2, XXREAL_2, FUNCT_7, JGRAPH_2, FUNCT_4,
+      FCONT_1, SQUARE_1, VALUED_1, INTEGRA1, INTEGRA5, SEQ_4, RFUNCT_3,
+      FUZZY_6;
+ notations TARSKI, XBOOLE_0, SUBSET_1, RELAT_1, NUMBERS, SQUARE_1, XCMPLX_0,
+      XXREAL_0, COMPLEX1, XREAL_0, FUNCT_1, RELSET_1, MEASURE5, PARTFUN1,
+      FUNCT_2, FCONT_1, FUNCT_3, RFUNCT_3, VALUED_1, FUNCT_4, COMSEQ_2, SEQ_4,
+      RCOMP_1, INTEGRA5, FUZNUM_1, FUZZY_6;
+ constructors COMPLEX1, SEQ_4, RELSET_1, FCONT_1, FUNCT_4, FUZNUM_1, SQUARE_1,
+      COMSEQ_2, RFUNCT_3, INTEGRA1, INTEGRA5, SEQ_2, FUZZY_6;
+ registrations RELSET_1, NUMBERS, XXREAL_0, MEMBERED, XBOOLE_0, VALUED_0,
+      VALUED_1, FUNCT_2, XREAL_0, ORDINAL1, FCONT_1, FUNCT_1, XCMPLX_0, NAT_1,
+      FUZNUM_1, SQUARE_1, INTEGRA1;
+ requirements NUMERALS, REAL, SUBSET, BOOLE, ARITHM;
+ equalities RCOMP_1, SQUARE_1;
+ expansions TARSKI, FCONT_1, INTEGRA5;
+ theorems TARSKI, XBOOLE_0, FUNCT_1, ABSVALUE, PARTFUN1, COMPLEX1, XREAL_1,
+      XXREAL_0, XXREAL_1, FUNCT_2, RELAT_1, XREAL_0, FCONT_1, XCMPLX_1,
+      FUNCT_4, VALUED_1, INTEGRA1, INTEGRA5, INTEGRA6, SEQ_4, RFUNCT_3,
+      RFUNCT_1, FUZZY_6, FUZNUM_1, FUZZY_7, INTEGR24;
+ schemes FUNCT_2;
+
+begin :: Preliminaries
+
+reserve A for non empty closed_interval Subset of REAL;
+
+theorem Lmbcd:
+  for b,c,d be Real st b > 0 & c > 0 & d > 0 holds
+    (b-d)/(b/c) < c
+proof
+  let b,c,d be Real;
+  assume
+  A1:b > 0 & c > 0 & d > 0; then
+  -d+b < 0+b by XREAL_1:8; then
+  (b-d)/b < b/b by A1,XREAL_1:74; then
+  ((b-d)/b) < 1 by A1,XCMPLX_1:60; then
+  ((b-d)/b)*c < 1*c by A1,XREAL_1:68;
+  hence thesis by XCMPLX_1:82;
+end;
+
+theorem
+  for a,x be Real holds a - |. a*x .| <= a
+proof
+  let a,x be Real;
+  |. a*x .| >= 0 by COMPLEX1:46; then
+  -|. a*x .| +a <= 0+a by XREAL_1:6;
+  hence thesis;
+end;
+
+theorem L724x:
+  for a,x be Real holds a - |. x .| <= a
+proof
+  let a,x be Real;
+  |. x .| >= 0 by COMPLEX1:46; then
+  -|. x .| +a<= 0+a by XREAL_1:6;
+  hence thesis;
+end;
+
+theorem
+  for a,b,c,x be Real holds
+    |. b*((a-x)-a)/c .| = |. b*((a+x)-a)/c .|
+proof
+ let a,b,c,x be Real;
+ thus |. b*((a-x)-a)/c .|
+  = |. (-(x*b))*(1/c) .| by XCMPLX_1:99
+  .= |. -((x*b)*(1/c)) .|
+  .= |. -((x*b)/c) .| by XCMPLX_1:99
+  .= |. b*((a+x)-a)/c .| by COMPLEX1:52;
+end;
+
+theorem F51max:
+  for a, b, c being Real holds
+    |. max (c,a) - max (c,b) .| <= |. a - b .|
+proof
+  let a, b, c be Real;
+  per cases;
+  suppose A1:a >= b & b >= c; then
+   |. max (c,a) - max (c,b) .| = |. a - max (c,b) .|
+     by XXREAL_0:def 10,XXREAL_0:2;
+   hence thesis by XXREAL_0:def 10,A1;
+  end;
+  suppose A2:a >= c & c >= b;
+   then a >= b by XXREAL_0:2; then
+   a-b >= b-b by XREAL_1:13; then
+   A24: |. (a - b) .| = a-b by ABSVALUE:def 1;
+ A21:  a-c >= c-c by A2,XREAL_1:13;
+   |. max (c,a) - max (c,b) .| = |. a - max (c,b) .| by XXREAL_0:def 10,A2
+   .= |. a - c .| by XXREAL_0:def 10,A2
+   .= a-c by ABSVALUE:def 1,A21;
+   hence thesis by A24,A2,XREAL_1:13;
+  end;
+  suppose A3:b >= c & c >= a; then
+   b >= a by XXREAL_0:2; then
+ AA:  b-a >= a-a by XREAL_1:13;
+   A32: |. (a - b) .| = |. b-a .| by COMPLEX1:60
+   .= b-a by ABSVALUE:def 1,AA;
+ A33:  b-c >= c-c by A3,XREAL_1:13;
+   |. max (c,a) - max (c,b) .| = |. c - max (c,b) .| by XXREAL_0:def 10,A3
+   .= |. c - b .| by XXREAL_0:def 10,A3
+   .= |. b-c .| by COMPLEX1:60
+   .= b-c by ABSVALUE:def 1,A33;
+   hence thesis by A32,A3,XREAL_1:13;
+  end;
+  suppose A4:b >= a & a >= c; then
+   |. max (c,a) - max (c,b) .| = |. max (c,a) - b .|
+     by XXREAL_0:def 10,XXREAL_0:2
+   .= |. a - b .| by XXREAL_0:def 10,A4;
+   hence thesis;
+  end;
+  suppose A5:c >= a & a >= b; then
+   |. max (c,a) - max (c,b) .| = |. max (c,a) - c .|
+      by XXREAL_0:def 10,XXREAL_0:2
+    .= |. c - c .| by XXREAL_0:def 10,A5
+    .= 0 by COMPLEX1:44;
+   hence thesis by COMPLEX1:46;
+  end;
+  suppose A6:c >= b & b >= a; then
+   |. max (c,a) - max (c,b) .| = |. c - max (c,b) .|
+      by XXREAL_0:def 10,XXREAL_0:2
+    .= |. c - c .| by XXREAL_0:def 10,A6
+    .= 0 by COMPLEX1:44;
+   hence thesis by COMPLEX1:46;
+  end;
+end;
+
+theorem F51min:
+  for a, b, c being Real holds
+    |. min (c,a) - min (c,b) .| <= |. a - b .|
+proof
+ let a, b, c be Real;
+ per cases;
+  suppose A1:a <= b & b <= c; then
+   |. min (c,a) - min (c,b) .| = |. a - min (c,b) .|
+     by XXREAL_0:def 9,XXREAL_0:2;
+   hence thesis by XXREAL_0:def 9,A1;
+  end;
+  suppose A2: a <= c & c <= b;
+   then a <= b by XXREAL_0:2; then
+  A22: a-a <= b-a by XREAL_1:13;
+   A24: |. (a - b) .| = |. b-a .| by COMPLEX1:60
+   .= b-a by ABSVALUE:def 1,A22;
+ A21:  a-a <= c-a by A2,XREAL_1:13;
+   |. min (c,a) - min (c,b) .| = |. a - min (c,b) .| by XXREAL_0:def 9,A2
+   .= |. a - c .| by XXREAL_0:def 9,A2
+   .= |. c-a .| by COMPLEX1:60
+   .= c-a by ABSVALUE:def 1,A21;
+   hence thesis by A24,A2,XREAL_1:13;
+  end;
+  suppose A3:b <= c & c <= a; then
+   b <= a by XXREAL_0:2; then
+   b-b <= a-b by XREAL_1:13; then
+   A32: |. a - b .| = a - b by ABSVALUE:def 1;
+A33:  b-b <= c-b by A3,XREAL_1:13;
+   |. min (c,a) - min (c,b) .| = |. c - min (c,b) .| by XXREAL_0:def 9,A3
+   .= |. c - b .| by XXREAL_0:def 9,A3
+   .= c-b by ABSVALUE:def 1,A33;
+   hence thesis by A32,A3,XREAL_1:13;
+  end;
+  suppose A4:b <= a & a <= c; then
+   |. min (c,a) - min (c,b) .| = |. min (c,a) - b .|
+      by XXREAL_0:def 9,XXREAL_0:2
+   .= |. a - b .| by XXREAL_0:def 9,A4;
+   hence thesis;
+  end;
+  suppose A5:c <= a & a <= b; then
+   |. min (c,a) - min (c,b) .| = |. min (c,a) - c .|
+      by XXREAL_0:def 9,XXREAL_0:2
+    .= |. c - c .| by XXREAL_0:def 9,A5
+    .= 0 by COMPLEX1:44;
+   hence thesis by COMPLEX1:46;
+  end;
+  suppose A6:c <= b & b <= a; then
+   |. min (c,a) - min (c,b) .| = |. c - min (c,b) .|
+       by XXREAL_0:def 9,XXREAL_0:2
+    .= |. c - c .| by XXREAL_0:def 9,A6
+    .= 0 by COMPLEX1:44;
+   hence thesis by COMPLEX1:46;
+  end;
+end;
+
+theorem F51:
+  for a, b, c, d being Real holds
+    |. min (c,max (d,a)) - min (c,max (d,b)) .| <= |. a - b .|
+proof
+  let a, b, c, d be Real;
+  A1: |. min (c,max (d,a)) - min (c,max (d,b)) .|
+    <= |. max (d,a) - max (d,b) .| by F51min;
+  |. max (d,a) - max (d,b) .| <= |. a - b .| by F51max;
+  hence thesis by A1,XXREAL_0:2;
+end;
+
+begin :: Continuous Functions
+
+theorem
+for c being Real, f,g be PartFunc of REAL,REAL st
+].-infty,c.] c= dom f & [.c,+infty.[ c= dom g holds
+f|].-infty,c.[ +* g|[.c,+infty.[ = (f|].-infty,c.]) +* (g|[.c,+infty.[)
+proof
+ let c be Real;
+ let f,g be PartFunc of REAL,REAL;
+ assume
+ A1: ].-infty,c.] c= dom f & [.c,+infty.[ c= dom g;
+ set f1 = (f|].-infty,c.[) +* (g|[.c,+infty.[);
+ set f2 = (f|].-infty,c.]) +* (g|[.c,+infty.[);
+ A4: -infty < c & c < +infty by XXREAL_0:12,XXREAL_0:9,XREAL_0:def 1;
+   ].-infty,c.[ c= ].-infty,c.] by XXREAL_1:21; then
+a1: ].-infty,c.[ c= dom f by A1;
+ A2: dom f1
+  = dom (f|].-infty,c.[) \/ dom (g|[.c,+infty.[) by FUNCT_4:def 1
+ .= ].-infty,c.[ \/ dom (g|[.c,+infty.[) by RELAT_1:62,a1
+ .= ].-infty,c.[ \/ [.c,+infty.[ by RELAT_1:62,A1
+ .= ].-infty,+infty.[ by XXREAL_1:173,A4
+ .= ].-infty,c.] \/ [.c,+infty.[ by XXREAL_1:172,A4
+ .= dom (f | ].-infty,c.]) \/ [.c,+infty.[ by RELAT_1:62,A1
+ .= dom (f | ].-infty,c.]) \/ dom (g | [.c,+infty.[) by RELAT_1:62,A1
+ .= dom f2 by FUNCT_4:def 1;
+ Dg: dom (g|[.c,+infty.[) = [.c,+infty.[ by RELAT_1:62,A1;
+ for x being object st x in dom f1 holds f1.x = f2.x
+ proof
+  let x be object;
+  assume x in dom f1; then
+  reconsider x as Real;
+  per cases;
+  suppose C1: x >= c; then
+   ((f|].-infty,c.[) +* (g|[.c,+infty.[)).x
+    = (g|[.c,+infty.[).x by FUNCT_4:13,Dg,XXREAL_1:236;
+   hence thesis by FUNCT_4:13,Dg,C1,XXREAL_1:236;
+  end;
+  suppose C2: x < c;
+   ].-infty,c.[ c= ].-infty,c.] by XXREAL_1:21; then
+   C6: x in ].-infty,c.] by XXREAL_1:233,C2;
+   not x in [.c,+infty.[ by C2,XXREAL_1:236; then
+   C4: not x in dom (g|[.c,+infty.[) by RELAT_1:62,A1; then
+   ((f|].-infty,c.[) +* (g|[.c,+infty.[)).x
+    = (f|].-infty,c.[).x by FUNCT_4:11
+   .= f .x by FUNCT_1:49,XXREAL_1:233,C2
+   .= (f|].-infty,c.]).x by FUNCT_1:49,C6;
+   hence thesis by FUNCT_4:11,C4;
+  end;
+ end;
+ hence thesis by FUNCT_1:2,A2;
+end;
+
+theorem Th1:
+for c being Real, f,g be PartFunc of REAL,REAL st
+f is continuous & g is continuous & f . c = g . c &
+].-infty,c.] c= dom f & [.c,+infty.[ c= dom g
+holds (f | ].-infty,c.]) +* (g | [.c,+infty.[) is continuous
+proof
+ let c be Real, f,g be PartFunc of REAL,REAL;
+ assume that
+ A1a: f is continuous & g is continuous and
+ A2: f.c = g.c and
+ A3: ].-infty,c.] c= dom f & [.c,+infty.[ c= dom g;
+ set F = (f|].-infty,c.]) +* (g|[.c,+infty.[);
+ set Df = ].-infty,c.];
+ set Dg = [.c,+infty.[;
+ A1: (f|Df) is continuous & (g|[.c,+infty.[) is continuous by A1a;
+ AD: dom (f|Df) = Df & dom (g|Dg) = Dg by RELAT_1:62,A3;
+ A7: c in Df & c in Dg by XXREAL_1:234,XXREAL_1:236;
+ for x0 being Real st x0 in dom F holds F is_continuous_in x0
+ proof
+  let x0 be Real;
+  assume x0 in dom F;
+  for r being Real st 0 < r holds
+  ex s being Real st
+  ( 0 < s & ( for x1 being Real st x1 in dom F & |.x1 - x0.| < s holds
+  |.F.x1 - F.x0.| < r ) )
+  proof
+   let r be Real;
+   assume
+   A4: 0 < r;
+   per cases;
+    suppose P2a: x0 < c; then
+     P2: x0 in Df by XXREAL_1:234;
+     consider sf being Real such that
+     P3: 0 < sf and
+     P4: for x1 being Real st x1 in Df & |. x1 - x0 .| < sf holds
+     |. f.x1 - f.x0 .| < r/2 by FCONT_1:14,A1,A3,P2,A4;
+     consider sg being Real such that
+     P8: 0 < sg and
+     P9: for x1 being Real st x1 in Dg & |. x1 - c .| < sg holds
+     |. g . x1 - g . c .| < r/2 by FCONT_1:14,A1,A3,A7,A4;
+     SMin: min(sf,sg) <= sf & min(sf,sg) <= sg by XXREAL_0:17;
+     take min(sf,sg);
+     for x1 being Real st x1 in dom F & |.x1 - x0.| < min(sf,sg)
+     holds
+     |.F.x1 - F.x0.| < r
+     proof
+      let x1 be Real;
+      assume that
+      x1 in dom F and
+      P7: |.x1 - x0.| < min(sf,sg);
+      PF: |.F.x1 - F.x0.|
+       = |.F.x1 - ((f|Df) . x0).| by FUNCT_4:11,XXREAL_1:236,P2a,AD
+      .= |.F.x1 - f.x0.| by FUNCT_1:49,XXREAL_1:234,P2a;
+      per cases;
+       suppose P11: x1 < c; then
+        not x1 in Dg by XXREAL_1:236; then
+        P12: not x1 in dom (g|Dg) by RELAT_1:62,A3;
+        P13: x1 in Df by XXREAL_1:234,P11;
+        P7a: |.x1 - x0.| < sf by XXREAL_0:2,P7,SMin;
+        |.F.x1 - F.x0.|
+        = |.((f|Df) . x1) - f.x0.| by FUNCT_4:11,P12,PF
+         .= |.f.x1 - f.x0.| by FUNCT_1:49,XXREAL_1:234,P11;
+        then
+        P14: |.F.x1 - F.x0.| < r/2 by P4,P13,P7a;
+        r/2 +0 < r/2+ r/2 by XREAL_1:8,A4;
+        hence |.(F . x1) - F.x0.| < r by XXREAL_0:2,P14;
+       end;
+       suppose P21: x1 >= c; then
+        P22:x1 in Dg by XXREAL_1:236;
+        P22b: x0 <= x1 by P2a,P21,XXREAL_0:2; then
+        c-c <= x1-c & x0-x0 <= x1-x0 by XREAL_1:13,P21;then
+        X1: |. x1-c .|= x1-c & x1-x0 = |. x1-x0 .| by COMPLEX1:43;
+        |. x1-c .| <= |. x1-x0 .| by XREAL_1:13,P2a,X1; then
+        |. x1-c .| < min(sf,sg) by XXREAL_0:2,P7;then
+        |. x1-c .| < sg by XXREAL_0:2,SMin;then
+       P23: |. g.x1 - g.c .| < r/2 by P9,P22;
+        c-x0 >= c-c by XREAL_1:13,P2a; then
+        X2: c-x0 = |. c-x0 .| by COMPLEX1:43;
+        x0-x0 <= x1-x0 by XREAL_1:13,P22b;then
+        X3: x1-x0 = |. x1-x0 .| by COMPLEX1:43;
+        |. c-x0 .| <= |. x1-x0 .| by XREAL_1:13,P21,X2,X3; then
+        |. c-x0 .| < min(sf,sg) by XXREAL_0:2,P7;then
+        |. c-x0 .| < sf by XXREAL_0:2,SMin;then
+       P24: |. f.c - f.x0 .| < r/2 by P4,A7;
+       x1 in dom (g|Dg) by RELAT_1:62,A3,P22; then
+       P26: |.(F . x1) - (F . x0).|
+        = |. (g|Dg) .x1 - f.x0 .| by FUNCT_4:13,PF
+        .= |. g .x1 -g.c + f.c - f.x0 .|
+                   by A2,FUNCT_1:49,XXREAL_1:236,P21;
+       P27: |. (g .x1 -g.c) + (f.c - f.x0) .| <=
+        |. g .x1 -g.c .|+ |. f.c - f.x0 .| by COMPLEX1:56;
+        |. g .x1 -g.c .|+ |. f.c - f.x0 .| < r/2+r/2 by P23,P24,XREAL_1:8;
+        hence |.(F . x1) - (F . x0).| < r by P26,P27,XXREAL_0:2;
+       end;
+     end;
+     hence thesis by P3,P8,XXREAL_0:21;
+    end;
+    suppose Q2a: x0 >= c; then
+     Q2: x0 in Dg by XXREAL_1:236;
+     Q1: x0 in dom (g|[.c,+infty.[) by RELAT_1:62,A3,Q2;
+     consider sf being Real such that
+     Q3: 0 < sf and
+     Q4: for x1 being Real st x1 in Df & |. x1 - c .| < sf holds
+     |. f.x1 - f.c .| < r/2 by FCONT_1:14,A1,A3,A7,A4;
+     consider sg being Real such that
+     Q8: 0 < sg and
+     Q9: for x1 being Real st x1 in Dg & |. x1 - x0 .| < sg holds
+     |. g . x1 - g . x0 .| < r/2 by FCONT_1:14,A1,A3,A4,Q2;
+     SMin: min(sf,sg) <= sf & min(sf,sg) <= sg by XXREAL_0:17;
+     take min(sf,sg);
+     for x1 being Real st x1 in dom F & |.(x1 - x0).| < min(sf,sg)
+     holds
+     |.(F . x1) - (F . x0).| < r
+     proof
+      let x1 be Real;
+      assume that x1 in dom F and
+      Q7: |. x1 - x0 .| < min(sf,sg);
+      QF: |.(F . x1) - (F . x0).|
+       = |.(F . x1) - ((g|[.c,+infty.[) . x0).| by FUNCT_4:13,Q1
+      .= |.(F . x1) - g . x0.| by FUNCT_1:49,XXREAL_1:236,Q2a;
+      per cases;
+       suppose Q11: x1 < c; then
+        Q12:x1 in Df by XXREAL_1:234;
+        Q12b: x1 <= x0 by Q2a,XXREAL_0:2,Q11; then
+        c-c <= c-x1 & x0-x0 <= x0-x1 by XREAL_1:13,Q11; then
+        X1: |. c-x1 .|= c-x1 & x0-x1 = |. x0-x1 .| by COMPLEX1:43;
+        |. c-x1 .| <= |. x0-x1 .| by X1,XREAL_1:13,Q2a;then
+        |. -(c-x1) .| <= |. (x0-x1) .| by COMPLEX1:52;then
+        |. x1-c .| <= |. -(x0-x1) .| by COMPLEX1:52;then
+        |. x1-c .| < min(sf,sg) by XXREAL_0:2,Q7;then
+        |. x1-c .| < sf by XXREAL_0:2,SMin;then
+       Q13: |. f.x1 - f.c .| < r/2 by Q4,Q12;
+        x0-c >= c-c by XREAL_1:13,Q2a; then
+        X2: x0-c = |. x0-c .| by COMPLEX1:43
+        .= |. -(x0-c) .| by COMPLEX1:52;
+        x0-x0 <= x0-x1 by XREAL_1:13,Q12b; then
+        X3: x0-x1 = |. x0-x1 .| by COMPLEX1:43
+        .= |. -(x0-x1) .| by COMPLEX1:52;
+        |. c-x0 .| <= |. x1-x0 .| by XREAL_1:13,X2,X3,Q11;
+        then
+        |. c-x0 .| < min(sf,sg) by XXREAL_0:2,Q7; then
+        |. c-x0 .| < sg by XXREAL_0:2,SMin; then
+       Q14: |. g.c - g.x0 .| < r/2 by Q9,A7;
+       Q16: |.(F . x1) - (F . x0).|
+        = |. (f|Df) .x1 - g.x0 .| by FUNCT_4:11,XXREAL_1:236,Q11,AD,QF
+        .= |. f.x1 -f.c + g.c - g.x0 .|
+                   by A2,FUNCT_1:49,Q11,XXREAL_1:234;
+       Q17: |. (f.x1 - f . c) + (g.c - g . x0) .| <=
+        |. f. x1 - f.c .|+ |. g.c - g . x0.| by COMPLEX1:56;
+        |. f. x1 - f.c .|+ |. g.c - g . x0.| < r/2+r/2 by Q13,Q14,XREAL_1:8;
+        hence |. F.x1 - F.x0.| < r by Q16,Q17,XXREAL_0:2;
+       end;
+       suppose Q21: x1 >= c; then ::x1 in dom(g|Dg); ::::x0,x1 in Dg
+        Q22: x1 in Dg by XXREAL_1:236;
+        Q7a: |.x1 - x0.| < sg by XXREAL_0:2,Q7,SMin;
+        |.(F . x1) - (F . x0).| = |.((g|[.c,+infty.[) . x1) - ( g. x0).|
+                        by FUNCT_4:13,XXREAL_1:236,Q21,AD,QF
+        .= |.(g . x1) - ( g. x0).| by FUNCT_1:49,XXREAL_1:236,Q21;
+        then
+        Q24: |.F.x1 - F.x0.| < r/2 by Q9,Q22,Q7a;
+        r/2 +0 < r/2+ r/2 by XREAL_1:8,A4;
+        hence |.F.x1 - F.x0.| < r by XXREAL_0:2,Q24;
+       end;
+     end;
+     hence thesis by Q3,Q8,XXREAL_0:21;
+    end;
+  end;
+  hence F is_continuous_in x0 by FCONT_1:3;
+ end;
+ hence thesis;
+end;
+
+theorem
+for c being Real, f,g be Function of REAL,REAL st
+f is continuous & g is continuous & f . c = g . c holds
+(f | ].-infty,c.]) +* (g | [.c,+infty.[) is continuous Function of REAL,REAL
+proof
+ let c be Real, f,g be Function of REAL,REAL;
+ assume that
+ A1: f is continuous & g is continuous and
+ A2: f . c = g . c;
+ reconsider F = (f|].-infty,c.]) +* (g|[.c,+infty.[) as PartFunc of REAL,REAL
+  by FUZZY_7:12;
+ ].-infty,c.] c= REAL & [.c,+infty.[ c= REAL; then
+ ].-infty,c.] c= dom f & [.c,+infty.[ c= dom g by FUNCT_2:def 1;
+ hence thesis by Th1,A2,A1,FUZZY_7:12;
+end;
+
+theorem F633:
+for a,b,c be Real, f,g,h be Function of REAL,REAL st
+a <= b & b <= c & f is continuous & g is continuous &
+h | [.a,c.] = (f| [.a,b.]) +* (g | [.b,c.]) & f.b = g.b
+holds integral( h,['a,c']) = integral(f,['a,b']) + integral(g,['b,c'])
+proof
+ let a,b,c be Real, f,g,h be Function of REAL,REAL;
+ assume that
+ A1: a <= b & b <= c and
+ A2: f is continuous & g is continuous and
+ A3: h | [.a,c.] = (f| [.a,b.]) +* (g | [.b,c.]) and
+ A4: f.b = g.b;
+ B1: f is_integrable_on ['a,c'] & f | ['a,c'] is bounded by FUZZY_6:25,A2;
+ B2: g is_integrable_on ['a,c'] & g | ['a,c'] is bounded by FUZZY_6:25,A2;
+ reconsider hh = h as PartFunc of REAL,REAL;
+ D1p: REAL = dom h by FUNCT_2:def 1; then
+ hh | [.a,c.] is continuous by FUZZY_7:41,A1,A2,A4,A3; then
+ hh | ['a,c'] is continuous by XXREAL_0:2,A1,INTEGRA5:def 3; then
+ h is_integrable_on ['a,c'] by INTEGRA5:11,D1p;
+ hence thesis by FUZZY_6:33,B1,B2,A3,A1,A4;
+end;
+
+theorem INTEGR241:
+for f being Function of REAL,REAL, a, b, c being Real st
+a <= b & b <= c & ['a,c'] c= dom f &
+f | ['a,b'] is bounded & f | ['b,c'] is bounded &
+f is_integrable_on ['a,b'] & f is_integrable_on ['b,c'] holds
+f is_integrable_on ['a,c'] &
+integral (f,a,c) = (integral (f,a,b)) + (integral (f,b,c))
+proof
+ let f be Function of REAL,REAL;
+ let a, b, c be Real;
+ assume that
+ A1: a <= b & b <= c and
+ A2: ['a,c'] c= dom f and
+ A3: f | ['a,b'] is bounded & f | ['b,c'] is bounded and
+ A4: f is_integrable_on ['a,b'] & f is_integrable_on ['b,c'];
+ reconsider ff = f as PartFunc of REAL,REAL;
+ ['a,c'] c= dom ff &
+  ff | ['a,b'] is bounded & ff | ['b,c'] is bounded &
+ ff is_integrable_on ['a,b'] & ff is_integrable_on ['b,c'] by A2,A3,A4;
+ hence f is_integrable_on ['a,c'] &
+ integral (f,a,c) = (integral (f,a,b)) + (integral (f,b,c))
+ by INTEGR24:1,A1;
+end;
+
+theorem INTEGRA617:
+for a, b, c being Real, f being Function of REAL,REAL st
+a <= c & f is_integrable_on ['a,c'] &
+f | ['a,c'] is bounded & ['a,c'] c= dom f & b in ['a,c'] holds
+f is_integrable_on ['a,b'] & f is_integrable_on ['b,c'] &
+integral (f,a,c) = (integral (f,a,b)) + (integral (f,b,c))
+proof
+ let a, c, b be Real;
+ let f be Function of REAL,REAL;
+ assume A1:a <= b & f is_integrable_on ['a,b'] &
+ f | ['a,b'] is bounded & ['a,b'] c= dom f & c in ['a,b'];
+ reconsider ff = f as PartFunc of REAL,REAL;
+ ff is_integrable_on ['a,b'] &
+ ff | ['a,b'] is bounded & ['a,b'] c= dom ff by A1;
+ hence
+ f is_integrable_on ['a,c'] & f is_integrable_on ['c,b'] &
+ integral (f,a,b) = (integral (f,a,c)) + (integral (f,c,b))
+ by INTEGRA6:17,A1;
+end;
+
+theorem Th39:
+for a being Real, f, g, h being Function of REAL,REAL st
+f | A is bounded & f is_integrable_on A &
+g | A is bounded & g is_integrable_on A &
+a in A & h = ( f | ].-infty,a.] ) +* ( g | [.a,+infty.[ ) & f.a = g.a
+holds h is_integrable_on A
+proof
+ let a be Real, f, g, h be Function of REAL,REAL;
+ assume
+ A1: f | A is bounded & f is_integrable_on A;
+ assume
+ A2: g | A is bounded & g is_integrable_on A;
+ assume
+ A3: a in A;
+ assume
+ A4: h = ( f | ].-infty,a.] ) +* ( g | [.a,+infty.[ );
+ assume
+ A40: f.a = g.a;
+ A5: ['lower_bound A, upper_bound A']
+  = [.lower_bound A,upper_bound A.] by INTEGRA5:def 3,SEQ_4:11
+ .= A by INTEGRA1:4;
+ a in [.lower_bound A,upper_bound A.] by INTEGRA5:def 3,SEQ_4:11,A3,A5;
+ then
+ B1: lower_bound A <= a & a <= upper_bound A by XXREAL_1:1;
+ B11: lower_bound A <= upper_bound A by SEQ_4:11;
+ B2s: dom h = REAL by FUNCT_2:def 1;
+ B21a: dom f = REAL by FUNCT_2:def 1;
+ B22a: dom g = REAL by FUNCT_2:def 1;
+ [.lower_bound A,a.] c= [.lower_bound A,upper_bound A.] &
+ [.a, upper_bound A.] c= [.lower_bound A,upper_bound A.] by XXREAL_1:34,B1;
+ then
+ [.lower_bound A,a.] c= A &
+ [.a, upper_bound A.] c= A by INTEGRA1:4; then
+ B301:
+ ['lower_bound A,a'] c= A & ['a, upper_bound A'] c= A by INTEGRA5:def 3,B1;
+ B51:dom (f | (['lower_bound A, a']) ) = ['lower_bound A,a'] by FUNCT_2:def 1
+ .= dom (h | (['lower_bound A, a']) ) by FUNCT_2:def 1;
+ B5g: for x being object st x in dom (f | ['lower_bound A,a'] ) holds
+ (f | ['lower_bound A ,a'] ) . x = (h | (['lower_bound A,a']) ) . x
+ proof
+  let x be object;
+  assume D1: x in dom (f | ['lower_bound A,a'] ); then
+  x in ['lower_bound A,a']; then
+  reconsider x as Element of REAL;
+  D1f: dom (f | ['lower_bound A,a'] )
+   = ['lower_bound A,a'] by FUNCT_2:def 1
+  .= [.lower_bound A,a.] by INTEGRA5:def 3,B1; then
+  D7: lower_bound A <= x & x <= a by XXREAL_1:1,D1;
+  D3u:for x being object st
+    x in (dom( f | ].-infty,a.] ) /\ dom( g | [.a,+infty.[ ))
+    holds ( f | ].-infty,a.] ).x = ( g | [.a,+infty.[ ) . x
+  proof
+   let x be object;
+   assume T1:  x in (dom( f | ].-infty,a.] ) /\ dom( g | [.a,+infty.[ ));
+   T2: (dom( f | ].-infty,a.] ) /\ dom( g | [.a,+infty.[ ))
+    = ].-infty,a.] /\ dom( g | [.a,+infty.[ ) by FUNCT_2:def 1
+   .= ].-infty,a.] /\ [.a,+infty.[ by FUNCT_2:def 1
+   .= [.a,a.] by XXREAL_1:272
+   .= {a} by XXREAL_1:17;
+   ( f | ].-infty,a.] ).x
+    = ( f | ].-infty,a.] ) . a by TARSKI:def 1,T1,T2
+   .= f.a by FUNCT_1:49,XXREAL_1:234
+   .= (g | [.a,+infty.[) . a by FUNCT_1:49,XXREAL_1:236,A40;
+   hence thesis by TARSKI:def 1,T1,T2;
+  end;
+  x in ].-infty,a.] by XXREAL_1:234,D7; then
+  D4: x in dom (f | ].-infty,a.]) by FUNCT_2:def 1;
+  (f | ['lower_bound A,a'] ) . x = f.x by FUNCT_1:49,D1
+  .= (f | ].-infty ,a.] ) . x by FUNCT_1:49,XXREAL_1:234,D7
+  .= ( ( f | ].-infty,a.] ) +* ( g | [.a,+infty.[ )).x
+  by D4,FUNCT_4:15,D3u,PARTFUN1:def 4
+  .= (h | ([.lower_bound A,a.]) ) . x by FUNCT_1:49,A4,D1f,D1;
+  hence thesis by INTEGRA5:def 3,B1;
+ end; then
+ B5:(f | ['lower_bound A,a'] ) = (h | (['lower_bound A,a']) )
+   by FUNCT_1:2,B51;
+ B61: dom (g | (['a, upper_bound A']) )
+  = ['a, upper_bound A'] by FUNCT_2:def 1
+ .= dom (h | (['a, upper_bound A']) ) by FUNCT_2:def 1;
+ B6f:for x being object st x in dom (g | ['a, upper_bound A']) holds
+ (g | ['a, upper_bound A']) . x = (h | ['a, upper_bound A'] ) . x
+ proof
+  let x be object;
+  assume E1: x in dom (g | ['a, upper_bound A']); then
+  x in ['a, upper_bound A']; then
+  reconsider x as Element of REAL;
+  E2x: dom (g | ['a, upper_bound A'] )
+   = ['a, upper_bound A'] by FUNCT_2:def 1
+  .= [.a, upper_bound A.] by INTEGRA5:def 3,B1; then
+  E3x:a <= x by XXREAL_1:1,E1; then
+  x in [.a,+infty.[ by XXREAL_1:236; then
+  E4: x in dom ( g | [.a,+infty.[ ) by FUNCT_2:def 1;
+  (g | ['a, upper_bound A']) . x = g.x by FUNCT_1:49,E1
+  .= ( g | [.a,+infty.[ ).x by FUNCT_1:49,E3x,XXREAL_1:236
+  .= h.x by A4,FUNCT_4:13,E4
+  .= (h | [.a, upper_bound A.] ) . x by FUNCT_1:49,E2x,E1;
+  hence thesis by INTEGRA5:def 3,B1;
+ end; then
+ (g | (['a, upper_bound A']) ) = (h | (['a, upper_bound A']) )
+   by FUNCT_1:2,B61; then
+ B3: h | ['lower_bound A,a'] is bounded &
+     h | ['a, upper_bound A'] is bounded
+   by B5,B301,RFUNCT_1:74,A1,A2;
+ B77:f is_integrable_on ['lower_bound A, a']
+   by B11,INTEGRA617,B21a,A5,A1,A3;
+ g is_integrable_on ['a, upper_bound A']
+   by B11,INTEGRA617,B22a,A5,A2,A3; then
+ h is_integrable_on ['lower_bound A, a'] &
+  h is_integrable_on ['a, upper_bound A']
+  by B77,B6f,FUNCT_1:2,B61,B5g,B51;
+ hence thesis by B1,B2s,B3,INTEGR241,A5;
+end;
+
+theorem FUZZY711:  ::: generalize FUZZY_7:20
+for a,b,c be Real, f,g be Function of REAL,REAL st a <= b & b <= c holds
+(f | ]. -infty,b .] +* g | [. b,+infty .[ ) | [. a,c .]
+= (f | [. a,b .]) +* (g | [. b,c .])
+proof
+ let a,b,c be Real, f,g be Function of REAL,REAL;
+ assume A1: a <= b & b <= c;
+ set F = f | ]. -infty,b .] +* g | [. b,+infty .[;
+ F = f | ]. -infty,b .[ +* g | [. b,+infty .[ by FUZZY_6:35;
+ then
+ reconsider F as Function of REAL,REAL by FUZZY_6:18;
+ A3: dom ((f | [. a,b .]) +* (g | [. b,c .]))
+ = dom (f | [. a,b .]) \/ dom (g | [. b,c .]) by FUNCT_4:def 1
+ .= [. a,b .] \/ dom (g | [. b,c .]) by FUNCT_2:def 1
+ .= [. a,b .] \/ [. b,c .] by FUNCT_2:def 1
+ .= [. a,c .] by XXREAL_1:165,A1;
+ A2: dom (F | [. a,c .]) = [. a,c .] by FUNCT_2:def 1;
+ for x being object st
+  x in dom ((f | ]. -infty,b .] +* g | [. b,+infty .[ ) | [. a,c .]) holds
+ ((f | ]. -infty,b .] +* g | [. b,+infty .[ ) | [. a,c .]).x
+ = ( (f | [. a,b .]) +* (g | [. b,c .])).x
+ proof
+  let x be object;
+  assume
+  A4a: x in dom ((f | ]. -infty,b .] +* g | [. b,+infty .[ ) | [. a,c .]);
+  then
+  reconsider x as Real by A2;
+  A5: a <= x & x <= c by XXREAL_1:1,A4a,A2;
+  A7: dom (g | [. b,+infty .[) = [. b,+infty .[ by FUNCT_2:def 1;
+  A8: dom (g | [. b,c .]) = [. b,c .] by FUNCT_2:def 1;
+  per cases;
+  suppose A6: x >= b;
+    ((f | ]. -infty,b .] +* g | [. b,+infty .[ ) | [. a,c .]).x
+   = (f | ]. -infty,b .] +* g | [. b,+infty .[).x by FUNCT_1:49,A4a,A2
+   .= (g | [. b,+infty .[).x by FUNCT_4:13,A6,XXREAL_1:236,A7
+   .= g.x by FUNCT_1:49,A6,XXREAL_1:236
+   .= (g | [. b,c .]).x by FUNCT_1:49,A6,A5,XXREAL_1:1
+  .= ( (f | [. a,b .]) +* (g | [. b,c .])).x
+    by FUNCT_4:13,A6,A5,XXREAL_1:1,A8;
+   hence thesis;
+  end;
+  suppose B1: x < b;
+   ].-infty, b.[ c= ].-infty,b.] by XXREAL_1:21; then
+   A10: x in ].-infty,b.] by XXREAL_1:233,B1;
+   A11: x in [.a,b.] by B1,A5;
+   A12: not x in [. b,c .] by B1,XXREAL_1:1;
+    ((f | ]. -infty,b .] +* g | [. b,+infty .[ ) | [. a,c .]).x
+    = (f | ]. -infty,b .] +* g | [. b,+infty .[).x by FUNCT_1:49,A4a,A2
+   .= (f | ]. -infty,b .] ).x by FUNCT_4:11,A7,XXREAL_1:236,B1
+   .= f.x by FUNCT_1:49,A10
+   .= (f | [. a,b .]).x by FUNCT_1:49,A11
+   .= ( (f | [. a,b .]) +* (g | [. b,c .])).x by FUNCT_4:11,A8,A12;
+   hence thesis;
+  end;
+ end;
+ hence thesis by FUNCT_1:2,A2,A3;
+end;
+
+theorem :: FUZZY_6:33
+for a,b,c being Real, f,g,h be Function of REAL,REAL st
+a <= b & b <= c &
+f is_integrable_on ['a,c'] & f | ['a,c'] is bounded &
+g is_integrable_on ['a,c'] & g | ['a,c'] is bounded &
+h = ( f | ].-infty,b.] ) +* ( g | [.b,+infty.[ ) & f.b = g.b
+holds integral(h,['a,c']) = integral(f,['a,b']) + integral(g,['b,c'])
+proof
+ let a,b,c be Real, f,g,h be Function of REAL,REAL;
+ assume that
+ A1: a <= b & b <= c and
+ A2: f is_integrable_on ['a,c'] & f | ['a,c'] is bounded &
+     g is_integrable_on ['a,c'] & g | ['a,c'] is bounded and
+ A3: h = ( f | ].-infty,b.] ) +* ( g | [.b,+infty.[ ) and
+ A4: f.b = g.b;
+ A5: h | [.a,c.] = (f| [.a,b.]) +* (g | [.b,c.]) by A1,FUZZY711,A3;
+ b in [.a,c.] by A1; then
+ b in ['a,c'] by INTEGRA5:def 3,XXREAL_0:2,A1; then
+ h is_integrable_on ['a,c'] by Th39,A2,A3,A4;
+ hence thesis by FUZZY_6:33,A1,A2,A4,A5;
+end;
+
+::area and centroid of continuous function
+theorem
+for f,g,h be Function of REAL,REAL, a,b,c be Real st
+a <= b & b <= c & f is continuous & g is continuous &
+h | [.a,c.] = f | [.a,b.] +* g | [.b,c.] &
+integral(f,['a,b']) <> 0 & integral(g,['b,c']) <> 0 & f.b = g.b holds
+centroid(h, ['a,c']) = 1 / integral(h,['a,c'])
+ * ( centroid(f, ['a,b']) * integral(f,['a,b'])
+   + centroid(g, ['b,c']) * integral(g,['b,c']) )
+proof
+ let f,g,h be Function of REAL,REAL, a,b,c be Real;
+ assume that A1: a <= b & b <= c and
+ A2: f is continuous & g is continuous and
+ A3: h | [.a,c.] = f | [.a,b.] +* g | [.b,c.];
+ assume A4:integral(f,['a,b']) <> 0 & integral(g,['b,c']) <> 0;
+ assume
+ A6:  f.b = g.b;
+ A5: centroid(f, ['a,b']) * integral(f,['a,b'])
+ + centroid(g, ['b,c']) * integral(g,['b,c'])
+  = (integral((id REAL)(#)f,['a,b'])/integral(f,['a,b']))
+   * integral(f,['a,b'])
+   + centroid(g, ['b,c']) * integral(g,['b,c'] ) by FUZZY_6:def 1
+ .= (integral((id REAL)(#)f,['a,b'])/integral(f,['a,b']))
+   * integral(f,['a,b'])
+   + (integral((id REAL)(#)g,['b,c'])/integral(g,['b,c']))
+   * integral(g,['b,c'] ) by FUZZY_6:def 1
+ .= integral((id REAL)(#)f,['a,b'])/(integral(f,['a,b'])
+   / integral(f,['a,b']) )
+   + (integral((id REAL)(#)g,['b,c'])/integral(g,['b,c']))
+   * integral(g,['b,c'] ) by XCMPLX_1:82
+ .= integral((id REAL)(#)f,['a,b'])/(1)
+   + (integral((id REAL)(#)g,['b,c'])/integral(g,['b,c']))
+   * integral(g,['b,c'] ) by XCMPLX_1:60,A4
+ .= integral((id REAL)(#)f,['a,b'])/(1)
+   + integral((id REAL)(#)g,['b,c'])/(integral(g,['b,c'])
+   / integral(g,['b,c'])) by XCMPLX_1:82
+ .= integral((id REAL)(#)f,['a,b'])
+   + integral((id REAL)(#)g,['b,c'])/(1) by XCMPLX_1:60,A4
+  .= integral((id REAL) (#) h,['a,c']) by FUZZY_7:43,A1,A2,A3,A6;
+ centroid(h, ['a,c'])
+ = integral((id REAL)(#)h,['a,c'])/integral(h,['a,c']) by FUZZY_6:def 1
+ .= integral((id REAL)(#)h,['a,c'])*(1/integral(h,['a,c'])) by XCMPLX_1:99;
+ hence thesis by A5;
+end;
+
+::b _________
+::     /\
+::    /  \
+::d ---------
+::  /      \
+::-          --
+::a-c  a   a+c
+::
+:: Symmetric membership functions by absolute value function
+
+theorem
+for f be Function of REAL,REAL, a,b,c be Real st
+(for x be Real holds f.x = b - |. b*(x-a)/c .|) holds
+(for y be Real holds f.(a-y) = f.(a+y))
+proof
+ let f be Function of REAL,REAL, a,b,c be Real;
+ assume A2: for x be Real holds f.x = b - |. b*(x-a)/c .|;
+  let y be Real;
+   thus f.(a-y) = b - |. b*((a-y)-a)/c .| by A2
+  .= b - |. (-(y*b))*(1/c) .| by XCMPLX_1:99
+  .= b - |. -((y*b)*(1/c)) .|
+  .= b - |. -((y*b)/c) .| by XCMPLX_1:99
+  .= b - |. b*((a+y)-a)/c .| by COMPLEX1:52
+  .= f.(a+y) by A2;
+end;
+
+theorem
+for f be Function of REAL,REAL, a,b,c,d,e be Real st
+(for x be Real holds f.x = min(d, max(e, b - |. b*(x-a)/c .|)))
+holds
+(for y be Real holds f.(a-y) = f.(a+y))
+proof
+ let f be Function of REAL,REAL, a,b,c,d,e be Real;
+ assume A2: for x be Real holds f.x = min(d, max(e, b - |. b*(x-a)/c .|));
+  let y be Real;
+   thus f.(a-y) = min(d, max(e, b - |. b*(a-y-a)/c .|)) by A2
+  .= min(d, max(e,b - |. (-(y*b))*(1/c) .|)) by XCMPLX_1:99
+  .= min(d, max(e,b - |. -((y*b)*(1/c)) .|))
+  .= min(d, max(e,b - |. -((y*b)/c) .|)) by XCMPLX_1:99
+  .= min(d, max(e,b - |. b*((a+y)-a)/c .|)) by COMPLEX1:52
+  .= f.(a+y) by A2;
+end;
+
+theorem LmCri2:
+for a,b,c,d be Real st b > 0 & c > 0 & d > 0 & d < b holds
+for x be Real holds
+(d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+ = min(d, max(0, b - |. b*(x-a)/c .|))
+proof
+ let a,b,c,d be Real;
+ assume that
+ A1: b > 0 & c > 0 & d > 0 and
+ A2: d < b;
+ thus for x be Real holds
+ (d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+ = min(d, max(0, b - |. b*(x-a)/c .|))
+ proof
+  let x be Real;
+  set p = a-c; set q = a+(d-b)/(b/c); set r = a+(b-d)/(b/c);
+  set s =a+c;
+  QP: q-p = (d-b)/(b/c) + c
+  .= (d-b)*(c/b) + c by XCMPLX_1:79
+  .= (d-b)*c/b + c by XCMPLX_1:74
+  .= (c*d-c*b)/b + c
+  .= c*d/b-c*b/b + c by XCMPLX_1:120
+  .= c*d/b-c + c by A1,XCMPLX_1:89
+  .= c*d/b;
+  SR: s-r = c - (b-d)/(b/c)
+  .= c- (b-d)*(c/b) by XCMPLX_1:79
+  .= c- (b-d)*c/b by XCMPLX_1:74
+  .= c - (c*b-c*d)/b
+  .= c- (c*b/b-c*d/b) by XCMPLX_1:120
+  .= c - (c - c*d/b) by A1,XCMPLX_1:89
+  .= c*d/b;
+  d+d<b+b by A2,XREAL_1:8; then
+  BD: b+b-(d+d) > (d+d)-(d+d) by XREAL_1:14;
+  r-q = (b-d)/(b/c) - (d-b)/(b/c)
+  .= ((b-d) - (d-b))/(b/c) by XCMPLX_1:120
+  .= (b+b-d - d)/(b/c); then
+  A3: 0+ p<q-p+p & 0+q<r-q+q & 0+r<s-r+r by XREAL_1:8,QP,SR,A1,BD;
+  BD5: d-b < b-b & b-d > d-d by A2,XREAL_1:14; then
+  QAR: q < a+0 & a+0 < r by XREAL_1:8,A1;
+  A4: (d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+   = d * TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c).x by VALUED_1:6
+  .= d*(((((AffineMap (0,0)) | (REAL \ ].p,s.[)) +*
+   ((AffineMap ((1 / (q - p)),(- (p / (q - p))))) | [.p,q.])) +*
+   ((AffineMap (0,1)) | [.q,r.])) +*
+   ((AffineMap ((- (1 / (s - r))),(s / (s - r)))) | [.r,s.])).x
+    by FUZNUM_1:def 8,A3;
+  set Fr = AffineMap ((- (1 / (s - r))),(s / (s - r)));
+  set Fs = (AffineMap (0,1));
+  set Fl = (AffineMap ((1 / (q - p)),(- (p / (q - p)))));
+  per cases;
+   suppose B1: a+c < x; then :: s < x
+     (a+c) + (-c) < x + (-c) & -c + x < 0 + x by A1,XREAL_1:8;
+    then
+    a < x by XXREAL_0:2; then
+    B2a: x-a > a-a by XREAL_1:14;
+    B3: not x in dom (Fr | [.r,s.]) by B1,XXREAL_1:1;
+    Br: r < x by A3,B1,XXREAL_0:2; then
+    B4: not x in dom (Fs | [.q,r.]) by XXREAL_1:1;
+    q < x by Br,A3,XXREAL_0:2; then
+    B5: not x in dom (Fl | [.p,q.]) by XXREAL_1:1;
+    not x in ].p,s.[ & x in REAL by B1,XXREAL_1:4,XREAL_0:def 1;
+    then
+    B6: x in REAL \ ].p,s.[ by XBOOLE_0:def 5;
+    BL: (d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+    = d*(AffineMap (0,0) | (REAL \ ].p,s.[) +* (Fl | [.p,q.])
+      +* (Fs | [.q,r.])).x by FUNCT_4:11,B3,A4
+    .= d*(AffineMap (0,0) | (REAL \ ].p,s.[) +* (Fl | [.p,q.])).x
+         by FUNCT_4:11,B4
+    .= d*(AffineMap (0,0) | (REAL \ ].p,s.[)).x by FUNCT_4:11,B5
+    .= d*(AffineMap (0,0)).x by FUNCT_1:49,B6
+    .= d*(0*x+0) by FCONT_1:def 4;
+    x-a > a+c-a by XREAL_1:9,B1; then
+    b*(x-a) > b*c by A1,XREAL_1:68; then
+    b*(x-a)/c > b*c/c by A1,XREAL_1:74; then
+    b*(x-a)/c > b by A1,XCMPLX_1:89; then
+    BC4: b*(x-a)/c - b*(x-a)/c > b - b*(x-a)/c by XREAL_1:9;
+    min(d, max(0, b - |. b*(x-a)/c .|))
+     = min(d, max(0, b - ( b*(x-a)/c ))) by ABSVALUE:def 1,B2a,A1
+    .= min(d,0) by BC4,XXREAL_0:def 10;
+    hence thesis by BL,A1,XXREAL_0:def 9;
+   end;
+   suppose C1: x <= a+c;
+    per cases;
+     suppose D1: a+(b-d)/(b/c) <= x; then ::r <= x <= s
+      x in [.r,s.] by C1; then
+      x in dom (Fr | [.r,s.]) by FUNCT_2:def 1; then
+      DD: (d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+       = d*(Fr | [.r,s.]).x by FUNCT_4:13,A4
+      .= d*(Fr.x) by FUNCT_1:49,XXREAL_1:1,C1,D1
+      .= d*( (- (1 / (c*d/b)))*x+(s / (c*d/b)) ) by SR,FCONT_1:def 4
+      .= d*( - (1 / (c*d/b))*x+ s/(c*d/b))
+      .= d*( - x / (c*d/b)+s/(c*d/b)) by XCMPLX_1:99
+      .= d*( s/(c*d/b)- x / (c*d/b))
+      .= d*( (a+c-x)/((c*d)/b) ) by XCMPLX_1:120
+      .= d*( (a+c-x)*(b/(c*d)) ) by XCMPLX_1:79
+      .= d* (((a+c-x)*b)/(c*d)) by XCMPLX_1:74
+      .= d* ((a+c-x)*b)/(c*d) by XCMPLX_1:74
+      .= ((a+c-x)*b)*(d/(d*c)) by XCMPLX_1:74
+      .= ((a+c-x)*b)*((d/d)/c) by XCMPLX_1:78
+      .= ((a+c-x)*b)*(1/c) by XCMPLX_1:60,A1
+      .= ((a+c-x)*b)/c by XCMPLX_1:99
+      .= b*((c - (x-a))/c) by XCMPLX_1:74
+      .= b*(c/c - (x-a)/c) by XCMPLX_1:120
+      .= b*(1 - (x-a)/c) by A1,XCMPLX_1:60
+      .= b*1 - b*((x-a)/c)
+      .= b - b*(x-a)/c by XCMPLX_1:74;
+      D8a: (b-d)/(b/c) <= x-a by D1,XREAL_1:19;
+      D7: x-a > 0 by BD5,A1,D1,XREAL_1:19;
+      b*(x-a) <= b*c by A1,XREAL_1:64,C1,XREAL_1:20; then
+      b*(x-a)/c <= b*c/c by A1,XREAL_1:72; then
+      b*(x-a)/c <= b by A1,XCMPLX_1:89; then
+      D8: b*(x-a)/c - b*(x-a)/c <= b - b*(x-a)/c by XREAL_1:13;
+      (b-d)/(b/c)*(b/c) <= (x-a)*(b/c) by A1,D8a,XREAL_1:64;
+      then
+      b-d <= (x-a)*(b/c) by A1,XCMPLX_1:87; then
+      b <= (x-a)*(b/c)+d by XREAL_1:20; then
+      b - (x-a)*(b/c) <= d by XREAL_1:20; then
+     D9: b - b*(x-a)/c <= d by XCMPLX_1:74;
+      min(d, max(0, b - |. b*(x-a)/c .|))
+      = min(d, max(0, b - ( b*(x-a)/c ))) by ABSVALUE:def 1,D7,A1
+      .= min(d, b - b*(x-a)/c ) by XXREAL_0:def 10,D8
+      .= b - b*(x-a)/c by XXREAL_0:def 9,D9;
+      hence thesis by DD;
+     end;
+     suppose E1: x < a+(b-d)/(b/c);
+      per cases;
+       suppose F1: a <= x; :: a <= x < r  --> d
+        F3: not x in dom (Fr | [.r,s.]) by E1,XXREAL_1:1;
+        F4a:q < x by F1,XXREAL_0:2,QAR; then
+         x in [.q,r.] by E1; then
+        F4: x in dom( Fs | [.q,r.] ) by FUNCT_2:def 1;
+        EE:(d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+             = d*(AffineMap (0,0) | (REAL \ ].p,s.[) +* (Fl | [.p,q.])
+              +* (Fs | [.q,r.])).x by FUNCT_4:11,F3,A4
+            .= d*(Fs | [.q,r.]).x by FUNCT_4:13,F4
+             .= d*((Fs ).x) by FUNCT_1:49,F4a,E1,XXREAL_1:1
+        .= d*( 0*x+1) by FCONT_1:def 4
+        .= d;
+        F7: x-a >= a-a by F1,XREAL_1:13;
+        x < a+c by XXREAL_0:2,E1,A3; then
+        x-a < a+c-a by XREAL_1:14; then
+        b*(x-a) < b*c by A1,XREAL_1:68; then
+        b*(x-a)/c < b*c/c by A1,XREAL_1:74; then
+        b*(x-a)/c < b by A1,XCMPLX_1:89; then
+        F8: b*(x-a)/c - b*(x-a)/c < b - b*(x-a)/c by XREAL_1:14;
+        x -a < (a+(b-d)/(b/c)) -a by E1,XREAL_1:14;
+        then
+        (x -a)*(b/c) < (b-d)/(b/c)*(b/c) by A1,XREAL_1:68;
+        then
+        (x -a)*(b/c) < b-d by A1,XCMPLX_1:87; then
+        (x -a)*(b/c) +d < b-d +d by XREAL_1:8; then
+        (x -a)*(b/c) +d -(x -a)*(b/c)< b-(x -a)*(b/c) by XREAL_1:14;
+        then
+        F9: d < b-(x -a)*b/c by XCMPLX_1:74;
+        min(d, max(0, b - |. b*(x-a)/c .|))
+         = min(d, max(0, b - ( b*(x-a)/c ))) by ABSVALUE:def 1,F7,A1
+        .= min(d, b - b*(x-a)/c ) by XXREAL_0:def 10,F8
+        .= d by XXREAL_0:def 9,F9;
+        hence thesis by EE;
+       end;
+       suppose x < a; then
+        G3: x-a < a-a by XREAL_1:14;
+        per cases;
+         suppose H1: a+(d-b)/(b/c) <= x; :::: q <= x < a  --> d
+          F3: not x in dom (Fr | [.r,s.]) by E1,XXREAL_1:1;
+          x in [.q,r.] by H1,E1;
+          then
+          F4: x in dom( Fs | [.q,r.] ) by FUNCT_2:def 1;
+          HH:(d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+             = d*(AffineMap (0,0) | (REAL \ ].p,s.[) +* (Fl | [.p,q.])
+              +* (Fs | [.q,r.])).x by FUNCT_4:11,F3,A4
+            .= d*(Fs | [.q,r.]).x by FUNCT_4:13,F4
+             .= d*((Fs ).x) by FUNCT_1:49,H1,E1,XXREAL_1:1
+          .= d*( 0*x+1) by FCONT_1:def 4
+          .= d;
+          a+(d-b)/(b/c)-a <= x-a by XREAL_1:13,H1; then
+          (d-b)/(b/c)*(b/c) <= (x-a)*(b/c) by A1,XREAL_1:64;
+          then
+          d-b <= (x-a)*(b/c) by A1,XCMPLX_1:87; then
+          d-b+b <= (x-a)*(b/c)+b by XREAL_1:6; then
+         H9: d-b+b <= (x-a)*b/c+b by XCMPLX_1:74;
+          a-c < x by XXREAL_0:2,H1,A3; then
+             x-a > a-c-a by XREAL_1:14; then
+            b*(x-a) > b*(-c) by XREAL_1:68,A1; then
+            b*(x-a)/c > (-c*b)/c by A1,XREAL_1:74; then
+            b*(x-a)/c > (-c*b/c) by XCMPLX_1:187; then
+            b*(x-a)/c > -b by A1,XCMPLX_1:89; then
+            H7: b*(x-a)/c + b > -b+b by XREAL_1:8;
+          min(d, max(0, b - |. b*(x-a)/c .|))
+           = min(d, max(0, b - -( b*(x-a)/c ))) by ABSVALUE:def 1,G3,A1
+          .= min(d, b + b*(x-a)/c ) by XXREAL_0:def 10,H7
+          .= d by XXREAL_0:def 9,H9;
+          hence thesis by HH;
+         end;
+         suppose I1: x < a+(d-b)/(b/c); then ::: x < q
+          x-p < q-p & p-p < q - p by A1,XREAL_1:14,QP; then
+          II: (x-p)/(q-p) < (q-p)/(q-p) by XREAL_1:74;
+          I4: Fl.x = (1 / (q - p))*x+(- (p / (q - p))) by FCONT_1:def 4
+          .= x / (q - p) + - p/(q - p) by XCMPLX_1:99
+          .= x / (q - p) - p/(q - p)
+         .= (x-p)/(q-p) by XCMPLX_1:120; then
+          I3: Fl.x < 1 by II,XCMPLX_1:60,QP,A1;
+          J8: (Fl.x)*d < 1*d by I3,A1,XREAL_1:68;
+          per cases;
+           suppose J1: a-c <= x; ::: p <= x < q
+            x < r by XXREAL_0:2,A3,I1; then
+            J3: not x in dom (Fr | [.r,s.]) by XXREAL_1:1;
+            J4: not x in dom (Fs | [.q,r.]) by XXREAL_1:1,I1;
+            x in [.p,q.] by I1,J1; then
+            J5: x in dom (Fl | [.p,q.]) by FUNCT_2:def 1;
+            x-a >= a-c-a by XREAL_1:9,J1; then
+            b*(x-a) >= b*(-c) by XREAL_1:64,A1; then
+            b*(x-a)/c >= (-c*b)/c by A1,XREAL_1:72; then
+            b*(x-a)/c >= (-c*b/c) by XCMPLX_1:187; then
+            b*(x-a)/c >= -b by A1,XCMPLX_1:89; then
+            J7: b*(x-a)/c + b >= -b+b by XREAL_1:6;
+            J9: d*(Fl.x) = d*(x-p)/(c*d/b) by XCMPLX_1:74,QP,I4
+            .= d*(x-p)/(d*(c/b)) by XCMPLX_1:74
+            .= (x-(a-c))/(c/b) by A1,XCMPLX_1:91
+            .= b*((x-a+c)/c) by XCMPLX_1:82;
+            JJ: min(d, max(0, b - |. b*(x-a)/c .|))
+             = min(d,max(0, b - -(b*(x-a)/c))) by A1,ABSVALUE:def 1,G3
+             .= min(d, b + b*(x-a)/c) by XXREAL_0:def 10,J7
+             .= min(d, b*1 + b*((x-a)/c)) by XCMPLX_1:74
+             .= min(d, b*(1 + (x-a)/c))
+             .= min(d, b*(c/c + (x-a)/c) ) by A1,XCMPLX_1:60
+             .= min(d, d*(Fl.x) ) by J9,XCMPLX_1:62
+             .= d*(Fl.x) by J8,XXREAL_0:def 9;
+            (d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+             = d*(AffineMap (0,0) | (REAL \ ].p,s.[) +* (Fl | [.p,q.])
+              +* (Fs | [.q,r.])).x by FUNCT_4:11,J3,A4
+            .= d*(AffineMap (0,0) | (REAL \ ].p,s.[) +* (Fl | [.p,q.])).x
+                 by FUNCT_4:11,J4
+            .= d*(Fl | [.p,q.]).x by FUNCT_4:13,J5
+            .= d*((Fl ).x) by FUNCT_1:49,XXREAL_1:1,I1,J1;
+            hence thesis by JJ;
+           end;
+           suppose K1: x < a-c; then ::: x < p   --> 0
+            B2: x-a < a-c-a by XREAL_1:9;
+            B1: -c < 0 by A1;
+            b*(x-a) < b*(-c) by A1,B2,XREAL_1:68; then
+            b*(x-a)/c < (-c*b)/c by A1,XREAL_1:74; then
+            b*(x-a)/c < (-c*b/c) by XCMPLX_1:187; then
+            b*(x-a)/c < -b by A1,XCMPLX_1:89; then
+            B4: b*(x-a)/c + b < -b+b by XREAL_1:6;
+            KM: min(d, max(0, b - |. b*(x-a)/c .|))
+             = min(d,max(0, b - -(b*(x-a)/c))) by COMPLEX1:70,A1,B1,B2
+            .=min(d,0) by B4,XXREAL_0:def 10;
+            p < r by A3,XXREAL_0:2; then
+            x < r by K1,XXREAL_0:2; then
+            K3: not x in dom (Fr | [.r,s.]) by XXREAL_1:1;
+            x < q by K1,A3,XXREAL_0:2; then
+            K4: not x in dom (Fs | [.q,r.]) by XXREAL_1:1;
+            K5: not x in dom (Fl | [.p,q.]) by K1,XXREAL_1:1;
+            not x in ].p,s.[ & x in REAL by K1,XXREAL_1:4,XREAL_0:def 1;
+            then
+            K6: x in REAL \ ].p,s.[ by XBOOLE_0:def 5;
+            (d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+             = d*(AffineMap (0,0) | (REAL \ ].p,s.[) +* (Fl | [.p,q.])
+              +* (Fs | [.q,r.])).x by FUNCT_4:11,K3,A4
+            .= d*(AffineMap (0,0) | (REAL \ ].p,s.[) +* (Fl | [.p,q.])).x
+                 by FUNCT_4:11,K4
+            .= d*(AffineMap (0,0) | (REAL \ ].p,s.[)).x by FUNCT_4:11,K5
+            .= d*(AffineMap (0,0)).x by FUNCT_1:49,K6
+            .= d*(0*x+0) by FCONT_1:def 4;
+            hence thesis by KM,A1,XXREAL_0:def 9;
+           end;
+         end;
+       end;
+     end;
+   end;
+ end;
+end;
+
+theorem Lm223:
+for a,b,c,d be Real st
+b > 0 & c > 0 & d > 0 & d < b holds
+centroid (d(#)TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c),['a-c,a+c'])
+= a
+proof
+ let a,b,c,d be Real;
+ assume A1: b > 0 & c > 0 & d > 0 & d < b;
+ A5:d-b < b-b & b-d > d-d by A1,XREAL_1:9;
+ set a1 = a+(d-b)/(b/c);
+ set a2 = a+(b-d)/(b/c);
+ set c0 = a + c - a2;
+ 0+b > -d + b by XREAL_1:6,A1; then
+ b/b > (b-d)/b by A1,XREAL_1:74; then
+ (b/b)*c > ((b-d)/b)*c by A1,XREAL_1:68; then
+ b/(b/c) > ((b-d)/b)*c by XCMPLX_1:82; then
+ b/(b/c) > (b-d)/(b/c) by XCMPLX_1:82; then
+ A6:b/(b/c) -(b-d)/(b/c) > (b-d)/(b/c) -(b-d)/(b/c) by XREAL_1:9;
+ A3:c0 = c-(b-d)/(b/c)
+ .= b/(b/c) -(b-d)/(b/c) by A1,XCMPLX_1:52;
+ A4:a1-c0 = (-(b-d))/(b/c) - c + a+((b-d)/(b/c))
+ .= -((b-d)/(b/c)) - c + a+((b-d)/(b/c)) by XCMPLX_1:187
+ .= a-c;
+ centroid ( d (#) TrapezoidalFS (a1-c0,a1,a2,a2+c0), ['a1-c0,a2+c0'])
+ = (a+(-(b-d))/(b/c) + (a+(b-d)/(b/c)))/2
+   by FUZZY_7:50,A1,A5,A3,A6,XREAL_1:6
+ .= (a+ -((b-d)/(b/c)) + (a+(b-d)/(b/c)))/2 by XCMPLX_1:187
+ .= a;
+ hence thesis by A4;
+end;
+
+theorem Lm220:
+for a,b,c,d be Real, f be Function of REAL,REAL st b > 0 & c > 0 & d > 0 &
+d < b & ( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds f = d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)
+proof
+ let a,b,c,d be Real;
+ let f be Function of REAL,REAL;
+ assume A1: b > 0 & c > 0 & d > 0 & d < b;
+ assume A2: for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|));
+ A3: dom f = REAL by FUNCT_2:def 1
+ .= dom (d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c))
+ by FUNCT_2:def 1;
+ for x be object st x in dom f holds
+ f.x = (d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+ proof
+  let x be object;
+  assume x in dom f; then
+  reconsider x as Real;
+  f.x = min(d, max(0, b - |. b*(x-a)/c .|)) by A2
+  .= (d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+  by A1,LmCri2;
+  hence thesis;
+ end;
+ hence thesis by A3,FUNCT_1:2;
+end;
+
+theorem Lm221:
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 & d < b &
+( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds centroid (f,['a-c,a+c']) = a
+proof
+ let a,b,c,d be Real;
+ let f be Function of REAL,REAL;
+ assume A1: b > 0 & c > 0 & d > 0 & d < b;
+ assume for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|));
+ hence centroid (f,['a-c,a+c'])
+ = centroid (
+ d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c),['a-c,a+c'])
+ by Lm220,A1
+ .= a by Lm223,A1;
+end;
+
+theorem L724p:
+for a,b,c,d,e be Real, f be Function of REAL,REAL st
+b <> 0 & c <> 0 &
+for x be Real holds f.x = min(d, max(e, b - |. b*(x-a)/c .|))
+holds f is Lipschitzian
+proof
+ let a,b,c,d,e be Real, f be Function of REAL,REAL;
+ assume A2:b <> 0 & c <> 0;
+ assume A1:for x be Real holds f.x = min(d, max(e, b - |. b*(x-a)/c .|));
+ ex r being Real st
+ ( 0 < r &
+ ( for x1, x2 being Real st x1 in dom f & x2 in dom f holds
+  |.f.x1 - f.x2.| <= r * |.x1 - x2.| ) )
+ proof
+  take |.b.| * |. 1/c .|;
+  TTT: |.b.| > 0 & |. (1/c) .| > 0 by A2,COMPLEX1:47;
+  for x1, x2 being Real st x1 in dom f & x2 in dom f holds
+  |.f.x1 - f.x2.| <= (|.b.| * |. 1/c .|) * |.x1 - x2.|
+  proof
+   let x1, x2 be Real;
+   T1: |.f.x1 - f.x2.| = |.min(d, max(e, b - |. b*(x1-a)/c .|))
+     - (f.x2).| by A1
+     .=|.min(d, max(e, b - |. b*(x1-a)/c .|))
+     - min(d, max(e, b - |. b*(x2-a)/c .|)).| by A1;
+   T2: |.f.x1 - f.x2.|
+    <= |.(b - |. b*(x1-a)/c .|) - (b - |. b*(x2-a)/c .|).| by T1,F51;
+T41:   |. |. b*(x2-a)/c .|- |. b*(x1-a)/c .| .|
+   <= |. b*(x2-a)/c - b*(x1-a)/c .| by COMPLEX1:64;
+   |. b*(x2-a)/c - b*(x1-a)/c .|
+      = |. b*((x2-a)/c) - b*(x1-a)/c .| by XCMPLX_1:74
+     .= |. b*((x2-a)/c) - b*((x1-a)/c) .| by XCMPLX_1:74
+     .= |. b*((x2-a)/c - (x1-a)/c) .|
+     .= |.b.| * |. (x2-a)/c - (x1-a)/c .| by COMPLEX1:65
+     .= |.b.| * |. (x2-a)*(1/c) - (x1-a)/c .| by XCMPLX_1:99
+     .= |.b.| * |. (x2-a)*(1/c) - (x1-a)*(1/c) .| by XCMPLX_1:99
+     .= |.b.| * |. (1/c)*((x2-a) - (x1-a)) .|
+     .= |.b.| * (|. (1/c) .| * |.  ((x2-a) - (x1-a)) .| ) by COMPLEX1:65
+     .= |.b.| * |. (1/c) .| * |.  x2 - x1 .|
+     .= |.b.| * |. (1/c) .| * |.  x1 - x2 .| by COMPLEX1:60;
+   hence thesis by T41,T2,XXREAL_0:2;
+  end;
+  hence thesis by TTT;
+ end;
+ hence thesis;
+end;
+
+theorem L724:
+for a,b,c,d,e be Real, f be Function of REAL,REAL st
+c <> 0 & for x be Real holds f.x = min(d, max(e, b - |. b*(x-a)/c .|))
+holds f is Lipschitzian
+proof
+ let a,b,c,d,e be Real, f be Function of REAL,REAL;
+ assume A2: c <> 0;
+ assume A1:for x be Real holds f.x = min(d, max(e, b - |. b*(x-a)/c .|));
+ per cases;
+  suppose B1: b = 0;
+   ex r being Real st
+   ( 0 < r &
+   ( for x1, x2 being Real st x1 in dom f & x2 in dom f holds
+   |.f.x1 - f.x2.| <= r * |.x1 - x2.| ) )
+   proof
+    take 1;
+    thus 0 < 1;
+     let x1, x2 be Real;
+     |.f.x1 - f.x2.|
+      =|.min(d, max(e, b - |. b*(x1-a)/c .|)) - f.x2.| by A1
+     .=|.min(d, max(e, b - |. b*(x1-a)/c .|))
+      - min(d, max(e, b - |. b*(x2-a)/c .|)).| by A1
+      .= 0 by COMPLEX1:44,B1;
+     hence thesis by COMPLEX1:46;
+   end;
+   hence thesis;
+  end;
+  suppose b <> 0;
+   hence thesis by A1,A2,L724p;
+  end;
+end;
+
+theorem Lm22a:
+for a,b,c,d be Real, f be Function of REAL,REAL st
+c > 0 & ( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds f is_integrable_on A & f | A is bounded
+proof
+ let a,b,c,d be Real, f be Function of REAL,REAL;
+ assume that
+ A2:  c > 0 and
+ A3: for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|));
+ reconsider f as PartFunc of REAL,REAL;
+ f is Lipschitzian by L724,A2,A3; then
+ A6: f | A is continuous;
+ dom f = REAL by FUNCT_2:def 1;
+ hence thesis by INTEGRA5:11,INTEGRA5:10,A6;
+end;
+
+theorem Lm22b:
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 &
+( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds f.(lower_bound ['a-c,a+c']) = 0 & f.(upper_bound ['a-c,a+c']) = 0
+proof
+ let a,b,c,d be Real, f be Function of REAL,REAL;
+ assume A1: b > 0 & c > 0 & d > 0;
+ assume A3: for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|));
+ a < a+c & a-c < a by XREAL_1:44, XREAL_1:29,A1;
+ then
+ A4: a-c < a+c by XXREAL_0:2;
+ A2:f.(lower_bound ['a-c,a+c'])
+  = f.(a-c) by FUZZY_6:7,A4
+ .= min(d, max(0, b - |. b*((a-c)-a)/c .|)) by A3
+ .= min(d,max(0, b - |. (-1)*(c*b)/c .|))
+ .= min(d,max(0, b - |. (-1)*(c*b/c) .|)) by XCMPLX_1:74
+ .= min(d, max(0, b - |. (-c*b/c) .|))
+ .= min(d,max(0, b - |. -b .|)) by A1,XCMPLX_1:89
+ .= min(d,max(0, b - -(- b))) by ABSVALUE:def 1,A1
+ .= 0 by XXREAL_0:def 9,A1;
+  f.(upper_bound ['a-c,a+c'])
+  = f.(a+c) by FUZZY_6:7,A4
+ .= min(d, max(0, b - |. b*((a+c)-a)/c .|)) by A3
+  .= min(d,max(0, b - |. b .|) )by A1,XCMPLX_1:89
+ .= min(d,max(0, b - b)) by ABSVALUE:def 1,A1
+ .= min(d,0);
+ hence thesis by A2,XXREAL_0:def 9,A1;
+end;
+
+theorem FU710a:
+for a,b,c be Real st b > 0 & c > 0 holds
+for x be Real st not x in ['a-c,a+c'] holds max(0, b - |. b*(x-a)/c .|) = 0
+proof
+ let a,b,c be Real;
+ assume that
+ A1: b > 0 and
+ A2: c > 0;
+  let x be Real;
+  assume A4: not x in ['a-c,a+c'];
+  deffunc H1(Element of REAL)
+   = In(max(0,b - |. b*($1-a)/c .|),REAL);
+  consider h being Function of REAL,REAL such that
+  A5: for x being Element of REAL holds h.x = H1(x) from FUNCT_2:sch 4;
+  A6: for x be Real holds h.x = max(0, b - |. b*(x-a)/c .|)
+  proof
+   let x be Real;
+   reconsider x as Element of REAL by XREAL_0:def 1;
+   h.x = In(max(0,b - |. b*(x-a)/c .|),REAL) by A5;
+   hence thesis;
+  end;
+  hence 0 = h.x by A4,FUZZY_7:19,A1,A2
+  .= max(0,b - |. b*(x-a)/c .|) by A6;
+end;
+
+theorem FU710b:
+for a,b,c,d be Real st b > 0 & c > 0 & d > 0
+holds
+for x be Real st not x in ['a-c,a+c'] holds
+min(d,max(0, b - |. b*(x-a)/c .|)) = 0
+proof
+ let a,b,c,d be Real;
+ assume that
+ A1: b > 0 and
+ A2: c > 0 and
+ A3: d > 0;
+  let x be Real;
+  assume not x in ['a-c,a+c']; then
+  min(d,max(0, b - |. b*(x-a)/c .|)) = min(d,0) by FU710a,A1,A2
+  .= 0 by XXREAL_0:def 9,A3;
+  hence thesis;
+end;
+
+theorem FU710:
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 &
+(for x be Real holds f.x = min(d,max(0, b - |. b*(x-a)/c .|))) holds
+for x be Real st not x in ['a-c,a+c'] holds f.x = 0
+proof
+ let a,b,c,d be Real, f be Function of REAL,REAL;
+ assume that
+ A1: b > 0 & c > 0 and
+ A2: d > 0 and
+ A3: for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|));
+  let x be Real;
+  assume A4: not x in ['a-c,a+c'];
+  f. x = min(d, max(0, b - |. b*(x-a)/c .|)) by A3
+  .= 0 by FU710b,A1,A2,A4;
+  hence thesis;
+end;
+
+theorem Lm22B3:
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 &
+( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds (for x be Real st x in (A \ ['a-c,a+c']) holds f.x = 0)
+proof
+ let a,b,c,d be Real, f be Function of REAL,REAL;
+ assume that
+ A1: b > 0 & c > 0 and
+ A2: d > 0 and
+ A3: for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|));
+  let x be Real;
+  assume A4: x in (A \ ['a-c,a+c']);
+  not x in ['a-c,a+c'] by XBOOLE_0:def 5,A4;
+  hence thesis by FU710,A1,A2,A3;
+end;
+
+theorem Lm22:
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 & ['a-c,a+c'] c= A &
+( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds
+centroid (f,A) = a
+proof
+ let a,b,c,d be Real, f be Function of REAL,REAL;
+ assume that
+ A1: b > 0 & c > 0 and
+ A2: d > 0 and
+ A3:  ['a-c,a+c'] c= A  and
+ A4: for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|));
+ a < a+c & a-c < a by XREAL_1:44, XREAL_1:29,A1; then
+ a-c < a+c by XXREAL_0:2;
+ then
+ lower_bound ['a-c,a+c'] = a-c & upper_bound ['a-c,a+c'] = a+c
+ by FUZZY_6:7; then
+ B1: lower_bound ['a-c,a+c'] <> upper_bound ['a-c,a+c'] by A1;
+ B2: f is_integrable_on A & f | A is bounded by A1,A4,Lm22a;
+ B3: (for x be Real st x in (A \ ['a-c,a+c']) holds f.x = 0)
+   by Lm22B3,A1,A2,A4;
+ f.(lower_bound ['a-c,a+c']) = 0 & f.(upper_bound ['a-c,a+c']) = 0
+    by A1,A2,A4,Lm22b; then
+ C1: centroid (f,A) = centroid (f,['a-c,a+c'])
+    by A3,B1,B2,B3,FUZZY_7:24;
+ per cases;
+  suppose d < b;
+   hence a = centroid (f,A) by Lm221,A1,A2,A4,C1;
+  end;
+  suppose K2: d >= b;
+   for x be Real holds f.x = max(0,b-|. b*(x-a)/c .|)
+   proof
+    let x be Real;
+    |. b*(x-a)/c .| >= 0 by COMPLEX1:46; then
+    - |. b*(x-a)/c .|+b <= 0+b by XREAL_1:6; then
+    max(0,b - |. b*(x-a)/c .|) <= b by XXREAL_0:28,A1; then
+    min(d, max(0, b - |. b*(x-a)/c .|)) = max(0,b - |. b*(x-a)/c .|)
+    by XXREAL_0:def 9,XXREAL_0:2,K2;
+    hence thesis by A4;
+   end;
+   hence thesis by FUZZY_7:34,A1,A3;
+  end;
+end;
+
+theorem
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 & ['a-c,a+c'] c= A &
+d < b &
+( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds
+centroid (f,A) = centroid (f,['a-c,a+c'])
+proof
+ let a,b,c,d be Real, f be Function of REAL,REAL;
+ assume that
+ A1: b > 0 & c > 0 and
+ A2: d > 0 and
+ A3: ['a-c,a+c'] c= A and
+ A4: d < b and
+ A5: for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|));
+ thus centroid (f,A) = a by A1,A2,A3,Lm22,A5
+ .= centroid (f,['a-c,a+c']) by A1,A2,A4,A5,Lm221;
+end;
+
+theorem
+for a,b,c,d be Real, f,F be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 &
+( for x be Real holds f.x = max(0, b - |. b*(x-a)/c .|)) &
+( for x be Real holds F.x = min(d, max(0, b - |. b*(x-a)/c .|))) holds
+centroid (f,['a-c,a+c']) = centroid (F,['a-c,a+c'])
+proof
+ let a,b,c,d be Real, f,F be Function of REAL,REAL;
+ assume A1: b > 0 & c > 0 & d > 0;
+ assume A2:for x be Real holds f.x = max(0, b - |. b*(x-a)/c .|);
+ assume A3:for x be Real holds F.x = min(d, max(0, b - |. b*(x-a)/c .|));
+ per cases;
+ suppose d < b; then
+  centroid (F,['a-c,a+c']) = a by Lm221,A1,A3;
+  hence thesis by FUZZY_7:31,A1,A2;
+ end;
+ suppose A5: d >= b;
+  A4:dom f = REAL by FUNCT_2:def 1
+  .= dom F by FUNCT_2:def 1;
+  for x being object st x in dom f holds f . x = F . x
+  proof
+   let x be object;
+   assume Xac: x in dom f;
+   reconsider x as Real by Xac;
+   A6: d >= max(0, b - |. b*(x-a)/c .|)
+   proof
+    per cases by XXREAL_0:16;
+    suppose max(0, b - |. b*(x-a)/c .|) = 0;
+     hence thesis by A1;
+    end;
+    suppose B2: max(0, b - |. b*(x-a)/c .|) = b - |. b*(x-a)/c .|;
+     b - |. b*(x-a)/c .| <= b by L724x;
+     hence thesis by A5,XXREAL_0:2,B2;
+    end;
+   end;
+   F.x = min(d, max(0, b - |. b*(x-a)/c .|)) by A3
+   .= max(0, b - |. b*(x-a)/c .|) by XXREAL_0:def 9,A6
+   .= f.x by A2;
+   hence thesis;
+  end;
+  hence thesis by FUNCT_1:2,A4;
+ end;
+end;
+
+theorem
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 & d < b &
+( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds f | [.a-c,a+c.] = AffineMap (b/c,b-a*b/c) | [. a-c, a+(d-b)/(b/c) .]
+                     +* AffineMap (0,d) | [. a+(d-b)/(b/c),a+(b-d)/(b/c) .]
+                     +* AffineMap (-b/c,b+a*b/c) | [.a+(b-d)/(b/c), a+c.]
+proof
+ let a,b,c,d be Real, f be Function of REAL,REAL;
+ assume that
+ A1:b > 0 & c > 0 & d > 0 and
+ A2: d < b and
+ A3: ( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) );
+ -(b-d)/(b/c) > -c by XREAL_1:24,Lmbcd,A1;
+then
+ A5a:(-(b-d))/(b/c) > -c by XCMPLX_1:187;then
+ A5: -c +a < (d-b)/(b/c) +a by XREAL_1:8;
+A60: d-b < b-b & b-d > d-d by A2,XREAL_1:9; then
+ A6: a+(d-b)/(b/c) < a+(b-d)/(b/c) by XREAL_1:6, A1;
+ (b-d)/(b/c) < c by Lmbcd,A1; then
+ A7: (b-d)/(b/c)+a < c+a by XREAL_1:8;
+ A8: a-c < a+(b-d)/(b/c) by A60,A5,XREAL_1:6, A1;
+ A4:  dom(AffineMap (b/c,b-a*b/c) | [. a-c, a+(d-b)/(b/c) .]
+   +* AffineMap (0,d) | [. a+(d-b)/(b/c),a+(b-d)/(b/c) .]
+   +* AffineMap (-b/c,b+a*b/c) | [.a+(b-d)/(b/c), a+c.])
+  = dom(AffineMap (b/c,b-a*b/c) | [. a-c, a+(d-b)/(b/c) .]
+   +* AffineMap (0,d) | [. a+(d-b)/(b/c),a+(b-d)/(b/c) .])
+   \/dom( AffineMap (-b/c,b+a*b/c) | [.a+(b-d)/(b/c), a+c.]) by FUNCT_4:def 1
+ .= dom(AffineMap (b/c,b-a*b/c) | [. a-c, a+(d-b)/(b/c) .] )
+   \/ dom( AffineMap (0,d) | [. a+(d-b)/(b/c),a+(b-d)/(b/c) .])
+   \/dom( AffineMap (-b/c,b+a*b/c) | [.a+(b-d)/(b/c), a+c.]) by FUNCT_4:def 1
+ .= [. a-c, a+(d-b)/(b/c) .]
+   \/ dom( AffineMap (0,d) | [. a+(d-b)/(b/c),a+(b-d)/(b/c) .])
+   \/dom( AffineMap (-b/c,b+a*b/c) | [.a+(b-d)/(b/c), a+c.]) by FUNCT_2:def 1
+ .= [. a-c, a+(d-b)/(b/c) .] \/ [. a+(d-b)/(b/c),a+(b-d)/(b/c) .]
+   \/dom( AffineMap (-b/c,b+a*b/c) | [.a+(b-d)/(b/c), a+c.]) by FUNCT_2:def 1
+ .= [. a-c, a+(d-b)/(b/c) .] \/ [. a+(d-b)/(b/c),a+(b-d)/(b/c) .]
+   \/ [.a+(b-d)/(b/c), a+c.] by FUNCT_2:def 1
+ .= [. a-c, a+(b-d)/(b/c) .] \/ [.a+(b-d)/(b/c), a+c.]
+    by XXREAL_1:165,A5,A6
+ .= [. a-c, a+c.] by XXREAL_1:165,A7,A8
+ .= dom(f | [.a-c,a+c.]) by FUNCT_2:def 1;
+ for x being object st x in dom ( f | [.a-c,a+c.] ) holds
+ (f | [.a-c,a+c.]).x
+ = (AffineMap (b/c,b-a*b/c) | [. a-c, a+(d-b)/(b/c) .]
+ +* AffineMap (0,d) | [. a+(d-b)/(b/c),a+(b-d)/(b/c) .]
+ +* AffineMap (-b/c,b+a*b/c) | [.a+(b-d)/(b/c), a+c.] ).x
+ proof
+  let x be object;
+  assume B0: x in dom ( f | [.a-c,a+c.] );
+  reconsider x as Real by B0;
+  set a1 = a+(d-b)/(b/c);
+  set a2 = a+(b-d)/(b/c);
+  a+c-a2 = -(b-d)/(b/c)+c
+  .= (-(b-d))/(b/c)+c by XCMPLX_1:187; then
+  B1: (a1+c-a) = (a+c-a2);
+  B21:-c+c < (d-b)/(b/c)+c by XREAL_1:8,A5a; then
+  B2: a1+c-a > 0;
+  set c0 = a1+c-a;
+  B5: a1+-c0 < a2+c0 by A6,XREAL_1:8,B2;
+  B6: d/c0 = d/((d-b)/(b/c)+c)
+  .= d/( ((d-b) + ((b/c)*c))/(b/c)) by XCMPLX_1:113,A1
+  .= d/( ((d-b) + b)/(b/c) ) by XCMPLX_1:87,A1
+  .= b/c by XCMPLX_1:54,A1; then
+  B7: -(d/c0)*(a1 - c0) = -(b/c)*a +(b/c)*c
+  .= -(b/c)*a + b by A1,XCMPLX_1:87
+  .= b -a*(b/c)
+  .= b-a*b/c by XCMPLX_1:74;
+  B8: (d/c0)*(a2 + c0)
+  = (b/c)*( (-(d-b))/(b/c) + a+(d-b)/(b/c) +c ) by B6
+  .= (b/c)*( (-(d-b)/(b/c)) + a+(d-b)/(b/c) +c ) by XCMPLX_1:187
+  .= a*(b/c) + c*(b/c)
+  .= a*(b/c) + b by A1,XCMPLX_1:87
+  .= b+a*b/c by XCMPLX_1:74;
+   (f | [.a-c,a+c.]).x = f.x by FUNCT_1:49,B0
+ .= min(d, max(0, b - |. b*(x-a)/c .|)) by A3
+ .= (d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+    by A1,A2,LmCri2
+ .= ((d (#) TrapezoidalFS (a1 - c0, a1,a2, a2 + c0))
+      | [.a1-c0,a2+c0.] ).x by FUNCT_1:49,B0,B1
+ .= ((d (#) TrapezoidalFS (a1 - c0, a1,a2, a2 + c0))
+      | ['a1-c0,a2+c0'] ).x by INTEGRA5:def 3,B5
+ .= (AffineMap (b/c,b-a*b/c) | [. a-c, a+(d-b)/(b/c) .]
+ +* AffineMap (0,d) | [. a+(d-b)/(b/c),a+(b-d)/(b/c) .]
+ +* AffineMap (-b/c,b+a*b/c) | [.a+(b-d)/(b/c), a+c.] ).x
+    by B6,FUZZY_7:47,B21,A1,A6,B1,B7,B8;
+  hence thesis;
+ end;
+ hence thesis by A4,FUNCT_1:2;
+end;
+
+::                (c,s)
+::      (b,r)   __ --  s
+::      r __ --     | \
+::       /|         |   \
+::     /  |         |     \
+::   ------------------------
+::    a   b         c       d
+:: (a,0)                   (d,0)
+
+:: square with vertices (a,0),(b,r),(c,s) and (d,0)
+
+theorem Th23a:
+for a,b,c,d,r,s be Real st a < b & b < c & c < d holds
+AffineMap(r/(b - a),-a*r/(b - a)).a = 0 &
+AffineMap(r/(b - a),-a*r/(b - a)).b = r &
+AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)).b = r &
+AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)).c = s &
+AffineMap((-s)/(d - c),-d*(-s)/(d - c)).c = s &
+AffineMap((-s)/(d - c),-d*(-s)/(d - c)).d = 0
+proof
+ let a,b,c,d,r,s be Real;
+ assume that
+ A1: a < b and
+ A2: b < c and
+ A3: c < d;
+ A4: b-a <> 0 by A1;
+ A5: c-b <> 0 by A2;
+ A6: c - d <> 0 by A3;
+ S1:AffineMap(r/(b - a),-a*r/(b - a)).a
+  = r/(b - a)*a + -a*r/(b - a) by FCONT_1:def 4
+ .= a*r/(b - a) + -a*r/(b - a) by XCMPLX_1:74
+ .= 0;
+ S2:AffineMap(r/(b - a),-a*r/(b - a)).b
+  = r/(b - a)*b + -a*r/(b - a) by FCONT_1:def 4
+ .= r/(b - a)*b + ((-a*r)/(b - a)) by XCMPLX_1:187
+ .= r/(b - a)*b + (-a)*r/(b - a)
+ .= r/(b - a)*b + r/(b - a)*(-a) by XCMPLX_1:74
+ .= r/(b - a)*(b + (-a))
+ .= r by XCMPLX_1:87,A4;
+ S3:AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)).b
+  = (s - r)/(c - b)*b + (s-c*(s - r)/(c - b)) by FCONT_1:def 4
+  .= b*((s - r)/(c - b)) + s -c*(s - r)/(c - b)
+  .= b*((s - r)/(c - b)) + s -c*((s - r)/(c - b)) by XCMPLX_1:74
+  .= s + -(-b --c)*((s - r)/(c - b) )
+  .= s + -(s - r) by XCMPLX_1:87,A5
+  .= r;
+ S4:AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)).c
+ = (s - r)/(c - b)*c + (s-c*(s - r)/(c - b)) by FCONT_1:def 4
+ .= c*(s - r)/(c - b) + (s-c*(s - r)/(c - b)) by XCMPLX_1:74
+ .=s;
+ S5:AffineMap((-s)/(d - c),-d*(-s)/(d - c)).c
+ = (-s)/(d - c)*c + -d*(-s)/(d - c) by FCONT_1:def 4
+ .= (-s)/(d - c)*c + (-d*(-s))/(d - c) by XCMPLX_1:187
+ .= (-s)/(d - c)*c + (-d)*(-s)/(d - c)
+ .= (-s)/(d - c)*c + (-s)/(d - c)*(-d) by XCMPLX_1:74
+ .= (-s)/(d - c)*(c + (-d))
+ .= s/(-(d - c))*(c -d) by XCMPLX_1:192
+ .= s by A6,XCMPLX_1:87;
+ AffineMap((-s)/(d - c),-d*(-s)/(d - c)).d
+ = (-s)/(d - c)*d + -d*(-s)/(d - c) by FCONT_1:def 4
+ .= d*(-s)/(d - c) + -d*(-s)/(d - c) by XCMPLX_1:74
+ .= 0;
+ hence thesis by S1,S2,S3,S4,S5;
+end;
+
+theorem Th23:
+for a,b,c,d,r,s be Real, f be Function of REAL,REAL st
+a < b & b < c & c < d &
+f | [.a,d.] = AffineMap(r/(b - a),-a*r/(b - a)) | [.a,b.]
++* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
++* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,d.] holds
+integral( (id REAL) (#) f, ['a,d'] )
+= (integral((id REAL) (#)
+     AffineMap(r/(b - a),-a*r/(b - a)), ['a,b']) +
+   integral((id REAL) (#)
+     AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+   integral((id REAL) (#)
+     AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) )
+proof
+ let a,b,c,d,r,s be Real, f be Function of REAL,REAL;
+ assume
+ A1: a < b & b < c & c < d;
+ assume A3: f | [.a,d.] = AffineMap(r/(b - a),-a*r/(b - a)) | [.a,b.]
+        +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+        +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,d.];
+ set iR = id REAL;
+ set fab = AffineMap(r/(b - a),-a*r/(b - a));
+ set fbc = AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b));
+ set fcd = AffineMap((-s)/(d - c),-d*(-s)/(d - c));
+ reconsider h = fab | ].-infty,b.[ +* fbc | [.b,+infty.[
+ as Function of REAL,REAL by FUZZY_6:18;
+ C2: fab.b = r by Th23a,A1
+ .= fbc.b by Th23a,A1;
+ C1: dom(fab | [.a,b.] +* fbc | [.b,c.])
+ = dom(fab | [.a,b.]) \/ dom(fbc | [.b,c.]) by FUNCT_4:def 1
+ .= [.a,b.] \/ dom(fbc | [.b,c.]) by FUNCT_2:def 1
+ .= [.a,b.] \/ [.b,c.] by FUNCT_2:def 1
+ .= [.a,c.] by XXREAL_1:165,A1
+ .= dom(h | [.a,c.] ) by FUNCT_2:def 1;
+C3: for x being object st x in dom (h | [.a,c.] ) holds
+ (h | [.a,c.]).x = (fab | [.a,b.] +* fbc | [.b,c.]) . x
+ proof
+  let x be object;
+  assume D1: x in dom (h | [.a,c.] );
+  then x in [.a,c.]; then
+  reconsider x as Element of REAL;
+  D2: a <= x & x <= c by D1,XXREAL_1:1;
+  per cases;
+  suppose S1:x < b; then
+   G1:x in [.a,b.] by D2;
+   G2: not x in dom ( fbc | [.b,+infty.[) by XXREAL_1:236,S1;
+   G6: not x in dom(fbc | [.b,c.]) by XXREAL_1:1,S1;
+   (h | [.a,c.] ).x
+    = (fab | ].-infty,b.[ +* fbc | [.b,+infty.[).x by FUNCT_1:49,D1
+   .= (fab | ].-infty,b.[).x by FUNCT_4:11,G2
+   .= fab.x by FUNCT_1:49, XXREAL_1:233,S1
+   .= (fab | [.a,b.]).x by FUNCT_1:49, G1;
+   hence thesis by FUNCT_4:11,G6;
+  end;
+  suppose S2: x >= b; then
+   G3: x in [.b,c.] by D2; then
+   G8: x in dom( fbc | [.b,c.]) by FUNCT_2:def 1;
+   x in [.b,+infty.[ by XXREAL_1:236,S2; then
+   G4: x in dom (fbc | [.b,+infty.[) by FUNCT_2:def 1;
+   (h | [.a,c.] ).x
+    = (fab | ].-infty,b.[ +* fbc | [.b,+infty.[).x by FUNCT_1:49,D1
+   .= (fbc | [.b,+infty.[).x by FUNCT_4:13,G4
+   .= fbc.x by FUNCT_1:49,XXREAL_1:236,S2
+   .= (fbc | [.b,c.] ).x by FUNCT_1:49,G3;
+   hence thesis by FUNCT_4:13,G8;
+  end;
+ end; then
+ C4:integral((id REAL) (#) h,['a,c'])
+ = integral(iR (#) fab,['a,b']) + integral(iR (#) fbc,['b,c'])
+ by FUZZY_7:43,A1,C2,FUNCT_1:2,C1;
+ B1: a <= c by A1,XXREAL_0:2;
+  c in [.b,+infty.[ by A1,XXREAL_1:236; then
+ c in dom(fbc | [.b,+infty.[) by FUNCT_2:def 1; then
+ B3: h.c = (fbc | [.b,+infty.[).c by FUNCT_4:13
+ .= fbc.c by FUNCT_1:49,A1,XXREAL_1:236
+ .= s by Th23a,A1
+ .= fcd.c by Th23a,A1;
+ fab is Lipschitzian & fbc is Lipschitzian by FUZZY_6:27;then
+ B2: h is Lipschitzian by FUZZY_6:26,C2;
+ f | [.a,d.]
+ = h | [.a,c.] +* fcd | [.c,d.] by C3,FUNCT_1:2,C1,A3;
+ hence thesis by C4,FUZZY_7:43,B2,B3,A1,B1;
+end;
+
+theorem Th24:
+for a,b,c,d,r,s be Real, f be Function of REAL,REAL st
+a < b & b < c & c < d &
+f | [.a,d.] = AffineMap(r/(b - a),-a*r/(b - a)) | [.a,b.]
++* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
++* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,d.]
+holds integral( f, ['a,d'] )
+= (integral(AffineMap(r/(b - a),-a*r/(b - a)), ['a,b']) +
+   integral(AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+   integral(AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) )
+proof
+ let a,b,c,d,r,s be Real, f be Function of REAL,REAL;
+ assume
+ A1: a < b & b < c & c < d;
+ assume A3: f | [.a,d.] = AffineMap(r/(b - a),-a*r/(b - a)) | [.a,b.]
+        +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+        +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,d.];
+ set fab = AffineMap(r/(b - a),-a*r/(b - a));
+ set fbc = AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b));
+ set fcd = AffineMap((-s)/(d - c),-d*(-s)/(d - c));
+ reconsider h = fab | ].-infty,b.[ +* fbc | [.b,+infty.[
+   as Function of REAL,REAL by FUZZY_6:18;
+ C2: fab.b = r by Th23a,A1
+   .= fbc.b by Th23a,A1;
+ C1: dom(fab | [.a,b.] +* fbc | [.b,c.])
+ = dom(fab | [.a,b.]) \/ dom(fbc | [.b,c.]) by FUNCT_4:def 1
+ .= [.a,b.] \/ dom(fbc | [.b,c.]) by FUNCT_2:def 1
+ .= [.a,b.] \/ [.b,c.] by FUNCT_2:def 1
+ .= [.a,c.] by XXREAL_1:165,A1
+ .= dom(h | [.a,c.] ) by FUNCT_2:def 1;
+C3: for x being object st x in dom (h | [.a,c.] ) holds
+ (h | [.a,c.] ).x= (fab | [.a,b.] +* fbc | [.b,c.]) . x
+ proof
+  let x be object;
+  assume D1:x in dom (h | [.a,c.] );
+  then x in [.a,c.]; then
+  reconsider x as Element of REAL;
+  D2: a <= x & x <= c by D1, XXREAL_1:1;
+  per cases;
+  suppose S1:x < b; then
+   G1:x in [.a,b.] by D2;
+   G2: not x in dom ( fbc | [.b,+infty.[) by XXREAL_1:236,S1;
+   G6: not x in dom (fbc | [.b,c.]) by XXREAL_1:1,S1;
+   (h | [.a,c.]).x
+    = (fab | ].-infty,b.[ +* fbc | [.b,+infty.[).x by FUNCT_1:49,D1
+   .= (fab | ].-infty,b.[).x by FUNCT_4:11,G2
+   .= fab.x by FUNCT_1:49, XXREAL_1:233,S1
+   .= (fab | [.a,b.]).x by FUNCT_1:49, G1;
+   hence thesis by FUNCT_4:11,G6;
+  end;
+  suppose S2: x >= b;then
+   G3: x in [.b,c.] by D2;
+   x in [.b,+infty.[ by XXREAL_1:236,S2; then
+   G4: x in dom (fbc | [.b,+infty.[) by FUNCT_2:def 1;
+   G8: x in dom( fbc | [.b,c.]) by FUNCT_2:def 1,G3;
+   (h | [.a,c.] ).x
+    = (fab | ].-infty,b.[ +* fbc | [.b,+infty.[).x by FUNCT_1:49,D1
+   .= (fbc | [.b,+infty.[).x by FUNCT_4:13,G4
+   .= fbc.x by FUNCT_1:49,XXREAL_1:236,S2
+   .= (fbc | [.b,c.] ).x by FUNCT_1:49,G3;
+   hence thesis by FUNCT_4:13,G8;
+  end;
+ end;
+ C4:integral( h,['a,c'])
+ = integral(fab,['a,b']) + integral(fbc,['b,c'])
+     by F633,A1,C2,C3,FUNCT_1:2,C1;
+ B1: a <= c by A1,XXREAL_0:2;
+ c in [.b,+infty.[ by A1,XXREAL_1:236; then
+ c in dom(fbc | [.b,+infty.[) by FUNCT_2:def 1; then
+ B3: h.c = (fbc | [.b,+infty.[).c by FUNCT_4:13
+ .= fbc.c by FUNCT_1:49,A1,XXREAL_1:236
+ .= s by Th23a,A1
+ .= fcd.c by Th23a,A1;
+ fab is Lipschitzian & fbc is Lipschitzian by FUZZY_6:27; then
+ B2: h is Lipschitzian by FUZZY_6:26,C2;
+ f | [.a,d.]
+ = h | [.a,c.] +* fcd | [.c,d.] by C3,A3,FUNCT_1:2,C1;
+  hence thesis by C4,F633,B2,B3,A1,B1;
+end;
+
+theorem Lm1:
+for a,b,c,d,r,s,x be Real st
+a < b & b < c & c < d & r >= 0 & s >= 0 & (x < a or d < x) holds
+(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
++* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
++* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x <= 0
+proof
+ let a,b,c,d,r,s,x be Real;
+ assume A1: a < b & b < c & c < d;
+ assume A2: r >= 0 & s >= 0;
+ assume x < a or d < x; then
+ per cases;
+ suppose A4:x < a; then
+  x < b by A1,XXREAL_0:2; then
+  A42: not x in dom(AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.])
+       by XXREAL_1:1;
+  a < c by A1,XXREAL_0:2; then
+  x < c by A4,XXREAL_0:2; then
+  A41: not x in dom(AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[)
+       by XXREAL_1:236;
+  x in ].-infty,b.] by XXREAL_1:234,A4,A1,XXREAL_0:2; then
+  A43:  x in dom(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.])
+   by FUNCT_2:def 1;
+  C2:(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+  +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+  +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x
+   =(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+  +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]).x
+          by A41,FUNCT_4:11
+  .=(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]).x
+          by A42,FUNCT_4:11
+  .= AffineMap(r/(b - a),-a*r/(b - a)).x by A43,FUNCT_1:47
+  .= r/(b - a)*x + -((a*r)/(b - a)) by FCONT_1:def 4
+  .= r/(b - a)*x + ((-a*r)/(b - a)) by XCMPLX_1:187
+  .= r/(b - a)*x + (-a)*r/(b - a)
+  .= r/(b - a)*x + r/(b - a)*(-a) by XCMPLX_1:74
+  .= r/(b - a)*(x + (-a));
+  C1:  0 < b-a by A1,XREAL_1:50;
+  x-a < 0 by A4,XREAL_1:49;
+  hence thesis by C2,C1,A2;
+ end;
+ suppose A5: d < x; then
+  x in [.c,+infty.[ by XXREAL_1:236,A1,XXREAL_0:2; then
+  A51: x in dom ( AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[)
+    by FUNCT_2:def 1;
+  B2:(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+  +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+  +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x
+   = (AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x
+      by A51,FUNCT_4:13
+  .= AffineMap((-s)/(d - c),-d*(-s)/(d - c)).x by A51,FUNCT_1:47
+  .= (-s)/(d - c)*x + (-d*(-s)/(d - c)) by FCONT_1:def 4
+  .= (-s)/(d - c)*x + (-d*(-s))/(d - c) by XCMPLX_1:187
+  .= (-s)/(d - c)*x + (-d)*(-s)/(d - c)
+  .= (-s)/(d - c)*x + (-s)/(d - c)*(-d) by XCMPLX_1:74
+  .= (-s)/(d - c)*(x-d);
+B1:  0 < d-c & -s <= 0 by A2,A1,XREAL_1:50;
+  0 < x-d by A5,XREAL_1:50;
+  hence thesis by B2,B1;
+ end;
+end;
+
+theorem Lm2:
+for a,b,c,d,r,s,x be Real st
+a < b & b < c & c < d & r >= 0 & s >= 0 & x in [.a,d.] holds
+(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
++* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
++* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x >= 0
+proof
+let a,b,c,d,r,s,x be Real;
+ assume A1:a < b & b < c & c < d;
+ assume A2: r >= 0 & s >= 0;
+ assume A3: x in [.a,d.];
+ per cases;
+ suppose A4: c <= x; :::[c,d]
+  A42: x <= d by XXREAL_1:1,A3;
+  x in [.c,+infty.[ by A4,XXREAL_1:236; then
+  A41:x in dom (AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[)
+   by FUNCT_2:def 1; then
+  A43:(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+  +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+  +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x
+   = ( AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x by FUNCT_4:13
+  .= ( AffineMap((-s)/(d - c),-d*(-s)/(d - c))).x by FUNCT_1:47,A41
+  .= (-s)/(d - c)*x + -d*(-s)/(d - c) by FCONT_1:def 4
+  .= (-s)/(d - c)*x + (-d*(-s))/(d - c) by XCMPLX_1:187
+  .= (-s)/(d - c)*x + (-d)*(-s)/(d - c)
+  .= (-s)/(d - c)*x + (-s)/(d - c)*(-d) by XCMPLX_1:74
+  .= (-s)/(d - c)*(x-d);
+B1:  0 < d-c & -s <= 0 by A2,A1,XREAL_1:50;
+  x-d <= 0 by A42,XREAL_1:47;
+  hence thesis by A43,B1;
+ end;
+ suppose A5: x < c; then
+  A51: not x in dom (AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[)
+    by XXREAL_1:236;
+  per cases;
+  suppose A6: b <= x; then
+   x in [.b,c.] by A5; then
+   A61: x in dom(AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.])
+       by FUNCT_2:def 1;
+   A65: c - b <> 0 by A1;
+   A64: (AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+   +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+   +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x
+    = (AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+   +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]).x
+         by A51,FUNCT_4:11
+    .= (AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]).x
+         by A61,FUNCT_4:13
+   .= (AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) ).x by FUNCT_1:47,A61
+   .= (s - r)/(c - b)*x + (s-c*(s - r)/(c - b)) by FCONT_1:def 4
+   .= x*(s - r)/(c - b) + (s-c*(s - r)/(c - b)) by XCMPLX_1:74
+   .= x*(s - r)/(c - b) + s-c*(s - r)/(c - b)
+   .= x*(s - r)/(c - b) + (s*(c - b))/(c - b)-c*(s - r)/(c - b)
+        by XCMPLX_1:89,A65
+   .= x*(s - r)/(c - b) + s*(c - b)/(c - b) + -(c*(s - r))/(c - b)
+   .= x*(s - r)/(c - b) + s*(c - b)/(c - b) + (-c*(s - r))/(c - b)
+           by XCMPLX_1:187
+   .= (x*(s - r) + s*(c - b) + (-c)*(s - r) )/(c - b)
+        by XCMPLX_1:63
+   .= (s*(x-b)+r*(c-x))/(c-b);
+   A62: x - b >= 0 by A6,XREAL_1:48;
+   A63: c - x > 0 by A5,XREAL_1:50;
+   c - b > 0 by XREAL_1:50,A1;
+   hence thesis by A64,A63,A62,A2;
+  end;
+  suppose A7: x < b; then
+   A72: not x in dom(AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.])
+     by XXREAL_1:1;
+   x < c by A1,A7,XXREAL_0:2; then
+   A74: not x in dom(AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[)
+    by XXREAL_1:236;
+   x in ].-infty,b.] by A7,XXREAL_1:234; then
+   A71: x in dom(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.])
+     by FUNCT_2:def 1;
+   A73: (AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+    +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+    +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x
+    =(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+    +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]).x
+          by A74,FUNCT_4:11
+   .=(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]).x
+          by A72,FUNCT_4:11
+   .= AffineMap(r/(b - a),-a*r/(b - a)).x by A71,FUNCT_1:47
+   .= r/(b - a)*x + (-(a*r)/(b - a)) by FCONT_1:def 4
+   .= r/(b - a)*x + ((-a*r)/(b - a)) by XCMPLX_1:187
+   .= r/(b - a)*x + (-a)*r/(b - a)
+   .= r/(b - a)*x + r/(b - a)*(-a) by XCMPLX_1:74
+   .= r/(b - a)*(x + (-a));
+   a <= x by A3,XXREAL_1:1; then
+   A72: 0 <= x - a by XREAL_1:48;
+   b - a > 0 by XREAL_1:50,A1;
+   hence thesis by A73,A72,A2;
+  end;
+ end;
+end;
+
+theorem
+for a,b,c,d,r,s be Real st
+a < b & b < c & c < d & r >= 0 & s >= 0 & r = s holds
+for x be Real holds
+( r (#) TrapezoidalFS (a,b,c,d) ).x
+= max+ ((AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
++* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
++* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x)
+proof
+ let a,b,c,d,r,s be Real;
+ assume A1:a < b & b < c & c < d;
+ assume A2: r >= 0 & s >= 0;
+ assume A3: r = s;
+ set fab = AffineMap(r/(b - a),-a*r/(b - a));
+ set fbc = AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b));
+ set fcd = AffineMap((-s)/(d - c),-d*(-s)/(d - c));
+ set T = TrapezoidalFS (a,b,c,d);
+ A5: AffineMap(r/(b - a),-a*r/(b - a))
+ = AffineMap(r * (1 / (b - a)),-a*r/(b - a)) by XCMPLX_1:99
+ .= AffineMap (r * (1 / (b - a)),(-r*a)/(b - a) ) by XCMPLX_1:187
+ .= AffineMap (r * (1 / (b - a)),(r*(-a))/(b - a))
+ .= AffineMap (r * (1 / (b - a)),r*((-a)/(b - a))) by XCMPLX_1:74
+ .= AffineMap (r * (1 / (b - a)),r * (- (a /(b-a)))) by XCMPLX_1:187
+ .= r (#) AffineMap (1 / (b - a),- (a /(b-a))) by FUZZY_7:13;
+ A7: AffineMap((-s)/(d - c),-d*(-s)/(d - c))
+ = AffineMap((-r)/(d - c),(-d*(-r))/(d - c)) by XCMPLX_1:187,A3
+ .= AffineMap(r/(-(d - c)),(d*r)/(d - c)) by XCMPLX_1:192
+ .= AffineMap(r*(1/(-(d - c))),(d*r)/(d - c)) by XCMPLX_1:99
+ .= AffineMap(r*((-1)/(d - c)),(d*r)/(d - c)) by XCMPLX_1:192
+ .= AffineMap (r * (- 1 / (d - c)),(d*r)/(d - c)) by XCMPLX_1:187
+ .= AffineMap (r * (- 1 / (d - c)), r* (d / (d - c))) by XCMPLX_1:74
+ .= r (#) AffineMap (- 1 / (d - c),d / (d - c)) by FUZZY_7:13;
+ A6: AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b))
+ = AffineMap(r*0,r*1) by A3
+  .= r (#) AffineMap (0,1) by FUZZY_7:13;
+ for x be Real holds
+ ( r (#) T ).x
+ = max+ ((AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+  +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+  +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x)
+ proof
+  let x be Real;
+  A4: ( r (#) T ).x
+   = r * T.x by VALUED_1:6
+  .= r * ((AffineMap (0,0) | (REAL \ ].a,d.[)) +* T | [.a,d.]).x
+     by FUZZY_7:45,A1;
+  per cases;
+  suppose B1: x in [.a,d.]; then
+  XX:x in dom (T | [.a,d.]) by FUNCT_2:def 1;
+  B11:(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+   +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+   +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x >= 0
+         by Lm2,A1,B1,A2;
+  B12: max+ ((AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+    +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+    +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x)
+   = max(0, (AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+     +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+     +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x)
+       by RFUNCT_3:def 1
+   .= (AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+     +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+     +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x
+    by XXREAL_0:def 10,B11;
+   per cases;
+   suppose D1: x < b; then ::[a,b]
+    Dc1: x < c by XXREAL_0:2,A1; then
+    D12: not x in dom (AffineMap (- (1 / (d - c)), d / (d - c)) | [.c,d.])
+         by XXREAL_1:1;
+    D14: not x in dom ( AffineMap (0,1) | [.b,c.] ) by XXREAL_1:1,D1;
+    a <= x by B1,XXREAL_1:1; then
+    x in [.a,b.] by D1; then
+    D15: x in dom ( AffineMap (1 / (b - a),(- (a / (b - a)))) | [.a,b.] )
+        by FUNCT_2:def 1;
+    D13: r*(T | [.a,d.]).x
+     = r*((((AffineMap ((1 / (b - a)),(- (a / (b - a))))) | [.a,b.])) +*
+       ((AffineMap (0,1)) | [.b,c.]) +*
+       ((AffineMap ((- (1 / (d - c))),(d / (d - c)))) | [.c,d.])).x
+           by FUZZY_7:44,A1
+    .= r*((((AffineMap ((1 / (b - a)),(- (a / (b - a))))) | [.a,b.])) +*
+       ((AffineMap (0,1)) | [.b,c.]) ).x
+           by FUNCT_4:11,D12
+    .= r*((((AffineMap ((1 / (b - a)),(- (a / (b - a))))) | [.a,b.])) ).x
+        by FUNCT_4:11,D14
+    .= r*(((AffineMap ((1 / (b - a)),(- (a / (b - a))))) )).x
+        by FUNCT_1:47,D15
+    .= fab.x by A5,VALUED_1:6;
+    D16: not x in dom (fcd | [.c,+infty.[) by XXREAL_1:236,Dc1;
+    D17: not x in dom( fbc | [.b,c.] ) by XXREAL_1:1,D1;
+    x in ].-infty,b.] by D1,XXREAL_1:234; then
+    D18: x in dom(fab | ].-infty,b.]) by FUNCT_2:def 1;
+    (fab | ].-infty,b.] +* fbc | [.b,c.] +* fcd | [.c,+infty.[).x
+     = (fab | ].-infty,b.] +* fbc | [.b,c.] ).x by FUNCT_4:11,D16
+    .= (fab | ].-infty,b.] ).x by FUNCT_4:11,D17
+    .= fab.x by FUNCT_1:47,D18;
+    hence thesis by D13,B12,FUNCT_4:13,A4,XX;
+   end;
+   suppose D2: b <= x;
+    per cases;
+    suppose D3: x < c; then ::::[b,c]
+     D33: not x in dom (AffineMap (- (1 / (d - c)), d / (d - c)) | [.c,d.])
+       by XXREAL_1:1;
+     D39:x in [.b,c.] by D3,D2; then
+     D32: x in dom ( AffineMap (0,1) | [.b,c.] ) by FUNCT_2:def 1;
+     D31: r*(T | [.a,d.]).x
+      = r*((((AffineMap ((1 / (b - a)),(- (a / (b - a))))) | [.a,b.])) +*
+       ((AffineMap (0,1)) | [.b,c.]) +*
+       ((AffineMap ((- (1 / (d - c))),(d / (d - c)))) | [.c,d.])).x
+           by FUZZY_7:44,A1
+     .= r*((((AffineMap ((1 / (b - a)),(- (a / (b - a))))) | [.a,b.])) +*
+       ((AffineMap (0,1)) | [.b,c.]) ).x
+           by FUNCT_4:11,D33
+     .= r * ( AffineMap (0,1) | [.b,c.] ).x by FUNCT_4:13,D32
+     .= r * ( AffineMap (0,1)).x by FUNCT_1:47,D32
+     .= (fbc.x) by A6,VALUED_1:6;
+     D34: not x in dom (fcd | [.c,+infty.[) by D3,XXREAL_1:236;
+     D35:  x in dom( fbc | [.b,c.] ) by FUNCT_2:def 1,D39;
+     (fab | ].-infty,b.] +* fbc | [.b,c.] +* fcd | [.c,+infty.[).x
+      = (fab | ].-infty,b.] +* fbc | [.b,c.] ).x by FUNCT_4:11,D34
+     .= (fbc | [.b,c.]).x by FUNCT_4:13,D35
+     .= fbc.x by FUNCT_1:47,D35;
+     hence thesis by D31,FUNCT_4:13,A4,XX,B12;
+    end;
+    suppose D4: c <= x; :::[c,d]
+     x <= d by B1,XXREAL_1:1; then
+     x in [.c,d.] by D4; then
+     D42: x in dom (AffineMap (- (1 / (d - c)), d / (d - c)) | [.c,d.])
+          by FUNCT_2:def 1;
+     D41: r*(T | [.a,d.]).x
+      = r*((((AffineMap ((1 / (b - a)),(- (a / (b - a))))) | [.a,b.])) +*
+       ((AffineMap (0,1)) | [.b,c.]) +*
+       ((AffineMap ((- (1 / (d - c))),(d / (d - c)))) | [.c,d.])).x
+           by FUZZY_7:44,A1
+      .= r*(AffineMap (- (1 / (d - c)), d / (d - c)) | [.c,d.]).x
+         by FUNCT_4:13,D42
+      .= r*(AffineMap (- (1 / (d - c)), d / (d - c)) ).x by FUNCT_1:47,D42
+     .= (fcd.x) by A7,VALUED_1:6;
+     x in [.c,+infty.[ by D4,XXREAL_1:236; then
+     D43: x in dom (fcd | [.c,+infty.[) by FUNCT_2:def 1;
+     (fab | ].-infty,b.] +* fbc | [.b,c.] +* fcd | [.c,+infty.[).x
+     = (fcd | [.c,+infty.[).x by FUNCT_4:13,D43
+     .= (fcd ).x by FUNCT_1:47,D43;
+     hence thesis by D41,FUNCT_4:13,A4,XX,B12;
+    end;
+   end;
+  end;
+  suppose C1: not x in [.a,d.]; then
+   C2:x < a or d < x; then
+   C3:(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+   +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+   +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x <= 0
+         by Lm1,A1,A2;
+   C6: max+ ((AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+    +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+    +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x)
+   = max(0, (AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
+     +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+     +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x)
+       by RFUNCT_3:def 1
+   .= 0 by XXREAL_0:def 10,C3;
+   C4: not x in dom(T | [.a,d.]) by C1;
+   C8: x in REAL by XREAL_0:def 1;
+   not x in ].a,d.[ by XXREAL_1:4,C2; then
+   C5: x in (REAL \ ].a,d.[) by XBOOLE_0:def 5,C8;
+   ( r (#) TrapezoidalFS (a,b,c,d) ).x
+    = r * (AffineMap (0,0) | (REAL \ ].a,d.[)).x by C4,FUNCT_4:11,A4
+   .= r * (AffineMap (0,0) ).x by FUNCT_1:49,C5
+   .= r*(0*x + 0) by FCONT_1:def 4;
+   hence thesis by C6;
+  end;
+ end;
+ hence thesis;
+end;
+
+theorem Th4:
+for a,b,c,d being Real st c <= d holds
+integral((id REAL) (#) (AffineMap (a,b)),['c,d'])
+           = (d - c)*( a*(d*d +d*c + c*c)/3 + b*(d + c)/2 ) &
+integral(AffineMap (a,b),['c,d']) = (d - c)*( a*(d + c)/2 + b )
+proof
+ let a,b,c,d be Real;
+ assume A1: c <= d;
+ A2:integral((id REAL) (#) (AffineMap (a,b)),['c,d'])
+ = integral((id REAL) (#) (AffineMap (a,b)),c,d) by INTEGRA5:def 4,A1
+ .= 1/3*a*(d*d*d - c*c*c) + 1/2*b*(d*d - c*c) by FUZZY_6:45,A1
+ .= (d - c)*(a*(d*d +d*c + c*c)/3 + b*(d + c)/2);
+ integral(AffineMap (a,b),['c,d'])
+ = integral(AffineMap (a,b),c,d) by INTEGRA5:def 4,A1
+ .= 1/2*a*(d ^2 - c ^2) + b*(d - c) by FUZZY_6:47,A1
+ .= 1/2*a*((d+c)*(d-c)) + b*(d - c);
+ hence thesis by A2;
+end;
+
+theorem
+for a,b,c,d,r,s be Real, f be Function of REAL,REAL st
+a < b & b < c & c < d &
+f | [.a,d.] = AffineMap(r/(b - a),-a*r/(b - a)) | [.a,b.]
++* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
++* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,d.] holds
+centroid( f,['a,d'] ) =
+( (b - a)*( ( r/(b - a) )*(b*b +b*a + a*a)/3 + ( -a*r/(b - a) )*(b + a)/2 )
++ (c - b)*( ( (s - r)/(c - b) )*(c*c +c*b + b*b)/3
+               + ( s-c*(s - r)/(c - b) )*(c + b)/2 )
++ (d - c)*( ( (-s)/(d - c) )*(d*d +d*c + c*c)/3
+                + ( -d*(-s)/(d - c) )*(d + c)/2 ) ) /
+( (b - a)*( ( r/(b - a) )*(b + a)/2 + ( -a*r/(b - a) ) )
++ (c - b)*( ( (s - r)/(c - b) )*(c + b)/2 + ( s-c*(s - r)/(c - b) ) )
++ (d - c)*( ( (-s)/(d - c) )*(d + c)/2 + ( -d*(-s)/(d - c) ) ) )
+proof
+ let a,b,c,d,r,s be Real, f be Function of REAL,REAL;
+ assume that
+ A1: a < b & b < c & c < d and
+ A3: f | [.a,d.] = AffineMap(r/(b - a),-a*r/(b - a)) | [.a,b.]
+        +* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
+        +* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,d.];
+centroid( f,['a,d'] )
+ = integral((id REAL)(#)f,['a,d'])/integral(f,['a,d']) by FUZZY_6:def 1
+ .=(integral((id REAL) (#) AffineMap(r/(b - a),-a*r/(b - a)),['a,b']) +
+integral((id REAL) (#)
+    AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+integral((id REAL) (#) AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) )
+/integral(f,['a,d']) by Th23,A1,A3
+ .=(integral((id REAL) (#) AffineMap(r/(b - a),-a*r/(b - a)),['a,b']) +
+    integral((id REAL) (#)
+      AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+    integral((id REAL) (#) AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) )
+  /
+  ( integral(AffineMap(r/(b - a),-a*r/(b - a)),['a,b']) +
+    integral( AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+    integral( AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) )
+         by Th24,A1,A3
+ .=((b - a)*( ( r/(b - a) )*(b*b +b*a + a*a)/3 + ( -a*r/(b - a) )*(b + a)/2 )
+ +
+    integral((id REAL) (#)
+      AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+    integral((id REAL) (#) AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) )
+  /
+  ( integral(AffineMap(r/(b - a),-a*r/(b - a)),['a,b']) +
+    integral( AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+    integral( AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) ) by Th4,A1
+ .=( (b - a)*( (r/(b - a))*(b*b+b*a+a*a)/3 + (-a*r/(b - a))*(b + a)/2 ) +
+     (c - b)*( ((s - r)/(c - b) )*(c*c+c*b+b*b)/3
+                       + ( s-c*(s - r)/(c - b) )*(c + b)/2 )
+    +integral((id REAL) (#) AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) )
+  /
+  ( integral(AffineMap(r/(b - a),-a*r/(b - a)),['a,b']) +
+    integral( AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+    integral( AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) ) by Th4,A1
+ .=( (b - a)*( (r/(b - a))*(b*b+b*a+a*a)/3 + (-a*r/(b - a))*(b + a)/2 ) +
+     (c - b)*( ((s - r)/(c - b) )*(c*c+c*b+b*b)/3
+                       + ( s-c*(s - r)/(c - b) )*(c + b)/2 )
+    +(d - c)*( ((-s)/(d - c))*(d*d+d*c+c*c)/3+(-d*(-s)/(d-c))*(d+c)/2 ) )
+  /
+  ( integral(AffineMap(r/(b - a),-a*r/(b - a)),['a,b']) +
+    integral( AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+    integral( AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) ) by Th4,A1
+ .=( (b - a)*( (r/(b - a))*(b*b+b*a+a*a)/3 + (-a*r/(b - a))*(b + a)/2 ) +
+     (c - b)*( ((s - r)/(c - b) )*(c*c+c*b+b*b)/3
+                       + ( s-c*(s - r)/(c - b) )*(c + b)/2 )
+    +(d - c)*( ((-s)/(d - c))*(d*d+d*c+c*c)/3+(-d*(-s)/(d-c))*(d+c)/2 ) )
+  /
+  ( (b - a)*( ( r/(b - a) )*(b + a)/2 + ( -a*r/(b - a) ) ) +
+    integral( AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+    integral( AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) ) by Th4,A1
+ .=( (b - a)*( (r/(b - a))*(b*b+b*a+a*a)/3 + (-a*r/(b - a))*(b + a)/2 ) +
+     (c - b)*( ((s - r)/(c - b) )*(c*c+c*b+b*b)/3
+                       + ( s-c*(s - r)/(c - b) )*(c + b)/2 )
+    +(d - c)*( ((-s)/(d - c))*(d*d+d*c+c*c)/3+(-d*(-s)/(d-c))*(d+c)/2 ) )
+  /
+  ( (b - a)*( ( r/(b - a) )*(b + a)/2 + ( -a*r/(b - a) ) ) +
+    integral( AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+    (d - c)*( ( (-s)/(d - c) )*(d + c)/2 + ( -d*(-s)/(d - c) ) ) ) by Th4,A1;
+ hence thesis by Th4,A1;
+end;
+
+::d _________ AffineMap (0,d)
+::    \   /
+::     \ /
+::      \
+::     / \
+::    /   \
+:: -----------
+::  b       c
+::
+:: sum of functions
+
+theorem
+for b, c, d being Real st b < c holds
+AffineMap ( d*(1 / (c - b)), d*(- b / (c - b)) ) +
+AffineMap ( d*(- 1 / (c - b)), d*(c / (c - b)) ) = AffineMap (0,d)
+proof
+ let b, c, d be Real;
+ assume A1:  b < c;
+ set f = AffineMap ( d*(1 / (c - b)), d*(- b / (c - b)) );
+ set g = AffineMap ( d*(- 1 / (c - b)), d*(c / (c - b)) );
+ A2: dom (f+g) = dom (f) /\ dom g by VALUED_1:def 1
+ .= dom (f) /\ REAL by FUNCT_2:def 1
+ .= REAL /\ REAL by FUNCT_2:def 1
+ .= dom AffineMap (0,d) by FUNCT_2:def 1;
+ for x being object st x in dom AffineMap (0,d) holds
+ (f+g).x = (AffineMap (0,d)).x
+ proof
+  let x be object;
+  assume A3: x in dom AffineMap (0,d); then
+  reconsider x as Real;
+  A5:c- b <> 0 by A1;
+  (f+g) . x = f.x + g.x by VALUED_1:def 1,A2,A3
+  .= ((d*(1 / (c - b)))*x + d*(- b / (c - b)))
+    + g.x by FCONT_1:def 4
+  .= ((d*(1 / (c - b)))*x + d*(- b / (c - b)))
+    + ((d*(- 1 / (c - b)))*x + d*(c / (c - b))) by FCONT_1:def 4
+  .= 0*x + d* ( c / (c - b) - b / (c - b) )
+  .= 0*x + d* ( (c - b) / (c - b) ) by XCMPLX_1:120
+  .= 0*x + d*1 by XCMPLX_1:60,A5;
+  hence thesis by FCONT_1:def 4;
+ end;
+ hence thesis by A2, FUNCT_1:2;
+end;
+
+theorem
+for a,b,c,p,q be Real st a < b & b < c holds
+AffineMap(p,q) | [.a,b.] +* AffineMap(p,q) | [.b,c.] = AffineMap(p,q) | [.a,c.]
+proof
+ let a,b,c,p,q be Real;
+ assume A1: a < b & b < c;
+ set f = AffineMap(p,q);
+ A2: dom(AffineMap(p,q) | [.a,b.] +* AffineMap(p,q) | [.b,c.])
+  = dom(AffineMap(p,q) | [.a,b.] ) \/ dom(AffineMap(p,q) | [.b,c.])
+    by FUNCT_4:def 1
+  .= [.a,b.] \/ dom(AffineMap(p,q) | [.b,c.]) by FUNCT_2:def 1
+  .= [.a,b.] \/ [.b,c.] by FUNCT_2:def 1
+  .= [.a,c.] by XXREAL_1:165,A1
+  .= dom (f | [.a,c.]) by FUNCT_2:def 1;
+ for x being object st x in dom (f | [.a,c.]) holds
+ (f | [.a,c.]).x = (f | [.a,b.] +* f | [.b,c.]).x
+ proof
+  let x be object;
+  assume A3:x in dom (f | [.a,c.]); then
+  reconsider x as Real;
+  AA6: a <= x & x <= c by XXREAL_1:1,A3;
+  per cases;
+   suppose b <= x; then
+    A8: x in [.b,c.] by AA6; then
+    A7: x in dom(f | [.b,c.]) by FUNCT_2:def 1;
+    ( f | [.a,b.] +* f | [.b,c.] ).x = (f | [.b,c.] ).x by FUNCT_4:13,A7
+    .= f.x  by FUNCT_1:49,A8;
+    hence thesis by FUNCT_1:49,A3;
+   end;
+   suppose A5: b > x; then
+    A9: x in [.a,b.] by AA6;
+    not x in dom(f | [.b,c.] ) by XXREAL_1:1,A5; then
+    ( f | [.a,b.] +* f | [.b,c.] ).x = (f | [.a,b.]).x by FUNCT_4:11
+    .= f.x by FUNCT_1:49,A9;
+    hence thesis by FUNCT_1:49,A3;
+   end;
+ end;
+ hence thesis by A2,FUNCT_1:2;
+end;
+
+theorem
+for a, b, c being Real st a < b & b < c holds
+(for x be Real st x in [.a,b.] holds
+TriangularFS (a,b,c).x = AffineMap (1 / (b - a), -(a / (b - a))).x )
+proof
+ let a, b, c be Real;
+ assume A1: a < b & b < c; then
+ A2: b-a <> 0;
+ A3: c-b <> 0 by A1;
+ C3: c in [.b,c.] by A1;
+ for x be Real st x in [.a,b.] holds
+ TriangularFS (a,b,c).x = AffineMap (1 / (b - a),- (a / (b - a))).x
+ proof
+  let x be Real;
+  assume A4: x in [.a,b.];
+  B10: dom ((AffineMap (0,0) | (REAL \ ].a,c.[))
+  +* (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.]))
+  = dom ((AffineMap (0,0) | (REAL \ ].a,c.[)))
+  \/ dom((AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])) by FUNCT_4:def 1
+  .= (REAL \ ].a,c.[)
+  \/ dom((AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])) by FUNCT_2:def 1
+  .= (REAL \ ].a,c.[) \/ [.a,b.] by FUNCT_2:def 1;
+  B12: x in dom ((AffineMap (0,0) | (REAL \ ].a,c.[))
+  +* (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.]))
+   by B10,A4,XBOOLE_0:def 3;
+  B13: x in dom ((AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.]))
+    by FUNCT_2:def 1,A4;
+  B11: ((AffineMap (0,0) | (REAL \ ].a,c.[))
+  +* (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])) tolerates
+   (AffineMap (- (1 / (c - b)),c / (c - b) ) | [.b,c.])
+  proof
+   for x being object st x in dom((AffineMap (0,0) | (REAL \ ].a,c.[))
+   +* (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])) /\
+   dom (AffineMap (- (1 / (c - b)),c / (c - b) ) | [.b,c.])
+   holds
+   ((AffineMap (0,0) | (REAL \ ].a,c.[))
+   +* (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])).x =
+   (AffineMap (- (1 / (c - b)),c / (c - b) ) | [.b,c.]).x
+   proof
+    let x be object;
+    assume B111: x in dom((AffineMap (0,0) | (REAL \ ].a,c.[))
+    +* (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])) /\
+    dom (AffineMap (- (1 / (c - b)),c / (c - b) ) | [.b,c.]);
+    then
+    reconsider x as Real;
+    dom((AffineMap (0,0) | (REAL \ ].a,c.[))
+    +* (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])) /\
+    dom (AffineMap (- (1 / (c - b)),c / (c - b) ) | [.b,c.])
+    = ( dom(AffineMap (0,0) | (REAL \ ].a,c.[))
+    \/ dom((AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.]))) /\
+    dom (AffineMap (- (1 / (c - b)),c / (c - b) ) | [.b,c.]) by FUNCT_4:def 1
+    .= ( (REAL \ ].a,c.[)
+    \/ dom((AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.]))) /\
+    dom (AffineMap (- (1 / (c - b)),c / (c - b) ) | [.b,c.]) by FUNCT_2:def 1
+    .= ( (REAL \ ].a,c.[) \/ [.a,b.] ) /\
+    dom (AffineMap (- (1 / (c - b)),c / (c - b) ) | [.b,c.]) by FUNCT_2:def 1
+    .= ( (REAL \ ].a,c.[) \/ [.a,b.] ) /\ [.b,c.] by FUNCT_2:def 1;
+    then
+  X1:  x in ( (REAL \ ].a,c.[) \/ [.a,b.] ) & x in [.b,c.]
+      by XBOOLE_0:def 4,B111;
+    per cases by X1,XBOOLE_0:def 3;
+    suppose x in REAL \ ].a,c.[ & x in [.b,c.];
+     then ( (x in ].-infty,a.] \/ [.c,+infty.[) & x in [.b,c.])
+       by XXREAL_1:398; then
+     (x in ].-infty,a.] & x in [.b,c.]) or
+          (x in [.c,+infty.[ & x in [.b,c.]) by XBOOLE_0:def 3;
+     then (-infty < x & x <= a & b <= x & x <= c) or
+      (c <= x & x <+infty & b <= x & x <= c)
+        by XXREAL_1:1,XXREAL_1:3,XXREAL_1:2;
+     then x in [.b,a.] or x in [.c,c.]; then
+C1:  x in {c} by XXREAL_1:17,XXREAL_1:29,A1;
+C2:  not c in dom (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])
+       by A1,XXREAL_1:1;
+     c <= c & c < +infty by XXREAL_0:9,XREAL_0:def 1; then
+     c in ].-infty,a.] or c in [.c,+infty.[; then
+     c in ].-infty,a.] \/ [.c,+infty.[ by XBOOLE_0:def 3;
+     then
+     C4: c in (REAL \ ].a,c.[) by XXREAL_1:398;
+     C5:((AffineMap (0,0) | (REAL \ ].a,c.[))
+      +* (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])).x
+     = ((AffineMap (0,0) | (REAL \ ].a,c.[))
+      +* (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])).c
+          by C1,TARSKI:def 1
+     .= ((AffineMap (0,0) | (REAL \ ].a,c.[)) ).c by C2,FUNCT_4:11
+     .= AffineMap (0,0) .c by C4,FUNCT_1:49
+     .= 0*c+0 by FCONT_1:def 4;
+     (AffineMap (- (1 / (c - b)),c / (c - b) ) | [.b,c.]).x
+     = (AffineMap (- (1 / (c - b)),c / (c - b) ) | [.b,c.]).c
+        by C1,TARSKI:def 1
+     .= (AffineMap (- (1 / (c - b)),c / (c - b) ) ).c by C3,FUNCT_1:49
+     .= (- (1 / (c - b)))*c +c/ (c - b) by FCONT_1:def 4
+     .= - (c*(1 / (c - b))) +c/ (c - b)
+     .= - (c*1 / (c - b)) +c/ (c - b) by XCMPLX_1:74
+     .= 0;
+     hence thesis by C5;
+    end;
+    suppose Z1:x in [.a,b.] & x in [.b,c.]; then
+   B113: a <= x & x <= b & b <= x & x <= c by XXREAL_1:1;
+     B114: x in dom (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])
+      by FUNCT_2:def 1,Z1;
+     B112:((AffineMap (0,0) | (REAL \ ].a,c.[))
+      +* (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])).x
+      = (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.]).x
+         by FUNCT_4:13,B114
+     .= (AffineMap (1 / (b - a),- (a / (b - a))) ).x by Z1,FUNCT_1:49
+     .= (AffineMap (1 / (b - a),- (a / (b - a))) ).b by B113,XXREAL_0:1
+     .= (1 / (b - a))*b+ (- (a / (b - a))) by FCONT_1:def 4
+     .= b*(1 / (b - a)) - a*1 / (b - a)
+     .= b*(1 / (b - a)) - a*(1 / (b - a)) by XCMPLX_1:74
+     .= (b-a)*(1 / (b - a))
+     .= (b-a)*1 / (b - a) by XCMPLX_1:74
+     .= 1 by A2,XCMPLX_1:60;
+     (AffineMap (- (1 / (c - b)),c / (c - b) ) | [.b,c.]).x
+      = (AffineMap (- (1 / (c - b)),c / (c - b) )).x by Z1,FUNCT_1:49
+     .= (- (1 / (c - b)))*x + c / (c - b) by FCONT_1:def 4
+     .= (- (1 / (c - b)))*b + c / (c - b) by B113,XXREAL_0:1
+     .= c*1 / (c - b) - b* (1 / (c - b))
+     .= c* (1 / (c - b)) - b* (1 / (c - b)) by XCMPLX_1:74
+     .= (c-b)* (1 / (c - b))
+     .= ((c-b)* 1) / (c - b) by XCMPLX_1:74
+     .= 1 by A3,XCMPLX_1:60;
+     hence thesis by B112;
+    end;
+    end;
+   hence thesis by PARTFUN1:def 4;
+  end;
+  thus TriangularFS (a,b,c).x
+   = ((((AffineMap (0,0)) | (REAL \ ].a,c.[)) +*
+  ((AffineMap ((1 / (b - a)),(- (a / (b - a))))) | [.a,b.])) +*
+  ((AffineMap ((- (1 / (c - b))),(c / (c - b)))) | [.b,c.])).x
+   by A1,FUZNUM_1:def 7
+  .= ((AffineMap (0,0) | (REAL \ ].a,c.[))
+  +* (AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.])).x
+   by FUNCT_4:15,B12,B11
+  .= ( AffineMap (1 / (b - a),- (a / (b - a))) | [.a,b.] ).x
+  by FUNCT_4:13,B13
+  .= ( AffineMap (1 / (b - a),- (a / (b - a)))).x by A4,FUNCT_1:49;
+ end;
+ hence thesis;
+end;
+
+theorem
+for a, b, c being Real st a < b & b < c holds
+(for x be Real st x in [.b,c.] holds
+TriangularFS (a,b,c).x = AffineMap (- (1 / (c - b)), c / (c - b)).x )
+proof
+ let a, b, c be Real;
+ assume A1: a < b & b < c;
+  let x be Real;
+  assume B1: x in [.b,c.]; then
+    B21: x in dom(AffineMap ((- (1 / (c - b))),(c / (c - b))) | [.b,c.])
+      by FUNCT_2:def 1;
+  thus TriangularFS (a,b,c).x
+   = ((((AffineMap (0,0)) | (REAL \ ].a,c.[)) +*
+  ((AffineMap ((1 / (b - a)),(- (a / (b - a))))) | [.a,b.])) +*
+  ((AffineMap ((- (1 / (c - b))),(c / (c - b)))) | [.b,c.])).x
+   by A1,FUZNUM_1:def 7
+  .= ( AffineMap (- (1 / (c - b)), c / (c - b)) | [.b,c.] ).x
+   by B21,FUNCT_4:13
+  .= ( AffineMap (- (1 / (c - b)), c / (c - b))).x
+   by B1,FUNCT_1:49;
+end;
+
+theorem
+for a, b, c being Real st a < b & b < c holds
+(for x be Real st not x in ].a,c.[ holds
+TriangularFS (a,b,c).x = AffineMap (0,0).x )
+proof
+ let a, b, c be Real;
+ assume A1: a < b & b < c;
+  set f = ((AffineMap (0,0)) | (REAL \ ].a,c.[));
+  set fab = ((AffineMap ((1 / (b - a)),(- (a / (b - a))))) | [.a,b.]);
+  set fbc = ((AffineMap ((- (1 / (c - b))),(c / (c - b)))) | [.b,c.]);
+ for x be Real st not x in ].a,c.[ holds
+ TriangularFS (a,b,c).x = (AffineMap (0,0)).x
+ proof
+  let x be Real;
+  assume B1: not x in ].a,c.[;
+  x in REAL by XREAL_0:def 1; then
+  B33: x in REAL \ ].a,c.[ by XBOOLE_0:def 5,B1;
+A4:  for x being object st x in (dom f) /\ dom (fab +* fbc) holds
+  f.x = (fab +* fbc).x
+  proof
+   let x be object;
+   assume A6: x in (dom f) /\ dom (fab +* fbc); then
+   reconsider x as Real;
+   x in REAL \ ].a,c.[ & x in dom (fab +* fbc) by A6,XBOOLE_0:def 4;
+   then
+   x in REAL \ ].a,c.[ & x in dom fab \/ dom fbc by FUNCT_4:def 1;
+   then
+   x in REAL \ ].a,c.[ & x in [.a,b.] \/ dom fbc by FUNCT_2:def 1;
+   then
+   x in REAL \ ].a,c.[ & x in [.a,b.] \/ [.b,c.] by FUNCT_2:def 1;
+   then
+   (x in ].-infty,a.] \/ [.c,+infty.[) & x in [.a,c.]
+      by XXREAL_1:398,XXREAL_1:165,A1; then
+   (x in ].-infty,a.] or x in [.c,+infty.[) & x in [.a,c.]
+          by XBOOLE_0:def 3; then
+   (-infty < x & x <= a & a <= x & x <= c) or
+      (c <= x & x <+infty & a <= x & x <= c)
+     by XXREAL_1:1,XXREAL_1:3,XXREAL_1:2; then
+   per cases by XXREAL_0:1;
+   suppose D4:x = a;
+    D1: not a in dom fbc by A1,XXREAL_1:1;
+    D2: a in [.a,b.] by A1;
+    a in ].-infty,a.] or a in [.c,+infty.[ by XXREAL_1:234;
+    then
+    a in ].-infty,a.] \/ [.c,+infty.[ by XBOOLE_0:def 3; then
+    a in (REAL \ ].a,c.[) by XXREAL_1:398; then
+    D5: f.x = (AffineMap (0,0)).a by FUNCT_1:49,D4
+    .= 0*a+0 by FCONT_1:def 4
+    .= 0;
+    (fab +* fbc).x = fab.a by FUNCT_4:11,D1,D4
+    .= (AffineMap ((1 / (b - a)),(- (a / (b - a))))).a by FUNCT_1:49,D2
+    .= (1 / (b - a))*a+ - (a / (b - a)) by FCONT_1:def 4
+    .= (a*1 / (b - a))+ - (a / (b - a)) by XCMPLX_1:74
+    .= 0;
+    hence thesis by D5;
+   end;
+   suppose E4: x = c;
+    E2: c in [.b,c.] by A1; then
+    E1: c in dom fbc by FUNCT_2:def 1;
+    c in ].-infty,a.] or c in [.c,+infty.[ by XXREAL_1:236;
+    then
+    c in ].-infty,a.] \/ [.c,+infty.[ by XBOOLE_0:def 3;
+    then
+    c in (REAL \ ].a,c.[) by XXREAL_1:398; then
+    E5:f.x = (AffineMap (0,0)).c by FUNCT_1:49,E4
+    .= 0*c+0 by FCONT_1:def 4
+    .= 0;
+    (fab +* fbc).x = fbc.c by FUNCT_4:13,E1,E4
+    .= AffineMap (- (1 / (c - b)), c / (c - b)).c by FUNCT_1:49,E2
+    .= (- (1 / (c - b)))*c+ c / (c - b) by FCONT_1:def 4
+     .= - (c*(1 / (c - b))) + c / (c - b)
+     .= - (c*1 / (c - b)) + c / (c - b) by XCMPLX_1:74
+     .= 0;
+    hence thesis by E5;
+   end;
+  end;
+  A5: x in dom f by B33,FUNCT_2:def 1;
+   thus TriangularFS (a,b,c).x
+   = ((((AffineMap (0,0)) | (REAL \ ].a,c.[)) +*
+  ((AffineMap ((1 / (b - a)),(- (a / (b - a))))) | [.a,b.])) +*
+  ((AffineMap ((- (1 / (c - b))),(c / (c - b)))) | [.b,c.])).x
+   by A1,FUZNUM_1:def 7
+  .= (f +* (fab +* fbc)).x by FUNCT_4:14
+  .= f.x by A4,PARTFUN1:def 4,A5,FUNCT_4:15
+  .= (AffineMap (0,0)) . x by FUNCT_1:49,B33;
+ end;
+ hence thesis;
+end;
+

@@ -1,0 +1,663 @@
+:: Fundamentals of Finitary Proofs
+::  by Taneli Huuskonen
+::
+:: Received December 24, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, SUBSET_1, XBOOLE_0, FINSEQ_1, XXREAL_0, TARSKI, ARYTM_3,
+      ORDINAL1, ORDINAL4, FUNCT_1, RELAT_1, NAT_1, ZFMISC_1, FOMODEL1, CARD_1,
+      FOMODEL2, FOMODEL4, FINSET_1, FINSUB_1, CQC_THE1, EQREL_1, BINOP_1,
+      AOFA_L00, ALGSPEC1, ABCMIZ_0, LANG1, MSAFREE5, SETFAM_1, QC_LANG1,
+      PROOFS_1, STRUCT_0;
+ notations TARSKI, XBOOLE_0, SUBSET_1, FUNCT_1, NUMBERS, FINSEQ_1, ZFMISC_1,
+      FUNCT_2, BINOP_1, XXREAL_0, XCMPLX_0, FINSET_1, EQREL_1, FINSUB_1,
+      SETFAM_1, ORDINAL1, RELAT_1, STRUCT_0;
+ constructors POLNOT_1, XREAL_0, EQREL_1, FINSUB_1, STRUCT_0, RELSET_1;
+ registrations ORDINAL1, FINSEQ_1, NAT_1, XREAL_0, FINSET_1, SUBSET_1, RELAT_1,
+      STRUCT_0, ZFMISC_1, XBOOLE_0;
+ requirements NUMERALS, SUBSET, BOOLE, REAL;
+
+
+begin
+
+reserve i, j, k, l, m, n for Nat,
+  a, b, c, t, u for object,
+  X, Y, Z for set,
+  D, D1, D2, Fml for non empty set;
+reserve p, q, r, s for FinSequence;
+
+::
+::       The Construction of a Proof
+::
+
+definition
+  let R be Relation;
+  attr R is finitary means
+:: PROOFS_1:def 1
+  for a st a in dom R holds a is finite set;
+end;
+
+registration
+  cluster empty -> finitary for Relation;
+
+  cluster finitary for Relation;
+end;
+
+notation
+  synonym Formula for object;
+end;
+
+definition
+  mode Rule is finitary Relation;
+  mode Formula-finset is finite set;
+  mode Formula-sequence is FinSequence;
+end;
+
+definition
+  let Fml be set;
+  mode Rule of Fml -> Rule means
+:: PROOFS_1:def 2
+  dom it c= Fin Fml & rng it c= Fml;
+end;
+
+definition
+  let Fml be non empty set;
+  mode Formula of Fml -> Formula means
+:: PROOFS_1:def 3
+  it in Fml;
+end;
+
+definition
+  let Fml be set;
+  mode Formula-finset of Fml -> Formula-finset means
+:: PROOFS_1:def 4
+  it c= Fml;
+
+  mode Formula-sequence of Fml -> Formula-sequence means
+:: PROOFS_1:def 5
+  it is FinSequence of Fml;
+end;
+
+ reserve R, R1, R2 for Rule;
+ reserve A, A1, A2 for non empty set;
+ reserve B, B1, B2 for set;
+ reserve P, P1, P2 for Formula-sequence;
+ reserve S, S1, S2 for Formula-finset;
+
+definition
+  let P;
+  redefine func rng P -> Formula-finset;
+end;
+
+definition
+  let Fml;
+  let B1, B2 be Subset of Fml;
+  redefine func B1 \/ B2 -> Subset of Fml;
+end;
+
+definition
+  let S1, S2;
+  redefine func S1 \/ S2 -> Formula-finset;
+end;
+
+definition
+  let Fml;
+  let S1, S2 be Formula-finset of Fml;
+  redefine func S1 \/ S2 -> Formula-finset of Fml;
+end;
+
+definition
+  let R1, R2;
+  redefine func R1 \/ R2 -> Rule;
+end;
+
+definition
+  let Fml;
+  let R1, R2 be Rule of Fml;
+  redefine func R1 \/ R2 -> Rule of Fml;
+end;
+
+definition
+  let B, R, P, n;
+  pred P, n is_a_correct_step_wrt B, R means
+:: PROOFS_1:def 6
+    (P.n in B or ex Q being Formula-finset st
+      ([Q, P.n] in R & for t st t in Q ex k st k in dom P & k < n & P.k = t));
+end;
+
+definition
+  let B, R, P;
+  attr P is (B, R)-correct means
+:: PROOFS_1:def 7
+    for k st k in dom P holds P, k is_a_correct_step_wrt B, R;
+end;
+
+registration
+  let B, R;
+  cluster non (B,R)-correct -> non empty for Formula-sequence;
+
+  let Fml;
+  cluster (B,R)-correct for Formula-sequence of Fml;
+end;
+
+registration
+  let B, R;
+  cluster (B,R)-correct for Formula-sequence;
+end;
+
+theorem :: PROOFS_1:1
+  for A, R for a being Element of A holds <*a*> is (A, R)-correct;
+
+registration
+  let A, R;
+  cluster non empty (A, R)-correct for Formula-sequence;
+end;
+
+definition
+  let B, R, S;
+  attr S is (B, R)-derivable means
+:: PROOFS_1:def 8
+    ex P st S = rng P & P is (B, R)-correct;
+end;
+
+theorem :: PROOFS_1:2
+  for B, R, P, P1, P2 st P is (B, R)-correct & P = P1^P2 holds
+      P1 is (B, R)-correct;
+
+theorem :: PROOFS_1:3
+  for B, R, P1, P2 st P1 is (B, R)-correct & P2 is (B, R)-correct holds
+      P1^P2 is (B, R)-correct;
+
+theorem :: PROOFS_1:4
+  for B, R, S1, S2 st S1 is (B, R)-derivable & S2 is (B, R)-derivable holds
+      S1 \/ S2 is (B, R)-derivable;
+
+theorem :: PROOFS_1:5
+  for B, B1, R, R1, P st B c= B1 & R c= R1 & P is (B, R)-correct holds
+      P is (B1, R1)-correct;
+
+definition
+  let B, a;
+  attr a is B-axiomatic means
+:: PROOFS_1:def 9
+  a in B;
+  let R;
+  pred B, R |- a means
+:: PROOFS_1:def 10
+  ex P st a in rng P & P is (B, R)-correct;
+end;
+
+definition
+  let B,R,a;
+  attr a is (B,R)-provable means
+:: PROOFS_1:def 11
+  B,R |- a;
+end;
+
+definition
+  let B, B1;
+  attr B1 is B-extending means
+:: PROOFS_1:def 12
+  B c= B1;
+end;
+
+definition
+  let R, R1;
+  attr R1 is R-extending means
+:: PROOFS_1:def 13
+  R c= R1;
+end;
+
+registration
+  let B;
+  cluster B-extending for set;
+end;
+
+registration
+  let R;
+  cluster R-extending for Rule;
+end;
+
+definition
+  let B;
+  mode Extension of B is B-extending set;
+end;
+
+registration
+  let Fml;
+  let B be Subset of Fml;
+  cluster B-extending for Subset of Fml;
+end;
+
+definition
+  let Fml;
+  let B be Subset of Fml;
+  mode Extension of B is B-extending Subset of Fml;
+end;
+
+definition
+  let R;
+  mode Extension of R is R-extending Rule;
+end;
+
+definition
+  let Fml;
+  let B be Subset of Fml;
+  let t be Formula of Fml;
+  func B + t -> Extension of B equals
+:: PROOFS_1:def 14
+  B \/ { t };
+end;
+
+theorem :: PROOFS_1:6
+  for B, t, a holds a is (B \/ {t})-axiomatic iff a is B-axiomatic or a = t;
+
+ reserve C for Extension of B;
+ reserve E for Extension of R;
+
+registration
+  let B, C;
+  cluster C-extending -> B-extending for set;
+
+  cluster non C-axiomatic -> non B-axiomatic for object;
+end;
+
+registration
+  let R, E;
+  cluster E-extending -> R-extending for Rule;
+end;
+
+definition
+  let B, R, R1;
+  attr R1 is (B, R)-derivable means
+:: PROOFS_1:def 15
+  for S, t st [S, t] in R1 holds B \/ S, R |- t;
+end;
+
+theorem :: PROOFS_1:7
+  for B, R, t holds B, R |- t iff ex S st t in S & S is (B, R)-derivable;
+
+theorem :: PROOFS_1:8
+  for B, R, a st a in B holds B, R |- a;
+
+registration
+  let B,R;
+  cluster non (B,R)-provable -> non B-axiomatic for object;
+end;
+
+theorem :: PROOFS_1:9
+  for B, R, S st for a st a in S holds B, R |- a
+      ex S1 st S c= S1 & S1 is (B, R)-derivable;
+
+theorem :: PROOFS_1:10
+  for B, B1, R, S st S is (B, R)-derivable & B /\ S c= B1
+      holds S is (B1, R)-derivable;
+
+theorem :: PROOFS_1:11
+  for B, R, t, S st (for a st a in S holds B, R |- a) & [S, t] in R
+      holds B, R |- t;
+
+theorem :: PROOFS_1:12
+  for B, R, a st B, R |- a holds a in B or ex S st [S, a] in R
+    & for b st b in S holds B, R |- b;
+
+theorem :: PROOFS_1:13
+  for B, R, S1, S2 st S1 is (B, R)-derivable & S2 is (S1, R)-derivable holds
+      S1 \/ S2 is (B, R)-derivable;
+
+theorem :: PROOFS_1:14
+  for B, R, B1, a st B1, R |- a & for b st b in B1 holds B, R |- b
+    holds B, R |- a;
+
+theorem :: PROOFS_1:15
+  for B, C, R, E, a st B, R |- a holds C, E |- a;
+
+definition
+  let B, R, a;
+  redefine attr a is (B,R)-provable means
+:: PROOFS_1:def 16
+  for C, E holds C,E |- a;
+end;
+
+registration
+  let B,R,C;
+  cluster non (C,R)-provable -> non (B,R)-provable for object;
+
+  let E;
+  cluster non (C,E)-provable -> non (B,R)-provable for object;
+end;
+
+theorem :: PROOFS_1:16
+  for B, R, R1, R2 holds R1 \/ R2 is (B,R)-derivable
+      iff R1 is (B,R)-derivable & R2 is (B,R)-derivable;
+
+theorem :: PROOFS_1:17
+  for Fml for B being Subset of Fml, R being Rule of Fml, a st B, R |- a
+    holds a in Fml;
+
+definition
+  struct (1-sorted) ProofSystem (# carrier -> set,
+    Axioms -> Subset of the carrier,
+     Rules -> Rule of the carrier #);
+end;
+
+definition
+  let P be ProofSystem;
+  mode Formula-finset of P is Formula-finset of the carrier of P;
+end;
+
+definition
+  let P be ProofSystem, a be object;
+  pred P |- a means
+:: PROOFS_1:def 17
+    the Axioms of P, the Rules of P |- a;
+end;
+
+registration
+  cluster non empty for ProofSystem;
+end;
+
+ reserve P for non empty ProofSystem;
+ reserve B, B1, B2 for Subset of P;
+ reserve F for finite Subset of P;
+
+theorem :: PROOFS_1:18
+  for P, a st P |- a holds a is Element of P;
+
+definition
+  let P, B;
+  pred P |- B means
+:: PROOFS_1:def 18
+  for a st a in B holds P |- a;
+end;
+
+definition
+  let P, B1, B2;
+  redefine func B1 \/ B2 -> Subset of P;
+end;
+
+definition
+  let P;
+  attr P is consistent means
+:: PROOFS_1:def 19
+  ex a st a in P & not P |- a;
+end;
+
+definition
+  let P, B;
+  func P \/ B -> non empty ProofSystem equals
+:: PROOFS_1:def 20
+  ProofSystem (# the carrier of P, (the Axioms of P) \/ B, the Rules of P #);
+end;
+
+registration
+  cluster consistent strict for non empty ProofSystem;
+end;
+
+registration
+  let P be strict ProofSystem;
+  let E be empty Subset of P;
+  reduce P \/ E to P;
+end;
+
+notation
+  let P;
+  antonym P is inconsistent for P is consistent;
+end;
+
+definition
+  let P, B;
+  attr B is consistent means
+:: PROOFS_1:def 21
+  P \/ B is consistent;
+end;
+
+registration
+  let P be consistent non empty ProofSystem;
+  cluster consistent for Subset of P;
+end;
+
+notation
+  let P, B;
+  antonym B is inconsistent for B is consistent;
+end;
+
+registration
+  let P;
+  cluster inconsistent for Subset of P;
+end;
+
+definition
+  let P;
+  attr P is paraconsistent means
+:: PROOFS_1:def 22
+  for S being finite Subset of P holds S is consistent;
+end;
+
+registration
+  cluster paraconsistent -> consistent for non empty ProofSystem;
+
+  cluster consistent non paraconsistent for non empty ProofSystem;
+end;
+
+:: Consistency, contradictions, Lindenbaum
+
+definition
+  let P, B, B1;
+  attr B1 is B-omitting means
+:: PROOFS_1:def 23
+  ex a st a in B & not P \/ B1 |- a;
+end;
+
+theorem :: PROOFS_1:19
+  for P, B, B1 st B is inconsistent holds B1 is consistent iff B1 is B-omitting
+;
+
+registration
+  let P;
+  let B be inconsistent Subset of P;
+  cluster B-omitting -> consistent for Subset of P;
+
+  cluster non B-omitting -> inconsistent for Subset of P;
+end;
+
+registration
+  let P, B;
+  cluster non B-omitting for Subset of P;
+end;
+
+theorem :: PROOFS_1:20
+  for P, B, B1, B2 st B1 is B-omitting & B2 c= B1 holds B2 is B-omitting;
+
+definition
+  let P, B;
+  func Omit(P,B) -> Subset-Family of P equals
+:: PROOFS_1:def 24
+  { B1 where B1 is Subset of P : B1 is B-omitting };
+end;
+
+definition
+  let P, B;
+  redefine func Omit(P,B) means
+:: PROOFS_1:def 25
+  for B1 holds B1 in it iff B1 is B-omitting;
+end;
+
+definition
+  let P, B, B1;
+  attr B1 is B-maximally-omitting means
+:: PROOFS_1:def 26
+  B1 is B-omitting & for B2 st B1 c< B2 holds B2 is non B-omitting;
+end;
+
+registration
+  let P, B;
+  cluster B-maximally-omitting -> B-omitting for Subset of P;
+end;
+
+definition
+  let X;
+  attr X is finite-character means
+:: PROOFS_1:def 27
+  for a holds a in X iff
+    ex B being set st B = a & for S being finite Subset of B holds S in X;
+end;
+
+definition
+  let X;
+  redefine attr X is finite-character means
+:: PROOFS_1:def 28
+
+  for Y holds Y in X iff for S being finite Subset of Y holds S in X;
+end;
+
+definition
+  let X;
+  let F be Subset-Family of X;
+  redefine attr F is finite-character means
+:: PROOFS_1:def 29
+  for B being Subset of X holds
+    B in F iff for S being finite Subset of B holds S in F;
+end;
+
+registration
+  let X;
+  cluster non empty finite-character for Subset-Family of X;
+end;
+
+registration
+  cluster empty -> finite-character for set;
+
+  cluster non empty finite-character for set;
+end;
+
+theorem :: PROOFS_1:21
+  for X being non empty finite-character set
+    ex Y being Element of X st for Z being Element of X holds not Y c< Z;
+
+registration
+  let P, F;
+  cluster Omit(P,F) -> finite-character;
+end;
+
+theorem :: PROOFS_1:22
+  for P, B, F st B is F-omitting ex B1 st B c= B1 & B1 is F-maximally-omitting;
+
+definition
+  let P, B;
+  attr B is maximally-consistent means
+:: PROOFS_1:def 30
+  B is consistent & for B1 st B c< B1 holds B1 is inconsistent;
+end;
+
+theorem :: PROOFS_1:23
+  for P, B st P is consistent non paraconsistent & B is consistent
+      ex B1 st B c= B1 & B1 is maximally-consistent;
+
+scheme :: PROOFS_1:sch 1
+  UnOpCongr { X() -> non empty set, F(Element of X()) -> Element of X(),
+        E() -> Equivalence_Relation of X()}:
+  ex f being UnOp of Class E() st for x being Element of X() holds
+      f.(Class(E(), x)) = Class(E(), F(x))
+provided
+   for x, y being Element of X() st [x,y] in E() holds [F(x),F(y)] in E();
+
+scheme :: PROOFS_1:sch 2
+  BinOpCongr { X() -> non empty set,
+        F(Element of X(), Element of X()) -> Element of X(),
+        E() -> Equivalence_Relation of X()}:
+  ex f being BinOp of Class E() st for x, y being Element of X() holds
+      f.(Class(E(), x), Class(E(), y)) = Class(E(), F(x, y))
+provided
+   for x1, x2, y1, y2 being Element of X()
+      st [x1,x2] in E() & [y1,y2] in E() holds [F(x1, y1),F(x2, y2)] in E();
+
+scheme :: PROOFS_1:sch 3
+  ProofInduction { B() -> set,
+        R() -> Rule,
+        S[object] } :
+  for a st B(), R() |- a holds S[a]
+provided
+   for a st a in B() holds S[a] and
+   for X, a st [X,a] in R() & for b st b in X holds S[b] holds S[a];
+
+definition
+  let R, X;
+  attr X is R-closed means
+:: PROOFS_1:def 31
+  for Y, a st [Y,a] in R & Y c= X holds a in X;
+end;
+
+definition
+  let D, R;
+  mode Theorem of D, R means
+:: PROOFS_1:def 32
+  D, R |- it;
+  sethood;
+end;
+
+definition
+  let X, R;
+  func Theorems(X,R) -> set equals
+:: PROOFS_1:def 33
+  { t where t is Element of X \/ rng R : X, R |- t };
+end;
+
+definition
+  let X, R;
+  redefine func Theorems(X,R) means
+:: PROOFS_1:def 34
+
+  for a holds a in it iff X, R |- a;
+end;
+
+registration
+  let X, R;
+  cluster Theorems(X,R) -> X-extending R-closed;
+
+  cluster X-extending R-closed for set;
+end;
+
+theorem :: PROOFS_1:24
+  for X, R, a holds
+    X, R |- a iff for Y being R-closed X-extending set holds a in Y;
+
+definition
+  let P;
+  func Theorems P -> Subset of P equals
+:: PROOFS_1:def 35
+  Theorems(the Axioms of P, the Rules of P);
+
+  let X;
+  attr X is P-closed means
+:: PROOFS_1:def 36
+  X is (the Rules of P)-closed (the Axioms of P)-extending;
+end;
+
+registration
+  let P;
+  cluster Theorems P -> P-closed;
+
+  cluster P-closed -> (the Rules of P)-closed (the Axioms of P)-extending
+    for set;
+
+  cluster (the Rules of P)-closed (the Axioms of P)-extending -> P-closed
+    for set;
+
+  cluster P-closed for Subset of P;
+
+  cluster P-closed for set;
+end;
+
+theorem :: PROOFS_1:25
+  for P, a holds P |- a iff for X being P-closed set holds a in X;

@@ -1,0 +1,376 @@
+:: Symmetrical Piecewise Linear Functions Composed by Absolute Value Function
+::  by Takashi Mitsuishi
+:: 
+:: Received December 18, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, XXREAL_1, CARD_1, RELAT_1, TARSKI,
+      FUNCT_1, XXREAL_0, PARTFUN1, ARYTM_1, ARYTM_3, COMPLEX1, MEASURE5,
+      FUZNUM_1, REAL_1, ORDINAL2, XXREAL_2, FUNCT_7, JGRAPH_2, FUNCT_4,
+      FCONT_1, SQUARE_1, VALUED_1, INTEGRA1, INTEGRA5, SEQ_4, RFUNCT_3,
+      FUZZY_6;
+ notations TARSKI, XBOOLE_0, SUBSET_1, RELAT_1, NUMBERS, SQUARE_1, XCMPLX_0,
+      XXREAL_0, COMPLEX1, XREAL_0, FUNCT_1, RELSET_1, MEASURE5, PARTFUN1,
+      FUNCT_2, FCONT_1, FUNCT_3, RFUNCT_3, VALUED_1, FUNCT_4, COMSEQ_2, SEQ_4,
+      RCOMP_1, INTEGRA5, FUZNUM_1, FUZZY_6;
+ constructors COMPLEX1, SEQ_4, RELSET_1, FCONT_1, FUNCT_4, FUZNUM_1, SQUARE_1,
+      COMSEQ_2, RFUNCT_3, INTEGRA1, INTEGRA5, SEQ_2, FUZZY_6;
+ registrations RELSET_1, NUMBERS, XXREAL_0, MEMBERED, XBOOLE_0, VALUED_0,
+      VALUED_1, FUNCT_2, XREAL_0, ORDINAL1, FCONT_1, FUNCT_1, XCMPLX_0, NAT_1,
+      FUZNUM_1, SQUARE_1, INTEGRA1;
+ requirements NUMERALS, REAL, SUBSET, BOOLE, ARITHM;
+
+
+begin :: Preliminaries
+
+reserve A for non empty closed_interval Subset of REAL;
+
+theorem :: FUZZY_8:1
+  for b,c,d be Real st b > 0 & c > 0 & d > 0 holds
+    (b-d)/(b/c) < c;
+
+theorem :: FUZZY_8:2
+  for a,x be Real holds a - |. a*x .| <= a;
+
+theorem :: FUZZY_8:3
+  for a,x be Real holds a - |. x .| <= a;
+
+theorem :: FUZZY_8:4
+  for a,b,c,x be Real holds
+    |. b*((a-x)-a)/c .| = |. b*((a+x)-a)/c .|;
+
+theorem :: FUZZY_8:5
+  for a, b, c being Real holds
+    |. max (c,a) - max (c,b) .| <= |. a - b .|;
+
+theorem :: FUZZY_8:6
+  for a, b, c being Real holds
+    |. min (c,a) - min (c,b) .| <= |. a - b .|;
+
+theorem :: FUZZY_8:7
+  for a, b, c, d being Real holds
+    |. min (c,max (d,a)) - min (c,max (d,b)) .| <= |. a - b .|;
+
+begin :: Continuous Functions
+
+theorem :: FUZZY_8:8
+for c being Real, f,g be PartFunc of REAL,REAL st
+].-infty,c.] c= dom f & [.c,+infty.[ c= dom g holds
+f|].-infty,c.[ +* g|[.c,+infty.[ = (f|].-infty,c.]) +* (g|[.c,+infty.[);
+
+theorem :: FUZZY_8:9
+for c being Real, f,g be PartFunc of REAL,REAL st
+f is continuous & g is continuous & f . c = g . c &
+].-infty,c.] c= dom f & [.c,+infty.[ c= dom g
+holds (f | ].-infty,c.]) +* (g | [.c,+infty.[) is continuous;
+
+theorem :: FUZZY_8:10
+for c being Real, f,g be Function of REAL,REAL st
+f is continuous & g is continuous & f . c = g . c holds
+(f | ].-infty,c.]) +* (g | [.c,+infty.[) is continuous Function of REAL,REAL;
+
+theorem :: FUZZY_8:11
+for a,b,c be Real, f,g,h be Function of REAL,REAL st
+a <= b & b <= c & f is continuous & g is continuous &
+h | [.a,c.] = (f| [.a,b.]) +* (g | [.b,c.]) & f.b = g.b
+holds integral( h,['a,c']) = integral(f,['a,b']) + integral(g,['b,c']);
+
+theorem :: FUZZY_8:12
+for f being Function of REAL,REAL, a, b, c being Real st
+a <= b & b <= c & ['a,c'] c= dom f &
+f | ['a,b'] is bounded & f | ['b,c'] is bounded &
+f is_integrable_on ['a,b'] & f is_integrable_on ['b,c'] holds
+f is_integrable_on ['a,c'] &
+integral (f,a,c) = (integral (f,a,b)) + (integral (f,b,c));
+
+theorem :: FUZZY_8:13
+for a, b, c being Real, f being Function of REAL,REAL st
+a <= c & f is_integrable_on ['a,c'] &
+f | ['a,c'] is bounded & ['a,c'] c= dom f & b in ['a,c'] holds
+f is_integrable_on ['a,b'] & f is_integrable_on ['b,c'] &
+integral (f,a,c) = (integral (f,a,b)) + (integral (f,b,c));
+
+theorem :: FUZZY_8:14
+for a being Real, f, g, h being Function of REAL,REAL st
+f | A is bounded & f is_integrable_on A &
+g | A is bounded & g is_integrable_on A &
+a in A & h = ( f | ].-infty,a.] ) +* ( g | [.a,+infty.[ ) & f.a = g.a
+holds h is_integrable_on A;
+
+theorem :: FUZZY_8:15   ::: generalize FUZZY_7:20
+for a,b,c be Real, f,g be Function of REAL,REAL st a <= b & b <= c holds
+(f | ]. -infty,b .] +* g | [. b,+infty .[ ) | [. a,c .]
+= (f | [. a,b .]) +* (g | [. b,c .]);
+
+theorem :: FUZZY_8:16 :: FUZZY_6:33
+for a,b,c being Real, f,g,h be Function of REAL,REAL st
+a <= b & b <= c &
+f is_integrable_on ['a,c'] & f | ['a,c'] is bounded &
+g is_integrable_on ['a,c'] & g | ['a,c'] is bounded &
+h = ( f | ].-infty,b.] ) +* ( g | [.b,+infty.[ ) & f.b = g.b
+holds integral(h,['a,c']) = integral(f,['a,b']) + integral(g,['b,c']);
+
+::area and centroid of continuous function
+theorem :: FUZZY_8:17
+for f,g,h be Function of REAL,REAL, a,b,c be Real st
+a <= b & b <= c & f is continuous & g is continuous &
+h | [.a,c.] = f | [.a,b.] +* g | [.b,c.] &
+integral(f,['a,b']) <> 0 & integral(g,['b,c']) <> 0 & f.b = g.b holds
+centroid(h, ['a,c']) = 1 / integral(h,['a,c'])
+ * ( centroid(f, ['a,b']) * integral(f,['a,b'])
+   + centroid(g, ['b,c']) * integral(g,['b,c']) );
+
+::b _________
+::     /\
+::    /  \
+::d ---------
+::  /      \
+::-          --
+::a-c  a   a+c
+::
+:: Symmetric membership functions by absolute value function
+
+theorem :: FUZZY_8:18
+for f be Function of REAL,REAL, a,b,c be Real st
+(for x be Real holds f.x = b - |. b*(x-a)/c .|) holds
+(for y be Real holds f.(a-y) = f.(a+y));
+
+theorem :: FUZZY_8:19
+for f be Function of REAL,REAL, a,b,c,d,e be Real st
+(for x be Real holds f.x = min(d, max(e, b - |. b*(x-a)/c .|)))
+holds
+(for y be Real holds f.(a-y) = f.(a+y));
+
+theorem :: FUZZY_8:20
+for a,b,c,d be Real st b > 0 & c > 0 & d > 0 & d < b holds
+for x be Real holds
+(d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c)).x
+ = min(d, max(0, b - |. b*(x-a)/c .|));
+
+theorem :: FUZZY_8:21
+for a,b,c,d be Real st
+b > 0 & c > 0 & d > 0 & d < b holds
+centroid (d(#)TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c),['a-c,a+c'])
+= a;
+
+theorem :: FUZZY_8:22
+for a,b,c,d be Real, f be Function of REAL,REAL st b > 0 & c > 0 & d > 0 &
+d < b & ( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds f = d (#) TrapezoidalFS (a-c,a+(d-b)/(b/c),a+(b-d)/(b/c),a+c);
+
+theorem :: FUZZY_8:23
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 & d < b &
+( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds centroid (f,['a-c,a+c']) = a;
+
+theorem :: FUZZY_8:24
+for a,b,c,d,e be Real, f be Function of REAL,REAL st
+b <> 0 & c <> 0 &
+for x be Real holds f.x = min(d, max(e, b - |. b*(x-a)/c .|))
+holds f is Lipschitzian;
+
+theorem :: FUZZY_8:25
+for a,b,c,d,e be Real, f be Function of REAL,REAL st
+c <> 0 & for x be Real holds f.x = min(d, max(e, b - |. b*(x-a)/c .|))
+holds f is Lipschitzian;
+
+theorem :: FUZZY_8:26
+for a,b,c,d be Real, f be Function of REAL,REAL st
+c > 0 & ( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds f is_integrable_on A & f | A is bounded;
+
+theorem :: FUZZY_8:27
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 &
+( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds f.(lower_bound ['a-c,a+c']) = 0 & f.(upper_bound ['a-c,a+c']) = 0;
+
+theorem :: FUZZY_8:28
+for a,b,c be Real st b > 0 & c > 0 holds
+for x be Real st not x in ['a-c,a+c'] holds max(0, b - |. b*(x-a)/c .|) = 0;
+
+theorem :: FUZZY_8:29
+for a,b,c,d be Real st b > 0 & c > 0 & d > 0
+holds
+for x be Real st not x in ['a-c,a+c'] holds
+min(d,max(0, b - |. b*(x-a)/c .|)) = 0;
+
+theorem :: FUZZY_8:30
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 &
+(for x be Real holds f.x = min(d,max(0, b - |. b*(x-a)/c .|))) holds
+for x be Real st not x in ['a-c,a+c'] holds f.x = 0;
+
+theorem :: FUZZY_8:31
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 &
+( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds (for x be Real st x in (A \ ['a-c,a+c']) holds f.x = 0);
+
+theorem :: FUZZY_8:32
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 & ['a-c,a+c'] c= A &
+( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds
+centroid (f,A) = a;
+
+theorem :: FUZZY_8:33
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 & ['a-c,a+c'] c= A &
+d < b &
+( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds
+centroid (f,A) = centroid (f,['a-c,a+c']);
+
+theorem :: FUZZY_8:34
+for a,b,c,d be Real, f,F be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 &
+( for x be Real holds f.x = max(0, b - |. b*(x-a)/c .|)) &
+( for x be Real holds F.x = min(d, max(0, b - |. b*(x-a)/c .|))) holds
+centroid (f,['a-c,a+c']) = centroid (F,['a-c,a+c']);
+
+theorem :: FUZZY_8:35
+for a,b,c,d be Real, f be Function of REAL,REAL st
+b > 0 & c > 0 & d > 0 & d < b &
+( for x be Real holds f.x = min(d, max(0, b - |. b*(x-a)/c .|)) )
+holds f | [.a-c,a+c.] = AffineMap (b/c,b-a*b/c) | [. a-c, a+(d-b)/(b/c) .]
+                     +* AffineMap (0,d) | [. a+(d-b)/(b/c),a+(b-d)/(b/c) .]
+                     +* AffineMap (-b/c,b+a*b/c) | [.a+(b-d)/(b/c), a+c.];
+
+::                (c,s)
+::      (b,r)   __ --  s
+::      r __ --     | \
+::       /|         |   \
+::     /  |         |     \
+::   ------------------------
+::    a   b         c       d
+:: (a,0)                   (d,0)
+
+:: square with vertices (a,0),(b,r),(c,s) and (d,0)
+
+theorem :: FUZZY_8:36
+for a,b,c,d,r,s be Real st a < b & b < c & c < d holds
+AffineMap(r/(b - a),-a*r/(b - a)).a = 0 &
+AffineMap(r/(b - a),-a*r/(b - a)).b = r &
+AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)).b = r &
+AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)).c = s &
+AffineMap((-s)/(d - c),-d*(-s)/(d - c)).c = s &
+AffineMap((-s)/(d - c),-d*(-s)/(d - c)).d = 0;
+
+theorem :: FUZZY_8:37
+for a,b,c,d,r,s be Real, f be Function of REAL,REAL st
+a < b & b < c & c < d &
+f | [.a,d.] = AffineMap(r/(b - a),-a*r/(b - a)) | [.a,b.]
++* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
++* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,d.] holds
+integral( (id REAL) (#) f, ['a,d'] )
+= (integral((id REAL) (#)
+     AffineMap(r/(b - a),-a*r/(b - a)), ['a,b']) +
+   integral((id REAL) (#)
+     AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+   integral((id REAL) (#)
+     AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) );
+
+theorem :: FUZZY_8:38
+for a,b,c,d,r,s be Real, f be Function of REAL,REAL st
+a < b & b < c & c < d &
+f | [.a,d.] = AffineMap(r/(b - a),-a*r/(b - a)) | [.a,b.]
++* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
++* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,d.]
+holds integral( f, ['a,d'] )
+= (integral(AffineMap(r/(b - a),-a*r/(b - a)), ['a,b']) +
+   integral(AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)),['b,c'])+
+   integral(AffineMap((-s)/(d - c),-d*(-s)/(d - c)),['c,d']) );
+
+theorem :: FUZZY_8:39
+for a,b,c,d,r,s,x be Real st
+a < b & b < c & c < d & r >= 0 & s >= 0 & (x < a or d < x) holds
+(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
++* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
++* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x <= 0;
+
+theorem :: FUZZY_8:40
+for a,b,c,d,r,s,x be Real st
+a < b & b < c & c < d & r >= 0 & s >= 0 & x in [.a,d.] holds
+(AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
++* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
++* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x >= 0;
+
+theorem :: FUZZY_8:41
+for a,b,c,d,r,s be Real st
+a < b & b < c & c < d & r >= 0 & s >= 0 & r = s holds
+for x be Real holds
+( r (#) TrapezoidalFS (a,b,c,d) ).x
+= max+ ((AffineMap(r/(b - a),-a*r/(b - a)) | ].-infty,b.]
++* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
++* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,+infty.[).x);
+
+theorem :: FUZZY_8:42
+for a,b,c,d being Real st c <= d holds
+integral((id REAL) (#) (AffineMap (a,b)),['c,d'])
+           = (d - c)*( a*(d*d +d*c + c*c)/3 + b*(d + c)/2 ) &
+integral(AffineMap (a,b),['c,d']) = (d - c)*( a*(d + c)/2 + b );
+
+theorem :: FUZZY_8:43
+for a,b,c,d,r,s be Real, f be Function of REAL,REAL st
+a < b & b < c & c < d &
+f | [.a,d.] = AffineMap(r/(b - a),-a*r/(b - a)) | [.a,b.]
++* AffineMap((s - r)/(c - b),s-c*(s - r)/(c - b)) | [.b,c.]
++* AffineMap((-s)/(d - c),-d*(-s)/(d - c)) | [.c,d.] holds
+centroid( f,['a,d'] ) =
+( (b - a)*( ( r/(b - a) )*(b*b +b*a + a*a)/3 + ( -a*r/(b - a) )*(b + a)/2 )
++ (c - b)*( ( (s - r)/(c - b) )*(c*c +c*b + b*b)/3
+               + ( s-c*(s - r)/(c - b) )*(c + b)/2 )
++ (d - c)*( ( (-s)/(d - c) )*(d*d +d*c + c*c)/3
+                + ( -d*(-s)/(d - c) )*(d + c)/2 ) ) /
+( (b - a)*( ( r/(b - a) )*(b + a)/2 + ( -a*r/(b - a) ) )
++ (c - b)*( ( (s - r)/(c - b) )*(c + b)/2 + ( s-c*(s - r)/(c - b) ) )
++ (d - c)*( ( (-s)/(d - c) )*(d + c)/2 + ( -d*(-s)/(d - c) ) ) );
+
+::d _________ AffineMap (0,d)
+::    \   /
+::     \ /
+::      \
+::     / \
+::    /   \
+:: -----------
+::  b       c
+::
+:: sum of functions
+
+theorem :: FUZZY_8:44
+for b, c, d being Real st b < c holds
+AffineMap ( d*(1 / (c - b)), d*(- b / (c - b)) ) +
+AffineMap ( d*(- 1 / (c - b)), d*(c / (c - b)) ) = AffineMap (0,d);
+
+theorem :: FUZZY_8:45
+for a,b,c,p,q be Real st a < b & b < c holds
+AffineMap(p,q) | [.a,b.] +* AffineMap(p,q) | [.b,c.] = AffineMap(p,q) | [.a,c.]
+;
+
+theorem :: FUZZY_8:46
+for a, b, c being Real st a < b & b < c holds
+(for x be Real st x in [.a,b.] holds
+TriangularFS (a,b,c).x = AffineMap (1 / (b - a), -(a / (b - a))).x );
+
+theorem :: FUZZY_8:47
+for a, b, c being Real st a < b & b < c holds
+(for x be Real st x in [.b,c.] holds
+TriangularFS (a,b,c).x = AffineMap (- (1 / (c - b)), c / (c - b)).x );
+
+theorem :: FUZZY_8:48
+for a, b, c being Real st a < b & b < c holds
+(for x be Real st not x in ].a,c.[ holds
+TriangularFS (a,b,c).x = AffineMap (0,0).x );
+

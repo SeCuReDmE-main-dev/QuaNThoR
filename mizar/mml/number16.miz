@@ -1,0 +1,2292 @@
+:: Elementary Number Theory Problems. {P}art {XVI}
+::  by Karol P\kak
+:: 
+:: Received December 14, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, NAT_1, RELAT_1, FUNCT_1, XXREAL_0, ARYTM_3, XCMPLX_0,
+      CARD_1, INT_1, NEWTON, INT_2, ARYTM_1, SUBSET_1, XBOOLE_0, TARSKI,
+      FINSET_1, ABIAN, ZFMISC_1, POWER, REAL_1, REALSET1, NUMBER06, ORDINAL2,
+      FINSEQ_1, AFINSQ_1, PRE_FF, UPROOTS, NUMBER09, PRE_POLY, NAT_3, FUNCOP_1,
+      CARD_3, ORDINAL4, VALUED_1, RFINSEQ, NUMERAL1, SEQ_1, SEQ_2, FINSEQ_2,
+      PARTFUN3, COMPLEX1, NUMBER10, NUMBER13, EULER_1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, CARD_1, NUMBERS,
+      XCMPLX_0, RELAT_1, FUNCT_1, FINSET_1, VALUED_0, XREAL_0, INT_1, INT_2,
+      NAT_1, XXREAL_0, POWER, NEWTON, ABIAN, SEQ_1, RVSUM_1, AFINSQ_1, PRE_FF,
+      NUMBER06, NAT_D, NUMBER09, WSIERP_1, PRE_POLY, FUNCOP_1, VALUED_1,
+      AFINSQ_2, NAT_3, NUMERAL1, COMPLEX1, RELSET_1, SEQ_2, FINSEQ_1, FINSEQ_2,
+      RECDEF_1, PARTFUN3, RFINSEQ, EULER_1, NUMBER10, NUMBER13;
+ constructors RELSET_1, ABIAN, SERIES_1, PRE_FF, NEWTON03, NUMBER06, NUMBER09,
+      INT_6, NAT_D, WSIERP_1, RECDEF_1, AFINSQ_2, NAT_3, NUMERAL1, SEQ_2,
+      COMSEQ_2, RFINSEQ, NUMBER08, EULER_1, NUMBER10, NUMBER13;
+ registrations ORDINAL1, RELSET_1, FINSET_1, XCMPLX_0, XXREAL_0, XREAL_0,
+      NAT_1, INT_1, MEMBERED, VALUED_0, CARD_1, NEWTON, NEWTON03, ABIAN, NAT_6,
+      POWER, XBOOLE_0, FUNCT_1, FINSEQ_1, RVSUM_1, NUMBER06, NUMBER09,
+      WSIERP_1, AFINSQ_1, AFINSQ_2, NEWTON02, NEWTON04, NUMBER03, NAT_3,
+      FUNCOP_1, RELAT_1, FINSEQ_9, NUMBER10, RVSUM_4, NEWTON05, NUMBER13;
+ requirements REAL, NUMERALS, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI;
+ equalities FINSEQ_1, ORDINAL1;
+ expansions ORDINAL1, INT_1, INT_2, NUMBER06, FINSEQ_1;
+ theorems NEWTON, WSIERP_1, INT_1, INT_2, NEWTON02, NAT_D, PEPIN, NUMBER02,
+      ORDINAL1, XREAL_1, XXREAL_0, NAT_1, XCMPLX_1, NAT_3, FUNCT_1, TARSKI,
+      CARD_1, PREPOWER, NUMPOLY1, NEWTON05, MOEBIUS2, FUNCT_2, ABIAN, FINSEQ_1,
+      RELAT_1, PRE_FF, FIB_NUM2, NAT_2, NUMBER06, NAT_6, NIVEN, NUMERAL1,
+      AFINSQ_1, XBOOLE_1, AFINSQ_2, VALUED_1, NUMBER11, LIOUVIL2, RVSUM_1,
+      NUMBER09, RAMSEY_1, XBOOLE_0, ZFMISC_1, INT_4, NUMBER12, CARD_2,
+      PRE_POLY, FINSEQ_2, PARTFUN1, SEQ_2, NUMBER13, FINSEQ_3, BINARI_6,
+      UNIFORM1, NUMBER10, PRIMRECI, ABSVALUE, PBOOLE, FUNCOP_1, NAT_4, EULER_2,
+      GR_CY_3, INT_6, XPRIMES1, XPRIMET1, STIRL2_1, PARTFUN3, FINSEQ_5,
+      NUMBER08, RFINSEQ, HILB10_5, NUMBER03, INT_5;
+ schemes NAT_1, FUNCT_1, FINSEQ_1;
+
+begin :: Problem 63
+:: Construction of a member in an arithmetic progression
+:: that has a given sequence of digits.
+
+reserve a,b,d,n,k,i,j,x,s for Nat;
+
+theorem Th1:
+  for f,g be XFinSequence of NAT holds
+    value(f^g,b) = value(f,b) + value(g,b) * b|^(len f)
+proof
+  let f,g be XFinSequence of NAT;
+  consider fx be XFinSequence of NAT such that
+A1: dom fx = dom f and
+A2: for i being Nat st i in dom fx holds fx.i = (f.i)*(b|^i) and
+A3: value(f,b) = Sum fx by NUMERAL1:def 1;
+  consider gx be XFinSequence of NAT such that
+A4: dom gx = dom g and
+A5: for i being Nat st i in dom gx holds gx.i = (g.i)*(b|^i) and
+A6: value(g,b) = Sum gx by NUMERAL1:def 1;
+  consider fgx be XFinSequence of NAT such that
+A7: dom fgx = dom (f^g) and
+A8: for i being Nat st i in dom fgx holds fgx.i = ((f^g).i)*(b|^i) and
+A9: value(f^g,b) = Sum fgx by NUMERAL1:def 1;
+  dom (f^g) = len f + len g by AFINSQ_1:def 3;
+  then consider Fx,Gx be XFinSequence such that
+A10: len Fx = len f & len Gx = len g & fgx = Fx ^ Gx by A7,AFINSQ_1:61;
+  rng Fx c= rng fgx & rng Gx c= rng fgx & rng fgx c= NAT by A10,AFINSQ_1:24,25;
+  then reconsider Fx,Gx as XFinSequence of NAT by XBOOLE_1:1,RELAT_1:def 19;
+  for k be Nat st k in dom fx holds fx.k = Fx.k
+  proof
+    let k be Nat such that
+A11:  k in dom fx;
+A12:  fx.k = (f.k)*(b|^k) by A2,A11;
+A13:  Fx.k = fgx.k by A1,A11,A10,AFINSQ_1:def 3;
+    dom f c= dom (f^g) by AFINSQ_1:21;
+    then fgx.k = ((f^g).k)*(b|^k) by A1,A11,A7,A8;
+    hence thesis by A13,A12,A1,A11,AFINSQ_1:def 3;
+  end;
+  then
+A14: fx = Fx by A10,A1,AFINSQ_1:8;
+  set B=b|^(len f);
+A15:dom (B(#)gx) = dom gx by VALUED_1:def 5;
+  for k be Nat st k in dom gx holds (B(#)gx).k = Gx.k
+  proof
+    let k be Nat such that
+A16:  k in dom gx;
+A17:  gx.k = (g.k)*(b|^k) by A5,A16;
+A18:  fgx.(k+len Fx) = ((f^g).(k+len Fx))*(b|^(k+len Fx))
+      by AFINSQ_1:23,A4,A16,A10,A8;
+A19:  (f^g).(k+len Fx) = g.k by A4,A16,A10,AFINSQ_1:def 3;
+A20:  b|^(k+len Fx) = (b|^k) * B by A10,NEWTON:8;
+    (B(#)gx).k = B*(gx.k) by VALUED_1:6;
+    hence thesis by A4,A16,A10,AFINSQ_1:def 3,A17,A18,A19,A20;
+  end;
+  then Gx = B(#)gx by A15,A4,A10,AFINSQ_1:8;
+  hence value(f^g,b) = Sum Fx + Sum (B(#)gx) by A9,A10,AFINSQ_2:55
+  .= value(f,b) + value(g,b)*B by A3,A6,A14,AFINSQ_2:64;
+end;
+
+theorem Th2:
+  b > 1 & n >0 & n*(b|^k) <= x < (n+1)*(b|^k)
+    implies digits(n,b) = digits(x,b)/^k
+proof
+  assume that
+A1: b > 1 & n > 0 and
+A2: n*(b|^k) <= x < (n+1)*(b|^k);
+  per cases;
+  suppose
+A3:   k=0;
+    then n*1 <= x < (n+1)*1 by A2,NEWTON:4;
+    then n <= x <= n by NAT_1:13;
+    then n=x by XXREAL_0:1;
+    hence thesis by A3,AFINSQ_2:10;
+  end;
+  suppose
+A4:   k>0;
+    set D=digits(x,b),Dk=D|k,K=D/^k;
+A5:   n*(b|^k) >= 1*(b|^k) by A1,NAT_1:14,XREAL_1:64;
+    x < b|^(len D) by A1,NUMBER11:9;
+    then n*(b|^k) < b|^(len D) by A2,XXREAL_0:2;
+    then b to_power k < b to_power (len D) by A5,XXREAL_0:2;
+    then k < len D by A1,PRE_FF:8;
+    then
+A6:   len Dk = k by AFINSQ_1:54;
+A7:   Dk^K = D;
+    then
+A8:   value(D,b) = value(Dk,b) + value(K,b) * b|^k by A6,Th1;
+A9:   x<>0 by A1,A2;
+    for i being Nat st i in dom Dk holds Dk.i<b
+    proof
+      let i be Nat such that
+A10:    i in dom Dk;
+      dom Dk c= dom D by A7,AFINSQ_1:21;
+      then D.i < b by A10,A1,A9,NUMERAL1:def 2;
+      hence thesis by A7,A10,AFINSQ_1:def 3;
+    end;
+    then
+A11:  0<= value(Dk,b)/(b|^k) < 1 by A6,A4,A1,NUMBER11:8,XREAL_1:191;
+    x <> 0 by A1,A2;
+    then x = value(Dk,b) + value(K,b) * b|^k by A8,A1,NUMERAL1:def 2;
+    then
+A12:  n*(b|^k)/ (b|^k) <=
+      (value(Dk,b) + value(K,b) * b|^k)/(b|^k) < (n+1)*(b|^k)/(b|^k)
+      by A1,A2,XREAL_1:72,74;
+    (value(Dk,b) + value(D/^k,b) * b|^k)/(b|^k)
+       = value(Dk,b)/(b|^k) + (value(D/^k,b) * b|^k)/(b|^k) by XCMPLX_1:62
+      .= value(Dk,b)/(b|^k) + value(D/^k,b) by A1,XCMPLX_1:89;
+    then
+A13:  n <= value(Dk,b)/(b|^k) + value(D/^k,b) < n+1 by A12,A1,XCMPLX_1:89;
+    then
+A14:  n - value(Dk,b)/(b|^k) <=
+      value(Dk,b)/(b|^k) + value(K,b) - value(Dk,b)/(b|^k) = value(K,b)
+      by XREAL_1:9;
+    n - value(Dk,b)/(b|^k) > n-1 by A11,XREAL_1:15;
+    then n-1 < value(D/^k,b) by A14,XXREAL_0:2;
+    then
+A15:  n-1+1 <= value(D/^k,b) by INT_1:7;
+A16:  value(K,b) < n+1 - value(Dk,b)/(b|^k) by A13,XREAL_1:20;
+    n+1 - value(Dk,b)/(b|^k) <= n+1 - 0 by XREAL_1:13;
+    then value(K,b) < n+1 by A16,XXREAL_0:2;
+    then value(K,b) <= n by NAT_1:13;
+    then
+A17:  digits(value(K,b),b) = digits(n,b) by A15,XXREAL_0:1;
+A18:  K <> {} by A15,A1,NUMBER11:1;
+    then reconsider L=len K-1 as Nat;
+A19:  len Dk + len K = len D by A7,AFINSQ_1:17;
+    L<L+1 by NAT_1:13;
+    then L in Segm len K by NAT_1:44;
+    then
+A20:  D.(k+L) = K.L by A7,A6,AFINSQ_1:def 3;
+A21:  D.((len D)-1)<>0 by A9,A1, NUMERAL1:def 2;
+    for i being Nat st i in dom K holds K.i<b
+    proof
+      let i be Nat such that
+A22:  i in dom K;
+      i + k in dom D by A6,A7,A22,AFINSQ_1:23;
+      then D.(k+i)<b by A1,A9,NUMERAL1:def 2;
+      hence thesis by A7,A22,A6,AFINSQ_1:def 3;
+    end;
+    hence thesis by A17,A1,A18,A21,A19,A20,A6,NUMBER11:5;
+  end;
+end;
+
+theorem Th3:
+  b > 0 & d > 1 & s > 0 implies
+    ex m,i being Nat st digits(ArProg (a,b).m,d)/^i = digits(s,d)
+proof
+  assume that
+A1: b > 0 & d > 1 and
+A2: s > 0;
+  set r = a mod b, t = a div b;
+A3: a = b*t+r by A1,NAT_D:2;
+A4: r < b by A1,NAT_D:1;
+  d>=1+1 by A1,NAT_1:13;
+  then consider n be positive Nat such that
+A5: 2*b*(t+1) +1 <= d|^n by LIOUVIL2:1;
+  b+0 < b+b by A1,XREAL_1:8;
+  then
+A6: b*(t+1) < (2*b)*(t+1) by XREAL_1:68;
+  1+0 <= s by A2,NAT_1:13;
+  then
+A7: 1*d|^n <= s*d|^n by XREAL_1:64;
+A8: 2*b*(t+1) < d|^n by A5,NAT_1:13;
+  then b*(t+1) < d|^n by A6,XXREAL_0:2;
+  then b*(t+1) < s*d|^n by A7,XXREAL_0:2;
+  then (t+1) < (s*d|^n)/ b by A1,XREAL_1:81;
+  then
+A9: (s*d|^n)/b - t >1 by XREAL_1:20;
+  set k = [/ (s*d|^n)/b - t \];
+  (s*d|^n)/b - t <= k by INT_1:def 7;
+  then reconsider k as Element of NAT by A9,INT_1:3;
+  take k,n;
+  (s*d|^n)/b <= k + t by INT_1:def 7,XREAL_1:20;
+  then
+A10: s*(d|^n) <= b *(k+t) by A1,XREAL_1:81;
+  k < (s*d|^n)/b - t +1 by INT_1:def 7;
+  then
+A11: k+1 <= (s*d|^n)/b  -t+1+1 by XREAL_1:6;
+  0+1 <= t+1 by XREAL_1:6;
+  then (2*b)*1 <= (2*b)*(t+1) by XREAL_1:64;
+  then (2*b)*1 < d|^n by A8,XXREAL_0:2;
+  then 2 < (d|^n)/b by A1,XREAL_1:81;
+  then
+A12: (s*d|^n)/b  -t +2 < (s*d|^n)/b  -t+(d|^n)/b by XREAL_1:8;
+  (s*d|^n)/b  -t+(d|^n)/b = (s*d|^n)/b +(d|^n)/b -t
+  .= ((s*d|^n)+(d|^n))/b - t by XCMPLX_1:62
+  .=((s+1)*d|^n)/b - t;
+  then k+1 < ((s+1)*d|^n)/b - t by A11,A12,XXREAL_0:2;
+  then k+1 + t < ((s+1)*d|^n)/b by XREAL_1:20;
+  then
+A13: (k+1 + t)*b < ((s+1)*d|^n) by A1,XREAL_1:79;
+  b *(k+t)+0 <= b *(k+t)+r by XREAL_1:7;
+  then
+A14: s*(d|^n) <= b*k + a by A3,A10,XXREAL_0:2;
+  b*k + a = b*k + b*t+r by A3;
+  then b*k + a < b*k + b*t+b by A4,XREAL_1:8;
+  then b*k + a < ((s+1)*d|^n) by A13,XXREAL_0:2;
+  then digits(s,d) = digits(b*k + a,d)/^n by Th2,A1,A2,A14;
+  hence thesis by NUMBER06:7;
+end;
+
+theorem :: Problem 63
+  b > 0 & s > 0 implies
+    ex m,i being Nat st digits(ArProg (a,b).m,10)/^i = digits(s,10) by Th3;
+
+begin :: Problem 67
+:: Construct an infinite set of relatively prime numbers
+:: in a given arithmetic progression
+
+theorem :: Problem 67
+  for a,b being Nat st a > 0 & a,b are_coprime
+    ex N be infinite Subset of NAT st
+       for n,m be Nat st n in N & m in N & n <> m holds
+          ArProg(b,a).n,ArProg(b,a).m are_coprime
+proof
+  let a,b be Nat such that
+A1: a > 0 & a,b are_coprime;
+  defpred X[set] means $1 is finite & not 0 in $1 &
+        for n,m be Nat st n in $1 & m in $1 & n <> m holds
+          ArProg(b,a).n,ArProg(b,a).m are_coprime;
+  defpred G[object,object] means
+      for Y be set st Y=$1 & X[Y] holds
+       ex k be Nat st not k in Y & $2 = Y\/{k} & X[Y\/{k}];
+A2:for x being object st x in bool NAT
+     ex y being object st y in bool NAT & G[x,y]
+  proof
+    let x be object such that
+A3:   x in bool NAT;
+    reconsider N=x as set by A3;
+    per cases;
+    suppose not X[N];
+      then G[N,N];
+      hence thesis by A3;
+    end;
+    suppose
+A4:     X[N];
+      then reconsider N as finite Subset of NAT by A3;
+      set C = canFS N;
+      defpred P[object,object] means $2 = ArProg(b,a).(C.$1);
+A5:     for k be Nat st k in Seg len C ex x being Element of NAT st P[k,x];
+      consider p be FinSequence of NAT such that
+A6:     dom p = Seg len C and
+A7:     for k be Nat st k in Seg len C holds P[k,p.k] from FINSEQ_1:sch 5(A5);
+A8:     dom p=dom C by A6,FINSEQ_1:def 3;
+      Product p <> 0
+      proof
+        assume Product p=0;
+        then consider k be Nat such that
+A9:       k in dom p & p.k = 0 by RVSUM_1:103;
+        set Ck= C.k;
+        Ck in rng C =N by A9,A8,FUNCT_1:def 3,FUNCT_2:def 3;
+        then Ck<>0 by A4;
+        then
+A10:      b+a*Ck <>0 by A1;
+        p.k = ArProg(b,a).Ck by A9,A6,A7;
+        hence thesis by A9,A10,NUMBER06:7;
+      end;
+      then reconsider m=Product p as non zero Nat;
+      reconsider RC=rng ArProg(b,a) /\ Coprimes(m) as infinite set
+        by A1,NUMBER09:17;
+      RC \((rng p)\/{b}) is infinite by RAMSEY_1:4;
+      then consider r be object such that
+A11:    r in RC \((rng p)\/{b}) by XBOOLE_0:def 1;
+      r in rng ArProg(b,a) by A11,XBOOLE_0:def 4;
+      then consider k be object such that
+A12:    k in dom ArProg(b,a) & ArProg(b,a).k = r by FUNCT_1:def 3;
+      reconsider r,k as Nat by A12;
+      set Nk = N\/{k};
+      take Nk;
+      N \/{k} c= NAT by ORDINAL1:def 12,ZFMISC_1:137;
+      hence Nk in bool NAT;
+      let XX be set such that A13:XX=x & X[XX];
+      take k;
+      thus not k in XX
+      proof
+        assume k in XX;
+        then k in rng C by A13,FUNCT_2:def 3;
+        then consider i be object such that
+A14:      i in dom C & C.i=k by FUNCT_1:def 3;
+        reconsider i as Nat by A14;
+        p.i = ArProg(b,a).(C.i) by A8,A14,A6,A7;
+        then r in rng p by A12,A8,A14,FUNCT_1:def 3;
+        then r in rng p\/{b} by XBOOLE_0:def 3;
+        hence thesis by A11,XBOOLE_0:def 5;
+      end;
+      thus Nk = XX\/{k} by A13;
+      X[XX\/{k}]
+      proof
+        thus XX\/{k} is finite by A13;
+        thus not 0 in XX\/{k}
+        proof
+          assume 0 in XX\/{k};
+          then 0 = k by A13,ZFMISC_1:136;
+          then r = b+a*0 by A12,NUMBER06:7;
+          then r in rng p\/{b} by ZFMISC_1:136;
+          hence thesis by A11,XBOOLE_0:def 5;
+        end;
+A15:      for n st n in XX holds
+            ArProg(b,a).n,ArProg(b,a).k are_coprime
+        proof
+          let n be Nat;
+          assume n in XX;
+          then n in rng C by A13,FUNCT_2:def 3;
+          then consider i be object such that
+A16:        i in dom C & C.i=n by FUNCT_1:def 3;
+          reconsider i as Nat by A16;
+          A17:p.i = ArProg(b,a).(C.i) by A8,A16,A6,A7;
+          r in Coprimes(m) by A11,XBOOLE_0:def 4;
+          then r in {j where j is Integer: m,j are_coprime} by NUMBER09:def 2;
+          then ex j be Integer st r=j & m,j are_coprime;
+          hence ArProg(b,a).n,ArProg(b,a).k are_coprime
+            by A12,A16,A17,A8,INT_4:32,NUMBER12:4;
+        end;
+        let n,m be Nat such that
+A18:      n in XX\/{k} & m in XX\/{k} & n <> m;
+        per cases by A18,ZFMISC_1:136;
+        suppose n in XX & m in XX;
+          hence thesis by A18,A13;
+        end;
+        suppose (n in XX & m =k) or (n =k & m in XX);
+          hence thesis by A15;
+        end;
+        suppose n =k & m =k;
+          hence thesis by A18;
+        end;
+      end;
+      hence thesis;
+    end;
+  end;
+  consider g be Function such that
+  dom g = bool NAT & rng g c= bool NAT and
+A19: for x be object st x in bool NAT holds G[x,g.x] from FUNCT_1:sch 6(A2);
+  deffunc G(object,object) = g.$2;
+  consider f be Function such that
+A20:dom f = NAT & f.0 = {} and
+A21: for n be Nat holds f.(n+1) = G(n,f.n) from NAT_1:sch 11;
+  defpred F[Nat] means f.$1 is finite & f.$1 in bool NAT & X[f.$1] &
+  for X be finite set st X = f.$1 holds card X= $1;
+  {} c= NAT;
+  then
+A22:F[0] by A20;
+A23:F[n] implies F[n+1]
+  proof
+    assume
+A24:  F[n];
+    then reconsider fn=f.n as finite Subset of NAT;
+A25:  f.(n+1) = g.fn by A21;
+    consider k be Nat such that
+A26:  not k in fn & g.fn = fn\/{k} & X[fn\/{k}] by A19,A24;
+    reconsider gfn = g.fn as finite set by A26;
+A27:  fn\/{k} c= NAT by ORDINAL1:def 12,ZFMISC_1:137;
+    card fn = n by A24;
+    hence thesis by A27,A26,A25,CARD_2:41;
+  end;
+A28:F[n] from NAT_1:sch 2(A22,A23);
+A29:union rng f is infinite
+  proof
+    assume union rng f is finite;
+    then reconsider U= union rng f as finite set;
+    reconsider fC = f.(card U+1) as finite set by A28;
+    fC in rng f by A20,FUNCT_1:def 3;
+    then card U+1 = card fC <= card U by A28,NAT_1:43,ZFMISC_1:74;
+    hence thesis by NAT_1:13;
+  end;
+  union rng f c= NAT
+  proof
+    let y be object;
+    assume y in union rng f;
+    then consider Y be set such that
+A30:  y in Y & Y in rng f by TARSKI:def 4;
+    consider x be object such that
+A31:  x in dom f & f.x = Y by A30,FUNCT_1:def 3;
+    reconsider x as Nat by A20,A31;
+    f.x in bool NAT by A28;
+    hence thesis by A30,A31;
+  end;
+  then reconsider N=union rng f as infinite Subset of NAT by A29;
+  take N;
+  defpred G[Nat] means for n be Nat holds f.n c= f.(n+$1);
+A32:G[0];
+A33:for k st G[k] holds G[k+1]
+  proof
+    let k such that
+A34:  G[k];
+    let n be Nat;
+A35:  f.n c= f.(n+k) by A34;
+A36:  f.(n+k+1) = g.(f.(n+k)) by A21;
+    f.(n+k) in bool NAT & X[f.(n+k)] by A28;
+    then consider l be Nat such that
+A37:  not l in f.(n+k) & g.(f.(n+k)) = f.(n+k)\/{l} & X[f.(n+k)\/{l}] by A19;
+    f.(n+k) c= f.(n+k+1) by A36,A37,XBOOLE_1:7;
+    hence thesis by A35,XBOOLE_1:1;
+  end;
+A38:G[n] from NAT_1:sch 2(A32,A33);
+  let n,m be Nat such that
+A39: n in N & m in N & n <> m;
+  consider N be set such that
+A40:n in N & N in rng f by A39,TARSKI:def 4;
+  consider xn be object such that
+A41:xn in dom f & f.xn = N by A40,FUNCT_1:def 3;
+  consider M be set such that
+A42:m in M & M in rng f by A39,TARSKI:def 4;
+  consider xm be object such that
+A43:xm in dom f & f.xm = M by A42,FUNCT_1:def 3;
+  reconsider xn,xm as Nat by A20,A41,A43;
+  f.xn c= f.(xn+xm) & f.xm c= f.(xn+xm) by A38;
+  hence thesis by A40,A41,A42,A43,A28,A39;
+end;
+
+begin :: Problem 68
+:: Construction of an infinite set of numbers with exactly
+:: the same prime divisors in a given arithmetic progression.
+
+theorem :: Problem 68
+  a > 0 & b > 0 implies
+    ex N be infinite Subset of NAT st
+       for n,m be Nat,p be Prime st n in N & m in N  holds
+          p divides ArProg(b,a).n iff p divides ArProg(b,a).m
+proof
+  assume
+A1: a > 0 & b > 0;
+  set d = a gcd (a+b);
+  consider a1,c be Nat such that
+A2: a = d*a1 & a+b = d*c & a1,c are_coprime by A1,NUMBER03:18;
+  reconsider a1 as non zero Nat by A1,A2;
+A3: a1 >= 1 by NAT_1:14;
+A4: c > 1
+  proof
+    c <>0 by A1,A2;
+    then
+A5: c >= 1 by NAT_1:14;
+    assume c <= 1;
+    then
+A6: c = 1 by A5,XXREAL_0:1;
+    a+0 < a+b by A1,XREAL_1:8;
+    hence thesis by A6,A2,A3,XREAL_1:66;
+  end;
+  then c >= 1+1 by NAT_1:13;
+  then c |^ Euler a1 > Euler a1 >= 1 by NAT_1:14,NEWTON:86;
+  then
+A7: c |^ Euler a1 > 1 by XXREAL_0:2;
+A8: for n be Nat holds a1 divides (c |^ Euler a1) |^(n+1) - 1
+  proof
+    let n be Nat;
+    a1 >= 1 by NAT_1:14;
+    then per cases by XXREAL_0:1;
+    suppose a1 = 1;
+      hence thesis by INT_2:12;
+    end;
+    suppose
+A9:   a1 > 1;
+      c <>0 by A2,A1;
+      then (c |^ Euler a1) mod a1 = 1 by A2,A9,EULER_2:18;
+      then (c |^ Euler a1) |^(n+1) mod a1 = 1 = 1 mod a1 by NEWTON05:15;
+      hence thesis by INT_4:23;
+    end;
+  end;
+  deffunc F(Nat) = c * (((c |^ Euler a1) |^($1+1) - 1)/a1) +1;
+  consider f be Function such that
+A10: dom f = NAT & for x be Element of NAT holds f.x = F(x) from FUNCT_1:sch 4;
+A11: rng f c= NAT
+  proof
+    let y be object;
+    assume y in rng f;
+    then consider x be object such that
+A12:  x in dom f & f.x=y by FUNCT_1:def 3;
+    reconsider x as Element of NAT by A12,A10;
+    c <> 0 by A1,A2;
+    then consider tn be Nat such that
+A13:  a1*tn = (c |^ Euler a1) |^(x+1) - 1 by A8,NAT_D:def 3;
+    (((c |^ Euler a1) |^(x+1) - 1)/a1) = tn *(a1/a1) by A13,XCMPLX_1:74
+    .= tn*1 by XCMPLX_1:60;
+    then y = c*tn+1 by A10,A12;
+    hence thesis;
+  end;
+  for x1,x2 being object st x1 in dom f & x2 in dom f & f.x1=f.x2 holds x1=x2
+  proof
+    let x1,x2 be object such that
+A14:  x1 in dom f & x2 in dom f & f.x1=f.x2;
+    reconsider x1,x2 as Element of NAT by A14,A10;
+    F(x1)=f.x1 & F(x2)=f.x2 by A10;
+    then c * (((c |^ Euler a1) |^(x1+1) - 1)/a1) +1 =
+    c * (((c |^ Euler a1) |^(x2+1) - 1)/a1) +1 by A14;
+    then ((c |^ Euler a1) |^(x1+1) - 1)/a1
+    = ((c |^ Euler a1) |^(x2+1) - 1)/a1 by A4,XCMPLX_1:5;
+    then a1*((c |^ Euler a1) |^(x1+1) - 1)
+    = a1*((c |^ Euler a1) |^(x2+1) - 1) by XCMPLX_1:95;
+    then (c |^ Euler a1) |^(x1+1) - 1
+    = (c |^ Euler a1) |^(x2+1) - 1 by XCMPLX_1:5;
+    then x1+1=x2+1 by A7,PEPIN:30;
+    hence thesis;
+  end;
+  then reconsider N=rng f as infinite Subset of NAT
+    by FUNCT_1:def 4,A11,A10,CARD_1:59;
+  take N;
+A15:for n be Nat,p be Prime st n in N  holds
+  p divides ArProg(b,a).n iff p divides d or p divides c
+  proof
+    let n be Nat,p be Prime such that
+A16:  n in N;
+    consider x be object such that
+A17:  x in dom f & f.x=n by A16,FUNCT_1:def 3;
+    reconsider x as Element of NAT by A17,A10;
+    c <> 0 by A1,A2;
+    then consider tn be Nat such that
+A18:  a1*tn = (c |^ Euler a1) |^(x+1) - 1 by A8,NAT_D:def 3;
+    (((c |^ Euler a1) |^(x+1) - 1)/a1) = tn *(a1/a1) by A18,XCMPLX_1:74
+    .= tn*1 by XCMPLX_1:60;
+    then n = c*tn+1 by A10,A17;
+    then
+A19: ArProg(b,a).n = b + a*(c*tn+1) by NUMBER06:7
+    .= a*c*tn + c*d by A2
+    .= d*c*(a1*tn)+c*d by A2
+    .= d*c*((c |^ Euler a1) |^(x+1) - 1)+c*d by A18
+    .= d*c*((c |^ Euler a1) |^(x+1))
+    .= d*c*(c |^ ((x+1)*Euler a1) ) by NEWTON:9
+    .= d*(c*(c |^ ((x+1)*Euler a1) ))
+    .= d*(c |^ (1+ (x+1)*Euler a1)) by NEWTON:6;
+    hereby assume p divides ArProg(b,a).n;
+      then p divides d or p divides (c |^ (1+ (x+1)*Euler a1)) by A19,INT_5:7;
+      hence p divides d or p divides c by NAT_3:5;
+    end;
+    assume p divides d or p divides c;
+    then p divides d or p divides (c |^ (1+ (x+1)*Euler a1)) by NEWTON02:14;
+    hence thesis by A19,NAT_D:9;
+  end;
+  let n,m be Nat,p be Prime such that
+A20: n in N & m in N;
+  p divides ArProg(b,a).n iff p divides d or p divides c by A20,A15;
+  hence thesis by A20,A15;
+end;
+
+begin :: Problem 65
+:: Construct an arithmetic progression with the least difference
+:: without fibonacci numbers.
+
+theorem Th7:
+  Fib 6 = 8 & Fib 7 = 13 & Fib 8 = 21 & Fib 9 = 34 &
+  Fib 10 = 55 & Fib 11 = 89 & Fib 12 = 144 & Fib 13 = 233 &
+  Fib 14 = 377 & Fib 15 = 610 & Fib 16 = 987 & Fib 17 = 1597 &
+  Fib 18 = 2584 & Fib 19 = 4181 & Fib 20 = 6765 & Fib 21 = 10946 &
+  Fib 22 = 17711 & Fib 23 = 28657 & Fib 24 = 46368 & Fib 25 = 75025
+proof
+  A1:Fib(4+1+1) = 5+3 by PRE_FF:1,NUMBER06:46,FIB_NUM2:23;
+  then A2:Fib(5+1+1) = 8+5 by NUMBER06:46,PRE_FF:1;
+  then A3:Fib(6+1+1) = 13+8 by A1,PRE_FF:1;
+  then A4:Fib(7+1+1) = 21+13 by A2,PRE_FF:1;
+  then A5:Fib(8+1+1) = 34+21 by A3,PRE_FF:1;
+  then A6:Fib(9+1+1) = 55+34 by A4,PRE_FF:1;
+  then A7:Fib(10+1+1) = 89+55 by A5,PRE_FF:1;
+  then A8:Fib(11+1+1) = 144+89 by A6,PRE_FF:1;
+  then A9:Fib(12+1+1) = 233+144 by A7,PRE_FF:1;
+  then A10:Fib(13+1+1) = 377+233 by A8,PRE_FF:1;
+  then A11:Fib(14+1+1) = 610+377 by A9,PRE_FF:1;
+  then A12:Fib(15+1+1) = 987+610 by A10,PRE_FF:1;
+  then A13:Fib(16+1+1) = 1597+987 by A11,PRE_FF:1;
+  then A14:Fib(17+1+1) = 2584+1597 by A12,PRE_FF:1;
+  then A15:Fib(18+1+1) = 4181+2584 by A13,PRE_FF:1;
+  then A16:Fib(19+1+1) = 6765+4181 by A14,PRE_FF:1;
+  then A17:Fib(20+1+1) = 10946+6765 by A15,PRE_FF:1;
+  then A18:Fib(21+1+1) = 17711+10946 by A16,PRE_FF:1;
+  then A19:Fib(22+1+1) = 28657+17711 by A17,PRE_FF:1;
+  then Fib(23+1+1) = 46368+28657 by A18,PRE_FF:1;
+  hence thesis by A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11,A12,A13,A14,A15,
+    A16,A17,A18,A19;
+end;
+
+theorem Th8:
+  Fib(n+2) >= n
+proof
+  defpred P[Nat] means Fib($1+2) >= $1;
+A1: P[0];
+A2: for n st P[n] holds P[n+1]
+  proof
+    let n such that A3:P[n];
+    n+2 > 1+0 by XREAL_1:8;
+    then Fib(n+2+1)>= Fib(n+2)+1 >= n+1 by A3,FIB_NUM2:44,NAT_1:13,XREAL_1:7;
+    hence thesis by XXREAL_0:2;
+  end;
+  for n holds P[n] from NAT_1:sch 2(A1,A2);
+  hence thesis;
+end;
+
+theorem Th9:
+  k < n <= 7 implies ex i st Fib(i) mod n = k
+proof
+  assume
+A1: k < n <= 7;
+  n=0 or ... or n=7 by A1;
+  then per cases by A1;
+    suppose
+A2:     n=1;
+      then
+A3:     k=0 by A1,NAT_1:14;
+      1*1+0 mod 1 = 0;
+      hence thesis by A2,A3,PRE_FF:1;
+    end;
+    suppose
+A4:     n=2;
+      then
+A5:     k=0 or ... or k=2 by A1;
+      2*0+1 mod 2 = 1 & 2*1+0 mod 2 = 0;
+      hence thesis by A1,A4,A5,FIB_NUM2:22,PRE_FF:1;
+    end;
+    suppose
+A6:     n=3;
+      then
+A7:     k=0 or ... or k=3 by A1;
+      3*0+2 mod 3 = 2 & 3*0+1 mod 3 = 1 & 3*1+0 mod 3 = 0 by NUMBER02:16;
+      hence thesis by A1,A6,A7,FIB_NUM2:22,23,PRE_FF:1;
+    end;
+    suppose
+A8:     n=4;
+      then
+A9:     k=0 or ... or k=4 by A1;
+      4*0+1 mod 4 = 1 & 4*0+2 mod 4 = 2 & 4*0+3 mod 4 = 3 &
+      4*2+0 mod 4 = 0 by NUMBER02:16;
+      hence thesis by A1,A8,A9,FIB_NUM2:21,22,23,Th7;
+    end;
+    suppose
+A10:    n=5;
+      then
+A11:    k=0 or ... or k=5 by A1;
+      5*1+0 mod 5 = 0 & 5*0+1 mod 5 = 1 & 5*0+2 mod 5 = 2 &
+      5*0+3 mod 5 = 3 & 5*6+4 mod 5 = 4 by NUMBER02:16;
+      hence thesis by A1,A10,A11,FIB_NUM2:22,23,PRE_FF:1,Th7,NUMBER06:46;
+    end;
+    suppose
+A12:    n=6;
+      then
+A13:    k=0 or ... or k=6 by A1;
+      24*6+0 mod 6 = 0 & 6*0+1 mod 6 = 1 & 6*0+2 mod 6 = 2 &
+      6*0+3 mod 6 = 3 & 6*5+4 mod 6 = 4 & 6*0+5 mod 6 = 5 by NUMBER02:16;
+      hence thesis by A1,A12,A13,FIB_NUM2:22,23,NUMBER06:46,PRE_FF:1,Th7;
+    end;
+    suppose
+A14:    n=7;
+      then
+A15:    k=0 or ... or k=7 by A1;
+      3*7+0 mod 7 = 0 & 7*0+1 mod 7 = 1 & 7*0+2 mod 7 = 2 &
+      7*0+3 mod 7 = 3 & 20*7+4 mod 7 = 4 & 7*0+5 mod 7 = 5 &
+      7*1+6 mod 7 = 6 by NUMBER02:16;
+      hence thesis by A1,A14,A15,FIB_NUM2:21,22,23,NUMBER06:46,Th7;
+    end;
+end;
+
+theorem Th10:
+  for j being Nat st 0 < j <= 7 ex i being Nat st
+    i>0 &
+    Fib(0),Fib(i) are_congruent_mod j &
+    Fib(1),Fib(i+1) are_congruent_mod j
+proof
+  let j be Nat such that
+A1: 0 < j <= 7;
+  j=0 or ... or j=7 by A1;
+  then per cases by A1;
+  suppose j=1;
+    then Fib(0),Fib(1) are_congruent_mod j &
+    Fib(1),Fib(1+1) are_congruent_mod j by INT_1:13;
+    hence thesis;
+  end;
+  suppose
+A2:   j=2;
+A3:   0*j+0 mod j = 0 & j*0+1 mod j = 1 by A2;
+    2*1+0 mod 2 = 0 & 2*1+1 mod 2 = 1;
+    then Fib(0),Fib(3) are_congruent_mod j &
+    Fib(1),Fib(3+1) are_congruent_mod j
+    by A2,A3,PRE_FF:1,NAT_D:64,FIB_NUM2:22,23;
+    hence thesis;
+  end;
+  suppose
+A4:   j=3;
+A5:   0*j+0 mod j = 0 & j*0+1 mod j = 1 by A4,NUMBER02:16;
+    3*7+0 mod j = 0 & 3*11+1 mod j = 1 by A4,NUMBER02:16;
+    then Fib(0),Fib(8) are_congruent_mod j &
+    Fib(1),Fib(8+1) are_congruent_mod j
+    by A4,A5,PRE_FF:1,NAT_D:64,Th7;
+    hence thesis;
+  end;
+  suppose
+A6:   j=4;
+A7:   0*j+0 mod j = 0 & j*0+1 mod j = 1 by A6,NUMBER02:16;
+    4*2+0 mod j = 0 & 4*3+1 mod j = 1 by A6,NUMBER02:16;
+    then Fib(0),Fib(6) are_congruent_mod j &
+    Fib(1),Fib(6+1) are_congruent_mod j
+    by A6,A7,PRE_FF:1,NAT_D:64,Th7;
+    hence thesis;
+  end;
+  suppose
+A8:   j=5;
+A9:   0*j+0 mod j = 0 & j*0+1 mod j = 1 by A8,NUMBER02:16;
+    5*1353+0 mod j = 0 & 5*2189+1 mod j = 1 by A8,NUMBER02:16;
+    then Fib(0),Fib(20) are_congruent_mod j &
+    Fib(1),Fib(20+1) are_congruent_mod j
+    by A8,A9,PRE_FF:1,NAT_D:64,Th7;
+    hence thesis;
+  end;
+  suppose
+A10:  j=6;
+A11:  0*j+0 mod j = 0 & j*0+1 mod j = 1 by A10,NUMBER02:16;
+    6*7728+0 mod j = 0 & 6*12504+1 mod j = 1 by A10,NUMBER02:16;
+    then Fib(0),Fib(24) are_congruent_mod j &
+    Fib(1),Fib(24+1) are_congruent_mod j
+    by A10,A11,PRE_FF:1,NAT_D:64,Th7;
+    hence thesis;
+  end;
+  suppose
+A12:  j=7;
+A13:  0*j+0 mod j = 0 & j*0+1 mod j = 1 by A12,NUMBER02:16;
+    7*141+0 mod j = 0 & 7*228+1 mod j = 1 by A12,NUMBER02:16;
+    then Fib(0),Fib(16) are_congruent_mod j &
+    Fib(1),Fib(16+1) are_congruent_mod j
+    by A12,A13,PRE_FF:1,NAT_D:64,Th7;
+    hence thesis;
+  end;
+end;
+
+theorem Th11:
+  for n,i,j st
+    Fib(n),Fib(n+i) are_congruent_mod j &
+    Fib(n+1),Fib(n+i+1) are_congruent_mod j
+  for x,y be Nat st x,y are_congruent_mod i holds
+    Fib(x),Fib(y) are_congruent_mod j
+proof
+  let n,i,j such that
+A1: Fib(n),Fib(n+i) are_congruent_mod j &
+    Fib(n+1),Fib(n+i+1) are_congruent_mod j;
+  defpred P[Nat] means  Fib($1),Fib($1+i) are_congruent_mod j &
+        Fib($1+1),Fib($1+i+1) are_congruent_mod j;
+  defpred Q[Nat] means P[n+$1];
+A2: Q[0] by A1;
+A3: for k be Nat st Q[k] holds Q[k+1]
+  proof
+    let k be Nat such that
+A4:   Q[k];
+    Fib(n+k)+Fib(n+k+1),Fib(n+k+i)+Fib(n+k+i+1) are_congruent_mod j
+    by A4,INT_1:16;
+    then Fib(n+k+1+1),Fib(n+k+i)+Fib(n+k+i+1) are_congruent_mod j by PRE_FF:1;
+    hence thesis by A4,PRE_FF:1;
+  end;
+A5: for k be Nat holds Q[k] from NAT_1:sch 2(A2,A3);
+  defpred R[Nat] means $1<=n implies
+    for i be Nat st i=n-$1 holds P[i];
+A6: R[0] by A1;
+A7: for k be Nat st R[k] holds R[k+1]
+  proof
+    let k be Nat such that
+A8:   R[k] & k+1 <=n;
+    let z be Nat such that
+A9:   z=n-(k+1);
+A10:  Fib(z) +Fib(z+1) = Fib(z+1+1) &
+    Fib(z+i) +Fib(z+i+1) = Fib(z+1+i+1) by PRE_FF:1;
+    P[z+1] by A8,NAT_1:13,A9;
+    then Fib(z+1+1)-Fib(z+1),Fib(z+1+i+1)-Fib(z+1+i) are_congruent_mod j
+      by INT_1:17;
+    hence thesis by A10,A8,NAT_1:13,A9;
+  end;
+A11: for k be Nat holds R[k] from NAT_1:sch 2(A6,A7);
+A12: for k be Nat holds Fib(k),Fib(k+i) are_congruent_mod j
+  proof
+    let k be Nat;
+    per cases;
+    suppose k <n;
+      then reconsider z=n-k as Element of NAT by NAT_1:21;
+A13:    R[z] by A11;
+      z <= n-0 by XREAL_1:10;
+      hence thesis by A13;
+    end;
+    suppose k>=n;
+      then reconsider z=k-n as Element of NAT by NAT_1:21;
+      Q[z] by A5;
+      hence thesis;
+    end;
+  end;
+A14:now let x,y be Nat such that
+A15: x <y & x,y are_congruent_mod i;
+    consider k be Integer such that
+A16: y = k * i + x by NAT_6:9,A15,INT_1:14;
+    y >= x+0 by A15;
+    then k >=0 by A15,A16,XREAL_1:7;
+    then reconsider k as Element of NAT by INT_1:3;
+    defpred D[Nat] means Fib(x),Fib(x+i*$1) are_congruent_mod j;
+A17:  D[0] by INT_1:11;
+A18:  for k be Nat st D[k] holds D[k+1]
+    proof
+      let k be Nat such that
+A19:    Fib(x),Fib(x+i*k) are_congruent_mod j;
+      Fib(x+i*k),Fib(x+i*k+i) are_congruent_mod j by A12;
+      hence thesis by A19,INT_1:15;
+    end;
+    for k be Nat holds D[k] from NAT_1:sch 2(A17,A18);
+    then D[k];
+    hence Fib(x),Fib(y) are_congruent_mod j by A16;
+  end;
+  let x,y be Nat such that
+A20: x,y are_congruent_mod i;
+A21: y,x are_congruent_mod i by A20,INT_1:14;
+  per cases by XXREAL_0:1;
+  suppose x<y;
+    hence thesis by A20,A14;
+  end;
+  suppose x=y;
+    hence thesis by INT_1:11;
+  end;
+  suppose y <x;
+    then Fib(y),Fib(x) are_congruent_mod j by A14,A21;
+    hence thesis by INT_1:14;
+  end;
+end;
+
+theorem Th12:
+  for i,j,k being Nat st 0 < j & k < i &
+     (for x,y being Nat st x,y are_congruent_mod j holds
+       Fib(x),Fib(y) are_congruent_mod i) &
+      (for x be Nat st x < j holds Fib(x) mod i <> k)
+  holds
+    for m be Nat holds not ArProg (k,i).m is Fibonacci
+proof
+  let i,j,k be Nat such that
+A1:  0 < j & k < i and
+A2:  for x,y be Nat st x,y are_congruent_mod j holds
+       Fib(x),Fib(y) are_congruent_mod i and
+A3:  for x be Nat st x < j holds Fib(x) mod i <> k;
+  let m be Nat;
+  assume ArProg (k,i).m is Fibonacci;
+  then consider f be Nat such that
+A4: ArProg (k,i).m= Fib(f);
+  ArProg (k,i).m = k + i*m by NUMBER06:7;
+  then
+A5: Fib(f) mod i = k by A1,A4,NUMBER02:16;
+A6: Fib(f mod j) mod i <>k by A3, A1,INT_1:58;
+  Fib(f),Fib(f mod j) are_congruent_mod i by A2,A1,NUMPOLY1:4;
+  hence thesis by A5,A6,NAT_D:64;
+end;
+
+theorem Th13:
+  Fib(0),Fib(12) are_congruent_mod 8 &
+  Fib(1),Fib(12+1) are_congruent_mod 8 &
+  for x be Nat st x < 12 holds Fib(x) mod 8 <> 4 & Fib(x) mod 8 <> 6
+proof
+  0*8+0 mod 8 = 0 & 18*8+0 mod 8 = 0 & 8*0+1 mod 8 = 1
+    & 8*29+1 mod 8 = 1 by NUMBER02:16;
+  hence Fib(0),Fib(12) are_congruent_mod 8 &
+    Fib(1),Fib(12+1) are_congruent_mod 8 by Th7,PRE_FF:1,NAT_D:64;
+  let x be Nat such that
+A1:  x < 12;
+A2:  x=0 or ... or x=12 by A1;
+  0*8+0 mod 8 = 0 & 8*0+1 mod 8 = 1 & 0*8+2 mod 8 = 2 & 8*0+3 mod 8 = 3 &
+  0*8+5 mod 8 = 5 & 8*1+0 mod 8 = 0 & 1*8+5 mod 8 = 5 & 8*2+5 mod 8 = 5 &
+  3*8+5 mod 8 = 5 & 8*4+2 mod 8 = 2 & 8*6+7 mod 8 = 7 & 11*8+1 mod 8 = 1
+    by NUMBER02:16;
+  hence thesis by A1,A2,Th7,FIB_NUM2:21,22,23,PRE_FF:1,NUMBER06:46;
+end;
+
+theorem :: Problem 65
+  (for i,j st 0 < i <= 7
+    ex k st ArProg (j,i).k is Fibonacci) &
+   for k holds not ArProg (4,8).k is Fibonacci
+proof
+  thus for i,j st 0 < i <= 7
+    ex k st ArProg (j,i).k is Fibonacci
+  proof
+    let i,j be Nat such that
+A1:   0 < i <= 7;
+    consider k be Nat such that
+A2:   k>0 and
+A3:   Fib(0),Fib(k) are_congruent_mod i &
+      Fib(1),Fib(k+1) are_congruent_mod i by A1,Th10;
+A4:   1=1+0 & k+1 = 0+k+1 & 0+k = k;
+    consider f be Nat such that
+A5:   Fib(f) mod i = j mod i by A1,INT_1:58,Th9;
+    ex w be Nat st f+k*w >=j
+    proof
+      per cases;
+      suppose f >=j;
+        then f+k*0 >=j;
+        hence thesis;
+      end;
+      suppose f < j;
+        then
+A6:       0 < j-f by XREAL_1:50;
+        consider i be Integer such that
+A7:       k*i <= j-f <= k*(i+1) by A2,NIVEN:5;
+        i+1 >0 by A6,A7;
+        then reconsider i1=i+1 as Element of NAT by INT_1:3;
+        j-f+f <= k*i1+f by A7,XREAL_1:6;
+        hence thesis;
+      end;
+    end;
+    then consider w be Nat such that
+A8:   f+k*w >=j;
+    Fib(f+k*w +2) >= f+k*w by Th8;
+    then
+A9:   Fib(f+k*w +2) >= j by A8,XXREAL_0:2;
+    2*k >= 2*1 by A2,NAT_1:14,XREAL_1:64;
+    then f+k*w+2*k >= f+k*w + 2 by XREAL_1:6;
+    then Fib(k*(2+w)+f) >= Fib(f+k*w +2) by FIB_NUM2:45;
+    then
+A10:  Fib(k*(2+w)+f) >= j by A9,XXREAL_0:2;
+    k*(2+w)+f,0+f are_congruent_mod k;
+    then Fib(k*(2+w)+f) mod i = j mod i by A4,A3,Th11,A5,NAT_D:64;
+    then consider z be Integer such that
+A11:  Fib(k*(2+w)+f) = z * i + j by A1,NAT_D:64,NAT_6:9;
+    z>=0 by A1,A11,A10,XREAL_1:30;
+    then reconsider z as Element of NAT by INT_1:3;
+    ArProg (j,i).z = z * i + j by NUMBER06:7;
+    hence thesis by A11;
+  end;
+  let k be Nat;
+  Fib(0),Fib(0+12) are_congruent_mod 8 &
+  Fib(0+1),Fib(0+12+1) are_congruent_mod 8 by Th13;
+  then
+A12:for x,y be Nat st x,y are_congruent_mod 12 holds
+    Fib(x),Fib(y) are_congruent_mod 8 by Th11;
+  for x be Nat st x < 12 holds Fib(x) mod 8 <> 4 by Th13;
+  hence thesis by A12,Th12;
+end;
+
+begin :: Problem 66
+:: Construct an arithmetic progression ak+b (k=0,1,2,...)
+:: without Fibonacci numbers where a,b are coprime.
+
+theorem :: Problem 66
+  4,11 are_coprime &
+  for m being Nat holds not ArProg (4,11).m is Fibonacci
+proof
+A1:  4 gcd 11 = 4 gcd (11-4) = 4 gcd (7-4) by PREPOWER:97;
+  3 gcd 4 = 3 gcd (4-3) by PREPOWER:97;
+  hence 4,11 are_coprime by A1;
+A2: 0*11+0 mod 11 = 0 & 5*11+0 mod 11 = 0 & 11*0+1 mod 11 = 1
+    & 11*8+1 mod 11 = 1 by NUMBER02:16;
+  then Fib(0),Fib(0+10) are_congruent_mod 11 &
+    Fib(0+1),Fib(0+10+1) are_congruent_mod 11 by Th7,PRE_FF:1,NAT_D:64;
+  then
+A3: (for x,y be Nat st x,y are_congruent_mod 10 holds
+       Fib(x),Fib(y) are_congruent_mod 11) by Th11;
+  for x be Nat st x < 10 holds Fib(x) mod 11 <> 4
+  proof
+    let x be Nat such that
+A4:   x < 10;
+A5:   x=0 or ... or x=10 by A4;
+    0*11+2 mod 11 = 2 & 11*0+3 mod 11 = 3 & 0*11+5 mod 11 = 5 &
+    11*0+8 mod 11 = 8 & 1*11+2 mod 11 = 2 & 11*1+10 mod 11 = 10 &
+    3*11+1 mod 11 = 1 by NUMBER02:16;
+    hence thesis by A5,A2,Th7,FIB_NUM2:21,22,23,PRE_FF:1,NUMBER06:46;
+  end;
+  hence thesis by A3,Th12;
+end;
+
+begin :: Problem 96
+:: Find the largest prime number in the sequence 1, 31, 331, 3331, ...
+
+theorem Th16:
+  value(<%1%>^(n-->3),10) = (10|^(n+1)-7)/3
+proof
+  defpred P[Nat] means 3*value(<%1%>^($1-->3),10) = (10|^($1+1)-7);
+  value(<%1%>^(0-->3),10)= 1 by NUMBER11:2;
+  then
+A1: P[0];
+A2: for n holds P[n] implies P[n+1]
+  proof
+    let n be Nat;
+    set n1=n+1,N=<%1%>^(n-->3);
+    assume
+A3:   P[n];
+    (Segm n1)-->3 = ((Segm n)-->3) ^ <%3%> by AFINSQ_1:87;
+    then <%1%>^(n1-->3) = <%1%>^(n-->3)^ <%3%> by AFINSQ_1:27;
+    then
+A4:   value(<%1%>^(n1-->3),10) = value(N,10) +value(<%3%>,10)*10|^(len N)
+    by Th1;
+    len (n-->3) = n & len <%1%> = 1 by AFINSQ_1:34;
+    then
+A5:   len N = n+1 by AFINSQ_1:17;
+    value(<%3%>,10) = 3 by NUMBER11:2;
+    then 3*value(<%1%>^(n1-->3),10) = 3*value(N,10) + 3*(3*10|^n1) by A5,A4;
+    then 3*value(<%1%>^(n1-->3),10) = (1+9)*10|^n1-7 by A3
+    .= 10|^(n1+1)-7 by NEWTON:6;
+    hence thesis;
+  end;
+A6:for n holds P[n] from NAT_1:sch 2(A1,A2);
+  3*value(<%1%>^(n-->3),10) = (10|^(n+1)-7) by A6;
+  hence thesis;
+end;
+
+theorem Th17:
+  ex k be Nat st 17 divides k = (10|^(16*n+9)-7)/3
+proof
+A1: 10|^(1+1) = 10*10|^1 by NEWTON:6;
+  100 = 17*5 + 15;
+  then 10|^2 mod 17 = 15 & 15*15 = 13*17 +4 by A1,NUMBER02:16;
+  then (10|^2*10|^2) mod 17 = (15*15) mod 17 = 4 & 10|^2*10|^2 = 10|^(2+2) &
+    16= 17*0+16 by NUMBER02:16,NAT_D:67,NEWTON:8;
+  then
+A2: (10|^4*10|^4) mod 17 = (4*4) mod 17 = 16 & 16*16 = 15*17+1 &
+  10|^4*10|^4 = 10|^(4+4) by NEWTON:8,NUMBER02:16,NAT_D:67;
+  then(10|^8*10|^8) mod 17 = (16*16) mod 17 = 1 &
+  10|^8*10|^8 = 10|^(8+8) by NEWTON:8,NUMBER02:16,NAT_D:67;
+  then
+A3:(10|^16) |^n mod 17 = 1|^n mod 17 = 1 by GR_CY_3:30;
+  10 mod 17 = 10 & 16*10 = 17*9 + 7 by NAT_D:24;
+  then
+A4:(10|^8*10) mod 17 = (16*10) mod 17 = 7 & 10|^8*10 = 10|^(8+1)
+  by A2,NEWTON:6,NUMBER02:16,NAT_D:67;
+  10|^(16*n+9) = 10|^(16*n)* (10|^9) by NEWTON:8
+  .= (10|^16) |^n * (10|^9) by NEWTON:9;
+  then 10|^(16*n+9) mod 17 = 1*7 mod 17 & 7 mod 17 = 7
+    by A3,A4,NAT_D:67;
+  then
+A5: (10|^(16*n+9) - 7) mod 17 = (7-7) mod 17 = 0 by INT_6:7;
+  value(<%1%>^((16*n+8)-->3),10) = (10|^(16*n+8+1)-7)/3 by Th16;
+  then reconsider k = (10|^(16*n+9)-7)/3 as Nat;
+  take k;
+  3*k*6 mod 17 = ((6 mod 17) * 0) mod 17 = 0 & 3*6*k = 3*k*6
+    by A5,NAT_D:67;
+  then 0 = (18 mod 17)*(k mod 17) mod 17 & (17*1+1) mod 17 = 1
+    by NUMBER02:16,NAT_D:67;
+  then k mod 17 = 0;
+  hence thesis by PEPIN:6;
+end;
+
+theorem Th18:
+  33331 is prime
+proof
+  now
+    33331 = 2*16665 + 1; hence not 2 divides 33331;
+    33331 = 3*11110 + 1; hence not 3 divides 33331 by NAT_4:9;
+    33331 = 5*6666 + 1; hence not 5 divides 33331 by NAT_4:9;
+    33331 = 7*4761 + 4; hence not 7 divides 33331 by NAT_4:9;
+    33331 = 11*3030 + 1; hence not 11 divides 33331 by NAT_4:9;
+    33331 = 13*2563 + 12; hence not 13 divides 33331 by NAT_4:9;
+    33331 = 17*1960 + 11; hence not 17 divides 33331 by NAT_4:9;
+    33331 = 19*1754 + 5; hence not 19 divides 33331 by NAT_4:9;
+    33331 = 23*1449 + 4; hence not 23 divides 33331 by NAT_4:9;
+    33331 = 29*1149+10; hence not 29 divides 33331 by NAT_4:9;
+    33331 = 31*1075+6; hence not 31 divides 33331 by NAT_4:9;
+    33331 = 37*900+31; hence not 37 divides 33331 by NAT_4:9;
+    33331 = 41*812+39; hence not 41 divides 33331 by NAT_4:9;
+    33331 = 43*775+6; hence not 43 divides 33331 by NAT_4:9;
+    33331 = 47*709+8; hence not 47 divides 33331 by NAT_4:9;
+    33331 = 53*628+47; hence not 53 divides 33331 by NAT_4:9;
+    33331 = 59*564+55; hence not 59 divides 33331 by NAT_4:9;
+    33331 = 61*546+25; hence not 61 divides 33331 by NAT_4:9;
+    33331 = 67*497+32; hence not 67 divides 33331 by NAT_4:9;
+    33331 = 71*469+32; hence not 71 divides 33331 by NAT_4:9;
+    33331 = 73*456+43; hence not 73 divides 33331 by NAT_4:9;
+    33331 = 79*421+72; hence not 79 divides 33331 by NAT_4:9;
+    33331 = 83*401+48; hence not 83 divides 33331 by NAT_4:9;
+    33331 = 89*374+45; hence not 89 divides 33331 by NAT_4:9;
+    33331 = 97*343+60; hence not 97 divides 33331 by NAT_4:9;
+    33331 = 101*330+1; hence not 101 divides 33331 by NAT_4:9;
+    33331 = 101 * 330 + 1; hence not 101 divides 33331 by NAT_4:9;
+    33331 = 103 * 323 + 62; hence not 103 divides 33331 by NAT_4:9;
+    33331 = 107 * 311 + 54; hence not 107 divides 33331 by NAT_4:9;
+    33331 = 109 * 305 + 86; hence not 109 divides 33331 by NAT_4:9;
+    33331 = 113 * 294 + 109; hence not 113 divides 33331 by NAT_4:9;
+    33331 = 127 * 262 + 57; hence not 127 divides 33331 by NAT_4:9;
+    33331 = 131 * 254 + 57; hence not 131 divides 33331 by NAT_4:9;
+    33331 = 137 * 243 + 40; hence not 137 divides 33331 by NAT_4:9;
+    33331 = 139 * 239 + 110; hence not 139 divides 33331 by NAT_4:9;
+    33331 = 149 * 223 + 104; hence not 149 divides 33331 by NAT_4:9;
+    33331 = 151 * 220 + 111; hence not 151 divides 33331 by NAT_4:9;
+    33331 = 157 * 212 + 47; hence not 157 divides 33331 by NAT_4:9;
+    33331 = 163 * 204 + 79; hence not 163 divides 33331 by NAT_4:9;
+    33331 = 167 * 199 + 98; hence not 167 divides 33331 by NAT_4:9;
+    33331 = 173 * 192 + 115; hence not 173 divides 33331 by NAT_4:9;
+    33331 = 179 * 186 + 37; hence not 179 divides 33331 by NAT_4:9;
+    33331 = 181 * 184 + 27; hence not 181 divides 33331 by NAT_4:9;
+  end;
+  then for n be Element of NAT st 1 < n & n*n <= 33331 & n is prime
+  holds not n divides 33331 by XPRIMET1:84;
+  hence thesis by NAT_4:14;
+end;
+
+theorem  Th19:
+  333331 is prime
+proof
+  now
+    333331 = 2 * 166665 + 1; hence not 2 divides 333331;
+    333331 = 3 * 111110 + 1; hence not 3 divides 333331 by NAT_4:9;
+    333331 = 5 * 66666 + 1; hence not 5 divides 333331 by NAT_4:9;
+    333331 = 7 * 47618 + 5; hence not 7 divides 333331 by NAT_4:9;
+    333331 = 11 * 30302 + 9; hence not 11 divides 333331 by NAT_4:9;
+    333331 = 13 * 25640 + 11; hence not 13 divides 333331 by NAT_4:9;
+    333331 = 17 * 19607 + 12; hence not 17 divides 333331 by NAT_4:9;
+    333331 = 19 * 17543 + 14; hence not 19 divides 333331 by NAT_4:9;
+    333331 = 23 * 14492 + 15; hence not 23 divides 333331 by NAT_4:9;
+    333331 = 29 * 11494 + 5; hence not 29 divides 333331 by NAT_4:9;
+    333331 = 31 * 10752 + 19; hence not 31 divides 333331 by NAT_4:9;
+    333331 = 37 * 9008 + 35; hence not 37 divides 333331 by NAT_4:9;
+    333331 = 41 * 8130 + 1; hence not 41 divides 333331 by NAT_4:9;
+    333331 = 43 * 7751 + 38; hence not 43 divides 333331 by NAT_4:9;
+    333331 = 47 * 7092 + 7; hence not 47 divides 333331 by NAT_4:9;
+    333331 = 53 * 6289 + 14; hence not 53 divides 333331 by NAT_4:9;
+    333331 = 59 * 5649 + 40; hence not 59 divides 333331 by NAT_4:9;
+    333331 = 61 * 5464 + 27; hence not 61 divides 333331 by NAT_4:9;
+    333331 = 67 * 4975 + 6; hence not 67 divides 333331 by NAT_4:9;
+    333331 = 71 * 4694 + 57; hence not 71 divides 333331 by NAT_4:9;
+    333331 = 73 * 4566 + 13; hence not 73 divides 333331 by NAT_4:9;
+    333331 = 79 * 4219 + 30; hence not 79 divides 333331 by NAT_4:9;
+    333331 = 83 * 4016 + 3; hence not 83 divides 333331 by NAT_4:9;
+    333331 = 89 * 3745 + 26; hence not 89 divides 333331 by NAT_4:9;
+    333331 = 97 * 3436 + 39; hence not 97 divides 333331 by NAT_4:9;
+    333331 = 101 * 3300 + 31; hence not 101 divides 333331 by NAT_4:9;
+    333331 = 103 * 3236 + 23; hence not 103 divides 333331 by NAT_4:9;
+    333331 = 107 * 3115 + 26; hence not 107 divides 333331 by NAT_4:9;
+    333331 = 109 * 3058 + 9; hence not 109 divides 333331 by NAT_4:9;
+    333331 = 113 * 2949 + 94; hence not 113 divides 333331 by NAT_4:9;
+    333331 = 127 * 2624 + 83; hence not 127 divides 333331 by NAT_4:9;
+    333331 = 131 * 2544 + 67; hence not 131 divides 333331 by NAT_4:9;
+    333331 = 137 * 2433 + 10; hence not 137 divides 333331 by NAT_4:9;
+    333331 = 139 * 2398 + 9; hence not 139 divides 333331 by NAT_4:9;
+    333331 = 149 * 2237 + 18; hence not 149 divides 333331 by NAT_4:9;
+    333331 = 151 * 2207 + 74; hence not 151 divides 333331 by NAT_4:9;
+    333331 = 157 * 2123 + 20; hence not 157 divides 333331 by NAT_4:9;
+    333331 = 163 * 2044 + 159; hence not 163 divides 333331 by NAT_4:9;
+    333331 = 167 * 1995 + 166; hence not 167 divides 333331 by NAT_4:9;
+    333331 = 173 * 1926 + 133; hence not 173 divides 333331 by NAT_4:9;
+    333331 = 179 * 1862 + 33; hence not 179 divides 333331 by NAT_4:9;
+    333331 = 181 * 1841 + 110; hence not 181 divides 333331 by NAT_4:9;
+    333331 = 191 * 1745 + 36; hence not 191 divides 333331 by NAT_4:9;
+    333331 = 193 * 1727 + 20; hence not 193 divides 333331 by NAT_4:9;
+    333331 = 197 * 1692 + 7; hence not 197 divides 333331 by NAT_4:9;
+    333331 = 199 * 1675 + 6; hence not 199 divides 333331 by NAT_4:9;
+    333331 = 211 * 1579 + 162; hence not 211 divides 333331 by NAT_4:9;
+    333331 = 223 * 1494 + 169; hence not 223 divides 333331 by NAT_4:9;
+    333331 = 227 * 1468 + 95; hence not 227 divides 333331 by NAT_4:9;
+    333331 = 229 * 1455 + 136; hence not 229 divides 333331 by NAT_4:9;
+    333331 = 233 * 1430 + 141; hence not 233 divides 333331 by NAT_4:9;
+    333331 = 239 * 1394 + 165; hence not 239 divides 333331 by NAT_4:9;
+    333331 = 241 * 1383 + 28; hence not 241 divides 333331 by NAT_4:9;
+    333331 = 251 * 1328 + 3; hence not 251 divides 333331 by NAT_4:9;
+    333331 = 257 * 1297 + 2; hence not 257 divides 333331 by NAT_4:9;
+    333331 = 263 * 1267 + 110; hence not 263 divides 333331 by NAT_4:9;
+    333331 = 269 * 1239 + 40; hence not 269 divides 333331 by NAT_4:9;
+    333331 = 271 * 1230 + 1; hence not 271 divides 333331 by NAT_4:9;
+    333331 = 277 * 1203 + 100; hence not 277 divides 333331 by NAT_4:9;
+    333331 = 281 * 1186 + 65; hence not 281 divides 333331 by NAT_4:9;
+    333331 = 283 * 1177 + 240; hence not 283 divides 333331 by NAT_4:9;
+    333331 = 293 * 1137 + 190; hence not 293 divides 333331 by NAT_4:9;
+    333331 = 307 * 1085 + 236; hence not 307 divides 333331 by NAT_4:9;
+    333331 = 311 * 1071 + 250; hence not 311 divides 333331 by NAT_4:9;
+    333331 = 313 * 1064 + 299; hence not 313 divides 333331 by NAT_4:9;
+    333331 = 317 * 1051 + 164; hence not 317 divides 333331 by NAT_4:9;
+    333331 = 331 * 1007 + 14; hence not 331 divides 333331 by NAT_4:9;
+    333331 = 337 * 989 + 38; hence not 337 divides 333331 by NAT_4:9;
+    333331 = 347 * 960 + 211; hence not 347 divides 333331 by NAT_4:9;
+    333331 = 349 * 955 + 36; hence not 349 divides 333331 by NAT_4:9;
+    333331 = 353 * 944 + 99; hence not 353 divides 333331 by NAT_4:9;
+    333331 = 359 * 928 + 179; hence not 359 divides 333331 by NAT_4:9;
+    333331 = 367 * 908 + 95; hence not 367 divides 333331 by NAT_4:9;
+    333331 = 373 * 893 + 242; hence not 373 divides 333331 by NAT_4:9;
+    333331 = 379 * 879 + 190; hence not 379 divides 333331 by NAT_4:9;
+    333331 = 383 * 870 + 121; hence not 383 divides 333331 by NAT_4:9;
+    333331 = 389 * 856 + 347; hence not 389 divides 333331 by NAT_4:9;
+    333331 = 397 * 839 + 248; hence not 397 divides 333331 by NAT_4:9;
+    333331 = 401 * 831 + 100; hence not 401 divides 333331 by NAT_4:9;
+    333331 = 409 * 814 + 405; hence not 409 divides 333331 by NAT_4:9;
+    333331 = 419 * 795 + 226; hence not 419 divides 333331 by NAT_4:9;
+    333331 = 421 * 791 + 320; hence not 421 divides 333331 by NAT_4:9;
+    333331 = 431 * 773 + 168; hence not 431 divides 333331 by NAT_4:9;
+    333331 = 433 * 769 + 354; hence not 433 divides 333331 by NAT_4:9;
+    333331 = 439 * 759 + 130; hence not 439 divides 333331 by NAT_4:9;
+    333331 = 443 * 752 + 195; hence not 443 divides 333331 by NAT_4:9;
+    333331 = 449 * 742 + 173; hence not 449 divides 333331 by NAT_4:9;
+    333331 = 457 * 729 + 178; hence not 457 divides 333331 by NAT_4:9;
+    333331 = 461 * 723 + 28; hence not 461 divides 333331 by NAT_4:9;
+    333331 = 463 * 719 + 434; hence not 463 divides 333331 by NAT_4:9;
+    333331 = 467 * 713 + 360; hence not 467 divides 333331 by NAT_4:9;
+    333331 = 479 * 695 + 426; hence not 479 divides 333331 by NAT_4:9;
+    333331 = 487 * 684 + 223; hence not 487 divides 333331 by NAT_4:9;
+    333331 = 491 * 678 + 433; hence not 491 divides 333331 by NAT_4:9;
+    333331 = 499 * 667 + 498; hence not 499 divides 333331 by NAT_4:9;
+    333331 = 503 * 662 + 345; hence not 503 divides 333331 by NAT_4:9;
+    333331 = 509 * 654 + 445; hence not 509 divides 333331 by NAT_4:9;
+    333331 = 521 * 639 + 412; hence not 521 divides 333331 by NAT_4:9;
+    333331 = 523 * 637 + 180; hence not 523 divides 333331 by NAT_4:9;
+    333331 = 541 * 616 + 75; hence not 541 divides 333331 by NAT_4:9;
+    333331 = 547 * 609 + 208; hence not 547 divides 333331 by NAT_4:9;
+    333331 = 557 * 598 + 245; hence not 557 divides 333331 by NAT_4:9;
+    333331 = 563 * 592 + 35; hence not 563 divides 333331 by NAT_4:9;
+    333331 = 569 * 585 + 466; hence not 569 divides 333331 by NAT_4:9;
+    333331 = 571 * 583 + 438; hence not 571 divides 333331 by NAT_4:9;
+    333331 = 577 * 577 + 402; hence not 577 divides 333331 by NAT_4:9;
+  end;
+  then for n be Element of NAT st 1 < n & n*n <= 333331 & n is prime
+  holds not n divides 333331 by XPRIMET1:212;
+  hence thesis by NAT_4:14;
+end;
+
+Lm1: 17 <> (10|^(n+1)-7)/3
+proof
+  10|^(0+1) = 10;
+  then
+A1: 10|^(1+1) = 10*10 by NEWTON:6;
+  per cases by NAT_1:14;
+    suppose n=0;
+      hence thesis;
+    end;
+    suppose n >= 1;
+      then n+1 >= 1+1 by XREAL_1:6;
+      then 10|^(n+1)-7 >= 10|^2-7 by NAT_6:1,XREAL_1:9;
+      then (10|^(n+1)-7)/3 >= (10|^2-7)/3 by XREAL_1:72;
+      hence thesis by A1;
+    end;
+end;
+
+theorem :: Problem 96
+  (for n be non zero Nat st n < 6 holds value(<%1%>^(n-->3),10) is prime) &
+    value(<%1%>^(8-->3),10) is non prime &
+  {value(<%1%>^(n-->3),10) where n is Nat:
+     value(<%1%>^(n-->3),10) is non prime} is infinite
+proof
+  hereby let n be non zero Nat;
+    assume
+A1:   n < 6;
+    then
+A2:   n = 0 or ... or n = 6;
+A3:   value(<%1%>^(n-->3),10) = (10|^(n+1)-7)/3 by Th16;
+    10|^(0+1) = 10;
+    then A4:10|^(1+1) = 10*10 by NEWTON:6;
+    then A5:10|^(2+1) = 10*10*10 by NEWTON:6;
+    then A6:10|^(3+1) = 10*10*10*10 by NEWTON:6;
+    then A7:10|^(4+1) = 10*10*10*10*10 by NEWTON:6;
+    then A8:10|^(5+1) = 10*10*10*10*10*10 by NEWTON:6;
+    per cases by A1,A2;
+    suppose n=1;
+      hence value(<%1%>^(n-->3),10) is prime by A3,A4,XPRIMES1:31;
+    end;
+    suppose n=2;
+      hence value(<%1%>^(n-->3),10) is prime by A3,A5,XPRIMES1:331;
+    end;
+    suppose n=3;
+      hence value(<%1%>^(n-->3),10) is prime by A3,A6,XPRIMES1:3331;
+    end;
+    suppose n=4;
+      hence value(<%1%>^(n-->3),10) is prime by A3,A7,Th18;
+    end;
+    suppose n=5;
+      hence value(<%1%>^(n-->3),10) is prime by A3,A8,Th19;
+    end;
+  end;
+  consider v be Nat such that
+A9: 17 divides v = (10|^(16*0+9)-7)/3 by Th17;
+  value(<%1%>^(8-->3),10) = (10|^(8+1)-7)/3 by Th16;
+  hence value(<%1%>^(8-->3),10) is non prime by A9,Lm1;
+  set V = {value(<%1%>^(n-->3),10) where n is Nat:
+    value(<%1%>^(n-->3),10) is non prime};
+  deffunc F(Nat) = (10|^(16*$1+9)-7)/3;
+  consider f be Function such that
+A10: dom f = NAT & for d be Element of NAT holds f.d = F(d)
+   from FUNCT_1:sch 4;
+A11: for x1,x2 be object st x1 in dom f & x2 in dom f & f.x1=f.x2 holds x1=x2
+  proof
+    let x1,x2 be object such that
+A12:  x1 in dom f & x2 in dom f & f.x1=f.x2;
+    reconsider n1=x1,n2=x2 as Element of NAT by A12,A10;
+    (10|^(16*n1+9)-7)/3 =f.n1 & f.n2=(10|^(16*n2+9)-7)/3 by A10;
+    then (10|^(16*n1+9)-7)/3 = (10|^(16*n2+9)-7)/3 by A12;
+    then 16*n1+9 = 16*n2+9 by PEPIN:30;
+    hence thesis;
+  end;
+  rng f c= V
+  proof
+    let y be object;
+    assume y in rng f;
+    then consider x be object such that
+A13:  x in dom f & f.x = y by FUNCT_1:def 3;
+    reconsider x as Nat by A13,A10;
+    f.x = (10|^(16*x+9)-7)/3 = (10|^(16*x+8+1)-7)/3 by A13,A10;
+    then
+A14:  f.x = value(<%1%>^((16*x+8)-->3),10) by Th16;
+    consider v be Nat such that
+A15:  17 divides v = (10|^(16*x+9)-7)/3 by Th17;
+    value(<%1%>^((16*x+8)-->3),10) = (10|^((16*x+8)+1)-7)/3 by Th16;
+    then value(<%1%>^((16*x+8)-->3),10) is non prime by A15,Lm1;
+    hence thesis by A14,A13;
+  end;
+  hence thesis by A11,FUNCT_1:def 4,A10,CARD_1:59;
+end;
+
+begin :: Product of Different Primes Selected Properties
+
+theorem Th21:
+  for n be non zero Nat, p be Prime st support pfexp n = {p} holds
+     n = p |^ (pfexp n).p
+proof
+  let n be non zero Nat, p be Prime such that
+A1: support pfexp n = {p};
+  set b = ppf n;
+  consider f be FinSequence of COMPLEX such that
+A2: Product b = Product f and
+A3: f = b*canFS(support b) by NAT_3:def 5;
+A4: support pfexp n = support b by NAT_3:def 9;
+  then
+A5: p in support b c= dom b by A1,PRE_POLY:37,TARSKI:def 1;
+  f = b*<*p*> by A3,A1,A4,FINSEQ_1:94
+  .= <* b.p *> by A5,FINSEQ_2:34;
+  then Product b = ::b.p by A2
+   p |^ (p |-count n) by A2,A5,A4,NAT_3:def 9;
+  then n = p |^ (p |-count n) by NAT_3:61;
+  hence thesis by NAT_3:def 8;
+end;
+
+theorem Th22:
+  for n being non zero Nat holds
+    rng pfexp n c= {0,1} & card support (pfexp n) = 1
+  iff n is prime
+proof
+  let n be non zero Nat;
+  hereby assume
+A1:   rng pfexp n c= {0,1} & card support (pfexp n) = 1;
+    then consider p be object such that
+A2:   support (pfexp n) = {p} by CARD_2:42;
+    p in {p} by TARSKI:def 1;
+    then reconsider p as Prime by A2,NAT_3:34;
+A3:   p in support (pfexp n) c= dom pfexp n by A2,TARSKI:def 1,PRE_POLY:37;
+    then A4:(pfexp n).p in rng pfexp n by FUNCT_1:def 3;
+    (pfexp n).p<>0 by A3,PRE_POLY:def 7;
+    then
+A5:   (pfexp n).p=1 by A1,A4,TARSKI:def 2;
+    n = p |^ 1 by A5,A2,Th21;
+    hence n is prime;
+  end;
+  assume
+A6:  n is prime;
+  n=n|^1;
+  then
+A7:  support pfexp (n) = {n} by A6,NAT_3:42;
+  thus rng pfexp n c= {0,1}
+  proof
+    let y be object such that
+A8:   y in rng pfexp n & not y in {0,1};
+    consider x be object such that
+A9:   x in dom pfexp n & (pfexp n).x=y by A8,FUNCT_1:def 3;
+    y<>0 & y<>1 by A8,TARSKI:def 2;
+    then x in support pfexp n by A9,PRE_POLY:def 7;
+    then x=n by A7,TARSKI:def 1;
+    then (pfexp n).x = 1 by A6,NAT_3:41;
+    hence thesis by A8,A9,TARSKI:def 2;
+  end;
+  thus card support (pfexp n) = 1 by A7,CARD_1:30;
+end;
+
+theorem Th23:
+  for n be non zero Nat holds 0 in rng pfexp n
+proof
+  let n be non zero Nat;
+  not SetPrimes c= support pfexp n;
+  then consider p be object such that
+A1: p in SetPrimes & not p in support pfexp n by TARSKI:def 3;
+  reconsider p as Prime by A1,NEWTON:def 6;
+  dom pfexp n = SetPrimes & (pfexp n).p = 0
+    by A1,PRE_POLY:def 7,PARTFUN1:def 2;
+  hence thesis by A1,FUNCT_1:def 3;
+end;
+
+theorem Th24:
+  for n,m be non zero Nat st n,m are_coprime holds
+    rng pfexp (n*m) = rng pfexp n \/ rng pfexp m
+proof
+  let n,m be non zero Nat such that
+  A1:n,m are_coprime;
+  A2:pfexp (n*m) = pfexp n + pfexp m by NAT_3:49;
+  A3:support pfexp (n*m) = support pfexp n \/ support pfexp m by NAT_3:46;
+  A4: rng pfexp (n*m) c= rng pfexp n \/ rng pfexp m
+  proof
+    let y be object such that A5: y in rng pfexp (n*m);
+    consider x be object such that
+    A6:x in dom pfexp (n*m) & (pfexp (n*m)).x=y by A5,FUNCT_1:def 3;
+    A7:(pfexp (n*m)).x = (pfexp n).x + (pfexp m).x by A2,PRE_POLY:def 5;
+    per cases by A3,XBOOLE_0:def 3;
+    suppose not x in support pfexp (n*m);
+      then A8:(pfexp (n*m)).x = 0 by PRE_POLY:def 7;
+      0 in rng (pfexp n) by Th23;
+      hence thesis by A6,A8,XBOOLE_0:def 3;
+    end;
+    suppose x in support pfexp n;
+      then not x in support pfexp m by A1,NAT_3:44,XBOOLE_0:3;
+      then (pfexp m).x = 0 by PRE_POLY:def 7;
+      then (pfexp (n*m)).x = (pfexp n).x & dom pfexp n = SetPrimes
+      by A7,PARTFUN1:def 2;
+      then (pfexp (n*m)).x in rng (pfexp n) by A6,FUNCT_1:def 3;
+      hence thesis by A6,XBOOLE_0:def 3;
+    end;
+    suppose x in support pfexp m;
+      then not x in support pfexp n by A1,NAT_3:44,XBOOLE_0:3;
+      then (pfexp n).x = 0 by PRE_POLY:def 7;
+      then (pfexp (n*m)).x = (pfexp m).x & dom pfexp m = SetPrimes
+      by A7,PARTFUN1:def 2;
+      then (pfexp (n*m)).x in rng (pfexp m) by A6,FUNCT_1:def 3;
+      hence thesis by A6,XBOOLE_0:def 3;
+    end;
+  end;
+  A9:rng pfexp n c= rng pfexp (n*m)
+  proof
+    let y be object such that A10: y in rng pfexp n;
+    consider x be object such that
+    A11:x in dom pfexp n & (pfexp n).x=y by A10,FUNCT_1:def 3;
+    A12:dom pfexp (n*m) = SetPrimes = dom pfexp n by PARTFUN1:def 2;
+    A13:(pfexp (n*m)).x = (pfexp n).x + (pfexp m).x by A2,PRE_POLY:def 5;
+    per cases;
+    suppose not x in support pfexp n;
+      then (pfexp n).x = 0 by PRE_POLY:def 7;
+      hence thesis by A11,Th23;
+    end;
+    suppose x in support pfexp n;
+      then not x in support pfexp m by A1,NAT_3:44,XBOOLE_0:3;
+      then (pfexp m).x = 0 by PRE_POLY:def 7;
+      hence thesis by A11,A13,A12,FUNCT_1:def 3;
+    end;
+  end;
+  rng pfexp m c= rng pfexp (n*m)
+  proof
+    let y be object such that A14: y in rng pfexp m;
+    consider x be object such that
+    A15:x in dom pfexp m & (pfexp m).x=y by A14,FUNCT_1:def 3;
+    A16:dom pfexp (n*m) = SetPrimes = dom pfexp m by PARTFUN1:def 2;
+    A17:(pfexp (n*m)).x = (pfexp n).x + (pfexp m).x by A2,PRE_POLY:def 5;
+    per cases;
+    suppose not x in support pfexp m;
+      then (pfexp m).x = 0 by PRE_POLY:def 7;
+      hence thesis by A15,Th23;
+    end;
+    suppose x in support pfexp m;
+      then not x in support pfexp n by A1,NAT_3:44,XBOOLE_0:3;
+      then (pfexp n).x = 0 by PRE_POLY:def 7;
+      hence thesis by A15,A17,A16,FUNCT_1:def 3;
+    end;
+  end;
+  then rng pfexp n \/ rng pfexp m c= rng pfexp (n*m) by A9,XBOOLE_1:8;
+  hence thesis by A4,XBOOLE_0:def 10;
+end;
+
+theorem Th25:
+  Product primesFinS (n+1) = Product (primesFinS n) * (primenumber n)
+proof
+  len primesFinS (n+1) = (n+1) by NUMBER13:def 1;
+  then
+A1: primesFinS (n+1) =
+  ((primesFinS (n+1)) | n) ^ <*(primesFinS (n+1)).(n+1)*>
+  by FINSEQ_3:55;
+A2:  n < n+1 by NAT_1:13;
+  then
+A3: ((primesFinS (n+1)) | n) = primesFinS n by NUMBER13:17;
+  (primesFinS (n+1)).(n+1) = primenumber n by A2,NUMBER13:def 1;
+  then primesFinS (n+1) = (primesFinS n) ^ <*primenumber n*> by A1,A3;
+  then Product primesFinS (n+1) = Product (primesFinS n) * (primenumber n)
+    by RVSUM_1:96;
+  hence thesis;
+end;
+
+theorem Th26:
+  for k be Nat holds
+     2|^k <= Product primesFinS k
+proof
+  defpred P[Nat] means 2|^$1 <= Product primesFinS $1;
+A1: Product primesFinS 0 = 1 by RVSUM_1:94;
+  2|^0 = 1 by NEWTON:4;
+  then
+A2: P[0] by A1;
+A3: P[n] implies P[n+1]
+  proof
+    set n1=n+1;
+    assume
+A4:   P[n];
+A5:   Product primesFinS n1 = Product (primesFinS n) * (primenumber n)
+      by Th25;
+    2 <= primenumber n by MOEBIUS2:8,21;
+    then 2 * 2|^n <= Product primesFinS n1 by A5,A4,XREAL_1:66;
+    hence thesis by NEWTON:6;
+  end;
+  P[n] from NAT_1:sch 2(A2,A3);
+  hence thesis;
+end;
+
+theorem Th27:
+  2 <= n implies ex k be non zero Nat st
+    Product primesFinS k <= n < Product primesFinS (k+1)
+proof
+  assume
+A1: 2 <= n;
+  defpred P[Nat] means n < Product primesFinS ($1+1);
+  consider k be Nat such that
+A2: 2 to_power k <= n & n < 2 to_power (k + 1) by A1,BINARI_6:2;
+  2|^(k+1) <= Product primesFinS (k+1) by Th26;
+  then n < Product primesFinS (k+1) by A2,XXREAL_0:2;
+  then P[k];
+  then
+A3: ex k st P[k];
+  consider m be Nat such that
+A4: P[m] and
+A5: for w be Nat st P[w] holds m <= w from NAT_1:sch 5(A3);
+  m<>0 by A1,A4,NUMBER13:9;
+  then reconsider m as non zero Nat;
+  take m;
+  reconsider m1=m-1 as Nat;
+  Product primesFinS m <= n
+  proof
+    assume n < Product primesFinS m;
+    then P[m1];
+    then m1+1=m <=m1 by A5;
+    hence thesis by NAT_1:13;
+  end;
+  hence thesis by A4;
+end;
+
+theorem Th28:
+  for p be Prime, k be Nat holds
+     (p |-count Product primesFinS k = 1 iff primeindex p < k) &
+     (p |-count Product primesFinS k = 0 iff primeindex p >= k)
+proof
+  defpred P[Nat] means
+  for p be Prime holds
+     (p |-count Product primesFinS $1 = 1 iff primeindex p < $1) &
+     (p |-count Product primesFinS $1 = 0 iff primeindex p >= $1);
+A1: P[0]
+  proof
+    let p be Prime;
+A2: Product primesFinS 0 = 1 by RVSUM_1:94;
+    p > 1 by INT_2:def 4;
+    then p |-count Product primesFinS 0 = 0 by A2,NAT_3:21;
+    hence thesis;
+  end;
+A3: P[n] implies P[n+1]
+  proof
+    assume
+A4:   P[n];
+    set n1=n+1;
+    let p be Prime;
+A5:   Product primesFinS n1 = Product (primesFinS n) * (primenumber n)
+      by Th25;
+A6:   p |-count Product primesFinS n1 =
+     (p |-count Product primesFinS n) + (p|-count (primenumber n))
+      by A5,NAT_3:28;
+A7:   n in NAT by ORDINAL1:def 12;
+A8:   p > 1 by INT_2:def 4;
+    thus p |-count Product primesFinS n1 = 1 iff primeindex p < n1
+    proof
+      thus p |-count Product primesFinS n1 = 1 implies primeindex p < n1
+      proof
+        assume p |-count Product primesFinS n1 = 1;
+        then
+A9:       (p |-count Product primesFinS n)+(p|-count (primenumber n))=1
+          by A6;
+        per cases;
+        suppose p = primenumber n;
+          then primeindex p = n by A7,NUMBER10:def 4;
+          hence thesis by NAT_1:13;
+        end;
+        suppose p<>primenumber n;
+          then (p|-count (primenumber n))=0 by A8,NAT_3:24;
+          then p |-count Product primesFinS n = 1 by A9;
+          then primeindex p < n by A4;
+          hence thesis by NAT_1:13;
+        end;
+      end;
+      assume primeindex p < n1;
+      then primeindex p <= n by NAT_1:13;
+      then per cases by XXREAL_0:1;
+      suppose
+A10:      primeindex p = n;
+        then primenumber n = p by NUMBER10:def 4;
+        then
+A11:      (p|-count (primenumber n))=1 by A8,NAT_3:22;
+        p |-count Product primesFinS n = 0 by A10,A4;
+        hence thesis by A6,A11;
+      end;
+      suppose
+A12:      primeindex p < n;
+        then p < primenumber n by NUMBER13:12;
+        then
+A13:      p|-count (primenumber n) = 0 by A8,NAT_3:24;
+        p |-count Product primesFinS n = 1 by A12,A4;
+        hence thesis by A6,A13;
+      end;
+    end;
+    thus p |-count Product primesFinS n1 = 0 implies primeindex p >= n1
+    proof
+      assume p |-count Product primesFinS n1 = 0;
+      then (p |-count Product primesFinS n) + (p|-count (primenumber n))=0
+        by A6;
+      then p |-count Product primesFinS n = 0 & p|-count (primenumber n) = 0;
+      then primeindex p >= n & primenumber n <> p by A4,A8,NAT_3:22;
+      then primeindex p >= n & primeindex p <> n by NUMBER10:def 4;
+      then primeindex p > n by XXREAL_0:1;
+      hence thesis by NAT_1:13;
+    end;
+    assume
+A14:  primeindex p >= n1;
+    then primeindex p >= n by NAT_1:13;
+    then
+A15:  p |-count Product primesFinS n = 0 by A4;
+A16:  p >= primenumber n1 by A14,NUMBER13:12;
+    n < n1 by NAT_1:13;
+    then
+    primenumber n1 > primenumber n by MOEBIUS2:21;
+    then p > primenumber n by A16,XXREAL_0:2;
+    then (p|-count (primenumber n))=0 by A8,NAT_3:24;
+    then p |-count Product primesFinS n1 = 0 by A6,A15;
+    hence thesis;
+  end;
+  P[n] from NAT_1:sch 2(A1,A3);
+  hence thesis;
+end;
+
+theorem
+  for p be Prime, k be Nat holds
+    p divides Product primesFinS k iff primeindex p < k
+proof
+  let p be Prime, k be Nat;
+A1:  p>1 by INT_2:def 4;
+  thus p divides Product primesFinS k implies primeindex p < k
+  proof
+    assume p divides Product primesFinS k;
+    then p |-count Product primesFinS k <> 0 by A1,NAT_3:27;
+    hence thesis by Th28;
+  end;
+  assume primeindex p < k;
+  then p |-count Product primesFinS k = 1 by Th28;
+  hence thesis by A1,NAT_3:27;
+end;
+
+theorem Th30:
+  for p be Prime, k be Nat st k <= primeindex p
+    holds p,Product primesFinS k are_coprime
+proof
+  let p be Prime, k be Nat;
+  assume k <= primeindex p;
+  then
+A1: primenumber k <= p by NUMBER13:12;
+  defpred P[Nat] means $1 <=k implies p,Product primesFinS ($1) are_coprime;
+  Product primesFinS 0 = 1 by RVSUM_1:94;
+  then
+A2: P[0] by WSIERP_1:9;
+A3: P[n] implies P[n+1]
+  proof
+    assume
+A4:   P[n];
+    set n1=n+1;
+    assume n1 <= k;
+    then
+A5:   n < k by NAT_1:13;
+    then
+A6:   p,Product primesFinS n are_coprime by A4;
+A7:   Product primesFinS (n+1) = Product (primesFinS n) * (primenumber n)
+    by Th25;
+    primenumber n < primenumber k by A5,MOEBIUS2:21;
+    then primenumber n < p by A1,XXREAL_0:2;
+    then primenumber n,p are_coprime by NUMBER06:3;
+    then p,Product primesFinS (n+1) are_coprime by A6,A7,INT_2:26;
+    hence thesis;
+  end;
+  P[n] from NAT_1:sch 2(A2,A3);
+  hence thesis;
+end;
+
+theorem Th31:
+  rng prime_exponents Product primesFinS n c= {0,1} &
+    card support (prime_exponents Product primesFinS n) = n
+proof
+  defpred P[Nat] means
+  card support (prime_exponents Product primesFinS ($1)) = $1 &
+    rng prime_exponents Product primesFinS ($1) c= {0,1};
+A1: Product primesFinS 0 = 1 by RVSUM_1:94;
+  then pfexp Product primesFinS 0 = EmptyBag SetPrimes by NAT_3:39;
+  then pfexp Product primesFinS 0 =SetPrimes-->{} by PBOOLE:def 3;
+  then
+A2: rng pfexp Product primesFinS 0 = {0} c= {0,1} by FUNCOP_1:8,ZFMISC_1:7;
+  support pfexp (Product primesFinS 0) ={} by A1;
+  then card support (pfexp Product primesFinS 0) =0;
+  then
+A3: P[0] by A2;
+A4: for n holds P[n] implies P[n+1]
+  proof
+    let n;
+    set pn = primenumber n,Pn=Product primesFinS n,
+      Pn1 = Product primesFinS (n+1);
+    assume
+A5:   P[n];
+A6:   Pn1 = Pn *pn by Th25;
+A7:   support pfexp pn \/ support pfexp Pn = support pfexp Pn1 by A6,NAT_3:46;
+    n in NAT by ORDINAL1:def 12;
+    then primeindex pn = n by NUMBER10:def 4;
+    then
+A8:   pn,Pn are_coprime by Th30;
+    then support pfexp pn misses support pfexp Pn by NAT_3:44;
+    then
+A9:   card support pfexp Pn1 =
+    (card support pfexp pn) + card  support pfexp Pn by A7,CARD_2:40;
+    card support (pfexp pn) = 1 by Th22;
+    hence card support pfexp Pn1 = n+1 by A9,A5;
+A10:  rng pfexp (Pn*pn) = rng pfexp Pn \/ rng pfexp pn by A8,Th24;
+A11:  rng pfexp pn c= {0,1} by Th22;
+    rng pfexp Pn c= {0,1} by A5;
+    then rng pfexp (Pn1) c= {0,1} by A6,A10,A11,XBOOLE_1:8;
+    hence thesis;
+  end;
+  for n holds P[n] from NAT_1:sch 2(A3,A4);
+  hence thesis;
+end;
+
+theorem Th32:
+  for n,m being Nat st
+    for k being Nat st k < m holds primenumber k divides n
+  holds Product primesFinS m divides n
+proof
+  let n,m be Nat such that
+A1: for k being Nat st k < m holds primenumber k divides n;
+  defpred P[Nat] means $1 <= m implies Product primesFinS $1 divides n;
+  Product primesFinS 0 = 1 by RVSUM_1:94;
+  then
+A2: P[0] by INT_2:12;
+A3: for i be Nat st P[i] holds P[i+1]
+  proof
+    let i such that
+A4:   P[i];
+    assume i+1 <=m;
+    then i < m by NAT_1:13;
+    then
+A5:   Product primesFinS i divides n & primenumber i divides n by A1,A4;
+    i in NAT by ORDINAL1:def 12;
+    then primeindex primenumber i = i by NUMBER10:def 4;
+    then primenumber i, Product primesFinS i are_coprime by Th30;
+    then (primenumber i) * Product primesFinS i divides n by A5,PEPIN:4;
+    then Product primesFinS (i+1) divides n by Th25;
+    hence thesis;
+  end;
+  for i be Nat holds P[i] from NAT_1:sch 2(A2,A3);
+  hence thesis;
+end;
+
+Lm2: for n,m being Nat st n <=m holds
+  Product primesFinS n <= Product primesFinS m
+proof
+  let n,m be Nat;
+  assume n <=m;
+  then (primesFinS m) | n = primesFinS n by NUMBER13:17;
+  hence thesis by NUMBER13:22;
+end;
+
+theorem Th33:
+  for n,m being Nat holds
+    n < m iff Product primesFinS n < Product primesFinS m
+proof
+  let n,m be Nat;
+  thus n < m implies Product primesFinS n < Product primesFinS m
+  proof
+    assume n < m;
+    then n+1 <=m by NAT_1:13;
+    then
+A1:   Product primesFinS (n+1) <= Product primesFinS m by Lm2;
+    2 <= primenumber n by MOEBIUS2:8,21;
+    then
+A2:   Product primesFinS n * 2 <= Product primesFinS n * (primenumber n)
+    by XREAL_1:66;
+    Product primesFinS n * 1 < Product primesFinS n * 2 by XREAL_1:68;
+    then Product primesFinS n < Product primesFinS n * (primenumber n)
+    by A2,XXREAL_0:2;
+    then Product primesFinS n < Product primesFinS (n+1) by Th25;
+    hence thesis by A1,XXREAL_0:2;
+  end;
+  thus thesis by Lm2;
+end;
+
+begin :: Problem 93
+:: Prove that the ratio of the smallest prime number that does not
+:: divide n to n tends to zero as n increases to infinity
+
+theorem :: Problem 93
+  for r be Real_Sequence st
+    for n be non zero Nat ex q be Prime st
+       r.n = q/n & not q divides n &
+       for p be Prime st not p divides n holds q <= p
+  holds r is convergent & lim r = 0
+proof
+  let r be Real_Sequence such that
+A1: for n be non zero Nat ex q be Prime st
+      r.n = q/n & not q divides n &
+      for p be Prime st not p divides n holds q <= p;
+A2: for p be Real st 0<p
+       ex n be Nat st for m be Nat st n<=m holds |.r.m-0.| < p
+  proof
+    let p be Real such that
+A3:   0<p;
+    consider w be Nat such that
+A4:   w > 0 & 1/w < p by A3,UNIFORM1:1;
+    set m = w+4;
+    take N = Product primesFinS (m) +1;
+    let n be Nat such that
+A5:   N <= n;
+A6:   2|^m <= Product primesFinS m by Th26;
+    1 <= m by NAT_1:14;
+    then 2 <= 2|^m by PREPOWER:12;
+    then 2 <= Product primesFinS m by A6,XXREAL_0:2;
+    then 2 < N by NAT_1:13;
+    then 2 < n by A5,XXREAL_0:2;
+    then consider k be non zero Nat such that
+A7:   Product primesFinS k <= n < Product primesFinS (k+1) by Th27;
+    set k1=k-1;
+    Product primesFinS (m) < N by NAT_1:13;
+    then Product primesFinS (m) < n by A5,XXREAL_0:2;
+    then Product primesFinS (m) < Product primesFinS (k+1) by A7,XXREAL_0:2;
+    then m < k+1 by Th33;
+    then
+A8:   4 <= m <= k by NAT_1:13,XREAL_1:31;
+    then 3+1 <= k1+1 by XXREAL_0:2;
+    then
+A9:   3 <= k1 by XREAL_1:8;
+    n is non zero Nat by A5;
+    then consider q be Prime such that
+A10:  r.n = q/n and not q divides n and
+A11:  for p be Prime st not p divides n holds q <= p by A1;
+    1 <= primenumber k1 by INT_2:def 4;
+    then
+A12:  1+primenumber k <= (primenumber k1)+primenumber (k1+1)
+      by XREAL_1:6;
+    q <= primenumber k
+    proof
+      assume
+A13:    q > primenumber k;
+      for i being Nat st i < k+1 holds primenumber i divides n
+      proof
+        let i be Nat such that
+A14:      i < k+1;
+        i <= k by A14,NAT_1:13;
+        then primenumber i <= primenumber k by MOEBIUS2:21;
+        then primenumber i < q by A13,XXREAL_0:2;
+        hence thesis by A11;
+      end;
+      then Product primesFinS (k+1) divides n by Th32;
+      then Product primesFinS (k+1) <= n by A5,NAT_D:7;
+      hence thesis by A7;
+    end;
+    then q < 1+primenumber k by NAT_1:13;
+    then
+A15:  q < (primenumber k1)+primenumber (k1+1) by A12,XXREAL_0:2;
+    (primenumber k1)+primenumber (k1+1) <= Product primesFinS (k1)
+    by A9,NUMBER13:23;
+    then q < Product primesFinS k1 by A15,XXREAL_0:2;
+    then
+A16:  q/n < Product primesFinS k1/n by A5,XREAL_1:74;
+    Product primesFinS k1/n <= Product primesFinS k1/Product primesFinS (k)
+    by A7,XREAL_1:118;
+    then
+A17:  q/n < Product primesFinS k1/Product primesFinS (k) by A16,XXREAL_0:2;
+    Product primesFinS (k1+1) = Product (primesFinS k1) * (primenumber k1)
+    by Th25;
+    then
+A18:  (1 * Product primesFinS k1)/Product primesFinS (k) = 1/(primenumber k1)
+      by XCMPLX_1:91;
+    k1 <= primenumber k1 by PRIMRECI:11;
+    then 1/primenumber k1  <= 1/k1 by A9,XREAL_1:118;
+    then
+A19:  q/n < 1/k1 by A17,A18,XXREAL_0:2;
+    w+3+1 <= k1+1 by A8;
+    then w+3 <= 0+k1 by XREAL_1:6;
+    then w < k1 by XREAL_1:8;
+    then 1/k1 < 1/w by A4,XREAL_1:76;
+    then 1/k1 < p by A4,XXREAL_0:2;
+    then
+A20:  q/n < p by A19,XXREAL_0:2;
+    |. q/n.|= q/n by ABSVALUE:def 1;
+    then |.r.n-0.| < p by A20,A10;
+    hence thesis;
+  end;
+  then r is convergent by SEQ_2:def 6;
+  hence thesis by A2,SEQ_2:def 7;
+end;
+
+begin :: Problem 95
+:: Prove that for all sufficiently large n, between n and 2n
+:: there exists at least one number which is a product of s
+:: different primes for a given s
+
+theorem :: Problem 95
+  for s be non zero Nat
+    for n be Nat st n > Product primesFinS s
+      ex p be Nat st n < p < 2*n &
+        rng prime_exponents p c= {0,1} &
+        card support (prime_exponents p) = s
+proof
+  let s be non zero Nat;
+  let n be Nat such that
+A1: n > Product primesFinS s;
+  reconsider s1=s-1 as Nat;
+  set Ps = Product primesFinS s1;
+  set k = n div Ps, r = n mod Ps;
+A2: n = k*Ps+r by INT_1:59;
+A3: s=s1+1;
+A4: k*Ps+Ps > k*Ps+r by INT_1:58,XREAL_1:6;
+  k*Ps+r > Ps * primenumber s1 by A3,A1,A2,Th25;
+  then (k+1)*Ps > Ps * primenumber s1 by A4,XXREAL_0:2;
+  then k+1 > primenumber s1 by XREAL_1:66;
+  then
+A5: k >= primenumber s1 by NAT_1:13;
+  then consider p be Prime such that
+A6: k < p & p <=2*k by NAT_1:14,NAT_4:56;
+  take pP=p*Ps;
+A7: p<> 2*k
+  proof
+    assume p = 2*k;
+    then p = 1+1 by NUMBER06:2;
+    then k <= 1 by A6,NAT_1:13;
+    hence thesis by INT_2:def 4,A5,XXREAL_0:2;
+  end;
+  k+1 <= p by A6,NAT_1:13;
+  then (k+1)*Ps <= p*Ps by XREAL_1:66;
+  hence n < pP by A2,A4,XXREAL_0:2;
+  p < 2*k by A6,A7,XXREAL_0:1;
+  then
+A8: p*Ps < (2*k)*Ps by XREAL_1:68;
+  (2*k)*Ps +0 <= (2*k)*Ps +2*r by XREAL_1:7;
+  hence pP < 2*n by A2,A8,XXREAL_0:2;
+A9:  support pfexp p \/ support pfexp Ps = support pfexp pP by NAT_3:46;
+A10: primeindex p <> s1 by A5,A6,NUMBER10:def 4;
+A11: s1 < primeindex p
+  proof
+    assume s1 >= primeindex p;
+    then s1 > primeindex p by A10,XXREAL_0:1;
+    then primenumber s1 > p by NUMBER13:12;
+    hence thesis by A5,A6,XXREAL_0:2;
+  end;
+  then support pfexp p misses support pfexp Ps by Th30,NAT_3:44;
+  then
+A12: card support pfexp pP =
+  (card support pfexp p) + card  support pfexp Ps by A9,CARD_2:40;
+A13: rng pfexp (p*Ps) = rng pfexp p \/ rng pfexp Ps by A11,Th30,Th24;
+A14: rng pfexp p c= {0,1} by Th22;
+  rng pfexp Ps c= {0,1} by Th31;
+  hence rng pfexp (pP) c= {0,1} by A13,A14,XBOOLE_1:8;
+  card support (pfexp p) = 1 by Th22;
+  hence card support pfexp pP = s by A3,Th31,A12;
+end;
+
+begin :: Problem 102
+:: Prove that the Chebyshev theorem is equivalent to the theorem
+:: that for integers n > 1 the expansion of n! into prime factors
+:: contains at least one prime with exponent 1.
+
+theorem Th36:
+  for n being Nat, p being Prime st p <= n & p|^2 divides n! holds 2*p <= n
+proof
+  let n be Nat, p be Prime such that
+A1: p <= n & p|^2 divides n! & 2*p > n;
+  p|^(1+1) = p*(p|^1) by NEWTON:6;
+  then consider o be Nat such that
+A2: p*p*o = n! by A1,NAT_D:def 3;
+  set I=idseq n;
+  for r being Real st r in rng I holds 0 < r
+  proof
+    let r be Real;
+    assume r in rng I;
+    then consider x be object such that
+A3:   x in dom idseq n & I.x = r by FUNCT_1:def 3;
+    reconsider x as Nat by A3;
+    I = id Seg n by FINSEQ_2:def 1;
+    then r =x by A3,FINSEQ_2:49;
+    hence thesis by A3,FINSEQ_3:25;
+  end;
+  then
+A4: I is positive-yielding by PARTFUN3:def 1;
+A5: 1 < p <= len I by A1,INT_2:def 4;
+  then
+A6: I =(I| (p-'1))^<*I.p*>^(I /^ p) by FINSEQ_5:84;
+  then
+A7:Product I = Product ((I| (p-'1))^<*I.p*>) * Product (I /^ p)
+  by RVSUM_1:97
+  .= Product (I | (p-'1))* (I.p) * Product (I /^ p) by RVSUM_1:96
+  .= Product (I | (p-'1)) * Product (I /^ p) * (I.p)
+  .= Product ((I | (p-'1)) ^ (I /^ p)) * (I.p) by RVSUM_1:97;
+  p in Seg n by A5;
+  then
+A8: I.p = p by FINSEQ_2:49;
+A9:(I| (p-'1))^<*I.p*> is positive-yielding &
+   (I /^ p) is positive-yielding by A4,A6,NUMBER08:37;
+  then (I| (p-'1)) is positive-yielding by NUMBER08:37;
+  then
+A10:(I| (p-'1))^(I /^ p) is positive-yielding by A9;
+  Product I = n! by NEWTON:def 2;
+  then p*p*o = Product I by A2;
+  then p*(p*o) = Product ((I | (p-'1)) ^ (I /^ p)) * p by A7,A8;
+  then p*o = Product ((I | (p-'1)) ^ (I /^ p)) by XCMPLX_1:5;
+  then
+A11:p divides Product ((I| (p-'1))^(I /^ p));
+  rng ((I| (p-'1))^(I /^ p)) c= NAT;
+  then ((I| (p-'1))^(I /^ p)) is FinSequence of NAT by FINSEQ_1:def 4;
+  then consider i be Nat such that
+A12:i in dom ((I| (p-'1))^(I /^ p)) and
+A13:p divides ((I| (p-'1))^(I /^ p)).i by A11,A10,HILB10_5:3;
+  1 < p by A5;
+  then
+A14:p-'1 = p-1 by XREAL_1:233;
+  then p-'1 < p-0 by XREAL_1:15;
+  then
+A15: p-'1 < len I by A5,XXREAL_0:2;
+  then
+A16:len (I| (p-'1)) = p-'1 by FINSEQ_1:59;
+  per cases by A12,FINSEQ_1:25;
+  suppose
+A17:  i in dom (I| (p-'1));
+    then
+A18:  ((I| (p-'1))^(I /^ p)).i = (I| (p-'1)).i by FINSEQ_1:def 7
+    .= I.i by FUNCT_1:47,A17;
+A19:  1<= i <= p-'1 by A16,A17,FINSEQ_3:25;
+    then i <= len I by A15,XXREAL_0:2;
+    then i in Seg n by A19;
+    then I.i = i by FINSEQ_2:49;
+    then p divides i by A18,A13;
+    then p-'1+1 = p <= i by A14,A19,INT_2:27;
+    hence thesis by A19,NAT_1:13;
+  end;
+  suppose ex k be Nat st k in dom (I /^ p) & i=len (I| (p-'1)) + k;
+    then consider k be Nat such that
+A20:  k in dom (I /^ p) & i=len (I| (p-'1)) + k;
+    k+p in dom I by A20,FINSEQ_5:26;
+    then
+A21:  k+p in Seg n by A6,FINSEQ_1:def 3;
+    ((I| (p-'1))^(I /^ p)).i = (I /^ p).k by A20,FINSEQ_1:def 7
+    .= I.(k+p) by A20,A5,RFINSEQ:def 1
+    .= k+p by A21,FINSEQ_2:49;
+    then p divides k+p by A13;
+    then consider o be Nat such that
+A22:  p*o = k+p by NAT_D:def 3;
+    o <>0 by A22;
+    then
+A23:  o >=1 by NAT_1:14;
+    1<=k by A20,FINSEQ_3:25;
+    then k<>0;
+    then o <> 1 by A22;
+    then o > 1 by A23,XXREAL_0:1;
+    then o >= 1+1 by NAT_1:13;
+    then k+p >= 2*p by A22,XREAL_1:66;
+    then k+p > n by A1,XXREAL_0:2;
+    hence thesis by A21,FINSEQ_1:1;
+  end;
+end;
+
+theorem Th37:
+  0 < a < b <= n implies a*b divides n!
+proof
+  assume
+A1: 0 < a < b <= n;
+A2: for x being object st x in dom <*a,b*> holds <*a,b*>.x <= n
+  proof
+    let x be object such that
+A3:   x in dom <*a,b*>;
+    len <*a,b*> = 2 by FINSEQ_1:44;
+    then dom <*a,b*> = Seg 2 by FINSEQ_1:def 3;
+    then x = 1 or x = 2 by A3,FINSEQ_1:2,TARSKI:def 2;
+    hence thesis by A1,XXREAL_0:2;
+  end;
+  rng <*a*> c= NAT;
+  then
+A4: <*a*> is FinSequence of NAT by FINSEQ_1:def 4;
+  for i being Nat st i in dom <*a*> holds <*a*>.i < b
+  proof
+    let i be Nat;
+    assume i in dom <*a*>;
+    then i in Seg 1 by FINSEQ_1:38;
+    then i = 1 by FINSEQ_1:2,TARSKI:def 1;
+    hence thesis by A1;
+  end;
+  then
+A5:  <*a,b*> is increasing positive-yielding by A1,A4,NUMBER12:8;
+  Product <*a,b*> = Product <*a*> * b by RVSUM_1:96
+  .= a*b;
+  hence thesis by A2,A5, NUMBER08:def 4,38;
+end;
+
+theorem Th38:
+  for p be Prime st 2 < n & n div 2 < p <= 2*(n div 2) holds
+    p |-count (n!) = 1
+proof
+  let p be Prime such that
+A1: 2 < n & n div 2 < p <= 2*(n div 2);
+  per cases;
+  suppose n is even;
+    then consider k be Nat such that
+A2:   n=2*k by ABIAN:def 2;
+A3:   n div 2 = k by A2,NAT_D:18;
+A4:   p < 2*k
+    proof
+      assume p >= 2*k;
+      then p = 2*k by A1,A3,XXREAL_0:1;
+      hence thesis by A2,A1,NUMBER06:2;
+    end;
+A5:   n < 2*p by A2, A3,A1,XREAL_1:68;
+A6:   p|^1 divides n! by A3,A1,A2,NEWTON:41;
+A7:   p<> 1 by INT_2:def 4;
+    not p|^(1+1) divides n! by A4,A2,Th36,A5;
+    hence thesis by A6,A7,NAT_3:def 7;
+  end;
+  suppose n is odd;
+    then consider k be Nat such that
+A8:   n=2*k+1 by ABIAN:9;
+    1 div 2 = 0 by NAT_D:27;
+    then
+A9:   n div 2 = k + 0 by A8,NAT_D:61;
+    k+1<=p by A9,A1,NAT_1:13;
+    then k+1+k < p+p by A9,A1,XREAL_1:8;
+    then
+A10:  n < 2*p by A8;
+A11:  p <= 2*k+1 by A9,A1,NAT_1:13;
+    then
+A12:  p|^1 divides n! by A8,NEWTON:41;
+A13:  p<> 1 by INT_2:def 4;
+    not p|^(1+1) divides n! by A8,A11,Th36,A10;
+    hence thesis by A12,A13,NAT_3:def 7;
+  end;
+end;
+
+theorem ::Problem 102
+  (for n being Nat st n > 1 ex p being Prime st n < p & p < 2*n)
+iff
+  (for n being Nat st n > 1 ex p being Prime st p |-count (n!) = 1)
+proof
+  hereby
+    assume
+A1:  for n being Nat st n > 1 ex p being Prime st n < p & p < 2*n;
+    let n be Nat such that
+A2:   n > 1;
+    (n=0 or ... or n=3) or n > 3;
+    then per cases by A2;
+    suppose n = 2;
+      then 2|-count (n!) = 1 by NAT_3:22,NEWTON:14;
+      hence ex p being Prime st p |-count (n!) = 1 by XPRIMES1:2;
+    end;
+    suppose n=3;
+      then n!=2*3 by STIRL2_1:50;
+      then 2|-count (n!) = (2|-count 2)+(2|-count 3) by NAT_3:28,XPRIMES1:2
+      .= 1+(2|-count 3) by NAT_3:22
+      .=1+0 by NAT_3:24,XPRIMES1:3;
+      hence ex p being Prime st p |-count (n!) = 1 by XPRIMES1:2;
+    end;
+    suppose
+A3:     n > 3 & n is even;
+      then consider k be Nat such that
+A4:     n=2*k by ABIAN:def 2;
+      k<>0 by A4,A3;
+      then k >= 1 & k <> 1 by A4,A3,NAT_1:14;
+      then k > 1 by XXREAL_0:1;
+      then consider p be Prime such that
+A5:     k < p & p < 2*k by A1;
+      take p;
+A6:     2< n by A3,XXREAL_0:2;
+      n div 2 = k by A4,NAT_D:18;
+      hence p |-count (n!) = 1 by A6,A5,Th38;
+    end;
+    suppose
+A7:     n > 3 & n is odd;
+      then consider k be Nat such that
+A8:     n=2*k+1 by ABIAN:9;
+      k<>0 by A8,A7;
+      then k >= 1 & k <> 1 by A8,A7,NAT_1:14;
+      then k > 1 by XXREAL_0:1;
+      then consider p be Prime such that
+A9:     k < p & p < 2*k by A1;
+      take p;
+A10:    2< n by A7,XXREAL_0:2;
+      1 div 2 = 0 by NAT_D:27;
+      then n div 2 = k + 0 by A8,NAT_D:61;
+      then n div 2 = k;
+      hence p |-count (n!) = 1 by A10,A9,Th38;
+    end;
+  end;
+  assume
+A11:for n being Nat st n > 1 ex p being Prime st p |-count (n!) = 1;
+  let n be Nat such that
+A12:n > 1;
+  n+n > 1+1 >= 1 by A12,XREAL_1:8;
+  then 2*n > 1 by XXREAL_0:2;
+  then consider p be Prime such that
+A13: p |-count ((2*n)!) = 1 by A11;
+  take p;
+  p<>1 by INT_2:def 4;
+  then p|^1 divides (2*n)! by A13,NAT_3:def 7;
+  then
+A14: p <= 2*n by NAT_4:19;
+  thus n < p
+  proof
+    assume n >= p;
+    then
+A15:  2*n >= 2*p by XREAL_1:66;
+    0+p < p+p by XREAL_1:8;
+    then
+A16:  p*(2*p) divides (2*n)! by A15,Th37;
+    p|^(1+1) = (p|^1) * p by NEWTON:6;
+    then p|^2 divides 2*(p*p);
+    hence thesis by A13,A16,INT_2:9,MOEBIUS2:40;
+  end;
+  assume p >= 2*n;
+  then
+A17: p = 2*n by A14,XXREAL_0:1;
+  then p = 2 by NUMBER06:2;
+  hence thesis by A17,A12;
+end;
+
+begin :: Problem 103
+:: Prove equivalence, there are two primes between n and 2n where 5 < n,
+:: and the expansion of n! into prime factors contains at least two primes
+:: with exponent 1 where n > 11.
+
+theorem :: Problem 103
+  (for n being Nat st n > 5 ex p,q being Prime st n < p < q < 2*n)
+implies
+  (for n being Nat st n > 10 ex p,q being Prime st
+     p < q & p |-count (n!) = 1 & q |-count (n!) = 1)
+proof
+  assume
+A1: for n being Nat st n > 5 ex p,q being Prime st n < p < q < 2*n;
+  let n be Nat such that
+A2: n > 10;
+  n >= 10+1 by A2,NAT_1:13;
+  then per cases by XXREAL_0:1;
+  suppose
+A3:  n = 11;
+    reconsider p=7,q=11 as Prime by XPRIMES1:7,11;
+    take p,q;
+    1 div 2 = 0 by NAT_D:27;
+    then
+A4:   5*2+1 div 2 = 5 + 0 by NAT_D:61;
+A5:   q|^1 divides q! by NEWTON:41;
+    2*11 > 11;
+    then not q|^(1+1) divides q! by Th36;
+    hence thesis by A4,Th38,A3,A5,NAT_3:def 7;
+  end;
+  suppose n > 11;
+    then
+A6:   n >= 11+1 by NAT_1:13;
+    set k = n div 2;
+    6*2 div 2 = 6 by NAT_D:18;
+    then 5+1 <= k by A6,NAT_2:24;
+    then 5 < k by NAT_1:13;
+    then consider p,q be Prime such that
+A7:   k < p < q < 2*k by A1;
+    take p,q;
+    p <= 2*k & k < q & 2 < n by A2,A7,XXREAL_0:2;
+    hence thesis by A7,Th38;
+  end;
+end;

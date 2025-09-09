@@ -1,0 +1,1923 @@
+:: Some Number Relations
+::  by Sebastian Koch
+:: 
+:: Received December 27, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies XBOOLE_0, FUNCT_1, XCMPLX_0, NUMBERS, RAT_1, INT_1, ZFMISC_1,
+      ARYTM_1, RELAT_1, ARYTM_3, CARD_1, BINOP_2, NAT_1, REAL_1, RELSET_3,
+      ORDINAL1, RELAT_2, TARSKI, MEMBERED, WELLORD1, FUNCT_5;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, RELAT_1, RELSET_1, RELAT_2,
+      MEMBERED, FUNCT_1, FUNCT_2, BINOP_1, SETWISEO, WELLORD1, ENUMSET1,
+      ORDINAL1, XCMPLX_0, XREAL_0, XXREAL_0, NAT_1, INT_1, NUMBERS, RAT_1,
+      VALUED_0, TOLER_1, BINOP_2, FUNCT_5;
+ constructors BINOP_1, SETWISEO, XCMPLX_0, RAT_1, RELSET_1, VALUED_0, NUMBERS,
+      RELAT_2, MEMBERED, BINOP_2, WELLORD1, FUNCT_5, CARD_1, TOLER_1;
+ registrations ORDINAL1, NUMBERS, XCMPLX_0, XREAL_0, NAT_1, INT_1, RAT_1,
+      RELSET_1, VALUED_0, MEMBERED, FUNCT_1, XBOOLE_0, CARD_1, RELAT_1;
+ requirements BOOLE, SUBSET, ARITHM, NUMERALS, REAL;
+ theorems TARSKI, XBOOLE_0, ZFMISC_1, RELAT_1, RELAT_2, XBOOLE_1, ENUMSET1,
+      MEMBERED, ORDINAL1, CARD_1, CHORD, EXCHSORT, NAT_1, XREAL_1, RELSET_1,
+      FUNCT_1, FUNCT_2, FUNCT_5, XCMPLX_0, XREAL_0, RAT_1, INT_1, MMLQUER2,
+      BINOP_2, XCMPLX_1;
+ schemes RELSET_1;
+
+begin :: Preliminaries
+
+:: not necessarily into MEMBERED - will cause unneeded expansions 
+registration
+  cluster -> natural-membered for Nat;
+  coherence
+  proof
+    let n be Nat;
+    now
+      let x be object;
+      assume A1: x in n;
+      n in omega by ORDINAL1:def 12;
+      then x in omega by A1, ORDINAL1:10;
+      hence x is natural;
+    end;
+    hence thesis by MEMBERED:def 6;
+  end;
+end;
+
+:: Succ Relation
+
+ reserve X, Y for set, A for Ordinal;
+
+definition
+  let X;
+  func succRel(X) -> Relation of X means
+  :Def1:
+  for x,y being set holds [x,y] in it iff x in X & y in X & y = succ x;
+  existence
+  proof
+    defpred P[object,object] means $2 = succ Segm $1;
+    consider R being Relation of X such that
+      A1: for x,y being object holds [x,y] in R iff x in X & y in X & P[x,y]
+      from RELSET_1:sch 1;
+    take R;
+    let x,y be set;
+    hereby
+      assume [x,y] in R;
+      then x in X & y in X & P[x,y] by A1;
+      hence x in X & y in X & y = succ x by ORDINAL1:def 17;
+    end;
+    assume x in X & y in X & y = succ x;
+    then x in X & y in X & P[x,y] by ORDINAL1:def 17;
+    hence [x,y] in R by A1;
+  end;
+  uniqueness
+  proof
+    let R1, R2 be Relation of X;
+    assume that
+      A2: for x,y being set holds [x,y] in R1 iff x in X & y in X & y = succ x
+      and
+      A3: for x,y being set holds [x,y] in R2 iff x in X & y in X & y = succ x;
+    now
+      let x,y be object;
+      reconsider a=x,b=y as set by TARSKI:1;
+      hereby
+        assume [x,y] in R1;
+        then [a,b] in R1;
+        then a in X & b in X & b = succ a by A2;
+        hence [x,y] in R2 by A3;
+      end;
+      assume [x,y] in R2;
+      then [a,b] in R2;
+      then a in X & b in X & b = succ a by A3;
+      hence [x,y] in R1 by A2;
+    end;
+    hence R1 = R2 by RELAT_1:def 2;
+  end;
+end;
+
+registration
+  let X;
+  cluster succRel(X) -> asymmetric;
+  coherence
+  proof
+    now
+      let x,y be object;
+      reconsider a=x,b=y as set by TARSKI:1;
+      assume x in field succRel(X) & y in field succRel(X) &
+        [x,y] in succRel(X) & [y,x] in succRel(X);
+      then b = succ a & a = succ b by Def1;
+      then succ b in b by ORDINAL1:6;
+      hence contradiction by ORDINAL1:6;
+    end;
+    hence thesis by RELAT_2:def 5, RELAT_2:def 13;
+  end;
+end;
+
+registration
+  cluster succRel {} -> empty;
+  coherence;
+  let X be trivial set;
+  cluster succRel(X) -> empty;
+  coherence
+  proof
+    assume succRel(X) is non empty;
+    then consider z being object such that
+      A1: z in succRel(X) by XBOOLE_0:def 1;
+    consider x,y being object such that
+      A2: z =[x,y] by A1, RELAT_1:def 1;
+    reconsider a=x,b=y as set by TARSKI:1;
+    [a,b] in succRel(X) by A1, A2;
+    then A4: a in X & b in X & b = succ a by Def1;
+    then a = b by ZFMISC_1:def 10;
+    then b in b by A4, ORDINAL1:6;
+    hence contradiction;
+  end;
+end;
+
+theorem Th1:
+  X c= Y implies succRel(X) c= succRel(Y)
+proof
+  assume A1: X c= Y;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume [x,y] in succRel(X);
+    then [a,b] in succRel(X);
+    then a in X & b in X & b = succ a by Def1;
+    hence [x,y] in succRel(Y) by A1, Def1;
+  end;
+  hence thesis by RELAT_1:def 3;
+end;
+
+theorem
+  succRel(X /\ Y) = succRel(X) /\ succRel(Y)
+proof
+  now
+    let z be object;
+    hereby
+      assume A1: z in succRel(X /\ Y);
+      then consider x,y being object such that
+        A2: z = [x,y] by RELAT_1:def 1;
+      reconsider a=x,b=y as set by TARSKI:1;
+      [a,b] in succRel(X /\ Y) by A1, A2;
+      then a in X /\ Y & b in X /\ Y & b = succ a by Def1;
+      then a in X & b in X & a in Y & b in Y & b = succ a by XBOOLE_0:def 4;
+      hence z in succRel(X) & z in succRel(Y) by A2, Def1;
+    end;
+    assume A3: z in succRel(X) & z in succRel(Y);
+    then consider x,y being object such that
+      A4: z = [x,y] by RELAT_1:def 1;
+    reconsider a=x,b=y as set by TARSKI:1;
+    [a,b] in succRel(X) & [a,b] in succRel(Y) by A3, A4;
+    then a in X & b in X & a in Y & b in Y & b = succ a by Def1;
+    then a in X /\ Y & b in X /\ Y & b = succ a by XBOOLE_0:def 4;
+    hence z in succRel(X /\ Y) by A4, Def1;
+  end;
+  hence thesis by XBOOLE_0:def 4;
+end;
+
+theorem
+  succRel(X) \/ succRel(Y) c= succRel(X \/ Y)
+proof
+  X c= X \/ Y & Y c= X \/ Y by XBOOLE_1:7;
+  then succRel(X) c= succRel(X \/ Y) &
+    succRel(Y) c= succRel(X \/ Y) by Th1;
+  hence thesis by XBOOLE_1:8;
+end;
+
+theorem Th4:
+  for B,C being Ordinal holds [B,C] in succRel(A) iff succ B in A & C = succ B
+proof
+  let B, C be Ordinal;
+  hereby
+    assume [B,C] in succRel(A);
+    then C in A & C = succ B by Def1;
+    hence succ B in A & C = succ B;
+  end;
+  assume A1: succ B in A & C = succ B;
+  B in succ B by ORDINAL1:6;
+  then B in A by A1, ORDINAL1:10;
+  hence thesis by A1, Def1;
+end;
+
+theorem Th5:
+  for B being Ordinal st succ B in A holds [B, succ B] in succRel(A) by Th4;
+
+theorem Th6:
+  succRel(2) = {[0,1]}
+proof
+  now
+    let z be object;
+    hereby
+      assume A1: z in succRel(2);
+      then consider x,y being object such that
+        A2: z = [x,y] by RELAT_1:def 1;
+      reconsider a=x,b=y as set by TARSKI:1;
+      [a,b] in succRel(2) by A1, A2;
+      then A3: a in 2 & b in 2 & b = succ a by Def1;
+      then per cases by CARD_1:50, TARSKI:def 2;
+      suppose a = 0;
+        hence z = [0,1] by A2, A3;
+      end;
+      suppose a = 1;
+        hence z = [0,1] by A3; :: by contradiction;
+      end;
+    end;
+    assume A5: z = [0,1];
+    1 = succ 0 & 1 in 2 by CARD_1:50, TARSKI:def 2;
+    hence z in succRel(2) by A5, Th4;
+  end;
+  hence thesis by TARSKI:def 1;
+end;
+
+theorem Th7:
+  succRel(3) = {[0,1], [1,2]}
+proof
+  now
+    let z be object;
+    thus z in succRel(3) implies z = [0,1] or z = [1,2]
+    proof
+      assume A1: z in succRel(3);
+      then consider x,y being object such that
+        A2: z = [x,y] by RELAT_1:def 1;
+      reconsider a=x,b=y as set by TARSKI:1;
+      [a,b] in succRel(3) by A1, A2;
+      then A3: a in 3 & b in 3 & b = succ a by Def1;
+      then per cases by CARD_1:51, ENUMSET1:def 1;
+      suppose a = 0;
+        hence thesis by A2, A3;
+      end;
+      suppose a = 1;
+        hence thesis by A2, A3;
+      end;
+      suppose a = 2;
+        hence thesis by A3; :: by contradiction;
+      end;
+    end;
+    assume A6: z = [0,1] or z = [1,2];
+    1 = succ 0 & 1 in 3 & 2 = succ 1 & 2 in 3 by CARD_1:51, ENUMSET1:def 1;
+    hence z in succRel(3) by A6, Th5;
+  end;
+  hence thesis by TARSKI:def 2;
+end;
+
+theorem Th8:
+  succRel(4) = {[0,1], [1,2], [2,3]}
+proof
+  now
+    let z be object;
+    thus z in succRel(4) implies z = [0,1] or z = [1,2] or z = [2,3]
+    proof
+      assume A1: z in succRel(4);
+      then consider x,y being object such that
+        A2: z = [x,y] by RELAT_1:def 1;
+      reconsider a=x,b=y as set by TARSKI:1;
+      [a,b] in succRel(4) by A1, A2;
+      then A3: a in 4 & b in 4 & b = succ a by Def1;
+      then per cases by CARD_1:52, ENUMSET1:def 2;
+      suppose a = 0;
+        hence thesis by A2, A3;
+      end;
+      suppose a = 1;
+        hence thesis by A2, A3;
+      end;
+      suppose a = 2;
+        hence thesis by A2, A3;
+      end;
+      suppose a = 3;
+        hence thesis by A3; :: by contradiction;
+      end;
+    end;
+    assume A7: z = [0,1] or z = [1,2] or z = [2,3];
+    1 = succ 0 & 1 in 4 & 2 = succ 1 & 2 in 4 & 3 = succ 2 & 3 in 4
+      by CARD_1:52, ENUMSET1:def 2;
+    hence z in succRel(4) by A7, Th5;
+  end;
+  hence thesis by ENUMSET1:def 1;
+end;
+
+theorem Th9:
+  succRel(5) = {[0,1], [1,2], [2,3], [3,4]}
+proof
+  now
+    let z be object;
+    thus z in succRel(5) implies z = [0,1] or z = [1,2] or z = [2,3]
+      or z = [3,4]
+    proof
+      assume A1: z in succRel(5);
+      then consider x,y being object such that
+        A2: z = [x,y] by RELAT_1:def 1;
+      reconsider a=x,b=y as set by TARSKI:1;
+      [a,b] in succRel(5) by A1, A2;
+      then A3: a in 5 & b in 5 & b = succ a by Def1;
+      then per cases by CARD_1:53, ENUMSET1:def 3;
+      suppose a = 0;
+        hence thesis by A2, A3;
+      end;
+      suppose a = 1;
+        hence thesis by A2, A3;
+      end;
+      suppose a = 2;
+        hence thesis by A2, A3;
+      end;
+      suppose a = 3;
+        hence thesis by A2, A3;
+      end;
+      suppose a = 4;
+        hence thesis by A3; :: by contradiction;
+      end;
+    end;
+    assume A8: z = [0,1] or z = [1,2] or z = [2,3] or z = [3,4];
+    1 = succ 0 & 1 in 5 & 2 = succ 1 & 2 in 5 & 3 = succ 2 & 3 in 5 &
+      4 = succ 3 & 4 in 5 by CARD_1:53, ENUMSET1:def 3;
+    hence z in succRel(5) by A8, Th4;
+  end;
+  hence thesis by ENUMSET1:def 2;
+end;
+
+theorem
+  succRel(omega) = the set of all [n,n+1] where n is Nat
+proof
+  set S = the set of all [n,n+1] where n is Nat;
+  now
+    let z be object;
+    hereby
+      assume A0: z in succRel(omega);
+      then consider x,y being object such that
+        A0a: z = [x,y] by RELAT_1:def 1;
+      reconsider a=x,b=y as set by TARSKI:1;
+      [a,b] in succRel(omega) by A0, A0a;
+      then A1: a in omega & b in omega & b = succ a by Def1;
+      then reconsider a,b as Nat;
+      b = succ Segm a by A1, ORDINAL1:def 17
+        .= Segm(a+1) by NAT_1:38
+        .= a + 1 by ORDINAL1:def 17;
+      hence z in S by A0a;
+    end;
+    assume z in S;
+    then consider n being Nat such that
+      A2: z = [n,n+1];
+    A4: n+1 = Segm(n+1) by ORDINAL1:def 17
+      .= succ Segm n by NAT_1:38
+      .= succ n by ORDINAL1:def 17;
+    n in omega & n+1 in omega by ORDINAL1:def 12;
+    hence z in succRel(omega) by A2, A4, Def1;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+begin :: Add Relation
+
+ reserve z,z1,z2 for Complex;
+ reserve r,r1,r2 for Real;
+ reserve q,q1,q2 for Rational;
+ reserve i,i1,i2 for Integer;
+ reserve n,n1,n2 for Nat;
+
+registration
+  let z;
+  cluster (curry addcomplex).z -> Function-like Relation-like;
+  coherence
+  proof
+    z in COMPLEX by XCMPLX_0:def 2;
+    then [z,z] in [: COMPLEX, COMPLEX :] by ZFMISC_1:87;
+    then [z,z] in dom addcomplex by FUNCT_2:def 1;
+    then z in dom curry addcomplex by FUNCT_5:19;
+    hence thesis by FUNCT_5:30;
+  end;
+end;
+
+definition
+  let X be complex-membered set;
+  let z;
+  func addRel(X,z) -> Relation of X equals
+  ((curry addcomplex).z) |_2 X;
+  correctness;
+end;
+
+registration
+  let z;
+  cluster addRel({},z) -> empty;
+  coherence;
+end;
+
+theorem Th11:
+  for X being complex-membered set
+  holds [z1,z2] in addRel(X,z) iff z1 in X & z2 in X & z2 = z + z1
+proof
+  let X be complex-membered set;
+  reconsider g = (curry addcomplex).z as Function;
+  z in COMPLEX & z1 in COMPLEX by XCMPLX_0:def 2;
+  then [z,z1] in [: COMPLEX, COMPLEX :] by ZFMISC_1:87;
+  then A1: [z,z1] in dom addcomplex by FUNCT_2:def 1;
+  hereby
+    assume [z1,z2] in addRel(X,z);
+    then [z1,z2] in g |_2 X & z1 is set & z2 is set by TARSKI:1;
+    then A2: z1 in X & z2 in X & [z1,z2] in g by MMLQUER2:4;
+    then z1 in dom g & g.z1 = z2 by FUNCT_1:1;
+    then z2 = addcomplex.(z,z1) by A1, FUNCT_5:20;
+    hence z1 in X & z2 in X & z2 = z + z1 by A2, BINOP_2:def 3;
+  end;
+  assume A3: z1 in X & z2 in X & z2 = z + z1;
+  then A4: z2 = addcomplex.(z,z1) by BINOP_2:def 3
+    .= g.z1 by A1, FUNCT_5:20;
+  z1 in dom g by A1, FUNCT_5:20;
+  hence thesis by A3, A4, FUNCT_1:1, MMLQUER2:4;
+end;
+
+theorem
+  for X being complex-membered set holds addRel(X,0) = id X
+proof
+  let X be complex-membered set;
+  now
+    let x,y be object;
+    hereby
+      assume A1: [x,y] in addRel(X,0);
+      reconsider z1=x,z2=y as set by TARSKI:1;
+      [z1,z2] in addRel(X,0) by A1;
+      then z1 in X & z2 in X by MMLQUER2:4;
+      then reconsider z1,z2 as Complex;
+      [z1,z2] in addRel(X,0) by A1;
+      then z1 in X & z2 = 0 + z1 by Th11;
+      hence x in X & x = y;
+    end;
+    assume A2: x in X & x = y;
+    then reconsider z1=x,z2=y as Complex;
+    z2 = 0 + z1 by A2;
+    hence [x,y] in addRel(X,0) by A2, Th11;
+  end;
+  hence thesis by RELAT_1:def 10;
+end;
+
+registration
+  let X be complex-membered set;
+  let z be non zero Complex;
+  cluster addRel(X,z) -> asymmetric;
+  coherence
+  proof
+    now
+      let x,y be object;
+      reconsider a=x,b=y as set by TARSKI:1;
+      assume A1: x in field addRel(X,z) & y in field addRel(X,z) &
+        [x,y] in addRel(X,z) & [y,x] in addRel(X,z);
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Complex;
+      b = z + a & a = z + b by A1, Th11;
+      then 0 = 2*z;
+      hence contradiction;
+    end;
+    hence thesis by RELAT_2:def 13, RELAT_2:def 5;
+  end;
+end;
+
+theorem Th13:
+  for X, Y being complex-membered set
+  holds X c= Y implies addRel(X,z) c= addRel(Y,z)
+proof
+  let X, Y be complex-membered set;
+  assume A1: X c= Y;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A2: [x,y] in addRel(X,z);
+    then [a,b] in addRel(X,z);
+    then a in X & b in X by MMLQUER2:4;
+    then reconsider a,b as Complex;
+    [a,b] in addRel(X,z) by A2;
+    then a in X & b in X & b = z + a by Th11;
+    hence [x,y] in addRel(Y,z) by A1, Th11;
+  end;
+  hence thesis by RELAT_1:def 3;
+end;
+
+theorem
+  for X, Y being complex-membered set holds
+    addRel(X /\ Y,z) = addRel(X,z) /\ addRel(Y,z)
+proof
+  let X, Y be complex-membered set;
+  now
+    let z0 be object;
+    hereby
+      assume A1: z0 in addRel(X /\ Y,z);
+      then consider x,y being object such that
+        A2: z0 = [x,y] by RELAT_1:def 1;
+      reconsider a=x,b=y as set by TARSKI:1;
+      [a,b] in addRel(X /\ Y,z) by A1, A2;
+      then a in X /\ Y & b in X /\ Y by MMLQUER2:4;
+      then reconsider a,b as Complex;
+      [a,b] in addRel(X /\ Y,z) by A1, A2;
+      then a in X /\ Y & b in X /\ Y & b = z + a by Th11;
+      then a in X & b in X & a in Y & b in Y & b = z + a by XBOOLE_0:def 4;
+      hence z0 in addRel(X,z) & z0 in addRel(Y,z) by A2, Th11;
+    end;
+    assume A3: z0 in addRel(X,z) & z0 in addRel(Y,z);
+    then consider x,y being object such that
+      A4: z0 = [x,y] by RELAT_1:def 1;
+    reconsider a=x,b=y as set by TARSKI:1;
+    [a,b] in addRel(X,z) by A3, A4;
+    then a in X & b in X by MMLQUER2:4;
+    then reconsider a,b as Complex;
+    [a,b] in addRel(X,z) & [a,b] in addRel(Y,z) by A3, A4;
+    then a in X & b in X & a in Y & b in Y & b = z + a by Th11;
+    then a in X /\ Y & b in X /\ Y & b = z + a by XBOOLE_0:def 4;
+    hence z0 in addRel(X /\ Y,z) by A4, Th11;
+  end;
+  hence thesis by XBOOLE_0:def 4;
+end;
+
+theorem
+  for X, Y being complex-membered set holds
+    addRel(X,z) \/ addRel(Y,z) c= addRel(X \/ Y,z)
+proof
+  let X, Y be complex-membered set;
+  X c= X \/ Y & Y c= X \/ Y by XBOOLE_1:7;
+  then addRel(X,z) c= addRel(X \/ Y,z) & addRel(Y,z) c= addRel(X \/ Y,z)
+    by Th13;
+  hence thesis by XBOOLE_1:8;
+end;
+
+theorem
+  for X being complex-membered set holds addRel(X,z)~ = addRel(X,-z)
+proof
+  let X be complex-membered set;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    hereby
+      assume A1: [x,y] in addRel(X,-z);
+      then [a,b] in addRel(X,-z);
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Complex;
+      [a,b] in addRel(X,-z) by A1;
+      then a in X & b in X & b = -z + a by Th11;
+      then a in X & b in X & a = z + b;
+      hence [y,x] in addRel(X,z) by Th11;
+    end;
+    assume A2: [y,x] in addRel(X,z);
+    then [b,a] in addRel(X,z);
+    then a in X & b in X by MMLQUER2:4;
+    then reconsider a,b as Complex;
+    [b,a] in addRel(X,z) by A2;
+    then a in X & b in X & a = z + b by Th11;
+    then a in X & b in X & b = -z + a;
+    hence [x,y] in addRel(X,-z) by Th11;
+  end;
+  hence thesis by RELAT_1:def 7;
+end;
+
+theorem Th17:
+  for X being complex-membered set holds
+    addRel(X,z1) * addRel(X,z2) c= addRel(X,z1+z2)
+proof
+  let X be complex-membered set;
+  now
+    let x,y be object;
+    assume [x,y] in addRel(X,z1) * addRel(X,z2);
+    then consider z being object such that
+      A1: [x,z] in addRel(X,z1) & [z,y] in addRel(X,z2) by RELAT_1:def 8;
+    reconsider a = x, b = y, c = z as set by TARSKI:1;
+    [a,c] in addRel(X,z1) & [c,b] in addRel(X,z2) by A1;
+    then A2: a in X & c in X & b in X by MMLQUER2:4;
+    then reconsider a,b,c as Complex;
+    c = z1 + a & b = z2 + c by A1, Th11;
+    then b = z1 + z2 + a;
+    hence [x,y] in addRel(X,z1+z2) by A2, Th11;
+  end;
+  hence thesis by RELAT_1:def 3;
+end;
+
+theorem
+  addRel(COMPLEX,z1) * addRel(COMPLEX,z2) = addRel(COMPLEX,z1+z2)
+proof
+  A1: addRel(COMPLEX,z1) * addRel(COMPLEX,z2) c= addRel(COMPLEX,z1+z2) by Th17;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A2: [x,y] in addRel(COMPLEX,z1+z2);
+    then [a,b] in addRel(COMPLEX,z1+z2);
+    then A3: a in COMPLEX & b in COMPLEX by MMLQUER2:4;
+    then reconsider a,b as Complex;
+    A4: b = z1 + z2 + a by A2, Th11;
+    set c = z1 + a;
+    c in COMPLEX & b = z2 + c by A4, XCMPLX_0:def 2;
+    then [a,c] in addRel(COMPLEX,z1) & [c,b] in addRel(COMPLEX,z2) by A3, Th11;
+    hence [x,y] in addRel(COMPLEX,z1) * addRel(COMPLEX,z2) by RELAT_1:def 8;
+  end;
+  then addRel(COMPLEX,z1+z2) c= addRel(COMPLEX,z1) * addRel(COMPLEX,z2)
+    by RELAT_1:def 3;
+  hence thesis by A1, XBOOLE_0:def 10;
+end;
+
+theorem
+  [z1,z1+z] in addRel(COMPLEX,z)
+proof
+  z1 in COMPLEX & z1+z in COMPLEX by XCMPLX_0:def 2;
+  hence thesis by Th11;
+end;
+
+theorem
+  addRel(COMPLEX,z) = the set of all [z1,z1+z] where z1
+proof
+  set S = the set of all [z1,z1+z] where z1;
+  now
+    let o be object;
+    hereby
+      assume A1: o in addRel(COMPLEX,z);
+      then consider x,y being object such that
+        A2: o = [x,y] by RELAT_1:def 1;
+      reconsider x,y as set by TARSKI:1;
+      [x,y] in addRel(COMPLEX,z) by A1, A2;
+      then x in COMPLEX & y in COMPLEX by MMLQUER2:4;
+      then reconsider x, y as Complex;
+      y = z + x by A1, A2, Th11;
+      hence o in S by A2;
+    end;
+    assume o in S;
+    then consider z1 such that
+      A3: o = [z1,z1+z];
+    z1 in COMPLEX & z1+z in COMPLEX by XCMPLX_0:def 2;
+    hence o in addRel(COMPLEX,z) by A3, Th11;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+registration
+  let r;
+  cluster (curry addreal).r -> Function-like Relation-like;
+  coherence
+  proof
+    r in REAL by XREAL_0:def 1;
+    then [r,r] in [: REAL, REAL :] by ZFMISC_1:87;
+    then [r,r] in dom addreal by FUNCT_2:def 1;
+    then r in dom curry addreal by FUNCT_5:19;
+    hence thesis by FUNCT_5:30;
+  end;
+end;
+
+theorem
+  for X being real-membered set holds addRel(X,r) = ((curry addreal).r) |_2 X
+proof
+  let X be real-membered set;
+  set g = (curry addreal).r;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    hereby
+      assume A1: [x,y] in addRel(X,r);
+      then [a,b] in addRel(X,r);
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Real;
+      [a,b] in addRel(X,r) by A1;
+      then A2: a in X & b in X & b = r + a by Th11;
+      r in REAL & a in REAL by XREAL_0:def 1;
+      then [r,a] in [: REAL, REAL :] by ZFMISC_1:87;
+      then A3: [r,a] in dom addreal by FUNCT_2:def 1;
+      A4: b = addreal.(r,a) by A2, BINOP_2:def 9
+        .= g.a by A3, FUNCT_5:20;
+      a in dom g by A3, FUNCT_5:20;
+      hence [x,y] in g |_2 X by A2, A4, FUNCT_1:1, MMLQUER2:4;
+    end;
+    assume [x,y] in g |_2 X;
+    then [a,b] in g |_2 X;
+    then A5: a in X & b in X & [a,b] in g by MMLQUER2:4;
+    then reconsider a,b as Real;
+    r in REAL & a in REAL by XREAL_0:def 1;
+    then [r,a] in [: REAL, REAL :] by ZFMISC_1:87;
+    then A6: [r,a] in dom addreal by FUNCT_2:def 1;
+    a in dom g & g.a = b by A5, FUNCT_1:1;
+    then b = addreal.(r,a) by A6, FUNCT_5:20
+     .= r + a by BINOP_2:def 9;
+    hence [x,y] in addRel(X,r) by A5, Th11;
+  end;
+  hence thesis by RELAT_1:def 2;
+end;
+
+theorem
+  for X being real-membered set holds
+    [r1,r2] in addRel(X,r) iff r1 in X & r2 in X & r2 = r + r1 by Th11;
+
+theorem
+  addRel(REAL,r1) * addRel(REAL,r2) = addRel(REAL,r1+r2)
+proof
+  A1: addRel(REAL,r1) * addRel(REAL,r2) c= addRel(REAL,r1+r2) by Th17;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A2: [x,y] in addRel(REAL,r1+r2);
+    then [a,b] in addRel(REAL,r1+r2);
+    then A3: a in REAL & b in REAL by MMLQUER2:4;
+    then reconsider a,b as Real;
+    A4: b = r1 + r2 + a by A2, Th11;
+    set c = r1 + a;
+    c in REAL & b = r2 + c by A4, XREAL_0:def 1;
+    then [a,c] in addRel(REAL,r1) & [c,b] in addRel(REAL,r2) by A3, Th11;
+    hence [x,y] in addRel(REAL,r1) * addRel(REAL,r2) by RELAT_1:def 8;
+  end;
+  then addRel(REAL,r1+r2) c= addRel(REAL,r1) * addRel(REAL,r2)
+    by RELAT_1:def 3;
+  hence thesis by A1, XBOOLE_0:def 10;
+end;
+
+theorem
+  [r1,r1+r] in addRel(REAL,r)
+proof
+  r1 in REAL & r1+r in REAL by XREAL_0:def 1;
+  hence thesis by Th11;
+end;
+
+theorem
+  addRel(REAL,r) = the set of all [r1,r1+r] where r1
+proof
+  set S = the set of all [r1,r1+r] where r1;
+  now
+    let o be object;
+    hereby
+      assume A1: o in addRel(REAL,r);
+      then consider x,y being object such that
+        A2: o = [x,y] by RELAT_1:def 1;
+      reconsider x,y as set by TARSKI:1;
+      [x,y] in addRel(REAL,r) by A1, A2;
+      then x in REAL & y in REAL by MMLQUER2:4;
+      then reconsider x, y as Real;
+      y = r + x by A1, A2, Th11;
+      hence o in S by A2;
+    end;
+    assume o in S;
+    then consider r1 such that
+      A3: o = [r1,r1+r];
+    r1 in REAL & r1+r in REAL by XREAL_0:def 1;
+    hence o in addRel(REAL,r) by A3, Th11;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+registration
+  let q;
+  cluster (curry addrat).q -> Function-like Relation-like;
+  coherence
+  proof
+    q in RAT by RAT_1:def 2;
+    then [q,q] in [: RAT, RAT :] by ZFMISC_1:87;
+    then [q,q] in dom addrat by FUNCT_2:def 1;
+    then q in dom curry addrat by FUNCT_5:19;
+    hence thesis by FUNCT_5:30;
+  end;
+end;
+
+theorem
+  for X being rational-membered set holds
+    addRel(X,q) = ((curry addrat).q) |_2 X
+proof
+  let X be rational-membered set;
+  set g = (curry addrat).q;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    hereby
+      assume A1: [x,y] in addRel(X,q);
+      then [a,b] in addRel(X,q);
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Rational;
+      [a,b] in addRel(X,q) by A1;
+      then A2: a in X & b in X & b = q + a by Th11;
+      q in RAT & a in RAT by RAT_1:def 2;
+      then [q,a] in [: RAT, RAT :] by ZFMISC_1:87;
+      then A3: [q,a] in dom addrat by FUNCT_2:def 1;
+      A4: b = addrat.(q,a) by A2, BINOP_2:def 15
+        .= g.a by A3, FUNCT_5:20;
+      a in dom g by A3, FUNCT_5:20;
+      hence [x,y] in g |_2 X by A2, A4, FUNCT_1:1, MMLQUER2:4;
+    end;
+    assume [x,y] in g |_2 X;
+    then [a,b] in g |_2 X;
+    then A5: a in X & b in X & [a,b] in g by MMLQUER2:4;
+    then reconsider a,b as Rational;
+    q in RAT & a in RAT by RAT_1:def 2;
+    then [q,a] in [: RAT, RAT :] by ZFMISC_1:87;
+    then A6: [q,a] in dom addrat by FUNCT_2:def 1;
+    a in dom g & g.a = b by A5, FUNCT_1:1;
+    then b = addrat.(q,a) by A6, FUNCT_5:20
+     .= q + a by BINOP_2:def 15;
+    hence [x,y] in addRel(X,q) by A5, Th11;
+  end;
+  hence thesis by RELAT_1:def 2;
+end;
+
+theorem
+  for X being rational-membered set holds
+    [q1,q2] in addRel(X,q) iff q1 in X & q2 in X & q2 = q + q1 by Th11;
+
+theorem
+  addRel(RAT,q1) * addRel(RAT,q2) = addRel(RAT,q1+q2)
+proof
+  A1: addRel(RAT,q1) * addRel(RAT,q2) c= addRel(RAT,q1+q2) by Th17;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A2: [x,y] in addRel(RAT,q1+q2);
+    then [a,b] in addRel(RAT,q1+q2);
+    then A3: a in RAT & b in RAT by MMLQUER2:4;
+    then reconsider a,b as Rational;
+    A4: b = q1 + q2 + a by A2, Th11;
+    set c = q1 + a;
+    c in RAT & b = q2 + c by A4, RAT_1:def 2;
+    then [a,c] in addRel(RAT,q1) & [c,b] in addRel(RAT,q2) by A3, Th11;
+    hence [x,y] in addRel(RAT,q1) * addRel(RAT,q2) by RELAT_1:def 8;
+  end;
+  then addRel(RAT,q1+q2) c= addRel(RAT,q1) * addRel(RAT,q2) by RELAT_1:def 3;
+  hence thesis by A1, XBOOLE_0:def 10;
+end;
+
+theorem
+  [q1,q1+q] in addRel(RAT,q)
+proof
+  q1 in RAT & q1+q in RAT by RAT_1:def 2;
+  hence thesis by Th11;
+end;
+
+theorem
+  addRel(RAT,q) = the set of all [q1,q1+q] where q1
+proof
+  set S = the set of all [q1,q1+q] where q1;
+  now
+    let o be object;
+    hereby
+      assume A1: o in addRel(RAT,q);
+      then consider x,y being object such that
+        A2: o = [x,y] by RELAT_1:def 1;
+      reconsider x,y as set by TARSKI:1;
+      [x,y] in addRel(RAT,q) by A1, A2;
+      then x in RAT & y in RAT by MMLQUER2:4;
+      then reconsider x, y as Rational;
+      y = q + x by A1, A2, Th11;
+      hence o in S by A2;
+    end;
+    assume o in S;
+    then consider q1 such that
+      A3: o = [q1,q1+q];
+    q1 in RAT & q1+q in RAT by RAT_1:def 2;
+    hence o in addRel(RAT,q) by A3, Th11;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+registration
+  let i;
+  cluster (curry addint).i -> Function-like Relation-like;
+  coherence
+  proof
+    i in INT by INT_1:def 2;
+    then [i,i] in [: INT, INT :] by ZFMISC_1:87;
+    then [i,i] in dom addint by FUNCT_2:def 1;
+    then i in dom curry addint by FUNCT_5:19;
+    hence thesis by FUNCT_5:30;
+  end;
+end;
+
+theorem
+  for X being integer-membered set holds
+    addRel(X,i) = ((curry addint).i) |_2 X
+proof
+  let X be integer-membered set;
+  set g = (curry addint).i;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    hereby
+      assume A1: [x,y] in addRel(X,i);
+      then [a,b] in addRel(X,i);
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Integer;
+      [a,b] in addRel(X,i) by A1;
+      then A2: a in X & b in X & b = i + a by Th11;
+      i in INT & a in INT by INT_1:def 2;
+      then [i,a] in [: INT, INT :] by ZFMISC_1:87;
+      then A3: [i,a] in dom addint by FUNCT_2:def 1;
+      A4: b = addint.(i,a) by A2, BINOP_2:def 20
+        .= g.a by A3, FUNCT_5:20;
+      a in dom g by A3, FUNCT_5:20;
+      hence [x,y] in g |_2 X by A2, A4, FUNCT_1:1, MMLQUER2:4;
+    end;
+    assume [x,y] in g |_2 X;
+    then [a,b] in g |_2 X;
+    then A5: a in X & b in X & [a,b] in g by MMLQUER2:4;
+    then reconsider a,b as Integer;
+    i in INT & a in INT by INT_1:def 2;
+    then [i,a] in [: INT, INT :] by ZFMISC_1:87;
+    then A6: [i,a] in dom addint by FUNCT_2:def 1;
+    a in dom g & g.a = b by A5, FUNCT_1:1;
+    then b = addint.(i,a) by A6, FUNCT_5:20
+     .= i + a by BINOP_2:def 20;
+    hence [x,y] in addRel(X,i) by A5, Th11;
+  end;
+  hence thesis by RELAT_1:def 2;
+end;
+
+theorem
+  for X being integer-membered set holds
+    [i1,i2] in addRel(X,i) iff i1 in X & i2 in X & i2 = i + i1 by Th11;
+
+theorem
+  addRel(INT,i1) * addRel(INT,i2) = addRel(INT,i1+i2)
+proof
+  A1: addRel(INT,i1) * addRel(INT,i2) c= addRel(INT,i1+i2) by Th17;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A2: [x,y] in addRel(INT,i1+i2);
+    then [a,b] in addRel(INT,i1+i2);
+    then A3: a in INT & b in INT by MMLQUER2:4;
+    then reconsider a,b as Integer;
+    A4: b = i1 + i2 + a by A2, Th11;
+    set c = i1 + a;
+    c in INT & b = i2 + c by A4, INT_1:def 2;
+    then [a,c] in addRel(INT,i1) & [c,b] in addRel(INT,i2) by A3, Th11;
+    hence [x,y] in addRel(INT,i1) * addRel(INT,i2) by RELAT_1:def 8;
+  end;
+  then addRel(INT,i1+i2) c= addRel(INT,i1) * addRel(INT,i2) by RELAT_1:def 3;
+  hence thesis by A1, XBOOLE_0:def 10;
+end;
+
+theorem
+  [i1,i1+i] in addRel(INT,i)
+proof
+  i1 in INT & i1+i in INT by INT_1:def 2;
+  hence thesis by Th11;
+end;
+
+theorem
+  addRel(INT,i) = the set of all [i1,i1+i] where i1
+proof
+  set S = the set of all [i1,i1+i] where i1;
+  now
+    let o be object;
+    hereby
+      assume A1: o in addRel(INT,i);
+      then consider x,y being object such that
+        A2: o = [x,y] by RELAT_1:def 1;
+      reconsider x,y as set by TARSKI:1;
+      [x,y] in addRel(INT,i) by A1, A2;
+      then x in INT & y in INT by MMLQUER2:4;
+      then reconsider x, y as Integer;
+      y = i + x by A1, A2, Th11;
+      hence o in S by A2;
+    end;
+    assume o in S;
+    then consider i1 such that
+      A3: o = [i1,i1+i];
+    i1 in INT & i1+i in INT by INT_1:def 2;
+    hence o in addRel(INT,i) by A3, Th11;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+registration
+  let n;
+  cluster (curry addnat).n -> Function-like Relation-like;
+  coherence
+  proof
+    n in NAT by ORDINAL1:def 12;
+    then [n,n] in [: NAT, NAT :] by ZFMISC_1:87;
+    then [n,n] in dom addnat by FUNCT_2:def 1;
+    then n in dom curry addnat by FUNCT_5:19;
+    hence thesis by FUNCT_5:30;
+  end;
+end;
+
+theorem
+  for X being natural-membered set holds
+    addRel(X,n) = ((curry addnat).n) |_2 X
+proof
+  let X be natural-membered set;
+  set g = (curry addnat).n;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    hereby
+      assume A1: [x,y] in addRel(X,n);
+      then [a,b] in addRel(X,n);
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Integer;
+      [a,b] in addRel(X,n) by A1;
+      then A2: a in X & b in X & b = n + a by Th11;
+      then n in NAT & a in NAT by ORDINAL1:def 12;
+      then [n,a] in [: NAT, NAT :] by ZFMISC_1:87;
+      then A3: [n,a] in dom addnat by FUNCT_2:def 1;
+      A4: b = addnat.(n,a) by A2, BINOP_2:def 23
+        .= g.a by A3, FUNCT_5:20;
+      a in dom g by A3, FUNCT_5:20;
+      hence [x,y] in g |_2 X by A2, A4, FUNCT_1:1, MMLQUER2:4;
+    end;
+    assume [x,y] in g |_2 X;
+    then [a,b] in g |_2 X;
+    then A5: a in X & b in X & [a,b] in g by MMLQUER2:4;
+    then reconsider a,b as Integer;
+    A6: n in NAT & a in NAT by A5, ORDINAL1:def 12;
+    then [n,a] in [: NAT, NAT :] by ZFMISC_1:87;
+    then A7: [n,a] in dom addnat by FUNCT_2:def 1;
+    a in dom g & g.a = b by A5, FUNCT_1:1;
+    then b = addnat.(n,a) by A7, FUNCT_5:20
+     .= n + a by A6, BINOP_2:def 23;
+    hence [x,y] in addRel(X,n) by A5, Th11;
+  end;
+  hence thesis by RELAT_1:def 2;
+end;
+
+theorem
+  for X being natural-membered set
+  holds [n1,n2] in addRel(X,n) iff n1 in X & n2 in X & n2 = n + n1 by Th11;
+
+theorem
+  addRel(NAT,n1) * addRel(NAT,n2) = addRel(NAT,n1+n2)
+proof
+  A1: addRel(NAT,n1) * addRel(NAT,n2) c= addRel(NAT,n1+n2) by Th17;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A2: [x,y] in addRel(NAT,n1+n2);
+    then [a,b] in addRel(NAT,n1+n2);
+    then A3: a in NAT & b in NAT by MMLQUER2:4;
+    then reconsider a,b as Nat;
+    A4: b = n1 + n2 + a by A2, Th11;
+    set c = n1 + a;
+    c in NAT & b = n2 + c by A4, ORDINAL1:def 12;
+    then [a,c] in addRel(NAT,n1) & [c,b] in addRel(NAT,n2) by A3, Th11;
+    hence [x,y] in addRel(NAT,n1) * addRel(NAT,n2) by RELAT_1:def 8;
+  end;
+  then addRel(NAT,n1+n2) c= addRel(NAT,n1) * addRel(NAT,n2) by RELAT_1:def 3;
+  hence thesis by A1, XBOOLE_0:def 10;
+end;
+
+theorem
+  [n1,n1+n] in addRel(NAT,n)
+proof
+  n1 in NAT & n1+n in NAT by ORDINAL1:def 12;
+  hence thesis by Th11;
+end;
+
+theorem
+  addRel(NAT,n) = the set of all [n1,n1+n] where n1
+proof
+  set S = the set of all [n1,n1+n] where n1;
+  now
+    let o be object;
+    hereby
+      assume A1: o in addRel(NAT,n);
+      then consider x,y being object such that
+        A2: o = [x,y] by RELAT_1:def 1;
+      reconsider x,y as set by TARSKI:1;
+      [x,y] in addRel(NAT,n) by A1, A2;
+      then x in NAT & y in NAT by MMLQUER2:4;
+      then reconsider x, y as Nat;
+      y = n + x by A1, A2, Th11;
+      hence o in S by A2;
+    end;
+    assume o in S;
+    then consider n1 such that
+      A3: o = [n1,n1+n];
+    n1 in NAT & n1+n in NAT by ORDINAL1:def 12;
+    hence o in addRel(NAT,n) by A3, Th11;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+theorem Th41:
+  for X being natural-membered set holds addRel(X,1) = succRel(X)
+proof
+  let X be natural-membered set;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    hereby
+      assume A1: [x,y] in addRel(X,1);
+      then [a,b] in addRel(X,1);
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Nat;
+      [a,b] in addRel(X,1) by A1;
+      then A2: a in X & b in X & b = 1 + a by Th11;
+      then b = Segm(a+1) by ORDINAL1:def 17
+        .= succ Segm a by NAT_1:38
+        .= succ a by ORDINAL1:def 17;
+      hence [x,y] in succRel(X) by A2, Def1;
+    end;
+    assume [x,y] in succRel(X);
+    then [a,b] in succRel(X);
+    then A3: a in X & b in X & b = succ a by Def1;
+    then reconsider a,b as Nat;
+    b = succ Segm a by A3, ORDINAL1:def 17
+      .= Segm(a+1) by NAT_1:38
+      .= 1 + a by ORDINAL1:def 17;
+    hence [x,y] in addRel(X,1) by A3, Th11;
+  end;
+  hence thesis by RELAT_1:def 2;
+end;
+
+begin :: Mult Relation
+
+registration
+  let z;
+  cluster (curry multcomplex).z -> Function-like Relation-like;
+  coherence
+  proof
+    z in COMPLEX by XCMPLX_0:def 2;
+    then [z,z] in [: COMPLEX, COMPLEX :] by ZFMISC_1:87;
+    then [z,z] in dom multcomplex by FUNCT_2:def 1;
+    then z in dom curry multcomplex by FUNCT_5:19;
+    hence thesis by FUNCT_5:30;
+  end;
+end;
+
+definition
+  let X be complex-membered set;
+  let z;
+  func multRel(X,z) -> Relation of X equals
+  ((curry multcomplex).z) |_2 X;
+  coherence;
+end;
+
+registration
+  let z;
+  cluster multRel({},z) -> empty;
+  coherence;
+end;
+
+theorem Th42:
+  for X being complex-membered set
+  holds [z1,z2] in multRel(X,z) iff z1 in X & z2 in X & z2 = z * z1
+proof
+  let X be complex-membered set;
+  reconsider g = (curry multcomplex).z as Function;
+  z in COMPLEX & z1 in COMPLEX by XCMPLX_0:def 2;
+  then [z,z1] in [: COMPLEX, COMPLEX :] by ZFMISC_1:87;
+  then A1: [z,z1] in dom multcomplex by FUNCT_2:def 1;
+  hereby
+    assume [z1,z2] in multRel(X,z);
+    then [z1,z2] in g |_2 X & z1 is set & z2 is set by TARSKI:1;
+    then A2: z1 in X & z2 in X & [z1,z2] in g by MMLQUER2:4;
+    then z1 in dom g & g.z1 = z2 by FUNCT_1:1;
+    then z2 = multcomplex.(z,z1) by A1, FUNCT_5:20;
+    hence z1 in X & z2 in X & z2 = z * z1 by A2, BINOP_2:def 5;
+  end;
+  assume A3: z1 in X & z2 in X & z2 = z * z1;
+  then A4: z2 = multcomplex.(z,z1) by BINOP_2:def 5
+    .= g.z1 by A1, FUNCT_5:20;
+  z1 in dom g by A1, FUNCT_5:20;
+  hence thesis by A3, A4, FUNCT_1:1, MMLQUER2:4;
+end;
+
+theorem
+  for X being complex-membered set st 0 in X
+  holds multRel(X,0) = [: X, {0} :]
+proof
+  let X be complex-membered set;
+  assume A0: 0 in X;
+  set M = [: X, {0} :];
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    hereby
+      assume A1: [x,y] in multRel(X,0);
+      then [a,b] in multRel(X,0);
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Complex;
+      [a,b] in multRel(X,0) by A1;
+      then a in X & b in X & b = 0 * a by Th42;
+      hence [x,y] in M by ZFMISC_1:106;
+    end;
+    assume [x,y] in M;
+    then A2: x in X & y = 0 by ZFMISC_1:106;
+    then reconsider a,b as Complex;
+    b = 0 * a by A2;
+    hence [x,y] in multRel(X,0) by A0, A2, Th42;
+  end;
+  hence thesis by RELAT_1:def 2;
+end;
+
+theorem
+  for X being complex-membered set holds multRel(X,1) = id X
+proof
+  let X be complex-membered set;
+  now
+    let x,y be object;
+    hereby
+      assume A1: [x,y] in multRel(X,1);
+      reconsider z1=x,z2=y as set by TARSKI:1;
+      [z1,z2] in multRel(X,1) by A1;
+      then z1 in X & z2 in X by MMLQUER2:4;
+      then reconsider z1,z2 as Complex;
+      [z1,z2] in multRel(X,1) by A1;
+      then z1 in X & z2 = 1 * z1 by Th42;
+      hence x in X & x = y;
+    end;
+    assume A2: x in X & x = y;
+    then reconsider z1=x,z2=y as Complex;
+    z2 = 1 * z1 by A2;
+    hence [x,y] in multRel(X,1) by A2, Th42;
+  end;
+  hence thesis by RELAT_1:def 10;
+end;
+
+theorem
+  for X being complex-membered set st z <> 1 & z <> -1 & not 0 in X
+  holds multRel(X,z) is asymmetric
+proof
+  let X be complex-membered set;
+  assume A0: z <> 1 & z <> -1 & not 0 in X;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A1: x in field multRel(X,z) & y in field multRel(X,z) &
+      [x,y] in multRel(X,z) & [y,x] in multRel(X,z);
+    then A2: a in X & b in X by MMLQUER2:4;
+    then reconsider a,b as Complex;
+    b = z * a & a = z * b by A1, Th42;
+    then b = z*(z*b);
+    then b*b" = (z*z*b)*b"
+      .= z*z*(b*b");
+    then 1 = z*z*(b*b") by A0, A2, XCMPLX_0:def 7;
+    then 1 = z*z*1 by A0, A2, XCMPLX_0:def 7;
+    hence contradiction by A0, XCMPLX_1:182;
+  end;
+  hence thesis by RELAT_2:def 13, RELAT_2:def 5;
+end;
+
+theorem Th47:
+  for X, Y being complex-membered set
+  holds X c= Y implies multRel(X,z) c= multRel(Y,z)
+proof
+  let X, Y be complex-membered set;
+  assume A1: X c= Y;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A2: [x,y] in multRel(X,z);
+    then [a,b] in multRel(X,z);
+    then a in X & b in X by MMLQUER2:4;
+    then reconsider a,b as Complex;
+    [a,b] in multRel(X,z) by A2;
+    then a in X & b in X & b = z * a by Th42;
+    hence [x,y] in multRel(Y,z) by A1, Th42;
+  end;
+  hence thesis by RELAT_1:def 3;
+end;
+
+theorem
+  for X, Y being complex-membered set
+  holds multRel(X /\ Y,z) = multRel(X,z) /\ multRel(Y,z)
+proof
+  let X, Y be complex-membered set;
+  now
+    let z0 be object;
+    hereby
+      assume A1: z0 in multRel(X /\ Y,z);
+      then consider x,y being object such that
+        A2: z0 = [x,y] by RELAT_1:def 1;
+      reconsider a=x,b=y as set by TARSKI:1;
+      [a,b] in multRel(X /\ Y,z) by A1, A2;
+      then a in X /\ Y & b in X /\ Y by MMLQUER2:4;
+      then reconsider a,b as Complex;
+      [a,b] in multRel(X /\ Y,z) by A1, A2;
+      then a in X /\ Y & b in X /\ Y & b = z * a by Th42;
+      then a in X & b in X & a in Y & b in Y & b = z * a by XBOOLE_0:def 4;
+      hence z0 in multRel(X,z) & z0 in multRel(Y,z) by A2, Th42;
+    end;
+    assume A3: z0 in multRel(X,z) & z0 in multRel(Y,z);
+    then consider x,y being object such that
+      A4: z0 = [x,y] by RELAT_1:def 1;
+    reconsider a=x,b=y as set by TARSKI:1;
+    [a,b] in multRel(X,z) by A3, A4;
+    then a in X & b in X by MMLQUER2:4;
+    then reconsider a,b as Complex;
+    [a,b] in multRel(X,z) & [a,b] in multRel(Y,z) by A3, A4;
+    then a in X & b in X & a in Y & b in Y & b = z * a by Th42;
+    then a in X /\ Y & b in X /\ Y & b = z * a by XBOOLE_0:def 4;
+    hence z0 in multRel(X /\ Y,z) by A4, Th42;
+  end;
+  hence thesis by XBOOLE_0:def 4;
+end;
+
+theorem
+  for X, Y being complex-membered set
+  holds multRel(X,z) \/ multRel(Y,z) c= multRel(X \/ Y,z)
+proof
+  let X, Y be complex-membered set;
+  X c= X \/ Y & Y c= X \/ Y by XBOOLE_1:7;
+  then multRel(X,z) c= multRel(X \/ Y,z) & multRel(Y,z) c= multRel(X \/ Y,z)
+    by Th47;
+  hence thesis by XBOOLE_1:8;
+end;
+
+theorem
+  for X being complex-membered set st z <> 0
+  holds multRel(X,z)~ = multRel(X,z")
+proof
+  let X be complex-membered set;
+  assume A1: z <> 0;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    hereby
+      assume A2: [x,y] in multRel(X,z");
+      then [a,b] in multRel(X,z");
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Complex;
+      [a,b] in multRel(X,z") by A2;
+      then a in X & b in X & b = z" * a by Th42;
+      then a in X & b in X & z" * z * a = z * b;
+      then a in X & b in X & 1 * a = z * b by A1, XCMPLX_0:def 7;
+      hence [y,x] in multRel(X,z) by Th42;
+    end;
+    assume A3: [y,x] in multRel(X,z);
+    then [b,a] in multRel(X,z);
+    then a in X & b in X by MMLQUER2:4;
+    then reconsider a,b as Complex;
+    [b,a] in multRel(X,z) by A3;
+    then a in X & b in X & a = z * b by Th42;
+    then a in X & b in X & z" * z * b = z" * a;
+    then a in X & b in X & 1 * b = z" * a by A1, XCMPLX_0:def 7;
+    hence [x,y] in multRel(X,z") by Th42;
+  end;
+  hence thesis by RELAT_1:def 7;
+end;
+
+theorem Th51:
+  for X being complex-membered set
+  holds multRel(X,z1) * multRel(X,z2) c= multRel(X,z1*z2)
+proof
+  let X be complex-membered set;
+  now
+    let x,y be object;
+    assume [x,y] in multRel(X,z1) * multRel(X,z2);
+    then consider z being object such that
+      A1: [x,z] in multRel(X,z1) & [z,y] in multRel(X,z2) by RELAT_1:def 8;
+    reconsider a = x, b = y, c = z as set by TARSKI:1;
+    [a,c] in multRel(X,z1) & [c,b] in multRel(X,z2) by A1;
+    then A2: a in X & c in X & b in X by MMLQUER2:4;
+    then reconsider a,b,c as Complex;
+    c = z1 * a & b = z2 * c by A1, Th42;
+    then b = z1 * z2 * a;
+    hence [x,y] in multRel(X,z1*z2) by A2, Th42;
+  end;
+  hence thesis by RELAT_1:def 3;
+end;
+
+theorem
+  multRel(COMPLEX,z1) * multRel(COMPLEX,z2) = multRel(COMPLEX,z1*z2)
+proof
+  A1: multRel(COMPLEX,z1) * multRel(COMPLEX,z2) c= multRel(COMPLEX,z1*z2)
+    by Th51;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A2: [x,y] in multRel(COMPLEX,z1*z2);
+    then [a,b] in multRel(COMPLEX,z1*z2);
+    then A3: a in COMPLEX & b in COMPLEX by MMLQUER2:4;
+    then reconsider a,b as Complex;
+    A4: b = z1 * z2 * a by A2, Th42;
+    set c = z1 * a;
+    c in COMPLEX & b = z2 * c by A4, XCMPLX_0:def 2;
+    then [a,c] in multRel(COMPLEX,z1) & [c,b] in multRel(COMPLEX,z2)
+      by A3, Th42;
+    hence [x,y] in multRel(COMPLEX,z1) * multRel(COMPLEX,z2) by RELAT_1:def 8;
+  end;
+  then multRel(COMPLEX,z1*z2) c= multRel(COMPLEX,z1) * multRel(COMPLEX,z2)
+    by RELAT_1:def 3;
+  hence thesis by A1, XBOOLE_0:def 10;
+end;
+
+theorem
+  [z1,z1*z] in multRel(COMPLEX,z)
+proof
+  z1 in COMPLEX & z1*z in COMPLEX by XCMPLX_0:def 2;
+  hence thesis by Th42;
+end;
+
+theorem
+  multRel(COMPLEX,z) = the set of all [z1,z1*z] where z1
+proof
+  set S = the set of all [z1,z1*z] where z1;
+  now
+    let o be object;
+    hereby
+      assume A1: o in multRel(COMPLEX,z);
+      then consider x,y being object such that
+        A2: o = [x,y] by RELAT_1:def 1;
+      reconsider x,y as set by TARSKI:1;
+      [x,y] in multRel(COMPLEX,z) by A1, A2;
+      then x in COMPLEX & y in COMPLEX by MMLQUER2:4;
+      then reconsider x, y as Complex;
+      y = z * x by A1, A2, Th42;
+      hence o in S by A2;
+    end;
+    assume o in S;
+    then consider z1 such that
+      A3: o = [z1,z1*z];
+    z1 in COMPLEX & z1*z in COMPLEX by XCMPLX_0:def 2;
+    hence o in multRel(COMPLEX,z) by A3, Th42;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+registration
+  let r;
+  cluster (curry multreal).r -> Function-like Relation-like;
+  coherence
+  proof
+    r in REAL by XREAL_0:def 1;
+    then [r,r] in [: REAL, REAL :] by ZFMISC_1:87;
+    then [r,r] in dom multreal by FUNCT_2:def 1;
+    then r in dom curry multreal by FUNCT_5:19;
+    hence thesis by FUNCT_5:30;
+  end;
+end;
+
+theorem
+  for X being real-membered set
+  holds multRel(X,r) = ((curry multreal).r) |_2 X
+proof
+  let X be real-membered set;
+  set g = (curry multreal).r;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    hereby
+      assume A1: [x,y] in multRel(X,r);
+      then [a,b] in multRel(X,r);
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Real;
+      [a,b] in multRel(X,r) by A1;
+      then A2: a in X & b in X & b = r * a by Th42;
+      r in REAL & a in REAL by XREAL_0:def 1;
+      then [r,a] in [: REAL, REAL :] by ZFMISC_1:87;
+      then A3: [r,a] in dom multreal by FUNCT_2:def 1;
+      A4: b = multreal.(r,a) by A2, BINOP_2:def 11
+        .= g.a by A3, FUNCT_5:20;
+      a in dom g by A3, FUNCT_5:20;
+      hence [x,y] in g |_2 X by A2, A4, FUNCT_1:1, MMLQUER2:4;
+    end;
+    assume [x,y] in g |_2 X;
+    then [a,b] in g |_2 X;
+    then A5: a in X & b in X & [a,b] in g by MMLQUER2:4;
+    then reconsider a,b as Real;
+    r in REAL & a in REAL by XREAL_0:def 1;
+    then [r,a] in [: REAL, REAL :] by ZFMISC_1:87;
+    then A6: [r,a] in dom multreal by FUNCT_2:def 1;
+    a in dom g & g.a = b by A5, FUNCT_1:1;
+    then b = multreal.(r,a) by A6, FUNCT_5:20
+     .= r * a by BINOP_2:def 11;
+    hence [x,y] in multRel(X,r) by A5, Th42;
+  end;
+  hence thesis by RELAT_1:def 2;
+end;
+
+theorem
+  for X being real-membered set
+  holds [r1,r2] in multRel(X,r) iff r1 in X & r2 in X & r2 = r * r1 by Th42;
+
+theorem
+  multRel(REAL,r1) * multRel(REAL,r2) = multRel(REAL,r1*r2)
+proof
+  A1: multRel(REAL,r1) * multRel(REAL,r2) c= multRel(REAL,r1*r2) by Th51;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A2: [x,y] in multRel(REAL,r1*r2);
+    then [a,b] in multRel(REAL,r1*r2);
+    then A3: a in REAL & b in REAL by MMLQUER2:4;
+    then reconsider a,b as Real;
+    A4: b = r1 * r2 * a by A2, Th42;
+    set c = r1 * a;
+    c in REAL & b = r2 * c by A4, XREAL_0:def 1;
+    then [a,c] in multRel(REAL,r1) & [c,b] in multRel(REAL,r2) by A3, Th42;
+    hence [x,y] in multRel(REAL,r1) * multRel(REAL,r2) by RELAT_1:def 8;
+  end;
+  then multRel(REAL,r1*r2) c= multRel(REAL,r1) * multRel(REAL,r2)
+    by RELAT_1:def 3;
+  hence thesis by A1, XBOOLE_0:def 10;
+end;
+
+theorem
+  [r1,r1*r] in multRel(REAL,r)
+proof
+  r1 in REAL & r1*r in REAL by XREAL_0:def 1;
+  hence thesis by Th42;
+end;
+
+theorem
+  multRel(REAL,r) = the set of all [r1,r1*r] where r1
+proof
+  set S = the set of all [r1,r1*r] where r1;
+  now
+    let o be object;
+    hereby
+      assume A1: o in multRel(REAL,r);
+      then consider x,y being object such that
+        A2: o = [x,y] by RELAT_1:def 1;
+      reconsider x,y as set by TARSKI:1;
+      [x,y] in multRel(REAL,r) by A1, A2;
+      then x in REAL & y in REAL by MMLQUER2:4;
+      then reconsider x, y as Real;
+      y = r * x by A1, A2, Th42;
+      hence o in S by A2;
+    end;
+    assume o in S;
+    then consider r1 such that
+      A3: o = [r1,r1*r];
+    r1 in REAL & r1*r in REAL by XREAL_0:def 1;
+    hence o in multRel(REAL,r) by A3, Th42;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+registration
+  let q;
+  cluster (curry multrat).q -> Function-like Relation-like;
+  coherence
+  proof
+    q in RAT by RAT_1:def 2;
+    then [q,q] in [: RAT, RAT :] by ZFMISC_1:87;
+    then [q,q] in dom multrat by FUNCT_2:def 1;
+    then q in dom curry multrat by FUNCT_5:19;
+    hence thesis by FUNCT_5:30;
+  end;
+end;
+
+theorem
+  for X being rational-membered set
+  holds multRel(X,q) = ((curry multrat).q) |_2 X
+proof
+  let X be rational-membered set;
+  set g = (curry multrat).q;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    hereby
+      assume A1: [x,y] in multRel(X,q);
+      then [a,b] in multRel(X,q);
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Rational;
+      [a,b] in multRel(X,q) by A1;
+      then A2: a in X & b in X & b = q * a by Th42;
+      q in RAT & a in RAT by RAT_1:def 2;
+      then [q,a] in [: RAT, RAT :] by ZFMISC_1:87;
+      then A3: [q,a] in dom multrat by FUNCT_2:def 1;
+      A4: b = multrat.(q,a) by A2, BINOP_2:def 17
+        .= g.a by A3, FUNCT_5:20;
+      a in dom g by A3, FUNCT_5:20;
+      hence [x,y] in g |_2 X by A2, A4, FUNCT_1:1, MMLQUER2:4;
+    end;
+    assume [x,y] in g |_2 X;
+    then [a,b] in g |_2 X;
+    then A5: a in X & b in X & [a,b] in g by MMLQUER2:4;
+    then reconsider a,b as Rational;
+    q in RAT & a in RAT by RAT_1:def 2;
+    then [q,a] in [: RAT, RAT :] by ZFMISC_1:87;
+    then A6: [q,a] in dom multrat by FUNCT_2:def 1;
+    a in dom g & g.a = b by A5, FUNCT_1:1;
+    then b = multrat.(q,a) by A6, FUNCT_5:20
+     .= q * a by BINOP_2:def 17;
+    hence [x,y] in multRel(X,q) by A5, Th42;
+  end;
+  hence thesis by RELAT_1:def 2;
+end;
+
+theorem
+  for X being rational-membered set
+  holds [q1,q2] in multRel(X,q) iff q1 in X & q2 in X & q2 = q * q1 by Th42;
+
+theorem
+  multRel(RAT,q1) * multRel(RAT,q2) = multRel(RAT,q1*q2)
+proof
+  A1: multRel(RAT,q1) * multRel(RAT,q2) c= multRel(RAT,q1*q2) by Th51;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A2: [x,y] in multRel(RAT,q1*q2);
+    then [a,b] in multRel(RAT,q1*q2);
+    then A3: a in RAT & b in RAT by MMLQUER2:4;
+    then reconsider a,b as Rational;
+    A4: b = q1 * q2 * a by A2, Th42;
+    set c = q1 * a;
+    c in RAT & b = q2 * c by A4, RAT_1:def 2;
+    then [a,c] in multRel(RAT,q1) & [c,b] in multRel(RAT,q2) by A3, Th42;
+    hence [x,y] in multRel(RAT,q1) * multRel(RAT,q2) by RELAT_1:def 8;
+  end;
+  then multRel(RAT,q1*q2) c= multRel(RAT,q1) * multRel(RAT,q2)
+    by RELAT_1:def 3;
+  hence thesis by A1, XBOOLE_0:def 10;
+end;
+
+theorem
+  [q1,q1*q] in multRel(RAT,q)
+proof
+  q1 in RAT & q1*q in RAT by RAT_1:def 2;
+  hence thesis by Th42;
+end;
+
+theorem
+  multRel(RAT,q) = the set of all [q1,q1*q] where q1
+proof
+  set S = the set of all [q1,q1*q] where q1;
+  now
+    let o be object;
+    hereby
+      assume A1: o in multRel(RAT,q);
+      then consider x,y being object such that
+        A2: o = [x,y] by RELAT_1:def 1;
+      reconsider x,y as set by TARSKI:1;
+      [x,y] in multRel(RAT,q) by A1, A2;
+      then x in RAT & y in RAT by MMLQUER2:4;
+      then reconsider x, y as Rational;
+      y = q * x by A1, A2, Th42;
+      hence o in S by A2;
+    end;
+    assume o in S;
+    then consider q1 such that
+      A3: o = [q1,q1*q];
+    q1 in RAT & q1*q in RAT by RAT_1:def 2;
+    hence o in multRel(RAT,q) by A3, Th42;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+registration
+  let i;
+  cluster (curry multint).i -> Function-like Relation-like;
+  coherence
+  proof
+    i in INT by INT_1:def 2;
+    then [i,i] in [: INT, INT :] by ZFMISC_1:87;
+    then [i,i] in dom multint by FUNCT_2:def 1;
+    then i in dom curry multint by FUNCT_5:19;
+    hence thesis by FUNCT_5:30;
+  end;
+end;
+
+theorem
+  for X being integer-membered set
+  holds multRel(X,i) = ((curry multint).i) |_2 X
+proof
+  let X be integer-membered set;
+  set g = (curry multint).i;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    hereby
+      assume A1: [x,y] in multRel(X,i);
+      then [a,b] in multRel(X,i);
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Integer;
+      [a,b] in multRel(X,i) by A1;
+      then A2: a in X & b in X & b = i * a by Th42;
+      i in INT & a in INT by INT_1:def 2;
+      then [i,a] in [: INT, INT :] by ZFMISC_1:87;
+      then A3: [i,a] in dom multint by FUNCT_2:def 1;
+      A4: b = multint.(i,a) by A2, BINOP_2:def 22
+        .= g.a by A3, FUNCT_5:20;
+      a in dom g by A3, FUNCT_5:20;
+      hence [x,y] in g |_2 X by A2, A4, FUNCT_1:1, MMLQUER2:4;
+    end;
+    assume [x,y] in g |_2 X;
+    then [a,b] in g |_2 X;
+    then A5: a in X & b in X & [a,b] in g by MMLQUER2:4;
+    then reconsider a,b as Integer;
+    i in INT & a in INT by INT_1:def 2;
+    then [i,a] in [: INT, INT :] by ZFMISC_1:87;
+    then A6: [i,a] in dom multint by FUNCT_2:def 1;
+    a in dom g & g.a = b by A5, FUNCT_1:1;
+    then b = multint.(i,a) by A6, FUNCT_5:20
+     .= i * a by BINOP_2:def 22;
+    hence [x,y] in multRel(X,i) by A5, Th42;
+  end;
+  hence thesis by RELAT_1:def 2;
+end;
+
+theorem
+  for X being integer-membered set
+  holds [i1,i2] in multRel(X,i) iff i1 in X & i2 in X & i2 = i * i1 by Th42;
+
+theorem
+  multRel(INT,i1) * multRel(INT,i2) = multRel(INT,i1*i2)
+proof
+  A1: multRel(INT,i1) * multRel(INT,i2) c= multRel(INT,i1*i2) by Th51;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A2: [x,y] in multRel(INT,i1*i2);
+    then [a,b] in multRel(INT,i1*i2);
+    then A3: a in INT & b in INT by MMLQUER2:4;
+    then reconsider a,b as Integer;
+    A4: b = i1 * i2 * a by A2, Th42;
+    set c = i1 * a;
+    c in INT & b = i2 * c by A4, INT_1:def 2;
+    then [a,c] in multRel(INT,i1) & [c,b] in multRel(INT,i2) by A3, Th42;
+    hence [x,y] in multRel(INT,i1) * multRel(INT,i2) by RELAT_1:def 8;
+  end;
+  then multRel(INT,i1*i2) c= multRel(INT,i1) * multRel(INT,i2)
+    by RELAT_1:def 3;
+  hence thesis by A1, XBOOLE_0:def 10;
+end;
+
+theorem
+  [i1,i1*i] in multRel(INT,i)
+proof
+  i1 in INT & i1*i in INT by INT_1:def 2;
+  hence thesis by Th42;
+end;
+
+theorem
+  multRel(INT,i) = the set of all [i1,i1*i] where i1
+proof
+  set S = the set of all [i1,i1*i] where i1;
+  now
+    let o be object;
+    hereby
+      assume A1: o in multRel(INT,i);
+      then consider x,y being object such that
+        A2: o = [x,y] by RELAT_1:def 1;
+      reconsider x,y as set by TARSKI:1;
+      [x,y] in multRel(INT,i) by A1, A2;
+      then x in INT & y in INT by MMLQUER2:4;
+      then reconsider x, y as Integer;
+      y = i * x by A1, A2, Th42;
+      hence o in S by A2;
+    end;
+    assume o in S;
+    then consider i1 such that
+      A3: o = [i1,i1*i];
+    i1 in INT & i1*i in INT by INT_1:def 2;
+    hence o in multRel(INT,i) by A3, Th42;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+registration
+  let n;
+  cluster (curry multnat).n -> Function-like Relation-like;
+  coherence
+  proof
+    n in NAT by ORDINAL1:def 12;
+    then [n,n] in [: NAT, NAT :] by ZFMISC_1:87;
+    then [n,n] in dom multnat by FUNCT_2:def 1;
+    then n in dom curry multnat by FUNCT_5:19;
+    hence thesis by FUNCT_5:30;
+  end;
+end;
+
+theorem
+  for X being natural-membered set
+  holds multRel(X,n) = ((curry multnat).n) |_2 X
+proof
+  let X be natural-membered set;
+  set g = (curry multnat).n;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    hereby
+      assume A1: [x,y] in multRel(X,n);
+      then [a,b] in multRel(X,n);
+      then a in X & b in X by MMLQUER2:4;
+      then reconsider a,b as Integer;
+      [a,b] in multRel(X,n) by A1;
+      then A2: a in X & b in X & b = n * a by Th42;
+      then n in NAT & a in NAT by ORDINAL1:def 12;
+      then [n,a] in [: NAT, NAT :] by ZFMISC_1:87;
+      then A3: [n,a] in dom multnat by FUNCT_2:def 1;
+      A4: b = multnat.(n,a) by A2, BINOP_2:def 24
+        .= g.a by A3, FUNCT_5:20;
+      a in dom g by A3, FUNCT_5:20;
+      hence [x,y] in g |_2 X by A2, A4, FUNCT_1:1, MMLQUER2:4;
+    end;
+    assume [x,y] in g |_2 X;
+    then [a,b] in g |_2 X;
+    then A5: a in X & b in X & [a,b] in g by MMLQUER2:4;
+    then reconsider a,b as Integer;
+    A6: n in NAT & a in NAT by A5, ORDINAL1:def 12;
+    then [n,a] in [: NAT, NAT :] by ZFMISC_1:87;
+    then A7: [n,a] in dom multnat by FUNCT_2:def 1;
+    a in dom g & g.a = b by A5, FUNCT_1:1;
+    then b = multnat.(n,a) by A7, FUNCT_5:20
+     .= n * a by A6, BINOP_2:def 24;
+    hence [x,y] in multRel(X,n) by A5, Th42;
+  end;
+  hence thesis by RELAT_1:def 2;
+end;
+
+theorem
+  for X being natural-membered set
+  holds [n1,n2] in multRel(X,n) iff n1 in X & n2 in X & n2 = n * n1 by Th42;
+
+theorem
+  multRel(NAT,n1) * multRel(NAT,n2) = multRel(NAT,n1*n2)
+proof
+  A1: multRel(NAT,n1) * multRel(NAT,n2) c= multRel(NAT,n1*n2) by Th51;
+  now
+    let x,y be object;
+    reconsider a=x,b=y as set by TARSKI:1;
+    assume A2: [x,y] in multRel(NAT,n1*n2);
+    then [a,b] in multRel(NAT,n1*n2);
+    then A3: a in NAT & b in NAT by MMLQUER2:4;
+    then reconsider a,b as Nat;
+    A4: b = n1 * n2 * a by A2, Th42;
+    set c = n1 * a;
+    c in NAT & b = n2 * c by A4, ORDINAL1:def 12;
+    then [a,c] in multRel(NAT,n1) & [c,b] in multRel(NAT,n2) by A3, Th42;
+    hence [x,y] in multRel(NAT,n1) * multRel(NAT,n2) by RELAT_1:def 8;
+  end;
+  then multRel(NAT,n1*n2) c= multRel(NAT,n1) * multRel(NAT,n2)
+    by RELAT_1:def 3;
+  hence thesis by A1, XBOOLE_0:def 10;
+end;
+
+theorem
+  [n1,n1*n] in multRel(NAT,n)
+proof
+  n1 in NAT & n1*n in NAT by ORDINAL1:def 12;
+  hence thesis by Th42;
+end;
+
+theorem
+  multRel(NAT,n) = the set of all [n1,n1*n] where n1
+proof
+  set S = the set of all [n1,n1*n] where n1;
+  now
+    let o be object;
+    hereby
+      assume A1: o in multRel(NAT,n);
+      then consider x,y being object such that
+        A2: o = [x,y] by RELAT_1:def 1;
+      reconsider x,y as set by TARSKI:1;
+      [x,y] in multRel(NAT,n) by A1, A2;
+      then x in NAT & y in NAT by MMLQUER2:4;
+      then reconsider x, y as Nat;
+      y = n * x by A1, A2, Th42;
+      hence o in S by A2;
+    end;
+    assume o in S;
+    then consider n1 such that
+      A3: o = [n1,n1*n];
+    n1 in NAT & n1*n in NAT by ORDINAL1:def 12;
+    hence o in multRel(NAT,n) by A3, Th42;
+  end;
+  hence thesis by TARSKI:2;
+end;
+
+begin :: Mod Relation
+
+definition
+  let n be non zero Nat;
+  func modRel(n) -> Relation of n equals
+  addRel(n,1) \/ {[n-1,0]};
+  coherence
+  proof
+    reconsider m = n-1 as Nat by CHORD:1;
+    0 < n & n-1 < n-0 by XREAL_1:15;
+    then 0 in Segm n & m in Segm n by NAT_1:44;
+    then 0 in n & m in n by ORDINAL1:def 17;
+    then {[m,0]} is n-valued n-defined by RELSET_1:3;
+    hence thesis by EXCHSORT:83;
+  end;
+end;
+
+theorem
+  modRel(1) = {[0,0]}
+proof
+  thus modRel(1) = succRel(1) \/ {[1-1,0]} by Th41
+    .= {} \/ {[0,0]} by CARD_1:49
+    .= {[0,0]};
+end;
+
+theorem
+  modRel(2) = {[0,1], [1,0]}
+proof
+  thus modRel(2) = succRel(2) \/ {[2-1,0]} by Th41
+    .= {[0,1], [1,0]} by Th6, ENUMSET1:1;
+end;
+
+theorem
+  modRel(3) = {[0,1], [1,2], [2,0]}
+proof
+  thus modRel(3) = succRel(3) \/ {[3-1,0]} by Th41
+    .= {[0,1], [1,2], [2,0]} by Th7, ENUMSET1:3;
+end;
+
+theorem
+  modRel(4) = {[0,1], [1,2], [2,3], [3,0]}
+proof
+  thus modRel(4) = succRel(4) \/ {[4-1,0]} by Th41
+    .= {[0,1], [1,2], [2,3], [3,0]} by Th8, ENUMSET1:6;
+end;
+
+theorem
+  modRel(5) = {[0,1], [1,2], [2,3], [3,4], [4,0]}
+proof
+  thus modRel(5) = succRel(5) \/ {[5-1,0]} by Th41
+    .= {[0,1], [1,2], [2,3], [3,4], [4,0]} by Th9, ENUMSET1:10;
+end;

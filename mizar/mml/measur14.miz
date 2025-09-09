@@ -1,0 +1,3120 @@
+:: Universality of Measure Space
+::  by Noboru Endou and Yasunari Shidama
+:: 
+:: Received December 9, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MEASUR14, INTEGRA1, MEASUR13, FINSEQ_1, FINSEQ_2, NUMBERS,
+      XXREAL_0, SUBSET_1, MESFUNC2, CARD_1, ARYTM_3, ARYTM_1, RELAT_1, REAL_1,
+      FUNCT_1, XBOOLE_0, TARSKI, ZFMISC_1, PROB_1, SUPINF_2, VALUED_0,
+      PARTFUN1, MEASURE1, MESFUNC5, MESFUNC1, MEASUR10, MEASUR11, MESFUN12,
+      RFUNCT_3, ORDINAL2, INTEGRA5, NAT_1, ORDINAL4, FUNCT_2, FUNCOP_1, PBOOLE,
+      CARD_3, FINSUB_1, SETFAM_1, PROB_2, MSSUBFAM, SEQ_2, SEQFUNC, XCMPLX_0,
+      MEASURE5, EQREL_1, MESFUNC3, MEASUR12;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, SETFAM_1, RELAT_1, FUNCT_1,
+      ORDINAL1, RELSET_1, PARTFUN1, FUNCT_2, BINOP_1, FUNCT_3, FUNCOP_1,
+      XXREAL_3, CARD_1, FINSUB_1, CARD_3, NUMBERS, XXREAL_0, XREAL_0, VALUED_0,
+      EXTREAL1, NAT_1, SUPINF_1, FINSEQ_1, FINSEQ_2, FINSEQOP, EUCLID,
+      SUPINF_2, PROB_1, PROB_2, SEQFUNC, MEASURE1, MEASURE3, MEASURE4,
+      MEASURE5, MEASUR12, MESFUNC1, MESFUNC2, MESFUNC3, MESFUNC5, MEASUR10,
+      PROB_3, MEASUR11, MESFUN12, MEASUR13;
+ constructors EXTREAL1, SUPINF_1, MESFUNC2, MEASUR11, MESFUN12, DOMAIN_1,
+      MESFUNC3, FINSEQOP, SEQFUNC, MEASURE3, PROB_3, MEASUR12, MEASUR13,
+      EUCLID;
+ registrations ORDINAL1, XBOOLE_0, RELAT_1, SUBSET_1, XREAL_0, NAT_1, NUMBERS,
+      VALUED_0, RELSET_1, MEASURE1, FINSEQ_1, FINSEQ_2, FUNCT_1, FUNCT_2,
+      FUNCOP_1, CARD_1, CARD_3, MEASURE9, MEMBERED, SRINGS_4, SETFAM_1,
+      MEASUR13, GLIBPRE1, EUCLID;
+ requirements BOOLE, SUBSET, NUMERALS, REAL, ARITHM;
+ equalities FINSEQ_1, MEASUR10, BINOP_1, SUBSET_1, MEASUR13, FINSEQ_2;
+ expansions TARSKI, XBOOLE_0, MESFUNC1, FINSEQ_1, FUNCT_1, PROB_1, SUPINF_2,
+      RELAT_1, MEASURE1, MESFUNC3, VALUED_0, PROB_2;
+ theorems XBOOLE_0, FUNCT_1, XXREAL_0, XBOOLE_1, MEASURE1, VALUED_0, FUNCT_2,
+      RELAT_1, MESFUNC5, PARTFUN1, MESFUNC1, SUPINF_2, MESFUNC2, MESFUNC3,
+      MEASUR10, MEASUR11, MESFUN12, FINSEQ_1, FINSEQ_2, TARSKI, ZFMISC_1,
+      NAT_1, FUNCT_3, FUNCOP_1, XREAL_1, PROB_1, ORDINAL1, CARD_1, XTUPLE_0,
+      CARD_3, PRVECT_3, FINSEQ_3, FINSUB_1, MEASUR13, BINOP_1, SRINGS_5,
+      MEASUR12;
+ schemes RECDEF_1, NAT_1, FUNCT_2, BINOP_1, SEQFUNC;
+
+begin :: Universality of Cartesian product type sets and tuple type sets
+
+theorem Th1:
+  for X,Y be non empty set, f be Function of X,Y st f is bijective
+    holds .:f is bijective & for s be Subset of X holds .:f.s = f.:s
+proof
+    let X,Y be non empty set, f be Function of X,Y;
+    assume
+A1: f is bijective;
+A2: dom f = X by FUNCT_2:def 1;
+    for y being object st y in bool Y
+     ex x being object st x in bool X & y = .:f.x
+    proof
+     let y be object;
+     assume y in bool Y; then
+     reconsider Z = y as Subset of rng f by A1,FUNCT_2:def 3;
+A3:  f.:(f"Z) = Z by FUNCT_1:77;
+     take x = f"Z;
+     thus thesis by A2,A3,FUNCT_3:def 1;
+    end; then
+    rng .:f = bool Y by FUNCT_2:10; then
+    .:f is onto by FUNCT_2:def 3;
+    hence .:f is bijective by A1;
+    thus thesis by A2,FUNCT_3:def 1;
+end;
+
+theorem Th2:
+  for X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X
+    st f is bijective holds .:f.:S is Field_Subset of Y
+proof
+    let X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X;
+    assume
+A1: f is bijective; then
+    .:f is bijective by Th1; then
+A2: dom .:f = bool X & rng .:f = bool Y by FUNCT_2:def 1,def 3;
+A3: dom f = X & rng f = Y by A1,FUNCT_2:def 1,def 3;
+
+    reconsider S1 = .:f.:S as Subset-Family of Y;
+
+A4: for A,B being set st A in S1 & B in S1 holds A /\ B in S1
+    proof
+     let A,B be set;
+     assume
+A5:  A in S1 & B in S1; then
+     consider s be object such that
+A6:  s in dom .:f & s in S & A = .:f.s by FUNCT_1:def 6;
+
+     consider t be object such that
+A7:  t in dom .:f & t in S & B = .:f.t by FUNCT_1:def 6,A5;
+
+     reconsider s,t as Subset of X by A6,A7;
+A8: .:f.s = f.:s & .:f.t = f.:t by A1,Th1;
+     (f.:s) /\ (f.:t) = f.:(s/\t) by A1,FUNCT_1:62; then
+A9: A /\ B = .:f.(s/\ t) by A1,A6,A7,A8,Th1;
+     s/\ t in S by FINSUB_1:def 2,A6,A7;
+     hence thesis by A2,A9,FUNCT_1:def 6;
+    end;
+
+    for A being Subset of Y st A in S1 holds A` in S1
+    proof
+     let A being Subset of Y;
+     assume A in S1; then
+     consider s be object such that
+A10: s in dom .:f & s in S & A  = .:f.s by FUNCT_1:def 6;
+     reconsider s as Subset of X by A10;
+A11: .:f.s = f.:s by A1,Th1;
+     f.:(s`) = (f.:X) \ f.:s by A1,FUNCT_1:64; then
+     f.:(s`) = Y \ (f.:s) by RELAT_1:113,A3; then
+A12: .:f.(s`) = A` by A1,A10,A11,Th1;
+     s` in S by A10,PROB_1:def 1;
+     hence thesis by A2,A12,FUNCT_1:def 6;
+    end; then
+    S1 is non empty cap-closed compl-closed by A2,A4,FINSUB_1:def 2;
+    hence thesis;
+end;
+
+definition
+  let X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X;
+  assume A1: f is bijective;
+  func CopyField(f,S) -> Field_Subset of Y equals :Def1:
+  .:f.:S;
+  correctness by Th2,A1;
+end;
+
+theorem Th3:
+for X,Y be non empty set, f be Function of X,Y, S be SigmaField of X
+  st f is bijective holds .:f.:S is SigmaField of Y
+proof
+    let X,Y be non empty set, f be Function of X,Y, S be SigmaField of X;
+    set S1 = .:f.:S;
+    assume
+A1: f is bijective; then
+    .:f is bijective by Th1; then
+A2: dom (.:f) = bool X & rng (.:f) = bool Y by FUNCT_2:def 1,def 3;
+
+A3: f is one-to-one & f is onto by A1;
+    reconsider S1 as Field_Subset of Y by A1,Th2;
+
+    for A1 being SetSequence of Y st rng A1 c= S1 holds Intersection A1 in S1
+    proof
+     let A1 be SetSequence of Y;
+     assume
+A4:  rng A1 c= S1;
+     defpred P[set,object] means A1.$1 = (.:f).$2 & $2 in S;
+
+A5:  for x being Element of NAT ex y being Element of bool X st P[x,y]
+     proof
+      let x be Element of NAT;
+      reconsider B = A1.x as Subset of Y;
+      B in rng A1 by FUNCT_2:4; then
+      consider z be object such that
+A6:   z in dom (.:f) & z in S & B = .:f.z by A4,FUNCT_1:def 6;
+      reconsider z as Element of bool X by A6;
+      take z;
+      thus .:f.z = A1.x by A6;
+      thus z in S by A6;
+     end;
+
+     consider T being Function of NAT,bool X such that
+A7:  for x being Element of NAT holds P[x,T.x] from FUNCT_2:sch 3(A5);
+     reconsider T as SetSequence of X;
+
+     now let s be object;
+      assume s in rng T; then
+      ex n be Element of NAT st n in dom T & s=T.n by PARTFUN1:3;
+      hence s in S by A7;
+     end; then
+A8: rng T c= S;
+
+     for y be object holds y in f.:(Intersection T) iff y in Intersection A1
+     proof
+      let y be object;
+      hereby assume y in f.:(Intersection T); then
+       consider x be object such that
+A9:    x in dom f & x in Intersection T & y = f.x by FUNCT_1:def 6;
+       now let n be Nat;
+A10:    x in T.n by PROB_1:13,A9;
+        n in NAT by ORDINAL1:def 12; then
+        A1.n = .:f.(T.n) & T.n in S by A7; then
+        A1.n = f.:(T.n) by A1,Th1;
+        hence y in A1.n by A9,A10,FUNCT_1:def 6;
+       end;
+       hence y in Intersection A1 by PROB_1:13;
+      end;
+
+      assume
+A11:  y in Intersection A1; then
+A12:  y in A1.0 by PROB_1:13;
+A13:  A1.0 = .:f.(T.0) & T.0 in S by A7;
+      .:f.(T.0) = f.:(T.0) by A1,Th1; then
+      consider t0 be object such that
+A14:  t0 in dom f & t0 in T.0 & y = f.t0 by A12,A13,FUNCT_1:def 6;
+
+      now let n be Nat;
+A15:   y in A1.n by A11,PROB_1:13;
+       n in NAT by ORDINAL1:def 12; then
+       A1.n = .:f.(T.n) by A7; then
+       A1.n = f.:(T.n) by A1,Th1; then
+       ex tn be object st tn in dom f & tn in T.n & y = f.tn
+         by A15,FUNCT_1:def 6;
+       hence t0 in T.n by A3,A14;
+      end; then
+      t0 in Intersection T by PROB_1:13;
+      hence y in f.:(Intersection T) by A14,FUNCT_1:def 6;
+     end; then
+     f.:(Intersection T) = Intersection A1 by TARSKI:2; then
+A16: .:f.(Intersection T) = Intersection A1 by A1,Th1;
+     Intersection T in S by A8,PROB_1:def 6;
+     hence Intersection A1 in S1 by A2,A16,FUNCT_1:def 6;
+    end; then
+    S1 is sigma-multiplicative;
+    hence thesis;
+end;
+
+definition
+  let X,Y be non empty set, f be Function of X,Y, S be SigmaField of X;
+  assume A1: f is bijective;
+  func CopyField(f,S) -> SigmaField of Y equals :Def2:
+  .:f.:S;
+  correctness by Th3,A1;
+end;
+
+theorem Th4:
+for X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X,
+    M be Measure of S st f is bijective holds
+  (ex G be Function of S,CopyField(f,S) st G = (.:f) |S
+       & dom G = S & rng G = CopyField(f,S) & G is bijective)
+& (ex F be Function of CopyField(f,S),S st F = ((.:f) |S)"
+       & rng F = S & dom F = CopyField(f,S) & F is bijective)
+proof
+    let X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X,
+        M be Measure of S;
+    assume
+A1: f is bijective;
+
+A2: dom ((.:f)|S) = S by FUNCT_2:def 1;
+    rng ((.:f)|S) = .:f.:S by RELAT_1:115; then
+A3: rng ((.:f)|S) = CopyField(f,S) by A1,Def1; then
+    reconsider G = (.:f) |S as Function of S,CopyField(f,S) by A2,FUNCT_2:1;
+
+A4: G is one-to-one by A1,FUNCT_1:52;
+
+    G is onto by A3,FUNCT_2:def 3;
+    hence
+      ex G be Function of S,CopyField(f,S) st G = (.:f) |S
+       & dom G = S & rng G = CopyField(f,S) & G is bijective by A2,A4,A3;
+
+A5: dom (G") = CopyField(f,S) by A4,A3,FUNCT_1:33;
+A6: rng (G") = S by A2,A4,FUNCT_1:33; then
+    reconsider F = G" as Function of CopyField(f,S),S by A5,FUNCT_2:1;
+    F is onto by A6,FUNCT_2:def 3;
+    hence thesis by A4,A5,A6;
+end;
+
+theorem Th5:
+for X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X,
+    M be Measure of S st f is bijective holds
+ ex M1 be Measure of CopyField(f,S) st M1 = M * ((.:f) |S)"
+     & for s being Element of CopyField(f,S) holds
+        ex t be Element of S st s = f.:t & M1.s = M.t
+proof
+    let X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X,
+        M be Measure of S;
+    assume
+A1: f is bijective; then
+A2: CopyField(f,S) = .:f.:S by Def1;
+    consider F be Function of CopyField(f,S),S such that
+A3: F = ((.:f) |S)" & rng F = S & dom F = CopyField(f,S)
+  & F is bijective by A1,Th4;
+
+    consider G be Function of S,CopyField(f,S) such that
+A4: G = (.:f) |S & dom G = S & rng G = CopyField(f,S)
+  & G is bijective by A1,Th4;
+
+    reconsider M1 = M * F as Function of CopyField(f,S),ExtREAL;
+
+A5: {} c= X;
+A6: {} in dom G by A4,PROB_1:4;
+    ((.:f) |S).{} = (.:f).{} by FUNCT_1:49,PROB_1:4; then
+    ((.:f) |S).{} = f.:{} by A5,A1,Th1; then
+A7: {} = F.{} by FUNCT_1:34,A3,A4,A6; then
+
+    M1.{} = M.{} by A3,FUNCT_1:13,PROB_1:4; then
+A8: M1 is zeroed by VALUED_0:def 19;
+
+A9:for s being Element of CopyField(f,S) holds
+     ex t be Element of S st s=f.:t & M1.s =M.t
+    proof
+     let s be Element of CopyField(f,S);
+     consider t be object such that
+A10: t in dom (.:f) & t in S & s= (.:f).t by A2,FUNCT_1:def 6;
+     reconsider t as Element of S by A10;
+A11: s = G.t by A4,A10,FUNCT_1:49;
+     take t;
+     thus s = f.:t by A1,A10,Th1;
+     M1.s = M.(F.s) by A3,FUNCT_1:13;
+     hence M1.s = M.t by A3,A4,A11,FUNCT_1:34;
+    end;
+
+    for A,B being Element of CopyField(f,S) st
+     A misses B & A \/ B in CopyField(f,S) holds M1.(A \/ B) = M1.A + M1.B
+    proof
+     let A,B be Element of CopyField(f,S);
+     assume
+A12: A misses B & A \/ B in CopyField(f,S);
+     consider a be Element of S such that
+A13: A = f.:a & M1.A = M.a by A9;
+     consider b be Element of S such that
+A14: B = f.:b & M1.B = M.b by A9;
+     A /\ B = f.:(a /\ b) by FUNCT_1:62,A1,A13,A14; then
+     A /\ B = (.:f).(a /\ b) by A1,Th1; then
+     {} = G.(a /\ b) by A12,A4,FUNCT_1:49; then
+A15: a misses b by A7,A3,A4,FUNCT_1:34;
+
+     A \/ B = f.:(a \/ b) by RELAT_1:120,A13,A14; then
+     A \/ B =(.:f).(a \/ b) by A1,Th1; then
+     A \/ B = G.(a \/ b) by A4,FUNCT_1:49; then
+     M1.(A \/ B) = M.(F.(G.(a \/ b))) by FUNCT_1:13,A3; then
+     M1.(A \/ B) = M.(a \/ b) by A3,A4,FUNCT_1:34;
+     hence M1.(A \/ B) = M1.A + M1.B by A13,A14,A15,MEASURE1:def 3;
+    end; then
+    M1 is additive;
+    hence thesis by A3,A8,A9;
+end;
+
+definition
+  let X,Y be non empty set, f be Function of X,Y, S be Field_Subset of X,
+      M be Measure of S;
+  assume A1:f is bijective;
+  func CopyMeasure(f,M) -> Measure of CopyField(f,S) means
+     it = M * ((.:f) |S)"
+   & for s being Element of CopyField(f,S) holds
+      ex t be Element of S st s = f.:t & it.s = M.t;
+  existence by A1,Th5;
+  uniqueness;
+end;
+
+theorem Th6:
+for X,Y be non empty set, f be Function of X,Y, S be SigmaField of X,
+    M be sigma_Measure of S st f is bijective holds
+ ex M1 be sigma_Measure of CopyField(f,S)
+    st M1 = M * ((.:f) |S)"
+     & for s being Element of CopyField(f,S) holds
+        ex t be Element of S st s = f.:t & M1.s = M.t
+proof
+    let X,Y be non empty set, f be Function of X,Y, S be SigmaField of X,
+        M be sigma_Measure of S;
+    assume
+A1: f is bijective;
+    reconsider S0 = S as Field_Subset of X;
+    reconsider M0 = M as Measure of S0;
+    consider F be Function of CopyField(f,S0),S0 such that
+A2: F = ((.:f) |S0)" & rng F = S0 & dom F = CopyField(f,S0)
+  & F is bijective by A1,Th4;
+    consider G be Function of S0,CopyField(f,S0) such that
+A3: G = (.:f) |S0 & dom G = S0 & rng G = CopyField(f,S0)
+  & G is bijective by A1,Th4;
+
+A4: CopyField(f,S0) = .:f.:S0 by A1,Def1; then
+A5: CopyField(f,S0) = CopyField(f,S) by A1,Def2; then
+    reconsider F as Function of CopyField(f,S),S;
+    reconsider G as Function of S,CopyField(f,S) by A1,A4,Def2;
+
+    consider M1 be Measure of CopyField(f,S0) such that
+A6: M1 = M * ((.:f) |S0)"
+  & for s being Element of CopyField(f,S0) holds
+     ex t be Element of S0 st s = f.:t & M1.s = M.t by Th5,A1;
+    reconsider M1 as Measure of CopyField(f,S) by A5;
+
+    for s being Sep_Sequence of CopyField(f,S) holds
+     SUM(M1*s) = M1.(union rng s)
+    proof
+     let s be Sep_Sequence of CopyField(f,S);
+     defpred P[Nat,set] means s.$1 = f.:$2 & M1.(s.$1) = M.$2;
+
+A7:  for x being Element of NAT ex y being Element of S st P[x,y] by A5,A6;
+
+     consider t being Function of NAT,S such that
+A8: for n being Element of NAT holds P[n,t.n] from FUNCT_2:sch 3(A7);
+     reconsider t as sequence of S;
+
+     for m, n being object st m <> n holds t.m misses t.n
+     proof
+      let m, n be object;
+      assume
+A9:   m <> n;
+      per cases;
+      suppose not m in dom t or not n in dom t; then
+       t.m = {} or t.n = {} by FUNCT_1:def 2;
+       hence t.m misses t.n;
+      end;
+      suppose m in dom t & n in dom t; then
+       reconsider m1 = m, n1 = n as Element of NAT;
+
+A10:   s.n1 = f.:(t.n1) & M1.(s.n1) = M.(t.n1) by A8;
+A11:   s.m1 = f.:(t.m1) & M1.(s.m1) = M.(t.m1) by A8;
+
+       s is disjoint_valued; then
+A12:   s.m misses s.n by A9;
+
+       now assume t.m1 /\ t.n1 <> {}; then
+        consider x be object such that
+A13:    x in t.m1 /\ t.n1 by XBOOLE_0:def 1;
+A14:    x in t.m1 by XBOOLE_0:def 4,A13;
+        t.m1 in S; then
+        t.m1 c= X; then
+        t.m1 c= dom f by FUNCT_2:def 1; then
+        f.x in f.:(t.m1 /\ t.n1) by A13,A14,FUNCT_1:def 6;
+        hence contradiction by A1,A10,A11,A12,FUNCT_1:62;
+       end;
+       hence t.m misses t.n;
+      end;
+     end; then
+     t is disjoint_valued; then
+     reconsider t as Sep_Sequence of S;
+
+A15: dom s = NAT & dom t = NAT by FUNCT_2:def 1;
+
+     for n be Element of NAT holds (M1*s).n = (M*t).n
+     proof
+      let n be Element of NAT;
+A16:  s.n = f.:(t.n) & M1.(s.n) = M.(t.n) by A8;
+      (M1*s).n = M1.(s.n) by A15,FUNCT_1:13;
+      hence (M1*s).n = (M*t).n by A16,A15,FUNCT_1:13;
+     end; then
+A17: M1*s = M*t by FUNCT_2:63;
+
+     for z be object holds z in union rng s iff z in f.:(union rng t)
+     proof
+      let z be object;
+      hereby assume z in union rng s; then
+       consider Y being set such that
+A18:   z in Y & Y in rng s by TARSKI:def 4;
+       consider n be Element of NAT such that
+A19:   n in dom s & Y = s.n by A18,PARTFUN1:3;
+A20:   z in f.:(t.n) by A8,A18,A19;
+
+       t.n in rng t by A15,FUNCT_1:def 3; then
+       f.:(t.n) c= f.:(union rng t) by RELAT_1:123,ZFMISC_1:74;
+       hence z in f.:(union rng t) by A20;
+      end;
+
+      assume z in f.:(union rng t); then
+      consider x be object such that
+A21:  x in dom f & x in union rng t & z=f.x by FUNCT_1:def 6;
+      consider Y being set such that
+A22:  x in Y & Y in rng t by A21,TARSKI:def 4;
+
+      consider n be Element of NAT such that
+A23:  n in dom t & Y=t.n by A22,PARTFUN1:3;
+      z in f.:(t.n) by A21,A22,A23,FUNCT_1:def 6; then
+A24:  z in s.n by A8;
+
+      s.n in rng s by A15,FUNCT_1:3;
+      hence z in union rng s by A24,TARSKI:def 4;
+     end; then
+A25: union rng s = f.:(union rng t) by TARSKI:2;
+
+     F*G = id (dom G) by A2,A3,FUNCT_1:39; then
+A26: F*G = id (dom M) by A3,FUNCT_2:def 1;
+     M1*G = M*(F*G) by A2,A6,RELAT_1:36; then
+     M1*G = M by A26,RELAT_1:52; then
+     M.(union rng t) = M1.(G.(union rng t)) by A3,FUNCT_1:13; then
+     M.(union rng t) = M1.((.:f).(union rng t)) by A3,FUNCT_1:49; then
+     M.(union rng t) = M1.(union rng s) by A1,A25,Th1;
+     hence thesis by A17,MEASURE1:def 6;
+    end; then
+    reconsider M1 as sigma_Measure of CopyField(f,S) by MEASURE1:def 6;
+    take M1;
+    thus thesis by A5,A6;
+end;
+
+definition
+  let X,Y be non empty set, f be Function of X,Y, S be SigmaField of X,
+      M be sigma_Measure of S;
+  assume A1:f is bijective;
+  func CopyMeasure(f,M) ->sigma_Measure of CopyField(f,S) means :Def4:
+     it = M*((.:f) |S)"
+   & for s being Element of CopyField(f,S) holds
+      ex t be Element of S st s = f.:t & it.s = M.t;
+  existence by A1,Th6;
+  uniqueness;
+end;
+
+definition
+  let m be non zero Nat, X be non-empty m-element FinSequence;
+  func Pt2FinSeq X -> m-element FinSequence means :Def5:
+   ( ex id1 be Function of CarProduct SubFin(X,1),product SubFin(X,1)
+     st it.1 = id1 & id1 is bijective
+   & for x be object st x in CarProduct SubFin(X,1) holds id1.x = <*x*>)
+   & ( for i be non zero Nat st i < m holds
+     ex Fi be Function of CarProduct SubFin(X,i),product SubFin(X,i),
+        IK be Function of [: CarProduct SubFin(X,i),ElmFin(X,i+1) :],
+         product SubFin(X,i+1)
+     st Fi = it.i & IK = it.(i+1) & Fi is bijective & IK is bijective
+      & for x,y be object st x in CarProduct SubFin(X,i) & y in ElmFin(X,i+1)
+         ex s be FinSequence st Fi.x = s & IK.(x,y) = s^ <*y*> );
+  existence
+  proof
+A1: m = len X by CARD_1:def 7;
+
+    SubFin(X,1) = X|1 by NAT_1:14,MEASUR13:def 5; then
+A2: dom SubFin(X,1) = {1} by FINSEQ_1:def 3,2;
+
+    (SubFin(X,1)).1 = CarProduct SubFin(X,1) by MEASUR13:def 3; then
+    consider id1 be Function of CarProduct SubFin(X,1),product SubFin(X,1)
+      such that
+A3: id1 is one-to-one & id1 is onto
+  & for x be object st x in CarProduct SubFin(X,1) holds
+     id1.x = <*x*> by A2,PRVECT_3:2;
+
+    defpred Q[Nat,set,set] means
+     ( ex i be non zero Nat,
+         Fi be Function of CarProduct SubFin(X,i),product SubFin(X,i)
+       st i=$1 & Fi=$2 & Fi is bijective )
+     implies
+       ex i be non zero Nat,
+         Fi be Function of CarProduct SubFin(X,i),product SubFin(X,i),
+         IK being Function of [: CarProduct SubFin(X,i),ElmFin(X,i+1) :],
+           product SubFin(X,i+1)
+       st i = $1 & Fi = $2 & IK = $3 & Fi is bijective & IK is bijective
+        & for x,y be object st x in CarProduct SubFin(X,i) & y in ElmFin(X,i+1)
+           ex s be FinSequence st Fi.x = s & IK.(x,y) = s^<*y*>;
+
+A4: for n being Nat st 1 <= n & n < m
+     for x being set ex y being set st Q[n,x,y]
+    proof
+     let n be Nat;
+     assume
+A5:  1 <= n & n < m;
+     let x be set;
+     now assume
+      ex k be non zero Nat,
+         Fk be Function of CarProduct SubFin(X,k),product SubFin(X,k)
+       st k=n & Fk=x & Fk is bijective; then
+      consider k be non zero Nat,
+        Fk be Function of CarProduct SubFin(X,k),product SubFin(X,k) such that
+A6:   k = n & Fk = x & Fk is bijective;
+
+      set Xk = SubFin(X,k);
+A7:   Fk is one-to-one & Fk is onto by A6;
+
+A8:   k+1 <= m by A5,A6,NAT_1:13;
+      set Xk1 = SubFin(X,k+1);
+
+      k <= k+1 by NAT_1:11; then
+A9:   SubFin(Xk1,k) = SubFin(X,k) by A8,MEASUR13:7;
+
+      len Xk1 = k+1 by CARD_1:def 7; then
+      k+1 in Seg len Xk1 by FINSEQ_1:4; then
+A11:  k+1 in dom Xk1 by FINSEQ_1:def 3;
+
+      reconsider Y = <*Xk1.(k+1)*> as non empty FinSequence;
+A12:  len Y = 1 & rng Y = {Xk1.(k+1)} by FINSEQ_1:39; then
+      not {} in rng Y by A11; then
+      reconsider Y as non-empty non empty FinSequence by RELAT_1:def 9;
+A13:  dom Y = {1} by A12,FINSEQ_1:2,def 3;
+
+      Y.1 = ElmFin(Xk1,k+1) by MEASUR13:def 1; then
+      Y.1 = ElmFin(X,k+1) by A8,MEASUR13:8; then
+      consider J be Function of ElmFin(X,k+1),product Y such that
+A14:  J is one-to-one & J is onto
+    & for x be object st x in ElmFin(X,k+1) holds J.x = <*x*>
+        by A13,PRVECT_3:2;
+
+      Xk = Xk1|k by A9,NAT_1:11,MEASUR13:def 5; then
+A15:  Xk1 = Xk ^ <* Xk1.(k+1) *> by CARD_1:def 7,FINSEQ_3:55;
+
+      consider I be Function of [: product Xk,product Y :],product(Xk^Y)
+       such that
+A16:  I is one-to-one & I is onto
+    & for x,y be FinSequence st x in product Xk & y in product Y
+       holds I.(x,y) = x^y by PRVECT_3:6;
+
+      reconsider I as Function of [: product Xk,product Y :],product Xk1
+        by A15;
+
+      deffunc B(object,object) = [Fk.$1,J.$2];
+
+A17:  for x,y be object st x in CarProduct Xk & y in ElmFin(X,k+1)
+       holds B(x,y) in [: product Xk,product Y :]
+      proof
+       let x,y be object;
+       assume x in CarProduct Xk & y in ElmFin(X,k+1); then
+       Fk.x in product Xk & J.y in product Y by FUNCT_2:5;
+       hence B(x,y) in [: product Xk,product Y :] by ZFMISC_1:87;
+      end;
+
+      consider K being Function of [: CarProduct Xk,ElmFin(X,k+1) :],
+               [: product Xk,product Y :] such that
+A18:  for x,y be object st x in CarProduct Xk & y in ElmFin(X,k+1)
+       holds K.(x,y) = B(x,y) from BINOP_1:sch 2(A17);
+A19:  dom K = [: CarProduct Xk,ElmFin(X,k+1) :] by FUNCT_2:def 1;
+
+      for z1,z2 be object st
+       z1 in dom K & z2 in dom K & K.z1 = K.z2 holds z1 = z2
+      proof
+       let z1,z2 be object;
+       assume
+A20:   z1 in dom K & z2 in dom K & K.z1 = K.z2; then
+       consider x1,y1 being object such that
+A21:   x1 in CarProduct Xk & y1 in ElmFin(X,k+1) & z1 = [x1,y1]
+         by ZFMISC_1:def 2;
+       consider x2,y2 being object such that
+A22:   x2 in CarProduct Xk & y2 in ElmFin(X,k+1) & z2 = [x2,y2]
+        by A20,ZFMISC_1:def 2;
+
+       [Fk.x1,J.y1] = K.(x1,y1) by A18,A21; then
+       [Fk.x1,J.y1] = K.(x2,y2) by A20,A21,A22; then
+       [Fk.x1,J.y1] = [Fk.x2,J.y2] by A18,A22; then
+A23:   Fk.x1 = Fk.x2 & J.y1 = J.y2 by XTUPLE_0:1;
+
+       x1 in dom Fk & x2 in dom Fk by A21,A22,FUNCT_2:def 1; then
+A24:   x1=x2 by A7,A23;
+       y1 in dom J & y2 in dom J by A21,A22,FUNCT_2:def 1;
+       hence z1=z2 by A14,A23,A24,A21,A22;
+      end; then
+A25:  K is one-to-one;
+
+      now let z be object;
+       assume z in [: product Xk,product Y :]; then
+       consider x, y being object such that
+A26:   x in product Xk & y in product Y & z = [x,y] by ZFMISC_1:def 2;
+       x in rng Fk by A6,A26,FUNCT_2:def 3; then
+       consider s be object such that
+A27:   s in dom Fk & x= Fk.s by FUNCT_1:def 3;
+       y in rng J by A14,A26,FUNCT_2:def 3; then
+       consider t be object such that
+A28:   t in dom J & y= J.t by FUNCT_1:def 3;
+       [s,t] in dom K & K.(s,t) = [x,y] by A18,A19,A27,A28,ZFMISC_1:87;
+       hence z in rng K by A26,FUNCT_1:3;
+      end; then
+      rng K = [: product Xk,product Y :]; then
+A29:  K is onto by FUNCT_2:def 3;
+
+      reconsider IK = I*K
+       as Function of [: CarProduct Xk,ElmFin(X,k+1) :],product SubFin(X,k+1);
+A30:  IK is one-to-one & IK is onto by A15,A16,A25,A29,FUNCT_2:27;
+
+      for x,y be object st x in CarProduct Xk & y in ElmFin(X,k+1)
+       holds ex s be FinSequence st Fk.x = s & IK.(x,y) = s^<*y*>
+      proof
+       let x,y be object;
+       assume
+A31:   x in CarProduct Xk & y in ElmFin(X,k+1); then
+       K.(x,y) = [Fk.x,J.y] by A18; then
+A32:   IK.(x,y) = I.(Fk.x,J.y) by A19,A31,FUNCT_1:13,ZFMISC_1:87;
+
+A33:   dom Xk = Seg len Xk by FINSEQ_1:def 3;
+
+A34:   Fk.x in product Xk by A31,FUNCT_2:5; then
+       ex g being Function st Fk.x = g & dom g = dom Xk
+        & for y being object st y in dom Xk holds g.y in Xk.y
+          by CARD_3:def 5; then
+       reconsider s = Fk.x as FinSequence by A33,FINSEQ_1:def 2;
+       take s;
+A35:   J.y = <*y*> by A31,A14;
+       J.y in product Y by A31,FUNCT_2:5;
+       hence thesis by A16,A32,A34,A35;
+      end;
+      hence thesis by A30,A6;
+     end;
+     hence thesis;
+    end;
+
+    consider P being FinSequence such that
+A36: len P = m & (P.1 = id1 or m = 0)
+   & for n be Nat st 1 <= n & n < m holds Q[ n,P.n,P.(n+1) ]
+      from RECDEF_1:sch 3(A4);
+    reconsider P as m-element FinSequence by A36,CARD_1:def 7;
+
+    defpred L[Nat] means
+     1 <= $1 & $1 <= m implies
+     ( ex i be non zero Nat,
+         Fi be Function of CarProduct SubFin(X,i),product SubFin(X,i)
+       st i = $1 & Fi = P.i & Fi is bijective );
+
+A37:L[0];
+A38:for n be Nat st L[n] holds L[n+1]
+    proof
+     let n be Nat;
+     assume
+A39: L[n];
+     assume
+A40: 1 <= n+1 & n+1 <= m;
+A41: n + 0 < n+1 by XREAL_1:8;
+
+     per cases;
+     suppose n = 0;
+      hence thesis by A3,A36;
+     end;
+     suppose
+      n <> 0; then
+      1 <= n & n < m by A41,A40,XXREAL_0:2,NAT_1:14; then
+      consider k be non zero Nat,
+       Fk be Function of CarProduct SubFin(X,k),product SubFin(X,k),
+       IK being Function of [: CarProduct SubFin(X,k),ElmFin(X,k+1) :],
+        product SubFin(X,k+1) such that
+A42:  k = n & Fk=P.n & IK = P.(n+1) & Fk is bijective & IK is bijective
+    & for x,y be object st x in CarProduct SubFin(X,k) & y in ElmFin(X,k+1)
+         ex s be FinSequence st Fk.x = s & IK.(x,y) = s^<*y*> by A36,A39;
+
+      set Xk1 = SubFin(X,k+1);
+      set Zk = SubFin(Xk1,k);
+A43:  CarProduct Xk1 = [: CarProduct SubFin(Xk1,k),ElmFin(Xk1,k+1) :]
+        by MEASUR13:6;
+      k <= k+1 & k+1 <= m by A42,A40,NAT_1:13; then
+A44:  Zk = SubFin(X,k) by MEASUR13:7;
+      ElmFin(X,k+1) = ElmFin(Xk1,k+1) by A42,A40,MEASUR13:8;
+      hence
+      ex k1 be non zero Nat,
+        Fk1 be Function of CarProduct SubFin(X,k1),product SubFin(X,k1)
+         st k1 = n+1 & Fk1 = P.k1 & Fk1 is bijective
+          by A42,A43,A44;
+     end;
+    end;
+
+A45:for n be Nat holds L[n] from NAT_1:sch 2(A37,A38);
+
+    1 <= m by NAT_1:14; then
+A46:ex k be non zero Nat,
+      Fk be Function of CarProduct SubFin(X,k),product SubFin(X,k)
+       st k = m & Fk = P.k & Fk is bijective by A45;
+    SubFin(X,m) = X|m by MEASUR13:def 5; then
+    SubFin(X,m) = X| (dom X) by A1,FINSEQ_1:def 3; then
+    reconsider y = P.m as Function of CarProduct X,product X by A46;
+
+A47:now let n be non zero Nat;
+     assume
+A48: n < m;
+A49: 1 <= n by NAT_1:14; then
+A50: Q[ n,P.n,P.(n+1) ] by A36,A48;
+
+     ex k be non zero Nat,
+       Fk be Function of CarProduct SubFin(X,k),product SubFin(X,k)
+       st k = n & Fk = P.k & Fk is bijective by A48,A49,A45;
+     hence
+      ex Fn be Function of CarProduct SubFin(X,n),product SubFin(X,n),
+         IK being Function of [: CarProduct SubFin(X,n),ElmFin(X,n+1) :],
+          product SubFin(X,n+1) st
+        Fn = P.n & IK = P.(n+1) & Fn is bijective & IK is bijective
+         & for x,y be object st x in CarProduct SubFin(X,n)
+               & y in ElmFin(X,n+1) holds
+              ex s be FinSequence st Fn.x = s & IK.(x,y) = s^ <*y*> by A50;
+    end;
+
+    take P;
+
+    thus ex id1 be Function of CarProduct SubFin(X,1),product SubFin(X,1)
+     st P.1 = id1 & id1 is bijective
+      & for x be object st x in CarProduct SubFin(X,1) holds id1.x = <*x*>
+        by A36,A3;
+    thus for i be non zero Nat st i < m holds
+     ex Fi be Function of CarProduct SubFin(X,i),product SubFin(X,i),
+        IK be Function of [: CarProduct SubFin(X,i),ElmFin(X,i+1) :],
+         product SubFin(X,i+1)
+     st Fi = P.i & IK = P.(i+1) & Fi is bijective & IK is bijective
+      & for x,y be object st x in CarProduct SubFin(X,i) & y in ElmFin(X,i+1)
+         ex s be FinSequence st Fi.x = s & IK.(x,y) = s^ <*y*> by A47;
+
+  end;
+  uniqueness
+  proof
+    let S1,S2 be m-element FinSequence;
+    assume that
+A51: ( ex id1 be Function of CarProduct SubFin(X,1),product SubFin(X,1)
+     st S1.1 = id1 & id1 is bijective
+      & for x be object st x in CarProduct SubFin(X,1) holds id1.x = <*x*>)
+  & ( for i be non zero Nat st i < m holds
+       ex Fi be Function of CarProduct SubFin(X,i),product SubFin(X,i),
+        IK be Function of [: CarProduct SubFin(X,i),ElmFin(X,i+1) :],
+         product SubFin(X,i+1)
+          st Fi = S1.i & IK = S1.(i+1) & Fi is bijective & IK is bijective
+           & for x,y be object st x in CarProduct SubFin(X,i)
+              & y in ElmFin(X,i+1)
+                ex s be FinSequence st Fi.x = s & IK.(x,y) = s^ <*y*> ) and
+A52: ( ex id1 be Function of CarProduct SubFin(X,1),product SubFin(X,1)
+     st S2.1 = id1 & id1 is bijective
+      & for x be object st x in CarProduct SubFin(X,1) holds id1.x = <*x*>)
+  & ( for i be non zero Nat st i < m holds
+       ex Fi be Function of CarProduct SubFin(X,i),product SubFin(X,i),
+        IK be Function of [: CarProduct SubFin(X,i),ElmFin(X,i+1) :],
+         product SubFin(X,i+1)
+          st Fi = S2.i & IK = S2.(i+1) & Fi is bijective & IK is bijective
+           & for x,y be object st x in CarProduct SubFin(X,i)
+              & y in ElmFin(X,i+1)
+                ex s be FinSequence st Fi.x = s & IK.(x,y) = s^ <*y*> );
+
+    consider id1 be Function of CarProduct SubFin(X,1),product SubFin(X,1)
+    such that
+A53: S1.1 = id1 & id1 is bijective
+  & for x be object st x in CarProduct SubFin(X,1) holds id1.x = <*x*> by A51;
+
+    consider id2 be Function of CarProduct SubFin(X,1),product SubFin(X,1)
+    such that
+A54: S2.1 = id2 & id2 is bijective
+  & for x be object st x in CarProduct SubFin(X,1) holds id2.x = <*x*> by A52;
+
+A55:now let x be object;
+     assume
+A56: x in CarProduct SubFin(X,1); then
+     id1.x = <*x*> by A53;
+     hence id1.x = id2.x by A54,A56;
+    end;
+
+    defpred Q[Nat] means 1 <= $1 & $1 <= m implies S1.$1 = S2.$1;
+
+A57:Q[0];
+A58:for k be Nat st Q[k] holds Q[k+1]
+    proof
+     let i be Nat;
+     assume
+A59: Q[i];
+     assume
+A60: 1 <= i+1 & i+1 <= m;
+
+     per cases;
+     suppose i=0;
+      hence S1.(i+1) = S2.(i+1) by A53,A54,A55,FUNCT_2:12;
+     end;
+     suppose
+A61:  i <> 0; then
+      i+1 <> 1; then
+A62:  1 < i + 1 by A60,XXREAL_0:1;
+
+      i + 0 < i + 1 by XREAL_1:8; then
+A63:  i < m by A60,XXREAL_0:2;
+      reconsider j = i as non zero Nat by A61;
+
+      consider Fi be Function of CarProduct SubFin(X,j),product SubFin(X,j),
+        IK be Function of [: CarProduct SubFin(X,j),ElmFin(X,j+1) :],
+          product SubFin(X,j+1) such that
+A64:  Fi = S1.i & IK = S1.(j+1) & Fi is bijective & IK is bijective
+    & for x,y be object st x in CarProduct SubFin(X,j) & y in ElmFin(X,j+1)
+         ex s be FinSequence st Fi.x = s & IK.(x,y) = s^<*y*> by A51,A63;
+
+      consider Gi be Function of CarProduct SubFin(X,j),product SubFin(X,j),
+        IL be Function of [: CarProduct SubFin(X,j),ElmFin(X,j+1) :],
+         product SubFin(X,i+1) such that
+A65:  Gi = S2.j & IL = S2.(j+1) & Gi is bijective & IL is bijective
+    & for x,y be object st x in CarProduct SubFin(X,j) & y in ElmFin(X,j+1)
+         ex s be FinSequence st Gi.x = s & IL.(x,y) = s^<*y*> by A52,A63;
+
+      for a be Element of CarProduct SubFin(X,j), b be Element of ElmFin(X,j+1)
+       holds IK.(a,b) = IL.(a,b)
+      proof
+       let a be Element of CarProduct SubFin(X,j);
+       let b be Element of ElmFin(X,j+1);
+A66:   ex s be FinSequence st Fi.a = s & IK.(a,b) = s^<*b*> by A64;
+       ex s be FinSequence st Gi.a = s & IL.(a,b) = s^<*b*> by A65;
+       hence IK.(a,b) = IL.(a,b) by A66,A59,A62,A64,A65,A60,NAT_1:13;
+      end;
+      hence S1.(i+1) = S2.(i+1) by A64,A65,BINOP_1:2;
+     end;
+    end;
+
+A67:for i be Nat holds Q[i] from NAT_1:sch 2(A57,A58);
+    len S1 = m & len S2 = m by CARD_1:def 7;
+    hence S1 = S2 by A67;
+  end;
+end;
+
+theorem Th7:
+for m,n be non zero Nat, X be non-empty m-element FinSequence st n <= m holds
+  (Pt2FinSeq X).n is Function of CarProduct SubFin(X,n),product SubFin(X,n)
+proof
+    let m,n be non zero Nat, X be non-empty m-element FinSequence;
+    assume
+A1: n <= m;
+A2: 1 <= n by NAT_1:14;
+
+    defpred P[Nat] means 1 <= $1 & $1 <= n implies
+     ex i be non zero Nat st $1 = i &
+      (Pt2FinSeq X).i is Function of
+        CarProduct SubFin(X,i),product SubFin(X,i);
+
+A3: P[0];
+A4: for k be Nat st P[k] holds P[k+1]
+    proof
+     let k be Nat;
+     assume
+A5:  P[k];
+     assume
+A6:  1 <= k+1 & k+1 <= n;
+     reconsider i = k+1 as non zero Nat;
+     take i;
+     thus k+1 = i;
+     thus (Pt2FinSeq X).i is Function of
+        CarProduct SubFin(X,i),product SubFin(X,i)
+     proof
+      per cases;
+      suppose
+A7:    k = 0;
+       ex id1 be Function of CarProduct SubFin(X,1),product SubFin(X,1) st
+       (Pt2FinSeq X).1 = id1 & id1 is bijective
+     & for x be object st x in CarProduct SubFin(X,1) holds id1.x = <*x*>
+         by Def5;
+       hence (Pt2FinSeq X).i is Function of
+        CarProduct SubFin(X,i),product SubFin(X,i) by A7;
+      end;
+      suppose k <> 0; then
+       consider i0 be non zero Nat such that
+A8:   k = i0
+     & (Pt2FinSeq X).i0 is Function of
+         CarProduct SubFin(X,i0),product SubFin(X,i0)
+           by A5,A6,NAT_1:13,14;
+       k < n by A6,NAT_1:13; then
+A9:   i0 < m by A1,A8,XXREAL_0:2; then
+       consider Fi be Function of CarProduct SubFin(X,i0),product SubFin(X,i0),
+         IK be Function of [: CarProduct SubFin(X,i0),ElmFin(X,i0+1) :],
+            product SubFin(X,i0+1) such that
+A10:   Fi = (Pt2FinSeq X).i0 & IK = (Pt2FinSeq X).(i0+1) & Fi is bijective
+     & IK is bijective
+     & for x,y be object st x in CarProduct SubFin(X,i0) & y in ElmFin(X,i0+1)
+        ex s be FinSequence st Fi.x = s & IK.(x,y) = s^<*y*> by Def5;
+
+       CarProduct SubFin(X,i0+1) = [: CarProduct SubFin(X,i0),ElmFin(X,i0+1) :]
+         by A9,MEASUR13:9;
+       hence (Pt2FinSeq X).i is Function of
+         CarProduct SubFin(X,i),product SubFin(X,i) by A8,A10;
+      end;
+     end;
+    end;
+    for k be Nat holds P[k] from NAT_1:sch 2(A3,A4); then
+    consider i be non zero Nat such that
+A11: i = n
+  & (Pt2FinSeq X).i is Function of
+        CarProduct SubFin(X,i),product SubFin(X,i) by A2;
+    thus thesis by A11;
+end;
+
+theorem Th8:
+for m,n1,n2,k be non zero Nat, X be non-empty m-element FinSequence
+ st k <= n1 & n1 <= n2 & n2 <= m holds
+  SubFin(SubFin(X,n1),k) = SubFin(SubFin(X,n2),k)
+& ElmFin(SubFin(X,n1),k) = ElmFin(SubFin(X,n2),k)
+proof
+    let m,n1,n2,k be non zero Nat, X be non-empty m-element FinSequence;
+    assume that
+A1: k <= n1 and
+A2: n1 <= n2 and
+A3: n2 <= m;
+
+A4: SubFin(X,n1) = X|n1 & SubFin(X,n2) = X|n2
+      by A2,A3,XXREAL_0:2,MEASUR13:def 5; then
+A5: SubFin(SubFin(X,n2),k) = (X|n2)|k by A1,A2,XXREAL_0:2,MEASUR13:def 5;
+
+A6: k <= n2 by A1,A2,XXREAL_0:2; then
+    X|n1|k = X|k & X|n2|k = X|k by A1,FINSEQ_1:5,RELAT_1:74;
+    hence SubFin(SubFin(X,n1),k) = SubFin(SubFin(X,n2),k)
+      by A5,A1,A4,MEASUR13:def 5;
+
+    1 <= k by NAT_1:14; then
+A7: k in Seg n1 & k in Seg n2 by A1,A6;
+    ElmFin(SubFin(X,n1),k) = (X|n1).k & ElmFin(SubFin(X,n2),k) = (X|n2).k
+      by A1,A4,A2,XXREAL_0:2,MEASUR13:def 1; then
+    ElmFin(SubFin(X,n1),k) = X.k & ElmFin(SubFin(X,n2),k) = X.k
+      by A7,FUNCT_1:49;
+    hence ElmFin(SubFin(X,n1),k) = ElmFin(SubFin(X,n2),k);
+end;
+
+theorem Th9:
+for m,n1,n2,k be non zero Nat, X be non-empty m-element FinSequence
+ st k <= n1 & n1 <= n2 & n2 <= m holds
+ (Pt2FinSeq SubFin(X,n1)).k = (Pt2FinSeq SubFin(X,n2)).k
+proof
+    let m,n1,n2,k be non zero Nat, X be non-empty m-element FinSequence;
+    assume that
+A1: k <= n1 and
+A2: n1 <= n2 and
+A3: n2 <= m;
+
+    set X1 = SubFin(X,n1), X2 = SubFin(X,n2);
+
+    defpred P[Nat] means 1 <= $1 & $1 <= n1 implies
+     ex i be non zero Nat st i = $1 & (Pt2FinSeq X1).i = (Pt2FinSeq X2).i;
+A4: P[0];
+A5: for i be Nat st P[i] holds P[i+1]
+    proof
+     let i be Nat;
+     assume
+A6:  P[i];
+     assume
+A7:  1 <= i+1 & i+1 <= n1;
+     reconsider i1 = i+1 as non zero Nat;
+     take i1;
+     thus i1 = i+1;
+     thus (Pt2FinSeq X1).i1 = (Pt2FinSeq X2).i1
+     proof
+      per cases;
+      suppose
+A8:    i = 0;
+       consider id1 be Function of CarProduct SubFin(X1,1),product SubFin(X1,1)
+        such that
+A9:    (Pt2FinSeq X1).1 = id1 & id1 is bijective
+     & for x be object st x in CarProduct SubFin(X1,1) holds id1.x = <*x*>
+         by Def5;
+       consider id2 be Function of CarProduct SubFin(X2,1),product SubFin(X2,1)
+        such that
+A10:    (Pt2FinSeq X2).1 = id2 & id2 is bijective
+     & for x be object st x in CarProduct SubFin(X2,1) holds id2.x = <*x*>
+         by Def5;
+A11:    dom id1 = CarProduct SubFin(X1,1) & dom id2 = CarProduct SubFin(X2,1)
+         by FUNCT_2:def 1;
+
+       1 <= n1 by NAT_1:14; then
+A12:    SubFin(X1,1) = SubFin(X2,1) by A2,A3,Th8;
+
+       for x be object st x in dom id1 holds id1.x = id2.x
+       proof
+        let x be object;
+        assume
+A13:    x in dom id1; then
+        id1.x = <*x*> by A9;
+        hence id1.x = id2.x by A12,A10,A13;
+       end;
+       hence (Pt2FinSeq X1).i1 = (Pt2FinSeq X2).i1 by A8,A12,A9,A10,A11
+,FUNCT_1:2;
+      end;
+      suppose i <> 0; then
+       consider i0 be non zero Nat such that
+A14:   i0 = i & (Pt2FinSeq X1).i0 = (Pt2FinSeq X2).i0
+         by A6,A7,NAT_1:13,14;
+
+A15:   i < n1 by A7,NAT_1:13; then
+       consider F1 be Function of
+         CarProduct SubFin(X1,i0),product SubFin(X1,i0),
+        I1 be Function of [:CarProduct SubFin(X1,i0),ElmFin(X1,i0+1):],
+                product SubFin(X1,i0+1) such that
+A16:   F1 = (Pt2FinSeq X1).i0 & I1 = (Pt2FinSeq X1).(i0+1)
+     & F1 is bijective & I1 is bijective
+     & for x,y be object st
+        x in CarProduct SubFin(X1,i0) & y in ElmFin(X1,i0+1)
+         ex s be FinSequence st F1.x = s & I1.(x,y) = s^ <*y*>
+           by A14,Def5;
+
+       i < n2 by A15,A2,XXREAL_0:2; then
+       consider F2 be Function of
+         CarProduct SubFin(X2,i0),product SubFin(X2,i0),
+        I2 be Function of [:CarProduct SubFin(X2,i0),ElmFin(X2,i0+1):],
+                product SubFin(X2,i0+1) such that
+A17:   F2 = (Pt2FinSeq X2).i0 & I2 = (Pt2FinSeq X2).(i0+1)
+     & F2 is bijective & I2 is bijective
+     & for x,y be object st
+        x in CarProduct SubFin(X2,i0) & y in ElmFin(X2,i0+1)
+         ex s be FinSequence st F2.x = s & I2.(x,y) = s^ <*y*>
+           by A14,Def5;
+
+A18:   SubFin(X1,i0) = SubFin(X2,i0) & ElmFin(X1,i0+1) = ElmFin(X2,i0+1)
+         by A7,A15,A14,A2,A3,Th8;
+A19:   dom I1 = [:CarProduct SubFin(X1,i0),ElmFin(X1,i0+1):]
+     & dom I2 = [:CarProduct SubFin(X2,i0),ElmFin(X2,i0+1):]
+         by FUNCT_2:def 1;
+
+       for z be object st z in dom I1 holds I1.z = I2.z
+       proof
+        let z be object;
+        assume z in dom I1; then
+        consider x,y be object such that
+A20:    x in CarProduct SubFin(X1,i0) & y in ElmFin(X1,i0+1) & z = [x,y]
+          by ZFMISC_1:84;
+A21:    ex s1 be FinSequence st F1.x = s1 & I1.(x,y) = s1^<*y*> by A16,A20;
+        ex s2 be FinSequence st F2.x = s2 & I2.(x,y) = s2^<*y*> by A18,A20,A17;
+        hence I1.z = I2.z by A14,A16,A17,A20,A21;
+       end; then
+       I1 = I2 by A18,A19;
+       hence (Pt2FinSeq X1).i1 = (Pt2FinSeq X2).i1 by A14,A16,A17;
+      end;
+     end;
+    end;
+A22: for i be Nat holds P[i] from NAT_1:sch 2(A4,A5);
+    1 <= k by NAT_1:14; then
+    ex i be non zero Nat st i = k & (Pt2FinSeq X1).i = (Pt2FinSeq X2).i
+      by A1,A22;
+    hence thesis;
+end;
+
+theorem Th10:
+for m,n,k be non zero Nat, X be non-empty m-element FinSequence st
+  k <= n & n <= m holds (Pt2FinSeq X).k = (Pt2FinSeq SubFin(X,n)).k
+proof
+    let m,n,k be non zero Nat, X be non-empty m-element FinSequence;
+    assume
+A1: k <= n & n <= m;
+A2: len X = m by FINSEQ_3:153;
+    SubFin(X,m) = X|m by MEASUR13:def 5; then
+    SubFin(X,m) = X by A2,FINSEQ_1:58;
+    hence (Pt2FinSeq X).k = (Pt2FinSeq SubFin(X,n)).k by A1,Th9;
+end;
+
+theorem Th11:
+for m,n be non zero Nat, X be non-empty m-element FinSequence,
+ P be Function of CarProduct SubFin(X,n),product SubFin(X,n) st
+  n <= m & P = (Pt2FinSeq X).n holds P is bijective
+proof
+    let m,n be non zero Nat, X be non-empty m-element FinSequence,
+    P be Function of CarProduct SubFin(X,n),product SubFin(X,n);
+    assume that
+A1: n <= m and
+A2: P = (Pt2FinSeq X).n;
+
+    defpred P[Nat] means 1 <= $1 & $1 <= n implies
+     ex i be non zero Nat,
+     F be Function of CarProduct SubFin(X,i),product SubFin(X,i)
+      st $1 = i & F = (Pt2FinSeq X).i & F is bijective;
+A3: P[0];
+A4: for k be Nat st P[k] holds P[k+1]
+    proof
+     let k be Nat;
+     assume
+A5:  P[k];
+     assume
+A6:  1 <= k+1 & k+1 <= n;
+     per cases;
+     suppose
+A7:   k = 0;
+      ex id1 be Function of CarProduct SubFin(X,1),product SubFin(X,1) st
+      (Pt2FinSeq X).1 = id1 & id1 is bijective
+    & for x be object st x in CarProduct SubFin(X,1) holds id1.x = <*x*>
+        by Def5;
+      hence thesis by A7;
+     end;
+     suppose k <> 0; then
+      consider i0 be non zero Nat,
+       F0 be Function of CarProduct SubFin(X,i0),product SubFin(X,i0)
+      such that
+A8:  k = i0 & F0 = (Pt2FinSeq X).i0 & F0 is bijective by A5,A6,NAT_1:13,14;
+
+      k < n by A6,NAT_1:13; then
+A9:  i0 < m by A1,A8,XXREAL_0:2; then
+      consider F be Function of CarProduct SubFin(X,i0),product SubFin(X,i0),
+       IK be Function of [: CarProduct SubFin(X,i0),ElmFin(X,i0+1) :],
+          product SubFin(X,i0+1) such that
+A10:  F = (Pt2FinSeq X).i0 & IK = (Pt2FinSeq X).(i0+1) & F is bijective
+    & IK is bijective
+    & for x,y be object st x in CarProduct SubFin(X,i0) & y in ElmFin(X,i0+1)
+       ex s be FinSequence st F.x = s & IK.(x,y) = s^ <*y*> by Def5;
+
+      reconsider i = i0+1 as non zero Nat;
+      CarProduct SubFin(X,i0+1) = [: CarProduct SubFin(X,i0),ElmFin(X,i0+1) :]
+        by A9,MEASUR13:9; then
+      reconsider IK as Function of CarProduct SubFin(X,i),product SubFin(X,i);
+      take i,IK;
+      thus thesis by A8,A10;
+     end;
+    end;
+    for k be Nat holds P[k] from NAT_1:sch 2(A3,A4); then
+    P[n];
+    hence P is bijective by A2,NAT_1:14;
+end;
+
+definition
+  let m be non zero Nat, X be non-empty m-element FinSequence;
+  func CarProd X -> Function of CarProduct X,product X equals
+    (Pt2FinSeq X).m;
+  correctness
+  proof
+A1: len X = m by FINSEQ_3:153;
+    SubFin(X,m) = X|m by MEASUR13:def 5; then
+    SubFin(X,m) = X by A1,FINSEQ_1:58;
+    hence thesis by Th7;
+  end;
+end;
+
+theorem Th12:
+for m be non zero Nat, X be non-empty m-element FinSequence holds
+ CarProd X is bijective
+proof
+    let m be non zero Nat, X be non-empty m-element FinSequence;
+A1: len X = m by FINSEQ_3:153;
+    SubFin(X,m) = X|m by MEASUR13:def 5; then
+    SubFin(X,m) = X by A1,FINSEQ_1:58;
+    hence thesis by Th11;
+end;
+
+theorem Th13:
+for n be non zero Nat, X be non-empty (n+1)-element FinSequence,
+ x,y be object st x in CarProduct SubFin(X,n) & y in ElmFin(X,n+1)
+  ex s,t be FinSequence st
+   (CarProd SubFin(X,n)).x = s & <*y*> = t & (CarProd X).(x,y) = s^t
+proof
+    let n be non zero Nat, X be non-empty (n+1)-element FinSequence,
+    x,y be object;
+    assume
+A1: x in CarProduct SubFin(X,n) & y in ElmFin(X,n+1);
+
+A2: n < n+1 by NAT_1:13; then
+    consider F be Function of CarProduct SubFin(X,n),product SubFin(X,n),
+     G be Function of [: CarProduct SubFin(X,n),ElmFin(X,n+1):],
+        product SubFin(X,n+1) such that
+A3: F = (Pt2FinSeq X).n & G = (Pt2FinSeq X).(n+1) & F is bijective
+  & G is bijective
+  & for x,y be object st x in CarProduct SubFin(X,n) & y in ElmFin(X,n+1)
+      ex s be FinSequence st F.x = s & G.(x,y) = s^<*y*> by Def5;
+
+    consider s be FinSequence such that
+A4: F.x = s & G.(x,y) = s^<*y*> by A1,A3;
+    set t = <*y*>;
+    take s,t;
+    thus (CarProd SubFin(X,n)).x = s & <*y*> = t & (CarProd X).(x,y) = s^t
+      by A3,A4,A2,Th10;
+end;
+
+definition
+  let n be non zero Nat, X be non-empty n-element FinSequence,
+      S be sigmaFieldFamily of X;
+  func XProd_Field S -> SigmaField of product X equals
+    CopyField(CarProd X,Prod_Field S);
+  correctness;
+end;
+
+definition
+  let n be non zero Nat, X be non-empty n-element FinSequence,
+      S be sigmaFieldFamily of X, m be sigmaMeasureFamily of S;
+  func XProd_Measure m -> sigma_Measure of XProd_Field S equals
+    CopyMeasure(CarProd X,Prod_Measure m);
+  correctness;
+end;
+
+theorem Th14:
+for X,Y be non empty set, f be Function of X,Y st f is bijective holds
+ ex g be Function of Y,X st g is bijective & g = f" & .:g = (.:f)"
+proof
+    let X,Y be non empty set, f be Function of X,Y;
+    assume
+A1: f is bijective; then
+A2: rng f = dom(f") & dom f = rng(f") by FUNCT_1:33;
+A3: dom f = X & rng f = Y by A1,FUNCT_2:def 1,def 3; then
+    reconsider g = f" as Function of Y,X by A2,FUNCT_2:1;
+
+    take g;
+A4: g is onto by A2,A3,FUNCT_2:def 3;
+    hence g is bijective by A1;
+    thus g = f";
+
+    .:f is bijective by A1,Th1; then
+A5: dom (.:f) = bool X & rng (.:f) = bool Y by FUNCT_2:def 1,def 3;
+
+    .:g is bijective by A1,A4,Th1; then
+A6:dom (.:g) = bool Y & rng (.:g) = bool X by FUNCT_2:def 1,def 3;
+
+    for x,y be object st x in dom (.:f) & y in dom (.:g) holds
+     (.:f).x = y iff (.:g).y = x
+    proof
+     let x,y be object;
+     assume
+A7: x in dom (.:f) & y in dom (.:g); then
+     reconsider s = x as Subset of X;
+     reconsider t = y as Subset of Y by A7;
+     now assume (.:f).x = y; then
+      y = f.:s by A1,Th1; then
+      (.:g).y = g.:(f.:s) by A1,A4,Th1; then
+      (.:g).y =f"(f.:s) by FUNCT_1:85,A1;
+      hence (.:g).y =x by A1,A3,FUNCT_1:94;
+     end;
+     hence (.:f).x = y implies (.:g).y = x;
+
+     assume (.:g).y = x; then
+     x = g.:t by A1,A4,Th1; then
+     (.:f).x = f.:(g.:t) by A1,Th1; then
+     (.:f).x =(g").:(g.:t) by FUNCT_1:43,A1; then
+     (.:f).x =g"(g.:t) by A1,FUNCT_1:85;
+     hence (.:f).x = y by A1,A2,A3,FUNCT_1:94;
+    end;
+    hence .:g = (.:f)" by A1,A5,A6,FUNCT_1:38;
+end;
+
+theorem Th15:
+  for X,Y be non empty set,
+      T be Function of X,Y, f be PartFunc of X,ExtREAL,
+      g be PartFunc of Y,ExtREAL st T is bijective & g = f*T" holds
+    dom g = T.:(dom f) & dom g = (.:T).(dom f)
+proof
+    let X,Y be non empty set, T be Function of X,Y,
+    f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL;
+    assume
+A1: T is bijective & g = f*T"; then
+    dom g = (T")"(dom f) by RELAT_1:147;
+    hence dom g = T.:(dom f) by A1,FUNCT_1:84;
+    hence dom g = (.:T).(dom f) by A1,Th1;
+end;
+
+theorem Th16:
+  for X,Y be non empty set,
+      S be SigmaField of X, T be Function of X,Y,
+      f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL,
+      A be Element of S, B be Element of CopyField(T,S)
+  st T is bijective & g = f*T" holds
+   for r be Real holds T.:(less_dom(f,r)) = less_dom(g,r)
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL,
+    A be Element of S, B be Element of CopyField(T,S);
+    assume that
+A1: T is bijective and
+A2: g = f*T";
+
+A3: dom T = X & rng T = Y by A1,FUNCT_2:def 1,def 3;
+A4: rng T = dom(T") & dom T = rng(T") by A1,FUNCT_1:33;
+A5: dom f c= X & rng f c= ExtREAL;
+
+    g*T = f*(T"*T) by A2,RELAT_1:36; then
+    g*T = f* (id dom T) by A1,FUNCT_1:39; then
+A6: g*T = f by A3,A5,RELAT_1:51;
+
+    let r be Real;
+
+    for x be object holds x in T.:(less_dom(f,r)) iff x in less_dom(g,r)
+    proof
+     let x be object;
+     hereby assume x in T.:(less_dom(f,r)); then
+      consider t be object such that
+A7:   t in dom T & t in less_dom(f,r) & x= T.t by FUNCT_1:def 6;
+A8:   t in dom f & f.t < r by A7,MESFUNC1:def 11;
+A9:   g.(T.t) = f.t by A6,A7,FUNCT_1:13;
+
+      T.t in dom g by A8,A6,FUNCT_1:11;
+      hence x in less_dom(g,r) by A7,A8,A9,MESFUNC1:def 11;
+     end;
+     assume
+A10:  x in less_dom(g,r); then
+      x in dom g & g.x < r by MESFUNC1:def 11; then
+     T".x in dom f & f.(T".x) < r by A3,A4,A2,FUNCT_1:11,13; then
+A11: T".x in less_dom(f,r) by MESFUNC1:def 11;
+
+     x = T.(T".x) by A1,A10,FUNCT_1:35,A3;
+     hence x in T.:(less_dom(f,r)) by A11,A3,FUNCT_1:def 6;
+    end;
+    hence T.:(less_dom(f,r)) = less_dom(g,r) by TARSKI:2;
+end;
+
+theorem Th17:
+  for X,Y be non empty set,
+      S be SigmaField of X, T be Function of X,Y
+   st T is bijective holds
+    ex H be Function of Y,X
+     st H is bijective
+     & H = T" & H" = T & .:H = (.:T)" & (.:H).:CopyField(T,S) = S
+     & CopyField(H,CopyField(T,S)) = S
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y;
+    assume
+A1: T is bijective; then
+    .:T is bijective by Th1; then
+A2: dom (.:T) = bool X & rng (.:T) = bool Y
+      by FUNCT_2:def 1,def 3;
+
+    consider H be Function of Y,X such that
+A3: H is bijective & H =T" & .:H = (.:T)" by A1,Th14;
+    take H;
+    thus H is bijective & H = T" & H" = T & .:H = (.:T)" by A1,A3,FUNCT_1:43;
+    (.:H).:CopyField(T,S) = (.:H).:((.:T).:S) by A1,Def2; then
+    (.:H).:CopyField(T,S) = (.:T)"((.:T).:S) by A1,A3,FUNCT_1:85;
+    hence (.:H).:CopyField(T,S) = S by A1,A2,FUNCT_1:94;
+    hence CopyField(H,CopyField(T,S)) = S by A3,Def2;
+end;
+
+theorem Th18:
+  for X,Y be non empty set,
+      S be SigmaField of X, T be Function of X,Y,
+      A be Subset of X st T is bijective holds
+    A in S iff T.:A in CopyField(T,S)
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+        A be Subset of X;
+    assume
+A1: T is bijective;
+
+A2: dom (.:T) = bool X by FUNCT_2:def 1;
+
+    consider H be Function of Y,X such that
+A3: H is bijective
+  & H = T" & H" = T
+  & .:H = (.:T)"
+  & (.:H).:CopyField(T,S) = S
+  & CopyField(H,CopyField(T,S)) = S by A1,Th17;
+
+A4: dom (.:H) = bool Y by FUNCT_2:def 1;
+
+    hereby assume A in S; then
+     (.:T).A in (.:T).:S by A2,FUNCT_1:def 6; then
+     (.:T).A in CopyField(T,S) by A1,Def2;
+     hence T.:A in CopyField(T,S) by A1,Th1;
+    end;
+    assume T.:A in CopyField(T,S); then
+    (.:T).A in CopyField(T,S) by A1,Th1; then
+    (.:H).((.:T).A) in (.:H).:CopyField(T,S) by A4,FUNCT_1:def 6;
+    hence A in S by A2,A3,FUNCT_1:34;
+end;
+
+theorem Th19:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ B be Subset of Y st T is bijective holds T"B in S iff B in CopyField(T,S)
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    B be Subset of Y;
+    assume T is bijective; then
+    consider H be Function of Y,X such that
+A1: H is bijective & H = T" & H" = T & .:H = (.:T)"
+  & (.:H).:CopyField(T,S) = S & CopyField(H,CopyField(T,S)) = S by Th17;
+
+    B in CopyField(T,S) iff H.:B in CopyField(H,CopyField(T,S)) by Th18,A1;
+    hence T"B in S iff B in CopyField(T,S) by A1,FUNCT_1:85;
+end;
+
+begin :: Integral on a tuple type set (one dimensional)
+
+theorem Th20:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL,
+ A be Element of S, B be Element of CopyField(T,S)
+  st T is bijective & B = T.:A & g = f*T" holds
+   f is A -measurable iff g is B -measurable
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL,
+    A be Element of S, B be Element of CopyField(T,S);
+    assume that
+A1: T is bijective and
+A2: B = T.:A and
+A3: g = f*T";
+
+A4: dom T = X by FUNCT_2:def 1;
+A5: dom f c= X;
+    g*T = f*(T"*T) by A3,RELAT_1:36; then
+    g*T = f* (id dom T) by A1,FUNCT_1:39; then
+A6: g*T = f by A4,A5,RELAT_1:51;
+
+    consider H be Function of Y,X such that
+A7: H is bijective & H = T" & H" = T & .:H = (.:T) "
+  & (.:H).: CopyField(T,S) = S & CopyField(H,CopyField(T,S)) = S by A1,Th17;
+    H.:B = T"(T.:A) by A2,A7,FUNCT_1:85; then
+A8: H.:B = A by A1,A4,FUNCT_1:94;
+
+    hereby assume
+A9:  f is A -measurable;
+     now let r be Real;
+A10:  A /\ less_dom(f,r) in S by A9;
+
+      (.:T).(A /\ less_dom(f,r)) = T.:(A /\ less_dom(f,r)) by A1,Th1; then
+      (.:T).(A /\ less_dom(f,r)) = (T.:A) /\ T.:(less_dom(f,r))
+        by A1,FUNCT_1:62; then
+A11:  (.:T).(A /\ less_dom(f,r)) = B /\ less_dom(g,r) by A2,A1,A3,Th16;
+
+      A /\ less_dom(f,r) in bool X; then
+      A /\ less_dom(f,r) in dom (.:T) by FUNCT_2:def 1; then
+      B /\ less_dom(g,r) in (.:T).:S  by A10,A11,FUNCT_1:def 6;
+      hence B /\ less_dom(g,r) in CopyField(T,S) by A1,Def2;
+     end;
+     hence g is B -measurable;
+    end;
+
+    assume
+A12:g is B -measurable;
+
+    now let r be Real;
+A13: B /\ less_dom(g,r) in CopyField(T,S) by A12;
+
+     (.:H).(B /\ less_dom(g,r)) = H.:(B /\ less_dom(g,r)) by A7,Th1; then
+     (.:H).(B /\ less_dom(g,r)) = (H.:B) /\ H.:(less_dom(g,r))
+       by A7,FUNCT_1:62; then
+A14: (.:H).(B /\ less_dom(g,r)) = A /\ less_dom(f,r) by A8,A6,A7,Th16;
+
+     B /\ less_dom(g,r) in bool Y; then
+     B /\ less_dom(g,r) in dom (.:H) by FUNCT_2:def 1;
+     hence A /\ less_dom(f,r) in S by A7,A13,A14,FUNCT_1:def 6;
+    end;
+    hence f is A -measurable;
+end;
+
+theorem Th21:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ F be Finite_Sep_Sequence of S st T is bijective holds
+  ((.:T) |S)*F is Finite_Sep_Sequence of CopyField(T,S)
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+        F be Finite_Sep_Sequence of S;
+    assume
+A1: T is bijective;
+
+    set H = (.:T) |S;
+    rng H = (.:T).:S by RELAT_1:115; then
+A2: rng H = CopyField(T,S) by A1,Def2;
+
+    dom H = S by FUNCT_2:def 1; then
+    reconsider H as Function of S,CopyField(T,S) by A2,FUNCT_2:1;
+    reconsider G = H*F as FinSequence of CopyField(T,S);
+
+    for m, n being object st m <> n holds G.m misses G.n
+    proof
+     let m,n be object;
+     assume
+A3:  m <> n;
+
+     per cases;
+     suppose not m in dom G or not n in dom G; then
+      G.m = {} or G.n = {} by FUNCT_1:def 2;
+      hence G.m misses G.n;
+     end;
+     suppose
+A4:   m in dom G & n in dom G; then
+      reconsider m1 = m, n1 = n as Element of NAT;
+
+      G.n1 = H.(F.n1) by A4,FUNCT_1:12; then
+      G.n1 =(.:T).(F.n1) by FUNCT_1:49; then
+A5:   G.n1 =T.:(F.n1) by A1,Th1;
+
+      G.m1 = H.(F.m1) by A4,FUNCT_1:12; then
+      G.m1 = (.:T).(F.m1) by FUNCT_1:49; then
+A6:   G.m1 =T.:(F.m1) by A1,Th1;
+
+      F is disjoint_valued; then
+      F.m misses F.n by A3; then
+      {} = T.: (F.m1 /\ F.n1);
+      hence G.m misses G.n by A1,A5,A6,FUNCT_1:62;
+     end;
+    end; then
+    G is disjoint_valued;
+    hence thesis;
+end;
+
+Lm1:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL
+  st T is bijective & g = f*T" & f is_simple_func_in S holds
+   g is_simple_func_in CopyField(T,S)
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL;
+    assume that
+A1: T is bijective and
+A2: g = f*T" and
+A3: f is_simple_func_in S;
+
+    f is real-valued by A3,MESFUNC2:def 4; then
+A4: rng f c= REAL;
+
+A5: dom T = X & rng T = Y by A1,FUNCT_2:def 1,def 3;
+A6: rng T = dom(T") & dom T = rng(T") by A1,FUNCT_1:33;
+
+    consider F being Finite_Sep_Sequence of S such that
+A7: dom f = union (rng F)
+  & for n being Nat, x,y being Element of X st n in dom F & x in F.n & y in F.n
+     holds f.x = f.y by A3,MESFUNC2:def 4;
+
+    rng g c= rng f by A2,RELAT_1:26; then
+    rng g c= REAL by A4; then
+A8: g is real-valued;
+
+    set H = (.:T) |S;
+    rng H = (.:T).:S by RELAT_1:115; then
+A9: rng H = CopyField(T,S) by A1,Def2;
+
+A10: dom H = S by FUNCT_2:def 1; then
+    reconsider H as Function of S,CopyField(T,S) by A9,FUNCT_2:1;
+    reconsider G = H*F as Finite_Sep_Sequence of CopyField(T,S) by Th21,A1;
+
+A11:for x be object holds x in dom g iff x in union (rng G)
+    proof
+     let x be object;
+     hereby assume x in dom g; then
+A12:  x in dom (T") & T".x in dom f by A2,FUNCT_1:11; then
+      consider Y be set such that
+A13:  T".x in Y & Y in (rng F) by A7,TARSKI:def 4;
+      consider t be object such that
+A14:  t in dom F & Y=F.t by A13,FUNCT_1:def 3;
+      reconsider t as Nat by A14;
+A15:  F.t in S;
+
+A16:  x = T.(T".x) by A12,A1,A6,FUNCT_1:35;
+
+      T.(T".x) in T.:Y by A12,A5,A13,FUNCT_1:def 6; then
+      x in (.:T).Y by A1,A14,A15,A16,Th1; then
+      x in ((.:T) |S).Y by A14,A15,FUNCT_1:49; then
+A17:  x in G.t by A14,FUNCT_1:13;
+
+      t in dom G by A10,A14,A15,FUNCT_1:11; then
+      G.t in rng G by FUNCT_1:3;
+      hence x in union rng G by A17,TARSKI:def 4;
+     end;
+
+     assume x in union rng G; then
+     consider Y be set such that
+A18: x in Y & Y in rng G by TARSKI:def 4;
+     consider t be object such that
+A19: t in dom G & Y = G.t by A18,FUNCT_1:def 3;
+
+     reconsider t as Nat by A19;
+     Y = H.(F.t) by A19,FUNCT_1:12; then
+     Y = (.:T).(F.t) by FUNCT_1:49; then
+     Y = T.:(F.t) by A1,Th1; then
+     consider z be object such that
+A20: z in dom T & z in (F.t) & x = T.z by A18,FUNCT_1:def 6;
+
+A21: z = T".x by A20,A1,FUNCT_1:34;
+A22: x in dom (T") by A6,A20,FUNCT_1:3;
+
+     t in dom F by A19,FUNCT_1:11; then
+     F.t in rng F by FUNCT_1:3; then
+     z in union rng F by A20,TARSKI:def 4;
+     hence x in dom g by A21,A7,A22,A2,FUNCT_1:11;
+    end;
+
+    for n being Nat, x,y being Element of Y
+       st n in dom G & x in G.n & y in G.n holds g.x = g.y
+    proof
+     let n be Nat;
+     let x,y be Element of Y;
+     assume
+A23: n in dom G & x in G.n & y in G.n; then
+A24: x in H.(F.n) & y in H.(F.n) by FUNCT_1:12;
+
+     H.(F.n) = (.:T).(F.n) by FUNCT_1:49; then
+A25: x in T.:(F.n) & y in T.:(F.n) by A24,A1,Th1; then
+     consider t be object such that
+A26: t in dom T & t in F.n & x = T.t by FUNCT_1:def 6;
+     reconsider t as Element of X by A26;
+
+     consider s be object such that
+A27: s in dom T & s in F.n & y = T.s by A25,FUNCT_1:def 6;
+     reconsider s as Element of X by A27;
+
+     g.x = f.(T".(T.t)) by A2,A5,A6,A26,FUNCT_1:13; then
+A28: g.x = f.t by A26,A1,FUNCT_1:34;
+     g.y = f.(T".(T.s)) by A2,A5,A6,A27,FUNCT_1:13; then
+     g.y = f.s by A27,A1,FUNCT_1:34;
+     hence g.x = g.y by A23,A26,A27,A7,A28,FUNCT_1:11;
+    end;
+    hence g is_simple_func_in CopyField(T,S) by A8,A11,TARSKI:2,MESFUNC2:def 4;
+end;
+
+theorem Th22:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL
+  st T is bijective & g = f*T" holds
+   f is_simple_func_in S iff g is_simple_func_in CopyField(T,S)
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL;
+    assume
+A1: T is bijective & g = f*T";
+    hence f is_simple_func_in S implies g is_simple_func_in CopyField(T,S)
+      by Lm1;
+    assume
+A2: g is_simple_func_in CopyField(T,S);
+
+    consider H be Function of Y,X such that
+A3: H is bijective & H = T" & H" = T & .:H = (.:T) "
+  & (.:H).:CopyField(T,S) = S & CopyField(H,CopyField(T,S)) = S by Th17,A1;
+
+A4: dom T = X by FUNCT_2:def 1;
+A5: dom f c= X;
+    g*T = f*(T"*T) by A1,RELAT_1:36; then
+    g*T = f* (id dom T) by FUNCT_1:39,A1; then
+    g*T = f by RELAT_1:51,A4,A5;
+    hence thesis by A2,A3,Lm1;
+end;
+
+theorem Th23:
+for X,Y be non empty set, T be Function of X,Y, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL st T is bijective & g = f*T" holds
+  f is nonnegative iff g is nonnegative
+proof
+    let X,Y be non empty set, T be Function of X,Y, f be PartFunc of X,ExtREAL,
+    g be PartFunc of Y,ExtREAL;
+    assume
+A1: T is bijective & g = f*T";
+
+A2: dom T = X by FUNCT_2:def 1;
+A3: dom f c= X;
+    g*T = f*(T"*T) by A1,RELAT_1:36; then
+    g*T = f* (id dom T) by FUNCT_1:39,A1; then
+A4: g*T = f by RELAT_1:51,A2,A3;
+    hereby assume f is nonnegative; then
+A5:  rng f is nonnegative;
+     now let y be ExtReal;
+      assume y in rng g; then
+      consider x be object such that
+A6:   x in dom g & y = g.x by FUNCT_1:def 3;
+A7:   y = f.(T".x) by A1,A6,FUNCT_1:12;
+      x in dom (T") & T".x in dom f by A1,A6,FUNCT_1:11;
+      hence 0. <= y by A5,A7,FUNCT_1:3;
+     end; then
+     rng g is nonnegative;
+     hence g is nonnegative;
+    end;
+
+    assume
+A8: g is nonnegative;
+    now let y be ExtReal;
+     assume y in rng f; then
+     consider x be object such that
+A9:  x in dom (g*T) & y = (g*T).x by A4,FUNCT_1:def 3;
+A10: x in dom T & T.x in dom g by A9,FUNCT_1:11;
+     y = g.(T.x) by FUNCT_1:12,A9;
+     hence 0. <= y by A8,A10,FUNCT_1:3,SUPINF_2:def 9;
+    end; then
+    rng f is nonnegative;
+    hence f is nonnegative;
+end;
+
+theorem Th24:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ F be Finite_Sep_Sequence of S, a be FinSequence of ExtREAL,
+ f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL
+  st T is bijective & g = f*T"
+   & F,a are_Re-presentation_of f holds
+   ex G be Finite_Sep_Sequence of CopyField(T,S)
+    st G = ((.:T) |S) * F & G,a are_Re-presentation_of g
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    F be Finite_Sep_Sequence of S, a be FinSequence of ExtREAL,
+    f be PartFunc of X,ExtREAL, g be PartFunc of Y,ExtREAL;
+    assume that
+A1: T is bijective and
+A2: g = f*T" and
+A3: F,a are_Re-presentation_of f;
+
+A4: dom T = X & rng T = Y by A1,FUNCT_2:def 1,def 3;
+A5: rng T = dom(T") by A1,FUNCT_1:33;
+
+    set H = (.:T) |S;
+    rng H = (.:T).:S by RELAT_1:115; then
+A6: rng H = CopyField(T,S) by A1,Def2;
+
+A7: dom H = S by FUNCT_2:def 1; then
+    reconsider H as Function of S,CopyField(T,S) by A6,FUNCT_2:1;
+    reconsider G = H*F as Finite_Sep_Sequence of CopyField(T,S) by Th21,A1;
+    take G;
+    thus G = ((.:T) |S) * F;
+
+A8: dom G = dom a by A3,A7,RELAT_1:27;
+
+A9:for x be object holds x in dom g iff x in union (rng G)
+    proof
+     let x be object;
+     hereby assume x in dom g; then
+A10:   x in dom (T") & T".x in dom f by A2,FUNCT_1:11; then
+      consider Y be set such that
+A11:   T".x in Y & Y in (rng F) by A3,TARSKI:def 4;
+      consider t be object such that
+A12:  t in dom F & Y = F.t by A11,FUNCT_1:def 3;
+      reconsider t as Nat by A12;
+A13:  F.t in S;
+
+A14:  x = T.(T".x) by A10,A1,A5,FUNCT_1:35;
+      T.(T".x) in T.:Y by A10,A4,A11,FUNCT_1:def 6; then
+      x in (.:T).Y by A1,A12,A13,A14,Th1; then
+      x in H.Y by A12,A13,FUNCT_1:49; then
+A15:  x in G.t by A12,FUNCT_1:13;
+
+      t in dom G by A7,A12,A13,FUNCT_1:11; then
+      G.t in rng G by FUNCT_1:3;
+      hence x in union (rng G) by A15,TARSKI:def 4;
+     end;
+     assume x in union (rng G); then
+     consider Y be set such that
+A16: x in Y & Y in rng G by TARSKI:def 4;
+     consider t be object such that
+A17: t in dom G & Y = G.t by A16,FUNCT_1:def 3;
+
+     reconsider t as Nat by A17;
+     Y = H.(F.t) by A17,FUNCT_1:12; then
+     Y = (.:T).(F.t) by FUNCT_1:49; then
+     Y = T.:(F.t) by A1,Th1; then
+     consider z be object such that
+A18: z in dom T & z in (F.t) & x = T.z by A16,FUNCT_1:def 6;
+A19: z = T".x by A18,A1,FUNCT_1:34;
+A20: x in dom (T") by A5,A18,FUNCT_1:3;
+
+     t in dom F & F.t in dom H by A17,FUNCT_1:11; then
+     F.t in rng F by FUNCT_1:3; then
+     z in union rng F by A18,TARSKI:def 4;
+     hence x in dom g by A19,A3,A20,A2,FUNCT_1:11;
+    end;
+
+    for n being Nat st n in dom G holds
+     for x being object st x in G.n holds g.x = a.n
+    proof
+     let n be Nat;
+     assume
+A21: n in dom G;
+     let x be object;
+     assume x in G.n; then
+A22: x in H.(F.n) by FUNCT_1:12,A21;
+     H.(F.n) = (.:T).(F.n) by FUNCT_1:49; then
+     H.(F.n) = T.:(F.n) by A1,Th1; then
+     consider t be object such that
+A23: t in dom T & t in F.n & x = T.t by A22,FUNCT_1:def 6;
+     reconsider t as Element of X by A23;
+
+     g.x = f.(T".(T.t)) by A2,A4,A5,A23,FUNCT_1:13; then
+     g.x = f.t by A23,A1,FUNCT_1:34;
+     hence g.x = a.n by A23,A3,A8,A21;
+    end;
+    hence thesis by A9,A3,A7,RELAT_1:27,TARSKI:2;
+end;
+
+theorem Th25:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL
+  st T is bijective & g = f*T" & f is_simple_func_in S & f is nonnegative
+  holds integral(CopyMeasure(T,M),g) = integral(M,f)
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+    g be PartFunc of Y,ExtREAL;
+    assume that
+A1: T is bijective and
+A2: g = f*T" and
+A3: f is_simple_func_in S and
+A4: f is nonnegative;
+
+A5: g is_simple_func_in CopyField(T,S)
+  & g is nonnegative by A1,A2,A3,A4,Th23,Th22;
+
+    consider F be Finite_Sep_Sequence of S, a,x be FinSequence of ExtREAL
+     such that
+A6: F,a are_Re-presentation_of f
+  & a.1 = 0.
+  & ( for n being Nat st 2 <= n & n in dom a holds 0. < a.n & a.n < +infty )
+  & dom x = dom F
+  & ( for n being Nat st n in dom x holds x.n = (a.n)*((M*F).n) )
+  & integral(M,f) = Sum x by A3,A4,MESFUNC3:def 2;
+
+    consider G be Finite_Sep_Sequence of CopyField(T,S) such that
+A7: G = ((.:T) |S)*F & G,a are_Re-presentation_of g by A1,A2,A6,Th24;
+
+    set L = CopyMeasure(T,M);
+    set H = (.:T) |S;
+    for n being Nat st n in dom x holds x.n = (a.n)*((L*G).n)
+    proof
+     let n be Nat;
+     assume
+A8:  n in dom x; then
+A9:  x.n = (a.n)*((M*F).n) by A6;
+
+A10: (M*F).n = M.(F.n) by A8,A6,FUNCT_1:13;
+A11: (L*G).n = L.(G.n) by A8,A6,A7,FUNCT_1:13;
+
+     reconsider Gn = G.n as Element of CopyField(T,S);
+     consider Kn be Element of S such that
+A12: Gn = T.:Kn & L.Gn =M.Kn by A1,Def4;
+A13: Gn = (.:T).Kn by A12,A1,Th1;
+A14: .:T is one-to-one by A1;
+A15: dom (.:T) = bool X by FUNCT_2:def 1;
+
+     G.n = ((.:T) |S).(F.n) by A7,A8,A6,FUNCT_1:13; then
+     G.n = (.:T).(F.n) by FUNCT_1:49;
+     hence thesis by A9,A10,A11,A12,A13,A14,A15;
+    end;
+    hence thesis by A5,A6,A7,MESFUNC3:def 2;
+end;
+
+theorem Th26:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL
+  st T is bijective & g = f*T" & f is_simple_func_in S & f is nonnegative
+  holds integral'(CopyMeasure(T,M),g) = integral'(M,f)
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+    g be PartFunc of Y,ExtREAL;
+    assume that
+A1: T is bijective and
+A2: g = f*T" and
+A3: f is_simple_func_in S and
+A4: f is nonnegative;
+
+    set L = CopyMeasure(T,M);
+
+A5: dom T = X by FUNCT_2:def 1;
+A6: dom f c= X;
+    g*T = f*(T"*T) by A2,RELAT_1:36; then
+    g*T = f* (id dom T) by A1,FUNCT_1:39; then
+A7: g*T = f by RELAT_1:51,A5,A6;
+
+    per cases;
+    suppose
+A8:  dom f = {};
+     now assume dom g <> {}; then
+      ex x be object st x in dom g by XBOOLE_0:def 1;
+      hence contradiction by A8,A2,FUNCT_1:11;
+     end; then
+     integral'(L,g) = 0. by MESFUNC5:def 14;
+     hence integral'(L,g) = integral'(M,f) by A8,MESFUNC5:def 14;
+    end;
+    suppose
+A9:  dom f <> {}; then
+     ex x be object st x in dom f by XBOOLE_0:def 1; then
+     dom g <> {} by A7,FUNCT_1:11; then
+     integral'(L,g) = integral(L,g) by MESFUNC5:def 14; then
+     integral'(L,g) = integral(M,f) by A1,A2,A3,A4,Th25;
+     hence integral'(L,g) = integral'(M,f) by MESFUNC5:def 14,A9;
+    end;
+end;
+
+theorem Th27:
+for X,Y be non empty set, T be Function of X,Y, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL st T is bijective & g = f*T" holds
+  max+g = (max+ f)*T" & max-g = (max- f)*T"
+proof
+    let X,Y be non empty set, T be Function of X,Y, f be PartFunc of X,ExtREAL,
+    g be PartFunc of Y,ExtREAL;
+    assume that
+A1: T is bijective and
+A2: g = f*T";
+
+A3: dom T = X & rng T = Y by A1,FUNCT_2:def 1,def 3;
+A4: rng T = dom (T") & dom T = rng (T") by A1,FUNCT_1:33;
+A5: dom (max+ f) = dom f & dom (max-f) = dom f by MESFUNC2:def 2,def 3;
+
+    reconsider H = T" as Function of Y,X by A3,A4,FUNCT_2:1;
+    reconsider g1 = (max+f)*H as PartFunc of Y,ExtREAL;
+
+A6: for x be object holds x in dom g1 iff x in dom g
+    proof :::
+     let x be object;
+     hereby assume x in dom g1; then
+      x in dom H & H.x in dom (max+f) by FUNCT_1:11;
+      hence x in dom g by A2,A5,FUNCT_1:11;
+     end;
+     assume x in dom g; then
+     x in dom H & H.x in dom f by A2,FUNCT_1:11;
+     hence x in dom g1 by FUNCT_1:11,A5;
+    end;
+
+    for y being Element of Y st y in dom g1 holds g1.y = max((g.y),0.)
+    proof
+     let y be Element of Y;
+     assume y in dom g1; then
+A7:  y in dom H & H.y in dom (max+f) by FUNCT_1:11;
+     reconsider x= H.y as Element of X;
+     g1.y = (max+f). x by FUNCT_1:13,A7; then
+     g1.y = max(f.x,0.) by A7,MESFUNC2:def 2;
+     hence g1.y = max(g.y,0.) by A2,A7,FUNCT_1:13;
+    end;
+    hence max+g = (max+f)*T" by A6,TARSKI:2,MESFUNC2:def 2;
+
+    reconsider g1 = (max-f)*H as PartFunc of Y,ExtREAL;
+
+A8: for x be object holds x in dom g1 iff x in dom g
+    proof :::
+     let x be object;
+     hereby assume x in dom g1; then
+      x in dom H & H.x in dom (max-f) by FUNCT_1:11;
+      hence x in dom g by A2,A5,FUNCT_1:11;
+     end;
+     assume x in dom g; then
+     x in dom H & H.x in dom f by A2,FUNCT_1:11;
+     hence x in dom g1 by A5,FUNCT_1:11;
+    end;
+
+    for y being Element of Y st y in dom g1 holds g1.y = max(-(g.y),0.)
+    proof
+     let y be Element of Y;
+     assume y in dom g1; then
+A9:  y in dom H & H.y in dom (max- f) by FUNCT_1:11;
+     reconsider x = H.y as Element of X;
+     g1.y = (max-f).x by FUNCT_1:13,A9; then
+     g1.y = max(-(f.x),0.) by A9,MESFUNC2:def 3;
+     hence g1.y = max(-(g.y),0.) by A2,A9,FUNCT_1:13;
+    end;
+    hence max-g = (max-f)*T" by A8,TARSKI:2,MESFUNC2:def 3;
+end;
+
+theorem Th28:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL, A being Element of S
+  st T is bijective & g = f*T" & A = dom f & f is A -measurable holds
+   ex B being Element of CopyField(T,S) st
+      B = T.:A & B = dom g & g is B -measurable
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+    g be PartFunc of Y,ExtREAL, A be Element of S;
+    assume that
+A1: T is bijective and
+A2: g = f*T" and
+A3: A = dom f and
+A4: f is A -measurable;
+
+    dom (.:T) = bool X by FUNCT_2:def 1; then
+    (.:T).A in (.:T).:S by FUNCT_1:def 6; then
+    (.:T).A in CopyField(T,S) by A1,Def2; then
+    reconsider B = T.:A as Element of CopyField(T,S) by A1,Th1;
+    take B;
+    dom g = (T")"(dom f) by A2,RELAT_1:147;
+    hence thesis by A3,A1,A2,A4,Th20,FUNCT_1:84;
+end;
+
+theorem Th29:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL, A be Element of S,
+ g be PartFunc of Y,ExtREAL st T is bijective & g = f*T"
+  & f is nonnegative & A = dom f & f is A -measurable
+holds integral+(CopyMeasure(T,M),g) = integral+(M,f)
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    M be sigma_Measure of S, f be PartFunc of X,ExtREAL, A be Element of S,
+    g be PartFunc of Y,ExtREAL;
+    assume that
+A1: T is bijective and
+A2: g = f*T" and
+A3: f is nonnegative and
+A4: A = dom f and
+A5: f is A -measurable;
+
+    dom (.:T) = bool X by FUNCT_2:def 1; then
+    (.:T).A in (.:T).:S by FUNCT_1:def 6; then
+    (.:T).A in CopyField(T,S) by A1,Def2; then
+    reconsider B = T.:A as Element of CopyField(T,S) by A1,Th1;
+
+A6: g is B -measurable by A1,A2,A5,Th20;
+A7: g is nonnegative by Th23,A1,A2,A3;
+    dom g = (T")"(dom f) by A2,RELAT_1:147; then
+A8: dom g = B by A4,A1,FUNCT_1:84;
+
+    consider F being Functional_Sequence of X,ExtREAL,
+     K being ExtREAL_sequence such that
+A9: ( for n being Nat holds F.n is_simple_func_in S & dom (F.n) = dom f )
+  & ( for n being Nat holds F.n is nonnegative )
+  & ( for n, m being Nat st n <= m holds
+       for x being Element of X st x in dom f holds (F.n).x <= (F.m).x )
+  & ( for x being Element of X st x in dom f holds
+        F#x is convergent & lim (F#x) = f.x )
+  & ( for n being Nat holds K.n = integral'(M,F.n) )
+  & K is convergent & integral+(M,f) = lim K by A4,A3,A5,MESFUNC5:def 15;
+
+A10: dom T = X & rng T = Y by A1,FUNCT_2:def 1,def 3;
+A11: rng T = dom(T") & dom T = rng(T") by A1,FUNCT_1:33; then
+    reconsider H = T" as Function of Y,X by A10,FUNCT_2:1;
+
+    consider H be Function of Y,X such that
+A12: H is bijective & H = T" & H" = T & .:H = (.:T)"
+  & (.:H).: CopyField(T,S) = S & CopyField(H,CopyField(T,S)) = S by Th17,A1;
+
+    for x be object holds x in T.:(dom f) iff x in dom g
+    proof
+     let x be object;
+     hereby assume x in T.:(dom f); then
+      consider t be object such that
+A13:  t in dom T & t in dom f & x=T.t by FUNCT_1:def 6;
+A14:  x in dom H by A12,A10,A13,A11,FUNCT_2:5;
+
+      H.x = t by A12,A13,FUNCT_1:34;
+      hence x in dom g by A12,A2,A13,A14,FUNCT_1:11;
+     end;
+     assume
+A15: x in dom g; then
+A16: x in dom H & H.x in dom f by A12,A2,FUNCT_1:11;
+     T.(H.x) = x by A12,A10,A15,FUNCT_1:35;
+     hence x in T.:(dom f) by A10,A16,FUNCT_1:def 6;
+    end; then
+A17:T.:(dom f) = dom g by TARSKI:2;
+
+A18:for n be Nat holds dom ((F.n)*H) = T.:(dom (F.n))
+    proof
+     let n be Nat;
+     for x be object holds x in dom ((F.n)*H) iff x in T.:(dom (F.n))
+     proof
+      let x be object;
+      hereby assume
+A19:   x in dom ((F.n)*H); then
+       x in dom H & H.x in dom (F.n) by FUNCT_1:11; then
+       T.(H.x) in T.:(dom (F.n)) by A10,FUNCT_1:def 6;
+       hence x in T.:(dom (F.n)) by A12,A10,A19,FUNCT_1:35;
+      end;
+      assume x in T.:(dom (F.n)); then
+      consider t be object such that
+A20:  t in dom T & t in dom (F.n) & x=T.t by FUNCT_1:def 6;
+A21:  x in dom H by A12,A10,A11,A20,FUNCT_2:5;
+
+      H.x = t by A12,FUNCT_1:34,A20;
+      hence x in dom ((F.n)*H) by A20,A21,FUNCT_1:11;
+     end;
+     hence thesis by TARSKI:2;
+    end;
+
+    deffunc F3(Nat) = (F.$1)*H;
+    consider G being Functional_Sequence of Y,ExtREAL such that
+A22:for n being Nat holds G.n = F3(n) from SEQFUNC:sch 1;
+
+    set L = CopyMeasure(T,M);
+
+A23:for n being Nat holds
+     G.n is_simple_func_in CopyField(T,S) & dom (G.n) = dom g
+    proof
+     let n be Nat;
+A24: F.n is_simple_func_in S & dom (F.n) = dom f by A9;
+A25: G.n = (F.n)*H by A22;
+     hence G.n is_simple_func_in CopyField(T,S) by A12,Th22,A1,A24;
+     thus dom (G.n) = dom g by A17,A18,A24,A25;
+    end;
+
+A26:for n being Nat holds G.n is nonnegative
+    proof
+     let n be Nat;
+A27: F.n is nonnegative by A9;
+     G.n = (F.n)*H by A22;
+     hence G.n is nonnegative by A12,A1,Th23,A27;
+    end;
+
+A28:for n, m being Nat st n <= m holds
+     for y being Element of Y st y in dom g holds (G.n).y <= (G.m).y
+    proof
+     let n,m be Nat;
+     assume
+A29: n <= m;
+     let y be Element of Y;
+     assume y in dom g; then
+A30: y in dom H & H.y in dom f by A12,A2,FUNCT_1:11;
+     reconsider x = H.y as Element of X;
+A31: (F.n).x <= (F.m).x by A9,A29,A30;
+A32: G.n = (F.n)*H & G.m = (F.m)*H by A22; then
+     (F.n).x = (G.n).y by A30,FUNCT_1:13;
+     hence thesis by A31,A32,A30,FUNCT_1:13;
+    end;
+
+A33:for y being Element of Y st y in dom g holds
+     G#y is convergent & lim(G#y) = g.y
+    proof
+     let y be Element of Y;
+     assume y in dom g; then
+A34: y in dom H & H.y in dom f by A12,A2,FUNCT_1:11;
+     reconsider x = H.y as Element of X;
+A35: F#x is convergent & lim(F#x) = f.x by A34,A9;
+
+     for n being Element of NAT holds (F#x).n = (G#y).n
+     proof
+      let n be Element of NAT;
+      reconsider m = n as Nat;
+A36:  (F#x).m = (F.m).x by MESFUNC5:def 13;
+A37:  (G#y).m = (G.m).y by MESFUNC5:def 13;
+      G.n = (F.n)*H & G.m = (F.m)*H by A22;
+      hence thesis by A36,A37,A34,FUNCT_1:13;
+     end; then
+     F#x = G#y by FUNCT_2:def 7;
+     hence thesis by A35,A2,A12,A34,FUNCT_1:13;
+    end;
+
+    for n being Nat holds K.n = integral'(L,G.n)
+    proof
+     let n be Nat;
+A38: K.n = integral'(M,F.n) by A9;
+A39: G.n = (F.n)*H by A22;
+     F.n is_simple_func_in S by A9;
+     hence thesis by A9,A38,A39,A12,A1,Th26;
+    end;
+    hence thesis by A6,A7,A8,A9,A23,A26,A28,A33,MESFUNC5:def 15;
+end;
+
+theorem
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL, B being Element of CopyField(T,S)
+  st T is bijective & g = f*T" & B = dom g & g is B -measurable holds
+   ex A being Element of S st B = T.:A & A = dom f & f is A -measurable
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+    g be PartFunc of Y,ExtREAL, B being Element of CopyField(T,S);
+    assume that
+A1: T is bijective and
+A2: g = f*T" and
+A3: B = dom g and
+A4: g is B -measurable;
+
+    consider H be Function of Y,X such that
+A5: H is bijective & H =T" & H" =T & .:H = (.:T)"
+  & (.:H).:CopyField(T,S) = S & CopyField(H,CopyField(T,S)) = S by A1,Th17;
+
+    T"B in S by Th19,A1; then
+    reconsider A = H.:B as Element of S by A5,FUNCT_1:85;
+    take A;
+    dom f in bool X; then
+A6: dom f in dom (.:T) by FUNCT_2:def 1;
+
+    .:T is bijective by A1,Th1; then
+A7: rng (.:T) = bool Y by FUNCT_2:def 3;
+
+    H.:(dom g) = H.:((.:T).(dom f)) by A1,A2,Th15; then
+A8: H.:(dom g) = (.:H).((.:T).(dom f)) by A5,Th1;
+
+    T.:A = T.:((.:H).B) by A5,Th1; then
+    T.:A = (.:T).((.:H).B) by A1,Th1; then
+    T.:A = B by A5,A7,FUNCT_1:35;
+    hence thesis by A8,A1,A2,A4,A3,A6,A5,Th20,FUNCT_1:34;
+end;
+
+theorem Th31:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL, A be Element of S
+  st T is bijective & g = f*T" & A = dom f & f is A -measurable
+holds
+   integral+(M,max+f) = integral+(CopyMeasure(T,M),max+g)
+ & integral+(M,max-f) = integral+(CopyMeasure(T,M),max-g)
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+    g be PartFunc of Y,ExtREAL, A be Element of S;
+    assume that
+A1: T is bijective and
+A2: g = f*T" and
+A3: A = dom f and
+A4: f is A -measurable;
+
+A5: A = dom (max+f) & A = dom (max-f) by A3,MESFUNC2:def 2,def 3;
+A6: max+f is A -measurable & max-f is A -measurable by A3,A4,MESFUNC2:25,26;
+A7: max+g = (max+f)*T" & max-g = (max-f)*T" by A1,A2,Th27;
+A8:for x being Element of X holds 0. <= (max+f).x by MESFUNC2:12;
+    for x being Element of X holds 0. <= (max-f).x by MESFUNC2:13;
+    hence thesis by A7,A8,Th29,A1,A5,A6,SUPINF_2:39;
+end;
+
+theorem Th32:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL, A be Element of S
+  st T is bijective & g = f*T" & A = dom f & f is A -measurable
+ holds Integral(CopyMeasure(T,M),g) = Integral(M,f)
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+    g be PartFunc of Y,ExtREAL, A be Element of S;
+    assume that
+A1: T is bijective and
+A2: g = f*T" and
+A3: A = dom f and
+A4: f is A -measurable;
+
+A5: integral+(M,max+f) = integral+(CopyMeasure(T,M),max+g)
+  & integral+(M,max-f) = integral+(CopyMeasure(T,M),max-g) by A1,A2,A3,A4,Th31;
+
+    Integral(M,f) = integral+(M,max+f) - integral+(M,max-f)
+      by MESFUNC5:def 16;
+    hence thesis by A5,MESFUNC5:def 16;
+end;
+
+theorem Th33:
+for X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+ M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+ g be PartFunc of Y,ExtREAL st T is bijective & g = f*T" holds
+  f is_integrable_on M iff g is_integrable_on CopyMeasure(T,M)
+proof
+    let X,Y be non empty set, S be SigmaField of X, T be Function of X,Y,
+    M be sigma_Measure of S, f be PartFunc of X,ExtREAL,
+    g be PartFunc of Y,ExtREAL;
+    assume
+A1: T is bijective & g = f*T";
+
+    hereby assume
+A2:  f is_integrable_on M; then
+A3:  integral+(M,max+f) < +infty
+   & integral+(M,max-f) < +infty by MESFUNC5:def 17;
+     consider A be Element of S such that
+A4:  A = dom f & f is A-measurable by A2,MESFUNC5:def 17;
+     consider B be Element of CopyField(T,S) such that
+A5:  B = T.:A & B = dom g & g is B -measurable by A1,A4,Th28;
+     integral+(M,max+f) = integral+(CopyMeasure(T,M),max+g)
+   & integral+(M,max-f) = integral+(CopyMeasure(T,M),max-g)
+        by A4,Th31,A1;
+     hence g is_integrable_on CopyMeasure(T,M) by A3,A5,MESFUNC5:def 17;
+    end;
+    assume
+A6: g is_integrable_on CopyMeasure(T,M); then
+A7: integral+(CopyMeasure(T,M),max+g) < +infty
+  & integral+(CopyMeasure(T,M),max-g) < +infty by MESFUNC5:def 17;
+
+    consider B being Element of CopyField(T,S) such that
+A8: B = dom g & g is B -measurable by A6,MESFUNC5:def 17;
+
+    consider H be Function of Y,X such that
+A9: H is bijective & H=T" & H"=T & .:H = (.:T)"
+  & (.:H).:CopyField(T,S) = S & CopyField(H,CopyField(T,S)) = S by Th17,A1;
+
+    dom (.:H) = bool Y by FUNCT_2:def 1; then
+    (.:H).B in S by A9,FUNCT_1:def 6; then
+    reconsider A = H.:B as Element of S by A9,Th1;
+
+    .:T is bijective by A1,Th1; then
+A10: rng (.:T) = bool Y by FUNCT_2:def 3;
+
+    T.:A = (.:T).A by A1,Th1; then
+    T.:A = (.:T).((.:H).B) by A9,Th1; then
+    T.:A = B by A10,A9,FUNCT_1:35; then
+A11: f is A -measurable by Th20,A1,A8;
+    dom f in bool X; then
+A12: dom f in dom (.:T) by FUNCT_2:def 1;
+
+    B = (T")"(dom f) by A1,A8,RELAT_1:147; then
+    B = T.:(dom f) by A1,FUNCT_1:84; then
+    B = (.:T).(dom f) by A1,Th1; then
+    (.:H).B = dom f by A9,A12,FUNCT_1:34; then
+A13:A = dom f by A9,Th1; then
+    integral+(M,max+f) = integral+(CopyMeasure(T,M),max+g)
+  & integral+(M,max-f) = integral+(CopyMeasure(T,M),max-g) by Th31,A1,A11;
+    hence f is_integrable_on M by MESFUNC5:def 17,A7,A11,A13;
+end;
+
+begin :: Integral on a tuple type set (n-dimensional)
+
+theorem Th34:
+for n be non zero Nat, X be non-empty n-element FinSequence,
+    S be sigmaFieldFamily of X, m be sigmaMeasureFamily of S,
+    f be PartFunc of CarProduct X,ExtREAL,
+    g be PartFunc of product X,ExtREAL,
+    A be Element of Prod_Field S, B be Element of XProd_Field S
+ st B = (CarProd X).:A & g = f*(CarProd X)" holds
+    f is A -measurable iff g is B -measurable
+proof
+    let n be non zero Nat, X be non-empty n-element FinSequence,
+    S be sigmaFieldFamily of X, m be sigmaMeasureFamily of S,
+    f be PartFunc of CarProduct X,ExtREAL,
+    g be PartFunc of product X,ExtREAL,
+    A be Element of Prod_Field S, B be Element of XProd_Field S;
+    assume
+A1: B = (CarProd X).:A & g = f*(CarProd X)";
+    CarProd X is bijective by Th12;
+    hence thesis by Th20,A1;
+end;
+
+theorem
+for n be non zero Nat, X be non-empty n-element FinSequence,
+    S be sigmaFieldFamily of X, m be sigmaMeasureFamily of S,
+    f be PartFunc of CarProduct X,ExtREAL,
+    g be PartFunc of product X,ExtREAL, A be Element of Prod_Field S
+ st g = f*(CarProd X)" & A = dom f & f is A -measurable
+ holds Integral(XProd_Measure m,g) = Integral(Prod_Measure m,f)
+   by Th12,Th32;
+
+theorem Th36:
+for n be non zero Nat, X be non-empty n-element FinSequence,
+    S be sigmaFieldFamily of X, m be sigmaMeasureFamily of S,
+    f be PartFunc of CarProduct X,ExtREAL,
+    g be PartFunc of product X,ExtREAL st g = f*(CarProd X)" holds
+    f is_integrable_on Prod_Measure m iff g is_integrable_on XProd_Measure m
+proof
+    let n be non zero Nat, X be non-empty n-element FinSequence,
+    S be sigmaFieldFamily of X, m be sigmaMeasureFamily of S,
+    f be PartFunc of CarProduct X,ExtREAL,
+    g be PartFunc of product X,ExtREAL;
+    assume
+A1: g = f*(CarProd X)";
+    CarProd X is bijective by Th12;
+    hence thesis by Th33,A1;
+end;
+
+begin :: Lebesgue type measure and Lebesgue type integral on REAL n
+
+Lm2:
+for n be non zero Nat holds Seg n --> REAL is non-empty n-element FinSequence
+proof
+    let n be non zero Nat;
+    set X = Seg n --> REAL;
+A1: dom X = Seg n & rng X = {REAL} by FUNCOP_1:8;
+    reconsider X as FinSequence;
+    n is Element of NAT by ORDINAL1:def 12; then
+    len X = n by A1,FINSEQ_1:def 3;
+    hence thesis by CARD_1:def 7;
+end;
+
+registration
+  let n be non zero Nat;
+  cluster Seg n --> REAL -> non-empty n-element for FinSequence;
+  correctness by Lm2;
+end;
+
+Lm3:
+for n be non zero Nat holds
+ Seg n --> L-Field is sigmaFieldFamily of (Seg n --> REAL)
+proof
+    let n be non zero Nat;
+    set S = Seg n --> L-Field;
+    set X = Seg n --> REAL;
+
+A1: dom S = Seg n;
+    reconsider S as FinSequence;
+    n is Element of NAT by ORDINAL1:def 12; then
+    len S = n by A1,FINSEQ_1:def 3; then
+    reconsider S as n-element FinSequence by CARD_1:def 7;
+    now let i be Nat;
+     assume i in Seg n; then
+     S.i = L-Field & X.i = REAL by FUNCOP_1:7;
+     hence S.i is SigmaField of X.i;
+    end;
+    hence thesis by MEASUR13:def 2;
+end;
+
+definition
+  let n be non zero Nat;
+  func L-Field n -> sigmaFieldFamily of (Seg n --> REAL) equals
+  Seg n --> L-Field;
+  correctness by Lm3;
+end;
+
+Lm4:
+for n be non zero Nat holds
+ Seg n --> L-Meas is sigmaMeasureFamily of L-Field n
+proof
+    let n be non zero Nat;
+    set M = Seg n --> L-Meas;
+
+A1: dom M = Seg n;
+    reconsider M as FinSequence;
+    n is Element of NAT by ORDINAL1:def 12; then
+    len M = n by A1,FINSEQ_1:def 3; then
+    reconsider M as n-element FinSequence by CARD_1:def 7;
+
+    now let i be Nat;
+     assume
+A2:  i in Seg n; then
+A3:  (L-Field n).i = L-Field & M.i = L-Meas & (Seg n --> REAL).i = REAL
+       by FUNCOP_1:7; then
+     reconsider F = L-Field as SigmaField of (Seg n --> REAL).i;
+     take F;
+     thus F = (L-Field n).i by A2,FUNCOP_1:7;
+     thus M.i is sigma_Measure of F by A3;
+    end;
+    hence thesis by MEASUR13:def 8;
+end;
+
+definition
+  let n be non zero Nat;
+  func L-Meas n -> sigmaMeasureFamily of L-Field n equals
+  Seg n --> L-Meas;
+  correctness by Lm4;
+end;
+
+Lm5:
+for n be non zero Nat holds
+  Prod_Field(L-Field n) is SigmaField of CarProduct(Seg n --> REAL)
+& Prod_Measure(L-Meas n) is sigma_Measure of Prod_Field(L-Field n)
+& XProd_Field(L-Field n) is SigmaField of product(Seg n --> REAL)
+& XProd_Field(L-Field n) is SigmaField of REAL n
+& XProd_Measure(L-Meas n) is sigma_Measure of XProd_Field(L-Field n)
+proof
+    let n be non zero Nat;
+    product(Seg n --> REAL) = REAL n by SRINGS_5:8;
+    hence thesis;
+end;
+
+definition
+  let n be non zero Nat;
+  func XL-Field n -> SigmaField of REAL n equals
+    XProd_Field(L-Field n);
+  correctness by Lm5;
+end;
+
+definition
+  let n be non zero Nat;
+  func XL-Meas n -> sigma_Measure of XL-Field n equals
+    XProd_Measure(L-Meas n);
+  correctness
+  proof
+    product(Seg n --> REAL) = REAL n by SRINGS_5:8;
+    hence thesis;
+  end;
+end;
+
+theorem Th37:
+  CarProduct(Seg 1 --> REAL) = REAL
+& ElmFin(Seg 1 --> REAL,1) = REAL
+& CarProduct(Seg 2 --> REAL) = [:REAL,REAL:]
+& ElmFin(Seg 2 --> REAL,2) = REAL
+& CarProduct(Seg 3 --> REAL) = [:REAL,REAL,REAL:]
+proof
+    set X = Seg 1 --> REAL;
+    1 in Seg 1; then
+    X.1 = REAL by FUNCOP_1:7;
+    hence CarProduct X = REAL & ElmFin(Seg 1 --> REAL,1) = REAL
+      by MEASUR13:def 3,def 1;
+
+    set Y = Seg 2 --> REAL;
+A1: 1 in Seg 2 & 2 in Seg 2; then
+A2: Y.1 = REAL & Y.2 = REAL by FUNCOP_1:7;
+
+    CarProduct Y = [: (ProdFinSeq Y).1,Y.(1+1) :] by MEASUR13:def 3;
+    hence CarProduct Y = [: REAL,REAL :] by A2,MEASUR13:def 3;
+    ElmFin(Y,2) = Y.2 by MEASUR13:def 1;
+    hence ElmFin(Y,2) = REAL by A1,FUNCOP_1:7;
+
+    set Z = Seg 3 --> REAL;
+    1 in Seg 3 & 2 in Seg 3 & 3 in Seg 3; then
+A3: Z.1 = REAL & Z.2 = REAL & Z.3 = REAL by FUNCOP_1:7;
+    (ProdFinSeq Z).1 = Z.1
+  & (ProdFinSeq Z).2 = [: (ProdFinSeq Z).1,Z.(1+1) :]
+  & (ProdFinSeq Z).3 = [: (ProdFinSeq Z).2,Z.(2+1) :] by MEASUR13:def 3;
+    hence CarProduct Z = [: REAL,REAL,REAL :] by A3,ZFMISC_1:def 3;
+end;
+
+theorem Th38:
+  CarProd(Seg 1 --> REAL) is Function of REAL,REAL 1
+& for s be object st s in REAL holds (CarProd(Seg 1 --> REAL)).s = <*s*>
+proof
+    set X = Seg 1 --> REAL;
+    set E = CarProd(Seg 1 --> REAL);
+    thus E is Function of REAL,REAL 1 by Th37,SRINGS_5:8;
+
+    thus for s be object st s in REAL holds E.s = <*s*>
+    proof
+     let s be object;
+     assume
+A1:  s in REAL;
+A2:  ex id1 be Function of CarProduct SubFin(X,1),product SubFin(X,1) st
+      (Pt2FinSeq X).1 = id1 & id1 is bijective
+    & for x be object st x in CarProduct SubFin(X,1) holds id1.x = <*x*>
+        by Def5;
+     SubFin(X,1) = X|1 by MEASUR13:def 5;
+     hence E.s = <*s*> by A1,A2,Th37;
+    end;
+end;
+
+theorem Th39:
+  CarProd(Seg 2 --> REAL) is Function of [:REAL,REAL:],REAL 2
+& for s,t be object st s in REAL & t in REAL holds
+          (CarProd(Seg 2 --> REAL)).([s,t])= <*s,t*>
+proof
+    set Y = Seg 2 --> REAL;
+    set Y1 = SubFin(Y,1);
+    set F = CarProd(Seg 2 --> REAL);
+
+    thus F is Function of [:REAL,REAL:],REAL 2 by Th37,SRINGS_5:8;
+    thus for s,t be object st s in REAL & t in REAL holds F.([s,t]) = <*s,t*>
+    proof
+     let s,t be object;
+     assume
+A1:  s in REAL & t in REAL;
+
+A2:  1 in Seg 1 & 1 in Seg 2 & 2 in Seg 2;
+
+A3:  Y1 = Y|1 by MEASUR13:def 5; then
+A4:  Y1.1 = Y.1 by A2,FUNCT_1:49;
+     CarProduct Y1 = (Y|1).1 by A3,MEASUR13:def 3; then
+A5:  CarProduct Y1 = REAL by A3,A4,A2,FUNCOP_1:7;
+
+     Y1 = <*REAL*> by A2,A3,A4,FUNCOP_1:7,FINSEQ_1:40; then
+A6:  Y1 = 1 |-> REAL by FINSEQ_2:59;
+
+     ElmFin(Y,1+1) = REAL by Th37; then
+     ex u,v be FinSequence st
+      (CarProd Y1).s = u & <*t*> = v & (CarProd Y).(s,t) = u^v by A5,A1,Th13;
+     hence (CarProd Y).([s,t]) = <*s,t*> by A1,A6,Th38;
+    end;
+end;
+
+theorem
+  CarProd(Seg 3 --> REAL) is Function of [:REAL,REAL,REAL:],REAL 3
+& for s,t,u be object st s in REAL & t in REAL & u in REAL holds
+          (CarProd(Seg 3 --> REAL)). [[s,t],u] = <*s,t,u*>
+proof
+    set Z = Seg 3 --> REAL;
+    set Z2 = SubFin(Z,2);
+    set H = CarProd(Seg 3 --> REAL);
+    thus H is Function of [:REAL,REAL,REAL:],REAL 3 by Th37,SRINGS_5:8;
+    thus for s,t,u be object st s in REAL & t in REAL & u in REAL holds
+          H.([[s,t],u]) = <*s,t,u*>
+    proof
+     let s,t,u be object;
+     assume
+A1:  s in REAL & t in REAL & u in REAL;
+
+A2:  1 in Seg 2 & 2 in Seg 2 & 1 in Seg 3 & 2 in Seg 3 & 3 in Seg 3;
+
+A3:  len Z2 = 2 by CARD_1:def 7;
+A4:  Z2 = Z|2 by MEASUR13:def 5; then
+     Z2.2 = Z.2 by A2,FUNCT_1:49; then
+A5:  Z2.2 = REAL by A2,FUNCOP_1:7;
+
+     Z2.1 = Z.1 by A4,A2,FUNCT_1:49; then
+     Z2 = <*REAL,REAL*> by A5,A3,A2,FUNCOP_1:7,FINSEQ_1:44; then
+A6:  Z2 = 2 |-> REAL by FINSEQ_2:61; then
+A7:  (CarProd Z2).([s,t]) = <*s,t*> by A1,Th39;
+
+     ElmFin(Z,3) = Z.3 by MEASUR13:def 1; then
+     ElmFin(Z,2+1) = REAL by A2,FUNCOP_1:7; then
+     ex a,b be FinSequence st
+     (CarProd Z2).([s,t]) = a & <*u*> = b  & (CarProd Z).([s,t],u) = a^b
+        by A1,A6,Th37,Th13,ZFMISC_1:87;
+     hence (CarProd Z).([[s,t],u]) = <*s,t,u*> by A7;
+    end;
+end;
+
+theorem Th41:
+  Prod_Field(L-Field 1) = L-Field
+& Borel_Sets c= Prod_Field(L-Field 1)
+& for I being Subset of REAL st I is Interval holds I in Prod_Field(L-Field 1)
+proof
+    1 in Seg 1; then
+A1: (L-Field 1).1 = L-Field by FUNCOP_1:7;
+    hence Prod_Field(L-Field 1) = L-Field by MEASUR13:def 11;
+    thus Borel_Sets c= Prod_Field(L-Field 1) by A1,MEASUR12:75,MEASUR13:def 11;
+    hence thesis by MEASUR10:5;
+end;
+
+theorem Th42:
+  Prod_Field(L-Field 2) = sigma measurable_rectangles(L-Field,L-Field)
+& measurable_rectangles(L-Field,L-Field)
+   c= sigma measurable_rectangles(L-Field,L-Field)
+& ( the set of all [:A,B:] where A is Element of Borel_Sets,
+      B is Element of Borel_Sets )
+   c= measurable_rectangles(L-Field,L-Field)
+& { [:I,J:] where I,J is Subset of REAL: I is Interval & J is Interval }
+   c= ( the set of all [:A,B:]
+          where A is Element of Borel_Sets, B is Element of Borel_Sets )
+proof
+    set X = Seg 2 --> REAL;
+
+A1: len SubFin(X,1) = 1 by CARD_1:def 7;
+A2: 1 in Seg 2 & 1 in Seg 1 & 2 in Seg 2;
+
+    consider S1 be SigmaField of CarProduct SubFin(X,1) such that
+A3: S1 = (ProdSigmaFldFinSeq(L-Field 2)).1
+  & (ProdSigmaFldFinSeq(L-Field 2)).(1+1)
+      = sigma measurable_rectangles(S1,ElmFin(L-Field 2,1+1))
+        by MEASUR13:def 11;
+
+    SubFin(X,1) = X|1 by MEASUR13:def 5; then
+    SubFin(X,1).1 = X.1 by A2,FUNCT_1:49; then
+    SubFin(X,1) = <*REAL*> by A1,A2,FUNCOP_1:7,FINSEQ_1:40; then
+a4: CarProduct SubFin(X,1) = <*REAL*>.1 by MEASUR13:def 3;
+
+    (ProdSigmaFldFinSeq(L-Field 2)).1 = (L-Field 2).1 by MEASUR13:def 11; then
+A5: S1 = L-Field by A3,A2,FUNCOP_1:7;
+
+    ElmFin(X,2) = X.2 by MEASUR13:def 1; then
+A6: ElmFin(X,2) = REAL by A2,FUNCOP_1:7;
+
+    ElmFin(L-Field 2,2) = (L-Field 2).2 by MEASUR13:def 7;
+    hence Prod_Field(L-Field 2) = sigma measurable_rectangles(L-Field,L-Field)
+      by A3,a4,A5,A6,A2,FUNCOP_1:7;
+
+    thus measurable_rectangles(L-Field,L-Field)
+      c= sigma measurable_rectangles(L-Field,L-Field) by PROB_1:def 9;
+
+    set XY = the set of all [:A,B:] where A is Element of Borel_Sets,
+               B is Element of Borel_Sets;
+
+    now let z be object;
+     assume z in XY; then
+     consider A,B be Element of Borel_Sets such that
+A7:  z=[:A,B:];
+     A in L-Field & B in L-Field by MEASUR12:75;
+     hence z in measurable_rectangles( L-Field,L-Field) by A7;
+    end;
+    hence XY c= measurable_rectangles ( L-Field,L-Field);
+
+    set IJ = { [:I,J:] where I,J is Subset of REAL:
+                 I is Interval & J is Interval};
+    now let z be object;
+     assume z in IJ; then
+     consider I,J be Subset of REAL such that
+A8:  z=[:I,J:] & I is Interval & J is Interval;
+
+     I in Borel_Sets & J in Borel_Sets by A8,MEASUR10:5;
+     hence z in XY by A8;
+    end;
+    hence IJ c= XY;
+end;
+
+theorem
+  Prod_Field(L-Field 3)
+   = sigma measurable_rectangles
+      (sigma measurable_rectangles(L-Field,L-Field),L-Field)
+& measurable_rectangles(sigma measurable_rectangles(L-Field,L-Field),L-Field)
+   c= sigma measurable_rectangles(
+       sigma measurable_rectangles(L-Field,L-Field),L-Field)
+& ( the set of all [:A,B,C:] where A is Element of Borel_Sets,
+         B is Element of Borel_Sets, C is Element of Borel_Sets)
+   c= measurable_rectangles(
+       sigma measurable_rectangles(L-Field,L-Field),L-Field)
+& { [:I,J,K:] where I,J,K is Subset of REAL:
+       I is Interval & J is Interval & K is Interval }
+   c= ( the set of all [:A,B,C:] where A is Element of Borel_Sets,
+           B is Element of Borel_Sets, C is Element of Borel_Sets )
+proof
+    set X = Seg 3 --> REAL;
+A1: len SubFin(X,1) = 1 by CARD_1:def 7;
+A2: 1 in Seg 3 & 2 in Seg 3 & 3 in Seg 3;
+A3: 1 in Seg 2 & 2 in Seg 2;
+A4: 1 in Seg 1;
+
+    consider S2 be SigmaField of CarProduct SubFin(X,2) such that
+A5: S2 = (ProdSigmaFldFinSeq(L-Field 3)).2
+  & (ProdSigmaFldFinSeq(L-Field 3)).(2+1)
+     = sigma measurable_rectangles(S2,ElmFin(L-Field 3,2+1))
+       by MEASUR13:def 11;
+    consider S1 be SigmaField of CarProduct SubFin(X,1) such that
+A6: S1 = (ProdSigmaFldFinSeq(L-Field 3)).1
+  & (ProdSigmaFldFinSeq(L-Field 3)).(1+1)
+     = sigma measurable_rectangles(S1,ElmFin(L-Field 3,1+1))
+       by MEASUR13:def 11;
+
+    SubFin(X,1) = X|1 by MEASUR13:def 5; then
+    SubFin(X,1).1 = X.1 by A4,FUNCT_1:49; then
+    SubFin(X,1) = <*REAL*> by A1,A2,FUNCOP_1:7,FINSEQ_1:40; then
+a7: CarProduct SubFin(X,1) = <*REAL*>.1 by MEASUR13:def 3;
+
+    SubFin(X,2) = X|2 by MEASUR13:def 5; then
+    SubFin(X,2).1 = X.1 & SubFin(X,2).2 = X.2 by A3,FUNCT_1:49; then
+A8: SubFin(X,2).1 = REAL & SubFin(X,2).2 = REAL by A2,FUNCOP_1:7; then
+    (ProdFinSeq SubFin(X,2)).1 = REAL by MEASUR13:def 3; then
+A9: (ProdFinSeq SubFin(X,2)).(1+1) = [:REAL,REAL:] by A8,MEASUR13:def 3;
+
+    (ProdSigmaFldFinSeq(L-Field 3)).1 = (L-Field 3).1 by MEASUR13:def 11; then
+A10: S1 = L-Field by A6,A2,FUNCOP_1:7;
+
+    ElmFin(X,2) = X.2 by MEASUR13:def 1; then
+A11: ElmFin(X,2) = REAL by A2,FUNCOP_1:7;
+    ElmFin(L-Field 3,2) = (L-Field 3).2 by MEASUR13:def 7; then
+A12: ElmFin(L-Field 3,2) = L-Field by A2,FUNCOP_1:7;
+
+    ElmFin(X,3) = X.3 by MEASUR13:def 1; then
+A13:ElmFin(X,3) = REAL by A2,FUNCOP_1:7;
+    ElmFin(L-Field 3,3) = (L-Field 3).3 by MEASUR13:def 7;
+    hence Prod_Field(L-Field 3)
+     = sigma measurable_rectangles(
+        sigma measurable_rectangles(L-Field,L-Field),L-Field)
+          by A9,A11,A12,a7,A6,A10,A5,A13,A2,FUNCOP_1:7;
+
+    thus measurable_rectangles(
+     sigma measurable_rectangles(L-Field,L-Field),L-Field)
+      c= sigma measurable_rectangles(
+          sigma measurable_rectangles(L-Field,L-Field),L-Field)
+            by PROB_1:def 9;
+
+    set XYZ = the set of all [:A,B,C:] where A is Element of Borel_Sets,
+                B is Element of Borel_Sets, C is Element of Borel_Sets;
+
+    now let z be object;
+     assume z in XYZ; then
+     consider A,B,C be Element of Borel_Sets such that
+A14: z = [:A,B,C:];
+A15: A in L-Field & B in L-Field & C in L-Fieldby MEASUR12:75; then
+A16: [:A,B:] in measurable_rectangles(L-Field,L-Field);
+
+     measurable_rectangles(L-Field,L-Field)
+      c= sigma measurable_rectangles(L-Field,L-Field) by PROB_1:def 9; then
+     [:[:A,B:],C:] in measurable_rectangles(
+          sigma measurable_rectangles(L-Field,L-Field),L-Field) by A15,A16;
+     hence z in measurable_rectangles(
+                 sigma measurable_rectangles(L-Field,L-Field),L-Field)
+        by A14,ZFMISC_1:def 3;
+    end;
+    hence XYZ c= measurable_rectangles(
+                  sigma measurable_rectangles(L-Field,L-Field),L-Field);
+
+    set IJK = { [:I,J,K:] where I,J,K is Subset of REAL: I is Interval
+                 & J is Interval & K is Interval};
+    now let z be object;
+     assume z in IJK; then
+     consider I,J,K be Subset of REAL such that
+A17: z = [:I,J,K:] & I is Interval & J is Interval & K is Interval;
+     I in Borel_Sets & J in Borel_Sets & K in Borel_Sets by A17,MEASUR10:5;
+     hence z in XYZ by A17;
+    end;
+    hence IJK c= XYZ;
+end;
+
+theorem Th44:
+for n be non zero Nat holds
+ Prod_Field(L-Field (n+1)) =
+     sigma measurable_rectangles(Prod_Field(L-Field n),L-Field)
+proof
+    let n be non zero Nat;
+    set X = Seg (n+1) --> REAL;
+    set X1 = SubFin(X,n);
+    set S1 = SubFin(L-Field(n+1),n);
+    set S11 = ElmFin(L-Field(n+1),n+1);
+
+A1: Prod_Field(L-Field(n+1))
+     = sigma measurable_rectangles(Prod_Field(S1),S11) by MEASUR13:34;
+
+A2: n < n+1 by NAT_1:13; then
+A3: Seg(n+1) /\ Seg n = Seg n by FINSEQ_1:5,XBOOLE_1:28;
+
+    SubFin(X,n) = X|n by A2,MEASUR13:def 5; then
+A4: SubFin(X,n) = Seg n --> REAL by A3,FUNCOP_1:12;
+
+    SubFin(L-Field(n+1),n) = (L-Field(n+1)) |n by A2,MEASUR13:def 6;  then
+A5: SubFin(L-Field(n+1),n) = L-Field n by A3,FUNCOP_1:12;
+
+    ElmFin(X,n+1) = X.(n+1) by MEASUR13:def 1; then
+A6: ElmFin(X,n+1) = REAL by FINSEQ_1:4,FUNCOP_1:7;
+    ElmFin(L-Field(n+1),n+1) = (L-Field(n+1)).(n+1) by MEASUR13:def 7;
+    hence Prod_Field(L-Field(n+1))
+     = sigma measurable_rectangles(Prod_Field(L-Field n),L-Field)
+       by A1,A4,A5,A6,FINSEQ_1:4,FUNCOP_1:7;
+end;
+
+theorem Th45:
+  Prod_Measure(L-Meas 1) = L-Meas
+& for E be Element of L-Field holds E in Prod_Field(L-Field 1)
+proof
+A1: 1 in Seg 1;
+    Prod_Measure(L-Meas 1) = (L-Meas 1).1 by MEASUR13:def 13;
+    hence Prod_Measure(L-Meas 1) = L-Meas by A1,FUNCOP_1:7;
+    thus for E be Element of L-Field holds E in Prod_Field(L-Field 1) by Th41;
+end;
+
+theorem Th46:
+   Prod_Measure(L-Meas 2) = Prod_Measure(L-Meas,L-Meas)
+& for E1,E2 be Element of L-Field holds
+   [:E1,E2:] in measurable_rectangles(L-Field,L-Field)
+& (Prod_Measure(L-Meas 2)).([:E1,E2:]) = (L-Meas.E1)*(L-Meas.E2)
+proof
+    set X = Seg 2 --> REAL, S = L-Field 2, m = L-Meas 2;
+    set X1 = SubFin(X,1), S1 = SubFin(S,1), m1 = SubFin(m,1);
+    set X11 = ElmFin(X,2), S11 = ElmFin(S,2), m11 = ElmFin(m,1+1);
+A1: Prod_Measure(L-Meas 2) = product_sigma_Measure(Prod_Measure m1,m11)
+      by MEASUR13:25;
+
+A2: 1 in Seg 1 & 1 in Seg 2 & 2 in Seg 2;
+
+    S11 = S.2 & m11 = m.2 by MEASUR13:def 7,def 10; then
+A3: S11 = L-Field & m11 = L-Meas by A2,FUNCOP_1:7;
+
+A4: len X1 = 1 & len S1 = 1 & len m1 = 1 by CARD_1:def 7;
+    X1 = X|1 & S1 = S|1 & m1 = m|1 by MEASUR13:def 5,def 6,def 9; then
+    X1.1 = (Seg 2 --> REAL).1 & S1.1 = (L-Field 2).1 & m1.1 = (L-Meas 2).1
+      by A2,FUNCT_1:49; then
+    X1 = <*REAL*> & S1 = <*L-Field*> & m1 = <*L-Meas*>
+      by A4,A2,FUNCOP_1:7,FINSEQ_1:40; then
+A5:X1 = 1 |-> REAL & S1 = 1 |-> L-Field & m1 = 1 |-> L-Meas by FINSEQ_2:59;
+    hence Prod_Measure(L-Meas 2) = Prod_Measure(L-Meas,L-Meas)
+      by A1,A3,Th37,Th41,Th45,MESFUN12:def 9;
+
+    thus for E1,E2 be Element of L-Field holds
+     [:E1,E2:] in measurable_rectangles(L-Field,L-Field)
+   & (Prod_Measure(L-Meas 2)).([:E1,E2:]) = (L-Meas.E1)*(L-Meas.E2)
+    proof
+     let E1,E2 be Element of L-Field;
+A6: [:E1,E2:] in measurable_rectangles(L-Field,L-Field);
+
+     measurable_rectangles(L-Field,L-Field)
+      c= sigma measurable_rectangles(L-Field,L-Field) by PROB_1:def 9; then
+     reconsider E = [:E1,E2:] as Element of
+                      sigma measurable_rectangles (L-Field,L-Field) by A6;
+     (product_sigma_Measure(L-Meas,L-Meas)).E = (L-Meas. E1)*(L-Meas. E2)
+       by MEASUR11:16;
+     hence thesis by A5,A3,Th37,Th41,Th45,MEASUR13:25;
+    end;
+end;
+
+theorem
+  Prod_Measure(L-Meas 3) = Prod_Measure(Prod_Measure(L-Meas,L-Meas),L-Meas)
+& for E1,E2,E3 be Element of L-Field holds
+   [:E1,E2,E3:] in measurable_rectangles(
+                     sigma measurable_rectangles(L-Field,L-Field),L-Field)
+& (Prod_Measure(L-Meas 3)).([:E1,E2,E3:]) = (L-Meas.E1)*(L-Meas.E2)*(L-Meas.E3)
+proof
+    set X = Seg 3 --> REAL, S = L-Field 3, m = L-Meas 3;
+    set X2 = SubFin(X,2), S2 = SubFin(S,2), m2 = SubFin(m,2);
+    set X21 = ElmFin(X,3), S21 = ElmFin(S,3), m21 = ElmFin(m,2+1);
+A1: Prod_Measure(L-Meas 3)
+     = product_sigma_Measure(Prod_Measure m2,m21) by MEASUR13:25;
+
+A2: 1 in Seg 2 & 2 in Seg 2 & 1 in Seg 3 & 2 in Seg 3 & 3 in Seg 3;
+
+    X21 = X.3 & S21 = S.3 & m21 = m.3 by MEASUR13:def 1,def 7,def 10; then
+A3: X21 = REAL & S21 = L-Field & m21 = L-Meas by A2,FUNCOP_1:7;
+
+A4: len X2 = 2 & len S2 = 2 & len m2 = 2 by CARD_1:def 7;
+
+A5: SubFin(X,2) = X|2 by MEASUR13:def 5; then
+    X2.1 = (Seg 3 --> REAL).1 by A2,FUNCT_1:49; then
+A6:X2.1 = REAL by FUNCOP_1:7,A2;
+
+    X2.2 = (Seg 3 --> REAL).2 by A2,A5,FUNCT_1:49; then
+    X2 = <*REAL,REAL*> by A4,A6,A2,FUNCOP_1:7,FINSEQ_1:44; then
+A7:X2 = 2 |-> REAL by FINSEQ_2:61;
+
+A8: SubFin(S,2) = S|2 by MEASUR13:def 6; then
+    S2.1 = (L-Field 3).1 by A2,FUNCT_1:49; then
+A9:S2.1 = L-Field by A2,FUNCOP_1:7;
+
+    S2.2 = (L-Field 3).2 by A2,A8,FUNCT_1:49; then
+    S2 = <*L-Field,L-Field*> by A4,A9,A2,FUNCOP_1:7,FINSEQ_1:44; then
+A10:S2 = 2 |-> L-Field by FINSEQ_2:61;
+
+A11: SubFin(m,2) = m|2 by MEASUR13:def 9; then
+    m2.1 = (L-Meas 3).1 by A2,FUNCT_1:49; then
+A12:m2.1 = L-Meas by A2,FUNCOP_1:7;
+
+    m2.2 = (L-Meas 3).2 by A2,A11,FUNCT_1:49; then
+    m2 = <*L-Meas,L-Meas*> by A4,A12,A2,FUNCOP_1:7,FINSEQ_1:44; then
+    m2 = 2 |-> L-Meas by FINSEQ_2:61;
+    hence
+A13:Prod_Measure m = Prod_Measure(Prod_Measure(L-Meas,L-Meas),L-Meas)
+      by A1,A7,A10,A3,Th37,Th42,Th46,MESFUN12:def 9;
+
+    thus for E1,E2,E3 be Element of L-Field holds
+      [:E1,E2,E3:] in measurable_rectangles(
+          sigma measurable_rectangles (L-Field,L-Field),L-Field)
+    & (Prod_Measure(L-Meas 3)).([:E1,E2,E3:])
+         = (L-Meas.E1)*(L-Meas.E2)*(L-Meas.E3)
+    proof
+     let E1,E2,E3 be Element of L-Field;
+     measurable_rectangles(L-Field,L-Field)
+      c= sigma measurable_rectangles (L-Field,L-Field) by PROB_1:def 9; then
+     reconsider F = [:E1,E2:] as Element of
+        sigma measurable_rectangles (L-Field,L-Field) by Th46;
+
+A14: [:F,E3:] in measurable_rectangles
+        (sigma measurable_rectangles (L-Field,L-Field),L-Field);
+     hence [:E1,E2,E3:] in measurable_rectangles
+        (sigma measurable_rectangles (L-Field,L-Field),L-Field)
+          by ZFMISC_1:def 3;
+
+     measurable_rectangles(sigma measurable_rectangles(L-Field,L-Field),
+       L-Field) c= sigma measurable_rectangles(sigma
+         measurable_rectangles (L-Field,L-Field),L-Field) by PROB_1:def 9; then
+     (product_sigma_Measure(Prod_Measure(L-Meas,L-Meas),L-Meas)).([:F,E3:])
+      = ((Prod_Measure(L-Meas,L-Meas)).F)*(L-Meas.E3) by A14,MEASUR11:16
+     .= (L-Meas.E1)*(L-Meas.E2)*(L-Meas. E3) by Th46; then
+     (Prod_Measure(Prod_Measure(L-Meas,L-Meas),L-Meas)).([:F,E3:])
+      = (L-Meas.E1)*(L-Meas.E2)*(L-Meas. E3) by MESFUN12:def 9;
+     hence thesis by A13,ZFMISC_1:def 3;
+    end;
+end;
+
+theorem
+for n be non zero Nat holds
+  Prod_Measure(L-Meas(n+1)) = Prod_Measure(Prod_Measure(L-Meas n),L-Meas)
+proof
+    let n be non zero Nat;
+
+    set X = Seg(n+1) --> REAL, S = L-Field (n+1), m = L-Meas (n+1);
+    set X1 = SubFin(X,n), S1 = SubFin(S,n), m1 = SubFin(m,n);
+    set X11 = ElmFin(X,n+1), S11 = ElmFin(S,n+1), m11 = ElmFin(m,n+1);
+
+A1: Prod_Measure(L-Meas(n+1)) = Prod_Measure(Prod_Measure(m1),m11)
+      by MEASUR13:28;
+
+A2: Seg n c= Seg (n+1) by NAT_1:12,FINSEQ_1:5;
+    SubFin(X,n) = X|n by NAT_1:12,MEASUR13:def 5; then
+    X1 = Seg (n+1) /\ Seg n--> REAL by FUNCOP_1:12; then
+A3: X1 = Seg n--> REAL by A2,XBOOLE_1:28;
+
+    SubFin(S,n) = S|n by NAT_1:12,MEASUR13:def 6; then
+    S1 = Seg (n+1) /\ Seg n--> L-Field by FUNCOP_1:12; then
+A4: S1 = L-Field n by A2,XBOOLE_1:28;
+    SubFin(m,n) = m|n by NAT_1:12,MEASUR13:def 9; then
+    m1 = Seg (n+1) /\ Seg n--> L-Meas by FUNCOP_1:12; then
+A5: m1 = L-Meas n by A2,XBOOLE_1:28;
+
+    ElmFin(X,n+1) = X.(n+1) by MEASUR13:def 1; then
+A6: X11 = REAL by FUNCOP_1:7,FINSEQ_1:3;
+    ElmFin(S,n+1) = S.(n+1) by MEASUR13:def 7; then
+A7: S11 = L-Field by FUNCOP_1:7,FINSEQ_1:3;
+    ElmFin(m,n+1) = m.(n+1) by MEASUR13:def 10;
+    hence
+    Prod_Measure(L-Meas(n+1)) = Prod_Measure(Prod_Measure(L-Meas n),L-Meas)
+      by A7,A1,A4,A3,A5,A6,FUNCOP_1:7,FINSEQ_1:3;
+end;
+
+theorem Th49:
+for n be non zero Nat, f be PartFunc of CarProduct(Seg n --> REAL),ExtREAL,
+  g be PartFunc of REAL n,ExtREAL,
+  A be Element of Prod_Field(L-Field n), B be Element of XL-Field n
+ st g = f*(CarProd(Seg n --> REAL))" & B = (CarProd(Seg n --> REAL)).:A
+ holds f is A -measurable iff g is B -measurable
+proof
+    let n be non zero Nat,
+    f be PartFunc of CarProduct(Seg n --> REAL),ExtREAL,
+    g be PartFunc of REAL n ,ExtREAL,
+    A be Element of Prod_Field(L-Field n), B be Element of XL-Field n;
+    assume that
+A1: g = f*(CarProd(Seg n --> REAL))" and
+A2: B = (CarProd(Seg n --> REAL)).:A;
+    product(Seg n --> REAL) = REAL n by SRINGS_5:8;
+    hence thesis by A1,A2,Th34;
+end;
+
+theorem Th50:
+for f1 be PartFunc of [:REAL,REAL:],ExtREAL,
+    f2 be PartFunc of CarProduct(Seg 2 --> REAL),ExtREAL,
+    A1 be Element of sigma measurable_rectangles(L-Field,L-Field),
+    A2 be Element of Prod_Field(L-Field 2) st f1 = f2 & A1 = A2 holds
+  f1 is A1-measurable iff f2 is A2-measurable
+proof
+    let f1 be PartFunc of [:REAL,REAL:],ExtREAL,
+    f2 be PartFunc of CarProduct(Seg 2 --> REAL),ExtREAL,
+    A1 be Element of sigma measurable_rectangles(L-Field,L-Field),
+    A2 be Element of Prod_Field(L-Field 2);
+    assume that
+A1: f1 = f2 and
+A2: A1 = A2;
+
+    Prod_Field(L-Field (1+1))
+     = sigma measurable_rectangles(Prod_Field(L-Field 1),L-Field) by Th44;
+    hence thesis by A1,A2,Th37,Th41;
+end;
+
+theorem
+for f be PartFunc of [:REAL,REAL:],ExtREAL, g be PartFunc of REAL 2,ExtREAL,
+ A be Element of sigma measurable_rectangles(L-Field,L-Field),
+ B be Element of XL-Field 2
+ st g = f*(CarProd(Seg 2 --> REAL))" & B = (CarProd(Seg 2 --> REAL)).:A
+ holds f is A-measurable iff g is B-measurable
+proof
+    let f be PartFunc of [:REAL,REAL:],ExtREAL,
+    g be PartFunc of REAL 2,ExtREAL,
+    A be Element of sigma measurable_rectangles(L-Field,L-Field),
+    B be Element of XL-Field 2;
+    assume that
+A1: g = f*(CarProd(Seg 2 --> REAL))" and
+A2: B = (CarProd(Seg 2 --> REAL)).:A;
+
+    Prod_Field(L-Field (1+1))
+     = sigma measurable_rectangles(Prod_Field(L-Field 1),L-Field) by Th44; then
+    reconsider A1 = A as Element of Prod_Field(L-Field 2) by Th37,Th41;
+    reconsider f1 = f as PartFunc of CarProduct(Seg 2 --> REAL),ExtREAL
+      by Th37;
+    f1 is A1-measurable iff g is B-measurable by A1,A2,Th49;
+    hence f is A-measurable iff g is B-measurable by Th50;
+end;
+
+theorem Th52:
+for f1 be PartFunc of [:[:REAL,REAL:],REAL:],ExtREAL,
+    f2 be PartFunc of CarProduct(Seg 3 --> REAL),ExtREAL,
+    A1 be Element of sigma measurable_rectangles(
+       sigma measurable_rectangles(L-Field,L-Field),L-Field),
+    A2 be Element of Prod_Field(L-Field 3) st f1 = f2 & A1 = A2 holds
+  f1 is A1-measurable iff f2 is A2-measurable
+proof
+    let f1 be PartFunc of [:[:REAL,REAL:],REAL:],ExtREAL,
+    f2 be PartFunc of CarProduct(Seg 3 --> REAL),ExtREAL,
+    A1 be Element of sigma measurable_rectangles(
+       sigma measurable_rectangles(L-Field,L-Field),L-Field),
+    A2 be Element of Prod_Field(L-Field 3);
+    assume that
+A1: f1 = f2 and
+A2: A1 = A2;
+    Prod_Field(L-Field(2+1))
+     = sigma measurable_rectangles(Prod_Field(L-Field 2),L-Field)
+  & Prod_Field(L-Field(1+1))
+     = sigma measurable_rectangles(Prod_Field(L-Field 1),L-Field) by Th44;
+    hence thesis by A1,A2,Th37,Th41;
+end;
+
+theorem
+for f be PartFunc of [:[:REAL,REAL:],REAL:],ExtREAL,
+ g be PartFunc of REAL 3,ExtREAL,
+ A be Element of sigma measurable_rectangles(
+       sigma measurable_rectangles(L-Field,L-Field),L-Field),
+ B be Element of XL-Field 3
+ st g = f*(CarProd(Seg 3 --> REAL))" & B = (CarProd(Seg 3 --> REAL)).:A
+ holds f is A-measurable iff g is B-measurable
+proof
+    let f be PartFunc of [:[:REAL,REAL:],REAL:],ExtREAL,
+    g be PartFunc of REAL 3,ExtREAL,
+    A be Element of sigma measurable_rectangles(
+       sigma measurable_rectangles(L-Field,L-Field),L-Field),
+    B be Element of XL-Field 3;
+    assume that
+A1: g = f*(CarProd(Seg 3 --> REAL))" and
+A2: B = (CarProd(Seg 3 --> REAL)).:A;
+
+    Prod_Field(L-Field (2+1))
+     = sigma measurable_rectangles(Prod_Field(L-Field 2),L-Field)
+  & Prod_Field(L-Field (1+1))
+     = sigma measurable_rectangles(Prod_Field(L-Field 1),L-Field) by Th44; then
+    reconsider A1 = A as Element of Prod_Field(L-Field 3) by Th37,Th41;
+
+    set Z = Seg 3 --> REAL;
+    1 in Seg 3 & 2 in Seg 3 & 3 in Seg 3; then
+A3: Z.1 = REAL & Z.2 = REAL & Z.3 = REAL by FUNCOP_1:7;
+    (ProdFinSeq Z).1 = Z.1
+  & (ProdFinSeq Z).2 = [: (ProdFinSeq Z).1,Z.(1+1) :]
+  & (ProdFinSeq Z).3 = [: (ProdFinSeq Z).2,Z.(2+1) :] by MEASUR13:def 3; then
+    reconsider f1 = f as PartFunc of CarProduct(Seg 3 --> REAL),ExtREAL by A3;
+    f1 is A1-measurable iff g is B-measurable by A1,A2,Th49;
+    hence f is A-measurable iff g is B-measurable by Th52;
+end;
+
+theorem
+for n be non zero Nat, f be PartFunc of CarProduct(Seg n --> REAL),ExtREAL,
+  g be PartFunc of REAL n,ExtREAL, A be Element of Prod_Field(L-Field n)
+ st g = f*(CarProd(Seg n --> REAL))" & A = dom f & f is A -measurable holds
+   Integral(XL-Meas n,g) = Integral(Prod_Measure(L-Meas n),f)
+proof
+    let n be non zero Nat,
+    f be PartFunc of CarProduct(Seg n --> REAL),ExtREAL,
+    g be PartFunc of REAL n, ExtREAL, A be Element of Prod_Field(L-Field n);
+    assume that
+A1: g = f*(CarProd(Seg n --> REAL))" and
+A2: A = dom f and
+A3: f is A -measurable;
+    product(Seg n --> REAL) = REAL n by SRINGS_5:8;
+    hence thesis by A1,A2,A3,Th12,Th32;
+end;
+
+theorem
+for n be non zero Nat, f be PartFunc of CarProduct(Seg n --> REAL),ExtREAL,
+  g be PartFunc of REAL n,ExtREAL
+ st g = f*(CarProd(Seg n --> REAL))" holds
+  f is_integrable_on Prod_Measure(L-Meas n) iff g is_integrable_on XL-Meas n
+proof
+    let n be non zero Nat,
+    f be PartFunc of CarProduct(Seg n --> REAL),ExtREAL,
+    g be PartFunc of REAL n,ExtREAL;
+    assume
+A1: g = f*(CarProd(Seg n --> REAL))";
+    product(Seg n --> REAL) = REAL n by SRINGS_5:8;
+    hence thesis by A1,Th36;
+end;

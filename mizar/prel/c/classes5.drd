@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<ReductionRegistrations>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="RELAT_1"/>
+<ArticleID name="FUNCT_1"/>
+<ArticleID name="XBOOLE_0"/>
+<ArticleID name="ZFMISC_1"/>
+<ArticleID name="SUBSET_1"/>
+<ArticleID name="PARTFUN1"/>
+<ArticleID name="XTUPLE_0"/>
+<ArticleID name="MCART_1"/>
+<ArticleID name="FUNCT_2"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="ORDINAL1"/>
+<ArticleID name="FINSET_1"/>
+<ArticleID name="CARD_1"/>
+<ArticleID name="STRUCT_0"/>
+<ArticleID name="FINSEQ_1"/>
+<ArticleID name="SETFAM_1"/>
+<ArticleID name="CLASSES2"/>
+<ArticleID name="ALGSTR_0"/>
+<ArticleID name="NUMBERS"/>
+<ArticleID name="XREAL_0"/>
+<ArticleID name="RLVECT_1"/>
+<ArticleID name="GRAPH_1"/>
+<ArticleID name="CAT_1"/>
+<ArticleID name="INT_1"/>
+<ArticleID name="GROUP_1"/>
+<ArticleID name="VECTSP_1"/>
+<ArticleID name="CLASSES5"/>
+</Signature>
+<Reduction aid="CLASSES5" nr="1">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="213">
+<Func kind="K" nr="212">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+</Func>
+</Func>
+<LocusVar nr="1"/>
+</Reduction>
+<Reduction aid="CLASSES5" nr="2">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="214">
+<Func kind="K" nr="212">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+</Func>
+</Func>
+<LocusVar nr="2"/>
+</Reduction>
+<Reduction aid="CLASSES5" nr="3">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="215">
+<Func kind="K" nr="212">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+</Func>
+</Func>
+<LocusVar nr="3"/>
+</Reduction>
+<Reduction aid="CLASSES5" nr="4">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="216">
+<Func kind="K" nr="212">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+</Func>
+</Func>
+<LocusVar nr="4"/>
+</Reduction>
+<Reduction aid="CLASSES5" nr="5">
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster/>
+</Typ>
+<Func kind="K" nr="217">
+<Func kind="K" nr="212">
+<LocusVar nr="1"/>
+<LocusVar nr="2"/>
+<LocusVar nr="3"/>
+<LocusVar nr="4"/>
+<LocusVar nr="5"/>
+</Func>
+</Func>
+<LocusVar nr="5"/>
+</Reduction>
+<Reduction aid="CLASSES5" nr="6">
+<Typ kind="M" nr="1">
+<Cluster>
+<Adjective nr="152"/>
+</Cluster>
+</Typ>
+<Func kind="K" nr="212">
+<Func kind="K" nr="213">
+<LocusVar nr="1"/>
+</Func>
+<Func kind="K" nr="214">
+<LocusVar nr="1"/>
+</Func>
+<Func kind="K" nr="215">
+<LocusVar nr="1"/>
+</Func>
+<Func kind="K" nr="216">
+<LocusVar nr="1"/>
+</Func>
+<Func kind="K" nr="217">
+<LocusVar nr="1"/>
+</Func>
+</Func>
+<LocusVar nr="1"/>
+</Reduction>
+</ReductionRegistrations>

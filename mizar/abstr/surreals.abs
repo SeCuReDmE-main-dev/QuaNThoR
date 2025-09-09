@@ -1,0 +1,298 @@
+:: Surreal Numbers: A Study of Square Roots
+::  by Karol P\kak
+:: 
+:: Received April 10, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MCART_1, FACIRC_1, RELAT_1, TARSKI, XBOOLE_0, SUBSET_1, XXREAL_0,
+      ARYTM_3, FUNCT_1, CARD_1, ORDINAL1, PBOOLE, CARD_3, ARROW, VECTSP_1,
+      NUMBERS, NAT_1, ARYTM_1, GLIB_000, WAYBEL_3, COHSP_1, PETRI_DF, SURREAL0,
+      SURREALR, SURREALS, SQUARE_1, MEMBER_1, FUNCOP_1;
+ notations TARSKI, XBOOLE_0, XTUPLE_0, SUBSET_1, RELAT_1, FUNCT_1, PBOOLE,
+      ORDINAL1, CARD_3, NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, COHSP_1, SURREAL0,
+      SURREALO, SURREALR, SURREALI;
+ constructors RELSET_1, NEWTON, NAT_1, CARD_3, COHSP_1, SURREALO, SURREALR,
+      SURREALI, PBOOLE;
+ registrations XBOOLE_0, RELAT_1, XTUPLE_0, ORDINAL1, FUNCT_1, NAT_1, XREAL_0,
+      SURREAL0, SURREALR, SURREALI, SUBSET_1, FUNCOP_1;
+ requirements BOOLE, SUBSET, NUMERALS, ARITHM, REAL;
+
+
+begin :: Surreal Numbers Without Negative Options
+
+ reserve n,m for Nat,
+      o for object,
+      p for pair object,
+      x,y,z for Surreal;
+
+definition
+   let x be object;
+   func NonNegativePart x -> pair set means
+:: SURREALS:def 1
+        (o in L_it iff ex l be Surreal st o= l & l in L_x & 0_No <= l) &
+        (o in R_it iff ex r be Surreal st o= r & r in R_x & 0_No <= r);
+end;
+
+registration
+  let x be object;
+  cluster L_NonNegativePart x -> surreal-membered for set;
+  cluster R_NonNegativePart x -> surreal-membered for set;
+end;
+
+theorem :: SURREALS:1
+  L_NonNegativePart o c= L_o & R_NonNegativePart o c= R_o;
+
+registration
+  let x be Surreal;
+  cluster NonNegativePart x -> surreal;
+end;
+
+theorem :: SURREALS:2
+  (x in L_NonNegativePart o iff x in L_o & 0_No <= x) &
+  (x in R_NonNegativePart o iff x in R_o & 0_No <= x);
+
+theorem :: SURREALS:3
+  born NonNegativePart x c= born x;
+
+theorem :: SURREALS:4
+  0_No <= x implies 0_No <= NonNegativePart x;
+
+theorem :: SURREALS:5
+  0_No <= x implies NonNegativePart x == x;
+
+begin :: Square Root Construction
+
+definition
+  let lamb be object;
+  let X,Y be set;
+  func sqrt(lamb,X,Y) -> surreal-membered set means
+:: SURREALS:def 2
+    o in it iff ex x,y st x in X & y in Y &
+      not x + y == 0_No & o = (lamb +'(x * y)) * (x+y)";
+end;
+
+definition
+  let x0 be pair object;
+  let x be object;
+  func transitions_of(x0,x) -> Function means
+:: SURREALS:def 3
+    dom it = NAT & it.0 = x0 &
+      for n holds it.n is pair &
+         (it.(n+1))`1 = L_(it.n) \/ sqrt(x,L_(it.n),R_(it.n)) &
+         (it.(n+1))`2 = R_(it.n) \/ sqrt(x,L_(it.n),L_(it.n)) \/
+             sqrt(x,R_(it.n),R_(it.n));
+end;
+
+definition
+  let x0 be pair object;
+  let x be object;
+  func sqrtL(x0,x) -> Function means
+:: SURREALS:def 4
+    dom it = NAT &
+    for k being Nat holds it.k = ((transitions_of (x0,x)).k)`1;
+end;
+
+definition
+  let x0 be pair object;
+  let x be object;
+  func sqrtR(x0,x) -> Function means
+:: SURREALS:def 5
+    dom it = NAT &
+    for k being Nat holds it.k = ((transitions_of (x0,x)).k)`2;
+end;
+
+theorem :: SURREALS:6
+  sqrtL(p,o).0 = L_p & sqrtR(p,o).0=R_p;
+
+theorem :: SURREALS:7
+  n <= m implies
+     sqrtL(p,o).n c= sqrtL(p,o).m &
+     sqrtR(p,o).n c= sqrtR(p,o).m;
+
+theorem :: SURREALS:8
+  sqrtL(p,o).(n+1) = sqrtL(p,o).n \/ sqrt(o,sqrtL(p,o).n,sqrtR(p,o).n)
+  & sqrtR(p,o).(n+1) = sqrtR(p,o).n \/
+     sqrt(o,sqrtL(p,o).n,sqrtL(p,o).n) \/
+     sqrt(o,sqrtR(p,o).n,sqrtR(p,o).n);
+
+theorem :: SURREALS:9
+  L_p is surreal-membered & R_p is surreal-membered implies
+    sqrtL(p,o).n is surreal-membered & sqrtR(p,o).n is surreal-membered;
+
+theorem :: SURREALS:10
+  L_p is surreal-membered & R_p is surreal-membered implies
+    Union sqrtL(p,o) is surreal-membered & Union sqrtR(p,o) is surreal-membered
+;
+
+theorem :: SURREALS:11
+  for X1,X2,Y1,Y2 be set st X1 c= X2 & Y1 c= Y2 holds
+    sqrt(o,X1,Y1) c= sqrt(o,X2,Y2);
+
+theorem :: SURREALS:12
+  Union sqrtL(p,o) = L_p\/sqrt(o,Union sqrtL(p,o),Union sqrtR(p,o));
+
+theorem :: SURREALS:13
+  Union sqrtR(p,o)
+    = R_p \/ sqrt(o,Union sqrtL(p,o),Union sqrtL(p,o)) \/
+       sqrt(o,Union sqrtR(p,o),Union sqrtR(p,o));
+
+begin :: The Square Root of a Surreal Number
+
+definition
+  let A be Ordinal;
+  func No_sqrt_op A -> ManySortedSet of Day A means
+:: SURREALS:def 6
+    ex S be c=-monotone Function-yielding Sequence st
+      dom S = succ A & it = S.A &
+      for B be Ordinal st B in succ A
+         ex SB be ManySortedSet of Day B st S.B = SB &
+           for x be object st x in Day B holds
+    SB.x = [Union sqrtL(
+                        [(union rng (S|B)).: L_NonNegativePart x,
+                         (union rng (S|B)).: R_NonNegativePart x],x),
+            Union sqrtR(
+                        [(union rng (S|B)).: L_NonNegativePart x,
+                         (union rng (S|B)).: R_NonNegativePart x],x)];
+end;
+
+theorem :: SURREALS:14
+  for S be c=-monotone Function-yielding Sequence st
+    for B be Ordinal st B in dom S
+      ex SB be ManySortedSet of Day B st S.B = SB &
+         for o st o in Day B holds
+  SB.o = [ Union sqrtL(
+                       [(union rng (S|B)).: L_NonNegativePart o,
+                        (union rng (S|B)).:R_NonNegativePart o],o),
+           Union sqrtR(
+                       [(union rng (S|B)).: L_NonNegativePart o,
+                        (union rng (S|B)).:R_NonNegativePart o],o)]
+  holds
+    for A be Ordinal st A in dom S holds No_sqrt_op A = S.A;
+
+definition
+  let o be object such that
+ o is Surreal;
+  func sqrt o -> set means
+:: SURREALS:def 7
+    for x st x = o holds it = (No_sqrt_op born x).x;
+end;
+
+definition
+  let x be Surreal;
+  redefine func sqrt x -> set equals
+:: SURREALS:def 8
+    (No_sqrt_op born x).x;
+end;
+
+definition
+  let x be object;
+  func sqrt_0 x -> pair set means
+:: SURREALS:def 9
+    (o in L_it iff ex l be Surreal st o = sqrt l & l in L_NonNegativePart x)&
+    (o in R_it iff ex r be Surreal st o = sqrt r & r in R_NonNegativePart x);
+end;
+
+theorem :: SURREALS:15
+  sqrt x = [Union sqrtL(sqrt_0 x,x),Union sqrtR (sqrt_0 x,x)];
+
+theorem :: SURREALS:16
+  Union sqrtL(p,o) = {} implies L_p={};
+
+theorem :: SURREALS:17
+  for x1,x2,y,z be Surreal st not x2 == 0_No & y = x1*x2" holds
+     (y*y < z iff x1*x1 < z*(x2*x2)) &
+     (z < y*y iff z*(x2*x2) < x1*x1);
+
+theorem :: SURREALS:18
+  x <= 0_No implies Union sqrtL(sqrt_0 x,o) = {};
+
+theorem :: SURREALS:19
+  0_No <= x implies
+     (y = sqrt x implies
+        0_No <= y & y*y == x &
+        (x==0_No implies y==0_No) &
+        (0_No < x implies 0_No < y)) &
+     (y in L_sqrt x implies 0_No <= y & y*y < x) &
+     (y in R_sqrt x implies 0_No < y & x < y*y) & sqrt x is surreal;
+
+theorem :: SURREALS:20
+  x <= 0_No implies sqrt x is surreal;
+
+registration
+  let x;
+  cluster sqrt x -> surreal;
+end;
+
+registration
+  let x;
+  cluster sqrt_0 x -> surreal;
+end;
+
+begin :: Selected Square Root Properties
+
+theorem :: SURREALS:21
+  0_No <= x implies 0_No <= sqrt x & sqrt x * sqrt x == x;
+
+theorem :: SURREALS:22
+  0_No == x implies sqrt x == 0_No;
+
+theorem :: SURREALS:23
+  0_No <= x implies
+     (y in L_sqrt x implies 0_No <= y & y*y < x) &
+     (y in R_sqrt x implies 0_No < y & x < y*y);
+
+theorem :: SURREALS:24
+  x < 0_No & (for y st y in R_x holds y < 0_No)
+      implies
+    sqrt x = 0_No;
+
+theorem :: SURREALS:25
+  (for y st y in L_NonNegativePart x \/ R_NonNegativePart x holds y==0_No)
+     implies
+  sqrt x = sqrt_0 x;
+
+registration
+  reduce sqrt 0_No to 0_No;
+  reduce sqrt 1_No to 1_No;
+  reduce sqrt - 1_No to - 1_No;
+end;
+
+theorem :: SURREALS:26
+  0_No <= x <= y implies sqrt x <= sqrt y;
+
+theorem :: SURREALS:27
+  0_No <= x < y implies sqrt x < sqrt y;
+
+theorem :: SURREALS:28
+  0_No <= x == y*y implies y == sqrt x or y == - sqrt x;
+
+registration
+  let x be positive Surreal;
+  cluster sqrt x -> positive;
+end;
+
+theorem :: SURREALS:29
+  0_No <= x implies sqrt (x*x) == x;
+
+theorem :: SURREALS:30
+  0_No < x implies (sqrt x)" == sqrt (x");
+
+begin :: Square Root of Negative Surreal Numbers - Outside the Defined Range
+
+theorem :: SURREALS:31
+  for x be Surreal st 0_No < x
+    ex y be Surreal st -1_No == y & sqrt y < -x &
+        y = [{},{0_No,(sqrt(x*x+1_No)-x) *(sqrt(x*x+1_No)-x)}];
+
+theorem :: SURREALS:32
+  ex x,y be Surreal st x == y < 0_No & sqrt x < sqrt y;

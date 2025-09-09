@@ -1,0 +1,389 @@
+:: Integration of Game Theoretic and Tree Theoretic Approaches to {C}onway 
+:: Numbers
+::  by Karol P\kak
+:: 
+:: Received December 12, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies RELAT_1, TARSKI, XBOOLE_0, LFUZZY_0, SUBSET_1, XXREAL_0, ARYTM_3,
+      FUNCT_1, ZFMISC_1, CARD_1, ORDINAL1, ARROW, ZFREFLE1, FINSET_1, NAT_1,
+      MATHMORP, GLIB_000, WAYBEL_3, SURREAL0, SURREALO;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, RELAT_1, FUNCT_1, RELSET_1,
+      ORDINAL1, FINSET_1, CARD_1, XCMPLX_0, XXREAL_0, ORDINAL7, SURREAL0;
+ constructors RELSET_1, ORDERS_5, ORDINAL7, SURREAL0;
+ registrations XBOOLE_0, RELAT_1, SUBSET_1, XTUPLE_0, ORDINAL1, ORDINAL3,
+      FUNCT_1, NAT_1, XREAL_0, CARD_1, FINSET_1, ORDINAL7, FOMODEL0, SURREAL0;
+ requirements BOOLE, SUBSET, NUMERALS, ARITHM;
+
+
+begin :: Preorder of Surreal Numbers
+
+reserve A,B,C,O for Ordinal,
+        X for set,
+        o for object,
+        x,y,z,t,r,l for Surreal;
+
+definition
+  func 1_No -> Surreal equals
+:: SURREALO:def 1
+    [{0_No},{}];
+end;
+
+theorem :: SURREALO:1
+  y in L_x \/R_x implies born y in born x;
+
+theorem :: SURREALO:2
+  L_x <> {x} <> R_x;
+
+::$N Preorder of Surreal Numbers - Reflexivity, Conway Ch.1 Th.0(iii)
+theorem :: SURREALO:3
+  x <= x;
+
+::$N Preorder of Surreal Numbers - Transitivity, Conway Ch.1 Th.1
+theorem :: SURREALO:4
+  x <= y & y <= z implies x <= z;
+
+theorem :: SURREALO:5
+  for x holds L_x <<= {x} <<= R_x;
+
+::$N Preorder of Surreal Numbers - Total, Conway Ch.1 Th.2(ii)
+theorem :: SURREALO:6
+  not y <= x implies x <= y;
+
+theorem :: SURREALO:7
+  A is finite implies Day A is finite;
+
+theorem :: SURREALO:8
+  born x is finite implies L_x is finite & R_x is finite;
+
+definition
+  let x,y;
+  redefine pred x <= y;
+  reflexivity;
+  connectedness;
+end;
+
+notation
+  let x,y;
+  synonym y >= x for x <= y;
+end;
+
+notation
+  let x,y;
+  antonym y < x for x <= y;
+  antonym x > y for x <= y;
+end;
+
+begin :: Equivalence Relation of Preorder
+
+definition
+  let x,y;
+  pred x == y means
+:: SURREALO:def 2
+    x <= y & y <= x;
+  reflexivity;
+  symmetry;
+end;
+
+theorem :: SURREALO:9
+  x <= y & y < z implies x < z;
+
+theorem :: SURREALO:10
+  x == y & y == z implies x == z;
+
+::$N Conway Ch.1 Th.2(i)
+theorem :: SURREALO:11
+  L_x << {x} & {x} << R_x;
+
+theorem :: SURREALO:12
+  for S be non empty surreal-membered set st S is finite
+     ex Min,Max be Surreal st Min in S & Max in S &
+       for x st x in S holds Min <= x <= Max;
+
+theorem :: SURREALO:13
+  x < y implies
+     (ex xR be Surreal st xR in R_x & x < xR <= y)
+  or
+     (ex yL be Surreal st yL in L_y & x <= yL < y);
+
+theorem :: SURREALO:14
+  L_y << {x} << R_y
+    implies [L_x \/ L_y, R_x \/ R_y] is Surreal;
+
+theorem :: SURREALO:15
+  L_y << {x} << R_y & z = [L_x \/ L_y, R_x \/ R_y]
+    implies x == z;
+
+::$N The Simplicity Theorem for Surreal Numbers
+theorem :: SURREALO:16
+  for x,y st L_y << {x} << R_y &
+    for z st L_y << {z} << R_y holds born x c= born z
+  holds x == y;
+
+theorem :: SURREALO:17
+  X << {x} & x <= y implies X << {y};
+
+theorem :: SURREALO:18
+ {x} << X & y <= x implies {y} << X;
+
+theorem :: SURREALO:19
+  x==y implies [L_x\/L_y,R_x\/R_y] is Surreal;
+
+theorem :: SURREALO:20
+  x==y & z = [L_x\/L_y,R_x\/R_y] implies x==z;
+
+theorem :: SURREALO:21
+  {x} << {y} iff x < y;
+
+theorem :: SURREALO:22
+  [{x},{y}] is Surreal iff x < y;
+
+theorem :: SURREALO:23
+  for Max be Surreal st
+    (for y st y in L_x holds y <= Max) & Max in L_x holds
+       [{Max},R_x] is Surreal &
+       for y st y = [{Max},R_x] holds y == x & born y c= born x;
+
+theorem :: SURREALO:24
+  for Min be Surreal st
+   (for y st y in R_x holds  Min <= y) & Min in R_x holds
+       [L_x,{Min}] is Surreal &
+       for y st y = [L_x,{Min}] holds y == x & born y c= born x;
+
+theorem :: SURREALO:25
+  x <= y & z = [{x,y},X] & t = [{y},X] implies z==t;
+
+theorem :: SURREALO:26
+  z = [{x,y},X] implies [{x},X] is Surreal;
+
+theorem :: SURREALO:27
+  x <= y & z = [X,{x,y}] & t = [X,{x}] implies z==t;
+
+theorem :: SURREALO:28
+  z = [X,{x,y}] implies [X,{x}] is Surreal;
+
+definition
+  let X,Y be set;
+  pred X <=_ Y means
+:: SURREALO:def 3
+    for x be Surreal st x in X
+      ex y1,y2 be Surreal st y1 in Y & y2 in Y & y1 <= x <= y2;
+  reflexivity;
+end;
+
+definition
+  let X,Y be set;
+  pred X <==> Y means
+:: SURREALO:def 4
+    X <=_ Y & Y <=_ X;
+  reflexivity;
+  symmetry;
+end;
+
+theorem :: SURREALO:29
+  for X1,X2,Y1,Y2 be set st
+    X1 <==> X2 & Y1 <==> Y2 & x = [X1,Y1] & y = [X2,Y2]
+  holds x == y;
+
+theorem :: SURREALO:30
+  for X,Y be set st X c= Y holds X <=_ Y;
+
+theorem :: SURREALO:31
+  for X1,X2,Y1,Y2 be set st X1 <=_ X2 & Y1 <=_ Y2 holds
+     X1 \/ Y1 <=_ X2 \/ Y2;
+
+theorem :: SURREALO:32
+  x == y implies {x} <=_ {y};
+
+begin :: Unique Multiple Properties Representative of Equivalence Class
+
+definition
+  let x be Surreal;
+  func born_eq x -> Ordinal means
+:: SURREALO:def 5
+    (ex y be Surreal st born y = it & y ==x ) &
+    for y be Surreal st y == x holds it c= born y;
+end;
+
+definition
+  let x be Surreal;
+  func born_eq_set x -> surreal-membered set means
+:: SURREALO:def 6
+    y in it iff y == x & y in Day born_eq x;
+end;
+
+registration
+  let x be Surreal;
+  cluster born_eq_set x -> non empty;
+end;
+
+definition
+  let A be non empty surreal-membered set, x be Surreal;
+  attr x is A -smallest means
+:: SURREALO:def 7
+       x in A & for y st y in A & y == x holds
+          card (L_x) (+) card (R_x) c= card (L_y) (+) card (R_y);
+end;
+
+registration
+  let A be non empty surreal-membered set;
+  cluster A -smallest for Surreal;
+end;
+
+theorem :: SURREALO:33
+   x==y implies born_eq x = born_eq y;
+
+theorem :: SURREALO:34
+  x == y implies born_eq_set x = born_eq_set y;
+
+theorem :: SURREALO:35
+  y in born_eq_set x implies born y = born_eq y = born_eq x;
+
+theorem :: SURREALO:36
+  [{},Day A] in Day succ A\Day A & [Day A,{}] in Day succ A\Day A;
+
+reserve n for Nat;
+
+definition
+  let A be set;
+  func made_of A -> surreal-membered set means
+:: SURREALO:def 8
+    o in it iff o is surreal & L_o\/R_o c= A;
+end;
+
+definition
+  let A be Ordinal;
+  func unique_No_op A -> Sequence means
+:: SURREALO:def 9
+    dom it = succ A &
+    for B be Ordinal st B in succ A holds it.B c= Day B &
+       for x holds x in it.B iff
+         x in union rng (it|B) or B=born_eq x &
+         ex Y be non empty surreal-membered set st
+             Y = born_eq_set x/\made_of union rng (it|B)
+           & x = the Y -smallest Surreal;
+end;
+
+registration
+  let A be Ordinal,o;
+  cluster (unique_No_op A).o -> surreal-membered;
+end;
+
+theorem :: SURREALO:37
+  A c= B implies (unique_No_op B)| succ A = unique_No_op A;
+
+theorem :: SURREALO:38
+  x in (unique_No_op A).B implies born_eq x = born x c= B &
+     x in (unique_No_op A).born x &
+     not x in union rng ((unique_No_op A)|born x);
+
+theorem :: SURREALO:39
+  O c= A c= B implies (unique_No_op A).O = (unique_No_op B).O;
+
+theorem :: SURREALO:40
+  A c= B & B in succ C implies (unique_No_op C).A c= (unique_No_op C).B;
+
+definition
+  let x be Surreal;
+  func Unique_No x -> Surreal means
+:: SURREALO:def 10
+    it == x & it in (unique_No_op born_eq x).born_eq x;
+end;
+
+theorem :: SURREALO:41
+  x==y implies Unique_No x = Unique_No y;
+
+theorem :: SURREALO:42
+  0_No = Unique_No 0_No;
+
+definition
+  let x be Surreal;
+  attr x is uniq-surreal means
+:: SURREALO:def 11
+    x = Unique_No x;
+end;
+
+registration
+  cluster 0_No -> uniq-surreal;
+  cluster uniq-surreal for Surreal;
+end;
+
+definition
+  mode uSurreal is uniq-surreal Surreal;
+end;
+
+theorem :: SURREALO:43
+  x is uSurreal & o in L_x \/ R_x implies o is uSurreal;
+
+theorem :: SURREALO:44
+  L_x is non empty finite & x is uSurreal implies card (L_x)=1;
+
+theorem :: SURREALO:45
+  R_x is non empty finite & x is uSurreal implies card (R_x)=1;
+
+theorem :: SURREALO:46
+  card (L_x) (+) card (R_x) = 0 iff x = 0_No;
+
+theorem :: SURREALO:47
+  card (L_x) (+) card (R_x) = 1 iff ex y be Surreal st
+    x= [{},{y}] or x = [{y},{}];
+
+definition
+  let X be set;
+  attr X is uniq-surreal-membered means
+:: SURREALO:def 12
+     o in X implies o is uSurreal;
+end;
+
+registration
+  cluster empty -> uniq-surreal-membered for set;
+  let x be uSurreal;
+  cluster L_x \/ R_x -> uniq-surreal-membered;
+  cluster {x} -> uniq-surreal-membered;
+end;
+
+registration
+  let X,Y be uniq-surreal-membered set;
+  cluster X\/Y -> uniq-surreal-membered;
+end;
+
+registration
+  let x be Surreal;
+  cluster Unique_No x -> uniq-surreal;
+end;
+
+theorem :: SURREALO:48
+  x is uSurreal implies born x = born_eq x;
+
+theorem :: SURREALO:49
+  (for z st z in born_eq_set x & L_z\/R_z is uniq-surreal-membered & x<>z
+         holds card (L_x) (+) card (R_x) in card (L_z) (+) card (R_z)) &
+    x in born_eq_set x &
+    L_x\/R_x is uniq-surreal-membered
+  implies x is uSurreal;
+
+theorem :: SURREALO:50
+  x is uSurreal & y is uSurreal & x==y implies x=y;
+
+theorem :: SURREALO:51
+  for c be Surreal st born c = born_eq c &
+    L_c << {x} << R_c holds born c c= born x;
+
+theorem :: SURREALO:52
+  for c,x be uSurreal st L_c << {x} << R_c & x <> c holds born c in born x;
+
+theorem :: SURREALO:53
+  born x = born_eq x & not born x is limit_ordinal implies
+    ex y,z be Surreal st x == z & (z = [L_y\/{y},R_y] or z = [L_y,R_y\/{y}]);
+
+

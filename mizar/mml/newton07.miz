@@ -1,0 +1,2437 @@
+:: Pascal's Triangle and {L}ucas's Theorem
+::  by Rafa{\l} Ziobro
+::
+:: Received December 24, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, NAT_1, FINSEQ_1, ARYTM_3, XXREAL_0, CARD_1, ARYTM_1,
+      RELAT_1, FUNCT_1, XCMPLX_0, NEWTON, ABIAN, SUBSET_1, VALUED_0, FOMODEL0,
+      VALUED_1, INT_1, ORDINAL1, ORDINAL4, CARD_3, REALSET1, NEWTON05,
+      EUCLID_3, NEWTON07, ZFMISC_1;
+ notations ORDINAL1, XCMPLX_0, NUMBERS, XXREAL_0, CARD_1, RELAT_1, FUNCT_1,
+      INT_1, INT_2, NAT_1, NEWTON, RVSUM_1, FINSEQ_1, NAT_D, ABIAN, SUBSET_1,
+      VALUED_0, NEWTON04, VALUED_1, FOMODEL0, AOFA_A00, NEWTON05, FINSEQ_4,
+      NUMPOLY1, NOMIN_9;
+ constructors ABIAN, SQUARE_1, NAT_D, NEWTON, WSIERP_1, RELSET_1, NEWTON04,
+      AOFA_A00, NEWTON05, FINSEQ_4, NUMPOLY1, NOMIN_9;
+ registrations ABIAN, ORDINAL1, RELSET_1, XXREAL_0, XREAL_0, NAT_1, INT_1,
+      FINSEQ_1, NEWTON, XBOOLE_0, XCMPLX_0, VALUED_0, NAT_6, RVSUM_1, FOMODEL0,
+      NEWTON02, NEWTON04, VALUED_1, LAGRA4SQ, REAL_3, EUCLID_9, FINSEQ_4,
+      AOFA_A00, NEWTON05, FINSEQ_9;
+ requirements REAL, NUMERALS, SUBSET, ARITHM;
+ equalities FINSEQ_1, NOMIN_9;
+ expansions INT_1, FINSEQ_1;
+ theorems INT_2, NAT_1, INT_1, NEWTON, XREAL_1, NAT_D, WSIERP_1, FINSEQ_1,
+      FINSEQ_3, RVSUM_1, CARD_1, NEWTON02, FUNCT_1, VALUED_1, XXREAL_0, INT_6,
+      NUMPOLY1, XCMPLX_1, FINSEQ_4, FINSEQ_9, AOFA_A00, NEWTON05, NAT_2,
+      STIRL2_1, PEPIN, LAGRA4SQ, RADIX_2, EULER_2;
+ schemes NAT_1, FINSEQ_1;
+
+begin
+
+:: NAT_D
+
+theorem ND1: for k,n be non zero Nat
+  holds k mod n = 0 implies (k - 1) mod n = n - 1
+  proof
+    let k,n be non zero Nat;
+    assume k mod n = 0; then
+    n divides k by PEPIN:6; then
+    consider m be Nat such that
+    A3: k = n*m by NAT_D:def 3;
+    A4: (n - 1) + 1 > (n - 1) + 0 by XREAL_1:6;
+    reconsider m as non zero Nat by A3;
+    reconsider d = m - 1 as Nat;
+    (d*n + (n - 1)) mod n = (n - 1) mod n by NAT_D:21
+      .= n - 1 by A4;
+    hence thesis by A3;
+  end;
+
+theorem ND2:
+  for k be Nat, n be non zero Nat holds
+    (k + 1) mod n = 0 implies (k + 1) div n = (k div n) + 1
+proof
+  let k be Nat, n be non zero Nat;
+  assume
+  A1: (k + 1) mod n = 0;
+  n >= 1 by NAT_1:14; then
+  per cases by XXREAL_0:1;
+  suppose n = 1; then
+    (k + 1) div n = k + 1 & k div n = k & 1 div n = 1 by NAT_2:4;
+    hence thesis;
+  end;
+  suppose
+    B1: n > 1;
+    n divides k + 1 by A1,PEPIN:6; then
+    reconsider k as non zero Nat by B1,NAT_D:7;
+    B2: ((k + 1) - 1) mod n = n - 1 by A1,ND1;
+    B3: n mod n = 0;
+    B4: ((k div n)*n) div n = (k div n) & ((1*n) div n) = 1 by NAT_D:18;
+    (1 + k) div n = (1 + ((k div n)*n + (k mod n))) div n by NAT_D:2
+    .= (n + (k div n)*n) div n by B2
+    .= (k div n) + 1 by B3,B4,NAT_D:19;
+    hence thesis;
+  end;
+end;
+
+registration
+  let a be non zero Nat;
+  reduce (a - 1) mod a to a - 1;
+  reducibility
+  proof
+    (a - 1) mod a = (a - 1) mod ((a - 1) + 1);
+    hence thesis;
+  end;
+end;
+
+theorem ND3:
+  for n,k be non zero Nat holds
+  n mod k > 0 implies (n - 1) mod k = (n mod k) - 1
+  proof
+    let n,k be non zero Nat;
+    assume
+    A1: n mod k > 0;
+    reconsider p = k - 1 as non zero Nat by A1,RADIX_2:1;
+    reconsider x = (n mod k) - 1 as Nat by A1;
+    A2: x + 1 < (k - 1) + 1 by NAT_D:1; then
+    k - (x + 1) > (x + 1) - (x + 1) by XREAL_1:9; then
+    reconsider m = k - (x + 1) as Nat;
+    x mod (x + (1 + m)) < k - 1 by A2,XREAL_1:6; then
+    ((x + 1) mod k) - 1 = ((n mod k) - (1 mod (1+p))) mod k
+    .= (n - 1) mod k by INT_6:7;
+    hence thesis;
+  end;
+
+theorem ND4:
+  for n,k be non zero Nat holds n mod k > 0 implies n div k = (n - 1) div k
+  proof
+    let n,k be non zero Nat;
+    assume
+    A1: n mod k > 0;
+    n = (n div k)*k + (n mod k) &
+      (n - 1) = ((n - 1) div k)*k + ((n - 1) mod k) by NAT_D:2; then
+    (n div k)*k/k  = (((n - 1) div k)*k + ((n - 1) mod k) + 1 - (n mod k))/k
+    .= (((n - 1) div k)*k + ((n mod k) - 1) + 1 - (n mod k))/k by A1,ND3
+    .= (n - 1) div k by XCMPLX_1:89;
+    hence thesis by XCMPLX_1:89;
+  end;
+
+:: Factorial
+
+registration
+  let a be trivial Nat;
+  cluster a! -> trivial non zero;
+  coherence
+  proof
+    a = 0 or a = 1 by NAT_2:def 1;
+    hence thesis by NAT_2:def 1,NEWTON:12,13;
+  end;
+end;
+
+registration
+  reduce 1! to 1;
+  reducibility by NEWTON:13;
+  reduce 2! to 2;
+  reducibility by NEWTON:14;
+  let a,b be Nat;
+  cluster (a + b)! mod b -> zero;
+  coherence
+  proof
+    per cases;
+    suppose b = 0;
+      hence thesis;
+    end;
+    suppose b <> 0; then
+      reconsider b as non zero Nat;
+      b divides (a + b)! by NEWTON:40;
+      hence thesis by PEPIN:6;
+    end;
+  end;
+end;
+
+theorem MDF:
+  for n,k be Nat holds n! divides (n+k)!
+  proof
+    let n,k be Nat;
+    defpred P[Nat] means n! divides (n+$1)!;
+    A1: P[0];
+    A2: for m be Nat st P[m] holds P[m + 1]
+    proof
+      let m be Nat such that
+      B1: n! divides (n+m)!;
+      (n+m+1)! = (n + m)!*(n + m + 1) by NEWTON:15; then
+      (n + m)! divides (n + m + 1)!;
+      hence thesis by B1,INT_2:9;
+    end;
+    for c be Nat holds P[c] from NAT_1:sch 2(A1,A2);
+    hence thesis;
+  end;
+
+theorem MDF1:
+  for n,k be Nat holds (min (n,k))! divides n!
+  proof
+    let n,k be Nat;
+    reconsider m = min (n,k) as Nat;
+    n - m >= m - m by XREAL_1:9,XXREAL_0:17; then
+    reconsider d = n - m as Nat;
+    m! divides (m + d)! by MDF;
+    hence thesis;
+  end;
+
+registration
+  let n be Nat;
+  reduce n choose 1 to n;
+  reducibility
+  proof
+    per cases;
+    suppose
+      n is zero;
+      hence thesis by NEWTON:def 3;
+    end;
+    suppose
+      n is non zero;
+      hence thesis by NEWTON:23,NAT_1:14;
+    end;
+  end;
+  let k be Nat;
+  cluster (n + k)!/(n!) -> natural;
+  coherence
+  proof
+    consider m be Nat such that
+    A1: (n + k)! = (n!)*m by MDF,NAT_D:def 3;
+    thus thesis by A1,XCMPLX_1:89;
+  end;
+  cluster (n + k)!/((n!)*(k!)) -> natural;
+  coherence
+  proof
+    k = (n + k) - n & n + k >= n + 0 by XREAL_1:6; then
+    (n + k) choose n = (n + k)!/((n!)*(k!)) by NEWTON:def 3;
+    hence thesis;
+  end;
+  cluster n!/((min(n,k))!) -> natural;
+  coherence
+  proof
+    consider m be Nat such that
+    A1: n! = (min(n,k))!*m by MDF1,NAT_D:def 3;
+    thus thesis by A1,XCMPLX_1:89;
+  end;
+  cluster (n + k)!/((min(n,k))!)|^2 -> natural;
+  coherence
+  proof
+    reconsider m = min (n,k) as Nat;
+    n >= m & k >= m by XXREAL_0:17; then
+    n + k >= m + m by XREAL_1:7; then
+    (n + k) - 2*m >= 2*m - 2*m by XREAL_1:9; then
+    reconsider d = (n + k) - 2*m as Nat;
+    A0:  (2*m)!/((m!)|^2)*((m!)|^2) = (2*m)! by XCMPLX_1:87;
+    A1: (2*m)! divides (2*m + d)! by MDF;
+    (m + m)!/((m!)*(m!)) is natural; then
+    (2*m)!/((m!)|^2) is natural by NEWTON:81; then
+    (m!)|^2 divides (2*m)! by A0; then
+    consider a be Nat such that
+    A2: (2*m + d)! = (m!)|^2 * a by A1,INT_2:9,NAT_D:def 3;
+    thus thesis by A2,XCMPLX_1:89;
+  end;
+end;
+
+theorem FPD:
+  for n,k be Nat holds (n!)|^k divides (n*k)!
+  proof
+    let n be Nat;
+    defpred  P[Nat] means (n!)|^$1 divides (n*$1)!;
+    A1: P[0]
+    proof
+      (n!)|^0 = 1 by NEWTON:4;
+      hence thesis by INT_2:12;
+    end;
+    A2: for m be Nat st P[m] holds P[m + 1]
+    proof
+      let m be Nat such that
+      B1: (n!)|^m divides (n*m)!;
+      (n*(m +1))! = ((n*m)!*(n!))* ((n*m + n)!/((n*m)!*(n!)))
+        by XCMPLX_1:87; then
+      B2: ((n*m)!*(n!)) divides (n*(m +1))!;
+      (n!)|^m*(n!) divides (n*m)!*(n!) by B1,INT_6:8; then
+      (n!)|^m*(n!) divides (n*(m +1))! by B2,INT_2:9;
+      hence thesis by NEWTON:6;
+    end;
+    for c be Nat holds P[c] from NAT_1:sch 2(A1,A2);
+    hence thesis;
+  end;
+
+theorem
+  for n,k be Nat holds k >= 2*n implies 2|^n divides k!
+  proof
+    let n,k be Nat;
+    assume k >= 2*n; then
+    min (k,2*n) = 2*n by XXREAL_0:def 9; then
+    A1: (2*n)! divides k! by MDF1;
+    (2!)|^n divides (2*n)! by FPD;
+    hence thesis by A1,INT_2:9;
+  end;
+
+:: n choose k
+registration
+  let n be non zero Nat;
+  reduce 0 choose n to 0;
+  reducibility by NEWTON:def 3;
+  let m be Nat;
+  cluster (m mod n) choose n -> zero;
+  coherence
+  proof
+    (m mod n) < n by NAT_D:1;
+    hence thesis by NEWTON:def 3;
+  end;
+end;
+
+theorem N20:
+  for k, n be Nat holds ((k + n) choose n) = ((k + n) choose k)
+  proof
+    let k,n be Nat;
+    (k + n) - k = n & k + n >= k + 0 by XREAL_1:6;
+    hence thesis by NEWTON:20;
+  end;
+
+theorem NP0:
+  for n be odd Nat holds n choose ((n + 1)/2) = n choose ((n - 1)/2)
+  proof
+    let n be odd Nat;
+    reconsider k = (n - 1)/2 as Nat;
+    (k + (k + 1)) choose k = (k + (k + 1)) choose (k + 1) by N20;
+    hence thesis;
+  end;
+
+theorem NP1:
+  for n be Nat holds (2*(n + 1)) choose (n + 1) = 2*((2*n + 1) choose n)
+  proof
+    let n be Nat;
+    ((2*n + 1) + 1) choose (n + 1) =
+      ((n + n + 1) choose n) + ((n + n + 1) choose (n+1)) by NEWTON:22
+    .= (((n + 1) + n) choose n) + (((n + 1) + n) choose n) by N20
+    .= 2* ((2*n + 1) choose n);
+    hence thesis;
+  end;
+
+theorem NP2:
+  for n be Nat holds (n + 1) choose 2 - (n choose 2) = n
+  proof
+    let n be Nat;
+    (n choose (1 + 1)) + (n choose 1) = (n + 1) choose (1 + 1) by NEWTON:22;
+    hence thesis;
+  end;
+
+registration
+  let n be Nat;
+  reduce (n + 1) choose 0 to 1;
+  reducibility by NEWTON:19;
+  reduce ((n+1) choose 2) - (n choose 2) to n;
+  reducibility by NP2;
+  cluster (2*(n + 1)) choose (n + 1) -> even;
+  coherence
+  proof
+    (2*(n + 1)) choose (n + 1) = 2*((2*n + 1) choose n) by NP1;
+    hence thesis;
+  end;
+end;
+
+theorem NPP:
+  for n be Nat, m be non zero Nat holds (n mod m) choose (m - 1) < 2
+  proof
+    let n be Nat, m be non zero Nat;
+    n mod m < (m - 1) + 1 by NAT_D:1; then
+    n mod m <= (m - 1) by INT_1:7; then
+    per cases by XXREAL_0:1;
+    suppose
+      n mod m = (m - 1); then
+      (n mod m) choose (m - 1) = 1 by NEWTON:21;
+      hence thesis;
+    end;
+    suppose
+      n mod m < m - 1;
+      hence thesis by NEWTON:def 3;
+    end;
+  end;
+
+registration
+  let m,n be Nat;
+  cluster (n mod (m + 1)) choose m -> trivial;
+  coherence
+  proof
+    (n mod (m + 1)) choose ((m + 1) - 1) < 2 by NPP; then
+    (n mod (m + 1)) choose m = 0 or (n mod (m + 1)) choose m = 1 by NAT_1:23;
+    hence thesis by NAT_2:def 1;
+  end;
+end;
+
+theorem NPR:
+  for n be Nat, m be non zero Nat holds
+    (n mod m) choose (m - 1) = 1 iff n mod m = m - 1
+  proof
+    let n be Nat, m be non zero Nat;
+    n mod m <> m - 1 implies (n mod m) choose (m - 1) = 0
+    proof
+      assume
+      B1: n mod m <> m - 1;
+      n mod m < (m - 1) + 1 by NAT_D:1; then
+      n mod m <= (m - 1) by INT_1:7; then
+      n mod m < m - 1 by B1,XXREAL_0:1;
+      hence thesis by NEWTON:def 3;
+    end;
+    hence thesis by NEWTON:21;
+  end;
+
+theorem
+  for p be odd Prime holds p divides ((p + 1) choose ((p + 1)/2))
+  proof
+    let p be odd Prime;
+    reconsider k = (p - 1)/2 as Nat;
+    p + p > p + 1 by XREAL_1:6,INT_2:def 4; then
+    (2*p)/2 > (p + 1)/2 by XREAL_1:74; then
+    p divides (p choose ((p + 1)/2)) by NEWTON02:119; then
+    A1: p divides ((2*k + 1) choose k) by NP0;
+    ((2*k + 1) choose k) divides 2*((2*k + 1) choose k); then
+    p divides (2*((2*k + 1) choose k)) by A1,INT_2:9; then
+    p divides ((2*(k + 1) choose (k + 1))) by NP1;
+    hence thesis;
+  end;
+
+theorem
+  for p be odd Prime, k be non zero Nat st k + 1 < p holds
+    p divides ((p + 1) choose (k + 1))
+  proof
+    let p be odd Prime, k be non zero Nat such that
+    A1: k + 1 < p;
+    0 < k + 0 < k + 1 < p by A1,XREAL_1:6; then
+    p divides (p choose k) & p divides (p choose (k + 1)) by NEWTON02:119; then
+    p divides ((p choose k) + (p choose (k + 1))) by WSIERP_1:4;
+    hence thesis by NEWTON:22;
+  end;
+
+theorem PCK:
+  for p be Prime, k be non zero Nat st k <> p holds (p choose k) mod p = 0
+  proof
+    let p be Prime, k be non zero Nat such that
+    A1: k <> p;
+    p divides (p choose k) by A1,NEWTON02:119;
+    hence thesis by PEPIN:6;
+  end;
+
+theorem
+  for p be Prime, k be non zero Nat st not p divides k holds
+    (p choose (k mod p)) mod p = 0
+  proof
+    let p be Prime, k be non zero Nat such that
+    A1: not p divides k;
+    k mod p <> 0 by A1,PEPIN:6; then
+    p > (k mod p) > 0 by NAT_D:1;
+    hence thesis by PCK;
+  end;
+
+  LmPCZ:
+  for p be odd Prime, n be Nat holds 2*n +1 < p implies
+    ((p - 1) choose (2*n)) mod p = 1 & ((p - 1) choose (2*n + 1)) mod p = p - 1
+  proof
+    let p be odd Prime;
+    defpred P[Nat] means 2*$1 + 1 < p implies
+      ((p - 1) choose (2*$1)) mod p = 1 &
+        ((p - 1) choose (2*$1 + 1)) mod p = p - 1;
+    A1: P[0]
+    proof
+      B1: ((p - 1) choose (2*0)) mod p = 1 mod p by NEWTON:19;
+      ((p - 1) choose (2*0 + 1)) mod p = (p - 1) mod ((p - 1) + 1);
+      hence thesis by B1;
+    end;
+    A2: for m be Nat st P[m] holds P[m + 1]
+    proof
+      let m be Nat such that
+      B1: 2*m + 1 < p implies (((p - 1) choose (2*m)) mod p = 1 &
+        ((p - 1) choose (2*m + 1)) mod p = p - 1);
+      2*(m + 1) + 1 < p implies ((p - 1) choose (2*(m + 1))) mod p = 1 &
+        ((p - 1) choose (2*(m + 1)+1)) mod p = p - 1
+      proof
+        assume
+        C1: 2*(m+1) + 1 < p;
+        C3: 2*m + 1 + 0 < 2*m + 1 + 2 by XREAL_1:6;
+        ((p - 1) + 1) choose ((2*m + 1) + 1) = ((p - 1) choose ((2*m + 1)+1)) +
+          ((p - 1) choose (2*m + 1)) by NEWTON:22; then
+        C4: ((p - 1) choose (2*m + 2)) mod p =
+          ((p choose (2*m + 2)) - (p - 1) choose ((2*m + 1)) mod p)
+        .= (((p choose (2*m + 2)) mod p) -
+            (((p - 1) choose (2*m + 1)) mod p)) mod p by INT_6:7
+        .= (0 - (p - 1)) mod p by PCK,B1,C1,XXREAL_0:2,C3
+        .= (1 - p) mod p
+        .= ((1 mod p) - (p mod p)) mod p by INT_6:7
+        .= 1 mod (1 + (p - 1))
+        .= 1;
+        ((p - 1)+1) choose ((2*m + 2) + 1) =
+          ((p - 1) choose ((2*m + 2)+1)) + ((p - 1) choose (2*m + 2))
+            by NEWTON:22; then
+        ((p - 1) choose ((2*m + 2)+1)) mod p =
+          ((((p - 1)+1) choose ((2*m + 2) + 1) -
+            ((p - 1) choose (2*m + 2)))) mod p
+        .= (((p choose (2*(m+1)+1)) mod p) -
+          (((p - 1) choose (2*(m+1))) mod p)) mod p by INT_6:7
+        .= (0 - 1) mod p by C1,C4,PCK
+        .= (- 1 + 1*p) mod ((p - 1) + 1) by NAT_D:61
+        .= p - 1;
+        hence thesis by C4;
+      end;
+      hence thesis;
+    end;
+    for c be Nat holds P[c] from NAT_1:sch 2(A1,A2);
+    hence thesis;
+  end;
+
+theorem PCZ:
+  for p be Prime, n be odd Nat st n < p holds
+    ((p - 1) choose n) mod p = p - 1 & ((p - 1) choose (n - 1)) mod p = 1
+  proof
+    let p be Prime, n be odd Nat such that
+    A1: n < p;
+    per cases;
+    suppose p is even; then
+      B1: p = 2 by LAGRA4SQ:13; then
+      n = 1 by A1,NAT_1:23; then
+      ((p - 1) choose (n - 1)) mod 2 = 1 mod (1+1) &
+        ((p - 1) choose n) mod 2 = 1 mod (1 + 1) by B1,NEWTON:19;
+      hence thesis by B1;
+    end;
+    suppose p is odd; then
+      reconsider p as odd Nat;
+      reconsider m = (n - 1)/2 as Nat;
+      2*m + 1 < p by A1;
+      hence thesis by LmPCZ;
+    end;
+  end;
+
+theorem
+  for p be Prime, n be even Nat st n < p holds
+    ((p - 1) choose n) mod p = 1
+  proof
+    let p be Prime, n be even Nat such that
+    A1: n < p;
+    per cases;
+    suppose p is even; then
+      B1: p = 2 by LAGRA4SQ:13;
+      2*0 + 1 is odd; then
+      n = 0 by A1,B1,NAT_1:23; then
+      ((p - 1) choose n) mod p = 1 mod (1 + (p - 1)) by NEWTON:19;
+      hence thesis;
+    end;
+    suppose p is odd; then
+      reconsider p as odd Nat;
+      reconsider m = n/2 as Nat;
+      2*m + 1 <= p by A1,INT_1:7; then
+      per cases by XXREAL_0:1;
+      suppose 2*m + 1 < p; then
+        1 = ((p - 1) choose ((2*m + 1) - 1)) mod p by PCZ;
+        hence thesis;
+      end;
+      suppose 2*m + 1 = p; then
+        ((p - 1) choose n) mod p = 1 mod (1 + (p - 1)) by NEWTON:21;
+        hence thesis;
+      end;
+    end;
+  end;
+
+theorem PC0:
+  for p be Prime, n be Nat, k be non zero Nat holds n + k < p implies
+    ((p + n) choose (k+n)) mod p = 0
+  proof
+    let p be Prime;
+    defpred P[Nat] means
+      for k be non zero Nat holds
+        (k + $1 < p implies ((p + $1) choose (k + $1)) mod p = 0);
+    A2: P[0] by PCK;
+    A3: for m be Nat st P[m] holds P[m + 1]
+    proof
+      let m be Nat such that
+      B1: for k be non zero Nat holds k + m < p implies
+        ((p + m) choose (k + m)) mod p = 0;
+      for k be non zero Nat holds k + (m + 1) < p implies
+        ((p + (m + 1)) choose (k + (m + 1))) mod p = 0
+      proof
+        let k be non zero Nat;
+        assume
+        C1: k + (m + 1) < p;
+        (k + m) + 0 < (k + m) + 1 by XREAL_1:6; then
+        C2:  k + m < p by C1,XXREAL_0:2;
+        C3: ((p + m) choose (m + (k + 1))) mod p = 0 by C1,B1;
+        ((p + m + 1) choose (k + m + 1)) mod p = (((p + m) choose (k + m)) +
+          ((p + m) choose (k + m + 1))) mod p by NEWTON:22
+        .= ((((p + m) choose (k + m)) mod p) +
+             (((p + m) choose (k + m + 1)) mod p)) mod p by NAT_D:66
+        .= (0 + 0) mod p by B1,C2,C3;
+        hence thesis;
+      end;
+      hence thesis;
+    end;
+    for c be Nat holds P[c] from NAT_1:sch 2(A2,A3);
+    hence thesis;
+  end;
+
+theorem
+  for p be Prime, n be Nat st n + 2 < p holds ((p + 1) choose (n+2)) mod p = 0
+  proof
+    let p be Prime, n be Nat such that
+    A1: n + 2 < p;
+    n + 1 + 1 < p by A1;
+    hence thesis by PC0;
+  end;
+
+theorem
+  for p be Prime, n be Nat holds n < p implies ((p + n) choose n) mod p = 1
+  proof
+    let p be Prime;
+    defpred P[Nat] means $1 < p implies ((p + $1) choose $1) mod p = 1;
+    A1: P[0]
+    proof
+      ((p + 0) choose 0) mod p = 1 mod (1 + (p - 1));
+      hence thesis;
+    end;
+    A2: for m be Nat st P[m] holds P[m+1]
+    proof
+      let m be Nat such that
+      B1: m < p implies ((p + m) choose m) mod p = 1;
+      m + 1 < p implies ((p + (m+1)) choose (m + 1)) mod p = 1
+      proof
+        assume
+        C1: m + 1 < p;
+        m  + 0 < m + 1 by XREAL_1:6; then
+        (0 + 1) mod (1 + (p - 1))
+        = ((((p + m) choose m) mod p) + (((p + m) choose (m + 1)) mod p))
+          mod p by C1,PC0,B1,XXREAL_0:2
+        .= (((p + m) choose m) + (p + m) choose (m + 1)) mod p by NAT_D:66
+        .= ((p + m + 1) choose (m + 1)) mod p by NEWTON:22;
+        hence thesis;
+      end;
+      hence thesis;
+    end;
+    for k be Nat holds P[k] from NAT_1:sch 2(A1,A2);
+    hence thesis;
+  end;
+
+theorem PCM:
+  for p be Prime, n be Nat, k be Nat holds
+    k <= n < p implies
+      ((p + n) choose k) mod p = (n choose k) mod p
+  proof
+    let p be Prime;
+    defpred P[Nat] means
+      for k be Nat holds (k <= $1 < p implies ((p + $1) choose k) mod p =
+        ($1 choose k) mod p);
+    A2: P[0]
+    proof
+      let k be Nat;
+      assume
+      k <= 0 < p; then
+      k = 0; then
+      ((p + 0) choose k) mod p = 1 mod (1 + (p - 1)) &
+      (0 choose k) mod p = 1 mod (1 + (p - 1)) by NEWTON:19;
+      hence thesis;
+    end;
+    A3: for m be Nat st P[m] holds P[m + 1]
+    proof
+      let m be Nat such that
+      B1: for k be Nat holds
+        k <= m < p implies ((p + m) choose k) mod p = (m choose k) mod p;
+      for k be Nat holds
+        k <= (m + 1) < p implies
+          ((p + (m+1)) choose k) mod p = ((m+1) choose k) mod p
+      proof
+        let k be Nat;
+        assume
+        C1: k <= (m + 1) < p;
+        m + 0 < m + 1 by XREAL_1:6; then
+        C2: m < p by C1,XXREAL_0:2;
+        per cases;
+        suppose
+          k = 0;
+          hence thesis by NEWTON:19;
+        end;
+        suppose k > 0; then
+          reconsider k as non zero Nat;
+          reconsider q = k - 1 as Nat;
+          D1: ((p + m) choose (q + 1)) mod p = (m choose (q + 1)) mod p
+          proof
+            per cases by C1,XXREAL_0:1;
+            suppose
+              E1: q + 1 = m + 1;
+              0 = (m choose (m + 1)) mod p &
+              0 = ((p + m) choose (q + 1)) mod p by E1,C1,PC0;
+              hence thesis by E1;
+            end;
+            suppose q + 1 < m + 1; then
+              q + 1 <= m by INT_1:7;
+              hence thesis by B1,C2;
+            end;
+          end;
+          ((p + m + 1) choose (q + 1)) mod p =
+              (((p + m) choose q) + ((p + m) choose (q + 1))) mod p
+                by NEWTON:22
+          .= ((((p + m) choose q) mod p) +
+              (((p + m) choose (q + 1)) mod p)) mod p by NAT_D:66
+          .= (((m choose q) mod p) + ((m choose (q + 1)) mod p)) mod p
+            by C1,D1,B1,C2,XREAL_1:6
+          .= ((m choose q) + (m choose (q + 1))) mod p by NAT_D:66
+          .= ((m + 1) choose (q + 1)) mod p by NEWTON:22;
+          hence thesis;
+        end;
+      end;
+      hence thesis;
+    end;
+    for c be Nat holds P[c] from NAT_1:sch 2(A2,A3);
+    hence thesis;
+  end;
+
+theorem PCN:
+  for p be Prime, n be non zero Nat st n < p holds ((2*p) choose n) mod p = 0
+  proof
+    let p be Prime, n be non zero Nat such that
+    A1: n < p;
+    reconsider m = p - 1 as non zero Nat;
+    reconsider k = n - 1 as Nat;
+    A2: m + 0 < m + 1 by XREAL_1:6;
+    k + 1 < m + 1 by A1; then
+    A3: k + 1 <= m by INT_1:7;
+    k + 1 < m + 1 by A1; then
+    A4: k < m by XREAL_1:6;
+    A5: ((m choose (k + 1))) mod p = ((p + m) choose (k + 1)) mod p &
+      ((p + m) choose k) mod p = (m choose k)mod p by PCM,A2,A3,A4;
+    ((p + p) choose n) mod p = (((p + m) + 1) choose (k + 1)) mod p
+    .= (((p + m) choose (k + 1))+ ((p + m) choose k)) mod p by NEWTON:22
+    .= ((((p + m) choose (k + 1)) mod p) +
+         ((((p + m) choose k))mod p)) mod p by NAT_D:66
+    .= ((m choose (k + 1)) + (m choose k)) mod p by NAT_D:66,A5
+    .= ((m + 1) choose (k + 1)) mod p by NEWTON:22
+    .= 0 by A1,PCK;
+    hence thesis;
+  end;
+
+theorem
+  for p be Prime, k,n be Nat holds k < n <= p implies
+     ((p + n) choose k) mod p = ((n choose k) mod p)
+  proof
+    let p be Prime, k,n be Nat;
+    assume
+    A1: k < n <= p;
+    per cases;
+    suppose k is non zero; then
+      reconsider k as non zero Nat;
+      per cases by A1,XXREAL_0:1;
+      suppose
+        B1: n = p;
+        ((2*p) choose k) mod p = 0 by A1,B1,PCN;
+        hence thesis by A1,B1,PCK;
+      end;
+      suppose n < p;
+        hence thesis by A1,PCM;
+      end;
+    end;
+    suppose k is zero; then
+      n choose k = 1 & (p + n) choose k = 1 by NEWTON:19;
+      hence thesis;
+    end;
+  end;
+
+theorem :: N02119:
+  for p be Prime, n be Nat st not p divides n holds (p choose n) mod p = 0
+  proof
+    let p be Prime, n be Nat such that
+    A1: not p divides n;
+    p divides p*0 & p divides p*1; then
+    p divides (p choose n) by A1,NEWTON02:119;
+    hence thesis by PEPIN:6;
+  end;
+
+theorem ILO:
+  for a,b be non zero Nat holds ((a*b) choose 1) mod b = 0
+  proof
+    let a,b be non zero Nat;
+    ((a*b) choose 1) mod b
+    = (0 + a*b) mod b;
+    hence thesis;
+  end;
+
+theorem
+  for a,b be Nat holds ((a*b + 1) choose 1) mod b = 1 mod b
+  proof
+    let a,b be Nat;
+    per cases;
+    suppose a is zero or b is zero;
+      hence thesis;
+    end;
+    suppose
+      B1: a is non zero & b is non zero; then
+      reconsider a as non zero Nat;
+      reconsider b as non zero Nat by B1;
+      ((a*b + 1) choose (0 + 1)) mod b =
+        (((a*b) choose 0) + ((a*b) choose (0+1))) mod b by NEWTON:22
+      .= (((((a*b) choose 0) mod b)) +
+        (((a*b) choose 1) mod b)) mod b by NAT_D:66
+      .= (((((a*b) choose 0) mod b)) + 0) mod b by ILO
+      .= (1 mod b) mod b by NEWTON:19;
+      hence thesis;
+    end;
+  end;
+
+theorem CPP:
+  for a,b,c be Nat holds ((a + 1) choose (b + 1)) mod c =
+  (((a choose b) mod c) + ((a choose (b + 1)) mod c)) mod c
+  proof
+    let a,b,c be Nat;
+    ((a + 1) choose (b + 1)) mod c =
+      ((a choose b) + (a choose (b + 1))) mod c by NEWTON:22
+    .= (((a choose b) mod c) + ((a choose (b + 1)) mod c)) mod c by NAT_D:66;
+  hence thesis;
+end;
+
+theorem CPK:
+  for p be Prime, n,k be Nat st k <> p holds
+    (((n mod p) + 1) choose k) mod p = (((n + 1) mod p) choose k) mod p
+  proof
+    let p be Prime, n,k be Nat such that
+    A0: k <> p;
+    A1: (n + 1) mod p = ((n mod p) + 1) mod p by NAT_D:22;
+    per cases;
+    suppose k = 0;
+      hence thesis by NEWTON:19;
+    end;
+    suppose k > 0; then
+      reconsider k as non zero Nat;
+      (n mod p) + 1 <= p by NAT_D:1,INT_1:7; then
+      per cases by XXREAL_0:1;
+      suppose
+        C1: (n mod p) + 1 = p;
+        (((n mod p) + 1) choose k) mod p = (0 choose k) mod p by C1,A0,PCK;
+        hence thesis by A1,C1;
+      end;
+      suppose (n mod p) + 1 < p;
+        hence thesis by A1,NAT_D:24;
+      end;
+    end;
+  end;
+
+:: recurrence of PT mod p
+
+:: Anton's lemma
+theorem AL:
+  for p be Prime, n be Nat,k be Nat holds
+  (n choose k) mod p =
+     (((n mod p) choose (k mod p))*((n div p) choose (k div p))) mod p
+  proof
+    let p be Prime;
+    defpred P[Nat] means for k be Nat holds
+    ($1 choose k) mod p =
+      ((($1 mod p) choose (k mod p))*(($1 div p) choose (k div p))) mod p;
+    A2: P[0]
+    proof
+      let k be Nat;
+      per cases;
+      suppose k is zero; then
+        reconsider k as zero Nat;
+        (0 mod p) choose k = 1 &
+          (0 mod p) choose (k mod p) = 1 &
+            (0 div p) choose (k div p) = 1 by NEWTON:19;
+        hence thesis;
+      end;
+      suppose k is non zero; then
+        reconsider k as non zero Nat;
+        per cases;
+        suppose
+          p divides k; then
+          p <= k by NAT_D:7; then
+          k div p is non zero by NAT_2:12;
+          hence thesis;
+        end;
+        suppose
+          not p divides k; then
+          k mod p is non zero by PEPIN:6;
+          hence thesis;
+        end;
+      end;
+    end;
+    A3: for i be Nat holds P[i] implies P[i+1]
+    proof
+      let i be Nat;
+      assume
+      B1: for s be Nat holds
+        (i choose s) mod p =
+           (((i mod p) choose (s mod p))*((i div p) choose (s div p))) mod p;
+      P[i + 1]
+      proof
+        let k be Nat;
+        per cases;
+        suppose
+          k = 0; then
+          ((i + 1) choose k) = 1 &
+          ((i + 1) div p) choose (k div p) = 1 &
+          ((i + 1) mod p) choose (k mod p) = 1 by NEWTON:19;
+          hence thesis;
+        end;
+        suppose
+          k > 0; then
+          reconsider k as non zero Nat;
+          reconsider m = k - 1 as Nat;
+      C0: (((i mod p) choose (m mod p))*((i div p) choose (m div p))) mod p =
+            (i choose m) mod p &
+              (((i mod p) choose (k mod p))*((i div p) choose (k div p)))
+                mod p =
+                 (i choose k) mod p by B1;
+          per cases;
+          suppose
+            not p divides i + 1; then
+            reconsider j = (i + 1) mod p as non zero Nat by PEPIN:6;
+            D1: 0 < j  < p by NAT_D:1; then
+            D2: ((i + 1) - 1) mod p = ((i+1) mod p) - 1 by ND3;
+            D2a: (i + 1) mod p = 1 + (i mod p) by D2;
+            D3: (i + 1) div p = ((i+1)-1) div p by D1,ND4;
+            D6: ((i+1) choose (m + 1)) mod p =
+              ((i choose m) + (i choose (m+1))) mod p by NEWTON:22
+            .= (((((i mod p) choose (m mod p))*((i div p) choose
+                (m div p))) mod p)
+            + ((((i mod p) choose (k mod p))*((i div p) choose
+              (k div p))) mod p)) mod p by C0,NAT_D:66;
+            per cases;
+            suppose
+              E1: k mod p = 0;
+              E2: m mod p = p - 1 by E1,ND1;
+              E4: ((i+1) mod p) choose (k mod p) = 1 &
+              (i mod p) choose (k mod p) = 1 by E1,NEWTON:19;
+              i mod p <> p - 1 by NAT_D:1,D2a; then
+              (i mod p) choose (p - 1) <> 1 by NPR; then
+              (i mod p) choose (p - 1) = 0 by NPP,NAT_1:23;
+              hence thesis by E4,D3,E2,D6;
+            end;
+            suppose
+              E1: k mod p > 0;
+              E1a: ((m + 1) - 1) mod p = ((m + 1) mod p) - 1 by E1,ND3;
+              E3: k div p = m div p by E1,ND4;
+              ((i+1) choose (m + 1)) mod p
+              =  (((((i mod p) choose (m mod p))*((i div p) choose
+                (k div p)))) + ((((i mod p) choose (k mod p))*((i div p)
+                  choose (k div p))))) mod p by E3,NAT_D:66,D6
+              .= ((((i mod p) choose (m mod p)) +
+                 ((i mod p) choose ((m mod p)+1)))*((i div p) choose
+                   (k div p))) mod p by E1a
+              .= (((((i mod p)+1) choose ((m mod p)+1)))*((i div p) choose
+                (k div p))) mod p by NEWTON:22
+              .= (((((i+1) mod p) choose ((m+1) mod p)))*((i div p) choose
+                (k div p))) mod p by D2,E1a;
+              hence thesis by D3;
+            end;
+          end;
+            suppose
+              C1: p divides i + 1; then
+              i + 1 >= p by NAT_D:7; then
+              (i + 1) - 1 >= p - 1 by XREAL_1:9; then
+              reconsider i as non zero Nat;
+              C2: (i + 1) mod p = 0 by C1,PEPIN:6; then
+              C2a: ((i + 1) - 1) mod p = p - 1 by ND1;
+              per cases;
+              suppose
+                D1: (k mod p) > 0; then
+                D2: (m mod p) = (k mod p) - 1 by ND3;
+                D3: (((i mod p) choose (m mod p))*((i div p) choose
+                  (m div p))) mod p = (i choose m) mod p &
+                (((i mod p) choose (k mod p))*((i div p) choose (k div p)))
+                  mod p = (i choose k) mod p by B1;
+                D4a: k mod p < p by NAT_D:1;
+                D6:  (((i + 1) mod p) choose (k mod p)) = 0
+                  by D1,NEWTON:def 3,C2;
+                ((i+1) choose (m + 1)) mod p =
+                  ((i choose m) + (i choose (m+1))) mod p by NEWTON:22
+                .= (((((i mod p) choose (m mod p))*((i div p)
+                  choose (m div p))) mod p)
+                + ((((i mod p) choose (k mod p))*((i div p) choose (k div p)))
+                  mod p)) mod p by D3,NAT_D:66
+                .= (((((i mod p) choose (m mod p))*((i div p)
+                  choose (k div p))) mod p)
+                + ((((i mod p) choose (1+(m mod p)))*((i div p)
+                  choose (k div p))) mod p)) mod p by D2,ND4
+                .= (((((i mod p) choose (m mod p))*((i div p)
+                  choose (k div p))))
+                + ((((i mod p) choose (1+(m mod p)))*((i div p)
+                  choose (k div p))))) mod p by NAT_D:66
+                .= (((((i mod p) choose (m mod p)) +
+                  ((i mod p) choose (1+(m mod p))))*((i div p)
+                    choose (k div p)))) mod p
+                .= ((((i mod p) + 1) choose (1+(m mod p)))*((i div p)
+                  choose (k div p))) mod p by NEWTON:22
+                .= (((p choose (k mod p)) mod p)*((i div p)
+                  choose (k div p))) mod p by EULER_2:8,C2a,D2
+                .= (0*((i div p) choose (k div p))) mod p by D4a,D1,PCK;
+                hence thesis by D6;
+              end;
+              suppose
+                D1: k mod p = 0; then
+                p divides k by PEPIN:6; then
+                p <= k by NAT_D:7; then
+                p - 1 <= k - 1 by XREAL_1:9; then
+                reconsider  m = k - 1 as non zero Nat;
+                E2: (m + 1) div p = (m div p) + 1 by D1,ND2;
+                E3: (((i div p) choose (k div p))*((i mod p) choose
+                  (k mod p))) mod p = (i choose k) mod p &
+                (((i div p) choose (m div p))*((i mod p) choose
+                  (m mod p))) mod p = (i choose m) mod p by B1;
+                ((m + 1)-1) mod p = p - 1 by D1,ND1; then
+                E5: (i mod p) choose (m mod p) = 1 by C2a,NEWTON:21;
+                E6: (i mod p) choose (k mod p) = 1 by D1, NEWTON:19;
+                (0 choose (k mod p)) = 1 by D1,NEWTON:19; then
+                ((0 choose (k mod p))*(((i div p) + 1) choose (k div p))) mod p
+                = (((i choose m) mod p) + ((i choose (m + 1))mod p)) mod p
+                  by E3,E5,E6,E2,CPP
+                .= ((i choose m) + (i choose (m + 1))) mod p by NAT_D:66
+                .= ((i + 1) choose (m + 1)) mod p by NEWTON:22;
+                hence thesis by C2,ND2;
+            end;
+          end;
+        end;
+      end;
+      hence thesis;
+    end;
+    for c be Nat holds P[c] from NAT_1:sch 2(A2,A3);
+    hence thesis;
+  end;
+
+theorem
+  for p be Prime, n be Nat holds (n choose p) mod p = (n div p) mod p
+  proof
+    let p be Prime, n be Nat;
+    (1*p + 0) mod p = 0 mod p &
+      (1*p + 0) div p = (0 div p) + 1 by NAT_D:61; then
+    (n choose p) mod p = (((n mod p) choose 0)*((n div p) choose 1)) mod p
+      by AL
+    .= (1*(n div p)) mod p by NEWTON:19;
+    hence thesis;
+  end;
+
+theorem
+  for p be Prime, n be Nat holds
+    ((p + n) choose p) mod p = ((n div p) + 1) mod p
+  proof
+    let p be Prime, n be Nat;
+    (1*p + n) mod p = n mod p & (1*p + 0) mod p = 0 mod p &
+    (1*p + n) div p = (n div p) + 1 &
+      (1*p + 0) div p = (0 div p) + 1 by NAT_D:61; then
+    ((p + n) choose p) mod p
+    = (((n mod p) choose 0)*((1 + (n div p)) choose 1)) mod p by AL
+    .= (1*((n div p) + 1)) mod p by NEWTON:19;
+    hence thesis;
+  end;
+
+theorem for p be Prime, n be Nat holds ((p*n) choose p) mod p = n mod p
+  proof
+    let p be Prime, n be Nat;
+    per cases;
+    suppose n is zero;
+      hence thesis;
+    end;
+    suppose n is non zero; then
+      reconsider n as non zero Nat;
+      (n*p + 0) mod p = 0 mod p & (1*p + 0) mod p = 0 mod p &
+      (n*p + 0) div p = (0 div p) + n &
+        (1*p + 0) div p = (0 div p) + 1 by NAT_D:61; then
+      ((p*n) choose p) mod p = ((0 choose 0)*(n choose 1)) mod p by AL
+      .= (1*n) mod p by NEWTON:21;
+      hence thesis;
+    end;
+  end;
+
+:: the way below is obviously ineffective for proving AL, remove if you wish
+theorem MOC:
+  for p be Prime, n,k be Nat st k < p holds
+    (n choose k) mod p = ((n mod p) choose k) mod p
+  proof
+    let p be Prime;
+    defpred P[Nat] means for k be Nat st k < p holds
+    ($1 choose k) mod p = (($1 mod p) choose k) mod p;
+    A2: P[0];
+    A3: for i be Nat holds P[i] implies P[i+1]
+    proof
+      let i be Nat;
+      assume
+      B1: P[i];
+      P[i + 1]
+      proof
+        let k be Nat such that
+        C1: k < p;
+        per cases;
+        suppose k = 0;
+          hence thesis by NEWTON:19;
+        end;
+        suppose
+          k > 0; then
+          reconsider m = k - 1 as Nat;
+          m + 0 < m + 1 by XREAL_1:6; then
+          m < p by C1,XXREAL_0:2; then
+          D3: (i choose m) mod p = ((i mod p) choose m) mod p by B1;
+          ((i + 1) choose (m + 1)) mod p =
+            (((i choose m) mod p) + ((i choose k) mod p))mod p by CPP
+          .= ((((i mod p) choose m) mod p) +
+              (((i mod p) choose (m + 1)) mod p)) mod p by D3,B1,C1
+          .= (((i mod p) + 1) choose (m + 1)) mod p by CPP;
+          hence thesis by C1, CPK;
+        end;
+      end;
+      hence thesis;
+    end;
+    for c be Nat holds P[c] from NAT_1:sch 2(A2,A3);
+    hence thesis;
+  end;
+
+theorem NPK:
+  for n,k be Nat, p be Prime st k < p holds
+    ((n*p + k) choose k) mod p = 1
+  proof
+    let n,k be Nat, p be Prime such that
+    A1: k < p;
+    ((n*p + k) choose k) mod p =
+      (((n*p + k) mod p) choose k) mod p by A1,MOC
+    .= ((k mod p) choose k) mod p by NAT_D:61
+    .= (k choose k) mod p by A1,MOC
+    .= 1 mod (1 + (p - 1)) by NEWTON:21;
+    hence thesis;
+  end;
+
+theorem KPN:
+  for n,k be Nat, p be Prime st k < p holds
+    ((n*p + k) choose (n*p)) mod p = 1
+  proof
+    let n,k be Nat, p be Prime such that
+    A1: k < p;
+    ((n*p + k) choose k) mod p = 1 by A1,NPK;
+    hence thesis by N20;
+  end;
+
+theorem
+  for p be Prime holds ((2*p) choose p) mod p = 2 mod p
+  proof
+    let p be Prime;
+    reconsider n = p - 1 as Nat;
+    n + 0 < n + 1 by XREAL_1:6; then
+    ((1*p + n) choose n) mod p = 1 &
+      ((1*p + n) choose (1*p)) mod p = 1 by NPK,KPN; then
+    2 mod p = ((((p + n) choose n) mod p) + (((p + n) choose p) mod p)) mod p
+    .=  (((p + n) choose n) + ((p + n) choose p)) mod p by NAT_D:66
+    .= (((p + n) + 1) choose (n + 1)) mod p by NEWTON:22;
+    hence thesis;
+  end;
+
+theorem
+  for p be Prime, n be Nat holds
+  (n choose (p - 1)) mod p = ((n mod p) choose (p - 1)) mod p
+  proof
+    let p be Prime, n be Nat;
+    (p - 1) + 0 < (p - 1) + 1 by XREAL_1:6;
+    hence thesis by MOC;
+  end;
+
+theorem IPN:
+  for k be non zero Nat, i be Nat, p be Prime holds
+  ((i*p + (p -' k)) choose (p -' k)) mod p = 1
+  proof
+    let k be non zero Nat, i be Nat, p be Prime;
+    per cases;
+    suppose p <= k; then
+      p -' k = 0 by NAT_2:8; then
+      ((i*p + (p -' k)) choose (p -' k)) mod p
+      = 1 mod ((p - 1) + 1) by NEWTON:19;
+      hence thesis;
+    end;
+    suppose
+      B1: p > k; then
+      p - k > k - k by XREAL_1:9; then
+      reconsider m = p - k as non zero Nat;
+      B2:  m + 0 < m + k by XREAL_1:6;
+      p - k = p -' k by B1,XREAL_1:233; then
+      ((i*p + (p -' k)) choose (p -' k)) mod p
+      = (((i*p + m) mod p) choose m) mod p by B2,MOC
+      .= ((m mod p) choose m) mod p by NAT_D:61
+      .= 1 mod ((p - 1) + 1) by B2,NEWTON:21;
+      hence thesis;
+    end;
+  end;
+
+theorem KPW:
+  for p be Prime, n,k be Nat holds k < p implies
+    ((n*p + k) choose p) mod p = ((n*p) choose p) mod p
+  proof
+    let p be Prime, n be Nat;
+    defpred P[Nat] means $1 < p implies
+      ((n*p + $1) choose p) mod p = ((n*p) choose p) mod p;
+    A1: P[0];
+    A2: for m be Nat st P[m] holds P[m+1]
+    proof
+      let m be Nat such that
+      B1: m < p implies ((n*p + m) choose p) mod p = ((n*p) choose p) mod p;
+      B2: (p - 1) + 0 < (p - 1) + 1 by XREAL_1:6;
+      m + 1 < p implies ((n*p + (m+1)) choose p) mod p = ((n*p) choose p) mod p
+      proof
+        assume
+        C1: m + 1 < p;
+        C2: m  + 0 < m + 1 by XREAL_1:6; then
+        C3: m < p by C1,XXREAL_0:2;
+        C4: (m + 1) - 1 < p - 1 by C1,XREAL_1:9;
+        (((n*p + m)+1) choose ((p - 1) + 1)) mod p =
+          (((((n*p + m)) choose ((p-1) + 1)) mod p)
+        + (((n*p + m)) choose ((p - 1)) mod p)) mod p by CPP
+        .= ((((n*p + m)) choose p) mod p)
+        + (((n*p + m) mod p) choose ((p - 1)) mod p) mod p by B2,MOC
+        .=((((n*p + m) choose p) mod p)
+        + (((m mod p) choose (p - 1)) mod p)) mod p by NAT_D:61
+        .=((((n*p + m) choose p) mod p)
+        + ((m choose (p - 1)) mod p)) mod p by C3,NAT_D:24
+        .=((((n*p + m) choose p) mod p)
+        + (0 mod p)) mod p by C4,NEWTON:def 3
+        .=((n*p) choose p) mod p by B1,C1,C2,XXREAL_0:2;
+        hence thesis;
+      end;
+      hence thesis;
+    end;
+    for k be Nat holds P[k] from NAT_1:sch 2(A1,A2);
+    hence thesis;
+  end;
+
+theorem
+  for p be Prime, n,k be Nat holds (((n + k)*p) choose p) mod p = (n + k) mod p
+  proof
+    let p be Prime, n be Nat;
+    defpred P[Nat] means (((n + $1)*p) choose p) mod p = (n + $1) mod p;
+    A1: P[0]
+    proof
+      defpred Q[Nat] means ($1*p) choose p mod p = $1 mod p;
+      B1: Q[0];
+      B2: for i be Nat st Q[i] holds Q[i+1]
+      proof
+        let i be Nat such that
+        C1: ((i*p) choose p) mod p = i mod p;
+        C2: (p - 1) + 1 > (p - 1) + 0 by XREAL_1:6;
+        p > 1 by INT_2:def 4; then
+        C3: p - 1 = p -' 1 by XREAL_1:233;
+        (((i+1)*p) choose p) mod p =
+           (((i*p + (p - 1) + 1) choose ((p-1)+1))) mod p
+        .=((((i*p + (p - 1)) choose (p-1)) mod p) +
+        (((i*p + (p - 1)) choose p) mod p)) mod p by CPP
+        .=((((i*p + (p - 1)) choose (p-1)) mod p) +
+        (((i*p) choose p) mod p)) mod p by C2,KPW
+        .=(i mod p + 1) mod p by C1,IPN,C3
+        .= (i + 1) mod p by NAT_D:22;
+        hence thesis;
+      end;
+      for c be Nat holds Q[c] from NAT_1:sch 2(B1,B2);
+      hence thesis;
+    end;
+    A2: for m be Nat st P[m] holds P[m+1]
+    proof
+      let m be Nat such that
+      B1: (((n + m)*p) choose p) mod p = (n + m) mod p;
+      B2: (p - 1) + 0 < (p - 1) + 1 by XREAL_1:6;
+      (((n + m)*p + (p - 1) + 1) choose ((p-1)+1)) mod p =
+      (((((n + m)*p + (p - 1)) choose p) mod p) +
+      (((((n + m)*p + (p - 1)) choose (p - 1))) mod p)) mod p by CPP
+      .= (((((n + m)*p + (p - 1)) choose p) mod p) +
+      (((((((n + m)*p + (p - 1))) mod p) choose (p - 1))) mod p)) mod p
+        by B2,MOC
+      .= (((((n + m)*p + (p - 1)) choose p) mod p) +
+      (((((p - 1) mod ((p-1)+1)) choose (p - 1))) mod p)) mod p by NAT_D:61
+      .= (((((n + m)*p + (p - 1)) choose p) mod p) +
+      (1 mod p)) mod p by NEWTON:21
+      .= (((((n + m)*p) choose p) mod p) +
+      (1 mod p)) mod p by KPW,B2
+      .= (n + m + 1) mod p by B1,NAT_D:66;
+      hence thesis;
+    end;
+    for k be Nat holds P[k] from NAT_1:sch 2(A1,A2);
+    hence thesis;
+  end;
+
+theorem
+  for p be Prime, k, n be Nat, m be non zero Nat st k + m < p holds
+    ((n*p + k) choose (m + k)) mod p = 0
+  proof
+    let p be Prime;
+    defpred P[Nat] means
+    for k be Nat, m be non zero Nat st k + m < p holds
+      (($1*p + k) choose (m + k)) mod p = 0;
+    A1: P[0]
+    proof
+      let k be Nat, m be non zero Nat;
+      ((0 + k) choose (k + m)) mod p = 0 mod p;
+      hence thesis;
+    end;
+    A2: for q be Nat holds P[q] implies P[q+1]
+    proof
+      let q be Nat;
+      assume
+      P[q];
+      P[q + 1]
+      proof
+        defpred Q[Nat] means
+          for m be non zero Nat st $1 + m < p holds
+            (((q+1)*p + $1) choose (m + $1)) mod p = 0;
+        C1: Q[0]
+        proof
+          let m be non zero Nat such that
+          D1: 0 + m < p;
+          (((q+1)*p + 0) choose (m + 0)) mod p =
+            ((((q+1)*p + 0) mod p) choose m) mod p by D1,MOC
+          .= 0 mod p;
+          hence thesis;
+        end;
+        C2: for a be Nat st Q[a] holds Q[a + 1]
+        proof
+          let a be Nat;
+          Q[a + 1]
+          proof
+            let m be non zero Nat such that
+            E1: (a + 1) + m < p;
+            (a + 1) + 0 < (a + 1) + m by XREAL_1:6; then
+            E3: (a + 1) < p by E1,XXREAL_0:2;
+            (((q+1)*p + (a + 1)) choose (m + (a + 1))) mod p =
+            ((((q+1)*p + (a + 1)) mod p) choose (m + (a + 1))) mod p by E1,MOC
+            .= (((a + 1) mod p) choose (a + m + 1)) mod p by NAT_D:61
+            .= ((a + 1) choose ((a + 1)+ m)) mod p by E3,NAT_D:24
+            .= 0 mod p;
+            hence thesis;
+          end;
+          hence thesis;
+        end;
+        for b be Nat holds Q[b] from NAT_1:sch 2(C1,C2);
+        hence thesis;
+      end;
+      hence thesis;
+    end;
+    for c be Nat holds P[c] from NAT_1:sch 2(A1,A2);
+    hence thesis;
+  end;
+
+theorem PAS:
+  for n be Nat holds Parity ((n+1)!) = (Parity (n+1))*(Parity (n!))
+proof
+  let n be Nat;
+  Parity ((n+1)!) = Parity (n!*(n+1)) by NEWTON:15;
+  hence thesis by NEWTON05:25;
+end;
+
+theorem
+  for n be even Nat holds Parity (n!) = Parity ((n+1)!)
+  proof
+    let n be even Nat;
+    Parity (n + 1) = 1 by NAT_2:def 1; then
+    Parity ((n + 1)!) = 1*(Parity (n!)) by PAS;
+    hence thesis;
+  end;
+
+theorem
+  for n be Nat holds
+    Parity ((n+2)!) = 2*Parity(Triangle (n+1))*Parity (n!)
+  proof
+    let n be Nat;
+    ((n+1)+1)! = (n+1)!*((n+1)+1) by NEWTON:15
+    .= (n+2)*(n!*(n+1)) by NEWTON:15
+    .= 2*((n+1)*((n+1)+1)/2)*(n!)
+    .= 2*Triangle(n+1)*(n!) by NUMPOLY1:19; then
+    Parity ((n+2)!) = (Parity (2*Triangle(n+1)))*(Parity (n!)) by NEWTON05:25
+    .= ((Parity 2)*(Parity (Triangle (n+1))))*(Parity (n!)) by NEWTON05:25;
+    hence thesis;
+  end;
+
+:: Pascal's Triangle step by step:
+
+registration
+  let f be 1-element FinSequence;
+  reduce <*f.1*> to f;
+  reducibility
+  proof
+    len f = 1 & len <*f.1*> = 1 by CARD_1:def 7;
+    hence thesis by FINSEQ_1:40;
+  end;
+end;
+
+registration
+  let f be 2-element FinSequence;
+  reduce <*f.1,f.2*> to f;
+  reducibility
+  proof
+    len f = 2 & len <*f.1,f.2*> = 2 by CARD_1:def 7;
+    hence thesis by FINSEQ_1:44;
+  end;
+end;
+
+registration
+  let f be 3-element FinSequence;
+  reduce <*f.1,f.2,f.3*> to f;
+  reducibility
+  proof
+    len f = 3 & len <*f.1,f.2,f.3*> = 3 by CARD_1:def 7;
+    hence thesis by FINSEQ_1:45;
+  end;
+end;
+
+registration
+  let f be 4-element FinSequence;
+  reduce <*f.1,f.2,f.3,f.4*> to f;
+  reducibility
+  proof
+    len f = 4 & len <*f.1,f.2,f.3,f.4*> = 4 by CARD_1:def 7;
+    hence thesis by FINSEQ_4:76;
+  end;
+end;
+
+registration
+  let f be 5-element FinSequence;
+  reduce <*f.1,f.2,f.3,f.4,f.5*> to f;
+  reducibility
+  proof
+    len f = 5 & len <*f.1,f.2,f.3,f.4,f.5*> = 5 by CARD_1:def 7;
+    hence thesis by FINSEQ_4:78;
+  end;
+end;
+
+registration
+  let f be 6-element FinSequence;
+  reduce <*f.1,f.2,f.3,f.4,f.5,f.6*> to f;
+  reducibility
+  proof
+    len f = 6 & len <*f.1,f.2,f.3,f.4,f.5,f.6*> = 6 by CARD_1:def 7;
+    hence thesis by AOFA_A00:20;
+  end;
+end;
+
+registration
+  let f be 7-element FinSequence;
+  reduce <*f.1,f.2,f.3,f.4,f.5,f.6,f.7*> to f;
+  reducibility
+  proof
+    len f = 7 & len <*f.1,f.2,f.3,f.4,f.5,f.6,f.7*> = 7 by CARD_1:def 7;
+    hence thesis by AOFA_A00:22;
+  end;
+end;
+
+registration
+  let f be 8-element FinSequence;
+  reduce <*f.1,f.2,f.3,f.4,f.5,f.6,f.7,f.8*> to f;
+  reducibility
+  proof
+    len f = 8 & len <*f.1,f.2,f.3,f.4,f.5,f.6,f.7,f.8*> = 8 by CARD_1:def 7;
+    hence thesis by AOFA_A00:24;
+  end;
+end;
+
+registration
+  let n be Nat;
+  reduce <*0*>.n to 0;
+  reducibility
+  proof
+    per cases;
+    suppose n in dom <*0*>; then
+      n in Seg 1 by FINSEQ_1:38; then
+      1 <= n <= 1 by FINSEQ_1:1; then
+      n = 1 by XXREAL_0:1;
+      hence thesis;
+    end;
+    suppose not n in dom <*0*>;
+      hence thesis by FUNCT_1:def 2;
+    end;
+  end;
+end;
+
+registration
+  let a1,a2,a3,a4,a5 be Complex;
+  cluster <*a1,a2,a3,a4,a5*> -> complex-valued;
+  coherence
+  proof
+    <*a1,a2,a3,a4*>^<*a5*> is complex-valued;
+    hence thesis by FINSEQ_4:75;
+  end;
+  let a6 be Complex;
+  cluster <*a1,a2,a3,a4,a5,a6*> -> complex-valued;
+  coherence
+  proof
+    <*a1,a2,a3,a4,a5*>^<*a6*> is complex-valued;
+    hence thesis by AOFA_A00:def 4;
+  end;
+  let a7 be Complex;
+  cluster <*a1,a2,a3,a4,a5,a6,a7*> -> complex-valued;
+  coherence
+  proof
+    <*a1,a2,a3,a4,a5,a6*>^<*a7*> = (<*a1,a2,a3,a4,a5*>^<*a6*>)^<*a7*>
+      by AOFA_A00:def 4
+    .= <*a1,a2,a3,a4,a5*>^<*a6,a7*> by FINSEQ_1:32;
+    hence thesis by AOFA_A00:def 5;
+  end;
+  let a8 be Complex;
+  cluster <*a1,a2,a3,a4,a5,a6,a7,a8*> -> complex-valued;
+  coherence
+  proof
+    <*a1,a2,a3,a4,a5,a6,a7*>^<*a8*> = (<*a1,a2,a3,a4,a5*>^<*a6,a7*>)^<*a8*>
+      by AOFA_A00:def 5
+    .= <*a1,a2,a3,a4,a5*>^<*a6,a7,a8*> by FINSEQ_1:32;
+    hence thesis by AOFA_A00:def 6;
+  end;
+end;
+
+:: FINSEQ_1:65
+theorem FINSEQ165:
+  for n be non zero Nat, f,g be FinSequence holds
+    (f^g).(len f + n) = g.n
+  proof
+    let n be non zero Nat, f,g be FinSequence;
+    per cases;
+    suppose
+      n in dom g;
+      hence thesis by FINSEQ_1:def 7;
+    end;
+    suppose
+      B1: not n in dom g; then
+      n < 1 or len g < n by FINSEQ_3:25; then
+      len f + len g < len f + n by NAT_1:14,XREAL_1:6; then
+      len (f^g) < len f + n by FINSEQ_1:22; then
+      not (len f + n) in dom (f^g) by FINSEQ_3:25; then
+      (f^g).(len f + n) = 0 by FUNCT_1:def 2;
+      hence thesis by B1, FUNCT_1:def 2;
+    end;
+  end;
+
+theorem CF:
+  for n be non zero Nat, c be Complex, f be FinSequence holds
+    (<*c*>^f).(n + 1) = f.n
+  proof
+    let n be non zero Nat, c be Complex, f be FinSequence;
+    reconsider g = <*c*> as 1-element FinSequence;
+    len g = 1 by FINSEQ_1:40;
+    hence thesis by FINSEQ165;
+  end;
+
+theorem FINSEQ1D7:
+  for f be FinSequence, n be Nat holds (f^<*0*>).n = f.n
+  proof
+    let f be FinSequence, n be Nat;
+    reconsider g = <*0*> as FinSequence;
+    per cases;
+    suppose n in dom f;
+      hence thesis by FINSEQ_1:def 7;
+    end;
+    suppose
+      not n in dom f; then
+      n < 1 or len f < n by FINSEQ_3:25; then
+      per cases by NAT_1:14;
+      suppose
+        n = 0;
+        hence thesis;
+      end;
+      suppose
+        n > len f; then
+        n - len f > len f - len f by XREAL_1:9; then
+        reconsider m = n - len f as non zero Nat;
+        (f^g).(len f + m) = g.m by FINSEQ165
+        .= 0;
+        hence thesis;
+      end;
+    end;
+  end;
+
+theorem PT:
+  for n be Nat holds
+    Newton_Coeff (n + 1) = (<*0*>^(Newton_Coeff n))+((Newton_Coeff n)^<*0*>)
+  proof
+    let n be Nat;
+    reconsider f = <*0*>^(Newton_Coeff n) as FinSequence of COMPLEX
+      by NEWTON02:103;
+    reconsider g = (Newton_Coeff n)^<*0*> as FinSequence of COMPLEX
+      by NEWTON02:103;
+    A1: len (Newton_Coeff (n + 1)) = n + 2 &
+      n + 2 = len ((<*0*>^(Newton_Coeff n))+((Newton_Coeff n)^<*0*>))
+        by CARD_1:def 7;
+    for i be Nat st 1 <= i <= len (Newton_Coeff (n + 1)) holds
+      (Newton_Coeff (n + 1)).i =
+        ((<*0*>^(Newton_Coeff n))+((Newton_Coeff n)^<*0*>)).i
+    proof
+      let i be Nat such that
+      B1: 1 <= i <= len (Newton_Coeff (n + 1));
+      reconsider j = i - 1 as Nat by B1;
+      B2: 1 <= i <= n + 1 + 1 by B1,CARD_1:def 7; then
+      i in Seg (n + 1 + 1); then
+      B3: i in dom Newton_Coeff (n+1) &
+        i in dom ((<*0*>^(Newton_Coeff n))+((Newton_Coeff n)^<*0*>))
+          by A1,FINSEQ_1:def 3;
+      per cases by B2,XXREAL_0:1;
+      suppose
+        i = 1; then
+        reconsider j as zero Nat;
+        C2: (<*0*>^(Newton_Coeff n)).(j + 1) = 0;
+        1 + 0 <= 1 + n by XREAL_1:6; then
+        1 in Seg (len (Newton_Coeff (n+1-1))); then
+        1 in dom Newton_Coeff n by FINSEQ_1:def 3; then
+        ((Newton_Coeff n)^<*0*>).(j + 1) = (Newton_Coeff n).(j+1)
+          by FINSEQ_1:def 7
+        .= 1;
+        hence thesis by B3,C2,VALUED_1:def 1;
+      end;
+      suppose
+        C0: 1 < i < n + 1 + 1; then
+        C1: 1 + 1 <= j + 1 <= n + 1 + 1 by INT_1:7;
+        reconsider j as non zero Nat by C0;
+        1 <= j <= len (Newton_Coeff (n+1-1)) by C1,XREAL_1:6; then
+        j in dom Newton_Coeff n by FINSEQ_3:25; then
+        C3: (Newton_Coeff n).j = n choose (j-1) by NEWTON:def 5;
+        1 <= j + 1 <= len (Newton_Coeff (n+1-1)) by C0,INT_1:7; then
+        C4: j + 1 in dom Newton_Coeff n by FINSEQ_3:25;
+        (<*0*>^(Newton_Coeff n)).(j + 1) = (Newton_Coeff n).j &
+        ((Newton_Coeff n)^<*0*>).(j + 1) = (Newton_Coeff n).(j + 1)
+          by CF,FINSEQ1D7; then
+        f.(j + 1) + g.(j + 1) =
+          (n choose (j - 1)) + (n choose ((j+1)-1)) by C3,NEWTON:def 5,C4
+        .= (n + 1) choose ((j-1)+1) by NEWTON:22
+        .= (Newton_Coeff (n+1)).(j + 1) by B3,NEWTON:def 5;
+        hence thesis by VALUED_1:def 1,B3;
+      end;
+      suppose
+        C1: i = n + 2; then
+        j = n + 1; then
+        reconsider j as non zero Nat;
+        C3: (<*0*>^(Newton_Coeff n)).(1 + j)
+        = (Newton_Coeff n).(n+1) by C1,CF
+        .= 1;
+        (f+g).(j + 1) = f.(j + 1) + g.(j + 1) by B3,VALUED_1:def 1
+        .= (Newton_Coeff (n+1)).((n+1)+1) by C1,C3;
+        hence thesis by C1;
+      end;
+    end;
+    hence thesis by A1;
+  end;
+
+theorem FINSEQ940A:
+  for a1,a2,b1,b2 be Complex, n be Nat,
+      f,g be n-element complex-valued FinSequence holds
+  (f^<*a1,a2*>) + (g^<*b1,b2*>) = (f+g)^<*a1+b1,a2+b2*>
+  proof
+    let a1,a2,b1,b2 be Complex, n be Nat,
+        f,g be n-element complex-valued FinSequence;
+    A1: f^<*a1,a2*> = f^<*a1*>^<*a2*> &
+    g^<*b1,b2*> = g^<*b1*>^<*b2*> by FINSEQ_1:32;
+    (f+g)^<*a1+b1,a2+b2*> = ((f+g)^<*a1+b1*>)^<*a2+b2*> by FINSEQ_1:32
+    .= ((f^<*a1*>)+(g^<*b1*>))^<*a2+b2*> by FINSEQ_9:40
+    .= ((f^<*a1*>)^<*a2*>)+((g^<*b1*>)^<*b2*>) by FINSEQ_9:40;
+    hence thesis by A1;
+  end;
+
+theorem FINSEQ940B:
+  for a1,a2,a3,b1,b2,b3 be Complex, n be Nat,
+      f,g be n-element complex-valued FinSequence holds
+  (f^<*a1,a2,a3*>) + (g^<*b1,b2,b3*>) = (f+g)^<*a1+b1,a2+b2,a3+b3*>
+  proof
+    let a1,a2,a3,b1,b2,b3 be Complex, n be Nat,
+        f,g be n-element complex-valued FinSequence;
+    <*a1,a2,a3*>=<*a1*>^(<*a2*>^<*a3*>) &
+    <*b1,b2,b3*>=<*b1*>^(<*b2*>^<*b3*>) by FINSEQ_1:32;then
+    A2: f^<*a1,a2,a3*> = f^<*a1*>^(<*a2*>^<*a3*>) &
+    g^<*b1,b2,b3*> = g^<*b1*>^(<*b2*>^<*b3*>) by FINSEQ_1:32;
+    (f+g)^<*a1+b1,a2+b2,a3+b3*> = (f+g)^(<*a1+b1*>^(<*a2+b2*>^<*a3+b3*>))
+      by FINSEQ_1:32
+    .= ((f+g)^<*a1+b1*>)^(<*a2+b2*>^<*a3+b3*>) by FINSEQ_1:32
+    .= ((f^<*a1*>)+(g^<*b1*>))^(<*a2+b2*>^<*a3+b3*>) by FINSEQ_9:40
+    .= ((f^<*a1*>)+(g^<*b1*>))^<*a2+b2*>^<*a3+b3*> by FINSEQ_1:32
+    .= (((f^<*a1*>)^<*a2*>)+((g^<*b1*>)^<*b2*>))^<*a3+b3*> by FINSEQ_9:40
+    .= ((f^<*a1*>)^<*a2*>^<*a3*>)+((g^<*b1*>)^<*b2*>^<*b3*>) by FINSEQ_9:40
+    .= ((f^<*a1*>)^<*a2*>^<*a3*>)+((g^<*b1*>)^(<*b2*>^<*b3*>)) by FINSEQ_1:32
+    .= ((f^<*a1*>)^(<*a2*>^<*a3*>))+((g^<*b1*>)^(<*b2*>^<*b3*>))
+      by FINSEQ_1:32;
+    hence thesis by A2;
+  end;
+
+theorem A5B5:
+  for a1,a2,a3,a4,a5,b1,b2,b3,b4,b5 be Complex holds
+  <*a1,a2,a3,a4,a5*> + <*b1,b2,b3,b4,b5*> = <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5*>
+  proof
+    let a1,a2,a3,a4,a5,b1,b2,b3,b4,b5 be Complex;
+    A1: <*a1,a2,a3,a4*> + <*b1,b2,b3,b4*> = <*a1+b1,a2+b2,a3+b3,a4+b4*>
+      by FINSEQ_9:43;
+    <*a1,a2,a3,a4,a5*> = <*a1,a2,a3,a4*>^<*a5*> &
+    <*b1,b2,b3,b4,b5*> = <*b1,b2,b3,b4*>^<*b5*> by FINSEQ_4:75; then
+    <*a1,a2,a3,a4,a5*> + <*b1,b2,b3,b4,b5*> =
+      <*a1+b1,a2+b2,a3+b3,a4+b4*>^<*a5+b5*> by A1,FINSEQ_9:40
+    .= <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5*> by FINSEQ_4:75;
+    hence thesis;
+  end;
+
+theorem A6B6:
+  for a1,a2,a3,a4,a5,a6,b1,b2,b3,b4,b5,b6 be Complex holds
+  <*a1,a2,a3,a4,a5,a6*> + <*b1,b2,b3,b4,b5,b6*> =
+    <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5,a6+b6*>
+  proof
+    let a1,a2,a3,a4,a5,a6,b1,b2,b3,b4,b5,b6 be Complex;
+    A1: <*a1,a2,a3,a4,a5*> + <*b1,b2,b3,b4,b5*> =
+      <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5*> by A5B5;
+    <*a1,a2,a3,a4,a5,a6*> = <*a1,a2,a3,a4,a5*>^<*a6*> &
+    <*b1,b2,b3,b4,b5,b6*> = <*b1,b2,b3,b4,b5*>^<*b6*> by AOFA_A00:def 4; then
+    <*a1,a2,a3,a4,a5,a6*> + <*b1,b2,b3,b4,b5,b6*> =
+      <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5*>^<*a6+b6*> by A1,FINSEQ_9:40
+    .= <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5,a6+b6*> by  AOFA_A00:def 4;
+    hence thesis;
+  end;
+
+theorem A7B7:
+  for a1,a2,a3,a4,a5,a6,a7,b1,b2,b3,b4,b5,b6,b7 be Complex holds
+    <*a1,a2,a3,a4,a5,a6,a7*> + <*b1,b2,b3,b4,b5,b6,b7*> =
+      <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5,a6+b6,a7+b7*>
+  proof
+    let a1,a2,a3,a4,a5,a6,a7,b1,b2,b3,b4,b5,b6,b7 be Complex;
+    A1: <*a1,a2,a3,a4,a5*> + <*b1,b2,b3,b4,b5*> =
+      <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5*> by A5B5;
+    <*a1,a2,a3,a4,a5,a6,a7*> = <*a1,a2,a3,a4,a5*>^<*a6,a7*> &
+    <*b1,b2,b3,b4,b5,b6,b7*> = <*b1,b2,b3,b4,b5*>^<*b6,b7*>
+      by AOFA_A00:def 5; then
+    <*a1,a2,a3,a4,a5,a6,a7*> + <*b1,b2,b3,b4,b5,b6,b7*> =
+      <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5*>^<*a6+b6,a7+b7*> by A1,FINSEQ940A;
+    hence thesis by AOFA_A00:def 5;
+  end;
+
+theorem A8B8:
+  for a1,a2,a3,a4,a5,a6,a7,a8,b1,b2,b3,b4,b5,b6,b7,b8 be Complex holds
+  <*a1,a2,a3,a4,a5,a6,a7,a8*> + <*b1,b2,b3,b4,b5,b6,b7,b8*> =
+    <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5,a6+b6,a7+b7,a8+b8*>
+  proof
+    let a1,a2,a3,a4,a5,a6,a7,a8,b1,b2,b3,b4,b5,b6,b7,b8 be Complex;
+    A1: <*a1,a2,a3,a4,a5*> + <*b1,b2,b3,b4,
+      b5*> = <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5*> by A5B5;
+    <*a1,a2,a3,a4,a5,a6,a7,a8*> = <*a1,a2,a3,a4,a5*>^<*a6,a7,a8*> &
+    <*b1,b2,b3,b4,b5,b6,b7,b8*> = <*b1,b2,b3,b4,b5*>^<*b6,b7,b8*>
+      by AOFA_A00:def 6; then
+    <*a1,a2,a3,a4,a5,a6,a7,a8*> + <*b1,b2,b3,b4,b5,b6,b7,b8*> =
+      <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5*>^<*a6+b6,a7+b7,a8+b8*> by A1,FINSEQ940B;
+    hence thesis by AOFA_A00:def 6;
+  end;
+
+theorem NC0:
+  Newton_Coeff 0 = <*1*>
+  proof
+    len (Newton_Coeff 0) = 0 + 1 by NEWTON:def 5; then
+    dom (Newton_Coeff 0) = Seg 1 & (Newton_Coeff 0).1 = 1 by FINSEQ_1:def 3;
+    hence thesis;
+  end;
+
+theorem
+  Newton_Coeff 1 = <*1,1*>
+  proof
+    len (Newton_Coeff 1) = 1 + 1 by NEWTON:def 5; then
+    dom (Newton_Coeff 1) = Seg 2 &
+      (Newton_Coeff 1).1 = 1 & (Newton_Coeff 1).(1+1) = 1 by FINSEQ_1:def 3;
+    hence thesis;
+  end;
+
+theorem
+  Newton_Coeff 2 = <*1,2,1*>
+  proof
+    len (Newton_Coeff 2) = 2 + 1 by NEWTON:def 5; then
+    dom (Newton_Coeff 2) = Seg 3 &
+      (Newton_Coeff 2).1 = 1 & (Newton_Coeff 2).(2+1) = 1 &
+        (Newton_Coeff 2).2 = 2 by FINSEQ_1:def 3;
+    hence thesis;
+  end;
+
+theorem NC3:
+  Newton_Coeff 3 = <*1,3,3,1*>
+  proof
+    reconsider f = <*1,3,3*> as 3-element real-valued FinSequence;
+    len (Newton_Coeff 3) = 3 + 1 by NEWTON:def 5; then
+    dom (Newton_Coeff 3) = Seg 4 & (Newton_Coeff 3).1 = 1 &
+      (Newton_Coeff 3).(3+1) = 1 & (Newton_Coeff 3).2 = 3 &
+        (Newton_Coeff 3).3 = 3 by FINSEQ_1:def 3;
+    hence thesis;
+  end;
+
+theorem NC4:
+  Newton_Coeff 4 = <*1,4,6,4,1*>
+  proof
+    A1: <*0*>^<*1,3,3,1*> = <*0,1,3,3,1*> & <*1,3,3,1*>^<*0*> = <*1,3,3,1,0*>
+      by FINSEQ_4:75;
+    Newton_Coeff (3 + 1) = <*0,1,3,3,1*> + <*1,3,3,1,0*> by A1,PT,NC3
+    .= <*0+1,1+3,3+3,3+1,1+0*> by A5B5;
+    hence thesis;
+  end;
+
+theorem NC5:
+  Newton_Coeff 5 = <*1,5,10,10,5,1*>
+  proof
+    <*0*>^<*1,4,6,4,1*> = <*0*>^(<*1,4,6,4*>^<*1*>) by FINSEQ_4:75
+    .= (<*0*>^<*1,4,6,4*>)^<*1*> by FINSEQ_1:32
+    .= <*0,1,4,6,4*>^<*1*> by FINSEQ_4:75; then
+    A1: <*0*>^<*1,4,6,4,1*> = <*0,1,4,6,4,1*> &
+      <*1,4,6,4,1*>^<*0*> = <*1,4,6,4,1,0*> by AOFA_A00:def 4;
+    Newton_Coeff (4 + 1) = <*0,1,4,6,4,1*> + <*1,4,6,4,1,0*> by A1,PT,NC4
+    .= <*0+1,1+4,4+6,6+4,4+1,1+0*> by A6B6;
+    hence thesis;
+  end;
+
+theorem NC6:
+  Newton_Coeff 6 = <*1,6,15,20,15,6,1*>
+  proof
+    A1: <*1,5,10,10,5,1*> = (<*1,5,10,10,5*>^<*1*>) by AOFA_A00:def 4;  then
+    A2: <*0*>^<*1,5,10,10,5,1*> = (<*0*>^<*1,5,10,10,5*>)^<*1*> by FINSEQ_1:32
+    .= (<*0*>^(<*1,5,10,10*>^<*5*>))^<*1*> by FINSEQ_4:75
+    .= (<*0*>^<*1,5,10,10*>)^<*5*>^<*1*> by FINSEQ_1:32
+    .= (<*0*>^<*1,5,10,10*>)^(<*5*>^<*1*>) by FINSEQ_1:32
+    .= <*0,1,5,10,10*>^<*5,1*> by FINSEQ_4:75;
+    A3: <*1,5,10,10,5,1*>^<*0*> = <*1,5,10,10,5*>^<*1,0*> by A1,FINSEQ_1:32;
+    A4: <*0*>^<*1,5,10,10,5,1*> = <*0,1,5,10,10,5,1*> &
+      <*1,5,10,10,5,1*>^<*0*> = <*1,5,10,10,5,1,0*> by A2,A3,AOFA_A00:def 5;
+    Newton_Coeff (5 + 1) = <*0,1,5,10,10,5,1*> + <*1,5,10,10,5,1,0*>
+      by A4,PT,NC5
+    .= <*0+1,1+5,5+10,10+10,10+5,5+1,1+0*> by A7B7;
+    hence thesis;
+  end;
+
+theorem NC7:
+  Newton_Coeff 7 = <*1,7,21,35,35,21,7,1*>
+  proof
+    A1: <*1,6,15,20,15,6,1*> = <*1,6,15,20,15*>^<*6,1*>
+      by AOFA_A00:def 5; then
+    A2: <*0*>^<*1,6,15,20,15,6,1*> = (<*0*>^<*1,6,15,20,15*>)^<*6,1*>
+      by FINSEQ_1:32
+    .= <*0*>^(<*1,6,15,20*>^<*15*>)^<*6,1*> by FINSEQ_4:75
+    .= (<*0*>^<*1,6,15,20*>)^<*15*>^<*6,1*> by FINSEQ_1:32
+    .= (<*0*>^<*1,6,15,20*>)^(<*15*>^<*6,1*>) by FINSEQ_1:32
+    .= (<*0*>^<*1,6,15,20*>)^<*15,6,1*> by FINSEQ_1:43
+    .= <*0,1,6,15,20*>^<*15,6,1*> by FINSEQ_4:75;
+    A3: <*1,6,15,20,15,6,1*>^<*0*> = <*1,6,15,20,15*>^<*6,1,0*>
+      by A1,FINSEQ_1:32;
+    A4: <*0*>^<*1,6,15,20,15,6,1*> = <*0,1,6,15,20,15,6,1*> &
+      <*1,6,15,20,15,6,1*>^<*0*> = <*1,6,15,20,15,6,1,0*>
+        by A2,A3,AOFA_A00:def 6;
+    Newton_Coeff (6 + 1) = <*0,1,6,15,20,15,6,1*> + <*1,6,15,20,15,6,1,0*>
+      by A4,PT,NC6
+    .= <*0+1,1+6,6+15,15+20,20+15,15+6,6+1,1+0*> by A8B8;
+    hence thesis;
+  end;
+
+theorem
+  Newton_Coeff 8 = <*1,8,28,56,70,56,28,8,1*>
+  proof
+    Newton_Coeff (7 + 1) = <*0*>^<*1,7,21,35,35,21,7,1*> +
+      <*1,7,21,35,35,21,7,1*>^<*0*> by PT,NC7
+    .= <*0*>^(<*1,7,21,35,35*>^<*21,7,1*>) + <*1,7,21,35,35,21,7,1*>^<*0*>
+      by AOFA_A00:def 6
+    .= <*0*>^<*1,7,21,35,35*>^<*21,7,1*> + <*1,7,21,35,35,21,7,1*>^<*0*>
+      by FINSEQ_1:32
+    .= <*0*>^(<*1,7,21,35*>^<*35*>)^<*21,7,1*> + <*1,7,21,35,35,21,7,1*>^<*0*>
+      by FINSEQ_4:75
+    .= <*0*>^<*1,7,21,35*>^<*35*>^<*21,7,1*> + <*1,7,21,35,35,21,7,1*>^<*0*>
+      by FINSEQ_1:32
+    .= <*0,1,7,21,35*>^<*35*>^<*21,7,1*> + <*1,7,21,35,35,21,7,1*>^<*0*>
+      by FINSEQ_4:75
+    .= <*0,1,7,21,35*>^(<*35*>^<*21,7,1*>) + <*1,7,21,35,35,21,7,1*>^<*0*>
+      by FINSEQ_1:32
+    .= <*0,1,7,21,35*>^(<*35,21,7,1*>) + <*1,7,21,35,35,21,7,1*>^<*0*>
+      by FINSEQ_4:74
+    .= <*0,1,7,21,35*>^(<*35,21,7*>^<*1*>) + <*1,7,21,35,35,21,7,1*>^<*0*>
+      by FINSEQ_4:74
+    .= <*0,1,7,21,35*>^<*35,21,7*>^<*1*> + <*1,7,21,35,35,21,7,1*>^<*0*>
+      by FINSEQ_1:32
+    .= <*0,1,7,21,35,35,21,7*>^<*1*> + <*1,7,21,35,35,21,7,1*>^<*0*>
+      by AOFA_A00:def 6
+    .= (<*0,1,7,21,35,35,21,7*> + <*1,7,21,35,35,21,7,1*>)^<*0+1*>
+      by FINSEQ_9:40
+    .= <*0+1,1+7,7+21,21+35,35+35,35+21,21+7,7+1*>^<*0+1*> by A8B8;
+    hence thesis;
+  end;
+
+:: The Little Hockey Stick and Puck Theorem
+theorem for n be Nat holds
+  (n choose 0) + ((n+2) choose 1) + ((n+4) choose 2) =
+    ((n+5) choose 2) - (n+5) choose 0
+  proof
+    let n be Nat;
+    (n choose 0) = 1 & (n + 1 + 1) choose 1 = n + 2 &
+      ((n + 3) + 1) choose 2 = (n + 3)*(n + 4)/2 &
+        ((n + 4) + 1) choose 2 = (n + 4)*(n + 5)/2 & (n + 5) choose 0 = 1
+          by NEWTON:19,NUMPOLY1:72;
+    hence thesis;
+  end;
+
+:: The Big Hockey Stick and Puck Theorem
+
+theorem for n be Nat holds
+  (n choose 0) + ((n+2) choose 1) +
+    ((n + 4) choose 2) + ((n + 6) choose 3) =
+      ((n + 7) choose 3) - ((n + 6) choose 1)
+  proof
+    let n be Nat;
+    (n choose 0) = 1 & (n+1+1) choose 1 = n+2 &
+      (n + 4) choose 2 = (n + 4)*((n+4)-1)/2 &
+        (n + 6) choose 3 = (n+6)*((n+6)-1)*((n+6)-2)/6 &
+          (n + 7) choose 3 = (n + 7)*((n + 7)-1)*((n+7)-2)/6 &
+            (n + 6) choose 1 = n + 6 by STIRL2_1:51,NEWTON:19;
+    hence thesis;
+  end;
+
+theorem LmN:
+  for n,k be Nat st k in Seg (n+1) holds ex l,m be Nat st
+  l = k - 1 & m = n - l
+  proof
+    let n,k be Nat such that
+    A1: k in Seg (n+1);
+    reconsider k as non zero Nat by A1,FINSEQ_1:1;
+    reconsider l = k - 1 as Nat;
+    (n - (k - 1)) + k >= 0 + k by A1,FINSEQ_1:1; then
+    n - l >= 0 by XREAL_1:6;
+    hence thesis;
+  end;
+
+theorem
+  for a,b be Complex, n,k be Nat st k in Seg(n+1)
+    ex c be object, l,m be Nat st m = k-1 & l = n-m & c = a|^l*b|^m
+    proof
+      let a,b be Complex, n,k be Nat such that
+      B1: k in Seg (n+1);
+      consider m1,l1 be Nat such that
+      B2: m1 = k - 1 & l1 = n - m1 by B1,LmN;
+      a|^l1*b|^m1 is object;
+      hence thesis by B2;
+    end;
+
+:: Pascal's Triangle: https://oeis.org/A007318
+
+:: Harmonic Triangle, https://www.deltami.edu.pl/media/articles/2020/02/delta-2020-02-trojkat-harmoniczny-blizniak-trojkata-pascala.pdf
+
+definition let n be non zero Nat;
+  func RHartr n -> FinSequence equals
+  n(#)(Newton_Coeff (n-1));
+  coherence;
+end;
+
+registration
+  let n be non zero Nat;
+  cluster RHartr n -> n-element;
+  coherence;
+  cluster RHartr n -> NAT-valued;
+  coherence;
+end;
+
+theorem HAR:
+  for n,k be non zero Nat holds (RHartr n).k = n*((n-1) choose (k-1))
+  proof
+    let n,k be non zero Nat;
+    per cases;
+    suppose k in dom RHartr n; then
+      k <= len (RHartr n) by FINSEQ_3:25; then
+      1 <= k <= n by CARD_1:def 7,NAT_1:14; then
+      k in Seg len Newton_Coeff (n - 1); then
+      A1: k in dom Newton_Coeff (n - 1) by FINSEQ_1:def 3; then
+      A2: k in dom (n(#)Newton_Coeff (n - 1)) by VALUED_1:def 5;
+      n*((n - 1) choose (k - 1)) = n*(Newton_Coeff (n - 1)).k
+        by A1,NEWTON:def 5
+      .= (n(#) Newton_Coeff (n - 1)).k by A2,VALUED_1:def 5;
+      hence thesis;
+    end;
+    suppose
+      B1: not k in dom RHartr n; then
+      1 > k or k > len (RHartr n) by FINSEQ_3:25; then
+      k > n by CARD_1:def 7,INT_1:74; then
+      k - 1 > n - 1 by XREAL_1:9; then
+      n*((n - 1) choose (k - 1)) = n*0 by NEWTON:def 3
+      .= (RHartr n).k by B1,FUNCT_1:def 2;
+      hence thesis;
+    end;
+  end;
+
+theorem
+  RHartr 1 = <*1*> by NC0;
+
+theorem RH2:
+  RHartr 2 = <*2,2*>
+  proof
+    reconsider f = RHartr 2 as 2-element FinSequence;
+    f.1 = 2*(Newton_Coeff (2-1)).1 & f.2 = 2*(Newton_Coeff (2-1)).2
+      by VALUED_1:6;
+    hence thesis;
+  end;
+
+theorem RH3:
+  RHartr 3 = <*3,6,3*>
+  proof
+    reconsider f = RHartr 3 as 3-element FinSequence;
+    f.1 = 3*(Newton_Coeff (3-1)).1 & f.2 = 3*(Newton_Coeff (3-1)).2 &
+      f.3 = 3*(Newton_Coeff (3-1)).3 by VALUED_1:6;
+    hence thesis;
+  end;
+
+theorem RH4:
+  RHartr 4 = <*4,12,12,4*>
+  proof
+    reconsider f = RHartr 4 as 4-element FinSequence;
+    f.1 = 4*(Newton_Coeff 3).1 & f.2 = 4*(Newton_Coeff 3).2 &
+      f.3 = 4*(Newton_Coeff 3).3 & f.4 = 4*(Newton_Coeff 3).4 by VALUED_1:6;
+    hence thesis;
+  end;
+
+theorem RH5:
+  RHartr 5 = <*5,20,30,20,5*>
+  proof
+    reconsider f = RHartr 5 as 5-element FinSequence;
+    reconsider g = Newton_Coeff (5-1) as (4+1)-element
+      complex-valued FinSequence;
+    A1: f.1 = 5*(g.1) & f.2 = 5*(g.2) & f.3 = 5*(g.3) &
+      f.4 = 5*(g.4) & f.5 = 5*(g.5) by VALUED_1:6;
+    g.1 = 1 & g.2 = 4 & g.3 = 6 & g.4 = 4 & g.5 = 1
+      by NC4;
+    hence thesis by A1;
+  end;
+
+theorem RH6:
+  RHartr 6 = <*6,30,60,60,30,6*>
+  proof
+    reconsider f = RHartr 6 as 6-element FinSequence;
+    reconsider g = Newton_Coeff (6-1) as (5+1)-element
+      complex-valued FinSequence;
+    A1: f.1 = 6*(g.1) & f.2 = 6*(g.2) & f.3 = 6*(g.3) &
+      f.4 = 6*(g.4) & f.5 = 6*(g.5) & f.6 = 6*(g.6) by VALUED_1:6;
+    g.1 = 1 & g.2 = 5 & g.3 = 10 & g.4 = 10 & g.5 = 5 & g.6 = 1
+      by NC5;
+    hence thesis by A1;
+  end;
+
+theorem RH7:
+  RHartr 7 = <*7,42,105,140,105,42,7*>
+  proof
+    reconsider f = RHartr 7 as 7-element FinSequence;
+    reconsider g = Newton_Coeff (7-1) as (6+1)-element
+      complex-valued FinSequence;
+    A1: f.1 = 7*(g.1) & f.2 = 7*(g.2) & f.3 = 7*(g.3) &
+      f.4 = 7*(g.4) & f.5 = 7*(g.5) & f.6 = 7*(g.6) & f.7 = 7*(g.7)
+        by VALUED_1:6;
+    g.1 = 1 & g.2 = 6 & g.3 = 15 & g.4 = 20 & g.5 = 15 & g.6 = 6 &
+      g.7 = 1 by NC6;
+    hence thesis by A1;
+  end;
+
+theorem RH8:
+  RHartr 8 = <*8,56,168,280,280,168,56,8*>
+  proof
+    reconsider f = RHartr 8 as 8-element FinSequence;
+    reconsider g = Newton_Coeff (8-1) as
+      (7+1)-element complex-valued FinSequence;
+    A1: f.1 = 8*(g.1) & f.2 = 8*(g.2) & f.3 = 8*(g.3) & f.4 = 8*(g.4) &
+      f.5 = 8*(g.5) & f.6 = 8*(g.6) & f.7 = 8*(g.7) & f.8 = 8*(g.8)
+        by VALUED_1:6;
+    g.1 = 1 & g.2 = 7 & g.3 = 21 & g.4 = 35 & g.5 = 35 & g.6 = 21 &
+      g.7 = 7 & g.8 = 1 by NC7;
+    hence thesis by A1;
+  end;
+
+definition let n be non zero Nat;
+  func Hartr n -> FinSequence equals
+::  :Def3:
+  (RHartr n)";
+  coherence;
+end;
+
+registration
+  let n be non zero Nat;
+  cluster Hartr n -> n-element;
+  coherence;
+  cluster Hartr n -> REAL-valued;
+  coherence;
+end;
+
+theorem :: HAT:
+  for n,k be non zero Nat holds (Hartr n).k = 1/(n*((n-1) choose (k-1)))
+  proof
+    let n,k be non zero Nat;
+    per cases;
+    suppose
+      k in dom RHartr n; then
+      k in dom (Hartr n) by VALUED_1:def 7; then
+      (Hartr n).k = ((RHartr n).k)" by VALUED_1:def 7
+      .= (n*((n-1) choose (k - 1)))" by HAR
+      .= 1/(n*((n - 1) choose (k -1))) by XCMPLX_1:215;
+      hence thesis;
+    end;
+    suppose
+      B1: not k in dom RHartr n; then
+      not k in dom (Hartr n) by VALUED_1:def 7; then
+      (Hartr n).k = 1/0 by FUNCT_1:def 2
+      .= 1/((RHartr n).k) by B1,FUNCT_1:def 2
+      .= 1/(n*((n-1) choose (k - 1))) by HAR;
+      hence thesis;
+    end;
+  end;
+
+theorem for n be non zero Nat holds Sum (RHartr n) = n*2|^(n - 1)
+  proof
+    let n be non zero Nat;
+    Sum (RHartr n) = n * Sum (Newton_Coeff (n - 1)) by RVSUM_1:87;
+    hence thesis by NEWTON:32;
+  end;
+
+theorem Hartr 1 = <*1*>
+  proof
+    reconsider f = Hartr 1 as 1-element complex-valued FinSequence;
+    reconsider g = RHartr 1 as 1-element complex-valued FinSequence;
+    len f = 1 & len g = 1 by CARD_1:def 7; then
+    dom f = Seg 1 & dom g = Seg 1 by FINSEQ_1:def 3; then
+    1 in dom f; then
+    f.1 = (g.1)" by VALUED_1:def 7
+    .= 1/1;
+    hence thesis;
+  end;
+
+theorem Hartr 2 = <*1/2,1/2*>
+  proof
+    reconsider f = Hartr 2 as 2-element complex-valued FinSequence;
+    reconsider g = RHartr 2 as 2-element complex-valued FinSequence;
+    len f = 2 & len g = 2 by CARD_1:def 7; then
+    dom f = Seg 2 & dom g = Seg 2 by FINSEQ_1:def 3; then
+    1 in dom f & 2 in dom f; then
+    f.1 = (g.1)" & f.2 = (g.2)" by VALUED_1:def 7;
+    hence thesis by RH2;
+  end;
+
+theorem Hartr 3 = <*1/3,1/6,1/3*>
+  proof
+    reconsider f = Hartr 3 as 3-element complex-valued FinSequence;
+    reconsider g = RHartr 3 as 3-element complex-valued FinSequence;
+    len f = 3 & len g = 3 by CARD_1:def 7; then
+    dom f = Seg 3 & dom g = Seg 3 by FINSEQ_1:def 3; then
+    1 in dom f & 2 in dom f & 3 in dom f; then
+    f.1 = (g.1)" & f.2 = (g.2)" & f.3 = (g.3)" by VALUED_1:def 7;
+    hence thesis by RH3;
+  end;
+
+theorem Hartr 4 = <*1/4,1/12,1/12,1/4*>
+  proof
+    reconsider f = Hartr 4 as 4-element complex-valued FinSequence;
+    reconsider g = RHartr 4 as 4-element complex-valued FinSequence;
+    A1: g.1 = 4 & g.2 = 12 & g.3 = 12 & g.4 = 4 by RH4;
+    len f = 4 & len g = 4 by CARD_1:def 7; then
+    dom f = Seg 4 & dom g = Seg 4 by FINSEQ_1:def 3; then
+    1 in dom f & 2 in dom f & 3 in dom f & 4 in dom f; then
+    f.1 = (g.1)" & f.2 = (g.2)" & f.3 = (g.3)" & f.4 = (g.4)"
+      by VALUED_1:def 7;
+    hence thesis by A1;
+  end;
+
+theorem Hartr 5 = <*1/5,1/20,1/30,1/20,1/5*>
+  proof
+    reconsider f = Hartr 5 as 5-element complex-valued FinSequence;
+    reconsider g = RHartr 5 as 5-element complex-valued FinSequence;
+    A1: g.1 = 5 & g.2 = 20 & g.3 = 30 & g.4 = 20 & g.5 = 5 by RH5;
+    len f = 5 & len g = 5 by CARD_1:def 7; then
+    dom f = Seg 5 & dom g = Seg 5 by FINSEQ_1:def 3; then
+    1 in dom f & 2 in dom f & 3 in dom f & 4 in dom f & 5 in dom f; then
+    f.1 = (g.1)" & f.2 = (g.2)" & f.3 = (g.3)" & f.4 = (g.4)" & f.5 = (g.5)"
+      by VALUED_1:def 7;
+    hence thesis by A1;
+  end;
+
+theorem Hartr 6 = <*1/6,1/30,1/60,1/60,1/30,1/6*>
+  proof
+    reconsider f = Hartr 6 as 6-element complex-valued FinSequence;
+    reconsider g = RHartr 6 as 6-element complex-valued FinSequence;
+    A1: g.1 = 6 & g.2 = 30 & g.3 = 60 & g.4 = 60 & g.5 = 30 &
+      g.6 = 6 by RH6;
+    len f = 6 & len g = 6 by CARD_1:def 7; then
+    dom f = Seg 6 & dom g = Seg 6 by FINSEQ_1:def 3; then
+    1 in dom f & 2 in dom f & 3 in dom f & 4 in dom f & 5 in dom f &
+      6 in dom f; then
+    f.1 = (g.1)" & f.2 = (g.2)" & f.3 = (g.3)" & f.4 = (g.4)" & f.5 = (g.5)" &
+      f.6 = (g.6)" by VALUED_1:def 7;
+    hence thesis by A1;
+  end;
+
+theorem Hartr 7 = <*1/7,1/42,1/105,1/140,1/105,1/42,1/7*>
+  proof
+    reconsider f = Hartr 7 as 7-element complex-valued FinSequence;
+    reconsider g = RHartr 7 as 7-element complex-valued FinSequence;
+    A1: g.1 = 7 & g.2 = 42 & g.3 = 105 & g.4 = 140 & g.5 = 105 & g.6 = 42 &
+      g.7 = 7 by RH7;
+    len f = 7 & len g = 7 by CARD_1:def 7; then
+    dom f = Seg 7 & dom g = Seg 7 by FINSEQ_1:def 3; then
+    1 in dom f & 2 in dom f & 3 in dom f & 4 in dom f & 5 in dom f &
+      6 in dom f & 7 in dom f; then
+    f.1 = (g.1)" & f.2 = (g.2)" & f.3 = (g.3)" & f.4 = (g.4)" & f.5 = (g.5)" &
+      f.6 = (g.6)" & f.7 = (g.7)" by VALUED_1:def 7;
+    hence thesis by A1;
+  end;
+
+theorem Hartr 8 = <*1/8,1/56,1/168,1/280,1/280,1/168,1/56,1/8*>
+  proof
+    reconsider f = Hartr 8 as 8-element complex-valued FinSequence;
+    reconsider g = RHartr 8 as 8-element complex-valued FinSequence;
+    A1: g.1 = 8 & g.2 = 56 & g.3 = 168 & g.4 = 280 & g.5 = 280 & g.6 = 168 &
+      g.7 = 56 & g.8 = 8 by RH8;
+    len f = 8 & len g = 8 by CARD_1:def 7; then
+    dom f = Seg 8 & dom g = Seg 8 by FINSEQ_1:def 3; then
+    1 in dom f & 2 in dom f & 3 in dom f & 4 in dom f & 5 in dom f &
+      6 in dom f & 7 in dom f & 8 in dom f; then
+    f.1 = (g.1)" & f.2 = (g.2)" & f.3 = (g.3)" & f.4 = (g.4)" & f.5 = (g.5)" &
+      f.6 = (g.6)" & f.7 = (g.7)" & f.8 = (g.8)" by VALUED_1:def 7;
+    hence thesis by A1;
+  end;
+
+::   https://mathworld.wolfram.com/RascalTriangle.html
+
+definition let n be natural Number;
+  func Rascal n -> FinSequence means
+  :Def1:
+  dom it = Seg(n + 1) & for i be Nat st i in dom it holds
+  it.i = (i-1)*(n+1-i) + 1;
+  existence
+  proof
+    deffunc F(Nat)=($1-1)*(n + 1 - $1) + 1;
+    consider FS be FinSequence such that
+    A1: len FS = n + 1 & for i be Nat st i in dom FS holds FS.i = F(i)
+      from FINSEQ_1:sch 2;
+    take FS;
+    thus thesis by A1,FINSEQ_1:def 3;
+    end;
+  uniqueness
+  proof
+    let F1,F2 be FinSequence such that
+    A1: dom F1 = Seg(n + 1) & (for i be Nat st i in dom F1 holds
+      F1.i = (i-1)*(n + 1 - i) + 1) & dom F2 = Seg(n + 1) &
+        (for i be Nat st i in dom F2 holds F2.i = (i-1)*(n + 1 - i) + 1);
+    consider X being set such that
+    A2: X = dom F1;
+    for k be Nat st k in X holds F1.k = F2.k
+    proof
+      let k be Nat such that
+      B1:  k in X;
+      F1.k = (k - 1)*(n + 1 - k) + 1 by A1,A2,B1
+      .= F2.k by A1,A2,B1;
+      hence thesis;
+    end;
+    hence thesis by A1,A2,FINSEQ_1:13;
+  end;
+end;
+
+registration
+  let n be Nat;
+  cluster Rascal n -> (n+1)-element;
+  coherence
+  proof
+    dom (Rascal n) = Seg (n + 1) by Def1; then
+    A1: len (Rascal n) = n+1 by FINSEQ_1:def 3;
+    (Rascal n) null n is (len (Rascal n))-element;
+    hence thesis by A1;
+  end;
+end;
+
+theorem Rascal 0 = <*1*>
+  proof
+    A1: dom (Rascal 0) = Seg (0 + 1) by Def1;
+    1 in dom (Rascal 0) by A1; then
+    (Rascal 0).1 = (1 - 1)*(0 + 1 - 1) + 1 by Def1
+    .= <*1*>.1;
+    hence thesis by A1,FINSEQ_1:def 8;
+  end;
+
+theorem Rascal 1 = <*1,1*>
+  proof
+    reconsider f = Rascal 1 as (1+1)-element FinSequence;
+    dom f = Seg (1 + 1) by Def1; then
+    1 in dom f & 2 in dom f; then
+    f.1 = (1-1)*(1+1-1) + 1 &
+    f.2 = (2-1)*(1+1-2) + 1 by Def1;
+    hence thesis;
+  end;
+
+theorem Rascal 2 = <*1,2,1*>
+  proof
+    reconsider f = Rascal 2 as (2+1)-element FinSequence;
+    dom f = Seg (2 + 1) by Def1; then
+    1 in dom f & 2 in dom f & 3 in dom f; then
+    f.1 = (1-1)*(2+1-1) + 1 &
+    f.2 = (2-1)*(2+1-2) + 1 &
+    f.3 = (3-1)*(2+1-3) + 1 by Def1;
+    hence thesis;
+  end;
+
+theorem Rascal 3 = <*1,3,3,1*>
+  proof
+    reconsider f = Rascal 3 as (3+1)-element FinSequence;
+    dom f = Seg (3 + 1) by Def1; then
+    1 in dom f & 2 in dom f & 3 in dom f & 4 in dom f; then
+    f.1 = (1-1)*(3+1-1) + 1 &
+    f.2 = (2-1)*(3+1-2) + 1 &
+    f.3 = (3-1)*(3+1-3) + 1 &
+    f.4 = (4-1)*(3+1-4) + 1 by Def1;
+    hence thesis;
+  end;
+
+theorem Rascal 4 = <*1,4,5,4,1*>
+  proof
+    reconsider f = Rascal 4 as (4+1)-element FinSequence;
+    dom f = Seg (4 + 1) by Def1; then
+    1 in dom f & 2 in dom f & 3 in dom f & 4 in dom f & 5 in dom f; then
+    f.1 = (1-1)*(4+1-1) + 1 &
+    f.2 = (2-1)*(4+1-2) + 1 &
+    f.3 = (3-1)*(4+1-3) + 1 &
+    f.4 = (4-1)*(4+1-4) + 1 &
+    f.5 = (5-1)*(4+1-5) + 1 by Def1;
+    hence thesis;
+  end;
+
+theorem Rascal 5 = <*1,5,7,7,5,1*>
+  proof
+    reconsider f = Rascal 5 as (5+1)-element FinSequence;
+    dom f = Seg (5 + 1) by Def1; then
+    1 in dom f & 2 in dom f & 3 in dom f &
+      4 in dom f & 5 in dom f & 6 in dom f; then
+    f.1 = (1-1)*(5+1-1) + 1 &
+    f.2 = (2-1)*(5+1-2) + 1 &
+    f.3 = (3-1)*(5+1-3) + 1 &
+    f.4 = (4-1)*(5+1-4) + 1 &
+    f.5 = (5-1)*(5+1-5) + 1 &
+    f.6 = (6-1)*(5+1-6) + 1 by Def1;
+    hence thesis;
+  end;
+
+theorem Rascal 6 = <*1,6,9,10,9,6,1*>
+  proof
+    reconsider f = Rascal 6 as (6+1)-element FinSequence;
+    dom f = Seg (6 + 1) by Def1; then
+    1 in dom f & 2 in dom f & 3 in dom f & 4 in dom f &
+      5 in dom f & 6 in dom f & 7 in dom f; then
+    f.1 = (1-1)*(6+1-1) + 1 &
+    f.2 = (2-1)*(6+1-2) + 1 &
+    f.3 = (3-1)*(6+1-3) + 1 &
+    f.4 = (4-1)*(6+1-4) + 1 &
+    f.5 = (5-1)*(6+1-5) + 1 &
+    f.6 = (6-1)*(6+1-6) + 1 &
+    f.7 = (7-1)*(6+1-7) + 1 by Def1;
+    hence thesis;
+  end;
+
+theorem R7:
+  Rascal 7 = <*1,7,11,13,13,11,7,1*>
+  proof
+    reconsider f = Rascal 7 as (7+1)-element FinSequence;
+    dom f = Seg (7 + 1) by Def1; then
+    1 in dom f & 2 in dom f & 3 in dom f & 4 in dom f &
+      5 in dom f & 6 in dom f & 7 in dom f & 8 in dom f; then
+    f.1 = (1-1)*(7+1-1) + 1 &
+    f.2 = (2-1)*(7+1-2) + 1 &
+    f.3 = (3-1)*(7+1-3) + 1 &
+    f.4 = (4-1)*(7+1-4) + 1 &
+    f.5 = (5-1)*(7+1-5) + 1 &
+    f.6 = (6-1)*(7+1-6) + 1 &
+    f.7 = (7-1)*(7+1-7) + 1 &
+    f.8 = (8-1)*(7+1-8) + 1 by Def1;
+    hence thesis;
+  end;
+
+theorem (Rascal 7).4 = 13 by R7;
+
+theorem for n be Nat holds (Rascal n).1 = 1
+  proof
+    let n be Nat;
+    reconsider f = Rascal n as (n + 1)-element FinSequence;
+    A1: dom f = Seg (n + 1) by Def1;
+    1 + 0 <= 1 + n by XREAL_1:6; then
+    1 in dom f by A1; then
+    f.1 = (1 - 1)*(n + 1 - 1) + 1 by Def1;
+    hence thesis;
+  end;
+
+theorem for n be non zero Nat holds (Rascal n).2 = n
+  proof
+    let n be non zero Nat;
+    reconsider f = Rascal n as (n+1)-element FinSequence;
+    A1: dom f = Seg (n + 1) by Def1;
+    1 + 1 <= n + 1 by XREAL_1:6,NAT_1:14; then
+    1 + 1 in dom f by A1; then
+    f.2 = (2-1)*(n + 1 - 2) + 1 by Def1;
+    hence thesis;
+  end;
+
+registration
+  let n,m be Nat;
+  cluster (Rascal n).m -> natural;
+  coherence
+  proof
+    per cases;
+    suppose
+      B1: m in dom (Rascal n); then
+      m in Seg (n + 1) by Def1; then
+      1 <= m <= n + 1 by FINSEQ_1:1; then
+      m - 1 >= 1 - 1 & (n + 1) - m >= m  - m by XREAL_1:9; then
+      (m - 1)*(n + 1 -m) + 1 is Nat;
+      hence thesis by Def1,B1;
+    end;
+    suppose not m in dom (Rascal n);
+      hence thesis by FUNCT_1:def 2;
+    end;
+  end;
+end;
+
+:: https://www.artofmathematics.org/sites/default/files/rascalstackled.pdf
+
+theorem
+  for k,n be Nat holds
+    (Rascal (k + n)).(n+1) + (Rascal (k + n + 2)).(n+2) =
+      (Rascal (k + n + 1)).(n+1) + (Rascal (k + n + 1)).(n + 2) + 1
+  proof
+    let k,n be Nat;
+    A0: dom(Rascal (k+n)) = Seg (k + n + 1) &
+      dom (Rascal (k + n + 1)) = Seg(k + n + 1 + 1) &
+    dom (Rascal (k+n+2)) = Seg (k + n + 2 + 1) by Def1;
+    1 + 0 <= 1 + n & 0 + (n + 1) <= k + (n + 1) by XREAL_1:6; then
+    (n + 1) in dom (Rascal(k+n)) by A0; then
+    A1: (Rascal(k + n)).(n + 1) = (n + 1 - 1)*(k + n + 1 - (n + 1)) + 1
+      by Def1;
+    1 + 0 <= 1 + n & 0 + (n + 1) <= (k + 1) + (n + 1) by XREAL_1:6; then
+    n + 1 in dom (Rascal (k + n + 1)) by A0; then
+    A2: (Rascal(k + n + 1)).(n + 1) = (n + 1 - 1)*(k + n + 1 + 1 - (n + 1)) +
+      1 by Def1;
+    1 + 0 <= 1 + (n + 1) & 0 + (n + 2) <= k + (n + 2) by XREAL_1:6; then
+    n + 2 in dom (Rascal(k + n + 1)) by A0; then
+    A3: (Rascal(k + n + 1)).(n + 2) =
+      (n + 2 - 1)*(k + n + 1 + 1 - (n + 2)) + 1 by Def1;
+    1 + 0 <= 1 + (n + 1) & 0 + (n + 2) <= (k + 1) + (n + 2) by XREAL_1:6; then
+    n + 2 in dom (Rascal (k + n + 2)) by A0; then
+    (Rascal(k + n + 2)).(n + 2) =
+      (n + 2 - 1)*(k + n + 2 + 1 - (n + 2)) + 1 by Def1;
+    hence thesis by A1,A2,A3;
+  end;
+
+theorem
+  for k,n be Nat holds
+    (Rascal (k + n)).(n+1) * (Rascal (k + n + 2)).(n+2) =
+      (Rascal (k + n + 1)).(n+1) * (Rascal (k + n + 1)).(n + 2) + 1
+  proof
+    let k,n be Nat;
+    A0: dom(Rascal (k+n)) = Seg (k + n + 1) &
+      dom (Rascal (k + n + 1)) = Seg(k + n + 1 + 1) &
+    dom (Rascal (k+n+2)) = Seg (k + n + 2 + 1) by Def1;
+    1 + 0 <= 1 + n & 0 + (n + 1) <= k + (n + 1) by XREAL_1:6; then
+    (n + 1) in dom (Rascal(k+n)) by A0; then
+    A1: (Rascal(k + n)).(n + 1) = (n + 1 - 1)*(k + n + 1 - (n + 1)) + 1
+      by Def1;
+    1 + 0 <= 1 + n & 0 + (n + 1) <= (k + 1) + (n + 1) by XREAL_1:6; then
+    n + 1 in dom (Rascal (k + n + 1)) by A0; then
+    A2: (Rascal(k + n + 1)).(n + 1) =
+      (n + 1 - 1)*(k + n + 1 + 1 - (n + 1)) + 1 by Def1;
+    1 + 0 <= 1 + (n + 1) & 0 + (n + 2) <= k + (n + 2) by XREAL_1:6; then
+    n + 2 in dom (Rascal(k + n + 1)) by A0; then
+    A3: (Rascal(k + n + 1)).(n + 2) =
+      (n + 2 - 1)*(k + n + 1 + 1 - (n + 2)) + 1 by Def1;
+    1 + 0 <= 1 + (n + 1) & 0 + (n + 2) <= (k + 1) + (n + 2)
+      by XREAL_1:6; then
+    n + 2 in dom (Rascal (k + n + 2)) by A0; then
+    (Rascal(k + n + 2)).(n + 2) =
+      (n + 2 - 1)*(k + n + 2 + 1 - (n + 2)) + 1 by Def1;
+    hence thesis by A1,A2,A3;
+  end;
+

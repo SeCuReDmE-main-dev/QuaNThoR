@@ -1,0 +1,437 @@
+:: Extensions of Languages in {P}olish Notation
+::  by Taneli Huuskonen
+:: 
+:: Received May 23, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, SUBSET_1, XBOOLE_0, FINSEQ_1, XXREAL_0, TARSKI, ARYTM_3,
+      CARD_1, ORDINAL4, FUNCT_1, RELAT_1, NAT_1, POLNOT_1, PRE_POLY, ZFMISC_1,
+      QC_LANG1, BINOP_1, FUNCOP_1, POLNOT_2, FOMODEL1, ALGSPEC1, FUNCT_4,
+      CAT_1, VALUED_0, AOFA_L00, QUANTAL1;
+ notations TARSKI, XBOOLE_0, SUBSET_1, NUMBERS, FINSEQ_1, XXREAL_0, XCMPLX_0,
+      RELAT_1, FUNCT_1, ORDINAL1, ZFMISC_1, BINOP_1, FUNCT_2, POLNOT_1,
+      FUNCOP_1, FUNCT_4, VALUED_0, FREEALG;
+ constructors PRE_POLY, RELSET_1, POLNOT_1, FUNCT_4, FREEALG;
+ registrations ORDINAL1, XREAL_0, FINSEQ_1, SUBSET_1, RELAT_1, XBOOLE_0,
+      FUNCT_1, NAT_1, CARD_1, RELSET_1, POLNOT_1, FUNCOP_1, VALUED_0;
+ requirements NUMERALS, SUBSET, BOOLE, ARITHM, REAL;
+
+
+begin
+
+ reserve a,b for object;
+ reserve k,l,m,n for Nat;
+ reserve p,q,r,s for FinSequence;
+ reserve P for non empty FinSequence-membered set;
+ reserve S,T for Polish-language;
+ reserve V for Polish-language of T;
+ reserve K for non trivial Polish-language;
+ reserve E for Polish-arity-function of K;
+
+definition
+  let F be Function;
+  attr F is Polish-arity-like means
+:: POLNOT_2:def 1
+  ex T st F is Polish-arity-function of T;
+end;
+
+registration
+  let T;
+  cluster -> Polish-arity-like for Polish-arity-function of T;
+end;
+
+definition
+  let F be Function;
+  redefine attr F is Polish-arity-like means
+:: POLNOT_2:def 2
+  dom F is Polish-language & F is natural-valued & F is with_zero;
+end;
+
+registration
+  cluster Polish-arity-like -> natural-valued with_zero
+    for Function;
+end;
+
+registration
+  cluster Polish-arity-like for Function;
+end;
+
+definition
+  mode Polish-arity-function is Polish-arity-like Function;
+end;
+
+ reserve B for Polish-arity-function;
+
+definition
+  let B, C be Polish-arity-function;
+  attr C is B-extending means
+:: POLNOT_2:def 3
+  B c= C;
+end;
+
+definition
+  let B be Polish-arity-function;
+  redefine func dom B -> Polish-language;
+end;
+
+theorem :: POLNOT_2:1
+  for T,B holds B is Polish-arity-function of T iff T = dom B;
+
+ reserve A for Polish-arity-function of T;
+
+definition
+  let B be Polish-arity-function;
+  func Polish-WFF-set B -> Polish-language of dom B means
+:: POLNOT_2:def 4
+  ex T,A st A = B & it = Polish-WFF-set(T,A);
+end;
+
+definition
+  let T, A;
+  redefine attr A is empty-yielding means
+:: POLNOT_2:def 5
+  for a st a in T holds A.a = 0;
+end;
+
+definition
+  let T, A, P;
+  redefine attr P is A-closed means
+:: POLNOT_2:def 6
+  for p, n, q st p in T & n = A.p & q in P^^n holds p^q in P;
+end;
+
+registration
+  let T;
+  cluster empty-yielding for Polish-arity-function of T;
+end;
+
+definition
+  let T, V;
+  attr V is full means
+:: POLNOT_2:def 7
+  ex A st V = Polish-WFF-set(T,A);
+end;
+
+registration
+  let T;
+  cluster full for Polish-language of T;
+end;
+
+definition
+  let T,A;
+  redefine func Polish-WFF-set(T,A) -> full Polish-language of T;
+end;
+
+definition
+  let T, U be Polish-language;
+  attr U is T-extending means
+:: POLNOT_2:def 8
+  T c= U;
+end;
+
+registration
+  let T;
+  cluster T-extending for Polish-language;
+end;
+
+registration
+  let K;
+  cluster K-extending -> non trivial for Polish-language;
+end;
+
+definition
+  let B,S;
+  attr S is B-compatible means
+:: POLNOT_2:def 9
+  for s st s in S & s is (dom B)-headed ex n st
+      n = (B.((dom B)-head s)) & (dom B)-tail s in S^^n;
+end;
+
+definition
+  let T,A,S;
+  redefine attr S is A-compatible means
+:: POLNOT_2:def 10
+  for s st s in S & s is T-headed holds T-tail s in S^^(A.(T-head s));
+end;
+
+registration
+  let T,A;
+  cluster Polish-WFF-set(T,A) -> A-compatible;
+end;
+
+registration
+  let T,A;
+  cluster A-closed A-compatible for Polish-language;
+end;
+
+registration
+  let B;
+  cluster B-extending for Polish-arity-function;
+
+  cluster B-closed B-compatible for Polish-language;
+end;
+
+definition
+  let B;
+  mode Polish-ext-set of B is B-closed B-compatible Polish-language;
+  mode Extension of B is B-extending Polish-arity-function;
+end;
+
+ reserve C for Extension of B;
+
+registration
+  let B, C;
+  cluster C-extending -> B-extending for Polish-arity-function;
+end;
+
+registration
+  let B,C;
+  cluster C-closed -> B-closed for Polish-language;
+
+  cluster C-compatible -> B-compatible for Polish-language;
+end;
+
+ reserve Z for B-closed Polish-language;
+
+theorem :: POLNOT_2:2
+  for B, Z, p, q st p in dom B & B.p = 1 & q in Z holds p^q in Z;
+
+theorem :: POLNOT_2:3
+  for B, Z, p, q, r st p in dom B & B.p = 2 & q in Z & r in Z
+    holds p^(q^r) in Z;
+
+definition
+  let B,Z,p;
+  assume  p in dom B & B.p = 1;
+  func Polish-unOp(B,Z,p) -> UnOp of Z means
+:: POLNOT_2:def 11
+  for q st q in Z holds it.q = p^q;
+end;
+
+definition
+  let B,Z,p;
+  assume  p in dom B & B.p = 2;
+  func Polish-binOp(B,Z,p) -> BinOp of Z means
+:: POLNOT_2:def 12
+  for q,r st q in Z & r in Z holds it.(q,r) = p^(q^r);
+end;
+
+ reserve J for Polish-ext-set of B;
+
+definition
+  let B, J;
+  func Polish-ext-complement(B, J) -> Subset of J equals
+:: POLNOT_2:def 13
+  { p where p is Element of J : p is non (dom B)-headed };
+end;
+
+definition
+  let B, J;
+  func Polish-ext-domain(B,J) -> (dom B)-extending Polish-language equals
+:: POLNOT_2:def 14
+  dom B \/ Polish-ext-complement(B,J);
+end;
+
+theorem :: POLNOT_2:4
+  for B, J holds Polish-WFF-set B c= J;
+
+definition
+  let P, n;
+  func P |` n -> Subset of P equals
+:: POLNOT_2:def 15
+  { p where p is Element of P : len p <= n };
+end;
+
+theorem :: POLNOT_2:5
+  for T holds T is full Polish-language of T;
+
+ reserve V for full Polish-language of T;
+ reserve U for T-extending Polish-language;
+ reserve W for full Polish-language of U;
+
+definition
+  let T, V;
+  func Polish-arity V -> Polish-arity-function of T means
+:: POLNOT_2:def 16
+  V = Polish-WFF-set(T,it);
+end;
+
+registration
+  let T, A;
+  reduce Polish-arity Polish-WFF-set(T,A) to A;
+end;
+
+registration
+  let T, V;
+  reduce Polish-WFF-set(T, Polish-arity V) to V;
+end;
+
+definition
+  let B, J;
+  func Polish-ext-arity(B,J)
+      -> Polish-arity-function of Polish-ext-domain(B,J) means
+:: POLNOT_2:def 17
+  J = Polish-WFF-set(Polish-ext-domain(B,J),it);
+end;
+
+definition
+  let T;
+  mode Formula of T is Element of T;
+end;
+
+definition
+  let B, J;
+  let F be Formula of J;
+  func Polish-ext-head F -> Element of Polish-ext-domain(B,J) equals
+:: POLNOT_2:def 18
+  (Polish-ext-domain(B,J))-head F;
+end;
+
+theorem :: POLNOT_2:6
+  for S,T,p st S-head p in T holds p is T-headed & S-head p = T-head p;
+
+theorem :: POLNOT_2:7
+  for B, J for F being Formula of J st Polish-ext-head F in dom B
+    holds Polish-ext-head F = (dom B)-head F;
+
+theorem :: POLNOT_2:8
+  for B, J for F being Formula of J st F is (dom B)-headed
+    holds Polish-ext-head F = (dom B)-head F;
+
+ reserve M for Polish-ext-set of C;
+ reserve e for Element of dom C;
+ reserve F, G, H for Formula of M;
+
+theorem :: POLNOT_2:9
+  for C,e,M,F st C.e = 1 & Polish-ext-head F = e
+      ex G st F = Polish-unOp(C,M,e).G;
+
+theorem :: POLNOT_2:10
+  for C,e,M,G st C.e = 1 holds Polish-ext-head(Polish-unOp(C,M,e).G) = e;
+
+theorem :: POLNOT_2:11
+  for C,e,M,F st C.e = 2 & Polish-ext-head F = e ex G,H
+    st F = Polish-binOp(C,M,e).(G,H);
+
+theorem :: POLNOT_2:12
+  for C,e,M,G,H st C.e = 2 holds
+      Polish-ext-head(Polish-binOp(C,M,e).(G,H)) = e;
+
+theorem :: POLNOT_2:13
+  for T,U,V,W holds Polish-arity V c= Polish-arity W iff V c= W;
+
+theorem :: POLNOT_2:14
+  for T,U,V,W holds V c= W iff W is (Polish-arity V)-closed;
+
+definition
+  let T, U, V, W;
+  redefine attr W is V-extending means
+:: POLNOT_2:def 19
+  Polish-arity V c= Polish-arity W;
+end;
+
+registration
+  let T, U, V;
+  cluster V-extending for full Polish-language of U;
+end;
+
+definition
+  let T, V;
+  mode Extension of V is Polish-ext-set of Polish-arity V;
+end;
+
+registration
+  let T,V;
+  cluster -> (Polish-arity V)-closed (Polish-arity V)-compatible
+      for Extension of V;
+end;
+
+ reserve Q for Extension of V;
+
+theorem :: POLNOT_2:15
+  for T,V,Q holds V c= Q;
+
+definition
+  let T,V,Q;
+  func Polish-ext-complement Q -> Subset of Q equals
+:: POLNOT_2:def 20
+    Polish-ext-complement(Polish-arity V, Q);
+end;
+
+definition
+  let T, V, Q;
+  func Polish-ext-domain Q -> T-extending Polish-language equals
+:: POLNOT_2:def 21
+  Polish-ext-domain(Polish-arity V, Q);
+end;
+
+definition
+  let T, V, Q;
+  func Polish-ext-arity Q
+      -> Polish-arity-function of Polish-ext-domain Q equals
+:: POLNOT_2:def 22
+  Polish-ext-arity(Polish-arity V, Q);
+end;
+
+definition
+  let T,V,Q;
+  let F be Formula of Q;
+  func Polish-ext-head F -> Element of Polish-ext-domain Q equals
+:: POLNOT_2:def 23
+  (Polish-ext-domain Q)-head F;
+end;
+
+theorem :: POLNOT_2:16
+  for T,V,Q for F being Formula of Q st Polish-ext-head F in T
+    holds Polish-ext-head F = T-head F;
+
+theorem :: POLNOT_2:17
+  for T,V,Q for F being Formula of Q st F is T-headed
+    holds Polish-ext-head F = T-head F;
+
+ reserve M for Extension of Polish-WFF-set(K,E);
+ reserve e for Element of K;
+ reserve F,G,H for Formula of M;
+
+definition
+  let T,V,Q;
+  let t be Element of T;
+  assume  (Polish-arity V).t = 1;
+  func Polish-unOp(T,Q,t) -> UnOp of Q means
+:: POLNOT_2:def 24
+  for p st p in Q holds it.p = t^p;
+end;
+
+definition
+  let T,V,Q;
+  let t be Element of T;
+  assume  (Polish-arity V).t = 2;
+  func Polish-binOp(T,Q,t) -> BinOp of Q means
+:: POLNOT_2:def 25
+  for p,q st p in Q & q in Q holds it.(p,q) = t^(p^q);
+end;
+
+theorem :: POLNOT_2:18
+  for K,E,e,M,F st E.e = 1 & Polish-ext-head F = e
+      ex G st F = Polish-unOp(K,M,e).G;
+
+theorem :: POLNOT_2:19
+  for K,E,e,M,G st E.e = 1 holds Polish-ext-head(Polish-unOp(K,M,e).G) = e;
+
+theorem :: POLNOT_2:20
+  for K,E,e,M,F st E.e = 2 & Polish-ext-head F = e ex G,H
+    st F = Polish-binOp(K,M,e).(G,H);
+
+theorem :: POLNOT_2:21
+  for K,E,e,M,G,H st E.e = 2 holds
+    Polish-ext-head(Polish-binOp(K,M,e).(G,H)) = e;

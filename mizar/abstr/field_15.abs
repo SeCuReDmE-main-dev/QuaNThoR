@@ -1,0 +1,902 @@
+:: Separable Polynomials and Separable Extensions
+::  by Christoph Schwarzweller
+:: 
+:: Received June 18, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ARYTM_3, VECTSP_1, ALGSTR_0, TARSKI, STRUCT_0, SUBSET_1, NAT_6,
+      SUPINF_2, MESFUNC1, C0SP1, POLYNOM1, TOPGEN_1, FUNCSDOM, EC_PF_1,
+      HURWITZ, CARD_1, RING_2, FUNCT_1, RELAT_1, NUMBERS, FOMODEL1, YELLOW_8,
+      QC_LANG1, ZFMISC_1, REALSET1, CAT_1, POLYNOM3, FINSEQ_1, UPROOTS,
+      ARYTM_1, AFINSQ_1, ALGNUM_1, XBOOLE_0, XXREAL_0, GLIB_000, NAT_1, INT_1,
+      INT_2, MOD_4, XCMPLX_0, MSSUBFAM, ALGSEQ_1, ABIAN, VECTSP_2, RATFUNC1,
+      RLVECT_5, CARD_3, GRAPH_1, NEWTON, PARTFUN1, FINSET_1, FUNCT_4, BINOP_1,
+      LATTICES, FUNCOP_1, GCD_1, RLVECT_1, UNIROOTS, GROUP_1, GROUP_2, GROUP_6,
+      PRE_POLY, POLYNOM2, POLYNOM5, RING_3, RING_5, FIELD_1, FIELD_4, FIELD_6,
+      FIELD_8, FIELD_9, FIELD_13, FIELD_14, FIELD_15;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, BINOP_1, RELAT_1, FINSET_1,
+      REALSET1, ORDINAL1, FUNCT_1, FUNCT_2, NUMBERS, CARD_1, PARTFUN1, FUNCT_4,
+      FUNCT_7, XCMPLX_0, XXREAL_0, XXREAL_2, NAT_1, NEWTON, NAT_6, UNIROOTS,
+      PRE_POLY, INT_1, INT_2, NAT_D, ABIAN, FINSEQ_1, ALGSEQ_1, STRUCT_0,
+      POLYNOM1, POLYNOM3, POLYNOM4, POLYNOM5, BINOM, ALGSTR_0, GCD_1, GROUP_1,
+      GROUP_2, GR_CY_1, MOD_4, UPROOTS, RLVECT_1, VECTSP_2, MATRLIN, HURWITZ,
+      VECTSP_1, C0SP1, EC_PF_1, RATFUNC1, ALGNUM_1, RING_2, RING_3, RING_4,
+      RING_5, FIELD_1, FIELD_4, FIELD_6, FIELD_7, FIELD_8, FIELD_9, FIELD_13,
+      FIELD_14;
+ constructors FINSOP_1, POLYNOM4, REALSET1, NAT_D, NAT_6, RATFUNC1, BINOM,
+      RINGCAT1, POLYDIFF, ALGSEQ_1, RECDEF_1, NEWTON, XXREAL_2, ALGNUM_1,
+      ABIAN, RING_5, VECTSP_9, RINGDER1, GR_CY_1, UNIROOTS, FIELD_8, FIELD_9,
+      FIELD_12, FIELD_13, FIELD_14;
+ registrations XBOOLE_0, ORDINAL1, RELSET_1, FUNCOP_1, XCMPLX_0, XXREAL_0,
+      XREAL_0, MEMBERED, STRUCT_0, FINSET_1, XXREAL_2, FUNCT_1, CARD_1,
+      REALSET1, RATFUNC1, MOD_4, ABIAN, RELAT_1, NEWTON, NAT_1, NAT_6, INT_1,
+      ALGSTR_0, ALGSTR_1, GROUP_1, GROUP_2, RLVECT_1, VECTSP_1, RINGCAT1,
+      RING_2, RING_3, RING_4, RING_5, PRE_POLY, POLYNOM3, POLYNOM4, POLYNOM5,
+      POLYDIFF, UPROOTS, UNIROOTS, EC_PF_1, FIELD_1, FIELD_4, FIELD_5, FIELD_6,
+      FIELD_7, FIELD_8, FIELD_9, FIELD_12, FIELD_13, FIELD_14;
+ requirements NUMERALS, SUBSET, BOOLE, REAL, ARITHM;
+
+
+begin :: Preliminaries
+
+registration
+let R be Ring;
+let k be non zero Nat;
+reduce (0.R)|^k to 0.R;
+end;
+
+registration
+let R be Ring;
+let k be Nat;
+reduce (1.R)|^k to 1.R;
+end;
+
+registration
+let p be Prime;
+cluster finite p-characteristic for Field;
+end;
+
+registration
+let F be finite Field;
+cluster Char F -> prime;
+end;
+
+registration
+let R be non degenerated Ring;
+cluster monic -> non zero for Element of the carrier of Polynom-Ring R;
+end;
+
+definition
+let F be Field;
+let p be non constant Element of the carrier of Polynom-Ring F;
+let a be non zero Element of F;
+redefine func a * p -> non constant Element of the carrier of Polynom-Ring F;
+end;
+
+theorem :: FIELD_15:1
+for n being Nat, m being non zero Nat holds n/m is Nat iff m divides n;
+
+theorem :: FIELD_15:2
+for p being Prime
+for n,a,b being Nat
+st p divides a & not p divides b & n = a/b holds p divides n;
+
+theorem :: FIELD_15:3
+for p being Prime
+for n being non zero Nat st n < p holds n gcd p = 1;
+
+theorem :: FIELD_15:4
+for n being non zero Nat
+for p being Prime ex k,m being Nat st n = m * p|^k & not p divides m;
+
+registration
+let R be domRing;
+let a be non zero Element of R;
+let n be Nat;
+cluster a|^n -> non zero;
+end;
+
+theorem :: FIELD_15:5
+for R being Ring
+for a being Element of R
+for n being even Nat holds (-a) |^ n = a |^ n;
+
+theorem :: FIELD_15:6
+for R being Ring
+for a being Element of R
+for n being odd Nat holds (-a) |^ n = -(a |^ n);
+
+theorem :: FIELD_15:7
+for R being 2-characteristic Ring, a being Element of R holds -a = a;
+
+theorem :: FIELD_15:8
+for R being add-associative right_zeroed right_complementable
+            Abelian non empty doubleLoopStr
+for i being Integer holds i '*' 0.R = 0.R;
+
+registration
+let F be finite Field;
+cluster MultGroup F -> cyclic;
+end;
+
+theorem :: FIELD_15:9
+for F being Field
+for E being FieldExtension of F holds MultGroup F is Subgroup of MultGroup E;
+
+theorem :: FIELD_15:10
+for R being Skew-Field
+for n being Nat
+for a being Element of R
+for b being Element of MultGroup R st a = b holds a|^n = b|^n;
+
+theorem :: FIELD_15:11
+for R being Ring
+for p being Polynomial of R
+for a,b being Element of R holds (a + b) * p = a * p + b * p;
+
+theorem :: FIELD_15:12
+for R being Ring
+for p being Polynomial of R
+for a,b being Element of R holds (a * b) * p = a * (b * p);
+
+theorem :: FIELD_15:13
+for R being Ring
+for q being Element of the carrier of Polynom-Ring R
+for p being Polynomial of R
+for n being Nat st p = q holds (n * 1.R) * p = n * q;
+
+theorem :: FIELD_15:14
+for R being Ring
+for q being Element of the carrier of Polynom-Ring R
+for p being Polynomial of R
+for n,j being Nat st p = n * q holds p.j = n * (q.j);
+
+theorem :: FIELD_15:15
+for F being Field
+for a being Element of F, p being Polynomial of F
+for E being FieldExtension of F
+for b being Element of E, q being Polynomial of E
+st a = b & p = q holds a * p = b * q;
+
+theorem :: FIELD_15:16
+for F being Field
+for p being irreducible Element of the carrier of Polynom-Ring F
+for q being Element of the carrier of Polynom-Ring F
+st q divides p holds q is unital or q is_associated_to p;
+
+theorem :: FIELD_15:17
+for F being Field
+for p being irreducible Element of the carrier of Polynom-Ring F
+for q being monic Element of the carrier of Polynom-Ring F
+st q divides p holds q = 1_.(F) or q = NormPolynomial p;
+
+theorem :: FIELD_15:18
+for F being Field
+for p being non zero Element of the carrier of Polynom-Ring F
+holds p is reducible iff
+      (p is Unit of Polynom-Ring F or
+       ex q being monic Element of the carrier of Polynom-Ring F
+                                 st q divides p & 1 <= deg q & deg q < deg p);
+
+theorem :: FIELD_15:19
+for F being Field
+for p being non constant Element of the carrier of Polynom-Ring F
+holds p is reducible iff
+      ex q being monic Element of the carrier of Polynom-Ring F
+                                st q divides p & 1 <= deg q & deg q < deg p;
+
+begin :: On Powers of Polynomials
+
+registration
+let R be domRing;
+let p be non zero Polynomial of R;
+let n be Nat;
+cluster p`^n -> non zero;
+end;
+
+registration
+let F be Field;
+let p be non constant Polynomial of F;
+let n be non zero Nat;
+cluster p`^n -> non constant;
+end;
+
+registration
+let F be Field;
+let p be non constant Element of the carrier of Polynom-Ring F;
+let n be non zero Nat;
+cluster p|^n -> non constant;
+end;
+
+registration
+let F be Field;
+let p be constant Element of the carrier of Polynom-Ring F;
+let n be non zero Nat;
+cluster p|^n -> constant;
+end;
+
+registration
+let F be Field;
+let p be constant Element of the carrier of Polynom-Ring F;
+let n be non zero Nat;
+cluster p`^n -> constant;
+end;
+
+theorem :: FIELD_15:20
+for R being domRing
+for p being Polynomial of R
+for n being Nat holds LC(p`^n) = (LC p)|^n;
+
+theorem :: FIELD_15:21
+for R being domRing
+for p being non zero Polynomial of R
+for n being Nat holds deg(p`^n) = n * (deg p);
+
+theorem :: FIELD_15:22
+for R being commutative Ring
+for p being Polynomial of R
+for n being non zero Nat holds (p `^ n).0 = (p.0) |^ n;
+
+theorem :: FIELD_15:23
+for R being domRing
+for a being non zero Element of R
+for n being Nat holds <%0.R,a%>`^n = (a|^n) * (<%0.R,1.R%>`^n);
+
+theorem :: FIELD_15:24
+for F being Field
+for a being Element of F
+for n being Nat holds (a|F)`^n = (a|^n)|F;
+
+theorem :: FIELD_15:25
+for F being Field
+for a being non zero Element of F
+for n,m being Nat holds anpoly(a,m)`^n = anpoly(a|^n,n*m);
+
+theorem :: FIELD_15:26
+for F being Field
+for a being Element of F
+for n being Nat holds deg((X-a)`^n) = n;
+
+theorem :: FIELD_15:27
+for F being Field
+for a being Element of F
+for n being non zero Nat holds Roots((X-a)`^n) = {a};
+
+theorem :: FIELD_15:28
+for F being Field
+for a being Element of F, n being Nat holds multiplicity((X-a)`^n,a) = n;
+
+theorem :: FIELD_15:29
+for F being Field
+for a being Element of F, n being Nat holds card BRoots((X-a)`^n) = n;
+
+theorem :: FIELD_15:30
+for R being non degenerated comRing, S being comRingExtension of R
+for a being Element of R, b being Element of S
+for n being Element of NAT st a = b holds (X-b)`^n = (X-a)`^n;
+
+theorem :: FIELD_15:31
+for F being Field
+for p being monic Polynomial of F
+for a being Element of F
+for n being Nat
+holds p divides (X-a)`^n iff ex l being Nat st l <= n & p = (X-a)`^l;
+
+theorem :: FIELD_15:32
+for R being non degenerated comRing
+for a,b being Element of R
+for n being Nat holds eval((X+a)`^n,b) = (a + b)|^n;
+
+theorem :: FIELD_15:33
+for F being Field
+for a being Element of F
+for n being non zero Nat holds (X-a)`^n splits_in F;
+
+theorem :: FIELD_15:34
+for F1 being Field,
+    F2 being F1-homomorphic Field
+for h being Homomorphism of F1,F2
+for a being Element of F1
+for n being Nat holds (PolyHom h).((X-a)`^n)= (X-(h.a))`^n;
+
+begin :: The Rings R^p for Primes p
+
+registration
+let p be Prime;
+cluster -> non degenerated for p-characteristic commutative Ring;
+end;
+
+theorem :: FIELD_15:35
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being Element of R holds p * a = 0.R;
+
+theorem :: FIELD_15:36
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being non zero Element of R
+for n being non zero Nat st n < p holds n * a <> 0.R;
+
+theorem :: FIELD_15:37
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being Element of R, n being Nat holds (n * p) * a = 0.R;
+
+theorem :: FIELD_15:38
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being Element of R, n being Nat st p divides n holds n * a = 0.R;
+
+theorem :: FIELD_15:39
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being non zero Element of R
+for n being Nat holds p divides n iff n * a = 0.R;
+
+theorem :: FIELD_15:40
+for p being Prime
+for R being p-characteristic commutative Ring
+for a,b being Element of R holds (a + b)|^p = a|^p + b|^p;
+
+theorem :: FIELD_15:41
+for p being Prime
+for R being p-characteristic commutative Ring
+for a,b being Element of R
+for i being Nat holds (a + b)|^(p|^i) = a|^(p|^i) + b|^(p|^i);
+
+theorem :: FIELD_15:42
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being Element of R holds -(a|^p) = (-a)|^p;
+
+definition
+let p be Prime;
+let R be p-characteristic commutative Ring;
+func R|^p -> strict doubleLoopStr means
+:: FIELD_15:def 1
+  the carrier of it = the set of all a|^p where a is Element of R &
+  the addF of it = (the addF of R)||(the carrier of it) &
+  the multF of it = (the multF of R)||(the carrier of it) &
+  1.it = 1.R & 0.it = 0.R;
+end;
+
+registration
+let p be Prime;
+let R be p-characteristic commutative Ring;
+cluster R|^p -> non degenerated;
+end;
+
+theorem :: FIELD_15:43
+for p being Prime
+for R being p-characteristic commutative Ring
+for a,b being Element of R
+for x,y being Element of R|^p st a = x & b = y holds a + b = x + y;
+
+theorem :: FIELD_15:44
+for p being Prime
+for R being p-characteristic commutative Ring
+for a,b being Element of R
+for x,y being Element of R|^p st a = x & b = y holds a * b = x * y;
+
+registration
+let p be Prime;
+let R be p-characteristic commutative Ring;
+cluster R|^p -> Abelian add-associative right_zeroed right_complementable;
+end;
+
+registration
+let p be Prime;
+let R be p-characteristic commutative Ring;
+cluster R|^p -> commutative associative well-unital distributive;
+end;
+
+registration
+let p be Prime;
+let F be p-characteristic Field;
+cluster F|^p -> almost_left_invertible;
+end;
+
+registration
+let p be Prime;
+let R be p-characteristic commutative Ring;
+cluster R|^p -> p-characteristic;
+end;
+
+definition
+let p be Prime;
+let F be p-characteristic Field;
+redefine func F|^p -> strict Subfield of F;
+end;
+
+begin
+
+definition
+let R be unital non empty doubleLoopStr;
+let a be Element of R;
+let n be non zero Nat;
+func X^(n,a) -> sequence of R equals
+:: FIELD_15:def 2
+  0_.(R) +* ((0,n) --> (-a,1.R));
+end;
+
+registration
+let R be unital non empty doubleLoopStr;
+let a be Element of R;
+let n be non zero Nat;
+cluster X^(n,a) -> finite-Support;
+end;
+
+registration
+let R be unital non degenerated doubleLoopStr;
+let a be Element of R;
+let n be non zero Nat;
+cluster X^(n,a) -> non constant monic;
+end;
+
+definition
+let R be non degenerated Ring;
+let a be Element of R;
+let n be non zero Nat;
+redefine func X^(n,a)
+                -> non constant monic Element of the carrier of Polynom-Ring R;
+end;
+
+theorem :: FIELD_15:45
+for L being unital non degenerated doubleLoopStr
+for a being Element of L
+for n being non zero Nat
+holds X^(n,a).0 = -a & X^(n,a).n = 1.L &
+      for m being Nat st m <> 0 & m <> n holds X^(n,a).m = 0.L;
+
+theorem :: FIELD_15:46
+for R being unital non degenerated doubleLoopStr
+for n being non zero Nat
+for a being Element of R holds deg X^(n,a) = n;
+
+theorem :: FIELD_15:47
+for R being unital non degenerated doubleLoopStr
+for n being non zero Nat
+for a being Element of R holds LC X^(n,a) = 1.R;
+
+theorem :: FIELD_15:48
+for R being non degenerated Ring
+for n being non zero Nat
+for a,x being Element of R holds eval(X^(n,a),x) = x|^n - a;
+
+theorem :: FIELD_15:49
+for F being Field
+for n being non zero Nat
+for a,b being Element of F holds b is_a_root_of X^(n,a) iff b|^n = a;
+
+theorem :: FIELD_15:50
+for F being Field, E being FieldExtension of F
+for n being non zero Nat
+for a being Element of F
+for b being Element of E st b = a holds X^(n,a) = X^(n,b);
+
+theorem :: FIELD_15:51
+for R being non degenerated commutative Ring
+for n being non trivial Nat
+for a being Element of R holds (Deriv R).(X^(n,a)) = n * X^(n-1,0.R);
+
+theorem :: FIELD_15:52
+for p being Prime
+for R being p-characteristic commutative Ring
+for a being Element of R holds (Deriv R).(X^(p,a)) = 0_.(R);
+
+theorem :: FIELD_15:53
+for p being Prime
+for F being p-characteristic Field
+for a,b being Element of F st b|^p = a holds X^(p,a) = (X-b)|^p;
+
+theorem :: FIELD_15:54
+for p being Prime
+for F being p-characteristic Field
+for a being Element of F
+st not ex b being Element of F st b|^p = a holds X^(p,a) is irreducible;
+
+begin :: More on Multiplicity of Roots
+
+theorem :: FIELD_15:55
+for F being Field
+for p being non zero Polynomial of F
+for a being Element of F holds deg p >= multiplicity(p,a);
+
+theorem :: FIELD_15:56
+for F being Field,
+    p being non zero Polynomial of F
+for a being Element of F
+for n being Element of NAT
+holds (X-a)`^n divides p iff multiplicity(p,a) >= n;
+
+theorem :: FIELD_15:57
+for F being Field,
+    E being FieldExtension of F
+for p being non zero Element of the carrier of Polynom-Ring F
+for a being Element of E
+holds a is_a_root_of p,E iff multiplicity(p,a) >= 1;
+
+theorem :: FIELD_15:58
+for F being Field,
+    p being non zero Polynomial of F
+for E being FieldExtension of F,
+    q being non zero Polynomial of E st q = p
+for K being E-extending FieldExtension of F
+for a being Element of K holds multiplicity(q,a) = multiplicity(p,a);
+
+theorem :: FIELD_15:59
+for F being Field,
+    p being non zero Polynomial of F
+for E being FieldExtension of F,
+    q being non zero Polynomial of E st q = p
+for a being Element of E holds multiplicity(q,a) = multiplicity(p,a);
+
+theorem :: FIELD_15:60
+for F being Field
+for p being non zero Polynomial of F
+for c being non zero Element of F
+for a being Element of F holds multiplicity(c*p,a) = multiplicity(p,a);
+
+theorem :: FIELD_15:61
+for F being Field
+for E being FieldExtension of F
+for p being non zero Polynomial of F
+for c being non zero Element of F
+for a being Element of E holds multiplicity(c*p,a) = multiplicity(p,a);
+
+theorem :: FIELD_15:62
+for F being Field
+for E being FieldExtension of F
+for p,q being non zero Polynomial of F
+for a being Element of E
+holds multiplicity(p*'q,a) = multiplicity(p,a) + multiplicity(q,a);
+
+theorem :: FIELD_15:63
+for F being Field
+for p being non zero Polynomial of F
+for E1,E2 being FieldExtension of F
+for i being Function of E1,E2 st i is F-fixing isomorphism
+for a being Element of E1 holds multiplicity(p,a) = multiplicity(p,i.a);
+
+theorem :: FIELD_15:64
+for F being Field,
+    p being non zero Polynomial of F
+for E being FieldExtension of F
+for a being Element of F holds multiplicity(p,@(a,E)) = multiplicity(p,a);
+
+theorem :: FIELD_15:65
+for F being Field,
+    p being non zero Polynomial of F
+for E being FieldExtension of F
+for K being E-extending FieldExtension of F
+for a being Element of E holds multiplicity(p,@(a,K)) = multiplicity(p,a);
+
+theorem :: FIELD_15:66
+for F being Field,
+    p being non zero Polynomial of F
+for q being Polynomial of F
+for a being Element of F
+st p = ((X-a)`^multiplicity(p,a)) *' q holds eval(q,a) <> 0.F;
+
+theorem :: FIELD_15:67
+for F being Field
+for p being non zero Polynomial of F
+holds card(Roots p) < card(BRoots p) iff
+      ex a being Element of F st multiplicity(p,a) > 1;
+
+theorem :: FIELD_15:68
+for F being Field
+for p being non zero Polynomial of F
+for a being Element of F
+holds multiplicity(NormPolynomial p,a) = multiplicity(p,a);
+
+theorem :: FIELD_15:69
+for F being Field
+for p being non constant Polynomial of F holds
+deg p = card(Roots p) iff
+(p splits_in F & for a being Element of F holds multiplicity(p,a) <= 1);
+
+theorem :: FIELD_15:70
+for F being Field
+for p being non zero Element of the carrier of Polynom-Ring F
+for a being Element of F st a is_a_root_of p
+holds (multiplicity(p,a) = 1 iff eval((Deriv F).p,a) <> 0.F) &
+      (multiplicity(p,a) > 1 iff eval((Deriv F).p,a) = 0.F);
+
+theorem :: FIELD_15:71
+for F being Field
+for p being non zero Element of the carrier of Polynom-Ring F
+holds (ex a being Element of F st multiplicity(p,a) > 1)
+      iff p gcd (Deriv F).p is with_roots;
+
+theorem :: FIELD_15:72
+for F being Field
+for p being non zero Element of the carrier of Polynom-Ring F
+for E being FieldExtension of F st p splits_in E
+holds (ex a being Element of E st multiplicity(p,a) > 1)
+      iff p gcd (Deriv F).p <> 1_.(F);
+
+theorem :: FIELD_15:73
+for F being Field
+for p being irreducible Element of the carrier of Polynom-Ring F
+for E being FieldExtension of F st p splits_in E holds
+(ex a being Element of E st multiplicity(p,a) > 1) iff (Deriv F).p = 0_.(F);
+
+theorem :: FIELD_15:74
+for p being Prime
+for R being p-characteristic commutative Ring
+for f being Element of the carrier of Polynom-Ring R
+holds (Deriv R).f = 0_.(R) iff
+      for i being Nat st i in Support f holds p divides i;
+
+begin :: Separable Polynomials
+
+definition
+let F be Field;
+let p be non constant Element of the carrier of Polynom-Ring F;
+attr p is separable means
+:: FIELD_15:def 3
+  for a being Element of the SplittingField of p
+  st a is_a_root_of p,(the SplittingField of p) holds multiplicity(p,a) = 1;
+end;
+
+notation
+let F be Field;
+let p be non constant Element of the carrier of Polynom-Ring F;
+antonym p is inseparable for p is separable;
+end;
+
+registration
+let F be Field;
+cluster separable for non constant monic
+                                Element of the carrier of Polynom-Ring F;
+cluster inseparable for non constant monic
+                                Element of the carrier of Polynom-Ring F;
+end;
+
+theorem :: FIELD_15:75
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F holds
+p is separable iff
+(for E being FieldExtension of F st p splits_in E
+ for a being Element of E st a is_a_root_of p,E holds multiplicity(p,a) = 1);
+
+theorem :: FIELD_15:76
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F holds
+p is separable iff
+(ex E being FieldExtension of F st p splits_in E &
+ for a being Element of E st a is_a_root_of p,E holds multiplicity(p,a) = 1);
+
+theorem :: FIELD_15:77
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F
+holds p is separable iff
+      for E being FieldExtension of F
+      for a being Element of E holds multiplicity(p,a) <= 1;
+
+theorem :: FIELD_15:78
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F
+holds p is separable iff
+      (ex E being FieldExtension of F st p splits_in E &
+          for a being Element of E holds multiplicity(p,a) <= 1);
+
+theorem :: FIELD_15:79
+for F being Field
+for p being separable non constant Element of the carrier of Polynom-Ring F
+holds deg p = card(Roots p) iff p splits_in F;
+
+theorem :: FIELD_15:80
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F
+holds p is separable iff p gcd (Deriv F).p = 1_.(F);
+
+theorem :: FIELD_15:81
+for F being Field,
+    p being non constant irreducible Element of the carrier of Polynom-Ring F
+holds p is separable iff (Deriv F).p <> 0_.(F);
+
+theorem :: FIELD_15:82
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F
+holds p is separable iff
+      for E being SplittingField of p
+      ex a being Element of E, q being Ppoly of E,Roots(E,p) st p = a * q;
+
+theorem :: FIELD_15:83
+for F being Field,
+    p being non constant monic Element of the carrier of Polynom-Ring F
+holds p is separable iff
+      for E being SplittingField of p holds p is Ppoly of E,Roots(E,p);
+
+theorem :: FIELD_15:84
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F holds
+p is separable iff
+for E being FieldExtension of F st p splits_in E holds p is_square-free_over E;
+
+theorem :: FIELD_15:85
+for F being Field,
+    p being non constant Element of the carrier of Polynom-Ring F
+holds p is separable iff
+      ex E being FieldExtension of F st card Roots(E,p) = deg p;
+
+theorem :: FIELD_15:86
+for F being Field
+for p being non constant Element of the carrier of Polynom-Ring F
+for a being non zero Element of F
+holds a * p is separable iff p is separable;
+
+theorem :: FIELD_15:87
+for F being Field
+for p,q being non constant Element of the carrier of Polynom-Ring F
+for r being Element of the carrier of Polynom-Ring F
+st p = q *' r holds p is separable implies q is separable;
+
+theorem :: FIELD_15:88
+for F being Field
+for E being FieldExtension of F
+for p being non constant Element of the carrier of Polynom-Ring F
+for q being non constant Element of the carrier of Polynom-Ring E
+st p = q holds p is separable iff q is separable;
+
+registration
+let F be Field;
+let a be Element of F;
+cluster X-a -> separable irreducible;
+end;
+
+registration
+let F be Field;
+let a be Element of F;
+let n be non trivial Nat;
+cluster (X-a)|^n -> inseparable reducible;
+end;
+
+registration
+let F be 0-characteristic Field;
+cluster -> separable for irreducible Element of the carrier of Polynom-Ring F;
+end;
+
+theorem :: FIELD_15:89
+for p being Prime
+for F being p-characteristic Field
+for a being Element of F
+st not a in F|^p holds X^(p,a) is irreducible inseparable;
+
+begin :: Perfect Fields
+
+definition
+let F be Field;
+attr F is perfect means
+:: FIELD_15:def 4
+  for p being irreducible Element of the carrier of Polynom-Ring F
+  holds p is separable;
+end;
+
+registration
+cluster -> perfect for 0-characteristic Field;
+end;
+
+theorem :: FIELD_15:90
+for p being Prime
+for F being p-characteristic Field
+for q being Element of the carrier of Polynom-Ring F
+st for i being Nat st i in Support q
+   holds p divides i & ex a being Element of F st a|^p = q.i
+ex r being Element of the carrier of Polynom-Ring F st r|^p = q;
+
+theorem :: FIELD_15:91
+for p being Prime
+for F being p-characteristic Field holds F is perfect iff F == F|^p;
+
+theorem :: FIELD_15:92
+for F being Field holds
+F is finite iff ex n being non zero Nat st card F = (Char F)|^n;
+
+theorem :: FIELD_15:93
+for p being Prime
+for F being finite p-characteristic Field
+for a being Element of F ex b being Element of F st b|^p = a;
+
+registration
+cluster -> perfect for finite Field;
+end;
+
+registration
+cluster -> perfect for algebraic-closed Field;
+end;
+
+begin :: Separable Extensions
+
+definition
+let F be Field;
+let E be FieldExtension of F;
+let a be Element of E;
+attr a is F-separable means
+:: FIELD_15:def 5
+  ex b being F-algebraic Element of E st b = a & MinPoly(b,F) is separable;
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+cluster non zero F-separable for Element of E;
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+cluster F-separable -> F-algebraic for Element of E;
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+let a be F-separable Element of E;
+cluster MinPoly(a,F) -> separable;
+end;
+
+definition
+let F be Field;
+let E be FieldExtension of F;
+attr E is F-separable means
+:: FIELD_15:def 6
+  E is F-algebraic &
+  for a being Element of E holds a is F-separable;
+end;
+
+notation
+let F be Field;
+let E be FieldExtension of F;
+antonym E is F-inseparable for E is F-separable;
+end;
+
+registration
+let F be Field;
+cluster F-finite F-separable for FieldExtension of F;
+end;
+
+registration
+let F be Field;
+cluster F-separable -> F-algebraic for FieldExtension of F;
+end;
+
+registration
+let F be Field;
+let E be F-separable FieldExtension of F;
+cluster -> F-separable for Element of E;
+end;
+
+theorem :: FIELD_15:94
+for F being Field
+for K being FieldExtension of F
+for E being K-extending FieldExtension of F
+st E is F-separable holds E is K-separable & K is F-separable;
+
+registration
+let F be perfect Field;
+cluster -> F-separable for F-algebraic FieldExtension of F;
+end;
+
+registration
+let F be perfect Field;
+cluster F-normal F-separable for FieldExtension of F;
+end;
+
+registration
+let F be perfect Field;
+let p be non constant Element of the carrier of Polynom-Ring F;
+cluster -> F-normal F-separable for SplittingField of p;
+end;

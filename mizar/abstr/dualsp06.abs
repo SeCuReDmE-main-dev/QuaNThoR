@@ -1,0 +1,298 @@
+:: Formalization of Orthogonal Complements of Normed Spaces
+::  by Hiroyuki Okazaki
+:: 
+:: Received November 28, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies DUALSP06, NUMBERS, SUBSET_1, FUNCT_1, FINSEQ_1, NAT_1, RELAT_1,
+      XBOOLE_0, XXREAL_2, XXREAL_0, SEQ_4, CARD_1, REAL_1, ARYTM_3, ARYTM_1,
+      CARD_3, SEQ_2, ORDINAL2, HAHNBAN, COMPLEX1, STRUCT_0, PARTFUN1, TARSKI,
+      DUALSP01, PRE_TOPC, REALSET1, NORMSP_1, FCONT_1, ZFMISC_1, RLVECT_1,
+      LOPBAN_1, ALGSTR_0, SUPINF_2, ASYMPT_1, RVSUM_1, PROB_2, RLSUB_1,
+      RUSUB_5, RLVECT_3, RLVECT_2, VALUED_1, SEQ_1, METRIC_1, MEMBERED,
+      NORMSP_0, RELAT_2;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, FUNCT_1, ORDINAL1, RELSET_1,
+      PARTFUN1, FUNCT_2, BINOP_1, REALSET1, NUMBERS, XCMPLX_0, XXREAL_0,
+      XREAL_0, MEMBERED, COMPLEX1, XXREAL_2, FINSEQ_1, VALUED_1, SEQ_1, SEQ_2,
+      SEQ_4, STRUCT_0, ALGSTR_0, PRE_TOPC, RLVECT_1, RLSUB_1, RLVECT_2,
+      RLVECT_3, NORMSP_0, NORMSP_1, HAHNBAN, DUALSP01;
+ constructors REAL_1, MONOID_0, SEQ_4, NAT_D, SEQ_2, REALSET1, RSSPACE,
+      TOPMETR, COMSEQ_2, DUALSP01, SEQ_1, RLVECT_2, RLVECT_3;
+ registrations NUMBERS, XREAL_0, SEQ_2, FUNCT_2, NAT_1, MEMBERED, ORDINAL1,
+      VALUED_0, VALUED_1, RELSET_1, CARD_1, STRUCT_0, ABSVALUE, NORMSP_1,
+      DUALSP01, XXREAL_2, RLSUB_1, XBOOLE_0, RLVECT_1, XCMPLX_0, FUNCOP_1,
+      SEQ_4, NORMSP_0, XXREAL_0;
+ requirements REAL, NUMERALS, BOOLE, SUBSET, ARITHM;
+
+
+begin
+
+definition
+  let V be RealNormSpace,
+      W be Subspace of V;
+  func RSubNormSpace(W) -> strict RealNormSpace means
+:: DUALSP06:def 1
+    the RLSStruct of it = the RLSStruct of W &
+    the normF of it = (the normF of V) | (the carrier of it);
+end;
+
+theorem :: DUALSP06:1
+  for V be RealNormSpace,
+      W be Subspace of V holds
+    RSubNormSpace(W) is SubRealNormSpace of V;
+
+definition
+  let V be RealNormSpace;
+  let x be Point of V;
+  let y be Point of DualSp V;
+  func x .|. y -> Real equals
+:: DUALSP06:def 2
+    y.x;
+end;
+
+theorem :: DUALSP06:2
+  for V being RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V holds
+     |. x.|.y .| <= ||.y.|| * ||.x.||;
+
+definition
+  let V be RealNormSpace;
+  let x be Point of V;
+  let y be Point of DualSp V;
+  pred x,y are_orthogonal means
+:: DUALSP06:def 3
+    x .|. y = 0;
+end;
+
+theorem :: DUALSP06:3
+  for V be RealNormSpace,
+      x be Point of V,
+      y,z be Point of DualSp V holds
+    x .|. (y+z) = x .|. y + x .|. z;
+
+theorem :: DUALSP06:4
+  for V be RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V,
+      a be Real holds
+    x .|. (a*y) = a * x .|. y;
+
+theorem :: DUALSP06:5
+  for V being RealNormSpace,
+      x,y be Point of V,
+      z be Point of DualSp V holds
+    (x + y) .|. z = x .|. z + y .|. z;
+
+theorem :: DUALSP06:6
+  for V being RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V,
+      a be Real holds
+    (a*x) .|. y = a* x .|. y;
+
+theorem :: DUALSP06:7
+  for V being RealNormSpace,
+      x be Point of V,
+      y,z be Point of DualSp V,
+      a,b be Real holds
+    x .|. (a*y + b*z) = a * x .|. y + b * x .|. z;
+
+theorem :: DUALSP06:8
+  for V being RealNormSpace,
+      y,z be Point of V,
+      x be Point of DualSp V,
+      a,b be Real holds
+    (a*y + b*z) .|. x = a * y .|. x + b * z .|. x;
+
+theorem :: DUALSP06:9
+  for V being RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V holds
+    x .|. (-y) = - x .|. y;
+
+theorem :: DUALSP06:10
+  for V being RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V holds
+    (-x) .|. y = - x .|. y;
+
+theorem :: DUALSP06:11
+  for V being RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V holds
+    (-x) .|. (-y) = x .|. y;
+
+theorem :: DUALSP06:12
+  for V being RealNormSpace,
+      x be Point of V,
+      y,z be Point of DualSp V holds
+    x .|. (y-z) = x .|. y - x .|. z;
+
+theorem :: DUALSP06:13
+  for V being RealNormSpace,
+      y,z be Point of V,
+      x be Point of DualSp V holds
+   (y-z) .|. x = y .|. x - z .|. x;
+
+theorem :: DUALSP06:14
+  for V being RealNormSpace,
+      x be Point of V holds
+    x .|. 0.(DualSp V) = 0;
+
+theorem :: DUALSP06:15
+  for V being RealNormSpace,
+      x be Point of DualSp V holds
+   0.V .|. x = 0;
+
+definition
+  let V be RealNormSpace,
+      x be Point of V,
+      y be Point of DualSp V;
+  pred x,y are_parallel means
+:: DUALSP06:def 4
+    x .|. y = ||.x.|| * ||.y.||;
+end;
+
+definition
+  let V be RealNormSpace;
+  let W be Subspace of V;
+  func Ort_Comp W -> strict Subspace of DualSp V means
+:: DUALSP06:def 5
+  the carrier of it = { v where v is VECTOR of DualSp V
+  : for w being VECTOR of V st w in W holds
+  w,v are_orthogonal };
+end;
+
+definition
+  let V be RealNormSpace;
+  let W be Subspace of DualSp V;
+  func Ort_Comp W -> strict Subspace of V means
+:: DUALSP06:def 6
+  the carrier of it = { v where v is VECTOR of V
+  : for w being VECTOR of DualSp V st w in W holds
+    v,w are_orthogonal };
+end;
+
+begin
+
+theorem :: DUALSP06:16
+  for V being RealNormSpace,
+      M being Subspace of V,
+      v being VECTOR of DualSp V,
+      m being VECTOR of V
+    st v in Ort_Comp M & m in M holds m .|. v = 0;
+
+theorem :: DUALSP06:17
+  for V being RealNormSpace,
+      M be Subspace of DualSp V,
+      v be VECTOR of V,
+      m being VECTOR of DualSp V
+   st v in Ort_Comp M & m in M
+     holds v .|. m = 0;
+
+theorem :: DUALSP06:18
+  for X be RealNormSpace,
+      x be Point of X,
+      M be non empty Subspace of X holds
+  {||.x-m.|| where m is Point of X :m in M}
+     is non empty bounded_below real-membered set;
+
+theorem :: DUALSP06:19
+  for X be RealNormSpace,
+      x be Point of X,
+      M be non empty Subspace of X holds
+   { x .|. y where y is Point of DualSp X :
+      y in Ort_Comp M & ||.y.|| <= 1 }
+      is non empty bounded_above real-membered set;
+
+theorem :: DUALSP06:20
+  for X be RealNormSpace,
+      x be Point of X,
+      M be non empty Subspace of X,
+      F,K be FinSequence of the carrier of X,
+      G be FinSequence of REAL
+  st len G = len F & len K = len F
+    &
+   ( for i be Nat st i in dom F holds F.i in x+M )
+    &
+   ( for i be Nat st i in dom K holds K.i = (G/.i)*(F/.i) )
+     holds
+    Sum K in
+      { a*x + m where a is Real,m is Point of X: m in M };
+
+theorem :: DUALSP06:21
+  for V be RealNormSpace,
+      x be Point of V,
+      M be non empty Subspace of V
+      st not x in M holds
+  ex L be non empty bounded_below real-membered set,
+     U be non empty bounded_above real-membered set st
+    L = {||.x-m.|| where m is Point of V : m in M} &
+    U = { x .|. y where y is Point of DualSp V :
+    y in Ort_Comp M & ||.y.|| <= 1 }
+    & inf L = sup U & sup U in U
+    & ( 0 < inf L implies ex v be Point of DualSp V
+    st ||.v.|| = 1 & v in Ort_Comp M & x .|. v = inf L ) &
+    for m0 be Point of V
+    st m0 in M & ||.x-m0.|| = inf L holds
+    for v be Point of DualSp V st ||.v.|| = 1
+    & v in Ort_Comp M & x .|. v = inf L
+    holds x-m0,v are_parallel;
+
+theorem :: DUALSP06:22
+  for V be RealNormSpace,
+      x, m0 be Point of V,
+      M be non empty Subspace of V st not x in M & m0 in M
+    holds
+    ( for m be Point of V st m in M holds ||.x-m0.|| <= ||.x-m.|| )
+        iff
+     ex p be Point of DualSp V
+       st p in Ort_Comp M & p <> 0.(DualSp V) & x-m0,p are_parallel;
+
+theorem :: DUALSP06:23
+  for X be RealNormSpace,
+      x be Point of DualSp X,
+      M be non empty Subspace of X holds
+  {||.x-m.|| where m is Point of DualSp X : m in Ort_Comp M}
+    is non empty bounded_below real-membered set;
+
+theorem :: DUALSP06:24
+  for X be RealNormSpace,
+      x be Point of DualSp X,
+      M be non empty Subspace of X holds
+  { y .|. x where y is Point of X :
+     y in M & ||.y.|| <= 1 }
+     is non empty bounded_above real-membered set;
+
+theorem :: DUALSP06:25
+  for V be RealNormSpace,
+      x be Point of DualSp V,
+      M be non empty Subspace of V,
+      SM be SubRealNormSpace of V
+      st SM = RSubNormSpace(M) holds
+   ex L be non empty bounded_below real-membered set,
+      U be non empty bounded_above real-membered set st
+      L = {||.x-m.|| where m is Point of DualSp V :m in Ort_Comp M}
+      &
+      U = { y .|. x where y is Point of V :
+      y in M & ||.y.|| <= 1 } &
+      ex m0 be Point of DualSp V,
+      fx be Lipschitzian linear-Functional of V,
+      xM be Point of DualSp SM
+      st x=fx & xM = fx | (the carrier of SM)
+      & m0 in Ort_Comp M
+      & ||.x-m0.|| = inf L & inf L in L
+      & ||.x-m0.|| = ||.xM.|| & for y be Point of V
+      st ||.y.|| = 1 & y in M & fx.y = ||.x-m0.||
+      holds y,x-m0 are_parallel;

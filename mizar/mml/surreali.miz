@@ -1,0 +1,3244 @@
+:: Inverse Element for Surreal Number
+::  by Karol P\kak
+:: 
+:: Received October 22, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MCART_1, FACIRC_1, RELAT_1, TARSKI, XBOOLE_0, SUBSET_1, XXREAL_0,
+      ARYTM_3, FUNCT_1, ZFMISC_1, CARD_1, ORDINAL1, PBOOLE, ARYTM_0, CARD_3,
+      ARROW, ZFREFLE1, VECTSP_1, REALALG1, NUMBERS, NAT_1, ARYTM_1, GLIB_000,
+      WAYBEL_3, COHSP_1, INTEGRA1, PETRI_DF, NORMSP_1, SURREAL0, SURREALR,
+      SURREALI, FUNCOP_1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, XTUPLE_0, SUBSET_1, RELAT_1, FUNCT_1,
+      PBOOLE, ORDINAL1, CARD_3, NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, COHSP_1,
+      SURREAL0, SURREALO, SURREALR;
+ constructors RELSET_1, NEWTON, NAT_1, CARD_3, COHSP_1, FUNCOP_1, SURREALO,
+      SURREALR;
+ registrations XBOOLE_0, RELAT_1, XTUPLE_0, ORDINAL1, FUNCT_1, NAT_1, XREAL_0,
+      XXREAL_0, FUNCOP_1, SURREAL0, SURREALR;
+ requirements BOOLE, SUBSET, NUMERALS, ARITHM, REAL;
+ definitions TARSKI, XBOOLE_0, RELAT_1, SURREAL0, SURREALO;
+ equalities SURREAL0, SURREALO, SURREALR;
+ expansions SURREAL0, SURREALO;
+ theorems RELAT_1, TARSKI, ZFMISC_1, FUNCT_1, XBOOLE_0, XBOOLE_1, XTUPLE_0,
+      NAT_1, ORDINAL1, ORDINAL3, PARTFUN1, CARD_5, ABCMIZ_1, SURREAL0,
+      SURREALO, SURREALR;
+ schemes TARSKI, NAT_1, ORDINAL1, CLASSES1, XBOOLE_0, FUNCT_1, SURREALR;
+
+begin :: Construction of the Inverse Element for Surreal Numbers
+
+ reserve A,B,O for Ordinal,
+      n,m for Nat,
+      a,b,o for object,
+      x,y,z for Surreal,
+      X,Y,Z for set,
+      Inv,I1,I2 for Function;
+
+definition
+  let x,y be object;
+  assume A1: x is surreal & y is surreal;
+  func x *' y -> Surreal means :Def1:
+     for x1,y1 be Surreal st x1=x & y1=y holds it = x1*y1;
+  existence
+  proof
+    reconsider xx=x,yy=y as Surreal by A1;
+    take xx*yy;
+    thus thesis;
+  end;
+  uniqueness
+  proof
+    reconsider xx=x,yy=y as Surreal by A1;
+    let a1,a2 be Surreal such that
+A2: for x1,y1 be Surreal st x1=x & y1=y holds a1 = x1*y1 and
+A3: for x1,y1 be Surreal st x1=x & y1=y holds a2 = x1*y1;
+    a1 = xx*yy by A2;
+    hence thesis by A3;
+  end;
+end;
+
+definition
+  let lamb,x be object;
+  let X be set;
+  let Inv be Function;
+  func divs(lamb,x,X,Inv) -> set means :Def2:
+    o in it iff ex xL be object st xL in X & xL <> 0_No &
+            o = (1_No +'(xL +' -' x) *' lamb) *' (Inv.xL);
+  existence
+  proof
+    defpred P[object,object] means
+    $2 = (1_No +'($1 +' -' x) *' lamb) *' (Inv.$1);
+A1: for x,y,z being object st P[x,y] & P[x,z] holds y = z;
+    consider D be set such that
+A2: for x being object holds x in D iff
+      ex y being object st y in X\{0_No} & P[y,x] from TARSKI:sch 1(A1);
+    take D;
+    let o;
+    thus o in D implies ex xL be object st xL in X & xL <> 0_No &
+    o = (1_No +'(xL +' -' x) *' lamb) *' (Inv.xL)
+    proof
+      assume o in D;
+      then consider y be object such that
+A3:   y in X\{0_No} & P[y,o] by A2;
+      y in X & y <>0_No by A3,ZFMISC_1:56;
+      hence thesis by A3;
+    end;
+    given xL be object such that
+A4: xL in X & xL <> 0_No and
+A5: o = (1_No +'(xL +' -' x) *' lamb) *' (Inv.xL);
+    xL in X\{0_No} by A4,ZFMISC_1:56;
+    hence thesis by A2,A5;
+  end;
+  uniqueness
+  proof
+    let D1,D2 be set such that
+A6: o in D1 iff ex xL be object st xL in X & xL <> 0_No &
+    o = (1_No +'(xL +' -' x) *' lamb) *' (Inv.xL) and
+A7: o in D2 iff ex xL be object st xL in X & xL <> 0_No &
+    o = (1_No +'(xL +' -' x) *' lamb) *' (Inv.xL);
+    now let o;
+      o in D1 iff ex xL be object st xL in X & xL <> 0_No &
+      o = (1_No +'(xL +' -' x) *' lamb) *' (Inv.xL) by A6;
+      hence o in D1 iff o in D2 by A7;
+    end;
+    hence thesis by TARSKI:2;
+  end;
+end;
+
+definition
+  let Lamb be set, x be object;
+  let X be set;
+  let Inv be Function;
+  func divset(Lamb,x,X,Inv) -> set means :Def3:
+    o in it iff ex lamb be object st
+          lamb in Lamb & o in divs(lamb,x,X,Inv);
+  existence
+  proof
+    set D = { divs(lamb,x,X,Inv) where lamb is Element of Lamb:lamb in Lamb};
+    take U= union D;
+    let o;
+    thus o in U implies ex lamb be object st
+      (lamb in Lamb & o in divs(lamb,x,X,Inv))
+    proof
+      assume o in U;
+      then consider d be set such that
+A1:   o in d & d in D by TARSKI:def 4;
+      ex l be Element of Lamb st d=divs(l,x,X,Inv) & l in Lamb by A1;
+      hence thesis by A1;
+    end;
+    given lamb be object such that
+A2: lamb in Lamb & o in divs(lamb,x,X,Inv);
+    divs(lamb,x,X,Inv) in D by A2;
+    hence thesis by A2,TARSKI:def 4;
+  end;
+  uniqueness
+  proof
+    let D1,D2 be set such that
+A3: o in D1 iff ex lamb be object st
+    lamb in Lamb & o in divs(lamb,x,X,Inv) and
+A4: o in D2 iff ex lamb be object st
+    lamb in Lamb & o in divs(lamb,x,X,Inv);
+    now let o;
+      o in D1 iff ex lamb be object st
+      lamb in Lamb & o in divs(lamb,x,X,Inv) by A3;
+      hence o in D1 iff o in D2 by A4;
+    end;
+    hence thesis by TARSKI:2;
+  end;
+end;
+
+definition
+  let x be object;
+  let Inv be Function;
+  func transitions_of(x,Inv) -> Function means :Def4:
+    dom it = NAT & it.0 = 1_No &
+      for k being Nat holds it.k is pair &
+         (it.(k+1))`1 =
+           L_(it.k) \/ divset(L_(it.k),x,R_x,Inv)\/divset(R_(it.k),x,L_x,Inv) &
+         (it.(k+1))`2 =
+           R_(it.k) \/ divset(L_(it.k),x,L_x,Inv)\/divset(R_(it.k),x,R_x,Inv);
+  existence
+  proof
+    deffunc G(object,object)=
+    [L_$2 \/ divset(L_$2,x,R_x,Inv) \/ divset(R_$2,x,L_x,Inv),
+    R_$2 \/ divset(L_$2,x,L_x,Inv) \/ divset(R_$2,x,R_x,Inv)];
+    consider f be Function such that
+A1: dom f = NAT & f.0 = 1_No &
+    for n being Nat holds f.(n+1) = G(n,f.n) from NAT_1:sch 11;
+    take f;
+    thus dom f = omega & f.0 = 1_No by A1;
+    let k be Nat;
+    thus f.k is pair
+    proof
+      per cases;
+      suppose k=0;
+        hence thesis by A1;
+      end;
+      suppose k>0;
+        then reconsider k1=k-1 as Nat by NAT_1:20;
+        f.(k1+1) = G(k1,f.k1) by A1;
+        hence thesis;
+      end;
+    end;
+    f.(k+1) = G(k,f.k) by A1;
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    let T1,T2 be Function such that
+A2: dom T1 = omega & T1.0 = 1_No and
+A3: for k being Nat holds T1.k is pair &
+    L_(T1.(k+1)) =
+      L_(T1.k) \/ divset(L_(T1.k),x,R_x,Inv) \/ divset(R_(T1.k),x,L_x,Inv) &
+    R_(T1.(k+1)) =
+     R_(T1.k) \/ divset(L_(T1.k),x,L_x,Inv) \/ divset(R_(T1.k),x,R_x,Inv)
+    and
+A4: dom T2 = omega & T2.0 = 1_No and
+A5: for k being Nat holds T2.k is pair &
+    L_(T2.(k+1)) =
+      L_(T2.k) \/ divset(L_(T2.k),x,R_x,Inv) \/ divset(R_(T2.k),x,L_x,Inv) &
+    R_(T2.(k+1)) =
+      R_(T2.k) \/ divset(L_(T2.k),x,L_x,Inv) \/ divset(R_(T2.k),x,R_x,Inv);
+    defpred P[Nat] means T1.$1= T2.$1;
+A6: P[0] by A2,A4;
+A7: for n be Nat st P[n] holds P[n+1]
+    proof
+      let n be Nat such that
+A8:   P[n];
+A9:   T1.(n+1) is pair & T2.(n+1) is pair by A3,A5;
+      R_(T1.(n+1)) = R_(T1.n) \/ divset(L_(T1.n),x,L_x,Inv) \/
+        divset(R_(T1.n),x,R_x,Inv) by A3; then
+A10:  (T1.(n+1))`2 = R_(T2.(n+1)) by A5,A8;
+      L_(T1.(n+1)) = L_(T1.n) \/ divset(L_(T1.n),x,R_x,Inv) \/
+        divset(R_(T1.n),x,L_x,Inv) by A3;
+      then (T1.(n+1))`1 = (T2.(n+1))`1 by A5,A8;
+      hence thesis by A9,A10,XTUPLE_0:2;
+    end;
+    for n be Nat holds P[n] from NAT_1:sch 2(A6,A7);
+    then for o st o in dom T1 holds T1.o=T2.o by A2;
+    hence thesis by A2,A4,FUNCT_1:2;
+  end;
+end;
+
+definition
+  let x be object;
+  let Inv be Function;
+  func divL(x,Inv)  -> Function means :Def5:
+    dom it = NAT &
+    for k being Nat holds it.k = (transitions_of(x,Inv).k)`1;
+  existence
+  proof
+    deffunc F(object) = (transitions_of(x,Inv).$1)`1;
+    consider f be Function such that
+A1: dom f = NAT and
+A2: for x be object st x in NAT holds f.x = F(x) from FUNCT_1:sch 3;
+    take f;
+    thus thesis by A1,A2,ORDINAL1:def 12;
+  end;
+  uniqueness
+  proof
+    let D1,D2 be Function such that
+A3: dom D1 = NAT &
+      for k being Nat holds D1.k = (transitions_of(x,Inv).k)`1 and
+A4: dom D2 = NAT &
+      for k being Nat holds D2.k = (transitions_of(x,Inv).k)`1;
+    for o st o in dom D1 holds D1.o=D2.o
+    proof
+      let o;
+      assume o in dom D1;
+      then reconsider a=o as Nat by A3;
+      thus D1.o = (transitions_of(x,Inv).a)`1 by A3
+      .= D2.o by A4;
+    end;
+    hence thesis by A3,A4,FUNCT_1:2;
+  end;
+end;
+
+definition
+  let x be object;
+  let Inv be Function;
+  func divR(x,Inv)  -> Function means :Def6:
+    dom it = NAT &
+    for k being Nat holds it.k = (transitions_of(x,Inv).k)`2;
+  existence
+  proof
+    deffunc F(object) = (transitions_of(x,Inv).$1)`2;
+    consider f be Function such that
+A1: dom f = NAT and
+A2: for x be object st x in NAT holds f.x = F(x) from FUNCT_1:sch 3;
+    take f;
+    thus thesis by A1,A2,ORDINAL1:def 12;
+  end;
+  uniqueness
+  proof
+    let D1,D2 be Function such that
+A3: dom D1 = NAT &
+      for k being Nat holds D1.k = (transitions_of(x,Inv).k)`2 and
+A4: dom D2 = NAT &
+      for k being Nat holds D2.k = (transitions_of(x,Inv).k)`2;
+    for o st o in dom D1 holds D1.o=D2.o
+    proof
+      let o;
+      assume o in dom D1;
+      then reconsider a=o as Nat by A3;
+      thus D1.o = (transitions_of(x,Inv).a)`2 by A3
+      .= D2.o by A4;
+    end;
+    hence thesis by A3,A4,FUNCT_1:2;
+  end;
+end;
+
+registration
+  let a,b be Surreal, x,y be object;
+  identify a*b with x*'y when a = x, b = y;
+  compatibility by Def1;
+end;
+
+theorem Th1:
+  divL(o,Inv).0 = {0_No} & divR(o,Inv).0={}
+proof
+  divL(o,Inv).0 = L_(transitions_of(o,Inv).0) &
+    divR(o,Inv).0 = R_(transitions_of(o,Inv).0) by Def5,Def6;
+  then divL(o,Inv).0 = L_1_No & divR(o,Inv).0 = R_1_No by Def4;
+  hence thesis;
+end;
+
+theorem
+  n <= m implies
+    divL(o,Inv).n c= divL(o,Inv).m &
+    divR(o,Inv).n c= divR(o,Inv).m
+proof
+  defpred P[Nat] means
+    divL(o,Inv).n c= divL(o,Inv).(n+$1) & divR(o,Inv).n c= divR(o,Inv).(n+$1);
+A1: P[0];
+A2: for k be Nat st P[k] holds P[k+1]
+  proof
+    set T=transitions_of(o,Inv);
+    let k be Nat such that
+A3: P[k];
+    set nk=n+k;
+A4: divL(o,Inv).(nk+1) = (T.(nk+1))`1 &
+    divR(o,Inv).(nk+1) = (T.(nk+1))`2 by Def5,Def6;
+A5: divL(o,Inv).nk = L_(T.nk) & divR(o,Inv).nk = R_(T.nk) by Def5,Def6;
+    (T.(nk+1))`1 =
+    L_(T.nk) \/ divset(L_(T.nk),o,R_o,Inv) \/ divset(R_(T.nk),o,L_o,Inv) &
+    (T.(nk+1))`2 =
+    R_(T.nk)\/divset(L_(T.nk),o,L_o,Inv)\/divset(R_(T.nk),o,R_o,Inv) by Def4;
+    then (T.(nk+1))`1 =
+    L_(T.nk) \/ (divset(L_(T.nk),o,R_o,Inv) \/ divset(R_(T.nk),o,L_o,Inv)) &
+    (T.(nk+1))`2 =
+      R_(T.nk) \/ (divset(L_(T.nk),o,L_o,Inv) \/ divset(R_(T.nk),o,R_o,Inv))
+    by XBOOLE_1:4;
+    then L_(T.nk) c= L_(T.(nk+1)) & R_(T.nk) c= R_(T.(nk+1)) by XBOOLE_1:7;
+    hence thesis by A4,A5,A3,XBOOLE_1:1;
+  end;
+A6:for k be Nat holds P[k] from NAT_1:sch 2(A1,A2);
+  assume n<=m;
+  then reconsider mn=m-n as Nat by NAT_1:21;
+  m=n+mn;
+  hence thesis by A6;
+end;
+
+definition
+  let X be set,f be Function;
+  attr f is X -surreal-valued means
+    o in X implies f.o is Surreal;
+end;
+
+theorem
+  Inv is Y -surreal-valued & X c= Y implies
+    Inv is X -surreal-valued;
+
+theorem Th4:
+  divs(y,x,X,Inv) is surreal-membered
+proof
+  let o;
+  assume o in divs(y,x,X,Inv);
+  then ex xL be object st
+    xL in X & xL <>0_No & o = (1_No +'(xL +' -' x) *' y) *' (Inv.xL) by Def2;
+  hence thesis;
+end;
+
+theorem Th5:
+  Y is surreal-membered & X is surreal-membered &
+     Inv is X -surreal-valued
+implies
+   divset(Y,x,X,Inv) is surreal-membered
+proof
+  assume
+A1: Y is surreal-membered & X is surreal-membered &
+  Inv is X -surreal-valued;
+  let o;
+  assume o in divset(Y,x,X,Inv);
+  then consider l be object such that
+A2:l in Y & o in divs(l,x,X,Inv) by Def3;
+  reconsider l as Surreal by A1,A2;
+  divs(l,x,X,Inv) is surreal-membered by Th4;
+  hence thesis by A2;
+end;
+
+theorem Th6:
+  divL(o,Inv).(n+1) = divL(o,Inv).n \/
+    divset(divL(o,Inv).n,o,R_o,Inv) \/ divset(divR(o,Inv).n,o,L_o,Inv)
+  &
+  divR(o,Inv).(n+1) = divR(o,Inv).n \/
+    divset(divL(o,Inv).n,o,L_o,Inv) \/ divset(divR(o,Inv).n,o,R_o,Inv)
+proof
+  set T=transitions_of(o,Inv);
+A1: divL(o,Inv).(n+1) = (T.(n+1))`1 & divR(o,Inv).(n+1) = (T.(n+1))`2
+  by Def5,Def6;
+  divL(o,Inv).n = (T.n)`1 & divR(o,Inv).n = (T.n)`2 by Def5,Def6;
+  hence thesis by Def4,A1;
+end;
+
+theorem Th7:
+   divs(o,x,X,Inv) = divs(o,x,X\{0_No},Inv)
+proof
+  thus divs(o,x,X,Inv) c= divs(o,x,X\{0_No},Inv)
+  proof
+    let a;
+    assume a in divs(o,x,X,Inv);
+    then consider xL be object such that
+A1: xL in X & xL <> 0_No &
+    a = (1_No +'(xL +' -' x) *' o) *' (Inv.xL) by Def2;
+    xL in X\{0_No} by A1,ZFMISC_1:56;
+    hence thesis by A1,Def2;
+  end;
+  let a;
+  assume a in divs(o,x,X\{0_No},Inv);
+  then consider xL be object such that
+A2: xL in X\{0_No} & xL <> 0_No &
+  a = (1_No +'(xL +' -' x) *' o) *' (Inv.xL) by Def2;
+  thus thesis by A2,Def2;
+end;
+
+theorem Th8:
+  divset(Y,x,X,Inv) = divset(Y,x,X\{0_No},Inv)
+proof
+  thus divset(Y,x,X,Inv) c= divset(Y,x,X\{0_No},Inv)
+  proof
+    let o;
+    assume o in divset(Y,x,X,Inv);
+    then consider lamb be object such that
+A1: lamb in Y & o in divs(lamb,x,X,Inv) by Def3;
+    o in divs(lamb,x,X\{0_No},Inv) by A1,Th7;
+    hence thesis by A1,Def3;
+  end;
+  let o;
+  assume o in divset(Y,x,X\{0_No},Inv);
+  then consider lamb be object such that
+A2:lamb in Y & o in divs(lamb,x,X\{0_No},Inv) by Def3;
+  o in divs(lamb,x,X,Inv) by A2,Th7;
+  hence thesis by A2,Def3;
+end;
+
+theorem Th9:
+   Inv is (L_x\/R_x)\{0_No} -surreal-valued implies
+     divL(x,Inv).n is  surreal-membered &
+     divR(x,Inv).n is  surreal-membered
+proof
+  assume
+A1:Inv is (L_x\/R_x)\{0_No} -surreal-valued;
+  defpred P[Nat] means
+  divL(x,Inv).$1 is  surreal-membered &
+  divR(x,Inv).$1 is  surreal-membered;
+  {} is surreal-membered;
+  then
+A2: P[0] by Th1;
+A3: P[m] implies P[m+1]
+  proof
+    assume
+A4: P[m];
+    L_x\{0_No} c= (L_x\/R_x)\{0_No} & R_x\{0_No} c= (L_x\/R_x)\{0_No}
+    by XBOOLE_1:7,33;
+    then
+A5: Inv is L_x\{0_No} -surreal-valued & Inv is R_x\{0_No} -surreal-valued
+    by A1;
+    divset(divL(x,Inv).m,x,L_x\{0_No},Inv) is surreal-membered &
+    divset(divL(x,Inv).m,x,R_x\{0_No},Inv) is surreal-membered &
+    divset(divR(x,Inv).m,x,L_x\{0_No},Inv) is surreal-membered &
+    divset(divR(x,Inv).m,x,R_x\{0_No},Inv) is surreal-membered
+    by A5,Th5,A4;
+    then
+A6: divset(divL(x,Inv).m,x,L_x,Inv) is surreal-membered &
+    divset(divL(x,Inv).m,x,R_x,Inv) is surreal-membered &
+    divset(divR(x,Inv).m,x,L_x,Inv) is surreal-membered &
+    divset(divR(x,Inv).m,x,R_x,Inv) is surreal-membered by Th8;
+    divL(x,Inv).(m+1) = divL(x,Inv).m \/
+       divset(divL(x,Inv).m,x,R_x,Inv) \/ divset(divR(x,Inv).m,x,L_x,Inv)
+     & divR(x,Inv).(m+1) = divR(x,Inv).m \/
+       divset(divL(x,Inv).m,x,L_x,Inv) \/ divset(divR(x,Inv).m,x,R_x,Inv)
+        by Th6;
+    hence thesis by A4,A6;
+  end;
+  P[m] from NAT_1:sch 2(A2,A3);
+  hence thesis;
+end;
+
+theorem Th10:
+  Inv is (L_x\/R_x)\{0_No} -surreal-valued implies
+    Union divL(x,Inv) is surreal-membered &
+    Union divR(x,Inv) is surreal-membered
+proof
+  assume
+A1: Inv is (L_x\/R_x)\{0_No} -surreal-valued;
+  thus Union divL(x,Inv) is surreal-membered
+  proof
+    let o;
+    assume o in Union divL(x,Inv);
+    then consider n be object such that
+A2: n in dom divL(x,Inv) & o in divL(x,Inv).n by CARD_5:2;
+    dom divL(x,Inv)=NAT by Def5;
+    then reconsider n as Nat by A2;
+    divL(x,Inv).n is surreal-membered by Th9,A1;
+    hence thesis by A2;
+  end;
+  let o;
+  assume o in Union divR(x,Inv);
+  then consider n be object such that
+A3: n in dom divR(x,Inv) & o in divR(x,Inv).n by CARD_5:2;
+  dom divR(x,Inv)=NAT by Def6;
+  then reconsider n as Nat by A3;
+  divR(x,Inv).n is surreal-membered by Th9,A1;
+  hence thesis by A3;
+end;
+
+theorem Th11:
+  Y c= Z implies divset(Y,x,X,Inv) c= divset(Z,x,X,Inv)
+proof
+  assume
+A1: Y c= Z;
+  let o;
+  assume o in divset(Y,x,X,Inv);
+  then ex lamb be object st lamb in Y & o in divs(lamb,x,X,Inv) by Def3;
+  hence thesis by A1,Def3;
+end;
+
+theorem Th12:
+  Union divL(x,Inv)
+    = {0_No}\/divset(Union divL(x,Inv),x,R_x,Inv)\/
+      divset(Union divR(x,Inv),x,L_x,Inv)
+proof
+  defpred P[Nat] means
+  divL(x,Inv).$1 c= {0_No}\/divset(Union divL(x,Inv),x,R_x,Inv)\/
+  divset(Union divR(x,Inv),x,L_x,Inv);
+  divL(x,Inv).0 = {0_No} by Th1;
+  then
+A1: P[0] by XBOOLE_1:7,10;
+A2: P[n] implies P[n+1]
+  proof
+    assume
+A3: P[n];
+    let o;
+    assume
+A4: o in divL(x,Inv).(n+1);
+    divL(x,Inv).(n+1) = divL(x,Inv).n \/
+    divset(divL(x,Inv).n,x,R_x,Inv) \/ divset(divR(x,Inv).n,x,L_x,Inv)
+    by Th6;
+    then o in divL(x,Inv).n \/
+    divset(divL(x,Inv).n,x,R_x,Inv) or o in divset(divR(x,Inv).n,x,L_x,Inv)
+    by A4,XBOOLE_0:def 3;
+    then per cases by XBOOLE_0:def 3;
+    suppose o in divL(x,Inv).n;
+      hence thesis by A3;
+    end;
+    suppose
+A5:   o in divset(divL(x,Inv).n,x,R_x,Inv);
+      divset(divL(x,Inv).n,x,R_x,Inv) c=
+      divset(Union divL(x,Inv),x,R_x,Inv) by ABCMIZ_1:1,Th11;
+      then o in {0_No}\/divset(Union divL(x,Inv),x,R_x,Inv)
+      by A5,XBOOLE_0:def 3;
+      hence o in {0_No}\/divset(Union divL(x,Inv),x,R_x,Inv)\/
+      divset(Union divR(x,Inv),x,L_x,Inv)
+      by XBOOLE_0:def 3;
+    end;
+    suppose
+A6:   o in divset(divR(x,Inv).n,x,L_x,Inv);
+      divset(divR(x,Inv).n,x,L_x,Inv) c=
+      divset(Union divR(x,Inv),x,L_x,Inv) by Th11,ABCMIZ_1:1;
+      hence thesis by A6,XBOOLE_0:def 3;
+    end;
+  end;
+A7: P[n] from NAT_1:sch 2(A1,A2);
+  thus Union divL(x,Inv)
+  c= {0_No}\/divset(Union divL(x,Inv),x,R_x,Inv)\/
+  divset(Union divR(x,Inv),x,L_x,Inv)
+  proof
+    let o;
+    assume o in Union divL(x,Inv);
+    then consider n be object such that
+A8: n in dom divL(x,Inv) & o in divL(x,Inv).n by CARD_5:2;
+    n in NAT by A8,Def5;
+    then reconsider n as Nat;
+    divL(x,Inv).n c= {0_No}\/divset(Union divL(x,Inv),x,R_x,Inv)\/
+    divset(Union divR(x,Inv),x,L_x,Inv) by A7;
+    hence thesis by A8;
+  end;
+A9: divset(Union divL(x,Inv),x,R_x,Inv) c= Union divL(x,Inv)
+  proof
+    let o;
+    assume o in divset(Union divL(x,Inv),x,R_x,Inv);
+    then consider l be object such that
+A10: l in Union divL(x,Inv) & o in divs(l,x,R_x,Inv) by Def3;
+    consider n be object such that
+A11: n in dom divL(x,Inv) & l in divL(x,Inv).n by A10,CARD_5:2;
+    n in NAT by A11,Def5;
+    then reconsider n as Nat;
+    o in divset(divL(x,Inv).n,x,R_x,Inv) by A10,A11,Def3;
+    then o in  divL(x,Inv).n \/ divset(divL(x,Inv).n,x,R_x,Inv)
+    by XBOOLE_0:def 3;
+    then o in divL(x,Inv).n \/
+    divset(divL(x,Inv).n,x,R_x,Inv) \/
+    divset(divR(x,Inv).n,x,L_x,Inv) by XBOOLE_0:def 3;
+    then
+A12: o in divL(x,Inv).(n+1) by Th6;
+    n+1 in NAT;
+    then n+1 in dom divL(x,Inv) by Def5;
+    hence thesis by A12,CARD_5:2;
+  end;
+A13: divset(Union divR(x,Inv),x,L_x,Inv) c= Union divL(x,Inv)
+  proof
+    let o;
+    assume o in divset(Union divR(x,Inv),x,L_x,Inv);
+    then consider l be object such that
+A14: l in Union divR(x,Inv) & o in divs(l,x,L_x,Inv) by Def3;
+    consider n be object such that
+A15: n in dom divR(x,Inv) & l in divR(x,Inv).n by A14,CARD_5:2;
+    n in NAT by A15,Def6;
+    then reconsider n as Nat;
+    o in divset(divR(x,Inv).n,x,L_x,Inv) by A14,A15,Def3;
+    then o in divL(x,Inv).n \/
+    divset(divL(x,Inv).n,x,R_x,Inv) \/
+    divset(divR(x,Inv).n,x,L_x,Inv) by XBOOLE_0:def 3;
+    then
+A16: o in divL(x,Inv).(n+1) by Th6;
+    n+1 in NAT;
+    then n+1 in dom divL(x,Inv) by Def5;
+    hence thesis by A16,CARD_5:2;
+  end;
+  divL(x,Inv).0 = {0_No} by Th1;
+  then {0_No} c= Union divL(x,Inv) by ABCMIZ_1:1;
+  then {0_No}\/divset(Union divL(x,Inv),x,R_x,Inv) c= Union divL(x,Inv)
+    by A9,XBOOLE_1:8;
+  hence thesis by A13,XBOOLE_1:8;
+end;
+
+theorem Th13:
+  Union divR(x,Inv)
+      = divset(Union divL(x,Inv),x,L_x,Inv)\/
+        divset(Union divR(x,Inv),x,R_x,Inv)
+proof
+  defpred P[Nat] means
+  divR(x,Inv).$1 c= divset(Union divL(x,Inv),x,L_x,Inv)\/
+  divset(Union divR(x,Inv),x,R_x,Inv);
+  divR(x,Inv).0 = {} by Th1;
+  then
+A1: P[0] by XBOOLE_1:2;
+A2: P[n] implies P[n+1]
+  proof
+    assume
+A3: P[n];
+    let o;
+    assume
+A4: o in divR(x,Inv).(n+1);
+    divR(x,Inv).(n+1) = divR(x,Inv).n \/
+    divset(divL(x,Inv).n,x,L_x,Inv) \/ divset(divR(x,Inv).n,x,R_x,Inv)
+      by Th6;
+    then o in divR(x,Inv).n \/
+    divset(divL(x,Inv).n,x,L_x,Inv) or o in divset(divR(x,Inv).n,x,R_x,Inv)
+      by A4,XBOOLE_0:def 3;
+    then per cases by XBOOLE_0:def 3;
+    suppose o in divR(x,Inv).n;
+      hence thesis by A3;
+    end;
+    suppose
+A5:   o in divset(divL(x,Inv).n,x,L_x,Inv);
+      divset(divL(x,Inv).n,x,L_x,Inv) c=
+      divset(Union divL(x,Inv),x,L_x,Inv) by Th11,ABCMIZ_1:1;
+      hence thesis by A5,XBOOLE_0:def 3;
+    end;
+    suppose
+A6:   o in divset(divR(x,Inv).n,x,R_x,Inv);
+      divset(divR(x,Inv).n,x,R_x,Inv) c=
+      divset(Union divR(x,Inv),x,R_x,Inv) by Th11,ABCMIZ_1:1;
+      hence thesis by A6,XBOOLE_0:def 3;
+    end;
+  end;
+A7: P[n] from NAT_1:sch 2(A1,A2);
+  thus Union divR(x,Inv)
+  c= divset(Union divL(x,Inv),x,L_x,Inv)\/divset(Union divR(x,Inv),x,R_x,Inv)
+  proof
+    let o;
+    assume o in Union divR(x,Inv);
+    then consider n be object such that
+A8: n in dom divR(x,Inv) & o in divR(x,Inv).n by CARD_5:2;
+    n in NAT by A8,Def6;
+    then reconsider n as Nat;
+    divR(x,Inv).n c= divset(Union divL(x,Inv),x,L_x,Inv)\/
+    divset(Union divR(x,Inv),x,R_x,Inv) by A7;
+    hence thesis by A8;
+  end;
+A9: divset(Union divL(x,Inv),x,L_x,Inv) c= Union divR(x,Inv)
+  proof
+    let o;
+    assume o in divset(Union divL(x,Inv),x,L_x,Inv);
+    then consider l be object such that
+A10: l in Union divL(x,Inv) & o in divs(l,x,L_x,Inv) by Def3;
+    consider n be object such that
+A11: n in dom divL(x,Inv) & l in divL(x,Inv).n by A10,CARD_5:2;
+    n in NAT by A11,Def5;
+    then reconsider n as Nat;
+    o in divset(divL(x,Inv).n,x,L_x,Inv) by A10,A11,Def3;
+    then o in  divR(x,Inv).n \/ divset(divL(x,Inv).n,x,L_x,Inv)
+    by XBOOLE_0:def 3;
+    then o in divR(x,Inv).n \/
+    divset(divL(x,Inv).n,x,L_x,Inv) \/
+    divset(divR(x,Inv).n,x,R_x,Inv) by XBOOLE_0:def 3;
+    then
+A12: o in divR(x,Inv).(n+1) by Th6;
+    n+1 in NAT;
+    then n+1 in dom divR(x,Inv) by Def6;
+    hence thesis by A12,CARD_5:2;
+  end;
+  divset(Union divR(x,Inv),x,R_x,Inv) c= Union divR(x,Inv)
+  proof
+    let o;
+    assume o in divset(Union divR(x,Inv),x,R_x,Inv);
+    then consider l be object such that
+A13: l in Union divR(x,Inv) & o in divs(l,x,R_x,Inv) by Def3;
+    consider n be object such that
+A14: n in dom divR(x,Inv) & l in divR(x,Inv).n by A13,CARD_5:2;
+    n in NAT by A14,Def6;
+    then reconsider n as Nat;
+    o in divset(divR(x,Inv).n,x,R_x,Inv) by A13,A14,Def3;
+    then o in divR(x,Inv).n \/
+    divset(divL(x,Inv).n,x,L_x,Inv) \/
+    divset(divR(x,Inv).n,x,R_x,Inv) by XBOOLE_0:def 3;
+    then
+A15: o in divR(x,Inv).(n+1) by Th6;
+    n+1 in NAT;
+    then n+1 in dom divR(x,Inv) by Def6;
+    hence thesis by A15,CARD_5:2;
+  end;
+  hence thesis by A9,XBOOLE_1:8;
+end;
+
+theorem Th14:
+  X\{0_No} c= Z & I1|Z = I2|Z implies
+     divs(a,b,X,I1) = divs(a,b,X,I2)
+proof
+  assume
+A1: X\{0_No} c= Z & I1|Z = I2|Z;
+  thus divs(a,b,X,I1) c= divs(a,b,X,I2)
+  proof
+    let o;
+    assume o in divs(a,b,X,I1);
+    then consider xL be object such that
+A2: xL in X & xL <> 0_No &
+    o = (1_No +'(xL +' -' b) *' a) *' (I1.xL) by Def2;
+A3: xL in X\{0_No} by A2,ZFMISC_1:56;
+    then I1.xL  = (I2|Z).xL by A1,FUNCT_1:49
+    .= I2.xL by A3,A1,FUNCT_1:49;
+    hence thesis by A2,Def2;
+  end;
+  let o;
+  assume o in divs(a,b,X,I2);
+  then consider xL be object such that
+A4:xL in X & xL <> 0_No &
+  o = (1_No +'(xL +' -' b) *' a) *' (I2.xL) by Def2;
+A5:xL in X\{0_No} by A4,ZFMISC_1:56;
+  then I2.xL = (I1|Z).xL by A1,FUNCT_1:49
+  .= I1.xL by A5,A1,FUNCT_1:49;
+  hence thesis by A4,Def2;
+end;
+
+theorem Th15:
+  X\{0_No} c= Z & I1|Z = I2|Z implies
+     divset(Y,o,X,I1) = divset(Y,o,X,I2)
+proof
+  assume
+A1: X\{0_No} c= Z & I1|Z = I2|Z;
+  thus divset(Y,o,X,I1) c= divset(Y,o,X,I2)
+  proof
+    let a;
+    assume a in divset(Y,o,X,I1);
+    then consider lamb be object such that
+A2: lamb in Y & a in divs(lamb,o,X,I1) by Def3;
+    divs(lamb,o,X,I1) = divs(lamb,o,X,I2) by A1,Th14;
+    hence thesis by A2,Def3;
+  end;
+  let a;
+  assume a in divset(Y,o,X,I2);
+  then consider lamb be object such that
+A3: lamb in Y & a in divs(lamb,o,X,I2) by Def3;
+  divs(lamb,o,X,I1) =divs(lamb,o,X,I2) by A1,Th14;
+  hence thesis by A3,Def3;
+end;
+
+theorem Th16:
+  for x be object st (L_x \/ R_x)\{0_No} c= Z & I1|Z = I2|Z holds
+    transitions_of(x,I1) = transitions_of(x,I2)
+proof
+  let x be object such that
+A1: (L_x \/ R_x)\{0_No} c= Z & I1|Z = I2|Z;
+  set T1 = transitions_of(x,I1),T2 = transitions_of(x,I2);
+  defpred P[Nat] means
+  T1.$1 = T2.$1;
+  T1.0 = 1_No by Def4;
+  then
+A2:  P[0] by Def4;
+A3: L_x\{0_No} c= (L_x \/ R_x)\{0_No} &
+  R_x\{0_No} c= (L_x \/ R_x)\{0_No} by XBOOLE_1:7,33;
+A4:P[n] implies P[n+1]
+  proof
+    assume
+A5: P[n];
+A6: T1.(n+1) is pair & T2.(n+1) is pair by Def4;
+A7: (T1.(n+1))`1 = L_(T1.n) \/ divset(L_(T1.n),x,R_x,I1) \/
+    divset(R_(T1.n),x,L_x,I1) by Def4
+    .= L_(T1.n) \/ divset(L_(T1.n),x,R_x,I2) \/ divset(R_(T1.n),x,L_x,I1)
+    by A1,A3,XBOOLE_1:1,Th15
+    .= L_(T2.n) \/ divset(L_(T2.n),x,R_x,I2) \/ divset(R_(T2.n),x,L_x,I2)
+    by A1,A3,XBOOLE_1:1,Th15,A5
+    .= (T2.(n+1))`1 by Def4;
+    (T1.(n+1))`2 =R_(T1.n) \/ divset(L_(T1.n),x,L_x,I1) \/
+    divset(R_(T1.n),x,R_x,I1) by Def4
+    .= R_(T1.n) \/ divset(L_(T1.n),x,L_x,I1) \/ divset(R_(T1.n),x,R_x,I2)
+    by A1,A3,XBOOLE_1:1,Th15
+    .= R_(T2.n) \/ divset(L_(T2.n),x,L_x,I2) \/ divset(R_(T2.n),x,R_x,I2)
+    by A1,A3,XBOOLE_1:1,Th15,A5
+    .=(T2.(n+1))`2 by Def4;
+    hence thesis by A6,A7,XTUPLE_0:2;
+  end;
+A8: P[n] from NAT_1:sch 2(A2,A4);
+A9:dom T1 = NAT = dom T2 by Def4;
+  then o in dom T1 implies T1.o=T2.o by A8;
+  hence thesis by A9,FUNCT_1:2;
+end;
+
+theorem Th17:
+  for x be object st (L_x \/ R_x)\{0_No} c= Z & I1|Z = I2|Z holds
+    divL(x,I1) = divL(x,I2) & divR(x,I1) = divR(x,I2)
+proof
+  let x be object such that
+A1: (L_x \/ R_x)\{0_No} c= Z & I1|Z = I2|Z;
+A2: transitions_of(x,I1) = transitions_of(x,I2) by A1,Th16;
+A3: dom divL(x,I1) = NAT = dom divL(x,I2) by Def5;
+  o in dom divL(x,I1) implies divL(x,I1).o=divL(x,I2).o
+  proof
+    assume o in dom divL(x,I1);
+    then reconsider n=o as Nat by A3;
+    thus divL(x,I1).o = (transitions_of(x,I1).n)`1 by Def5
+    .= divL(x,I2).o by A2,Def5;
+  end;
+  hence divL(x,I1) = divL(x,I2) by A3,FUNCT_1:2;
+A4: dom divR(x,I1) = NAT = dom divR(x,I2) by Def6;
+  o in dom divR(x,I1) implies divR(x,I1).o=divR(x,I2).o
+  proof
+    assume o in dom divR(x,I1);
+    then reconsider n=o as Nat by A4;
+    thus divR(x,I1).o = (transitions_of(x,I1).n)`2 by Def6
+    .= divR(x,I2).o by Def6,A2;
+  end;
+  hence thesis by A4,FUNCT_1:2;
+end;
+
+begin :: The Concept of Positive Options in Conway's Sense
+
+definition
+  let x be Surreal;
+  attr x is positive means :Def8:
+    0_No < x;
+end;
+
+registration
+  cluster 1_No -> positive;
+  coherence
+  proof
+A1: 0_No in {0_No} by TARSKI:def 1;
+    assume 1_No <= 0_No;
+    then L_1_No << {0_No} by SURREAL0:43;
+    hence thesis by SURREALO:3,A1;
+  end;
+end;
+
+registration
+  cluster positive for Surreal;
+  existence
+  proof
+    take 1_No;
+    thus thesis;
+  end;
+end;
+
+registration
+  let x,y be positive Surreal;
+  cluster x + y -> positive;
+  coherence
+  proof
+    0_No < x & 0_No <= y by Def8;
+    then 0_No +0_No < x+y by SURREALR:44;
+    hence thesis;
+  end;
+  cluster x * y -> positive;
+  coherence
+  proof
+    0_No < x & 0_No < y by Def8;
+    hence thesis by SURREALR:72;
+  end;
+end;
+
+Lm1: 0_No < x implies ex y be Surreal st y==x &
+    (for z holds z in L_y iff z=0_No or (z in L_x & 0_No<z) ) &
+    (for z holds z in R_y iff z in R_x & 0_No<z )
+proof
+  assume
+A1: 0_No < x;
+  defpred P[object] means for z st z=$1 holds 0_No < z;
+  consider yL be set such that
+A2: o in yL iff o in L_x & P[o] from XBOOLE_0:sch 1;
+  consider yR be set such that
+A3: o in yR iff o in R_x & P[o] from XBOOLE_0:sch 1;
+  set YL=yL\/{0_No};
+A4: YL << yR
+  proof
+    let l,r be Surreal such that
+A5:  l in YL & r in yR;
+    per cases by A5,ZFMISC_1:136;
+    suppose
+A6:   l in yL;
+A7:   L_x << R_x by SURREAL0:45;
+      l in L_x & r in R_x by A6,A5,A2,A3;
+      hence thesis by A7;
+    end;
+    suppose l=0_No;
+      hence thesis by A3,A5;
+    end;
+  end;
+A8: o in YL \/ yR implies ex O st O in born x & o in Day O
+  proof
+    assume o in YL \/ yR;
+    then o in yL\/{0_No} or o in yR by XBOOLE_0:def 3;
+    then
+A9: o in yL or o=0_No or o in yR by ZFMISC_1:136;
+    then reconsider o as Surreal by SURREAL0:def 16,A2,A3;
+    take born o;
+    0_No <= 0_No;
+    then born x <>{} by A1,SURREAL0:37;
+    then {} c< born x by XBOOLE_1:2,XBOOLE_0:def 8;
+    then
+A10: {} in born x by ORDINAL1:11;
+    o in L_x or o=0_No or o in R_x by A9,A2,A3;
+    then o in L_x \/R_x or o =0_No by XBOOLE_0:def 3;
+    hence thesis by SURREAL0:def 18,A10,SURREAL0:37,SURREALO:1;
+  end;
+  [YL,yR] in Day born x by A4,A8,SURREAL0:46;
+  then reconsider y = [YL,yR]  as Surreal;
+  take y;
+A11:x=[L_x,R_x];
+A12:for a be Surreal st a in YL ex b be Surreal st b in L_x & a <= b
+  proof
+    let a be Surreal;
+    (ex xR be Surreal st xR in R_0_No & 0_No < xR <= x) or
+    (ex yL be Surreal st yL in L_x & 0_No <= yL < x)
+    by A1,SURREALO:13;
+    then consider L be Surreal such that
+A13: L in L_x & 0_No <= L < x;
+    assume a in YL;
+    then a in yL or a=0_No by ZFMISC_1:136;
+    hence thesis by A13,A2;
+  end;
+A14:for a be Surreal st a in R_x ex b be Surreal st b in yR & b <= a
+  proof
+    let a be Surreal;
+    assume
+A15: a in R_x;
+    0_No <= x by A1;
+    then 0_No in {0_No} << R_x by SURREAL0:43,TARSKI:def 1;
+    then P[a] by A15;
+    hence thesis by A15,A3;
+  end;
+A16:for a be Surreal st a in yR ex b be Surreal st b in R_x & b <= a by A3;
+  for a be Surreal st a in L_x ex b be Surreal st b in YL & a <= b
+  proof
+    let a be Surreal such that
+A17:a in L_x;
+    per cases;
+    suppose 0_No < a;
+      then P[a];
+      then a in YL by A2,A17,ZFMISC_1:136;
+      hence thesis;
+    end;
+    suppose
+A18:  a <= 0_No;
+      0_No in YL by ZFMISC_1:136;
+      hence thesis by A18;
+    end;
+  end;
+  hence y==x by A14,A12,SURREAL0:44,A16,A11;
+  thus for z holds z in L_y iff z=0_No or (z in L_x & 0_No<z)
+  proof
+    let z;
+    thus z in L_y implies z=0_No or (z in L_x & 0_No<z)
+    proof
+      assume z in L_y & z <>0_No;
+      then z in yL by ZFMISC_1:136;
+      hence thesis by A2;
+    end;
+    assume
+A19: z=0_No or (z in L_x & 0_No<z);
+    assume
+A20: not z in L_y;
+    then P[z] by A19,ZFMISC_1:136;
+    hence thesis by A20,A19,A2,ZFMISC_1:136;
+  end;
+  let z;
+  thus z in R_y implies z in R_x & 0_No<z by A3;
+  assume
+A21: z in R_x & 0_No<z;
+  then P[z];
+  hence thesis by A3,A21;
+end;
+
+definition
+  let x be object;
+  assume A1:x is positive Surreal;
+  func ||.x.|| -> positive Surreal means :Def9:
+       (y in L_it iff y = 0_No or (y in L_x & y is positive)) &
+    (y in R_it iff y in R_x & y is positive);
+  existence
+  proof
+    reconsider X=x as Surreal by A1;
+    consider s be Surreal such that
+A2: s==X and
+A3: for z holds z in L_s iff z=0_No or (z in L_x & 0_No<z)and
+A4: for z holds z in R_s iff z in R_x & 0_No<z by Lm1,A1,Def8;
+    0_No < s by A2,A1,Def8,SURREALO:4;
+    then reconsider s as positive Surreal by Def8;
+    take s;
+    thus thesis by A3,A4;
+  end;
+  uniqueness
+  proof
+    let s1,s2 be positive Surreal such that
+A5: (y in L_s1 iff y=0_No or (y in L_x & y is positive)) &
+    (y in R_s1 iff y in R_x & y is positive) and
+A6: (y in L_s2 iff y=0_No or (y in L_x & y is positive)) &
+    (y in R_s2 iff y in R_x & y is positive);
+    o in L_s1 implies o in L_s2
+    proof
+      assume
+A7:   o in L_s1;
+      then reconsider o as Surreal by SURREAL0:def 16;
+      o=0_No or (o in L_x & o is positive) by A7,A5;
+      hence thesis by A6;
+    end;
+    then
+A8: L_s1 c= L_s2 by TARSKI:def 3;
+    o in L_s2 implies o in L_s1
+    proof
+      assume
+A9:   o in L_s2;
+      then reconsider o as Surreal by SURREAL0:def 16;
+      o=0_No or (o in L_x & o is positive) by A9,A6;
+      hence thesis by A5;
+    end;
+    then L_s2 c= L_s1 by TARSKI:def 3;
+    then
+A10:L_s1 = L_s2 by A8,XBOOLE_0:def 10;
+    o in R_s1 implies o in R_s2
+    proof
+      assume
+A11:  o in R_s1;
+      then reconsider o as Surreal by SURREAL0:def 16;
+      o in R_x & o is positive by A11,A5;
+      hence thesis by A6;
+    end;
+    then
+A12: R_s1 c= R_s2 by TARSKI:def 3;
+    o in R_s2 implies o in R_s1
+    proof
+      assume
+A13:  o in R_s2;
+      then reconsider o as Surreal by SURREAL0:def 16;
+      o in R_x & o is positive by A13,A6;
+      hence thesis by A5;
+    end;
+    then R_s2 c= R_s1 by TARSKI:def 3;
+    then R_s1 = R_s2 by A12,XBOOLE_0:def 10;
+    hence thesis by A10,XTUPLE_0:2;
+  end;
+end;
+
+theorem Th18:
+  x is positive implies x == ||.x.||
+proof
+  assume
+A1: x is positive;
+  then consider y be Surreal such that
+A2:y==x and
+A3: (for z holds z in L_y iff z=0_No or (z in L_x & 0_No<z) ) and
+A4: (for z holds z in R_y iff z in R_x & 0_No<z ) by Lm1;
+  0_No < y by A1,A2,SURREALO:4;
+  then reconsider y as positive Surreal by Def8;
+  (z in L_y iff z=0_No or (z in L_x & z is positive)) &
+  (z in R_y iff z in R_x & z is positive) by A3,A4;
+  hence thesis by A2,A1,Def9;
+end;
+
+theorem
+  x is positive implies ||.||.x.||.|| = ||.x.||
+proof
+  set Nx = ||.x.||, NNx=||.Nx.||;
+  assume
+A1:x is positive;
+  o in L_NNx implies o in L_Nx
+  proof
+    assume
+A2: o in L_NNx & not o in L_Nx;
+    then reconsider o as Surreal by SURREAL0:def 16;
+    o = 0_No or (o in L_Nx & o is positive) by A2,Def9;
+    hence thesis by A1,A2,Def9;
+  end;
+  then
+A3: L_NNx c= L_Nx by TARSKI:def 3;
+  o in L_Nx implies o in L_NNx
+  proof
+    assume
+A4: o in L_Nx & not o in L_NNx;
+    then reconsider o as Surreal by SURREAL0:def 16;
+    o = 0_No or (o in L_x & o is positive) by A1,A4,Def9;
+    hence thesis by A4,Def9;
+  end;
+  then L_Nx c= L_NNx by TARSKI:def 3;
+  then
+A5:L_Nx = L_NNx by A3,XBOOLE_0:def 10;
+  o in R_NNx implies o in R_Nx
+  proof
+    assume
+A6: o in R_NNx & not o in R_Nx;
+    then reconsider o as Surreal by SURREAL0:def 16;
+    o in R_Nx & o is positive by A6,Def9;
+    hence thesis by A6;
+  end;
+  then
+A7: R_NNx c= R_Nx by TARSKI:def 3;
+  o in R_Nx implies o in R_NNx
+  proof
+    assume
+A8: o in R_Nx & not o in R_NNx;
+    then reconsider o as Surreal by SURREAL0:def 16;
+    o in R_x & o is positive by A1,A8,Def9;
+    hence thesis by A8,Def9;
+  end;
+  then R_Nx c= R_NNx by TARSKI:def 3;
+  then R_Nx = R_NNx by A7,XBOOLE_0:def 10;
+  hence thesis by A5,XTUPLE_0:2;
+end;
+
+theorem Th20:
+  x is positive implies
+    (L_||.x.|| \/ R_||.x.||)\{0_No} c= L_x \/R_x
+proof
+  assume
+A1: x is positive;
+  let a;
+  assume
+A2: a in (L_||.x.|| \/ R_||.x.||)\{0_No};
+  then reconsider a as Surreal by SURREAL0:def 16;
+A3:a in (L_||.x.|| \/ R_||.x.||) & a <> 0_No by A2,ZFMISC_1:56;
+  a in L_||.x.|| or a in R_||.x.|| by A2,XBOOLE_0:def 3;
+  then a in L_x or a in R_x by Def9,A1,A3;
+  hence thesis by XBOOLE_0:def 3;
+end;
+
+theorem Th21:
+  x is positive & y in (L_||.x.|| \/ R_||.x.||)\{0_No} implies y is positive
+proof
+  assume
+A1: x is positive & y in (L_||.x.|| \/ R_||.x.||)\{0_No};
+  then
+A2:y in (L_||.x.|| \/ R_||.x.||) & y <> 0_No by ZFMISC_1:56;
+  y in L_||.x.|| or y in R_||.x.|| by A1,XBOOLE_0:def 3;
+  hence thesis by Def9,A1,A2;
+end;
+
+theorem Th22:
+  x is positive implies born ||.x.|| c= born x
+proof
+A1:0_No <= 0_No;
+  assume
+A2: x is positive;
+  then
+A3: {} in born x by A1,SURREAL0:37,ORDINAL3:8;
+A4: born 0_No={} by SURREAL0:37;
+  set Nx=||.x.||;
+  for o be object st o in L_Nx \/ R_Nx
+    ex O st O in born x & o in Day O
+  proof
+    let o;
+    assume
+A5: o in L_Nx \/ R_Nx;
+    then reconsider o as Surreal by SURREAL0:def 16;
+    per cases;
+    suppose o = 0_No;
+      then o in Day {} by SURREAL0:def 18,A4;
+      hence thesis by A3;
+    end;
+    suppose o <> 0_No;
+      then
+A6:   o in (L_Nx \/R_Nx)\{0_No} by A5,ZFMISC_1:56;
+      (L_Nx \/R_Nx)\{0_No} c= L_x \/R_x by A2,Th20;
+      then born o in born x & o in Day born o
+      by A6,SURREALO:1,SURREAL0:def 18;
+      hence thesis;
+    end;
+  end;
+  then Nx=[L_Nx,R_Nx] in Day born x by SURREAL0:45,46;
+  hence thesis by SURREAL0:def 18;
+end;
+
+definition
+  let A be Ordinal;
+  func Positives A -> Subset of Day A means :Def10:
+    x in it iff x in Day A & 0_No < x;
+  existence
+  proof
+    defpred P[object] means
+    for y st y=$1 holds 0_No <y;
+    consider P be set such that
+A1: o in P iff o in Day A & P[o] from XBOOLE_0:sch 1;
+    P c= Day A
+    proof
+      let o;
+      thus thesis by A1;
+    end;
+    then reconsider P as Subset of Day A;
+    take P;
+    let x;
+    thus x in P implies x in Day A & 0_No < x by A1;
+    assume
+A2: x in Day A & 0_No < x;
+    then P[x];
+    hence thesis by A2,A1;
+  end;
+  uniqueness
+  proof
+    let P1,P2 be Subset of Day A such that
+A3: x in P1 iff x in Day A & 0_No < x and
+A4: x in P2 iff x in Day A & 0_No < x;
+    o in  P1 implies o in P2
+    proof
+      assume
+A5:   o in P1;
+      then reconsider x=o as Surreal;
+      x in Day A & 0_No < x by A3,A5;
+      hence thesis by A4;
+    end;
+    then
+A6: P1 c= P2 by TARSKI:def 3;
+    o in  P2 implies o in P1
+    proof
+      assume
+A7:   o in P2;
+      then reconsider x=o as Surreal;
+      x in Day A & 0_No < x by A4,A7;
+      hence thesis by A3;
+    end;
+    then P2 c= P1 by TARSKI:def 3;
+    hence thesis by A6,XBOOLE_0:def 10;
+  end;
+end;
+
+theorem Th23:
+  A c= B implies Positives A c= Positives B
+proof
+  assume
+A1: A c= B;
+  let x,y be object;
+  assume
+A2:[x,y] in Positives A;
+  then reconsider xy=[x,y] as Surreal;
+  xy in Day A c= Day B & 0_No < xy by A1,A2,Def10,SURREAL0:35;
+  hence thesis by Def10;
+end;
+
+theorem Th24:
+  x is positive implies
+    (L_||.x.|| \/ R_||.x.||)\{0_No} c= Positives born x
+proof
+  assume A1:x is positive;
+  then
+A2:(L_||.x.|| \/ R_||.x.||)\{0_No} c= L_x \/ R_x by Th20;
+  let a;
+  assume
+A3:a in (L_||.x.|| \/ R_||.x.||)\{0_No};
+  then reconsider a as Surreal by SURREAL0:def 16;
+A4:a is positive by A1,A3,Th21;
+  born a in born x by A3,A2,SURREALO:1;
+  then a in Day born a c= Day born x by SURREAL0:35,def 18,ORDINAL1:def 2;
+  hence thesis by A4,Def10;
+end;
+
+begin :: The Inverse Element for Surreal Numbers
+
+definition
+  let A be Ordinal;
+  func No_inverse_op A -> ManySortedSet of Positives A means :Def11:
+    ex S be c=-monotone Function-yielding Sequence st
+      dom S = succ A & it = S.A &
+      for B be Ordinal st B in succ A
+         ex SB be ManySortedSet of Positives B st S.B = SB &
+           for x be object st x in Positives B holds
+             SB.x = [ Union divL(||.x.||,union rng (S|B)),
+                      Union divR(||.x.||,union rng (S|B))];
+  existence
+  proof
+    deffunc D(Ordinal) = Positives $1;
+A1: for A,B be Ordinal st A c= B holds D(A) c= D(B) by Th23;
+    deffunc H(object,c=-monotone Function-yielding Sequence)=
+    [ Union divL(||.$1.||,(union rng ($2))),
+    Union divR(||.$1.||,(union rng ($2)))];
+A2: for S be c=-monotone Function-yielding Sequence st
+    for A be Ordinal st A in dom S holds dom (S.A) = D(A)
+    for A be Ordinal,o st o in dom (S.A) holds H(o,S|A) = H(o,S)
+    proof
+      let S be c=-monotone Function-yielding Sequence such that
+A3:   for A be Ordinal st A in dom S holds dom (S.A) = D(A);
+      let A be Ordinal,o such that
+A4:   o in dom (S.A);
+      S.A <>{} by A4;
+      then
+A5:   A in dom S by FUNCT_1:def 2;
+      then
+A6:   dom (S.A) =D(A) by A3;
+      then reconsider x=o as Surreal by A4;
+      set Nx=||.x.||;
+      set xx=L_Nx\/R_Nx,xxZ=xx\{0_No};
+A7:   x in Day A & 0_No < x by A6,A4,Def10;
+A8:   born x c= A by SURREAL0:def 18,A6,A4;
+      then
+A9:   Positives born x c= Positives A by Th23;
+A10:  x is positive by A6,A4,Def10;
+      xxZ c= Positives born x by A7,Def8,Th24;
+      then
+A11:  xxZ c= Positives A by A9,XBOOLE_1:1;
+A12:  dom (S.A) c= dom union rng S by A5,SURREALR:2;
+A13:  xxZ c= dom (union rng (S|A))
+      proof
+        let o;
+        assume
+A14:    o in xxZ;
+        then reconsider o as Surreal by SURREAL0:def 16;
+        set b=born o;
+        xxZ c= L_x \/R_x by A10,Th20;
+        then
+A15:    b in born x by SURREALO:1,A14;
+        b in dom S by A5,A8,A15,ORDINAL1:10;
+        then
+A16:    b in dom (S|A) by A15,A8,RELAT_1:57;
+        then
+A17:    dom ((S|A).b) c= dom union rng (S|A) by SURREALR:2;
+A18:    (S|A).b = S.b by A16,FUNCT_1:47;
+A19:    o is positive by A10,Th21,A14;
+A20:    dom (S.b) = D(b) by A3,A15,A8,A5,ORDINAL1:10;
+        o in Day b by SURREAL0:def 18;
+        then o in D(b) by Def10,A19;
+        hence thesis by A18,A17,A20;
+      end;
+A21:  dom ((union rng (S|A))|xxZ) = xxZ = dom ((union rng S)|xxZ)
+      by A12,A6,A11,XBOOLE_1:1,A13,RELAT_1:62;
+      a in xxZ implies ((union rng (S|A))|xxZ).a = ((union rng S)|xxZ).a
+      proof
+        assume
+A22:    a in xxZ;
+        then reconsider a as Surreal by SURREAL0:def 16;
+        set b=born a;
+A23:    ((union rng (S|A))|xxZ).a = (union rng (S|A)).a by A22,FUNCT_1:49;
+A24:    ((union rng S)|xxZ).a = (union rng S).a by A22,FUNCT_1:49;
+        xxZ c= L_x \/R_x by A10,Th20;
+        then
+A25:    b in born x by SURREALO:1,A22;
+A26:    a is positive by A10,Th21,A22;
+A27:    dom (S.b) = D(b) by A3,A8,A25,A5,ORDINAL1:10;
+        a in Day b by SURREAL0:def 18;
+        then a in dom (S.b) & b in A by Def10,A26,A27,A25,A8;
+        hence thesis by A23,A24,SURREALR:5;
+      end;
+      then (union rng (S|A))|xxZ = (union rng S)|xxZ by A21,FUNCT_1:2;
+      then divL(Nx,(union rng (S|A)))= divL(Nx,(union rng S)) &
+      divR(Nx,(union rng (S|A)))= divR(Nx,(union rng S)) by Th17;
+      hence H(o,S|A) = H(o,S);
+    end;
+    consider S be c=-monotone Function-yielding Sequence such that
+A28: dom S = succ A and
+A29:  for B be Ordinal st B in succ A
+       ex SB be ManySortedSet of D(B) st S.B = SB &
+         for o st o in D(B) holds SB.o = H(o,S|B) from SURREALR:sch 1(A2,A1);
+    consider SA be ManySortedSet of D(A) such that
+A30: S.A = SA &
+    for o st o in D(A) holds SA.o = H(o,S|A) by A29,ORDINAL1:6;
+    take SA,S;
+    thus thesis by A28,A29,A30;
+  end;
+  uniqueness
+  proof
+    let dA1,dA2 be ManySortedSet of Positives A;
+    deffunc D(Ordinal) = Positives $1;
+    deffunc H(object,c=-monotone Function-yielding Sequence) =
+    [ Union divL(||.$1.||,(union rng ($2))),
+    Union divR(||.$1.||,(union rng ($2)))];
+    given S1 be c=-monotone Function-yielding Sequence such that
+A31:  dom S1 = succ A & dA1 = S1.A &
+    for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of Positives B st S1.B = SB &
+    for x be object st x in Positives B holds
+    SB.x = H(x,S1|B);
+    given S2 be c=-monotone Function-yielding Sequence such that
+A32:  dom S2 = succ A & dA2 = S2.A &
+    for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of Positives B st S2.B = SB &
+    for x be object st x in Positives B holds
+    SB.x = H(x,S2|B);
+A33: succ A c= dom S1 & succ A c= dom S2 by A31,A32;
+A34:for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of D(B) st S1.B = SB &
+    for o st o in D(B) holds SB.o = H(o,S1|B) by A31;
+A35:for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of D(B) st S2.B = SB &
+    for o st o in D(B) holds SB.o = H(o,S2|B) by A32;
+    S1| (succ A) = S2|(succ A) from SURREALR:sch 2(A33,A34,A35);
+    then S1| (succ A) = S2 by A32;
+    hence thesis by A31,A32;
+  end;
+end;
+
+theorem Th25:
+  for S be c=-monotone Function-yielding Sequence st
+    for B st B in dom S
+      ex SB be ManySortedSet of Positives B st S.B = SB &
+         for o st o in Positives B holds
+           SB.o =
+           [ Union divL(||.o.||,(union rng (S|B))),
+             Union divR(||.o.||,(union rng (S|B)))]
+    holds
+  for A st A in dom S holds No_inverse_op A = S.A
+proof
+  deffunc D(Ordinal) = Positives $1;
+  deffunc H(object,c=-monotone Function-yielding Sequence) =
+  [Union divL(||.$1.||,(union rng ($2))),
+    Union divR(||.$1.||,(union rng ($2)))];
+  let S1 be c=-monotone Function-yielding Sequence such that
+A1: for B be Ordinal st B in dom S1
+       ex SB be ManySortedSet of D(B) st S1.B = SB &
+         for x be object st x in D(B) holds SB.x = H(x,S1|B);
+  let A be Ordinal such that
+A2: A in dom S1;
+A3:succ A c= dom S1 by A2,ORDINAL1:21;
+  consider S2 be c=-monotone Function-yielding Sequence such that
+A4:dom S2 = succ A & S2.A = No_inverse_op A &
+      for B be Ordinal st B in succ A
+         ex SB be ManySortedSet of D(B) st S2.B = SB &
+           for x be object st x in D(B) holds
+             SB.x = H(x,S2|B) by Def11;
+A5: for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of D(B) st S1.B = SB &
+        for x be object st x in D(B) holds SB.x = H(x,S1|B) by A1,A3;
+A6: for B be Ordinal st B in succ A
+    ex SB be ManySortedSet of D(B) st S2.B = SB &
+      for x be object st x in D(B) holds SB.x = H(x,S2|B) by A4;
+A7: succ A c= dom S1 & succ A c= dom S2 by A2,ORDINAL1:21,A4;
+A8: S1|succ A = S2|succ A from SURREALR:sch 2(A7,A5,A6);
+  A in succ A by ORDINAL1:8;
+  hence thesis by A4,A8,FUNCT_1:49;
+end;
+
+definition
+  let x be Surreal;
+  func inv x -> object equals
+     (No_inverse_op born x).x;
+  coherence;
+end;
+
+definition
+  let x be Surreal;
+  func No_inverses_on x -> Function means :Def13:
+     dom it = (L_x\/R_x)\{0_No} &
+     for y st y in (L_x\/R_x)\{0_No} holds it.y = inv y;
+  existence
+  proof
+    defpred P[object,object] means y=$1 implies $2=inv y;
+A1: for e being object st e in (L_x\/R_x)\{0_No}
+    ex u being object st P[e,u]
+    proof
+      let e be object such that
+A2:   e in (L_x\/R_x)\{0_No};
+      reconsider e as Surreal by A2,SURREAL0:def 16;
+      take inv e;
+      thus thesis;
+    end;
+    consider f be Function such that
+A3:  dom f = (L_x\/R_x)\{0_No} and
+A4:  for e being object st
+    e in (L_x\/R_x)\{0_No} holds P[e,f.e] from CLASSES1:sch 1(A1);
+    take f;
+    thus dom f = (L_x\/R_x)\{0_No} by A3;
+    let y;
+    thus thesis by A4;
+  end;
+  uniqueness
+  proof
+    let i1,i2 be Function such that
+A5: dom i1 = (L_x\/R_x)\{0_No} and
+A6: for y st y in (L_x\/R_x)\{0_No} holds i1.y = inv y and
+A7: dom i2 = (L_x\/R_x)\{0_No} and
+A8: for y st y in (L_x\/R_x)\{0_No} holds i2.y = inv y;
+    o in (L_x\/R_x)\{0_No} implies i1.o = i2.o
+    proof
+      assume
+A9:   o in (L_x\/R_x)\{0_No};
+      then reconsider o as Surreal by SURREAL0:def 16;
+      i1.o = inv o by A9,A6;
+      hence thesis by A9,A8;
+    end;
+    hence thesis by A5,A7,FUNCT_1:2;
+  end;
+end;
+
+theorem Th26:
+  x is positive & No_inverses_on ||.x.|| c= Inv implies
+        inv x = [ Union divL(||.x.||,Inv),Union divR(||.x.||,Inv)]
+proof
+  set A=born x,Nx=||.x.||;
+  assume A1: x is positive & No_inverses_on Nx c= Inv;
+  consider S be c=-monotone Function-yielding Sequence such that
+A2:  dom S = succ A & No_inverse_op A = S.A and
+A3:  for B be Ordinal st B in succ A
+         ex SB be ManySortedSet of Positives B st S.B = SB &
+           for o be object st o in Positives B holds
+             SB.o = [ Union divL(||.o.||,(union rng (S|B))),
+                      Union divR(||.o.||,(union rng (S|B)))] by Def11;
+  consider SB be ManySortedSet of Positives A such that
+A4:  S.A = SB and
+A5:  for o be object st o in Positives A holds
+             SB.o = [ Union divL(||.o.||,(union rng (S|A))),
+                      Union divR(||.o.||,(union rng (S|A)))] by A3,ORDINAL1:6;
+  set UA=union rng (S|A);
+  x in Day A by SURREAL0:def 18;
+  then
+A6: x in Positives A by A1,Def10;
+  set XX = (L_Nx \/ R_Nx)\{0_No};
+A7: XX c= Positives A by A1,Th24;
+A8: XX c= L_x \/ R_x by A1,Th20;
+  XX c= dom UA
+  proof
+    let o;
+    assume
+A9: o in XX;
+    then reconsider o as Surreal by SURREAL0:def 16;
+    set b = born o;
+A10:0_No < o by A7,A9,Def10;
+    o in Day b by SURREAL0:def 18;
+    then
+A11:o in Positives b by A10,Def10;
+A12:born o in A by A9,A8,SURREALO:1;
+    b in succ A by ORDINAL1:8,A9,A8,SURREALO:1;
+    then ex SB be ManySortedSet of Positives b st S.b = SB &
+            for o be object st o in Positives b holds
+              SB.o = [ Union divL(||.o.||,(union rng (S|b))),
+                       Union divR(||.o.||,(union rng (S|b)))] by A3;
+    then o in dom (S.b) by A11,PARTFUN1:def 2;
+    hence thesis by A12,SURREALR:5;
+  end;
+  then
+A13: dom (UA|XX) = XX by RELAT_1:62;
+  XX=dom (No_inverses_on Nx) c= dom Inv by RELAT_1:11,A1,Def13;
+  then
+A14: dom(Inv|XX)=XX by RELAT_1:62;
+  a in XX implies (UA|XX).a = (Inv|XX).a
+  proof
+    assume
+A15: a in XX;
+    then reconsider o=a as Surreal by SURREAL0:def 16;
+A16: (UA|XX).a = UA.a by A15,FUNCT_1:49;
+    set b = born o;
+A17: 0_No < o by A7,A15,Def10;
+    o in Day b by SURREAL0:def 18;
+    then
+A18: o in Positives b by A17,Def10;
+A19: born o in A by A15,A8,SURREALO:1;
+A20: b in succ A by ORDINAL1:8,A15,A8,SURREALO:1;
+    then ex SB be ManySortedSet of Positives b st S.b = SB &
+    for o be object st o in Positives b holds
+    SB.o = [ Union divL(||.o.||,(union rng (S|b))),
+    Union divR(||.o.||,(union rng (S|b)))] by A3;
+    then
+A21: o in dom (S.b) by A18,PARTFUN1:def 2;
+    then
+A22: UA.o = (union rng S).o by A19,SURREALR:5;
+A23: b in dom S by ORDINAL1:8,A15,A8,SURREALO:1, A2;
+A24: No_inverse_op b = S.b by A2,A3,Th25,A20;
+A25: (Inv|XX).o = Inv.o by A15,FUNCT_1:49;
+A26: o in dom No_inverses_on Nx by A15,Def13;
+    (No_inverses_on Nx).o = inv o by A15,Def13;
+    then [o,inv o] in No_inverses_on Nx by A26,FUNCT_1:1;
+    then (Inv|XX).o = inv o by A1,A25,FUNCT_1:1;
+    hence thesis by A24,A16,A22,A21,A23,SURREALR:2;
+  end;
+  then UA|XX = Inv|XX by A13,A14,FUNCT_1:2;
+  then divL(Nx,UA) = divL(Nx,Inv) & divR(Nx,UA) = divR(Nx,Inv) by Th17;
+  hence thesis by A6,A4,A5,A2;
+end;
+
+theorem Th27:
+  for f be Function st dom f = NAT & y in Union f
+    ex n st y in f.n &
+       for m st y in f.m holds n <= m
+proof
+  let f be Function such that
+A1:dom f = NAT & y in Union f;
+  defpred P[Nat] means y in f.$1;
+  consider n be object such that
+A2:n in dom f & y in f.n by A1,CARD_5:2;
+  reconsider n as Nat by A1,A2;
+  y in f.n by A2;
+  then
+A3:ex n st P[n];
+  ex k be Nat st P[k] &
+  for n being Nat st P[n] holds k <= n from NAT_1:sch 5(A3);
+  hence thesis;
+end;
+
+theorem Th28:
+   for x1,x1R,y1,y1R be Surreal st 0_No < x1 & x1 * x1R == 1_No &
+     0_No < y1 & y1 * y1R == 1_No & x * y1 < y * x1
+   holds x * x1R < y * y1R
+proof
+  let x1,x1R,y1,y1R be Surreal such that
+A1:0_No < x1 & x1 * x1R == 1_No &
+  0_No < y1 & y1 * y1R == 1_No & x * y1 < y * x1;
+A2: 0_No <= x1 & 0_No <= y1 by A1;
+  1_No is positive;
+  then 0_No < x1 * x1R & 0_No < y1 * y1R by A1,SURREALO:4;
+  then
+A3: 0_No < x1R & 0_No < y1R by A2,SURREALR:72;
+  then x * y1 * y1R < y * x1 * y1R by A1,SURREALR:70;
+  then
+A4: x * y1 * y1R * x1R  < y * x1 * y1R *x1R by A3,SURREALR:70;
+  x * y1 * y1R == x * (y1 * y1R)== x *1_No =x by SURREALR:51,SURREALR:69,A1;
+  then x * y1 * y1R==x by SURREALO:4;
+  then
+A5: x * y1 * y1R * x1R == x * x1R by SURREALR:51;
+  y * x1 * y1R *x1R == y * (x1 * y1R) *x1R == y * ((x1 * y1R) *x1R)
+  by SURREALR:51,SURREALR:69;
+  then y * x1 * y1R *x1R == y * ((x1 * y1R) *x1R) == y * (y1R*(x1 *x1R))
+  by SURREALR:69,SURREALO:4,SURREALR:51;
+  then
+A6:y * x1 * y1R *x1R== y * (y1R*(x1 *x1R)) by SURREALO:4;
+  y1R*(x1 *x1R) == y1R *1_No =y1R by SURREALR:51,A1;
+  then y * (y1R*(x1 *x1R))==y*y1R by SURREALR:51;
+  then y * x1 * y1R *x1R == y*y1R by A6,SURREALO:4;
+  then x * y1 * y1R * x1R < y*y1R by A4,SURREALO:4;
+  hence thesis by A5,SURREALO:4;
+end;
+
+theorem Th29:
+  for x,x1,x2,y1,y2 be Surreal holds
+   (1_No +(x2 - x) * y2)*x1 +- (1_No +(x1 - x) * y1) * x2 ==
+       (x1-x2)*(1_No-x*y1) + (y1-y2)*x1*(x-x2) &
+   (1_No +(x2  - x) * y2)*x1 - (1_No +(x1  - x) * y1) * x2 ==
+       (x1-x2)*(1_No-x*y2) + (y2-y1)*x2*(x1-x)
+proof
+  let x,x1,x2,y1,y2 be Surreal;
+  (x2 + - x) * y2*x1 == (x2*y2 + (- x) * y2)*x1 == x2*y2*x1 + (- x) * y2*x1
+  by SURREALR:51,SURREALR:67;
+  then (x2 + - x) * y2*x1 == x2*y2*x1 + (- x) * y2*x1 by SURREALO:4;
+  then (1_No +(x2 + - x) * y2)*x1 == 1_No*x1+(x2 + - x) * y2*x1
+  == x1 + (x2*y2*x1 + (- x) * y2*x1) by SURREALR:43,67;
+  then
+A1:(1_No +(x2 + - x) * y2)*x1 == x1 + (x2*y2*x1 + (- x) * y2*x1)
+  by SURREALO:4;
+  (x1 + - x) * y1*x2 == (x1*y1 + (- x) * y1)*x2 == x1*y1*x2 + (- x) * y1*x2
+  by SURREALR:51,SURREALR:67;
+  then (x1 + - x) * y1*x2 == x1*y1*x2 + (- x) * y1*x2 by SURREALO:4;
+  then (1_No +(x1 + - x) * y1)*x2 == 1_No*x2+(x1 + - x) * y1*x2
+  == x2 + (x1*y1*x2 + (- x) * y1*x2) by SURREALR:43,67;
+  then (1_No +(x1 + - x) * y1)*x2 == x2 + (x1*y1*x2 + (- x) * y1*x2)
+  by SURREALO:4;
+  then
+A2: -((1_No +(x1 + - x) * y1)*x2) == -(x2 + (x1*y1*x2 + (- x) * y1*x2))
+  by SURREALR:10;
+A3:(x1+-x2)*1_No = x1+-x2;
+  (x1+-x2)*(-x*y1) == x1*(-x*y1)+(-x2)*(-x*y1) by SURREALR:67;
+  then (x1+-x2)*(1_No+-x*y1)==(x1+-x2)+ (x1+-x2)*(-x*y1) ==
+  (x1+-x2)+( x1*(-x*y1)+(-x2)*(-x*y1))
+  by A3,SURREALR:43,SURREALR:67;
+  then
+A4: (x1+-x2)*(1_No+-x*y1) == (x1+-x2)+( x1*(-x*y1)+(-x2)*(-x*y1))
+  by SURREALO:4;
+  set X3 = x1*(-x*y1),X4=(-x2)*(-x*y1),Y3=y1*x1*x,X5=(-y2)*x1 *x,
+  X6=y1*x1*(-x2),X7=(-y2)*x1*(-x2);
+A5: (y1*x1+(-y2)*x1)*x == (y1*x1*x)+(-y2)*x1 *x &
+  (y1*x1+(-y2)*x1)*(-x2) == y1*x1*(-x2)+(-y2)*x1*(-x2) by SURREALR:67;
+  (y1+-y2)*x1*(x+-x2) == (y1*x1+(-y2)*x1)*(x+-x2)==
+  (y1*x1+(-y2)*x1)*x + (y1*x1+(-y2)*x1)*(-x2) by SURREALR:51,SURREALR:67;
+  then (y1+-y2)*x1*(x+-x2) ==
+  (y1*x1+(-y2)*x1)*x + (y1*x1+(-y2)*x1)*(-x2)==
+  ((y1*x1*x)+(-y2)*x1 *x)+(y1*x1*(-x2)+(-y2)*x1*(-x2))
+  by A5,SURREALO:4,SURREALR:43;
+  then (y1+-y2)*x1*(x+-x2) ==
+  ((y1*x1*x)+(-y2)*x1 *x)+(y1*x1*(-x2)+(-y2)*x1*(-x2)) by SURREALO:4;
+  then
+A6: (x1+-x2)*(1_No+-x*y1) + (y1+-y2)*x1*(x+-x2) ==
+  (x1+-x2)+(X3+X4)+((Y3+X5)+(X6+X7)) by A4,SURREALR:43;
+A7: (X3+X4)+((Y3+X5)+(X6+X7)) = X4+(X3+((Y3+X5)+(X6+X7))) by SURREALR:37
+  .= (X3+(Y3+X5)+(X7+X6))+X4 by SURREALR:37
+  .= (((X3+Y3)+X5)+(X7+X6))+X4 by SURREALR:37
+  .= (((X3+Y3)+X5)+X7+X6)+X4 by SURREALR:37
+  .= ((X3+Y3)+(X5 +X7)+X6)+X4 by SURREALR:37
+  .= (X3+Y3)+(X5 +X7)+(X6+X4) by SURREALR:37;
+A8: (x1+-x2)+(X3+X4)+((Y3+X5)+(X6+X7))
+  =(x1+-x2)+( (X3+X4)+((Y3+X5)+(X6+X7))) by SURREALR:37
+  .=(x1+-x2)+( (X3+Y3)+(X5 +X7))+(X6+X4) by A7,SURREALR:37
+  .=x1+(( (X3+Y3)+(X5 +X7)) + -x2)+(X6+X4) by SURREALR:37
+  .=x1+((( (X3+Y3)+(X5 +X7)) + -x2)+(X6+X4)) by SURREALR:37
+  .=x1+(( (X3+Y3)+(X5 +X7)) + (-x2+(X6+X4))) by SURREALR:37
+  .=x1+( (X3+Y3)+(X5 +X7)) + (-x2+(X6+X4)) by SURREALR:37;
+A9: -(x1*(x*y1))== - Y3 by SURREALR:65,69;
+  X3==-Y3 by A9,SURREALR:58;
+  then X3+Y3 == (-Y3) + Y3 = Y3 - Y3 == 0_No by SURREALR:39,43;
+  then
+A10:X3+Y3 == 0_No by SURREALO:4;
+  X5= (-(y2*x1)) *x by SURREALR:58
+  .= - ((y2*x1) *x) by SURREALR:58
+  .= (y2*x1) *(-x) by SURREALR:58;
+  then
+A11: X5 ==(-x)*y2*x1 by SURREALR:69;
+  X7=(-(y2*x1))*(-x2) by SURREALR:58
+  .=x2*(y2*x1) by SURREALR:58;
+  then X7==x2*y2*x1 by SURREALR:69;
+  then X5 +X7 == x2*y2*x1 + (- x) * y2*x1 by A11,SURREALR:43;
+  then
+A12: (X3+Y3)+(X5 +X7) == 0_No +(x2*y2*x1 + (- x) * y2*x1)
+  = x2*y2*x1 + (- x) * y2*x1 by A10,SURREALR:43;
+  X4 = ((-x)*y1)*(-x2) by SURREALR:58
+  .=-(-x)*y1*x2 by SURREALR:58;
+  then
+A13: -x2+(X6+X4) ==-x2 +(-(x1*y1*x2) + - (- x) * y1*x2) by SURREALR:58;
+  x1 + (x2*y2*x1 + (- x) * y2*x1) == x1+ ((X3+Y3)+(X5 +X7)) by A12,SURREALR:43;
+  then
+A14: x1 + (x2*y2*x1 + (- x) * y2*x1) +
+  (-x2 +(-(x1*y1*x2) + - (- x) * y1*x2))
+  == x1+( (X3+Y3)+(X5 +X7)) + (-x2+(X6+X4)) by A13,SURREALR:43;
+  -( x2 + (x1*y1*x2 + (- x) * y1*x2)) = -x2 +-(x1*y1*x2 + (- x) * y1*x2)
+  by SURREALR:40
+  .= -x2 +(-(x1*y1*x2) + - (- x) * y1*x2) by SURREALR:40;
+  then
+A15: x1 + (x2*y2*x1 + (- x) * y2*x1) +
+  (-x2 +(-(x1*y1*x2) + - (- x) * y1*x2))==
+  (1_No +(x2 + - x) * y2)*x1+ -((1_No +(x1 + - x) * y1)*x2)
+  by A1,A2,SURREALR:43;
+  then (1_No +(x2 + - x) * y2)*x1+ -((1_No +(x1 + - x) * y1)*x2) ==
+  x1+( (X3+Y3)+(X5 +X7)) + (-x2+(X6+X4)) by A14,SURREALO:4;
+  hence (1_No +(x2 - x) * y2)*x1 +- (1_No +(x1 - x) * y1) * x2 ==
+  (x1-x2)*(1_No-x*y1) + (y1-y2)*x1*(x-x2) by A6,A8,SURREALO:4;
+A16:(x1+-x2)*1_No = x1+-x2;
+  (x1+-x2)*(-x*y2) == x1*(-x*y2)+(-x2)*(-x*y2) by SURREALR:67;
+  then (x1+-x2)*(1_No+-x*y2)==(x1+-x2)+ (x1+-x2)*(-x*y2) ==
+  (x1+-x2)+( x1*(-x*y2)+(-x2)*(-x*y2)) by A16,SURREALR:43,SURREALR:67;
+  then
+A17:(x1+-x2)*(1_No+-x*y2)==(x1+-x2)+( x1*(-x*y2)+(-x2)*(-x*y2))
+  by SURREALO:4;
+A18: (y2*x2+(-y1)*x2)*x1 == y2*x2*x1+(-y1)*x2*x1 &
+  (y2*x2+(-y1)*x2)*(-x) == y2*x2*(-x)+(-y1)*x2*(-x) by SURREALR:67;
+  (y2+-y1)*x2*(x1+-x) == (y2*x2+(-y1)*x2)*(x1+-x)==
+  (y2*x2+(-y1)*x2)*x1 + (y2*x2+(-y1)*x2)*(-x) by SURREALR:51,67;
+  then (y2+-y1)*x2*(x1+-x) ==
+  (y2*x2+(-y1)*x2)*x1 + (y2*x2+(-y1)*x2)*(-x)
+  == (y2*x2*x1+(-y1)*x2*x1)+( y2*x2*(-x)+(-y1)*x2*(-x))
+  by A18,SURREALO:4,SURREALR:43;
+  then
+A19: (y2+-y1)*x2*(x1+-x) ==
+  (y2*x2*x1+(-y1)*x2*x1)+( y2*x2*(-x)+(-y1)*x2*(-x)) by SURREALO:4;
+  set A2=y2*x2*x1, A3 = x1*(-x*y2), A4 = -x2, A5 = (-y1)*x2*x1,
+  A6 = (-y1)*x2*(-x),A7 = (-x2)*(-x*y2), B7=y2*x2*(-x);
+A20: (x1+-x2)*(1_No+-x*y2) + (y2+-y1)*x2*(x1+-x) ==
+  (x1+A4)+(A3+A7)+((A2+A5)+(B7+A6)) by A19,A17,SURREALR:43;
+  (A7+A3)+(B7+A2) = (A3+A7)+B7+A2 by SURREALR:37
+  .= A3+(A7+B7)+A2 by SURREALR:37
+  .= (A2+A3)+(A7+B7) by SURREALR:37;
+  then ((A3+A7)+(A2+B7+(A5+A6))) = (A2+A3)+(A7+B7)+(A5+A6) by SURREALR:37;
+  then
+A21:(x1+A4)+((A3+A7)+(A2+B7+(A5+A6)))
+  =x1+((A2+A3)+(A7+B7) +(A5+A6)+A4) by SURREALR:37
+  .=x1+((A2+A3)+(A7+B7) +((A5+A6)+A4)) by SURREALR:37
+  .=x1+((A2+A3)+(A7+B7)) +(A4+(A5+A6)) by SURREALR:37
+  .=x1+(A2+A3)+(A7+B7) +(A4+(A5+A6)) by SURREALR:37;
+A22:(A2+A5)+(B7+A6) = (A2+A5)+A6+B7 by SURREALR:37
+  .= A2+(A5+A6)+B7 by SURREALR:37
+  .= A2+B7+(A5+A6) by SURREALR:37;
+A23: (x1+A4)+(A3+A7)+(A2+B7+(A5+A6)) =
+  x1+(A2+A3)+(A7+B7) +(A4+(A5+A6)) by A21,SURREALR:37;
+A24: A2+A3 = x2*y2*x1 + (- x) * y2*x1 by SURREALR:58;
+  A5 = (-(y1*x2))*x1 by SURREALR:58
+  .= -(y1*x2*x1) by SURREALR:58;
+  then
+A25:A5 == -(x1*y1*x2) by SURREALR:65,69;
+A26: (-y1)*x2*(-x) = (-(y1*x2))*(-x) by SURREALR:58
+  .= -((y1*x2)*(-x)) by SURREALR:58;
+  (-y1)*x2*(-x) == - ((- x) * y1*x2) by A26,SURREALR:65,69;
+  then A5+A6== -(x1*y1*x2) + - (- x) * y1*x2 by A25,SURREALR:43;
+  then
+A27: A4+(A5+A6)== (-x2 +(-(x1*y1*x2) + - (- x) * y1*x2)) by SURREALR:43;
+A28: A7  = - (x2*(-x*y2)) by SURREALR:58;
+  -x*y2 = (-x)*y2 by SURREALR:58;
+  then x2*(-x*y2)  == y2*x2*(-x) by SURREALR:69;
+  then A7 == - B7 by A28,SURREALR:10;
+  then A7+B7 == -B7+B7= B7 - B7 == 0_No by SURREALR:39,43;
+  then
+A29: A7+B7  == 0_No by SURREALO:4;
+  x1+(A2+A3)+(A7+B7)==x1 + (x2*y2*x1 + (- x) * y2*x1)+0_No
+  by A29,SURREALR:43,A24;
+  then x1+(A2+A3)+(A7+B7) +(A4+(A5+A6))==
+  x1 + (x2*y2*x1 + (- x) * y2*x1) +(-x2 +(-(x1*y1*x2) + - (- x) * y1*x2))
+  by A27,SURREALR:43;
+  then (x1+A4)+(A3+A7)+(A2+B7+(A5+A6))==
+  (1_No +(x2 + - x) * y2)*x1+ -((1_No +(x1 + - x) * y1)*x2)
+  by A23,SURREALO:4,A15;
+  hence thesis by A22,A20,SURREALO:4;
+end;
+
+theorem Th30:
+  for x1,y1,Ix1 be Surreal st x1*Ix1==1_No holds
+     x1*y +x*y1 - x1*y1 == 1_No +x1*( y - (1_No +(x1-x)*y1)*Ix1)
+proof
+  let x1,y1,Ix1 be Surreal such that
+A1: x1*Ix1==1_No;
+  (x1 * ( (1_No +(x1+-x)*y1)*Ix1)) == (1_No +(x1+-x)*y1)*(x1*Ix1) ==
+  (1_No +(x1+-x)*y1)*1_No = 1_No +(x1+-x)*y1
+  by A1,SURREALR:69,51;
+  then (x1 * ( (1_No +(x1+-x)*y1)*Ix1)) == 1_No +(x1+-x)*y1
+  by SURREALO:4;
+  then
+A2: - (x1 * ( (1_No +(x1+-x)*y1)*Ix1)) == -(1_No +(x1+-x)*y1)
+  = -1_No +- ((x1+-x)*y1) by SURREALR:10,40;
+  -((x1+-x)*y1) == -(x1*y1 + (-x)*y1) by SURREALR:65,SURREALR:67;
+  then -1_No +- ((x1+-x)*y1) == -1_No + -(x1*y1 + (-x)*y1) by SURREALR:43;
+  then
+A3: - (x1 * ( (1_No +(x1+-x)*y1)*Ix1)) ==
+  -1_No + -(x1*y1 + (-x)*y1) by A2,SURREALO:4;
+A4: (x1) * (- (1_No +(x1+-x)*y1)*Ix1) == -1_No + -(x1*y1 + (-x)*y1)
+  by A3,SURREALR:58;
+  x1*( y +- (1_No +(x1+-x)*y1)*Ix1) == (x1* y) + x1 *(- (1_No +(x1+-x)*y1)*Ix1)
+  == (x1* y) + (-1_No + -(x1*y1 + (-x)*y1)) by A4,SURREALR:43,67;
+  then x1*( y +- (1_No +(x1+-x)*y1)*Ix1) ==
+  (x1* y) + (-1_No + -(x1*y1 + (-x)*y1)) by SURREALO:4;
+  then
+A5:1_No +x1*( y +- (1_No +(x1+-x)*y1)*Ix1) ==
+  1_No + ((x1* y) + (-1_No + -(x1*y1 + (-x)*y1))) by SURREALR:43;
+A6: 1_No -1_No==0_No by SURREALR:39;
+  - ((-x)*y1) = - - (x*y1) by SURREALR:58
+  .= x*y1;
+  then
+A7: (x1* y) + -(x1*y1 + (-x)*y1) = (x1* y) +( -(x1*y1) + x*y1 )
+  by SURREALR:40
+  .= x1*y +x*y1 +- x1*y1 by SURREALR:37;
+  1_No + ((x1* y) + (-1_No + -(x1*y1 + (-x)*y1))) =
+  1_No + (-1_No + ((x1* y) + -(x1*y1 + (-x)*y1))) by SURREALR:37
+  .= (1_No + -1_No) + ((x1* y) + -(x1*y1 + (-x)*y1)) by SURREALR:37;
+  then 1_No + ((x1* y) + (-1_No + -(x1*y1 + (-x)*y1))) ==
+  0_No + (x1*y +x*y1 +- x1*y1) = x1*y +x*y1 +- x1*y1 by A7,A6,SURREALR:43;
+  hence thesis by A5,SURREALO:4;
+end;
+
+Lm2:
+for x st x is positive holds inv x is surreal
+     & for y st y=inv x holds x*y == 1_No
+proof
+  defpred P[Ordinal] means
+     for x st born x = $1 & x is positive holds inv x is surreal
+     & for y st y=inv x holds x*y == 1_No;
+A1: for D be Ordinal st for C be Ordinal st C in D holds P[C] holds P[D]
+  proof
+    let D be Ordinal such that
+A2: for C be Ordinal st C in D holds P[C];
+    let x such that
+A3: born x=D & x is positive;
+    set Nx=||.x.||,Inv = No_inverses_on Nx;
+A4: (L_Nx\/R_Nx)\{0_No} c= L_x \/R_x by A3,Th20;
+A5: Inv is (L_Nx\/R_Nx)\{0_No} -surreal-valued
+    proof
+      let o;
+      assume
+A6:   o in (L_Nx\/R_Nx)\{0_No};
+      then reconsider o as Surreal by SURREAL0:def 16;
+      born o in born x & o is positive by A6,A4,A3,SURREALO:1,Th21;
+      then inv o is surreal by A2,A3;
+      hence thesis by A6,Def13;
+    end;
+    then
+A7: Union divL(Nx,Inv) is surreal-membered &
+    Union divR(Nx,Inv) is surreal-membered by Th10;
+    defpred P[Nat] means
+    (for yL be Surreal st yL in divL(Nx,Inv).$1 holds Nx*yL < 1_No) &
+    (for yR be Surreal st yR in divR(Nx,Inv).$1 holds 1_No < Nx*yR);
+A8: P[0]
+    proof
+      thus for yL be Surreal st yL in divL(Nx,Inv).0  holds Nx*yL < 1_No
+      proof
+A9:     1_No is positive;
+        let yL be Surreal such that A10: yL in divL(Nx,Inv).0;
+        divL(Nx,Inv).0 = {0_No} by Th1;
+        then yL = 0_No by A10,TARSKI:def 1;
+        hence thesis by A9;
+      end;
+      thus thesis by Th1;
+    end;
+A11: P[n] implies P[n+1]
+    proof
+      assume
+A12:  P[n];set n1=n+1;
+A13: divL(Nx,Inv).n c= Union divL(Nx,Inv) &
+      divR(Nx,Inv).n c= Union divR(Nx,Inv) by ABCMIZ_1:1;
+      thus for yL be Surreal st yL in divL(Nx,Inv).n1 holds Nx*yL < 1_No
+      proof
+        let yL be Surreal such that
+A14:    yL in divL(Nx,Inv).n1;
+        divL(Nx,Inv).n1 = divL(Nx,Inv).n \/
+        divset(divL(Nx,Inv).n,Nx,R_Nx,Inv) \/
+        divset(divR(Nx,Inv).n,Nx,L_Nx,Inv) by Th6;
+        then (yL in divL(Nx,Inv).n \/ divset(divL(Nx,Inv).n,Nx,R_Nx,Inv) or
+        yL in divset(divR(Nx,Inv).n,Nx,L_Nx,Inv))
+        by A14,XBOOLE_0:def 3;
+        then per cases by XBOOLE_0:def 3;
+        suppose yL in divL(Nx,Inv).n;
+          hence thesis by A12;
+        end;
+        suppose yL in divset(divL(Nx,Inv).n,Nx,R_Nx,Inv);
+          then consider yL1 be object such that
+A15:      yL1 in divL(Nx,Inv).n & yL in divs(yL1,Nx,R_Nx,Inv) by Def3;
+          reconsider yL1 as Surreal by A7,A15,A13;
+          consider xR be object such that
+A16:      xR in R_Nx & xR <> 0_No and
+A17:      yL = (1_No +'(xR +' -' Nx) *' yL1) *' (Inv.xR) by A15,Def2;
+          reconsider xR as Surreal by A16,SURREAL0:def 16;
+A18:      xR in L_Nx \/ R_Nx by A16,XBOOLE_0:def 3;
+          then
+A19:      born xR in born Nx c= born x by A3,SURREALO:1,Th22;
+A20:      xR is positive by A3,A16,Def9;
+          then reconsider IxR=inv xR as Surreal by A3,A2,A19;
+A21:      xR * IxR == 1_No by A3,A2,A19,A20;
+          Nx in {Nx} << R_Nx by SURREALO:11,TARSKI:def 1;
+          then
+A22:      Nx +-Nx < xR +-Nx by A16,SURREALR:32;
+          Nx -Nx ==0_No by SURREALR:39;
+          then
+A23:      0_No < xR +-Nx by A22,SURREALO:4;
+A24:      Nx*yL1*(xR +-Nx) < 1_No*(xR +-Nx) = xR +-Nx
+          by A12,A15,A23,SURREALR:70;
+          xR in (L_Nx\/R_Nx)\{0_No} by A18,A16,ZFMISC_1:56;
+          then
+A25:      Nx*yL = Nx * ((1_No +(xR + - Nx) * yL1) * IxR) by A17,Def13;
+A26:      Nx* ((1_No +(xR + - Nx) * yL1) * IxR) ==
+          Nx*((1_No * IxR) +((xR + - Nx) * yL1 * IxR)) by SURREALR:51,67;
+          Nx * ((1_No * IxR) +((xR + - Nx) * yL1 * IxR)) ==
+          (Nx * (1_No * IxR)) + Nx * ((xR + - Nx) * yL1 * IxR) by SURREALR:67;
+          then
+A27:      Nx*yL == (Nx * (1_No * IxR)) +Nx *((xR + - Nx) * yL1 * IxR)
+          by A26,A25,SURREALO:4;
+A28:      0_No < xR * IxR by SURREALO:4, Def8,A21;
+          0_No <= xR by A20;
+          then 0_No < IxR by A28,SURREALR:72;
+          then
+A29:      Nx*yL1*(xR +-Nx)* IxR < (xR +-Nx)* IxR by A24,SURREALR:70;
+A30:      Nx*(yL1*((xR +-Nx) * IxR))  == Nx*((xR + - Nx) * yL1 * IxR)
+          by SURREALR:51,SURREALR:69;
+          (Nx*yL1*(xR +-Nx)) * IxR == (Nx*yL1)*((xR +-Nx) * IxR)
+          == Nx*(yL1*((xR +-Nx) * IxR)) by SURREALR:69;
+          then (Nx*yL1*(xR +-Nx)) * IxR == Nx*(yL1*((xR +-Nx) * IxR))
+          by SURREALO:4;
+          then (Nx*yL1*(xR +-Nx)) * IxR == Nx*((xR + - Nx) * yL1 * IxR)
+          by A30,SURREALO:4;
+          then Nx * ((xR + - Nx) * yL1 * IxR) <
+          (xR +-Nx)*IxR by A29,SURREALO:4;
+          then (Nx * (1_No * IxR)) + Nx * ((xR + - Nx) * yL1 * IxR) <
+          (Nx * (1_No * IxR)) + (xR +-Nx)*IxR by SURREALR:44;
+          then
+A31:        Nx*yL < (Nx * IxR) + (xR +-Nx)*IxR by A27,SURREALO:4;
+          (-Nx)*IxR = - (Nx * IxR) by SURREALR:58;
+          then (xR +-Nx)*IxR == (xR*IxR) + -(Nx*IxR) by SURREALR:67;
+          then
+A32:        (Nx * IxR) + (xR +-Nx)*IxR ==
+          (Nx * IxR) + ((xR*IxR) + -(Nx*IxR)) by SURREALR:43;
+A33:      (Nx * IxR) -(Nx*IxR)==0_No by SURREALR:39;
+          (Nx * IxR) + ((xR*IxR) + -(Nx*IxR))  =
+          (Nx * IxR) + -(Nx*IxR) + (xR*IxR) by SURREALR:37;
+          then (Nx * IxR) + ((xR*IxR) + -(Nx*IxR)) == 0_No + (xR*IxR)
+          by A33,SURREALR:43;
+          then (Nx * IxR) + (xR +-Nx)*IxR == xR*IxR by A32,SURREALO:4;
+          then Nx*yL < xR*IxR by A31,SURREALO:4;
+          hence thesis by A21,SURREALO:4;
+        end;
+        suppose yL in divset(divR(Nx,Inv).n,Nx,L_Nx,Inv);
+          then consider yL1 be object such that
+A34:      yL1 in divR(Nx,Inv).n & yL in divs(yL1,Nx,L_Nx,Inv) by Def3;
+          reconsider yL1 as Surreal by A7,A34,A13;
+          consider xR be object such that
+A35:      xR in L_Nx & xR <> 0_No and
+A36:      yL = (1_No +'(xR +' -' Nx) *' yL1) *' (Inv.xR) by A34,Def2;
+          reconsider xR as Surreal by A35,SURREAL0:def 16;
+A37:      xR in L_Nx \/ R_Nx by A35,XBOOLE_0:def 3;
+          then
+A38:      born xR in born Nx c= born x by A3,SURREALO:1,Th22;
+A39:      xR is positive by A3,A35,Def9;
+          then reconsider IxR=inv xR as Surreal by A3,A2,A38;
+A40:      xR * IxR == 1_No by A3,A2,A38,A39;
+          Nx in {Nx} & L_Nx << {Nx} by SURREALO:11,TARSKI:def 1;
+          then
+A41:      xR +-Nx < Nx +-Nx by A35,SURREALR:32;
+          Nx -Nx ==0_No by SURREALR:39;
+          then
+A42:      xR +-Nx < 0_No by A41,SURREALO:4;
+A43:      Nx*yL1*(xR +-Nx) < 1_No*(xR +-Nx) =xR +-Nx
+          by A12,A34,SURREALR:71,A42;
+          xR in (L_Nx\/R_Nx)\{0_No} by A37,A35,ZFMISC_1:56;
+          then
+A44:      Nx*yL = Nx * ((1_No +(xR + - Nx) * yL1) * IxR) by A36,Def13;
+A45:      Nx* ((1_No +(xR + - Nx) * yL1) * IxR) ==
+          Nx*((1_No * IxR) +((xR + - Nx) * yL1 * IxR)) by SURREALR:51,67;
+          Nx * ((1_No * IxR) +((xR + - Nx) * yL1 * IxR)) ==
+          (Nx * (1_No * IxR)) + Nx * ((xR + - Nx) * yL1 * IxR) by SURREALR:67;
+          then
+A46:      Nx*yL == (Nx * (1_No * IxR))+Nx * ((xR + - Nx) * yL1 * IxR)
+          by A45,A44,SURREALO:4;
+A47:      0_No < xR * IxR by SURREALO:4, Def8,A40;
+          0_No <= xR by A39;
+          then 0_No < IxR by A47,SURREALR:72;
+          then
+A48:      Nx*yL1*(xR +-Nx)* IxR < (xR +-Nx)* IxR by A43,SURREALR:70;
+A49:      Nx*(yL1*((xR +-Nx) * IxR))  == Nx*((xR + - Nx) * yL1 * IxR)
+          by SURREALR:51,SURREALR:69;
+          (Nx*yL1*(xR +-Nx)) * IxR == (Nx*yL1)*((xR +-Nx) * IxR)
+          == Nx*(yL1*((xR +-Nx) * IxR)) by SURREALR:69;
+          then (Nx*yL1*(xR +-Nx)) * IxR == Nx*(yL1*((xR +-Nx) * IxR))
+          by SURREALO:4;
+          then (Nx*yL1*(xR +-Nx)) * IxR == Nx*((xR + - Nx) * yL1 * IxR)
+          by A49,SURREALO:4;
+          then Nx * ((xR + - Nx) * yL1 * IxR) < (xR +-Nx)*IxR
+          by A48,SURREALO:4;
+          then (Nx * (1_No * IxR)) + Nx * ((xR + - Nx) * yL1 * IxR) <
+          (Nx * (1_No * IxR)) + (xR +-Nx)*IxR by SURREALR:44;
+          then
+A50:      Nx*yL < (Nx * IxR) + (xR +-Nx)*IxR by A46,SURREALO:4;
+          (-Nx)*IxR = - (Nx * IxR) by SURREALR:58;
+          then (xR +-Nx)*IxR == (xR*IxR) + -(Nx*IxR) by SURREALR:67;
+          then
+A51:      (Nx * IxR) + (xR +-Nx)*IxR ==
+          (Nx * IxR) + ((xR*IxR) + -(Nx*IxR)) by SURREALR:43;
+A52:      (Nx * IxR) -(Nx*IxR)==0_No by SURREALR:39;
+          (Nx * IxR) + ((xR*IxR) + -(Nx*IxR))
+          =(Nx * IxR) + -(Nx*IxR) + (xR*IxR) by SURREALR:37;
+          then (Nx * IxR) + ((xR*IxR) + -(Nx*IxR)) == 0_No + (xR*IxR)
+          by A52,SURREALR:43;
+          then (Nx * IxR) + (xR +-Nx)*IxR == 0_No + (xR*IxR)
+          by A51,SURREALO:4;
+          then Nx*yL < xR*IxR by A50,SURREALO:4;
+          hence thesis by A40,SURREALO:4;
+        end;
+      end;
+      let yL be Surreal such that
+A53:  yL in divR(Nx,Inv).n1;
+      divR(Nx,Inv).n1 = divR(Nx,Inv).n \/
+      divset(divL(Nx,Inv).n,Nx,L_Nx,Inv) \/ divset(divR(Nx,Inv).n,Nx,R_Nx,Inv)
+      by Th6;
+      then (yL in divR(Nx,Inv).n \/ divset(divL(Nx,Inv).n,Nx,L_Nx,Inv) or
+      yL in divset(divR(Nx,Inv).n,Nx,R_Nx,Inv)) by A53,XBOOLE_0:def 3;
+      then per cases by XBOOLE_0:def 3;
+      suppose yL in divR(Nx,Inv).n;
+        hence thesis by A12;
+      end;
+      suppose yL in divset(divL(Nx,Inv).n,Nx,L_Nx,Inv);
+        then consider yL1 be object such that
+A54:    yL1 in divL(Nx,Inv).n & yL in divs(yL1,Nx,L_Nx,Inv) by Def3;
+        reconsider yL1 as Surreal by A7,A54,A13;
+        consider xR be object such that
+A55:    xR in L_Nx & xR <> 0_No and
+A56:    yL = (1_No +'(xR +' -' Nx) *' yL1) *' (Inv.xR) by A54,Def2;
+        reconsider xR as Surreal by A55,SURREAL0:def 16;
+A57:    xR in L_Nx \/ R_Nx by A55,XBOOLE_0:def 3;
+        then
+A58:    born xR in born Nx c= born x by A3,SURREALO:1,Th22;
+A59:    xR is positive by A3,A55,Def9;
+        then reconsider IxR=inv xR as Surreal by A3,A2,A58;
+A60:    xR * IxR == 1_No by A3,A2,A58,A59;
+        Nx in {Nx} & L_Nx << {Nx} by SURREALO:11,TARSKI:def 1;
+        then
+A61:    xR +-Nx  < Nx +-Nx by A55,SURREALR:32;
+        Nx -Nx ==0_No by SURREALR:39;
+        then
+A62:    xR +-Nx < 0_No by A61,SURREALO:4;
+A63:    xR +-Nx= 1_No*(xR +-Nx) < Nx*yL1*(xR +-Nx)
+        by A12,A54,SURREALR:71,A62;
+        xR in (L_Nx\/R_Nx)\{0_No} by A57,A55,ZFMISC_1:56;
+        then
+A64:    Nx*yL = Nx * ((1_No +(xR + - Nx) * yL1) * IxR) by A56,Def13;
+A65:    Nx* ((1_No +(xR + - Nx) * yL1) * IxR) ==
+        Nx*((1_No * IxR) +((xR + - Nx) * yL1 * IxR)) by SURREALR:51,67;
+        Nx * ((1_No * IxR) +((xR + - Nx) * yL1 * IxR)) ==
+        (Nx * (1_No * IxR)) + Nx * ((xR + - Nx) * yL1 * IxR) by SURREALR:67;
+        then
+A66:    Nx*yL == (Nx * (1_No * IxR)) + Nx * ((xR + - Nx) * yL1 * IxR)
+        by A65,A64,SURREALO:4;
+A67:    0_No < xR * IxR by SURREALO:4, Def8,A60;
+        0_No <= xR by A59;
+        then 0_No < IxR by A67,SURREALR:72;
+        then
+A68:    (xR +-Nx)* IxR < Nx*yL1*(xR +-Nx)* IxR by A63,SURREALR:70;
+A69:    Nx*(yL1*((xR +-Nx) * IxR)) == Nx*((xR + - Nx) * yL1 * IxR)
+        by SURREALR:51,69;
+        (Nx*yL1*(xR +-Nx)) * IxR == (Nx*yL1)*((xR +-Nx) * IxR)
+        == Nx*(yL1*((xR +-Nx) * IxR)) by SURREALR:69;
+        then (Nx*yL1*(xR +-Nx)) * IxR == Nx*(yL1*((xR +-Nx) * IxR))
+        by SURREALO:4;
+        then (Nx*yL1*(xR +-Nx)) * IxR == Nx*((xR + - Nx) * yL1 * IxR)
+        by A69,SURREALO:4;
+        then (xR +-Nx)*IxR < Nx * ((xR + - Nx) * yL1 * IxR) by A68,SURREALO:4;
+        then (Nx * (1_No * IxR)) + (xR +-Nx)*IxR<
+        (Nx * (1_No * IxR)) + Nx * ((xR + - Nx) * yL1 * IxR) by SURREALR:44;
+        then
+A70:    (Nx * IxR) + (xR +-Nx)*IxR < Nx*yL by A66,SURREALO:4;
+        (-Nx)*IxR = - (Nx * IxR) by SURREALR:58;
+        then (xR +-Nx)*IxR == (xR*IxR) + -(Nx*IxR) by SURREALR:67;
+        then
+A71:    (Nx * IxR) + (xR +-Nx)*IxR ==
+        (Nx * IxR) + ((xR*IxR) + -(Nx*IxR)) by SURREALR:43;
+        A72: (Nx * IxR) -(Nx*IxR)==0_No by SURREALR:39;
+        (Nx * IxR) + ((xR*IxR) + -(Nx*IxR))  =
+        (Nx * IxR) + -(Nx*IxR) + (xR*IxR) by SURREALR:37;
+        then (Nx * IxR) + ((xR*IxR) + -(Nx*IxR)) == 0_No + (xR*IxR)
+        by A72,SURREALR:43;
+        then (Nx * IxR) + (xR +-Nx)*IxR == 0_No + (xR*IxR) by A71,SURREALO:4;
+        then xR*IxR < Nx*yL by A70,SURREALO:4;
+        hence thesis by A60,SURREALO:4;
+      end;
+      suppose yL in divset(divR(Nx,Inv).n,Nx,R_Nx,Inv);
+        then consider yL1 be object such that
+A73:    yL1 in divR(Nx,Inv).n & yL in divs(yL1,Nx,R_Nx,Inv) by Def3;
+        reconsider yL1 as Surreal by A7,A73,A13;
+        consider xR be object such that
+A74:    xR in R_Nx & xR <> 0_No and
+A75:    yL = (1_No +'(xR +' -' Nx) *' yL1) *' (Inv.xR) by A73,Def2;
+        reconsider xR as Surreal by A74,SURREAL0:def 16;
+A76:    xR in L_Nx \/ R_Nx by A74,XBOOLE_0:def 3;
+        then
+A77:    born xR in born Nx c= born x by A3,SURREALO:1,Th22;
+A78:    xR is positive by A3,A74,Def9;
+        then reconsider IxR=inv xR as Surreal by A3,A2,A77;
+A79:    xR * IxR == 1_No by A3,A2,A77,A78;
+        Nx in {Nx}<<R_Nx by SURREALO:11,TARSKI:def 1;
+        then
+A80:    Nx +-Nx < xR +-Nx by A74,SURREALR:32;
+        Nx -Nx ==0_No by SURREALR:39;
+        then
+A81:    0_No < xR +-Nx by A80,SURREALO:4;
+A82:    xR +-Nx= 1_No*(xR +-Nx) < Nx*yL1*(xR +-Nx)
+        by A12,A73,A81,SURREALR:70;
+        xR in (L_Nx\/R_Nx)\{0_No} by A76,A74,ZFMISC_1:56;
+        then
+A83:    Nx*yL = Nx * ((1_No +(xR + - Nx) * yL1) * IxR) by A75,Def13;
+A84:    Nx* ((1_No +(xR + - Nx) * yL1) * IxR) ==
+        Nx*((1_No * IxR) +((xR + - Nx) * yL1 * IxR)) by SURREALR:51,67;
+        Nx * ((1_No * IxR) +((xR + - Nx) * yL1 * IxR)) ==
+        (Nx * (1_No * IxR)) + Nx * ((xR + - Nx) * yL1 * IxR) by SURREALR:67;
+        then
+A85:    Nx*yL == (Nx * (1_No * IxR)) + Nx * ((xR + - Nx) * yL1 * IxR)
+        by A84,A83,SURREALO:4;
+A86:    0_No < xR * IxR by SURREALO:4, Def8,A79;
+        0_No <= xR by A78;
+        then 0_No < IxR by A86,SURREALR:72;
+        then
+A87:    (xR +-Nx)* IxR  < Nx*yL1*(xR +-Nx)* IxR by A82,SURREALR:70;
+A88:    Nx*(yL1*((xR +-Nx) * IxR))  == Nx*((xR + - Nx) * yL1 * IxR)
+        by SURREALR:69,51;
+        (Nx*yL1*(xR +-Nx)) * IxR == (Nx*yL1)*((xR +-Nx) * IxR)
+        == Nx*(yL1*((xR +-Nx) * IxR)) by SURREALR:69;
+        then (Nx*yL1*(xR +-Nx)) * IxR == Nx*(yL1*((xR +-Nx) * IxR))
+        by SURREALO:4;
+        then (Nx*yL1*(xR +-Nx)) * IxR == Nx*((xR + - Nx) * yL1 * IxR)
+        by A88,SURREALO:4;
+        then (xR +-Nx)*IxR< Nx * ((xR + - Nx) * yL1 * IxR)
+        by A87,SURREALO:4;
+        then (Nx * (1_No * IxR)) + (xR +-Nx)*IxR <
+        (Nx * (1_No * IxR)) + Nx * ((xR + - Nx) * yL1 * IxR) by SURREALR:44;
+        then
+A89:    (Nx * IxR) + (xR +-Nx)*IxR < Nx*yL by A85,SURREALO:4;
+        (-Nx)*IxR = - (Nx * IxR) by SURREALR:58;
+        then (xR +-Nx)*IxR == (xR*IxR) + -(Nx*IxR) by SURREALR:67;
+        then
+A90:    (Nx * IxR) + (xR +-Nx)*IxR ==
+        (Nx * IxR) + ((xR*IxR) + -(Nx*IxR)) by SURREALR:43;
+A91:    (Nx * IxR)  -(Nx*IxR)==0_No by SURREALR:39;
+        (Nx * IxR) + ((xR*IxR) + -(Nx*IxR))  =
+        (Nx * IxR) + -(Nx*IxR) + (xR*IxR) by SURREALR:37;
+        then (Nx * IxR) + ((xR*IxR) + -(Nx*IxR)) == 0_No + (xR*IxR)
+        by A91,SURREALR:43;
+        then (Nx * IxR) + (xR +-Nx)*IxR == 0_No + (xR*IxR) by A90,SURREALO:4;
+        then xR*IxR < Nx*yL by A89,SURREALO:4;
+        hence thesis by A79,SURREALO:4;
+      end;
+    end;
+A92: P[n] from NAT_1:sch 2(A8,A11);
+A93: 0_No <= Nx by Def8;
+A94: Union divL(Nx,Inv)<<Union divR(Nx,Inv)
+    proof
+      let l,r be Surreal such that
+A95:  l in Union divL(Nx,Inv) & r in Union divR(Nx,Inv);
+      dom  divL(Nx,Inv)=NAT by Def5;
+      then consider n1 be Nat such that
+A96:  l in divL(Nx,Inv).n1 &
+      for m st l in divL(Nx,Inv).m holds n1 <=m by A95,Th27;
+      dom  divR(Nx,Inv)=NAT by Def6;
+      then consider n2 be Nat such that
+A97:  r in divR(Nx,Inv).n2 &
+         for m st r in divR(Nx,Inv).m holds n2 <=m by A95,Th27;
+      n2 <>0 by A97,Th1;
+      then reconsider N2=n2-1 as Nat by NAT_1:20;
+      per cases;
+      suppose n1 =0;
+        then {0_No} =divL(Nx,Inv).n1 by Th1;
+        then
+A98:    l=0_No by A96,TARSKI:def 1;
+        0_No <= 1_No < Nx * r by A92,A97,Def8;
+        then 0_No < Nx * r by SURREALO:4;
+        hence thesis by A98,A93,SURREALR:72;
+      end;
+      suppose 0 < n1;
+        then reconsider N1=n1-1 as Nat by NAT_1:20;
+A99:    divL(Nx,Inv).N1 c= Union divL(Nx,Inv) &
+        divR(Nx,Inv).N1 c= Union divR(Nx,Inv) &
+        divL(Nx,Inv).N2 c= Union divL(Nx,Inv) &
+        divR(Nx,Inv).N2 c= Union divR(Nx,Inv)
+        by ABCMIZ_1:1;
+        divL(Nx,Inv).(N1+1) = divL(Nx,Inv).N1\/
+        divset(divL(Nx,Inv).N1,Nx,R_Nx,Inv) \/
+        divset(divR(Nx,Inv).N1,Nx,L_Nx,Inv) by Th6;
+        then l in divL(Nx,Inv).N1\/
+        divset(divL(Nx,Inv).N1,Nx,R_Nx,Inv) or
+        l in divset(divR(Nx,Inv).N1,Nx,L_Nx,Inv) by A96,XBOOLE_0:def 3;
+        then per cases by XBOOLE_0:def 3;
+        suppose l in divL(Nx,Inv).N1;
+          then N1 >= N1+1 by A96;
+          hence thesis by NAT_1:13;
+        end;
+        suppose l in divset(divL(Nx,Inv).N1,Nx,R_Nx,Inv);
+          then consider y1 be object such that
+A100:     y1 in divL(Nx,Inv).N1 & l in divs(y1,Nx,R_Nx,Inv) by Def3;
+          reconsider y1 as Surreal by A100,A99,A7;
+          consider x1 be object such that
+A101:     x1 in R_Nx & x1 <> 0_No &
+          l = (1_No +'(x1 +' -' Nx) *' y1) *' (Inv.x1) by A100,Def2;
+          reconsider x1 as Surreal by A101,SURREAL0:def 16;
+A102:     x1 is positive & x1 in R_x by A3,Def9,A101;
+          then 0_No < x1 & x1 in L_x \/ R_x by XBOOLE_0:def 3;
+          then
+A103:     born x1 in born x by SURREALO:1;
+          then reconsider Ix1=inv x1 as Surreal by A102,A3,A2;
+A104:     x1 * Ix1 == 1_No by A3,A2,A103,A102;
+          x1 in L_Nx \/R_Nx by A101,XBOOLE_0:def 3;
+          then x1 in (L_Nx \/R_Nx)\{0_No} by A101,ZFMISC_1:56;
+          then
+A105:     Ix1 = Inv.x1 by Def13;
+          divR(Nx,Inv).(N2+1) = divR(Nx,Inv).N2 \/
+          divset(divL(Nx,Inv).N2,Nx,L_Nx,Inv) \/
+          divset(divR(Nx,Inv).N2,Nx,R_Nx,Inv) by Th6;
+          then r in divR(Nx,Inv).N2 \/
+          divset(divL(Nx,Inv).N2,Nx,L_Nx,Inv) or
+          r in divset(divR(Nx,Inv).N2,Nx,R_Nx,Inv) by A97,XBOOLE_0:def 3;
+          then per cases by XBOOLE_0:def 3;
+          suppose r in divR(Nx,Inv).N2;
+            then N2 >= N2+1 by A97;
+            hence thesis by NAT_1:13;
+          end;
+          suppose r in divset(divL(Nx,Inv).N2,Nx,L_Nx,Inv);
+            then consider y2 be object such that
+A106:       y2 in divL(Nx,Inv).N2 & r in divs(y2,Nx,L_Nx,Inv) by Def3;
+            reconsider y2 as Surreal by A7,A106,A99;
+            consider x2 be object such that
+A107:       x2 in L_Nx & x2 <> 0_No &
+            r = (1_No +'(x2 +' -' Nx) *' y2) *' (Inv.x2) by A106,Def2;
+            reconsider x2 as Surreal by A107,SURREAL0:def 16;
+A108:       x2 is positive & x2 in L_x by A3,Def9,A107;
+            then 0_No < x2 & x2 in L_x \/ R_x by XBOOLE_0:def 3;
+            then
+A109:       born x2 in born x by SURREALO:1;
+            then reconsider Ix2=inv x2 as Surreal by A108,A3,A2;
+A110:       x2* Ix2 == 1_No by A3,A2,A109,A108;
+            x2 in L_Nx \/R_Nx by A107,XBOOLE_0:def 3;
+            then
+A111:       x2 in (L_Nx \/R_Nx)\{0_No} by A107,ZFMISC_1:56;
+            0_No < (1_No +(x2 + - Nx) * y2)*x1 - (1_No +(x1 + - Nx) * y1) * x2
+            proof
+              L_Nx << {Nx} << R_Nx &Nx in {Nx} by TARSKI:def 1,SURREALO:11;
+              then
+A112:         0_No < x1 - Nx & 0_No < Nx - x2 by SURREALR:45,A101,A107;
+              L_Nx << R_Nx by SURREAL0:45;
+              then
+A113:         0_No < x1 -x2 by A107,A101,SURREALR:45;
+A114:         0_No < 1_No-Nx*y1 & 0_No < 1_No-Nx*y2
+              by A100,A106,A92,SURREALR:45;
+A115:         (1_No +(x2 - Nx) * y2)*x1 - (1_No +(x1 - Nx)*y1)*x2==
+              (x1-x2)*(1_No-Nx*y1) + (y1-y2)*x1*(Nx-x2) by Th29;
+A116:         (1_No +(x2 - Nx) * y2)*x1 - (1_No +(x1 - Nx)*y1)*x2
+              == (x1-x2)*(1_No-Nx*y2) + (y2-y1)*x2*(x1-Nx) by Th29;
+A117:         x2 is positive & x1 is positive by A3,A107,A101,Def9;
+A118:         0_No < (x1+-x2)*(1_No+-Nx*y1) by A113,A114,SURREALR:72;
+A119:         0_No < (x1+-x2)*(1_No+-Nx*y2) by A113,A114,SURREALR:72;
+              per cases;
+              suppose y1 == y2;
+                then y1 +- y2 == y2 - y2 ==0_No by SURREALR:43,39;
+                then y1 +- y2  ==0_No by SURREALO:4;
+                then (y1+-y2)*x1 ==0_No*x1 =0_No by SURREALR:51;
+                then (y1+-y2)*x1*(Nx+-x2) ==0_No*(Nx+-x2)=0_No
+                by SURREALR:51;
+                then 0_No+0_No < (x1+-x2)*(1_No+-Nx*y1) + (y1+-y2)*x1*(Nx+-x2)
+                by A118,SURREALR:44;
+                hence thesis by A115,SURREALO:4;
+              end;
+              suppose y1 < y2;
+                then 0_No < y2 -y1 by SURREALR:45;
+                then 0_No < (y2+-y1)*x2 by A117,SURREALR:72;
+                then 0_No <= (y2+-y1)*x2*(x1+-Nx) by A112,SURREALR:72;
+                then 0_No + 0_No < (x1+-x2)*(1_No+-Nx*y2)+(y2+-y1)*x2*(x1+-Nx)
+                by A119,SURREALR:44;
+                hence thesis by A116,SURREALO:4;
+              end;
+              suppose y2 <y1;
+                then 0_No < y1 -y2 by SURREALR:45;
+                then 0_No < (y1+-y2)*x1 by A117,SURREALR:72;
+                then 0_No <= (y1+-y2)*x1*(Nx+-x2) by A112,SURREALR:72;
+                then 0_No + 0_No <  (x1+-x2)*(1_No+-Nx*y1)+(y1+-y2)*x1*(Nx+-x2)
+                by A118,SURREALR:44;
+                hence thesis by A115,SURREALO:4;
+              end;
+            end;
+            then (1_No +(x1 + - Nx) * y1) * x2 < (1_No +(x2 + - Nx) * y2)*x1
+            by SURREALR:45;
+            then (1_No +(x1 + - Nx) * y1) * Ix1 <
+            (1_No +(x2 + - Nx) * y2) * Ix2 by A108,A102,A104,A110,Th28;
+            hence thesis by A101,A107,A105,A111,Def13;
+          end;
+          suppose r in divset(divR(Nx,Inv).N2,Nx,R_Nx,Inv);
+            then consider y2 be object such that
+A120:       y2 in divR(Nx,Inv).N2 & r in divs(y2,Nx,R_Nx,Inv) by Def3;
+            reconsider y2 as Surreal by A7,A120,A99;
+            consider x2 be object such that
+A121:       x2 in R_Nx & x2 <> 0_No &
+            r = (1_No +'(x2 +' -' Nx) *' y2) *' (Inv.x2) by A120,Def2;
+            reconsider x2 as Surreal by A121,SURREAL0:def 16;
+A122:       x2 is positive & x2 in R_x by A3,Def9,A121;
+            then 0_No < x2 & x2 in L_x \/ R_x by XBOOLE_0:def 3;
+            then
+A123:       born x2 in born x by SURREALO:1;
+            then reconsider Ix2=inv x2 as Surreal by A122,A3,A2;
+A124:       x2* Ix2 == 1_No by A3,A2,A123,A122;
+            x2 in L_Nx \/R_Nx by A121,XBOOLE_0:def 3;
+            then
+A125:       x2 in (L_Nx \/R_Nx)\{0_No} by A121,ZFMISC_1:56;
+            0_No < (1_No +(x2 + - Nx) * y2)*x1 - (1_No +(x1 + - Nx) * y1) * x2
+            proof
+              L_Nx << {Nx} << R_Nx &Nx in {Nx} by TARSKI:def 1,SURREALO:11;
+              then
+A126:         0_No < x1 - Nx & Nx-x2 <0_No by A101,A121,SURREALR:45,46;
+              Nx*y1 < 1_No <= Nx*y2 by A100,A120,A92;
+              then Nx*y1 < Nx*y2 by SURREALO:4;
+              then y1 < y2 by Def8,SURREALR:73;
+              then
+A127:         y1-y2  < 0_No < y2-y1 by SURREALR:45,46;
+A128:         1_No-Nx*y2 < 0_No by A120,A92,SURREALR:46;
+A129:         0_No < 1_No-Nx*y1 & 0_No < Nx*y2 - 1_No
+              by A100,A120,A92,SURREALR:45;
+A130:         (1_No +(x2 - Nx) * y2)*x1 - (1_No +(x1-Nx)*y1)*x2==
+              (x1-x2)*(1_No-Nx*y1) + (y1-y2)*x1*(Nx-x2) by Th29;
+A131:         (1_No +(x2 - Nx) * y2)*x1 - (1_No +(x1-Nx)*y1)*x2==
+              (x1-x2)*(1_No-Nx*y2) + (y2-y1)*x2*(x1-Nx) by Th29;
+A132:         x2 is positive & x1 is positive by A3,A121,A101,Def9;
+              0_No < (1_No +(x2 + - Nx) * y2)*x1 - (1_No +(x1 +- Nx)*y1)*x2
+              proof
+A133:           (y1+-y2)*(Nx+-x2)*x1 == (y1+-y2)*x1*(Nx+-x2)
+                by SURREALR:69;
+                0_No < (y1+-y2)*(Nx+-x2) by A127,A126,SURREALR:72;
+                then 0_No < (y1+-y2)*(Nx+-x2)*x1 by A132,SURREALR:72;
+                then
+A134:           0_No < (y1+-y2)*x1*(Nx+-x2) by A133,SURREALO:4;
+                per cases;
+                suppose x2 < x1;
+                  then 0_No < x1 - x2 by SURREALR:45;
+                  then
+A135:             0_No <= (x1+-x2)*(1_No+-Nx*y1) by A129,SURREALR:72;
+                  0_No +0_No < (x1+-x2)*(1_No+-Nx*y1) +(y1+-y2)*x1*(Nx+-x2)
+                  by A134,A135,SURREALR:44;
+                  hence thesis by A130,SURREALO:4;
+                end;
+                suppose x1==x2;
+                  then x1 +- x2 == x2 +- x2 = x2 - x2 ==0_No by SURREALR:43,39;
+                  then x1 +- x2  ==0_No by SURREALO:4;
+                  then (x1+-x2)*(1_No+-Nx*y1) ==0_No*(1_No+-Nx*y1) =0_No
+                  by SURREALR:51;
+                  then 0_No +0_No < (x1+-x2)*(1_No+-Nx*y1)+(y1+-y2)*x1*(Nx+-x2)
+                  by A134,SURREALR:44;
+                  hence thesis by A130,SURREALO:4;
+                end;
+                suppose x1 < x2;
+                  then x1-x2 < 0_No by SURREALR:46;
+                  then
+A136:             0_No < (x1+-x2)*(1_No+-Nx*y2) by A128,SURREALR:72;
+                  0_No < (y2+-y1)*x2 by A127,A132,SURREALR:72;
+                  then 0_No <= (y2+-y1)*x2*(x1+-Nx) by A126,SURREALR:72;
+                  then 0_No +0_No < (x1+-x2)*(1_No+-Nx*y2)+(y2+-y1)*x2*(x1+-Nx)
+                  by A136,SURREALR:44;
+                  hence thesis by A131,SURREALO:4;
+                end;
+              end;
+              hence thesis;
+            end;
+            then (1_No +(x1 + - Nx) * y1) * x2 < (1_No +(x2 + - Nx) * y2)*x1
+            by SURREALR:45;
+            then (1_No +(x1 + - Nx) * y1) * Ix1 <
+            (1_No +(x2 + - Nx) * y2) * Ix2 by A122,A102,A104,A124,Th28;
+            hence thesis by A101,A121,A105,A125,Def13;
+          end;
+        end;
+        suppose l in divset(divR(Nx,Inv).N1,Nx,L_Nx,Inv);
+          then consider y1 be object such that
+A137:     y1 in divR(Nx,Inv).N1 & l in divs(y1,Nx,L_Nx,Inv) by Def3;
+          reconsider y1 as Surreal by A137,A99,A7;
+          consider x1 be object such that
+A138:     x1 in L_Nx & x1 <> 0_No &
+          l = (1_No +'(x1 +' -' Nx) *' y1) *' (Inv.x1) by A137,Def2;
+          reconsider x1 as Surreal by A138,SURREAL0:def 16;
+A139:     x1 is positive & x1 in L_x by A3,Def9,A138;
+          then 0_No < x1 & x1 in L_x \/ R_x by XBOOLE_0:def 3;
+          then
+A140:     born x1 in born x by SURREALO:1;
+          then reconsider Ix1=inv x1 as Surreal by A139,A3,A2;
+A141:     x1 * Ix1 == 1_No by A3,A2,A140,A139;
+          x1 in L_Nx \/R_Nx by A138,XBOOLE_0:def 3;
+          then x1 in (L_Nx \/R_Nx)\{0_No} by A138,ZFMISC_1:56;
+          then
+A142:     Ix1 = Inv.x1 by Def13;
+          divR(Nx,Inv).(N2+1) = divR(Nx,Inv).N2 \/
+          divset(divL(Nx,Inv).N2,Nx,L_Nx,Inv) \/
+          divset(divR(Nx,Inv).N2,Nx,R_Nx,Inv) by Th6;
+          then r in divR(Nx,Inv).N2 \/ divset(divL(Nx,Inv).N2,Nx,L_Nx,Inv)
+          or r in divset(divR(Nx,Inv).N2,Nx,R_Nx,Inv)
+          by A97,XBOOLE_0:def 3;
+          then per cases by XBOOLE_0:def 3;
+          suppose r in divR(Nx,Inv).N2;
+            then N2 >= N2+1 by A97;
+            hence thesis by NAT_1:13;
+          end;
+          suppose r in divset(divL(Nx,Inv).N2,Nx,L_Nx,Inv);
+            then consider y2 be object such that
+A143:       y2 in divL(Nx,Inv).N2 & r in divs(y2,Nx,L_Nx,Inv) by Def3;
+            reconsider y2 as Surreal by A7,A143,A99;
+            consider x2 be object such that
+A144:       x2 in L_Nx & x2 <> 0_No &
+            r = (1_No +'(x2 +' -' Nx) *' y2) *' (Inv.x2) by A143,Def2;
+            reconsider x2 as Surreal by A144,SURREAL0:def 16;
+A145:       x2 is positive & x2 in L_x by A3,Def9,A144;
+            then 0_No < x2 & x2 in L_x \/ R_x by XBOOLE_0:def 3;
+            then
+A146:       born x2 in born x by SURREALO:1;
+            then reconsider Ix2=inv x2 as Surreal by A145,A3,A2;
+A147:       x2* Ix2 == 1_No by A3,A2,A146,A145;
+            x2 in L_Nx \/R_Nx by A144,XBOOLE_0:def 3;
+            then
+A148:       x2 in (L_Nx \/R_Nx)\{0_No} by A144,ZFMISC_1:56;
+            0_No < (1_No +(x2 + - Nx) * y2)*x1 - (1_No +(x1 + - Nx) * y1) * x2
+            proof
+              L_Nx << {Nx} << R_Nx &Nx in {Nx} by TARSKI:def 1,SURREALO:11;
+              then
+A149:         x1 - Nx < 0_No & x2-Nx <0_No<Nx-x2
+              by A138,A144,SURREALR:45,SURREALR:46;
+              Nx*y2 < 1_No <= Nx*y1 by A137,A143,A92;
+              then Nx*y2 < Nx*y1 by SURREALO:4;
+              then y2 < y1 by Def8,SURREALR:73;
+              then
+A150:         y2-y1 < 0_No < y1-y2 by SURREALR:45,SURREALR:46;
+A151:         0_No < 1_No-Nx*y2 by A143,A92,SURREALR:45;
+A152:         1_No-Nx*y1<0_No & Nx*y2 - 1_No <0_No
+              by A137,A143,A92,SURREALR:46;
+A153:         (1_No +(x2 - Nx) * y2)*x1 - (1_No +(x1-Nx)*y1)*x2==
+              (x1-x2)*(1_No-Nx*y1) + (y1-y2)*x1*(Nx-x2) by Th29;
+A154:         (1_No +(x2 - Nx) * y2)*x1 - (1_No +(x1-Nx)*y1)*x2==
+              (x1-x2) * (1_No-Nx*y2) + (y2-y1)*x2*(x1-Nx) by Th29;
+A155:         x2 is positive & x1 is positive by A3,A144,A138,Def9;
+              0_No < (1_No +(x2 + - Nx) * y2)*x1 - (1_No+(x1+-Nx)*y1)*x2
+              proof
+A156:           (y2+-y1)*(x1+-Nx)*x2 == (y2+-y1)*x2*(x1+-Nx)
+                by SURREALR:69;
+                0_No<(y2+-y1)*(x1+-Nx) by A150,A149,SURREALR:72;
+                then 0_No < (y2+-y1)*(x1+-Nx)*x2 by A155,SURREALR:72;
+                then
+A157:           0_No < (y2+-y1)*x2*(x1+-Nx) by A156,SURREALO:4;
+                per cases;
+                suppose x2 < x1;
+                  then 0_No < x1 - x2 by SURREALR:45;
+                  then
+A158:             0_No <= (x1+-x2)*(1_No+-Nx*y2) by A151,SURREALR:72;
+                  0_No= 0_No +0_No<(x1+-x2)*(1_No+-Nx*y2) +(y2+-y1)*x2*(x1+-Nx)
+                  by A157,A158,SURREALR:44;
+                  hence thesis by A154,SURREALO:4;
+                end;
+                suppose x1==x2;
+                  then x1 +- x2 == x2 - x2 ==0_No by SURREALR:43,39;
+                  then x1 +- x2  ==0_No by SURREALO:4;
+                  then (x1+-x2)*(1_No+-Nx*y2) ==0_No*(1_No+-Nx*y2) =0_No
+                  by SURREALR:51;
+                  then 0_No +0_No < (x1+-x2)*(1_No+-Nx*y2)
+                  +(y2+-y1)*x2*(x1+-Nx) by A157,SURREALR:44;
+                  hence thesis by A154,SURREALO:4;
+                end;
+                suppose x1 < x2;
+                  then x1-x2 < 0_No by SURREALR:46;
+                  then
+A159:             0_No < (x1+-x2)*(1_No+-Nx*y1) by A152,SURREALR:72;
+                  0_No < (y1+-y2)*x1 by A150,A155,SURREALR:72;
+                  then 0_No <= (y1+-y2)*x1*(Nx+-x2) by A149,SURREALR:72;
+                  then 0_No=0_No +0_No <
+                  (x1+-x2)*(1_No+-Nx*y1)+(y1+-y2)*x1*(Nx+-x2)
+                  by A159,SURREALR:44;
+                  hence thesis by A153,SURREALO:4;
+                end;
+              end;
+              hence thesis;
+            end;
+            then (1_No +(x1 - Nx) * y1) * x2 < (1_No +(x2 - Nx) * y2)*x1
+            by SURREALR:45;
+            then (1_No +(x1  - Nx) * y1) * Ix1 <
+            (1_No +(x2 - Nx) * y2) * Ix2 by A145,A139,A141,A147,Th28;
+            hence thesis by A138,A144,A142,A148,Def13;
+          end;
+          suppose r in divset(divR(Nx,Inv).N2,Nx,R_Nx,Inv);
+            then consider y2 be object such that
+A160:       y2 in divR(Nx,Inv).N2 & r in divs(y2,Nx,R_Nx,Inv) by Def3;
+            reconsider y2 as Surreal by A7, A160,A99;
+            consider x2 be object such that
+A161:       x2 in R_Nx & x2 <> 0_No &
+            r = (1_No +'(x2 +' -' Nx) *' y2) *' (Inv.x2) by A160,Def2;
+            reconsider x2 as Surreal by A161,SURREAL0:def 16;
+A162:       x2 is positive & x2 in R_x by A3,Def9,A161;
+            then 0_No < x2 & x2 in L_x \/ R_x by XBOOLE_0:def 3;
+            then
+A163:       born x2 in born x by SURREALO:1;
+            then reconsider Ix2=inv x2 as Surreal by A162,A3,A2;
+A164:       x2* Ix2 == 1_No by A3,A2,A163,A162;
+            x2 in L_Nx \/R_Nx by A161,XBOOLE_0:def 3;
+            then
+A165:       x2 in (L_Nx \/R_Nx)\{0_No} by A161,ZFMISC_1:56;
+            0_No < (1_No +(x2 + - Nx) * y2)*x1 - (1_No +(x1 + - Nx) * y1) * x2
+            proof
+              L_Nx << {Nx} << R_Nx &Nx in {Nx} by TARSKI:def 1,SURREALO:11;
+              then
+A166:         x1 - Nx <0_No< Nx-x1 & Nx - x2 < 0_No < x2-Nx
+              by A138,A161,SURREALR:45,46;
+              L_Nx << R_Nx by SURREAL0:45;
+              then
+A167:         x1 -x2 < 0_No by A161,A138,SURREALR:46;
+A168:         1_No - Nx*y1 <0_No & 1_No - Nx*y2<0_No
+              by A137,A160,A92,SURREALR:46;
+A169:         (1_No +(x2 - Nx) * y2)*x1 +- (1_No +(x1-Nx)*y1)*x2==
+              (x1-x2)*(1_No-Nx*y1) + (y1-y2)*x1*(Nx-x2) by Th29;
+A170:         (1_No +(x2 - Nx) * y2)*x1 - (1_No +(x1-Nx)*y1)*x2
+              == (x1-x2)*(1_No-Nx*y2) + (y2-y1)*x2*(x1-Nx) by Th29;
+A171:         x2 is positive & x1 is positive by A3,A161,A138,Def9;
+A172:         0_No < (x1+-x2)*(1_No+-Nx*y1) by A167,A168,SURREALR:72;
+A173:         0_No < (x1+-x2)*(1_No+-Nx*y2) by A167,A168,SURREALR:72;
+              per cases;
+              suppose y1 == y2;
+                then y1 +- y2 == y2 - y2 == 0_No by SURREALR:43,39;
+                then y1 +- y2  ==0_No by SURREALO:4;
+                then (y1+-y2)*x1 ==0_No*x1 = 0_No by SURREALR:51;
+                then (y1+-y2)*x1*(Nx+-x2) == 0_No*(Nx+-x2)=0_No
+                  by SURREALR:51;
+                then 0_No+0_No < (x1+-x2)*(1_No+-Nx*y1) + (y1+-y2)*x1*(Nx+-x2)
+                  by A172,SURREALR:44;
+                hence thesis by A169,SURREALO:4;
+              end;
+              suppose y1 < y2;
+                then y1 -y2<0_No by SURREALR:46;
+                then (y1+-y2)*x1<0_No by A171,SURREALR:74;
+                then 0_No <= (y1+-y2)*x1*(Nx+-x2) by A166,SURREALR:72;
+                then 0_No=0_No + 0_No <
+                (x1+-x2)*(1_No+-Nx*y1) + (y1+-y2)*x1*(Nx+-x2)
+                  by A172,SURREALR:44;
+                hence thesis by A169,SURREALO:4;
+              end;
+              suppose y2 <y1;
+                then y2 -y1 < 0_No by SURREALR:46;
+                then (y2+-y1)*x2 <0_No by A171,SURREALR:74;
+                then 0_No <= (y2+-y1)*x2*(x1+-Nx) by A166,SURREALR:72;
+                then 0_No + 0_No < (x1+-x2)*(1_No+-Nx*y2)+(y2+-y1)*x2*(x1+-Nx)
+                  by A173,SURREALR:44;
+                hence thesis by A170,SURREALO:4;
+              end;
+            end;
+            then (1_No +(x1 - Nx) * y1) * x2 < (1_No +(x2 - Nx) * y2)*x1
+              by SURREALR:45;
+            then (1_No +(x1 + - Nx) * y1) * Ix1 <
+            (1_No +(x2 + - Nx) * y2) * Ix2 by A162,A139,A141,A164,Th28;
+            hence thesis by A138,A161,A142,A165,Def13;
+          end;
+        end;
+      end;
+    end;
+    reconsider UL= Union divL(Nx,Inv),
+    UR=Union divR(Nx,Inv) as surreal-membered set by A5,Th10;
+    consider M be Ordinal such that
+A174: for o st o in UL\/ UR
+    ex A be Ordinal st A in M & o in Day A by SURREAL0:47;
+A175: inv x = [UL,UR] by A3,Th26;
+    inv x in Day M by A175,A174,A94,SURREAL0:46;
+    hence inv x is surreal;
+    let y such that A176:y=inv x;
+    set xy =Nx*y;
+A177:xy = [comp(L_Nx,Nx,y,L_y) \/ comp(R_Nx,Nx,y,R_y),
+    comp(L_Nx,Nx,y,R_y) \/ comp(R_Nx,Nx,y,L_y)] by SURREALR:50;
+A178: UL=L_y << {y} << R_y=UR & y in {y}
+    by SURREALO:11,A175,A176,TARSKI:def 1;
+A179:dom divL(Nx,Inv) =NAT =dom divR(Nx,Inv) by Def5,Def6;
+A180: {1_No} << R_xy
+    proof
+      let r,l be Surreal such that
+A181: r in {1_No} & l in R_xy;
+      per cases by A177,A181,XBOOLE_0:def 3;
+      suppose l in comp(L_Nx,Nx,y,R_y);
+        then consider x1,y1 be Surreal such that
+A182:   l = (x1*y) +' (Nx*y1) +' -' (x1*y1) & x1 in L_Nx & y1 in R_y
+        by SURREALR:def 14;
+        consider n be Nat such that
+A183:   y1 in divR(Nx,Inv).n &
+        for m st y1 in divR(Nx,Inv).m holds n <= m
+        by A182,A175,A176,Th27,A179;
+        per cases;
+        suppose x1=0_No;
+          then
+A184:     l = 0_No + (Nx*y1) + 0_No by SURREALR:23,A182;
+          1_No < Nx*y1 by A183,A92;
+          hence thesis by A184,A181,TARSKI:def 1;
+        end;
+        suppose
+A185:     x1 <> 0_No;
+          x1 in L_Nx \/ R_Nx by A182,XBOOLE_0:def 3;
+          then
+A186:     born x1 in born Nx c= born x by A3,SURREALO:1,Th22;
+A187:     x1 is positive by A3,A185,A182,Def9;
+          then reconsider Ix1=inv x1 as Surreal by A3,A2,A186;
+          x1 * Ix1 == 1_No by A3,A2,A186,A187;
+          then
+A188:     x1*y +Nx*y1 - x1*y1 ==
+          1_No +x1*( y - (1_No +(x1-Nx)*y1)*Ix1) by Th30;
+          x1 in L_Nx \/R_Nx by A182,XBOOLE_0:def 3;
+          then x1 in (L_Nx \/R_Nx)\{0_No} by A185,ZFMISC_1:56;
+          then Ix1 = Inv.x1 by Def13;
+          then (1_No +'(x1+'-'Nx)*'y1)*'Ix1 in divs(y1,Nx,L_Nx,Inv)
+          by A185,A182,Def2;
+          then (1_No +(x1+-Nx)*y1)*'Ix1 in divset(divR(Nx,Inv).n,Nx,L_Nx,Inv)
+          by A183,Def3;
+          then (1_No +(x1+-Nx)*y1)*'Ix1 in divL(Nx,Inv).n \/
+          divset(divL(Nx,Inv).n,Nx,R_Nx,Inv)\/
+          divset(divR(Nx,Inv).n,Nx,L_Nx,Inv) by XBOOLE_0:def 3;
+          then
+A189:     (1_No +(x1+-Nx)*y1)*'Ix1 in divL(Nx,Inv).(n+1) by Th6;
+          (1_No +(x1+-Nx)*y1)*'Ix1 in UL by A179,A189,CARD_5:2;
+          then 0_No < y - (1_No +(x1+-Nx)*y1)*Ix1 by A178,SURREALR:45;
+          then 0_No < x1*(y +- (1_No +(x1+-Nx)*y1)*Ix1)
+          by A187,SURREALR:72;
+          then 1_No + 0_No < 1_No + x1*(y +- (1_No +(x1+-Nx)*y1)*Ix1)
+          by SURREALR:44;
+          then 1_No=1_No+0_No < l by A182,A188,SURREALO:4;
+          hence thesis by A181,TARSKI:def 1;
+        end;
+      end;
+      suppose l in comp(R_Nx,Nx,y,L_y);
+        then consider x1,y1 be Surreal such that
+A190:   l = (x1*y) +' (Nx*y1) +' -' (x1*y1) & x1 in R_Nx & y1 in L_y
+        by SURREALR:def 14;
+        consider n be Nat such that
+A191:   y1 in divL(Nx,Inv).n &
+        for m st y1 in divL(Nx,Inv).m holds n <= m
+        by A190,A175,A176,Th27,A179;
+        x1 in L_Nx \/ R_Nx by A190,XBOOLE_0:def 3;
+        then
+A192:   born x1 in born Nx c= born x by A3,SURREALO:1,Th22;
+A193:   x1 is positive by A3,A190,Def9;
+        then reconsider Ix1=inv x1 as Surreal by A3,A2,A192;
+        x1 * Ix1 == 1_No by A3,A2,A192,A193; then
+A194:   x1*y +Nx*y1 - x1*y1 ==
+        1_No +x1*( y - (1_No +(x1-Nx)*y1)*Ix1) by Th30;
+A195:   0_No <= 0_No < x1 by A193;
+        x1 in L_Nx \/R_Nx by A190,XBOOLE_0:def 3;
+        then x1 in (L_Nx \/R_Nx)\{0_No} by A195,ZFMISC_1:56;
+        then Ix1 = Inv.x1 by Def13;
+        then (1_No +'(x1+'-'Nx)*'y1)*'Ix1 in divs(y1,Nx,R_Nx,Inv)
+        by A195,A190,Def2;
+        then (1_No +(x1+-Nx)*y1)*'Ix1 in divset(divL(Nx,Inv).n,Nx,R_Nx,Inv)
+        by A191,Def3;
+        then (1_No +(x1+-Nx)*y1)*'Ix1 in
+        divL(Nx,Inv).n \/
+        divset(divL(Nx,Inv).n,Nx,R_Nx,Inv) by XBOOLE_0:def 3;
+        then
+        (1_No +(x1+-Nx)*y1)*'Ix1 in divL(Nx,Inv).n \/
+        divset(divL(Nx,Inv).n,Nx,R_Nx,Inv) \/
+        divset(divR(Nx,Inv).n,Nx,L_Nx,Inv) by XBOOLE_0:def 3;
+        then
+A196:   (1_No +(x1+-Nx)*y1)*'Ix1 in divL(Nx,Inv).(n+1) by Th6;
+        (1_No +(x1+-Nx)*y1)*'Ix1 in UL by A179,A196,CARD_5:2;
+        then 0_No < y - (1_No +(x1+-Nx)*y1)*Ix1 by A178,SURREALR:45;
+        then 0_No< x1*(y +- (1_No +(x1+-Nx)*y1)*Ix1)
+        by A193,SURREALR:72;
+        then 1_No + 0_No < 1_No + x1*(y +- (1_No +(x1+-Nx)*y1)*Ix1)
+        by SURREALR:44;
+        then 1_No = 1_No + 0_No < l by A194,A190,SURREALO:4;
+        hence thesis by A181,TARSKI:def 1;
+      end;
+    end;
+A197: L_xy << {1_No}
+    proof
+      let l,r be Surreal such that
+A198: l in L_xy &r in {1_No};
+      per cases by A177,A198,XBOOLE_0:def 3;
+      suppose l in comp(L_Nx,Nx,y,L_y);
+        then consider x1,y1 be Surreal such that
+A199:   l = (x1*y) +' (Nx*y1) +' -' (x1*y1)
+        & x1 in L_Nx & y1 in L_y by SURREALR:def 14;
+        consider n be Nat such that
+A200:   y1 in divL(Nx,Inv).n &
+        for m st y1 in divL(Nx,Inv).m holds n <= m
+        by A199,A175,A176,Th27,A179;
+        per cases;
+        suppose x1=0_No;
+          then
+A201:     l = 0_No + (Nx*y1) + 0_No by SURREALR:23,A199;
+          Nx*y1 < 1_No by A92,A200;
+          hence thesis by A201,A198,TARSKI:def 1;
+        end;
+        suppose
+A202:     x1<>0_No;
+          x1 in L_Nx \/ R_Nx by A199,XBOOLE_0:def 3;
+          then
+A203:     born x1 in born Nx c= born x by A3,SURREALO:1,Th22;
+A204:     x1 is positive by A3,A202,A199,Def9;
+          then reconsider Ix1=inv x1 as Surreal by A3,A2,A203;
+          x1 * Ix1 == 1_No by A3,A2,A203,A204;
+          then
+A205:     x1*y +Nx*y1 - x1*y1
+          == 1_No +x1*( y - (1_No +(x1-Nx)*y1)*Ix1) by Th30;
+          x1 in L_Nx \/R_Nx by A199,XBOOLE_0:def 3;
+          then x1 in (L_Nx \/R_Nx)\{0_No} by A202,ZFMISC_1:56;
+          then Ix1 = Inv.x1 by Def13;
+          then (1_No +'(x1+'-'Nx)*'y1)*'Ix1 in divs(y1,Nx,L_Nx,Inv)
+          by A202,A199,Def2;
+          then (1_No +(x1+-Nx)*y1)*'Ix1 in divset(divL(Nx,Inv).n,Nx,L_Nx,Inv)
+          by A200,Def3;
+          then (1_No +(x1+-Nx)*y1)*'Ix1 in
+          divR(Nx,Inv).n \/
+          divset(divL(Nx,Inv).n,Nx,L_Nx,Inv) by XBOOLE_0:def 3;
+          then (1_No +(x1+-Nx)*y1)*'Ix1 in
+          divR(Nx,Inv).n \/ divset(divL(Nx,Inv).n,Nx,L_Nx,Inv) \/
+          divset(divR(Nx,Inv).n,Nx,R_Nx,Inv) by XBOOLE_0:def 3;
+          then
+A206:     (1_No +(x1+-Nx)*y1)*'Ix1 in divR(Nx,Inv).(n+1) by Th6;
+          (1_No +(x1+-Nx)*y1)*'Ix1 in UR by A179,A206,CARD_5:2;
+          then y - (1_No +(x1+-Nx)*y1)*Ix1 < 0_No by A178,SURREALR:46;
+          then x1*(y +- (1_No +(x1+-Nx)*y1)*Ix1) < 0_No
+            by A204,SURREALR:74;
+          then 1_No + x1*(y +- (1_No +(x1+-Nx)*y1)*Ix1) < 1_No + 0_No
+            by SURREALR:44;
+          then l < 1_No+0_No=1_No by A199,A205,SURREALO:4;
+          hence thesis by A198,TARSKI:def 1;
+        end;
+      end;
+      suppose l in comp(R_Nx,Nx,y,R_y);
+        then consider x1,y1 be Surreal such that
+A207:   l = (x1*y) +' (Nx*y1) +' -' (x1*y1) & x1 in R_Nx & y1 in R_y
+          by SURREALR:def 14;
+        consider n be Nat such that
+A208:   y1 in divR(Nx,Inv).n &
+        for m st y1 in divR(Nx,Inv).m holds n <= m
+          by A207,A175,A176,Th27,A179;
+        x1 in L_Nx \/ R_Nx by A207,XBOOLE_0:def 3;
+        then
+A209:   born x1 in born Nx c= born x by A3,SURREALO:1,Th22;
+A210:   x1 is positive by A3,A207,Def9;
+        then reconsider Ix1=inv x1 as Surreal by A3,A2,A209;
+        x1 * Ix1 == 1_No by A3,A2,A209,A210;
+        then
+A211:   x1*y +Nx*y1 - x1*y1 ==
+        1_No +x1*( y - (1_No +(x1-Nx)*y1)*Ix1) by Th30;
+A212:   0_No <= 0_No < x1 by A210;
+        x1 in L_Nx \/R_Nx by A207,XBOOLE_0:def 3;
+        then x1 in (L_Nx \/R_Nx)\{0_No} by A212,ZFMISC_1:56;
+        then Ix1 = Inv.x1 by Def13;
+        then (1_No +'(x1+'-'Nx)*'y1)*'Ix1 in divs(y1,Nx,R_Nx,Inv)
+          by A212,A207,Def2;
+        then (1_No +(x1+-Nx)*y1)*'Ix1 in divset(divR(Nx,Inv).n,Nx,R_Nx,Inv)
+          by A208,Def3;
+        then (1_No +(x1+-Nx)*y1)*'Ix1 in
+        divR(Nx,Inv).n \/
+        divset(divL(Nx,Inv).n,Nx,L_Nx,Inv) \/
+        divset(divR(Nx,Inv).n,Nx,R_Nx,Inv) by XBOOLE_0:def 3;
+        then
+A213:   (1_No +(x1+-Nx)*y1)*'Ix1 in divR(Nx,Inv).(n+1) by Th6;
+        (1_No +(x1+-Nx)*y1)*'Ix1 in UR by A179,A213,CARD_5:2;
+        then y - (1_No +(x1+-Nx)*y1)*Ix1 < 0_No by A178,SURREALR:46;
+        then x1*(y +- (1_No +(x1+-Nx)*y1)*Ix1) < 0_No by A210,SURREALR:74;
+        then 1_No + x1*(y +- (1_No +(x1+-Nx)*y1)*Ix1) < 1_No + 0_No
+          by SURREALR:44;
+        then l < 1_No+0_No=1_No by A207,A211,SURREALO:4;
+        hence thesis by A198,TARSKI:def 1;
+      end;
+    end;
+A214: R_1_No \/ R_xy= R_xy;
+    reconsider oxy=[L_1_No \/ L_xy, R_xy] as Surreal
+    by A180,A197,A214,SURREALO:14;
+A215: 0_No in L_Nx by A3,Def9;
+    0_No in {0_No} by TARSKI:def 1;
+    then 0_No in {0_No}\/divset(UL,Nx,R_Nx,Inv) by XBOOLE_0:def 3;
+    then 0_No in {0_No}\/divset(UL,Nx,R_Nx,Inv)\/
+    divset(UR,Nx,L_Nx,Inv) by XBOOLE_0:def 3;
+    then
+A216: 0_No in L_y by A176,A175,Th12;
+    0_No*y+Nx*0_No +- (0_No*0_No)=0_No;
+    then 0_No in comp(L_Nx,Nx,y,L_y) by A216,A215,SURREALR:def 14;
+    then 0_No in comp(L_Nx,Nx,y,L_y) \/ comp(R_Nx,Nx,y,R_y) by XBOOLE_0:def 3;
+    then xy = oxy by A177,ZFMISC_1:40;
+    then
+A217:xy == 1_No by A180,A197,A214,SURREALO:15;
+    x*y == Nx*y by A3,Th18,SURREALR:51;
+    hence x*y == 1_No by A217,SURREALO:4;
+  end;
+  for D be Ordinal holds P[D] from ORDINAL1:sch 2(A1);
+  hence thesis;
+end;
+
+registration
+  let x be positive Surreal;
+  cluster inv x -> surreal;
+  coherence by Lm2;
+end;
+
+theorem
+  x is positive implies inv x is Surreal;
+
+theorem
+  x is positive & y = inv x implies x * y == 1_No by Lm2;
+
+definition
+  let x be Surreal;
+  assume A1: not x == 0_No;
+  func x" -> Surreal means :Def14:
+    it = inv x if x is positive otherwise
+         -it = inv -x;
+  existence
+  proof
+    thus x is positive implies ex IT be Surreal st IT = inv x;
+    assume not x is positive;
+    then -x is positive by A1,SURREALR:10,23;
+    then reconsider i=inv -x as Surreal;
+    - - i = i;
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    let I1,I2 be Surreal;
+    I1 = - -I1 & I2 = - - I2;
+    hence thesis;
+  end;
+  correctness;
+end;
+
+begin :: Selected Properties of the Inverse Element
+
+theorem Th33:
+  not x == 0_No implies x * x" == 1_No
+proof
+  assume
+A1:not x == 0_No;
+  per cases;
+  suppose 0_No < x;
+    then
+A2: x is positive;
+    then x" = inv x by A1,Def14;
+    hence thesis by A2,Lm2;
+  end;
+  suppose
+A3: not 0_No < x;
+    then
+A4: -x is positive by A1,SURREALR:23,10;
+    then reconsider I=inv (-x) as Surreal;
+A5: not x is positive by A3;
+    (x")*x = (-(x")) * (-x) by SURREALR:58
+    .= I *(-x) by A5,A1,Def14;
+    hence thesis by A4,Lm2;
+  end;
+end;
+
+definition
+  let X,Y be set, x be Surreal;
+  func divset(X,x,Y) -> set means :Def15:
+        o in it iff ex x1,y1 be Surreal st
+              0_No < x1 & x1 in X & y1 in Y &
+              o = (1_No + (x1 - x)*y1) * (x1");
+  existence
+  proof
+    defpred P[object,object] means
+    $1 is pair & L_$1 is surreal & R_$1 is surreal &
+    for x1,y1 be Surreal st $1=[x1,y1] holds
+    0_No < x1 & $2 = (1_No +(x1+-x)*y1)* (x1");
+A1: for a,b,c being object st P[a,b] & P[a,c] holds b = c
+    proof
+      let a,b,c be object such that
+A2:   P[a,b] & P[a,c];
+      consider a1,a2 be object such that
+A3:   a=[a1,a2] by XTUPLE_0:def 1,A2;
+      reconsider a1,a2 as Surreal by A3,A2;
+      thus b = (1_No +(a1+-x)*a2)* (a1") by A3,A2
+      .= c by A3,A2;
+    end;
+    consider D be set such that
+A4: for x being object holds x in D iff
+      ex y being object st y in [:X,Y:] & P[y,x] from TARSKI:sch 1(A1);
+    take D;
+    let o;
+    thus o in D implies ex x1,y1 be Surreal st
+    0_No < x1 & x1 in X & y1 in Y & o = (1_No +(x1-x)*y1)* (x1")
+    proof
+      assume o in D;
+      then consider y be object such that
+A5:   y in [:X,Y:] & P[y,o] by A4;
+      consider a1,a2 be object such that
+A6:   y=[a1,a2] by XTUPLE_0:def 1,A5;
+      reconsider a1,a2 as Surreal by A6,A5;
+      take a1,a2;
+      thus thesis by A6,A5,ZFMISC_1:87;
+    end;
+    given x1,y1 be Surreal such that
+A7: 0_No < x1 & x1 in X & y1 in Y and
+A8: o = (1_No +(x1-x)*y1)* (x1");
+A9: [x1,y1] in [:X,Y:] by A7,ZFMISC_1:87;
+    P[[x1,y1],o]
+    proof
+      thus [x1,y1] is pair & L_[x1,y1] is surreal & R_[x1,y1] is surreal;
+      let X1,Y1 be Surreal; assume [x1,y1]=[X1,Y1];
+      then x1=X1 & y1=Y1 by XTUPLE_0:1;
+      hence thesis by A7,A8;
+    end;
+    hence thesis by A9,A4;
+  end;
+  uniqueness
+  proof
+    let D1,D2 be set such that
+A10: o in D1 iff ex x1,y1 be Surreal st
+    0_No < x1 & x1 in X & y1 in Y & o = (1_No +(x1-x)*y1)* (x1") and
+A11: o in D2 iff ex x1,y1 be Surreal st
+    0_No < x1 & x1 in X & y1 in Y & o = (1_No +(x1-x)*y1)* (x1");
+    now let o;
+      o in D1 iff  ex x1,y1 be Surreal st
+      0_No < x1 & x1 in X & y1 in Y & o = (1_No +(x1-x)*y1)* (x1") by A10;
+      hence o in D1 iff o in D2 by A11;
+    end;
+    hence thesis by TARSKI:2;
+  end;
+end;
+
+registration
+  let X,Y be set, x be Surreal;
+  cluster divset(X,x,Y) -> surreal-membered;
+  coherence
+  proof
+    let o;
+    assume o in divset(X,x,Y);
+    then ex x1,y1 be Surreal st
+    0_No < x1 & x1 in X & y1 in Y & o = (1_No +(x1-x)*y1)* (x1") by Def15;
+    hence thesis;
+  end;
+end;
+
+theorem Th34:
+  for X,nX be set, Y be surreal-membered set
+     st x is positive &
+    ((X = L_x & nX=L_||.x.||) or (X=R_x & nX=R_||.x.||))
+  holds
+     divset(X,||.x.||,Y) = divset(Y,||.x.||,nX,No_inverses_on ||.x.||)
+proof
+  set Nx = ||.x.||,Inv = No_inverses_on Nx;
+  let X,X1 be set, Y be surreal-membered set such that
+A1: x is positive and
+A2: ((X = L_x & X1=L_||.x.||) or (X=R_x & X1=R_||.x.||));
+  thus divset(X,Nx,Y) c= divset(Y,Nx,X1,Inv)
+  proof
+    let o;
+    assume o in divset(X,Nx,Y);
+    then consider x1,y1 be Surreal such that
+A3: 0_No < x1 & x1 in X & y1 in Y and
+A4: o = (1_No +(x1-Nx)*y1)* (x1") by Def15;
+A5: x1 is positive by A3;
+    not x1==0_No by A3;
+    then
+A6: x1"=inv x1 by A5,Def14;
+A7: x1 is positive by A3;
+A8: 0_No <=0_No;
+A9: x1 in X1 by A2,A3,A1,A7,Def9;
+    x1 in L_Nx or x1 in R_Nx by A2,A3,A1,A7,Def9;
+    then x1 in (L_Nx\/R_Nx) by XBOOLE_0:def 3;
+    then x1 in (L_Nx\/R_Nx)\{0_No} by A8,A3,ZFMISC_1:56;
+    then o = (1_No +'(x1+'-'Nx)*'y1)*' (Inv.x1) by A6,A4,Def13;
+    then o in divs(y1,Nx,X1,Inv) by A9,A8,A3,Def2;
+    hence thesis by A3,Def3;
+  end;
+  let o;
+  assume o in divset(Y,Nx,X1,Inv);
+  then consider y1 be object such that
+A10:y1 in Y & o in divs(y1,Nx,X1,Inv) by Def3;
+  reconsider y1 as Surreal by A10,SURREAL0:def 16;
+  consider x1 be object such that
+A11:x1 in X1 & x1 <> 0_No &
+    o = (1_No +'(x1 +' -' Nx) *' y1) *' (Inv.x1)
+    by A10,Def2;
+  reconsider x1 as  Surreal by A2,A11,SURREAL0:def 16;
+A12:x1 in X & x1 is positive by A2,A1,A11,Def9;
+A13:not x1==0_No by A12;
+A14: x1" = inv x1 by A12,A13,Def14;
+  x1 in (L_Nx\/R_Nx) by XBOOLE_0:def 3,A2,A11;
+  then x1 in (L_Nx\/R_Nx)\{0_No} by A11,ZFMISC_1:56;
+  then o = (1_No +(x1 - Nx) * y1) * (x1") by A11,A14,Def13;
+  hence thesis by Def15,A12,A10;
+end;
+
+theorem Th35:
+  x==y implies divset(X,x,Y) <=_ divset(X,y,Y)
+proof
+  assume
+A1:x==y;
+  let z be Surreal;
+  assume z in divset(X,x,Y);
+  then consider x1,y1 be Surreal such that
+A2:  0_No < x1 & x1 in X & y1 in Y and
+A3:  z = (1_No +(x1-x)*y1)* (x1") by Def15;
+A4:(1_No +(x1-y)*y1)* (x1") in divset(X,y,Y) by A2,Def15;
+  -x == -y by A1,SURREALR:10;
+  then x1+-x == x1+-y by SURREALR:43;
+  then (x1+-x)*y1 == (x1+-y)*y1 by SURREALR:51;
+  then 1_No+(x1+-x)*y1 == 1_No+(x1+-y)*y1 by SURREALR:43;
+  then z == (1_No+(x1+-y)*y1)*(x1") by A3,SURREALR:51;
+  hence thesis by A4;
+end;
+
+theorem Th36:
+  x is positive
+     implies
+    x" = [{0_No}\/divset(R_x,||.x.||,L_(x"))\/divset(L_x,||.x.||,R_(x")),
+                  divset(L_x,||.x.||,L_(x"))\/divset(R_x,||.x.||,R_(x"))]
+proof
+  set Nx = ||.x.||,Inv = No_inverses_on Nx;
+  assume
+A1: x is positive;
+  then not x==0_No;
+  then
+A2:x"=inv x by A1,Def14;
+  set UL=Union divL(Nx,Inv),UR=Union divR(Nx,Inv);
+A3: inv x = [ UL,UR] by A1,Th26;
+  then UL c= L_(x") \/ R_(x") by A2,XBOOLE_1:7;
+  then
+A4: divset(UL,Nx,R_Nx,Inv) = divset(R_x,||.x.||,UL) &
+  divset(UL,||.x.||,L_Nx,No_inverses_on ||.x.||)=
+          divset(L_x,||.x.||,UL) by A1,A2,A3,Th34;
+  UR c= L_(x") \/ R_(x") by A2,A3,XBOOLE_1:7;
+  then
+A5:divset(UR,Nx,L_Nx,Inv)= divset(L_x,||.x.||,UR) &
+  divset(UR,Nx,R_Nx,Inv)= divset(R_x,||.x.||,UR) by A1,A2,A3,Th34;
+  UL = {0_No}\/divset(UL,Nx,R_Nx,Inv)\/ divset(UR,Nx,L_Nx,Inv) by Th12;
+  hence thesis by A4,A5,A3,A2,Th13;
+end;
+
+theorem Th37:
+  for X1,X2,Y1,Y2 be surreal-membered set st
+    X2 <=_ X1 & Y2 <=_ Y1 & [X1,Y1] is surreal
+  holds [X2,Y2] is surreal
+proof
+  let X1,X2,Y1,Y2 be surreal-membered set such that
+A1: X2 <=_ X1 & Y2 <=_ Y1 & [X1,Y1] is surreal;
+A2: X2 << Y2
+  proof
+    let l,r be Surreal such that
+A3: l in X2 & r in Y2;
+    consider l1,l2 be Surreal such that
+A4: l1 in X1 & l2 in X1 & l1 <= l <= l2 by A3,A1;
+    consider r1,r2 be Surreal such that
+A5: r1 in Y1 & r2 in Y1 & r1 <= r <= r2 by A3,A1;
+    X1 =L_[X1,Y1] <<R_[X1,Y1]=Y1 by A1,SURREAL0:45;
+    then l < r1 by A4,A5,SURREALO:4;
+    hence thesis by A5,SURREALO:4;
+  end;
+  consider M be Ordinal such that
+A6:for o st o in X2 \/ Y2 ex A be Ordinal st A in M & o in Day A
+  by SURREAL0:47;
+  [X2,Y2] in Day M by A6,A2,SURREAL0:46;
+  hence thesis;
+end;
+
+theorem
+  x is positive implies
+     [{0_No}\/divset(R_x,x,L_(x"))\/divset(L_x,x,R_(x")),
+      divset(L_x,x,L_(x"))\/divset(R_x,x,R_(x"))] is Surreal
+proof
+  set Nx = ||.x.||;
+  assume
+A1: x is positive;
+  then divset(R_x,x,L_(x")) <=_ divset(R_x,Nx,L_(x")) by Th18,Th35;
+  then
+A2: {0_No}\/divset(R_x,x,L_(x")) <=_ {0_No}\/divset(R_x,Nx,L_(x"))
+  by SURREALO:31;
+  divset(L_x,x,R_(x")) <=_ divset(L_x,Nx,R_(x")) by A1,Th18,Th35;
+  then
+A3: {0_No}\/divset(R_x,x,L_(x"))\/divset(L_x,x,R_(x"))
+  <=_ {0_No}\/divset(R_x,Nx,L_(x"))\/divset(L_x,Nx,R_(x"))
+  by A2,SURREALO:31;
+  divset(L_x,x,L_(x")) <=_divset(L_x,Nx,L_(x")) &
+  divset(R_x,x,R_(x")) <=_divset(R_x,Nx,R_(x")) by A1,Th18,Th35;
+  then
+A4: divset(L_x,x,L_(x"))\/divset(R_x,x,R_(x"))
+  <=_ divset(L_x,Nx,L_(x"))\/divset(R_x,Nx,R_(x"))
+  by SURREALO:31;
+  [{0_No}\/divset(R_x,Nx,L_(x"))\/divset(L_x,Nx,R_(x")),
+  divset(L_x,Nx,L_(x"))\/divset(R_x,Nx,R_(x"))] is Surreal
+  by A1,Th36;
+  hence thesis by TARSKI:1,Th37,A3,A4;
+end;
+
+theorem
+  x is positive & y = [{0_No}\/divset(R_x,x,L_(x"))\/divset(L_x,x,R_(x")),
+                       divset(L_x,x,L_(x"))\/divset(R_x,x,R_(x"))]
+  implies x" == y
+proof
+  set Nx = ||.x.||;
+  assume
+A1: x is positive;
+  then
+A2: x==Nx by Th18;
+  then divset(R_x,x,L_(x")) <==> divset(R_x,Nx,L_(x")) by Th35;
+  then
+A3:{0_No}\/divset(R_x,x,L_(x")) <==>{0_No}\/divset(R_x,Nx,L_(x"))
+  by SURREALO:31;
+  divset(L_x,x,R_(x")) <==> divset(L_x,Nx,R_(x")) by A2,Th35;
+  then
+A4:{0_No}\/divset(R_x,x,L_(x"))\/divset(L_x,x,R_(x"))
+  <==> {0_No}\/divset(R_x,Nx,L_(x"))\/divset(L_x,Nx,R_(x"))
+  by A3,SURREALO:31;
+  divset(L_x,x,L_(x")) <==> divset(L_x,Nx,L_(x")) &
+  divset(R_x,x,R_(x")) <==> divset(R_x,Nx,R_(x")) by A2,Th35;
+  then
+A5:divset(L_x,x,L_(x"))\/divset(R_x,x,R_(x"))
+  <==> divset(L_x,Nx,L_(x"))\/divset(R_x,Nx,R_(x"))
+  by SURREALO:31;
+  assume
+A6: y = [{0_No}\/divset(R_x,x,L_(x"))\/divset(L_x,x,R_(x")),
+  divset(L_x,x,L_(x"))\/divset(R_x,x,R_(x"))];
+  x"=[{0_No}\/divset(R_x,Nx,L_(x"))\/divset(L_x,Nx,R_(x")),
+  divset(L_x,Nx,L_(x"))\/divset(R_x,Nx,R_(x"))] by A1,Th36;
+  hence thesis by SURREALO:29,A6,A4,A5;
+end;
+
+begin :: Fundamental Properties of the Inverse Element
+
+theorem Th40:
+  not x == 0_No implies (0_No < x iff 0_No < x")
+proof
+  assume not x == 0_No;
+  then
+A1:x * (x") == 1_No by Th33;
+A2:0_No < x * (x") by A1,SURREALO:4,Def8;
+  thus 0_No < x implies 0_No < x"
+  proof
+    assume 0_No < x;
+    then 0_No <= x;
+    hence thesis by A2,SURREALR:72;
+  end;
+  assume 0_No < x";
+  then 0_No <= x";
+  hence thesis by A2,SURREALR:72;
+end;
+
+registration
+  let x be positive Surreal;
+  cluster x" -> positive;
+  coherence
+  proof
+    not 0_No == x by Def8;
+    hence thesis by Def8,Th40;
+  end;
+end;
+
+theorem Lm3:
+  x*y ==0_No iff x == 0_No or y == 0_No by SURREALR:72,74;
+
+theorem Th41:
+  not x == 0_No & x * y == 1_No implies y == x"
+proof
+  assume
+A1:not x == 0_No & x * y == 1_No;
+  then
+A2: x * x" == 1_No by Th33;
+  (x"* x) * y == x"* (x * y) == 1_No * x" by A1,SURREALR:54,SURREALR:69;
+  then 1_No * y == (x"* x) * y == x" by A2,SURREALR:54,SURREALO:4;
+  hence thesis by SURREALO:4;
+end;
+
+theorem
+  not 0_No == x & x == y implies x" == y"
+proof
+  assume
+A1:not 0_No == x & x == y;
+  then
+A2: not 0_No == y by SURREALO:4;
+  y*x" == x*x" == 1_No by A1,Th33,SURREALR:54;
+  then y*x" == 1_No by SURREALO:4;
+  hence thesis by A2,Th41;
+end;
+
+theorem
+  not x==0_No implies x" " == x
+proof
+  assume not x==0_No;
+  then
+A1:0_No < 1_No == x*x" by Th33,Def8;
+  then not x*x" == 0_No by SURREALO:4;
+  then not x" == 0_No by SURREALR:72,74;
+  hence thesis by A1,Th41;
+end;
+
+theorem
+  not x==0_No & not y == 0_No implies (x*y)" == x" * y"
+proof
+  assume
+A1: not x==0_No & not y == 0_No; then
+A2: x*x" == 1_No == y*y" by Th33;
+  (x" * y") * (x*y) == (x" * y") * y*x == (x" * (y" * y))*x by SURREALR:54,69;
+  then (x" * y") * (x*y) == (y" * y)*x"*x == (y" * y)*(x"*x)
+  by SURREALO:4,SURREALR:69;
+  then (x" * y") * (x*y) == (y" * y)*(x"*x) == (y" * y)*1_No
+  by A2,SURREALO:4,SURREALR:54;
+  then (x" * y") * (x*y) == y" * y by SURREALO:4;
+  then (x" * y") * (x*y) == 1_No by A2,SURREALO:4;
+  hence thesis by A1,Lm3,Th41;
+end;

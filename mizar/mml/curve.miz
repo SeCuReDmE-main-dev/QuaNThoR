@@ -1,0 +1,2496 @@
+:: On the Properties of Curves and Parametrization-Independent Isoperimetric 
+:: Inequality
+::  by Kazuhisa Nakasho and Yasunari Shidama
+:: 
+:: Received December 14, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies CURVE, NUMBERS, XBOOLE_0, PARTFUN1, SUBSET_1, FUNCT_1, RELAT_1,
+      XXREAL_2, COMPLEX1, ARYTM_1, XXREAL_0, ARYTM_3, REAL_1, FDIFF_1, RCOMP_1,
+      TARSKI, VALUED_1, CARD_1, ORDINAL4, INTEGRA5, INTEGRA1, XXREAL_1,
+      SQUARE_1, ORDINAL2, FCONT_1, SIN_COS, PREPOWER, TOPMETR, PRE_TOPC,
+      STRUCT_0, FUNCT_7, LIMFUNC1, JGRAPH_2;
+ notations TARSKI, XBOOLE_0, SUBSET_1, NUMBERS, XCMPLX_0, XREAL_0, XXREAL_0,
+      COMPLEX1, FUNCT_1, RELSET_1, COMSEQ_2, FUNCT_2, RCOMP_1, VALUED_0,
+      VALUED_1, PARTFUN1, PARTFUN2, RFUNCT_1, SQUARE_1, PREPOWER, FCONT_1,
+      FDIFF_1, LIMFUNC1, SIN_COS, TAYLOR_1, INTEGRA5, STRUCT_0, PRE_TOPC,
+      TOPMETR;
+ constructors FDIFF_1, PARTFUN2, RFUNCT_1, INTEGRA2, LIMFUNC1, COMSEQ_2,
+      FCONT_1, INTEGRA5, SIN_COS, PREPOWER, TAYLOR_1, SQUARE_1, RVSUM_1,
+      COMPLEX1, TOPMETR;
+ registrations XREAL_0, RELSET_1, RCOMP_1, VALUED_0, MEMBERED, XXREAL_0,
+      XBOOLE_0, NUMBERS, FUNCT_2, FCONT_3, SQUARE_1, RELAT_1, FCONT_1,
+      ORDINAL1, BORSUK_5, XCMPLX_0, STRUCT_0, PRE_TOPC, TOPMETR;
+ requirements NUMERALS, BOOLE, SUBSET, REAL, ARITHM;
+ definitions TARSKI;
+ equalities XCMPLX_0, SUBSET_1, INTEGRA5, SQUARE_1, RCOMP_1, LIMFUNC1,
+      STRUCT_0;
+ expansions FCONT_1, FDIFF_1, VALUED_0, MEMBERED;
+ theorems TARSKI, PREPOWER, RFUNCT_1, FUNCT_1, FDIFF_1, XCMPLX_1, RCOMP_1,
+      XBOOLE_0, FCONT_1, FDIFF_2, RELAT_1, XREAL_0, TOPMETR, BORSUK_5,
+      XXREAL_0, FUNCT_2, XBOOLE_1, XREAL_1, COMPLEX1, INTEGRA5, INTEGRA6,
+      TAYLOR_1, VALUED_1, TOPREAL5, TOPS_2, TOPS_4, INTEGRA7, LEIBNIZ1, ROLLE,
+      PDLAX, XXREAL_1, COMPTRIG;
+ schemes FUNCT_2;
+
+begin :: Preliminaries and Basic Theorems
+
+ reserve a,b,r for Real;
+ reserve A for non empty set;
+ reserve X,x for set;
+ reserve f,g,F,G for PartFunc of REAL,REAL;
+ reserve n for Element of NAT;
+
+LmPI: 0 < PI by LEIBNIZ1:17;
+
+definition
+  let a,b be Real,
+      x,y be PartFunc of REAL,REAL;
+  func ArcLenP(x,y,a,b) -> PartFunc of REAL,REAL means
+  :Def1:
+    dom it = [.a,b.]
+  & for t be Real st t in [.a,b.]
+    holds it.t = integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                           (y`|dom y)(#)(y`|dom y)),a,t);
+  existence
+  proof
+    deffunc F(Real) = In(integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                                   (y`|dom y)(#)(y`|dom y)),a,$1),REAL);
+
+    consider l0 be Function of REAL,REAL such that
+    A1: for t being Element of REAL holds l0.t = F(t) from FUNCT_2:sch 4;
+
+    A2: for t being Real
+        holds l0.t = integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                               (y`|dom y)(#)(y`|dom y)),a,t)
+    proof
+      let t be Real;
+      t in REAL by XREAL_0:def 1; then
+      l0.t = In(integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                          (y`|dom y)(#)(y`|dom y)),a,t),REAL) by A1;
+      hence thesis;
+    end;
+
+    set L = l0 | [.a,b.];
+    A3: dom l0 = REAL by FUNCT_2:def 1;
+    reconsider L as PartFunc of REAL,REAL;
+    take L;
+
+    now
+      let t be Real;
+      assume t in [.a,b.];
+      hence L.t = l0.t by FUNCT_1:49
+               .= integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                            (y`|dom y)(#)(y`|dom y)),a,t) by A2;
+    end;
+    hence thesis by A3,RELAT_1:62;
+  end;
+  uniqueness
+  proof
+    let f1,f2 be PartFunc of REAL,REAL;
+    assume that
+    A4: dom f1 = [.a,b.]
+    & for t be Real st t in [.a,b.]
+      holds f1.t = integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                             (y`|dom y)(#)(y`|dom y)),a,t)
+      and
+    A5: dom f2 = [.a,b.]
+      & for t be Real st t in [.a,b.]
+        holds f2.t = integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                               (y`|dom y)(#)(y`|dom y)),a,t);
+    now
+      let t be object;
+      assume
+      A6: t in dom f1; then
+      reconsider s = t as Real;
+      thus f1.t = integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x)+
+                            (y`|dom y)(#)(y`|dom y)),a,s) by A4,A6
+               .= f2.t by A4,A5,A6;
+    end;
+    hence f1 = f2 by A4,A5,FUNCT_1:2;
+  end;
+end;
+
+Lm1:
+  for a,b be Real holds ].a,b.[ c= [.a,b.] by XXREAL_1:25;
+
+theorem Th1:
+  for a,b,d be Real,
+      f be PartFunc of REAL,REAL
+  st a < b
+   & [.a,b.] c= dom f
+   & f | [.a,b.] is continuous
+   & f.a < d < f.b
+  holds ex c be Real st a < c < b & d = f.c
+proof
+  let a,b,d be Real,
+      f be PartFunc of REAL,REAL;
+  assume
+  A1: a < b
+    & [.a,b.] c= dom f
+    & f | [.a,b.] is continuous
+    & f.a < d < f.b;
+
+  A2: dom(f | [.a,b.]) = [.a,b.] by A1,RELAT_1:62;
+  A3: [.a,b.] = the carrier of Closed-Interval-TSpace(a,b) by A1,TOPMETR:18;
+  rng(f | [.a,b.]) c= the carrier of R^1 by TOPMETR:17; then
+  reconsider g = f | [.a,b.] as Function of Closed-Interval-TSpace(a,b),R^1
+    by A2,A3,FUNCT_2:2;
+  a in [.a,b.] & b in [.a,b.] by A1; then
+  A4: g.a = f.a & g.b = f.b by FUNCT_1:49;
+
+  set T = Closed-Interval-TSpace(a,b);
+
+  for p be Point of T
+  for r be positive Real
+  ex W be open Subset of T
+  st p in W & g .: W c= ].g.p-r, g.p+r.[
+  proof
+    let p be Point of T;
+    let r be positive Real;
+
+    reconsider q = p as Real;
+    consider s be Real such that
+    A7: 0 < s
+     & for t be Real st t in [.a,b.]
+     & |.t-q.| < s holds |.f.t - f.q.| < r by A1,A3,FCONT_1:14;
+
+    reconsider W0 = ].q-s, q+s.[ as open Subset of R^1
+      by BORSUK_5:39,TOPMETR:17;
+    reconsider P = [.a,b.] as Subset of R^1 by TOPMETR:17;
+    reconsider W = W0 /\ [.a,b.] as Subset of T by A3,XBOOLE_1:17;
+
+    [.a,b.] = [#]Closed-Interval-TSpace(a,b) by A1,TOPMETR:18;
+    then reconsider W as open Subset of T by TOPS_2:24;
+    take W;
+    |.q-q.| = 0 by COMPLEX1:44; then
+    q in ].q-s, q+s.[ by A7,RCOMP_1:1;
+    hence p in W by A3,XBOOLE_0:def 4;
+
+    now
+      let z be object;
+      assume z in g.:W;
+      then consider x be object such that
+      A9: x in dom g & x in W & z = g.x by FUNCT_1:def 6;
+      A10: x in ].q-s, q+s.[ & x in [.a,b.] by A9,XBOOLE_0:def 4;
+      reconsider x as Real by A9;
+      |.x-q.| < s by A10,RCOMP_1:1; then
+      A11: |.f.x - f.q.| < r by A7,A10;
+      f.x = g.x & f.q = g.p by A3,A9,FUNCT_1:49;
+      hence z in ].g.p-r, g.p+r.[ by A9,A11,RCOMP_1:1;
+    end;
+    hence g.:W c= ].g.p-r, g.p+r.[;
+  end; then
+  g is continuous by TOPS_4:21; then
+  consider c be Real such that
+  A12: g.c = d & a < c < b by A1,A4,TOPREAL5:6;
+  take c;
+  c in [.a,b.] by A12;
+  hence thesis by A12,FUNCT_1:49;
+end;
+
+theorem Th2:
+  for a,b be Real,
+      Z be open Subset of REAL
+   st a < b & [.a,b.] c= Z
+  holds
+    ex a1,b1 be Real
+    st a1 < a & b < b1 & a1 < b1
+      & [.a1,b1.] c= Z
+      & [.a,b.] c= ].a1,b1.[
+proof
+  let a,b be Real,
+      Z be open Subset of REAL;
+  assume
+  A1: a < b & [.a,b.] c= Z; then
+  a in [.a,b.]; then
+  consider d1 be Real such that
+  A2: 0 < d1 & ].a-d1, a+d1.[ c= Z by A1,RCOMP_1:19;
+
+  b in [.a,b.] by A1; then
+  consider d2 be Real such that
+  A3: 0 < d2 & ].b-d2, b+d2.[ c= Z by A1,RCOMP_1:19;
+
+  reconsider d = min(d1,d2) as Real;
+  A4: d <= d1 & d <= d2 by XXREAL_0:17;
+  A5: 0 < d by A2,A3,XXREAL_0:15; then
+  A6: 0 < d/2 < d by XREAL_1:216;
+
+  set a1 = a - d/2;
+  set b1 = b + d/2;
+  take a1,b1;
+  A7: a1 < a - 0 by A5,XREAL_1:15; then
+  A8: a1 < b by A1,XXREAL_0:2;
+  A9: b + 0 < b1 by A5,XREAL_1:8;
+  hence a1 < a & b < b1 & a1 < b1 by A7,A8,XXREAL_0:2;
+  thus [.a1,b1.] c= Z
+  proof
+    let t be object;
+    assume
+    A11: t in [.a1,b1.]; then
+    reconsider s = t as Real;
+    per cases by A11,XXREAL_1:1;
+    suppose
+      A13: a1 <= s < a;
+      A14: a-d < a-d/2 by A6,XREAL_1:15;
+      a-d1 <= a-d by A4,XREAL_1:13; then
+      a-d1 < a1 by A14,XXREAL_0:2; then
+      A15: a-d1 < s by A13,XXREAL_0:2;
+      a+0 < a+d1 by A2,XREAL_1:8; then
+      s < a+d1 by A13,XXREAL_0:2; then
+      t in ].a-d1, a+d1.[ by A15;
+      hence t in Z by A2;
+    end;
+    suppose
+      a <= s <= b; then
+      t in [.a,b.];
+      hence t in Z by A1;
+    end;
+    suppose
+      A16: b < s <= b1;
+      A17: b+d/2 < b+d by A6,XREAL_1:8;
+      b+d <= b+d2 by A4,XREAL_1:7; then
+      b+d/2 < b+d2 by A17,XXREAL_0:2; then
+      A18: s < b+d2 by A16,XXREAL_0:2;
+      b-d2 < b-0 by A3,XREAL_1:15; then
+      b-d2 < s by A16,XXREAL_0:2; then
+      t in ].b-d2, b+d2.[ by A18;
+      hence t in Z by A3;
+    end;
+  end;
+  let t be object;
+  assume
+  A20: t in [.a,b.]; then
+  reconsider s=t as Real;
+  a <= s <= b by A20,XXREAL_1:1; then
+  a1 < s < b1 by A7,A9,XXREAL_0:2;
+  hence t in ].a1,b1.[;
+end;
+
+begin :: Arc Length Parametrization Construction
+
+theorem Th3:
+  for a,b be Real,
+     x,y be PartFunc of REAL,REAL
+   st a < b
+    & x is differentiable
+    & y is differentiable
+    & [.a,b.] c= dom x & [.a,b.] c= dom y
+    & x`| dom x is continuous
+    & y`| dom y is continuous
+    & for t be Real st t in dom x /\ dom y
+      holds 0 < diff(x,t)^2 + diff(y,t)^2
+  holds
+    ex a1,b1 be Real,
+       l be PartFunc of REAL,REAL,
+       Z be open Subset of REAL
+    st a1 < a & b < b1
+     & Z = dom x /\ dom y
+     & [.a,b.] c= ].a1,b1.[ & [.a1,b1.] c= Z
+     & dom l = Z
+     & (for t be Real st t in [.a1,b1.]
+        holds l.t = integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                              (y`|dom y)(#)(y`|dom y)),a1,t))
+     & l is_differentiable_on ].a1,b1.[
+     & l`| ].a1,b1.[ = ( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                         (y`|dom y)(#)(y`|dom y))) | ].a1,b1.[
+     & l`| ].a1,b1.[ is continuous
+     & (for t be Real st t in ].a1,b1.[
+        holds l is_differentiable_in t
+            & diff(l,t) = (diff(x,t)^2 + diff(y,t)^2) #R(1/2))
+     & for t be Real st t in [.a,b.]
+       holds ArcLenP(x,y,a,b).t = l.t-l.a
+proof
+  let a,b be Real,
+      x,y be PartFunc of REAL,REAL;
+  assume
+  A1: a < b
+    & x is differentiable
+    & y is differentiable
+    & [.a,b.] c= dom x & [.a,b.] c= dom y
+    & x`| dom x is continuous
+    & y`| dom y is continuous
+    & for t be Real st t in dom x /\ dom y
+      holds 0 < diff(x,t)^2 + diff(y,t)^2;
+
+  reconsider Z1 = dom x, Z2 = dom y as open Subset of REAL by A1,FDIFF_1:10;
+  reconsider Z = Z1 /\ Z2 as open Subset of REAL;
+  A3: ['a,b'] = [.a,b.] by A1,INTEGRA5:def 3;
+  A4: Z c= Z1 & Z c= Z2 by XBOOLE_1:17;
+  A5: ['a,b'] c= Z by A1,A3,XBOOLE_1:19;
+  a in [.a,b.] by A1; then
+  consider d1 be Real such that
+  A6: 0 < d1 & ].a-d1, a+d1.[ c= Z by A3,A5,RCOMP_1:19;
+
+  b in [.a,b.] by A1; then
+  consider d2 be Real such that
+  A7: 0 < d2 & ].b-d2, b+d2.[ c= Z by A3,A5,RCOMP_1:19;
+
+  reconsider d = min(d1,d2) as Real;
+  A8: d <= d1 & d <= d2 by XXREAL_0:17;
+  B8: 0 < d by A6,A7,XXREAL_0:15; then
+  A9: 0 < d/2 < d by XREAL_1:216;
+
+  set a1 = a - d/2;
+  set b1 = b + d/2;
+  A10: a1 < a - 0 by B8,XREAL_1:15; then
+  A11: a1 < b by A1,XXREAL_0:2;
+  A12: b + 0 < b1 by B8,XREAL_1:8; then
+  A13: a1 < b1 by A11,XXREAL_0:2;
+  A14: ['a1,b1'] = [.a1,b1.] by A11,A12,INTEGRA5:def 3,XXREAL_0:2;
+  A15: [.a1,b1.] c= Z
+  proof
+    let t be object;
+    assume
+    A16: t in [.a1,b1.]; then
+    reconsider s = t as Real;
+    per cases by A16,XXREAL_1:1;
+    suppose
+      A17: a1 <= s < a;
+      A18: a - d < a - d/2 by A9,XREAL_1:15;
+      a - d1 <= a - d by A8,XREAL_1:13; then
+      a - d1 < a1 by A18,XXREAL_0:2; then
+      A19: a - d1 < s by A17,XXREAL_0:2;
+      a + 0 < a + d1 by A6,XREAL_1:8; then
+      s < a + d1 by A17,XXREAL_0:2; then
+      t in ].a-d1, a+d1.[ by A19;
+      hence t in Z by A6;
+    end;
+    suppose
+      a <= s <= b; then
+      t in [.a,b.];
+      hence t in Z by A3,A5;
+    end;
+    suppose
+      A20: b < s <= b1;
+      A21: b + d/2 < b + d by A9,XREAL_1:8;
+      b + d <= b + d2 by A8,XREAL_1:7; then
+      b + d/2 < b + d2 by A21,XXREAL_0:2; then
+      A22: s < b + d2 by A20,XXREAL_0:2;
+      b - d2 < b - 0 by A7,XREAL_1:15; then
+      b - d2 < s by A20,XXREAL_0:2; then
+      t in ].b-d2, b+d2.[ by A22;
+      hence t in Z by A7;
+    end;
+  end;
+
+  deffunc F(Real) = In(integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                                 (y`|dom y)(#)(y`|dom y)),a1,$1),REAL);
+
+  consider l0 be Function of REAL,REAL such that
+  A26: for t be Element of REAL holds l0.t = F(t) from FUNCT_2:sch 4;
+  A27: for t be Real
+       holds l0.t = integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                              (y`|dom y)(#)(y`|dom y)),a1,t)
+  proof
+    let t be Real;
+    t in REAL by XREAL_0:def 1; then
+    l0.t = In(integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                        (y`|dom y)(#)(y`|dom y)),a1,t),REAL) by A26;
+    hence thesis;
+  end;
+
+  set l = l0 | Z;
+  A28: dom l0 = REAL by FUNCT_2:def 1; then
+  A29: dom l = Z by RELAT_1:62;
+  reconsider l as PartFunc of REAL,REAL;
+
+  ].a1,b1.[ c= [.a1,b1.] by Lm1; then
+  A30: ].a1,b1.[ c= dom l by A15,A29;
+
+  set X = x`| dom x;
+  set Y = y`| dom y;
+  A31: dom X = dom x & dom Y = dom y by A1,FDIFF_1:def 7;
+  set XXYY = #R(1/2) * ((x`|dom x)(#)(x`|dom x) + (y`|dom y)(#)(y`|dom y));
+
+    dom(X(#)X) = dom X /\ dom X
+  & dom(Y(#)Y) = dom Y /\ dom Y by VALUED_1:def 4; then
+  A32: dom(X(#)X + Y(#)Y) = Z by A31,VALUED_1:def 1;
+  now
+    let w be object;
+    assume
+    A33: w in rng(X(#)X + Y(#)Y); then
+    consider t be object such that
+    A34: t in dom(X(#)X + Y(#)Y)
+       & w = (X(#)X + Y(#)Y).t by FUNCT_1:def 3;
+    reconsider v = w as Real by A33;
+    reconsider s = t as Real by A34;
+    w = (X(#)X).s + (Y(#)Y).s by VALUED_1:def 1,A34
+     .= X.s * X.s + (Y(#)Y).s by VALUED_1:5
+     .= (X.s)^2 + (Y.s)^2 by VALUED_1:5
+     .= diff(x,s)^2 + (Y.s)^2 by A1,A4,A32,A34,FDIFF_1:def 7
+     .= diff(x,s)^2 + diff(y,s)^2 by A1,A4,A32,A34,FDIFF_1:def 7; then
+    A36: 0 < v by A1,A34,A32;
+    v < +infty by XREAL_0:def 1,XXREAL_0:9; then
+    w in ].0, +infty.[ by A36;
+    hence w in dom( #R(1/2) ) by TAYLOR_1:def 4;
+  end; then
+  rng(X(#)X + Y(#)Y) c= dom( #R(1/2) ); then
+  A37: dom XXYY = Z by A32,RELAT_1:27;
+
+  set XY = X(#)X + Y(#)Y;
+  now
+    let t be Real;
+    assume t in dom( #R(1/2) ); then
+    t in ].0,+infty.[ by TAYLOR_1:def 4; then
+    0 < t < +infty by XXREAL_1:4;
+    hence #R(1/2) is_continuous_in t by FDIFF_1:24,TAYLOR_1:21;
+  end; then
+  A38: #R(1/2) is continuous; then
+  A39: XXYY is continuous by A1;
+  XXYY | ['a1,b1'] is continuous by A1,A38; then
+  A40: XXYY | ['a1,b1'] is bounded
+     & XXYY is_integrable_on ['a1,b1'] by A14,A15,A37,INTEGRA5:10,11;
+
+  take a1,b1,l,Z;
+  thus a1 < a & b < b1 by A10,A12;
+  thus Z = dom x /\ dom y;
+  thus [.a,b.] c= ].a1,b1.[ by A10,A12,XXREAL_1:47;
+  thus [.a1,b1.] c= Z by A15;
+  thus dom l = Z by A28,RELAT_1:62;
+  thus
+  A42: for t be Real st t in [.a1,b1.]
+       holds l.t = integral(XXYY,a1,t)
+  proof
+    let t be Real;
+    assume t in [.a1,b1.];
+    hence l.t = l0.t by A15,FUNCT_1:49
+             .= integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                          (y`|dom y)(#)(y`|dom y)),a1,t) by A27;
+  end;
+
+  A43: [.a,b.] c= ].a1,b1.[ by A10,A12,XXREAL_1:47;
+  Z1: ].a1,b1.[ c= [.a1,b1.] by Lm1;
+
+  Z2: a in [.a,b.] by A1;
+  A56: for t be Real st t in [.a,b.]
+  holds ArcLenP(x,y,a,b).t = l.t - l.a
+  proof
+    let t be Real;
+    assume
+    A57: t in [.a,b.]; then
+    A59: l.a = integral(XXYY,a1,a)
+       & l.t = integral(XXYY,a1,t) by Z1,A42,Z2,A43;
+    A60: a <= t <= b by A57,XXREAL_1:1; then
+    A61: a1 < t by A10,XXREAL_0:2;
+    Z5: t <= b1 by A12,A60,XXREAL_0:2;
+    A66: ['a1,t'] c= dom XXYY
+    proof
+      let z be object;
+      assume
+      A62: z in ['a1,t']; then
+      A63: z in [.a1,t.] by A10,A60,INTEGRA5:def 3,XXREAL_0:2;
+      reconsider s = z as Real by A62;
+      a1 <= s <= t by A63,XXREAL_1:1; then
+      a1 <= s <= b1 by Z5,XXREAL_0:2; then
+      s in [.a1,b1.];
+      hence z in dom XXYY by A15,A37;
+    end;
+    XXYY | ['a1,t'] is continuous by A1,A38; then
+    A67: XXYY | ['a1,t'] is bounded
+       & XXYY is_integrable_on ['a1,t'] by A66,INTEGRA5:10,11;
+
+    Z4: a1 < a < b1 by Z2,A43,XXREAL_1:4;
+    a1 < a <= t by A57,XXREAL_1:1,A10; then
+    a in [.a1,t.]; then
+    a in ['a1,t'] by A60,Z4,INTEGRA5:def 3,XXREAL_0:2;
+    then l.t = l.a + integral(XXYY,a,t) by A59,A61,A66,A67,INTEGRA6:17;
+    hence (ArcLenP(x,y,a,b)).t = l.t - l.a by A57,Def1;
+  end;
+  A70: for t be Real st t in ].a1,b1.[ holds l.t = integral(XXYY,a1,t)
+    by Z1,A42;
+
+  A75: ].a1,b1.[ c= dom l by Z1,A15,A29;
+
+  A72: now
+    let t be Real;
+    assume
+    A73: t in ].a1,b1.[;
+    XXYY is_continuous_in t by Z1,A15,A37,A39,A73;
+    hence l is_differentiable_in t & diff(l,t) = XXYY.t
+      by A13,A14,A15,A30,A37,A40,A70,A73,INTEGRA6:28;
+  end;
+
+  for t be Real st t in ].a1,b1.[ holds l is_differentiable_in t by A72;
+  hence
+  A76: l is_differentiable_on ].a1,b1.[ by A75,FDIFF_1:9; then
+  A77: dom(l`| ].a1,b1.[) = ].a1,b1.[ by FDIFF_1:def 7;
+  A78: dom(XXYY | ].a1,b1.[) = ].a1,b1.[ by A29,A37,A75,RELAT_1:62;
+  now
+    let s be object;
+    assume
+    A79: s in dom(l`| ].a1,b1.[); then
+    reconsider t = s as Real;
+    diff(l,t) = XXYY.t by A72,A77,A79
+             .= (XXYY | ].a1,b1.[).t by A77,A79,FUNCT_1:49;
+    hence (l`| ].a1,b1.[).s = (XXYY | ].a1,b1.[).s
+      by A76,A77,A79,FDIFF_1:def 7;
+  end;
+  hence l`| ].a1,b1.[ = XXYY | ].a1,b1.[
+      & l`| ].a1,b1.[ is continuous by A1,A38,A77,A78,FUNCT_1:2;
+  thus for t be Real st t in ].a1,b1.[
+       holds l is_differentiable_in t
+           & diff(l,t) = (diff(x,t)^2 + diff(y,t)^2) #R (1/2)
+  proof
+    let t be Real;
+    assume
+    A80: t in ].a1,b1.[;
+    A81: ].a1,b1.[ c= [.a1,b1.] by Lm1; then
+    t in Z by A15,A80; then
+    t in dom x & t in dom y by XBOOLE_0:def 4; then
+    A84: X.t = diff(x,t) & Y.t = diff(y,t) by A1,FDIFF_1:def 7;
+    A83: XXYY is_continuous_in t by A15,A37,A39,A80,A81;
+    A85: XY.t
+     = (X(#)X).t + (Y(#)Y).t by A15,A32,A80,A81,VALUED_1:def 1
+    .= X.t * X.t + (Y(#)Y).t by VALUED_1:5
+    .= diff(x,t)^2 + diff(y,t)^2 by A84,VALUED_1:5; then
+    A86: 0 < XY.t by A1,A15,A80,A81;
+    XY.t < +infty by XREAL_0:def 1,XXREAL_0:9; then
+    A87: XY.t in right_open_halfline(0) by A86;
+    XXYY.t = ( #R(1/2) ).(XY.t) by A15,A37,A80,A81,FUNCT_1:12
+    .= (diff(x,t)^2 + diff(y,t)^2) #R (1/2) by A85,A87,TAYLOR_1:def 4;
+    hence thesis by A13,A14,A15,A30,A37,A40,A70,A80,A83,INTEGRA6:28;
+  end;
+  thus thesis by A56;
+end;
+
+theorem Th4:
+  for a,b be Real,
+      x,y be PartFunc of REAL,REAL
+   st a < b
+    & x is differentiable
+    & y is differentiable
+    & [.a,b.] c= dom x & [.a,b.] c= dom y
+    & x`| dom x is continuous
+    & y`| dom y is continuous
+    & for t be Real st t in dom x /\ dom y
+      holds 0 < diff(x,t)^2 + diff(y,t)^2
+  holds
+    ex a1,b1 be Real,
+       L be one-to-one PartFunc of REAL,REAL
+    st a1 < a & b < b1
+     & [.a1,b1.] c= dom x /\ dom y
+     & dom L = ].a1,b1.[
+     & (for t be Real st t in ].a1,b1.[
+        holds L.t = integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                              (y`|dom y)(#)(y`|dom y)),a1,t))
+     & (for t be Real st t in [.a,b.]
+        holds ArcLenP(x,y,a,b).t = L.t - L.a)
+     & L is increasing
+     & L | [.a,b.] is continuous
+     & L .: [.a,b.] = [.L.a, L.b.]
+     & (for t be Real st t in ].a1,b1.[
+        holds L is_differentiable_in t)
+     & L is_differentiable_on ].a1,b1.[
+     & (for t be Real st t in ].a1,b1.[
+        holds diff(L,t) = (diff(x,t)^2 + diff(y,t)^2) #R (1/2))
+     & L" is_differentiable_on dom(L")
+     & (for t be Real st t in dom(L")
+        holds diff(L",t) = 1/diff(L,(L").t))
+     & L" is continuous
+     & (for s be Real st s in rng L
+        holds x * L" is_differentiable_in s
+            & y * L" is_differentiable_in s
+            & diff(x * L",s) = diff(x,L".s) * diff(L",s)
+            & diff(y * L",s) = diff(y,L".s) * diff(L",s)
+            & diff(x * L",s)^2 + diff(y * L",s)^2 = 1)
+     & (x * L") `| dom(x * L")
+       = ((x`| dom x) * L")(#)((L")`| dom(L"))
+     & (y * L") `| dom(y * L")
+       = ((y`| dom y) * L")(#)((L")`| dom(L"))
+     & (L")`| dom(L") = ((L`| dom L) * (L"))^
+     & (L")`| dom(L") is continuous
+     & [.L.a, L.b.] c= dom(L")
+     & [.L.a, L.b.] c= dom(x*L")
+     & [.L.a, L.b.] c= dom(y*L")
+     & [.L.a, L.b.] c= rng L
+     & dom(x*L") = dom(L")
+     & dom(y*L") = dom(L")
+     & x * L" is differentiable
+     & y * L" is differentiable
+     & (x * L")`| dom(x * L") is continuous
+     & (y * L")`| dom(y * L") is continuous
+     & (for s be Real st s in dom(x * L") /\ dom(y * L")
+        holds diff(x * L",s)^2 + diff(y * L",s)^2 = 1)
+     & integral(y(#)(x`|dom x),a,b)
+     = integral((y * L")(#)((x * L")`|dom(x * L") ),L.a,L.b)
+proof
+  let a,b be Real,
+      x,y be PartFunc of REAL,REAL;
+  assume
+  A1: a < b
+    & x is differentiable
+    & y is differentiable
+    & [.a,b.] c= dom x & [.a,b.] c= dom y
+    & x`| dom x is continuous
+    & y`| dom y is continuous
+    & for t be Real st t in dom x /\ dom y
+      holds 0 < diff(x,t)^2 + diff(y,t)^2; then
+  consider a1,b1 be Real,
+           l be PartFunc of REAL,REAL,
+           Z be open Subset of REAL such that
+  A2: a1 < a & b < b1
+    & Z = dom x /\ dom y
+    & [.a,b.] c= ].a1,b1.[
+    & [.a1,b1.] c= Z
+    & dom l = Z
+    & (for t be Real st t in [.a1,b1.]
+       holds l.t = integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                             (y`|dom y)(#)(y`|dom y)),a1,t))
+    & l is_differentiable_on ].a1,b1.[
+    & l`| ].a1,b1.[ = ( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                        (y`|dom y)(#)(y`|dom y))) | ].a1,b1.[
+    & l`| ].a1,b1.[ is continuous
+    & (for t be Real st t in ].a1,b1.[
+       holds l is_differentiable_in t
+           & diff(l,t) = (diff(x,t)^2 + diff(y,t)^2) #R (1/2))
+    & for t be Real st t in [.a,b.]
+      holds ArcLenP(x,y,a,b).t = l.t - l.a by Th3;
+
+  set L = l | ].a1,b1.[;
+  B5: ].a1,b1.[ c= [.a1,b1.] by Lm1;
+  A5: dom L = ].a1,b1.[ by A2,RELAT_1:62;
+  A6: for t be Real st t in ].a1,b1.[
+      holds L.t = integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                            (y`|dom y)(#)(y`|dom y)),a1,t)
+  proof
+    let t be Real;
+    assume
+    A7: t in ].a1,b1.[;
+    hence L.t = l.t by FUNCT_1:49
+             .= integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                (y`|dom y)(#)(y`|dom y)),a1,t) by A2,A7,B5;
+  end;
+
+  A9: a in [.a,b.] & b in [.a,b.] by A1;
+
+  A10: for t be Real st t in [.a,b.]
+       holds ArcLenP(x,y,a,b).t = L.t - L.a
+  proof
+    let t be Real;
+    assume
+    A11: t in [.a,b.];
+    hence ArcLenP(x,y,a,b).t
+     = l.t - l.a by A2
+    .= L.t - l.a by A2,A11,FUNCT_1:49
+    .= L.t - L.a by A2,A9,FUNCT_1:49;
+  end;
+
+  A13: for t be Real st t in ].a1,b1.[ holds 0 < diff(l,t)
+  proof
+    let t be Real;
+    assume
+    A14: t in ].a1,b1.[; then
+    diff(l,t) = (diff(x,t)^2 + diff(y,t)^2) #R (1/2) by A2;
+    hence thesis by A1,A2,A14,PREPOWER:81;
+  end; then
+  A16: L is increasing by A2,ROLLE:9;
+
+  now
+    let t1,t2 be object;
+    assume
+    A17: t1 in dom L & t2 in dom L & L.t1 = L.t2; then
+    reconsider s1 = t1, s2 = t2 as Real;
+
+    thus t1 = t2
+    proof
+      assume t1 <> t2;
+      then per cases by XXREAL_0:1;
+      suppose
+        s1 < s2;
+        hence contradiction by A16,A17;
+      end;
+      suppose
+        s2 < s1;
+        hence contradiction by A16,A17;
+      end;
+    end;
+  end; then
+  reconsider L as one-to-one PartFunc of REAL,REAL by FUNCT_1:def 4;
+
+  set P = integral( #R(1/2) * ((x`|dom x)(#)(x`|dom x) +
+                    (y`|dom y)(#)(y`|dom y)),a1,b1);
+  A19: L is_differentiable_on ].a1,b1.[ by A2,RELAT_1:62;
+
+  A20: for t be Real st t in ].a1,b1.[
+       holds diff(L,t) = (diff(x,t)^2 + diff(y,t)^2) #R (1/2)
+  proof
+    let t be Real;
+    assume
+    A21: t in ].a1,b1.[; then
+    diff(l,t) = (diff(x,t)^2 + diff(y,t)^2) #R (1/2) by A2;
+    hence thesis by A2,A21,PDLAX:11;
+  end;
+
+  A23: for t be Real st t in ].a1,b1.[ holds 0 < diff(L,t)
+  proof
+    let t be Real;
+    assume
+    A24: t in ].a1,b1.[; then
+    0 < diff(l,t) by A13;
+    hence thesis by A2,A24,PDLAX:11;
+  end;
+
+  A27: L is one-to-one
+    & L" is_differentiable_on dom(L")
+    & for t be Real st t in dom(L")
+      holds diff(L",t) = 1 / diff(L,L".t) by A19,A23,FDIFF_2:48;
+
+  A28: dom(L") = rng L by FUNCT_1:33;
+  A30: for s be Real st s in rng L
+       holds x * L" is_differentiable_in s
+           & y * L" is_differentiable_in s
+           & diff(x*L",s) = diff(x,L".s)*diff(L",s)
+           & diff(y*L",s) = diff(y,L".s)*diff(L",s)
+           & diff(x*L",s)^2 + diff(y*L",s)^2 = 1
+  proof
+    let s be Real;
+    assume
+    A31: s in rng L; then
+    A33: L" is_differentiable_in s by A27,A28;
+    L".s in rng(L") by A28,A31,FUNCT_1:3; then
+    A34: L".s in ].a1,b1.[ by A5,FUNCT_1:33; then
+    A36: L".s in dom x & L".s in dom y by A2,XBOOLE_0:def 4;
+      x is_differentiable_on dom x
+    & y is_differentiable_on dom y by A1; then
+    A37: x is_differentiable_in L".s
+       & y is_differentiable_in L".s by A36;
+    hence x*L" is_differentiable_in s
+        & y*L" is_differentiable_in s by A33,FDIFF_2:13;
+    thus
+    A38: diff(x*L",s) = diff(x,L".s) * diff(L",s)
+       & diff(y*L",s) = diff(y,L".s) * diff(L",s) by A33,A37,FDIFF_2:13;
+    A39: diff(L",s) = 1 / diff(L,L".s) by A19,A23,A28,A31,FDIFF_2:48;
+    A40: diff(L,L".s) = (diff(x,L".s)^2 + diff(y,L".s)^2) #R (1/2) by A20,A34;
+    A41: 0 < diff(x,(L").s)^2 + diff(y,(L").s)^2 by A1,A2,A34;
+    A42: diff(L,L".s)^2
+     = (diff(x,L".s)^2 + diff(y,L".s)^2) #R (1/2 + 1/2)
+        by A1,A2,A34,A40,PREPOWER:75
+    .= (diff(x,L".s)^2 + diff(y,(L").s)^2) by A1,A2,A34,PREPOWER:72;
+
+    thus diff(x*L",s)^2 + diff(y*L",s)^2
+     = (diff(x,L".s)^2 + diff(y,L".s)^2)
+     * ((1 / diff(L,L".s)) * (1 / diff(L,L".s))) by A38,A39
+    .= (diff(x,L".s)^2 + diff(y,L".s)^2)
+     * ((1*1) / (diff(L,L".s) * diff(L,L".s))) by XCMPLX_1:76
+    .= 1 by A41,A42,XCMPLX_1:106;
+  end;
+
+  A43: rng(L") = ].a1,b1.[ by A5,FUNCT_1:33;
+  dom x /\ dom y c= dom x & dom x /\ dom y c= dom y by XBOOLE_1:17; then
+  A45: ].a1,b1.[ c= dom x & ].a1,b1.[ c= dom y by A2; then
+  A47: dom(x*L") = dom(L") & dom(y*L") = dom(L") by A43,RELAT_1:27; then
+  A49: x*L" is_differentiable_on dom(x*L") by A28,A30;
+  A51: y*L" is_differentiable_on dom(y*L") by A28,A30,A47;
+  A52: now
+    let t be object;
+    assume
+    A53: t in dom(L"); then
+    reconsider s = t as Real;
+    L".s in rng(L") by A53,FUNCT_1:3; then
+    L".s in dom L by FUNCT_1:33; then
+    A55: L".s in dom x & L".s in dom y by A2,A5,XBOOLE_0:def 4;
+
+    thus ((x*L")`| dom(x*L")).t
+     = diff(x*L",s) by FDIFF_1:def 7,A47,A53,A49
+    .= diff(x, L".s) * diff(L",s) by A28,A30,A53
+    .= ((x`|dom x).(L".s)) * diff(L",s) by A1,A55,FDIFF_1:def 7
+    .= ((x`|dom x).(L".s)) * ((L")`|dom(L")).s by A27,A53,FDIFF_1:def 7
+    .= ((x`|dom x) * L").s * ((L")`|dom(L")).s by A53,FUNCT_1:13
+    .= (((x`|dom x) * L")(#)((L")`|dom(L"))).t by VALUED_1:5;
+
+    thus ((y * L")`| dom(y * L")).t
+     = diff(y * L",s) by A47,A51,A53,FDIFF_1:def 7
+    .= diff(y,L".s)*diff(L",s) by A28,A30,A53
+    .= ((y`|dom y).(L".s)) * diff(L",s) by A1,A55,FDIFF_1:def 7
+    .= ((y`|dom y).(L".s)) * ((L")`|dom(L")).s by A27,A53,FDIFF_1:def 7
+    .= ((y`|dom y) * L").s * ((L")`|dom(L")).s by A53,FUNCT_1:13
+    .= (((y`|dom y) * L")(#)((L")`|dom(L"))).t by VALUED_1:5;
+  end;
+
+    dom(x`|dom x) = dom x
+  & dom(y`|dom y) = dom y by A1,FDIFF_1:def 7; then
+  A56: dom((x`|dom x) * L") = dom(L")
+     & dom((y`|dom y) * L") = dom(L") by A43,A45,RELAT_1:27;
+  A57: dom(((x`|dom x) * L")(#)((L")`| dom(L")))
+     = dom((x`|dom x) * L") /\ dom((L")`| dom(L")) by VALUED_1:def 4
+    .= dom(L") /\ dom(L") by A27,A56,FDIFF_1:def 7
+    .= dom(L");
+
+  A58: dom((x*L")`| dom(x*L")) = dom(L")
+     & dom((y*L")`| dom(y*L")) = dom(L")
+     by A47,A49,A51,FDIFF_1:def 7; then
+  A59: for t be object st t in dom((x * L")`| dom(x * L"))
+       holds ((x*L")`| dom(x*L")).t
+           = (((x`|dom x) * L")(#)((L")`| dom(L"))).t by A52;
+  A60: dom(((y`|dom y) * L")(#)((L")`| dom(L")))
+     = dom((y`|dom y) * L") /\ dom((L")`| dom(L")) by VALUED_1:def 4
+    .= dom(L") /\ dom(L") by A27,A56,FDIFF_1:def 7
+    .= dom(L");
+
+  A61: for t be object st t in dom((y * L")`| dom(y * L"))
+  holds ((y * L")`| dom(y * L")).t
+      = (((y`|dom y) * L")(#)((L")`| dom(L"))).t by A52,A58;
+  A62: L" is continuous by A27,FDIFF_1:25;
+  set LL = (L")`|dom(L");
+  dom(L`|dom L) = dom L by A19,A5,FDIFF_1:def 7
+               .= rng(L") by FUNCT_1:33; then
+  A63: dom((L`|dom L) * L") = dom(L") by RELAT_1:27;
+
+  ((L`|dom L) * L") " {0} = {}
+  proof
+    assume ((L`|dom L) * L") " {0} <> {}; then
+    consider z be object such that
+    A64: z in ((L`|dom L) * L") " {0};
+    A65: z in dom((L`|dom L) * L")
+       & ((L`|dom L) * L").z in {0} by A64,FUNCT_1:def 7;
+    A66: ((L`|dom L) * L").z = 0 by A65,TARSKI:def 1;
+    reconsider t = z as Real by A64;
+    L".t in rng(L") by A63,A65,FUNCT_1:3; then
+    A67: L".t in ].a1,b1.[ by A5,FUNCT_1:33;
+    A68: ((L`|dom L) * L").t
+       = (L`|dom L).(L".t) by A63,A65,FUNCT_1:13
+      .= diff(L, L".t) by A5,A19,A67,FDIFF_1:def 7;
+    diff(L, L".t) = (diff(x, L".t)^2 + diff(y, L".t)^2) #R (1/2) by A20,A67;
+    hence contradiction by A1,A2,A66,A67,A68,PREPOWER:81;
+  end; then
+  A69: dom(((L`|dom L) * L")^)
+     = dom(L") \ {} by A63,RFUNCT_1:def 2
+    .= dom(L");
+
+  A70: dom LL = dom(L") by A27,FDIFF_1:def 7;
+  A71: now
+    let s be object;
+    assume
+    A73: s in dom LL; then
+    reconsider t = s as Real;
+    A74: LL.s = diff(L",t) by A27,A70,A73,FDIFF_1:def 7
+             .= 1 / diff(L,L".t) by A19,A23,A70,A73,FDIFF_2:48;
+    L".t in rng(L") by A70,A73,FUNCT_1:3; then
+    A75: L".t in ].a1,b1.[ by A5,FUNCT_1:33;
+    ((L`|dom L) * L").t
+     = (L`|dom L).(L".t) by A70,A73,FUNCT_1:13
+    .= diff(L, L".t) by A5,A19,A75,FDIFF_1:def 7;
+    hence LL.s = (((L`|dom L) * L")^).s by A69,A70,A73,A74,RFUNCT_1:def 2;
+  end; then
+  A76: LL = ((L`|dom L) * L")^ by A69,A70,FUNCT_1:2;
+
+  (l | ].a1,b1.[)`| ].a1,b1.[ = l `| ].a1,b1.[ by A2,FDIFF_2:16; then
+  A77: (L`|dom L) * L" is continuous by A2,A5,A62;
+
+  for t be Real st t in dom LL holds LL is_continuous_in t
+  proof
+    let t be Real;
+    assume
+    A79: t in dom LL; then
+    L".t in rng(L") by A70,FUNCT_1:3; then
+    A80: L".t in ].a1,b1.[ by A5,FUNCT_1:33;
+    A81: ((L`|dom L) * L").t
+       = (L`|dom L).(L".t) by A70,A79,FUNCT_1:13
+      .= diff(L,L".t) by A5,A19,A80,FDIFF_1:def 7;
+    diff(L,L".t) = (diff(x,L".t)^2 + diff(y,L".t)^2) #R (1/2) by A20,A80; then
+    ((L`|dom L) * L").t <> 0 by A1,A2,A80,A81,PREPOWER:81;
+    hence LL is_continuous_in t by A63,A70,A76,A77,A79,FCONT_1:10;
+  end; then
+  A84: ((L") `| dom(L")) is continuous; then
+  A85: (x*L") `| dom(x*L") is continuous by A1,A57,A58,A59,A62,FUNCT_1:2;
+  take a1,b1,L;
+  A94: [.a,b.] c= dom L by A2,RELAT_1:62;
+
+  A86: for s be object holds s in L.: [.a,b.] iff s in [.L.a, L.b.]
+  proof
+    let s be object;
+    hereby
+      assume s in L.: [.a,b.]; then
+      consider x be object such that
+      A87: x in dom L & x in [.a,b.] & s = L.x by FUNCT_1:def 6;
+      reconsider t = x as Real by A87;
+      A88: a <= t <= b by A87,XXREAL_1:1;
+      A91: L.a <= L.t
+      proof
+        per cases;
+        suppose
+          a = t;
+          hence L.a <= L.t;
+        end;
+        suppose
+          a <> t; then
+          a < t by A88,XXREAL_0:1;
+          hence L.a <= L.t by A16,A87,A94,A9;
+        end;
+      end;
+
+      L.t <= L.b
+      proof
+        per cases;
+        suppose
+          b = t;
+          hence L.t <= L.b;
+        end;
+        suppose
+          b <> t; then
+          t < b by A88,XXREAL_0:1;
+          hence L.t <= L.b by A16,A87,A94,A9;
+        end;
+      end;
+      hence s in [.L.a,L.b .] by A87,A91;
+    end;
+    assume
+    A93: s in [.L.a,L.b.]; then
+    reconsider t = s as Real;
+
+    per cases by A93,XXREAL_1:1;
+    suppose
+      L.a = t;
+      hence s in L.: [.a,b.] by A94,A9,FUNCT_1:def 6;
+    end;
+    suppose
+      L.a <> t & L.a <= t <= L.b & L.b <> t; then
+      A100: L.a < t < L.b by XXREAL_0:1;
+      L | ].a1,b1.[ is continuous by A2,FDIFF_1:25; then
+      L | [.a,b.] is continuous; then
+      consider u be Real such that
+      A101: a < u < b & t = L.u by A1,A94,A100,Th1;
+
+      u in [.a,b.] by A101;
+      hence s in L.: [.a,b.] by A94,A101,FUNCT_1:def 6;
+    end;
+    suppose
+      L.b = t;
+      hence s in L.: [.a,b.] by A94,A9,FUNCT_1:def 6;
+    end;
+  end;
+
+  A104: L | ].a1,b1.[ is continuous by A2,FDIFF_1:25;
+
+  set e1 = (a - a1)/2;
+  set e2 = (b1 - b)/2;
+
+  B104: 0 < a-a1 & 0 < b1-b by A2,XREAL_1:50; then
+  A105: 0 < e1 < a-a1 & 0 < e2 < b1-b by XREAL_1:216;
+
+  set a2 = a1 + e1;
+  set b2 = b1 - e2;
+  set H = (y*L")(#)((x`|dom x) * L");
+
+  A106: a2 < a & a2 < b & b < b2 & a2 < b2
+      & [.a,b.] c= ].a2,b2.[ & [.a2,b2.] c= ].a1,b1.[
+  proof
+    A107: a2 < a1 + (a - a1) by A105,XREAL_1:8;
+    hence a2 < a;
+    thus
+    A108: a2 < b by A1,A107,XXREAL_0:2;
+    A109: b1 - (b1 - b) < b2 by A105,XREAL_1:15;
+    hence b < b2 & a2 < b2 by A108,XXREAL_0:2;
+
+    thus [.a,b.] c= ].a2,b2.[ by A107,A109,XXREAL_1:47;
+
+    A111: a1 + 0 < a1 + e1 by B104,XREAL_1:8;
+    b1 - e2 < b1 - 0 by B104,XREAL_1:15;
+    hence thesis by A111,XXREAL_1:47;
+  end;
+
+  deffunc FX(Real) = In(integral(y(#)(x`|dom x),a2,$1),REAL);
+  consider F0 be Function of REAL,REAL such that
+  A114: for t be Element of REAL holds F0.t = FX(t) from FUNCT_2:sch 4;
+
+  A115: for t be Real holds F0.t = integral(y(#)(x`|dom x),a2,t)
+  proof
+    let t be Real;
+    t in REAL by XREAL_0:def 1;
+    then F0.t = In(integral(y(#)(x`|dom x),a2,t),REAL) by A114;
+    hence thesis;
+  end;
+
+  set F = F0 | [.a2,b2.];
+  dom F0 = REAL by FUNCT_2:def 1; then
+  A116: dom F = [.a2,b2.] by RELAT_1:62;
+  reconsider F as PartFunc of REAL,REAL;
+
+  A0: ].a2,b2.[ c= [.a2,b2.] by Lm1;
+  A117: for t be Real st t in ].a2,b2.[
+        holds F.t = integral(y(#)(x`|dom x),a2,t)
+  proof
+    let t be Real;
+    assume t in ].a2,b2.[;
+    hence F.t = F0.t by A0,FUNCT_1:49
+             .= integral(y(#)(x`|dom x),a2,t) by A115;
+  end;
+
+  B118: y|dom y is continuous by A1,FDIFF_1:25; then
+  A119: y(#)(x`|dom x) is continuous by A1;
+  A120: (y(#)(x`|dom x)) | ['a2,b2'] is continuous by A1,B118;
+  A121: dom(y(#)(x`|dom x))
+      = dom y /\ dom(x`|dom x) by VALUED_1:def 4
+     .= Z by A1,A2,FDIFF_1:def 7;
+
+  A122: ['a2,b2'] c= dom(y(#)(x`|dom x))
+  proof
+    let z be object;
+    assume z in ['a2,b2']; then
+    z in [.a2,b2.] by A106,INTEGRA5:def 3;
+    hence z in dom(y(#)(x`|dom x)) by A2,B5,A106,A121;
+  end; then
+  A123: (y(#)(x`|dom x)) | ['a2,b2'] is bounded
+      & y(#)(x`|dom x) is_integrable_on ['a2,b2']
+    by A120,INTEGRA5:10,11;
+  A124: F.a = integral(y(#)(x`|dom x),a2,a)
+      & F.b = integral(y(#)(x`|dom x),a2,b) by A9,A106,A117;
+
+  A126: ['a2,b'] c= dom(y(#)(x`|dom x))
+  proof
+    let z be object;
+    assume
+    B124: z in ['a2,b']; then
+    A125: z in [.a2,b.] by A106,INTEGRA5:def 3;
+    reconsider t = z as Real by B124;
+    a2 <= t <= b by A125,XXREAL_1:1; then
+    a2 <= t <= b2 by A106,XXREAL_0:2; then
+    t in [.a2,b2.]; then
+    t in ['a2,b2'] by A106,INTEGRA5:def 3;
+    hence z in dom(y(#)(x`|dom x)) by A122;
+  end;
+  (y(#)(x`|dom x)) | ['a2,b'] is continuous by A1,B118; then
+  A127: (y(#)(x`|dom x)) | ['a2,b'] is bounded
+      & y(#)(x`|dom x) is_integrable_on ['a2,b'] by A126,INTEGRA5:10,11;
+
+  a in [.a2,b.] by A1,A106; then
+  a in ['a2,b'] by A106,INTEGRA5:def 3; then
+  A129: integral(y(#)(x`|dom x),a2,b)
+  = integral(y(#)(x`|dom x),a2,a) + integral(y(#)(x`|dom x),a,b)
+    by A106,A126,A127,INTEGRA6:17;
+  A130: ].a2,b2.[ c= dom F by A116,Lm1;
+
+  A131: for t be Real st t in ].a2,b2.[
+        holds F is_differentiable_in t
+            & diff(F,t) = (y(#)(x`|dom x)).t
+  proof
+    let t be Real;
+    assume
+    A132: t in ].a2,b2.[; then
+    t in ].a1,b1.[ by A0,A106; then
+    y(#)(x`|dom x) is_continuous_in t by A2,A119,A121;
+    hence thesis by A106,A117,A122,A123,A130,A132,INTEGRA6:28;
+  end;
+
+  A135: L.a < L.b by A1,A16,A9,A94; then
+  A136: ['L.a,L.b'] = [.L.a,L.b.] by INTEGRA5:def 3;
+  A149: a2 in [.a2,b2.] by A106;
+  A151: b2 in [.a2,b2.] by A106;
+
+  A137: ['L.a,L.b'] c= ].L.a2,L.b2.[
+  proof
+    let z be object;
+    assume
+    A138: z in ['L.a,L.b']; then
+    reconsider t = z as Real;
+    A139: L.a <= t <= L.b by A136,A138,XXREAL_1:1;
+    L.a2 < L.a & L.b < L.b2 by A2,A5,A16,A106,A9,A149,A151; then
+    L.a2 < t & t < L.b2 by A139,XXREAL_0:2;
+    hence z in ].L.a2,L.b2.[;
+  end;
+  set G = F * (L" | ].L.a2,L.b2.[);
+
+  A143: [.a2,b2.] c= dom L by A2,A106,RELAT_1:62;
+
+  for s be object holds
+  s in L.: [.a2,b2.] iff s in [.L.a2,L.b2.]
+  proof
+    let s be object;
+    hereby
+      assume s in L.: [.a2,b2.]; then
+      consider x be object such that
+      A141: x in dom L & x in [.a2,b2.] & s = L.x by FUNCT_1:def 6;
+      reconsider t = x as Real by A141;
+      A142: a2 <= t <= b2 by A141,XXREAL_1:1;
+      A145: L.a2 <= L.t
+      proof
+        per cases;
+        suppose
+          a2 = t;
+          hence L.a2 <= L.t;
+        end;
+        suppose
+          a2 <> t; then
+          a2 < t by A142,XXREAL_0:1;
+          hence L.a2 <= L.t by A16,A141,A143,A149;
+        end;
+      end;
+
+      L.t <= L.b2
+      proof
+        per cases;
+        suppose
+          b2 = t;
+          hence L.t <= L.b2;
+        end;
+        suppose
+          b2 <> t; then
+          t < b2 by A142,XXREAL_0:1;
+          hence L.t <= L.b2 by A16,A141,A143,A151;
+        end;
+      end;
+      hence s in [.L.a2,L.b2.] by A141,A145;
+    end;
+    assume
+    A147: s in [.L.a2,L.b2.]; then
+    reconsider t = s as Real;
+
+    per cases by A147,XXREAL_1:1;
+    suppose
+      L.a2 = t;
+      hence s in L.: [.a2,b2.] by A143,A149,FUNCT_1:def 6;
+    end;
+    suppose
+      L.a2 <> t & L.a2 <= t <= L.b2 & L.b2 <> t; then
+      A154: L.a2 < t & t < L.b2 by XXREAL_0:1;
+      L | ].a1,b1.[ is continuous by A2,FDIFF_1:25; then
+      L | [.a2,b2.] is continuous; then
+      consider u be Real such that
+      A155: a2 < u < b2 & t = L.u by A106,A143,A154,Th1;
+
+      u in [.a2,b2.] by A155;
+      hence s in L.: [.a2,b2.] by A143,A155,FUNCT_1:def 6;
+    end;
+    suppose
+      L.b2 = t;
+      hence s in L.: [.a2,b2.] by A143,A151,FUNCT_1:def 6;
+    end;
+  end; then
+  A157: L.: [.a2,b2.] = [.L.a2,L.b2.];
+  Z1: ].L.a2,L.b2.[ c= [.L.a2,L.b2.] by Lm1;
+
+  A158: ].L.a2,L.b2.[ c= rng L
+  proof
+    let z be object;
+    assume z in ].L.a2,L.b2.[; then
+    consider t be object such that
+    A160: t in dom L & t in [.a2,b2.] & z = L.t by Z1,A157,FUNCT_1:def 6;
+    thus z in rng L by A160,FUNCT_1:3;
+  end; then
+  A161: ].L.a2,L.b2.[ c= dom(L") by FUNCT_1:33; then
+  A162: dom(L" | ].L.a2, L.b2.[) = ].L.a2,L.b2.[ by RELAT_1:62;
+  rng(L" | ].L.a2,L.b2.[) c= dom F
+  proof
+    let z be object;
+    assume z in rng(L" | ].L.a2,L.b2.[); then
+    consider t be object such that
+    A163: t in dom(L" | ].L.a2,L.b2.[)
+        & z = (L" | ].L.a2, L.b2.[).t by FUNCT_1:def 3;
+    A165: z = L".t by A162,A163,FUNCT_1:49;
+    consider s be object such that
+    A166: s in dom L & s in [.a2,b2.] & t = L.s
+      by Z1,A157,A162,A163,FUNCT_1:def 6;
+    thus z in dom F by A116,A165,A166,FUNCT_1:34;
+  end; then
+  A167: ].L.a2,L.b2.[ = dom G by A162,RELAT_1:27;
+  A168: for t be Real st t in ].L.a2,L.b2.[
+        holds G is_differentiable_in t
+            & (L" | ].L.a2,L.b2.[).t in ].a2,b2.[
+            & diff(G,t) = diff(F,(L" | ].L.a2,L.b2.[).t)
+                        * diff(L" | ].L.a2,L.b2.[ ,t)
+  proof
+    let t be Real;
+    assume
+    A169: t in ].L.a2,L.b2.[; then
+    L" is_differentiable_in t by A27,A28,A158; then
+    A171: L" | ].L.a2,L.b2.[ is_differentiable_in t by A161,A169,PDLAX:10;
+    A172: (L" | ].L.a2,L.b2.[).t = L".t by A169,FUNCT_1:49;
+
+    consider s be object such that
+    A173: s in dom L & s in [.a2,b2.] & t = L.s by Z1,A157,A169,FUNCT_1:def 6;
+    reconsider s as Real by A173;
+    L".t in [.a2,b2.] by A173,FUNCT_1:34; then
+    A174: a2 <= L".t <= b2 by XXREAL_1:1;
+    A175: L.a2 < t < L.b2 by A169,XXREAL_1:4;
+
+    a2 <> L".t & b2 <> L".t
+    proof
+      assume not (a2 <> L".t & b2 <> L".t); then
+      per cases;
+      suppose
+        a2 = L".t;
+        hence contradiction by A158,A169,A175,FUNCT_1:35;
+      end;
+      suppose
+        b2 = L".t;
+        hence contradiction by A158,A169,A175,FUNCT_1:35;
+      end;
+    end; then
+    A178: a2 < L".t < b2 by A174,XXREAL_0:1; then
+    L".t in ].a2,b2.[; then
+    F is_differentiable_in (L" | ].L.a2,L.b2.[).t by A131,A172;
+    hence thesis by A171,A172,A178,FDIFF_2:13;
+  end; then
+  A179: G is_differentiable_on ].L.a2,L.b2.[ by A167; then
+  A180: dom(G`| ].L.a2,L.b2.[) = ].L.a2,L.b2.[ by FDIFF_1:def 7;
+
+  dom((x * L") `| dom(x * L")) = dom(L") by A47,A49,FDIFF_1:def 7; then
+  dom((y * L")(#)((x * L")`| dom(x * L")))
+   = dom(L") /\ dom(L") by A47,VALUED_1:def 4
+  .= dom(L"); then
+  A182: dom(((y * L")(#)((x*L")`| dom(x*L"))) | ].L.a2,L.b2.[)
+      = ].L.a2, L.b2.[ by A161,RELAT_1:62;
+
+  for s be object
+  st s in dom(G`| ].L.a2, L.b2.[)
+  holds (G`| ].L.a2, L.b2.[).s
+      = (((y*L")(#)((x*L")`| dom(x*L"))) | ].L.a2,L.b2.[).s
+  proof
+    let s be object;
+    assume
+    A183: s in dom(G`| ].L.a2,L.b2.[); then
+    reconsider t = s as Real;
+
+    L".t in rng(L") by A161,A180,A183,FUNCT_1:3; then
+    A186: L".t in dom L by FUNCT_1:33;
+    set K = L" | ].L.a2, L.b2.[;
+    A189: K.t in ].a2,b2.[ by A168,A180,A183;
+    A190: K.t = L".t by A180,A183,FUNCT_1:49;
+    thus (G`| ].L.a2, L.b2.[).s
+     = diff(G,t) by A179,A180,A183,FDIFF_1:def 7
+    .= diff(F,K.t) * diff(K,t) by A168,A180,A183
+    .= (y(#)(x`|dom x)).(K.t) * diff(K,t) by A131,A189
+    .= (y.(K.t) * (x`|dom x).(K.t)) * diff(K,t) by VALUED_1:5
+    .= y.(K.t) * ((x`|dom x).(K.t) * diff(K,t))
+    .= (y*L").t * ((x`|dom x).(L".t) * diff(K,t))
+      by A161,A180,A183,A190,FUNCT_1:13
+    .= (y*L").t * ((x`|dom x).(L".t) * diff(L",t))
+      by A27,A28,A158,A180,A183,PDLAX:11
+    .= (y*L").t * (diff(x, L".t) * diff(L",t))
+      by A1,A5,A45,A186,FDIFF_1:def 7
+    .= (y*L").t * diff(x*L",t) by A30,A158,A180,A183
+    .= (y*L").t * (((x*L")`| dom(x*L")).t)
+      by A47,A49,A161,A180,A183,FDIFF_1:def 7
+    .= ((y*L")(#)((x*L")`| dom(x*L"))).t by VALUED_1:5
+    .= (((y*L")(#)((x*L")`| dom(x*L"))) | ].L.a2, L.b2.[).s
+      by A180,A183,FUNCT_1:49;
+  end; then
+  A192: (G`|].L.a2,L.b2.[) | ['L.a,L.b']
+   = (((y*L")(#)((x*L")`| dom(x*L"))) | ].L.a2,L.b2.[) | ['L.a,L.b']
+   by A180,A182,FUNCT_1:2
+  .= ((y*L")(#)((x*L")`| dom(x*L"))) | ['L.a,L.b'] by A137,RELAT_1:74;
+
+  A193: ['L.a,L.b'] c= dom(G`| ].L.a2,L.b2.[) by A137,A179,FDIFF_1:def 7;
+  (y*L") | dom(y*L") is continuous by A51,FDIFF_1:25; then
+   (G`| ].L.a2, L.b2.[) | ['L.a,L.b'] is bounded
+  & G`| ].L.a2, L.b2.[ is_integrable_on ['L.a,L.b']
+    by A85,A192,A193,INTEGRA5:10,11; then
+  A194: G.(L.b) = integral(G`| ].L.a2, L.b2.[ ,L.a, L.b) + G.(L.a)
+    by A135,A137,A179,INTEGRA7:10;
+
+  A195: integral(G`| ].L.a2, L.b2.[,L.a,L.b)
+   = integral(G`| ].L.a2, L.b2.[,['L.a,L.b']) by A135,INTEGRA5:def 4
+  .= integral((y*L")(#)((x*L")`| dom(x*L")), ['L.a,L.b']) by A192
+  .= integral((y*L")(#)((x*L")`| dom(x*L")),L.a,L.b)
+    by A135,INTEGRA5:def 4;
+  A196: L.a in [.L.a,L.b.] & L.b in [.L.a,L.b.] by A135; then
+
+  A197: G.(L.a)
+   = F.((L" | ].L.a2, L.b2.[ ).(L.a)) by A136,A137,A162,FUNCT_1:13
+  .= F.(L".(L.a)) by A136,A137,A196,FUNCT_1:49
+  .= F.a by A9,A94,FUNCT_1:34;
+
+  A198: G.(L.b)
+   = F.((L" | ].L.a2,L.b2.[).(L.b)) by A136,A137,A162,A196,FUNCT_1:13
+  .= F.(L".(L.b)) by A136,A137,A196,FUNCT_1:49
+  .= F.b by A9,A94,FUNCT_1:34;
+
+  A200: [.L.a,L.b.] c= dom(L") by A136,A137,A161;
+
+  for s be Real st s in dom(x*L") /\ dom(y*L")
+  holds diff(x*L",s)^2 + diff(y*L",s)^2 = 1
+  proof
+    let s be Real;
+    assume s in dom(x*L") /\ dom(y*L"); then
+    s in rng L by A47,FUNCT_1:33;
+    hence thesis by A30;
+  end;
+  hence thesis by A1,A2,A6,A10,A16,A19,A20,A23,A30,A43,A45,A49,A51,A57,A58,
+    A59,A60,A61,A62,A69,A70,A71,A84,A86,A104,A124,A129,A194,A195,
+    A197,A198,A200,FDIFF_2:48,FUNCT_1:2,33,RELAT_1:27;
+end;
+
+begin :: Parametrization-Independent Isoperimetric Inequality
+
+Lm2:
+  for f be PartFunc of REAL,REAL,
+      N be open Subset of REAL
+   st dom f = REAL & f is continuous
+  holds f"N is open
+proof
+  let f be PartFunc of REAL,REAL,
+      N be open Subset of REAL;
+  assume
+  A1: dom f = REAL & f is continuous;
+
+  reconsider M = f"N as Subset of REAL;
+  now
+    let r be Element of REAL;
+    assume r in M; then
+    r in dom f & f.r in N by FUNCT_1:def 7; then
+    consider g be Real such that
+    A5: 0 < g & ].f.r-g,f.r+g.[ c= N by RCOMP_1:19;
+
+    set N1 = ].f.r-g,f.r+g.[;
+    N1 is Neighbourhood of f.r by A5,RCOMP_1:def 6; then
+    consider K be Neighbourhood of r such that
+    A6: f.:K c= N1 by A1,FCONT_1:5;
+    take K;
+    thus K c= M
+    proof
+      let s be object;
+      assume
+      A7: s in K; then
+      f.s in f.:K by A1,FUNCT_1:def 6; then
+      f.s in N1 by A6;
+      hence s in M by A1,A5,A7,FUNCT_1:def 7;
+    end;
+  end;
+  hence thesis by RCOMP_1:20;
+end;
+
+Lm3:
+  for x,y be PartFunc of REAL,REAL,
+      a,b be Real
+  st a < b
+   & x is differentiable
+   & y is differentiable
+   & ['a,b'] c= dom x
+   & ['a,b'] c= dom y
+   & x`|dom x is continuous
+   & y`|dom y is continuous
+   & (for t be Real st t in dom x /\ dom y
+      holds diff(x,t)^2 + diff(y,t)^2 = 1)
+   & y.a = 0
+   & y.b = 0
+  holds
+    integral(y(#)(x`|dom x),a,b) <= 1/2 * (b-a)^2 /PI
+  & (integral(y(#)(x`|dom x),a,b) = 1/2 * (b-a)^2 /PI
+        iff
+    ((for t be Real st t in [.a,b.]
+      holds y.t = (b-a)/PI * sin.(PI*(t-a)/(b-a))
+          & x.t = (b-a)/PI * (-cos.(PI*(t-a)/(b-a))
+                              +cos.0 + PI/(b-a) * x.a))
+             or
+     (for t be Real st t in [.a,b.]
+      holds y.t = -(b-a)/PI * sin.(PI*(t-a)/(b-a))
+          & x.t = (b-a)/PI * (cos.(PI*(t-a)/(b-a))
+                              - cos.0 + PI/(b-a) * x.a))))
+proof
+  let x,y be PartFunc of REAL,REAL,
+      a,b be Real;
+  assume
+  A1: a < b
+    & x is differentiable
+    & y is differentiable
+    & ['a,b'] c= dom x
+    & ['a,b'] c= dom y
+    & x`|dom x is continuous
+    & y`|dom y is continuous
+    & (for t be Real st t in dom x /\ dom y
+       holds diff(x,t)^2 + diff(y,t)^2 = 1)
+    & y.a = 0 & y.b = 0;
+
+  set K = (b-a)/PI;
+  A3: 0 < b-a by A1,XREAL_1:50;
+  A4: dom(x`|dom x) = dom x
+    & dom(y`|dom y) = dom y by A1,FDIFF_1:def 7;
+  A5: ['0,PI'] = [.0,PI.] by COMPTRIG:5,INTEGRA5:def 3;
+  A6: ['a,b'] = [.a,b.] by A1,INTEGRA5:def 3;
+  PI + 0 < PI + 1 by XREAL_1:8; then
+  A7: [.0,PI.] c= ].-1,PI+1.[ by XXREAL_1:47;
+  set G = PI/(b-a);
+
+  reconsider Z1 = dom x, Z2 = dom y as open Subset of REAL by A1,FDIFF_1:10;
+  reconsider Z = Z1 /\ Z2 as open Subset of REAL;
+
+  consider a1,b1 be Real such that
+  A10: a1 < a & b < b1 & a1 < b1
+    & [.a1,b1.] c= Z
+    & [.a,b.] c= ].a1,b1.[ by A1,A6,Th2,XBOOLE_1:19;
+
+  set T = AffineMap (K,a);
+  A11: for t be Real holds T.t = K * t + a by FCONT_1:def 4;
+
+  A13: dom T = [#]REAL by FUNCT_2:def 1;
+
+  A14: for t be Real st t in REAL holds T.t = K*t + a by FCONT_1:def 4; then
+  A21: T is_differentiable_on REAL
+     & for t be Real st t in REAL holds (T`|REAL).t = K
+     by A13,FDIFF_1:23;
+  A23: T is_differentiable_on ].-1,PI+1.[ by A13,A14,FDIFF_1:23,26;
+
+  now
+    let t1,t2 be object;
+    assume
+    A24: t1 in dom T & t2 in dom T & T.t1 = T.t2; then
+    reconsider s1 = t1, s2 = t2 as Real;
+    K*s1 + a = T.s2 by FCONT_1:def 4,A24
+            .= K*s2 + a by FCONT_1:def 4; then
+    s1 = K*s2/K by A3,COMPTRIG:5,XCMPLX_1:89
+      .= s2 by A3,COMPTRIG:5,XCMPLX_1:89;
+    hence t1 = t2;
+  end; then
+  reconsider T as one-to-one PartFunc of REAL,REAL by FUNCT_1:def 4;
+
+  now
+    let t be Real;
+    assume
+    A25: t in ].-1,PI+1.[; then
+    (T`|REAL).t = K by A13,A14,FDIFF_1:23;
+    hence 0 < diff(T,t) by A3,A21,A25,FDIFF_1:def 7,COMPTRIG:5;
+  end; then
+  A26: T | ].-1,PI+1.[ is increasing by A23,ROLLE:9;
+  A27: dom(T| ].-1,PI+1.[) = ].-1,PI+1.[ by A13,RELAT_1:62;
+
+  A28: x is_differentiable_on dom x
+     & y is_differentiable_on dom y by A1;
+  A29: dom x is open & dom y is open by A1,FDIFF_1:10; then
+
+  reconsider DX = T"(dom x) as open Subset of REAL
+    by A13,Lm2;
+  reconsider DY = T"(dom y) as open Subset of REAL
+    by A13,A29,Lm2;
+  set x1 = (PI/(b-a))(#)(x*T);
+  set y1 = (PI/(b-a))(#)(y*T);
+
+  A30: dom(x*T) = DX by RELAT_1:147; then
+  A32: dom x1 = DX by VALUED_1:def 5;
+  A31: dom(y*T) = DY by RELAT_1:147; then
+  A33: dom y1 = DY by VALUED_1:def 5;
+
+  A34: for t be Real holds t in DX iff T.t in dom x
+  proof
+    let t be Real;
+    thus t in DX implies T.t in dom x by FUNCT_1:def 7;
+    assume
+    A35: T.t in dom x;
+    t in dom T by A13,XREAL_0:def 1;
+    hence t in DX by A35,FUNCT_1:def 7;
+  end;
+
+  A39: rng (T|DX) c= dom x
+  proof
+    let t be object;
+    assume t in rng(T|DX); then
+    consider s be object such that
+    A36: s in dom(T|DX) & t = (T|DX).s by FUNCT_1:def 3;
+    A37: dom(T|DX) = dom T /\ DX by RELAT_1:61;
+    reconsider s as Real by A36;
+    s in dom T & t = T.s by A36,A37,FUNCT_1:49,XBOOLE_0:def 4;
+    hence t in dom x by A34,A36;
+  end;
+
+  A46: for t be Real holds t in DY iff T.t in dom y
+  proof
+    let t be Real;
+    thus t in DY implies T.t in dom y by FUNCT_1:def 7;
+    assume
+    A47: T.t in dom y;
+    t in dom T by A13,XREAL_0:def 1;
+    hence t in DY by A47,FUNCT_1:def 7;
+  end;
+
+  A51: rng(T|DY) c= dom y
+  proof
+    let t be object;
+    assume t in rng(T|DY); then
+    consider s be object such that
+    A48: s in dom(T|DY) & t = (T|DY).s by FUNCT_1:def 3;
+    A49: dom(T|DY) = dom T /\ DY by RELAT_1:61;
+    reconsider s as Real by A48;
+    s in dom T & t = T.s by A48,A49,XBOOLE_0:def 4,FUNCT_1:49;
+    hence t in dom y by A46,A48;
+  end;
+  dom y c= rng(T|DY)
+  proof
+    let t be object;
+    assume
+    A52: t in dom y; then
+    reconsider u = t as Real;
+    set s = (u-a)/K;
+    A53: T.s = K*((u-a)/K) + a by FCONT_1:def 4
+            .= u-a + a by A3,COMPTRIG:5,XCMPLX_1:87
+            .= t;
+    s in dom T by A13,XREAL_0:def 1; then
+    A55: s in DY by A52,A53,FUNCT_1:def 7; then
+    A56: t = (T|DY).s by A53,FUNCT_1:49;
+    s in dom(T|DY) by A13,A55,RELAT_1:57;
+    hence t in rng(T|DY) by A56,FUNCT_1:3;
+  end; then
+  A57: rng(T|DY) = dom y by A51;
+
+  A58: for t be Real st t in DX
+       holds x1 is_differentiable_in t & diff(x1,t) = diff(x,T.t)
+  proof
+    let t be Real;
+    assume
+    A59: t in DX;
+    A60: t in REAL by XREAL_0:def 1;
+    A61: T is_differentiable_in t by A21,XREAL_0:def 1;
+    x is_differentiable_in T.t by A28,A34,A59; then
+    A62: x*T is_differentiable_in t
+       & diff(x*T,t) = diff(x,T.t) * diff(T,t) by A61,FDIFF_2:13; then
+    A63: x1 is_differentiable_in t
+       & diff(x1,t) = PI/(b-a) * diff(x*T,t) by FDIFF_1:15;
+
+    (T`|REAL).t = K by A13,A14,FDIFF_1:23,XREAL_0:def 1; then
+    diff(T,t) = K by A21,A60,FDIFF_1:def 7; then
+    diff(x1,t) = PI/(b-a) * K * diff(x,T.t) by A62,A63
+              .= 1 * diff(x,T.t) by A3,COMPTRIG:5,XCMPLX_1:112;
+    hence thesis by A62,FDIFF_1:15;
+  end; then
+  A64: x1 is_differentiable_on DX by A32; then
+  A65: x1 is differentiable by A30,VALUED_1:def 5;
+  A66: dom(x1`|dom x1) = DX by A32,A64,FDIFF_1:def 7;
+  A67: dom((x`|dom x) * (T|DX))
+     = dom(T|DX) by A4,A39,RELAT_1:27
+    .= DX by A13,RELAT_1:62;
+
+  for t be object st t in dom(x1`|dom x1)
+  holds (x1`|dom x1).t = ((x`|dom x) * (T|DX)).t
+  proof
+    let t be object;
+    assume
+    A68: t in dom(x1`|dom x1); then
+    reconsider s = t as Real;
+    A70: T.s in dom x by A34,A66,A68;
+    t in dom x1 by A65,A68,FDIFF_1:def 7;
+    hence (x1`|dom x1).t
+     = diff(x1,s) by A65,FDIFF_1:def 7
+    .= diff(x,T.s) by A58,A66,A68
+    .= (x`|dom x).(T.s) by A1,A70,FDIFF_1:def 7
+    .= (x`|dom x).((T|DX).s) by A66,A68,FUNCT_1:49
+    .= ((x`|dom x) * (T|DX)).t by A66,A67,A68,FUNCT_1:12;
+  end; then
+  A72: x1`|dom x1 is continuous by A1,A66,A67,FUNCT_1:2;
+
+  A73: for t be Real st t in DY
+       holds y1 is_differentiable_in t & diff(y1,t) = diff(y,T.t)
+  proof
+    let t be Real;
+    assume
+    A74: t in DY;
+    A75: t in REAL by XREAL_0:def 1;
+    A76: T is_differentiable_in t by A21,XREAL_0:def 1;
+    y is_differentiable_in T.t by A28,A46,A74; then
+    A77: y*T is_differentiable_in t
+       & diff(y*T,t) = diff(y,T.t) * diff(T,t) by A76,FDIFF_2:13; then
+    A78: y1 is_differentiable_in t
+       & diff(y1,t) = PI/(b-a) * diff(y*T,t) by FDIFF_1:15;
+    (T`|REAL).t = K by A13,A14,FDIFF_1:23,XREAL_0:def 1; then
+    diff(T,t) = K by A21,A75,FDIFF_1:def 7; then
+
+    diff(y1,t) = PI/(b-a) * K * diff(y,T.t) by A77,A78
+    .= 1 * diff(y,T.t) by A3,COMPTRIG:5,XCMPLX_1:112;
+    hence thesis by A77,FDIFF_1:15;
+  end; then
+  B79: y1 is_differentiable_on DY by A33; then
+  A80: y1 is differentiable by A31,VALUED_1:def 5;
+  A81: dom(y1`|dom y1) = DY by A33,B79,FDIFF_1:def 7;
+  A82: dom((y`|dom y) * (T|DY))
+   = dom(T|DY) by A4,A57,RELAT_1:27
+  .= DY by A13,RELAT_1:62;
+
+  A92: 0 in [.0,PI.] & PI in [.0,PI.] by COMPTRIG:5;
+
+  for t be object st t in dom(y1`|dom y1)
+  holds (y1`|dom y1).t = ((y`|dom y) * (T|DY)).t
+  proof
+    let t be object;
+    assume
+    A83: t in dom(y1`|dom y1); then
+    reconsider s = t as Real;
+    A85: T.s in dom y by A46,A81,A83;
+    t in dom y1 by A80,A83,FDIFF_1:def 7;
+    hence (y1`|dom y1).t
+     = diff(y1,s) by A80,FDIFF_1:def 7
+    .= diff(y,T.s) by A73,A81,A83
+    .= (y`|dom y).(T.s) by A1,A85,FDIFF_1:def 7
+    .= (y`|dom y).((T|DY).s) by A81,A83,FUNCT_1:49
+    .= ((y`|dom y) * (T|DY)).t by A81,A82,A83,FUNCT_1:12;
+  end; then
+  A87: y1`|dom y1 is continuous by A1,A81,A82,FUNCT_1:2;
+  A95: T.PI = K * PI + a by FCONT_1:def 4
+           .= b - a + a by COMPTRIG:5,XCMPLX_1:87
+           .= b;
+  A88: now
+    let t be object;
+    assume
+    A89: t in ['0,PI']; then
+    reconsider s = t as Real;
+    A90: s in ].-1,PI+1.[ by A5,A7,A89;
+    set T1 = T | ].-1,PI+1.[;
+    A94: T1.s = T.s & T1.0 = T.0 & T1.PI = T.PI by A5,A7,A89,A92,FUNCT_1:49;
+    0 <= s <= PI by A5,A89,XXREAL_1:1; then
+    (0 = s or 0 < s) & (s = PI or s < PI) by XXREAL_0:1; then
+    T1.0 <= T1.s <= T1.PI by A26,A27,A90,A7,A92; then
+    K*0 + a <= T.s <= T.PI by FCONT_1:def 4,A94;
+    hence T.t in [.a,b.] by A95;
+  end;
+
+  A96: ['0,PI'] c= dom x1
+  proof
+    let t be object;
+    assume
+    A97: t in ['0,PI']; then
+    reconsider s = t as Real;
+    T.s in dom x by A1,A6,A88,A97;
+    hence t in dom x1 by A32,A34;
+  end;
+
+  A99: ['0,PI'] c= dom y1
+  proof
+    let t be object;
+    assume
+    A100: t in ['0,PI']; then
+    reconsider s = t as Real;
+    T.s in dom y by A1,A6,A88,A100;
+    hence t in dom y1 by A33,A46;
+  end;
+
+  A102: for t be Real st t in dom x1 /\ dom y1
+        holds diff(x1,t)^2 + diff(y1,t)^2 = 1
+  proof
+    let t be Real;
+    assume t in dom x1 /\ dom y1; then
+    A103: t in DX & t in DY by A32,A33,XBOOLE_0:def 4; then
+    T.t in dom x & T.t in dom y by A34,A46; then
+    A104: T.t in dom x /\ dom y by XBOOLE_0:def 4;
+      diff(x1,t) = diff(x,T.t)
+    & diff(y1,t) = diff(y,T.t) by A58,A73,A103;
+    hence thesis by A1,A104;
+  end;
+
+  A106: T.0 = K*0 + a by FCONT_1:def 4
+           .= a;
+
+  A110: y1.0 = PI/(b-a) * (y*T).0 by VALUED_1:6
+            .= PI/(b-a) * y.(T.0) by A5,A31,A33,A92,A99,FUNCT_1:12
+            .= 0 by A1,A106;
+  A111: y1.PI = PI/(b-a) * (y*T).PI by VALUED_1:6
+             .= PI/(b-a) * y.(T.PI) by A5,A31,A33,A92,A99,FUNCT_1:12
+             .= 0 by A1,A95;
+
+  A113: x1.0 = PI/(b-a) * (x*T).0 by VALUED_1:6
+            .= PI/(b-a) * x.a by A5,A30,A32,A92,A96,A106,FUNCT_1:12;
+
+  A114: integral(y1(#)(x1`|dom x1),0,PI) <= 1/2 * PI
+     & (integral(y1(#)(x1`|dom x1),0,PI) = 1/2 * PI
+      iff
+    ((for t be Real st t in [.0,PI.]
+      holds y1.t = sin.t & x1.t = -cos.t + cos.0 + x1.0)
+          or
+     (for t be Real st t in [.0,PI.]
+      holds y1.t = -sin.t & x1.t = cos.t -cos.0 + x1.0)))
+    by A65,A72,A80,A87,A96,A99,A102,A110,A111,PDLAX:16;
+
+  deffunc FX(Real) = In(integral(y(#)(x`|dom x),a1,$1),REAL);
+
+  consider S0 be Function of REAL,REAL such that
+  A115: for t be Element of REAL holds S0.t = FX(t) from FUNCT_2:sch 4;
+
+  A116: for t be Real holds S0.t = integral(y(#)(x`|dom x),a1,t)
+  proof
+    let t be Real;
+    t in REAL by XREAL_0:def 1; then
+    S0.t = In(integral(y(#)(x`|dom x),a1,t),REAL) by A115;
+    hence thesis;
+  end;
+
+  set S = S0 | [.a1,b1.];
+  dom S0 = REAL by FUNCT_2:def 1; then
+  A117: dom S = [.a1,b1.] by RELAT_1:62;
+  C1: ].a1,b1.[ c= [.a1,b1.] by Lm1;
+  reconsider S as PartFunc of REAL,REAL;
+
+  A118: for t be Real st t in ].a1,b1.[
+        holds S.t = integral(y(#)(x`|dom x),a1,t)
+  proof
+    let t be Real;
+    assume t in ].a1,b1.[;
+    hence S.t = S0.t by C1,FUNCT_1:49
+             .= integral(y(#)(x`|dom x),a1,t) by A116;
+  end;
+
+  B119: y|dom y is continuous by A1,FDIFF_1:25; then
+  A120: y(#)(x`|dom x) is continuous by A1;
+  A121: (y(#)(x`|dom x)) | ['a1,b1'] is continuous by A1,B119;
+
+  A122: dom(y(#)(x`|dom x))
+      = dom y /\ dom(x`|dom x) by VALUED_1:def 4
+     .= Z by A1,FDIFF_1:def 7;
+
+  A123: ['a1,b1'] c= dom(y(#)(x`|dom x)) by A10,A122,INTEGRA5:def 3;
+    then
+  A124: (y(#)(x`|dom x)) | ['a1,b1'] is bounded
+      & y(#)(x`|dom x) is_integrable_on ['a1,b1'] by A121,INTEGRA5:10,11;
+  B0: a in [.a,b.] & b in [.a,b.] by A1; then
+  A125: S.a = integral(y(#)(x`|dom x),a1,a)
+      & S.b = integral(y(#)(x`|dom x),a1,b) by A10,A118;
+  A126: a1 < b by A1,A10,XXREAL_0:2;
+  A128: ['a1,b'] c= dom(y(#)(x`|dom x))
+  proof
+    let z be object;
+    assume
+    A127: z in ['a1,b']; then
+    reconsider t = z as Real;
+    z in [.a1,b.] by A1,A10,A127,INTEGRA5:def 3,XXREAL_0:2; then
+    a1 <= t <= b by XXREAL_1:1; then
+    a1 <= t <= b1 by A10,XXREAL_0:2; then
+    t in [.a1,b1.]; then
+    t in ['a1,b1'] by A10,INTEGRA5:def 3;
+    hence z in dom(y(#)(x`|dom x)) by A123;
+  end;
+
+  (y(#)(x`|dom x)) | ['a1,b'] is continuous by A1,B119; then
+  A129: (y(#)(x`|dom x)) | ['a1,b'] is bounded
+      & y(#)(x`|dom x) is_integrable_on ['a1,b'] by A128,INTEGRA5:10,11;
+
+  A130: a1 < a < b1 by B0,A10,XXREAL_1:4;
+  a in [.a1,b.] by A1,A10; then
+  a in ['a1,b '] by A1,A130,INTEGRA5:def 3,XXREAL_0:2; then
+  A131: integral(y(#)(x`|dom x),a1,b)
+  = integral(y(#)(x`|dom x),a1,a)
+  + integral(y(#)(x`|dom x),a,b) by A126,A128,A129,INTEGRA6:17;
+  A132: ].a1,b1.[ c= dom S by A117,Lm1;
+
+  A133: for t be Real st t in ].a1,b1.[
+        holds S is_differentiable_in t & diff(S,t) = (y(#)(x`|dom x)).t
+  proof
+    let t be Real;
+    assume
+    A134: t in ].a1,b1.[; then
+    y(#)(x`|dom x) is_continuous_in t by A10,A120,A122,C1;
+    hence S is_differentiable_in t & diff(S,t) = (y(#)(x`|dom x)).t
+      by A10,A118,A123,A124,A132,A134,INTEGRA6:28;
+  end;
+
+  set P1 = (a1-a)/K;
+  set Q1 = (b1-a)/K;
+  A136: P1 < 0 & PI < Q1 & P1 < Q1
+  proof
+    A138: a1-a < 0 by A10,XREAL_1:49;
+    hence P1 < 0 by A3,COMPTRIG:5;
+
+    A139: (b1-a)/K = PI * ((b1-a)/(b-a)) by XCMPLX_1:81
+                  .= PI * ((b-a)/(b-a) + (b1-b)/(b-a))
+                  .= PI * (1 + (b1-b)/(b-a)) by A3,XCMPLX_1:60
+                  .= PI + PI * ((b1-b)/(b-a));
+
+    0 < b1-b by A10,XREAL_1:50; then
+    PI + 0 < PI + PI * ((b1-b)/(b-a)) by A3,COMPTRIG:5,XREAL_1:8;
+    hence PI < Q1 & P1 < Q1 by A3,A138,A139,COMPTRIG:5;
+  end;
+
+  A141: [.0,PI.]  c= ].P1,Q1.[
+      & ['0,PI']  c= ].P1,Q1.[
+      & ['0,PI']  c= ['P1,Q1']
+      & [.P1,Q1.] c= DX /\ DY
+  proof
+    A142: [.0,PI.] c= ].P1,Q1.[ by A136,XXREAL_1:47;
+    thus [.0,PI.] c= ].P1,Q1.[
+        & ['0,PI'] c= ].P1,Q1.[ by A5,A136,XXREAL_1:47;
+    ].P1,Q1.[ c= [.P1,Q1.] by Lm1; then
+    ].P1,Q1.[ c= ['P1,Q1'] by A136,INTEGRA5:def 3;
+    hence ['0,PI'] c= ['P1,Q1'] by A5,A142;
+    let s be object;
+    assume
+    A148: s in [.P1,Q1.]; then
+    reconsider t = s as Real;
+    A149: P1 <= t <= Q1 by A148,XXREAL_1:1;
+    A150: T.t = K*t + a
+        & T.P1 = K*P1 + a
+        & T.Q1 = K*Q1 + a by FCONT_1:def 4; then
+
+    A151: T.P1 = (a1-a) + a by A3,COMPTRIG:5,XCMPLX_1:87
+              .= a1;
+    A152: T.Q1 = (b1-a) + a by A3,A150,COMPTRIG:5,XCMPLX_1:87
+              .= b1;
+
+    K*P1 <= K*t <= K*Q1 by A3,A149,COMPTRIG:5,XREAL_1:64; then
+    K*P1 + a <= K*t + a <= K*Q1 + a by XREAL_1:7; then
+    T.t in [.a1,b1.] by A150,A151,A152; then
+    T.t in dom x & T.t in dom y by A10,XBOOLE_0:def 4; then
+    s in DX & s in DY by A34,A46;
+    hence s in DX /\ DY by XBOOLE_0:def 4;
+  end;
+  BB: ].P1,Q1.[ c= [.P1,Q1.] by Lm1; then
+  B142: ].P1,Q1.[ c= DX /\ DY by A141;
+  set W = S*(T | ].P1,Q1.[);
+  A155: dom(y1(#)(x1`|dom x1)) = DY /\ DX by A33,A66,VALUED_1:def 4;
+
+  A157: for s be Real holds T.s in [.a1,b1.] iff s in [.P1,Q1.]
+  proof
+    let s be Real;
+    hereby
+      assume T.s in [.a1,b1.]; then
+      A158: a1 <= T.s <= b1 by XXREAL_1:1;
+      A159: T.s = K*s + a
+          & T.P1 = K*P1 + a
+          & T.Q1 = K*Q1 + a by FCONT_1:def 4; then
+
+      A160: T.P1 = (a1-a) + a by A3,COMPTRIG:5,XCMPLX_1:87
+                .= a1;
+      T.Q1 = (b1-a) + a by A3,A159,COMPTRIG:5,XCMPLX_1:87
+          .= b1; then
+      K*P1 + a - a <= K*s + a - a <= K*Q1 + a - a
+        by A158,A159,A160,XREAL_1:13; then
+      A162: K*P1/K <= K*s/K <= K*Q1/K
+        by A3,COMPTRIG:5,XREAL_1:72; then
+      P1 <= K*s/K by A3,COMPTRIG:5,XCMPLX_1:89; then
+      A163: P1 <= s by A3,COMPTRIG:5,XCMPLX_1:89;
+      s <= K*Q1/K by A3,A162,COMPTRIG:5,XCMPLX_1:89; then
+      s <= Q1 by A3,COMPTRIG:5,XCMPLX_1:89;
+      hence s in [.P1,Q1.] by A163;
+    end;
+
+    assume s in [.P1,Q1.]; then
+    A165: P1 <= s <= Q1 by XXREAL_1:1;
+    A166: T.s = K*s + a
+        & T.P1 = K*P1 + a
+        & T.Q1 = K*Q1 + a by FCONT_1:def 4; then
+
+    A167: T.P1 = (a1-a) + a by A3,COMPTRIG:5,XCMPLX_1:87
+              .= a1;
+    A168: T.Q1 = (b1-a) + a by A3,A166,COMPTRIG:5,XCMPLX_1:87
+              .= b1;
+    K*P1 <= K*s <= K*Q1 by A3,A165,COMPTRIG:5,XREAL_1:64; then
+    K*P1 + a <= K*s + a <= K*Q1 + a by XREAL_1:7;
+    hence T.s in [.a1,b1.] by A166,A167,A168;
+  end;
+
+  A169: for s be Real holds T.s in ].a1,b1.[ iff s in ].P1,Q1.[
+  proof
+    let s be Real;
+    A171: T.s = K*s + a
+        & T.P1 = K*P1 + a
+        & T.Q1 = K*Q1 + a by FCONT_1:def 4; then
+    A172: T.P1 = (a1-a) + a by A3,COMPTRIG:5,XCMPLX_1:87
+              .= a1;
+    B1: T.Q1 = (b1-a)+a by A3,A171,COMPTRIG:5,XCMPLX_1:87
+            .= b1;
+    hereby
+      assume T.s in ].a1,b1.[; then
+      a1 < T.s < b1 by XXREAL_1:4; then
+      K*P1 + a - a < K*s + a - a < K*Q1 + a - a
+        by A171,A172,B1,XREAL_1:14; then
+      A174: K*P1/K < K*s/K < K*Q1/K by A3,COMPTRIG:5,XREAL_1:74; then
+      P1 < K*s/K by A3,COMPTRIG:5,XCMPLX_1:89; then
+      A175: P1 < s by A3,COMPTRIG:5,XCMPLX_1:89;
+      s < K*Q1/K by A3,A174,COMPTRIG:5,XCMPLX_1:89; then
+      s < Q1 by A3,COMPTRIG:5,XCMPLX_1:89;
+      hence s in ].P1,Q1.[ by A175;
+    end;
+    assume s in ].P1,Q1.[; then
+    P1 < s < Q1 by XXREAL_1:4; then
+    K*P1 < K*s < K*Q1 by A3,COMPTRIG:5,XREAL_1:68; then
+    K*P1 + a < K*s + a < K*Q1 + a by XREAL_1:8;
+    hence T.s in ].a1,b1.[ by A171,A172,B1;
+  end;
+
+  A181: dom(T | ].P1,Q1.[) = ].P1,Q1.[ by A13,RELAT_1:62;
+  now
+    let z be object;
+    assume z in rng(T | ].P1,Q1.[); then
+    consider t be object such that
+    A182: t in dom(T | ].P1,Q1.[)
+        & z = (T | ].P1,Q1.[).t by FUNCT_1:def 3;
+    z = T.t by A181,A182,FUNCT_1:49;
+    hence z in dom S by BB,A117,A157,A181,A182;
+  end; then
+  rng(T | ].P1,Q1.[) c= dom S; then
+  A185: ].P1,Q1.[ = dom W by A181,RELAT_1:27;
+
+  A186: for t be Real st t in ].P1,Q1.[
+        holds W is_differentiable_in t
+            & (T | ].P1,Q1.[).t in ].a1,b1.[
+            & diff(W,t) = diff(S,(T | ].P1,Q1.[).t)
+                        * diff(T | ].P1,Q1.[,t)
+  proof
+    let t be Real;
+    assume
+    A187: t in ].P1,Q1.[; then
+    T is_differentiable_in t by A21; then
+    A188: T | ].P1,Q1.[ is_differentiable_in t by A13,A187,PDLAX:10;
+    A189: (T | ].P1,Q1.[).t = T.t by A187,FUNCT_1:49; then
+    (T | ].P1,Q1.[).t in ].a1,b1.[ by A169,A187; then
+    S is_differentiable_in (T | ].P1,Q1.[).t by A133;
+    hence thesis by A169,A187,A188,A189,FDIFF_2:13;
+  end; then
+  A191: W is_differentiable_on ].P1,Q1.[ by A185; then
+  A192: dom(W`| ].P1,Q1.[) = ].P1,Q1.[ by FDIFF_1:def 7;
+
+  A193: dom(K^2(#)((y1(#)(x1`|dom x1)) | ].P1,Q1.[))
+      = dom((y1(#)(x1`|dom x1)) | ].P1,Q1.[) by VALUED_1:def 5
+     .= ].P1,Q1.[ by B142,A155,RELAT_1:62;
+
+  for s be object st s in dom (W`| ].P1,Q1.[)
+  holds (W`| ].P1,Q1.[).s = (K^2(#)((y1(#)(x1`|dom x1)) | ].P1,Q1.[)).s
+  proof
+    let s be object;
+    assume
+    A194: s in dom(W`| ].P1,Q1.[); then
+    reconsider t = s as Real;
+
+    T.t in [.a1,b1.] by A169,A192,A194,C1; then
+    A196: T.t in dom x & T.t in dom y by A10,XBOOLE_0:def 4; then
+    A197: t in dom x1 by A32,A34;
+    A198: t in REAL by XREAL_0:def 1;
+    (T`|REAL).t = K by A13,A14,FDIFF_1:23,XREAL_0:def 1; then
+    A201: diff(T,t) = K by A21,A198,FDIFF_1:def 7;
+    set L = T | ].P1,Q1.[;
+    A202: L.t in ].a1,b1.[ by A186,A192,A194;
+    A203: L.t = T.t by A192,A194,FUNCT_1:49;
+    y1.t = PI/(b-a) * (y*T).t by VALUED_1:6
+        .= PI/(b-a) * y.(T.t) by A13,FUNCT_1:13,XREAL_0:def 1; then
+    A205: (b-a)/PI * y1.t = (b-a)/PI * (PI/(b-a)) * y.(T.t)
+                         .= 1 * y.(T.t) by A3,COMPTRIG:5,XCMPLX_1:112;
+    thus (W`| ].P1,Q1.[).s
+     = diff(W,t) by A191,A192,A194,FDIFF_1:def 7
+    .= diff(S,L.t) * diff(L,t) by A186,A192,A194
+    .= (y(#)(x`|dom x)).(L.t) * diff(L,t) by A133,A202
+    .= y.(L.t) * (x`|dom x).(L.t) * diff(L,t) by VALUED_1:5
+    .= ((b-a)/PI * y1.t) * ((x`|dom x).(L.t) * diff(L,t)) by A203,A205
+    .= (b-a)/PI * y1.t * ((x`|dom x).(T.t) * diff(T,t))
+      by A13,A21,A192,A194,A203,PDLAX:11
+    .= ((b-a)/PI * y1.t) * (diff(x,T.t) * K) by A1,A196,A201,FDIFF_1:def 7
+    .= K^2 * y1.t * diff(x,T.t)
+    .= K^2 * y1.t * diff(x1,t) by A32,A58,A197
+    .= K^2 * y1.t * (x1`|dom x1).t by A65,A197,FDIFF_1:def 7
+    .= K^2 * (y1.t * (x1`|dom x1).t)
+    .= K^2 * (y1(#)(x1`|dom x1)).t by VALUED_1:5
+    .= K^2 * ((y1(#)(x1`|dom x1)) | ].P1,Q1.[).t by FUNCT_1:49,A192,A194
+    .= (K^2(#)((y1(#)(x1`|dom x1)) | ].P1,Q1.[)).s by VALUED_1:6;
+  end; then
+  W`| ].P1,Q1.[ = K^2(#)(y1(#)(x1`|dom x1)) | ].P1,Q1.[
+    by A192,A193,FUNCT_1:2; then
+  A206: (W `| ].P1,Q1.[) | ['0,PI']
+   = K^2(#)((y1(#)(x1`|dom x1)) | ].P1,Q1.[) | ['0,PI'] by RFUNCT_1:49
+  .= K^2(#)((y1(#)(x1`|dom x1)) | ['0,PI']) by A141,RELAT_1:74;
+
+  A207: ['0,PI'] c= dom(W`| ].P1,Q1.[) by A141,A191,FDIFF_1:def 7;
+  B207: y1|dom y1 is continuous by A80,FDIFF_1:25; then
+  A208: (y1(#)(x1`|dom x1)) | ['0,PI'] is continuous by A72;
+  (W`| ].P1,Q1.[) | ['0,PI'] is bounded
+   & W`| ].P1,Q1.[ is_integrable_on ['0,PI']
+    by A72,A206,A207,B207,INTEGRA5:10,11; then
+  A209: W.PI = integral(W`|].P1,Q1.[,0,PI) + W.0
+    by COMPTRIG:5,A141,A191,INTEGRA7:10;
+  A210: (y1(#)(x1`|dom x1)) | ['0,PI'] is bounded
+      & (y1(#)(x1`|dom x1)) is_integrable_on ['0,PI']
+        by A32,A33,A96,A99,A155,A208,INTEGRA5:10,11,XBOOLE_1:19;
+
+  A211: integral(W`| ].P1,Q1.[,0,PI)
+   = integral(W`| ].P1,Q1.[, ['0,PI']) by COMPTRIG:5,INTEGRA5:def 4
+  .= integral(K^2(#)(y1(#)(x1`|dom x1)), ['0,PI']) by A206,RFUNCT_1:49
+  .= integral(K^2(#)(y1(#)(x1`|dom x1)),0,PI) by COMPTRIG:5,INTEGRA5:def 4
+  .= K^2 * integral(y1(#)(x1`|dom x1),0,PI)
+    by A32,A33,A96,A99,A155,A210,COMPTRIG:5,INTEGRA6:10,XBOOLE_1:19;
+  A212: 0 in ['0,PI'] & PI in ['0,PI'] by A5,COMPTRIG:5;
+  A213: W.0 = S.((T | ].P1,Q1.[).0) by A141,A181,A212,FUNCT_1:13
+           .= S.a by A106,A141,A212,FUNCT_1:49;
+
+  A214: W.PI = S.((T | ].P1,Q1.[).PI) by A141,A181,A212,FUNCT_1:13
+            .= S.b by A95,A141,A212,FUNCT_1:49;
+  A217: (b-a)/K = (b-a)/(b-a) * PI by XCMPLX_1:82
+               .= 1 * PI by A3,XCMPLX_1:60
+               .= PI;
+  A218: PI * K = b-a by COMPTRIG:5,XCMPLX_1:87;
+  A219: ((b-a)/PI) * (PI/(b-a)) = 1 by A3,COMPTRIG:5,XCMPLX_1:112;
+  A220: for t be Real holds t in [.0,PI.] iff T.t in [.a,b.]
+  proof
+    let t be Real;
+    thus t in [.0,PI.] implies T.t in [.a,b.] by A5,A88;
+    assume T.t in [.a,b.]; then
+    K*t + a in [.a,b.] by A11; then
+    a <= K*t + a <= b by XXREAL_1:1; then
+    a - a <= K*t + a - a <= b - a by XREAL_1:9; then
+    0 / K <= K*t/K <= (b-a)/K by COMPTRIG:5,XREAL_1:72; then
+    0 <= t <= (b-a)/K by A3,COMPTRIG:5,XCMPLX_1:89;
+    hence t in [.0,PI.] by A217;
+  end;
+
+  A221: for t be Real holds (t-a)/K in [.0,PI.] iff t in [.a,b.] :::
+  proof
+    let t be Real;
+    hereby
+      assume (t-a)/K in [.0,PI.]; then
+      0 <= (t-a)/K <= PI by XXREAL_1:1; then
+      0 * K <= (t-a)/K * K <= PI * K by A3,XREAL_1:64; then
+      0 <= t-a <= PI * K by A3,COMPTRIG:5,XCMPLX_1:87; then
+      0 + a <= t-a + a <= b-a + a by A218,XREAL_1:7;
+      hence t in [.a,b.];
+    end;
+    assume t in [.a,b.]; then
+    a <= t <= b by XXREAL_1:1; then
+    a-a <= t-a <= b-a by XREAL_1:9; then
+    0 / K <= (t-a)/K <= (b-a)/K by COMPTRIG:5,XREAL_1:72;
+    hence (t-a)/K in [.0,PI.] by A217;
+  end;
+
+  A222: integral(y(#)(x`|dom x),a,b) <= 1/2 * PI * K^2
+    by A3,A114,A125,A131,A209,A211,A213,A214,COMPTRIG:5,XREAL_1:64;
+
+  PI * K^2 = PI * ((b-a)/PI) * ((b-a)/PI)
+  .= (b-a) * ((b-a)/PI) by COMPTRIG:5,XCMPLX_1:87
+  .= (b-a)^2 / PI;
+  hence integral(y(#)(x`|dom x),a,b) <= 1/2 * (b-a)^2 / PI by A222;
+
+    hereby
+      assume integral(y(#)(x`|dom x),a,b) = 1/2 * (b-a)^2 / PI; then
+      (b-a)^2 / PI^2 * integral(y1(#)(x1`|dom x1),0,PI)
+       = 1/2 * (b-a)^2 /PI by A125,A131,A209,A211,A213,A214,XCMPLX_1:76; then
+      PI^2 * ((b-a)^2 / PI^2) * integral(y1(#)(x1`|dom x1),0,PI)
+       = PI^2 *((1/2)*(b-a)^2 /PI); then
+      (b-a)^2 * integral(y1(#)(x1`|dom x1),0,PI)
+       = PI * (PI * ((b-a)^2/PI)) * (1/2) by COMPTRIG:5,XCMPLX_1:87
+      .= PI * (b-a)^2 * (1/2) by LmPI,XCMPLX_1:87; then
+      integral(y1(#)(x1`|(dom x1)),0,PI)
+       = (1/2 * PI * (b-a)^2) / (b-a)^2 by A3,XCMPLX_1:89
+      .= 1/2 * PI by A3,XCMPLX_1:89;
+      then per cases by A65,A72,A80,A87,A96,A99,A102,A110,A111,PDLAX:16;
+      suppose
+        A224: for t be Real st t in [.0,PI.]
+              holds y1.t = sin.t & x1.t = -cos.t + cos.0 + x1.0;
+        now
+          let t be Real;
+          set s = T.t;
+          set u = (t-a)/K;
+          A225: u = PI * (t-a)/(b-a) by XCMPLX_1:77;
+          A226: T.u = K*u + a by A11
+          .= t-a + a by A3,COMPTRIG:5,XCMPLX_1:87
+          .= t;
+          assume t in [.a,b.]; then
+          A227: u in [.0,PI.] by A221; then
+          (x*T).u = x.(T.u) & (y*T).u = y.(T.u)
+            by A5,A30,A31,A32,A33,A96,A99,FUNCT_1:12; then
+          x1.u = PI/(b-a) * x.t & y1.u  = PI/(b-a) * y.t
+            by A226,VALUED_1:6; then
+            (b-a)/PI * x1.u = (b-a)/PI * (PI/(b-a)) * x.t
+          & (b-a)/PI * y1.u = (b-a)/PI * (PI/(b-a)) * y.t;
+          hence y.t = (b-a)/PI * sin.(PI * (t-a)/(b-a))
+              & x.t = (b-a)/PI * (-cos.(PI * (t-a)/(b-a))
+                    + cos.0 + PI/(b-a) * x.a) by A113,A219,A224,A225,A227;
+        end;
+
+        hence (for t be Real st t in [.a,b.]
+               holds y.t = (b-a)/PI * sin.(PI * (t-a)/(b-a))
+                   & x.t = (b-a)/PI * (-cos.(PI * (t-a)/(b-a))
+                                      + cos.0 + (PI/(b-a)) * x.a))
+                  or
+               (for t be Real st t in [.a,b.]
+                holds y.t = -(b-a)/PI * sin.(PI * (t-a)/(b-a))
+                    & x.t = (b-a)/PI * (cos.(PI * (t-a)/(b-a))
+                                      - cos.0 + PI/(b-a) *x.a));
+      end;
+      suppose
+        A231: for t be Real st t in [.0,PI.]
+              holds y1.t = -sin.t & x1.t = cos.t - cos.0 + x1.0;
+        now
+          let t be Real;
+          set s = T.t;
+          set u = (t-a)/K;
+          A232: u = PI * (t-a)/(b-a) by XCMPLX_1:77;
+          A233: T.u = K*u + a by A11
+                   .= t-a + a by A3,COMPTRIG:5,XCMPLX_1:87
+                   .= t;
+          assume t in [.a,b.]; then
+          A234: u in [.0,PI.] by A221; then
+          A235: y1.u = -sin.(PI * (t-a)/(b-a))
+              & x1.u = cos.(PI * (t-a)/(b-a)) - cos.0 + x1.0 by A231,A232;
+          (x*T).u = x.(T.u) & (y*T).u = y.(T.u)
+            by A5,A30,A31,A32,A33,A96,A99,A234,FUNCT_1:12; then
+            x1.u = PI/(b-a) * x.t
+          & y1.u = PI/(b-a) * y.t by A233,VALUED_1:6; then
+            (b-a)/PI * x1.u = (b-a)/PI * (PI/(b-a)) * x.t
+          & (b-a)/PI * y1.u = (b-a)/PI * (PI/(b-a)) * y.t;
+          hence y.t = -(b-a)/PI *  sin.(PI * (t-a)/(b-a))
+              & x.t =  (b-a)/PI * (cos.(PI * (t-a)/(b-a))
+                                 - cos.0 + (PI/(b-a)) * x.a)
+                                 by A113,A219,A235;
+        end;
+        hence (for t be Real st t in [.a,b.]
+               holds y.t = (b-a)/PI *   sin.(PI * (t-a)/(b-a))
+                   & x.t = (b-a)/PI * (-cos.(PI * (t-a)/(b-a))
+                                      + cos.0 + (PI/(b-a)) * x.a))
+                or
+              (for t be Real st t in [.a,b.]
+               holds y.t = -(b-a)/PI *  sin.(PI * (t-a)/(b-a))
+                   & x.t =  (b-a)/PI * (cos.(PI * (t-a)/(b-a))
+                                     - cos.0 + (PI/(b-a)) * x.a));
+      end;
+    end;
+    assume (for t be Real st t in [.a,b.]
+            holds y.t = (b-a)/PI *   sin.(PI * (t-a)/(b-a))
+                & x.t = (b-a)/PI * (-cos.(PI * (t-a)/(b-a))
+                                   + cos.0 + PI/(b-a) * x.a))
+              or
+            (for t be Real st t in [.a,b.]
+             holds y.t = -(b-a)/PI *  sin.(PI * (t-a)/(b-a))
+                 & x.t =  (b-a)/PI * (cos.(PI * (t-a)/(b-a))
+                                    - cos.0 + (PI/(b-a)) * x.a));
+    then per cases;
+    suppose
+      A238: for t be Real st t in [.a,b.]
+            holds y.t = (b-a)/PI *   sin.(PI * (t-a)/(b-a))
+                & x.t = (b-a)/PI * (-cos.(PI * (t-a)/(b-a))
+                                   + cos.0 + PI/(b-a) * x.a);
+
+      now
+        let t be Real;
+        set s = T.t;
+        set u = (t-a)/K;
+        s - a = K*t + a - a by A11
+             .= K*t; then
+        PI * (s-a) = PI * (K*t); then
+        A239: PI * (s-a)/(b-a)
+         = (PI * (b-a)/PI) * t/(b-a)
+        .= (b-a) * t/(b-a) by COMPTRIG:5,XCMPLX_1:89
+        .= t by A3,XCMPLX_1:89;
+        assume
+        A240: t in [.0,PI.]; then
+        A241: s in [.a,b.] by A220;
+        (x*T).t = x.(T.t) & (y*T).t = y.(T.t)
+          by A5,A30,A31,A32,A33,A96,A99,A240,FUNCT_1:12; then
+          x1.t = PI/(b-a) * x.(T.t)
+        & y1.t = PI/(b-a) * y.(T.t) by VALUED_1:6; then
+          (b-a)/PI * x1.t = (b-a)/PI * (PI/(b-a)) * x.(T.t)
+        & (b-a)/PI * y1.t = (b-a)/PI * (PI/(b-a)) * y.(T.t); then
+          PI/(b-a) * ((b-a)/PI * y1.t) = PI/(b-a) * ((b-a)/PI *   sin.t)
+        & PI/(b-a) * ((b-a)/PI * x1.t) = PI/(b-a) * ((b-a)/PI * (-cos.t
+                      + cos.0 + PI/(b-a) * x.a)) by A219,A238,A239,A241; then
+          PI/(b-a) * ((b-a)/PI) * y1.t = PI/(b-a) * ((b-a)/PI) *  sin.t
+        & PI/(b-a) * ((b-a)/PI) * x1.t = PI/(b-a) * ((b-a)/PI) * (-cos.t
+                                            + cos.0 + PI/(b-a) * x.a);
+        hence y1.t =  sin.t
+            & x1.t = -cos.t + cos.0 + x1.0 by A113,A219;
+      end;
+      hence integral(y(#)(x`|dom x),a,b)
+       = (b-a)^2 / PI^2 * (1/2 * PI)
+        by A114,A125,A131,A209,A211,A213,A214,XCMPLX_1:76
+      .= (PI * (b-a)^2) / PI^2 * (1/2)
+      .= (PI/PI) * ((b-a)^2 / PI) * (1/2) by XCMPLX_1:76
+      .= 1 * ((b-a)^2 / PI) * (1/2) by COMPTRIG:5,XCMPLX_1:60
+      .= 1/2 * (b-a)^2 / PI;
+    end;
+    suppose
+      A243: for t be Real st t in [.a,b.]
+            holds y.t = -(b-a)/PI *  sin.(PI * (t-a)/(b-a))
+                & x.t =  (b-a)/PI * (cos.(PI * (t-a)/(b-a))
+                                   - cos.0 + PI/(b-a) * x.a);
+      now
+        let t be Real;
+        set s = T.t;
+        set u = (t-a)/K;
+        s - a = K*t + a - a by A11
+             .= K*t; then
+        PI * (s - a) = PI * (K*t); then
+        A244: PI * (s-a)/(b-a)
+         = (PI * (b-a)/PI) * t/(b-a)
+        .= (b-a) * t/(b-a) by COMPTRIG:5,XCMPLX_1:89
+        .= t by A3,XCMPLX_1:89;
+        assume
+        A245: t in [.0,PI.]; then
+        s in [.a,b.] by A220; then
+        A246:   y.s = -(b-a)/PI *  sin.(PI * (s-a)/(b-a))
+              & x.s =  (b-a)/PI * (cos.(PI * (s-a)/(b-a))
+                      - cos.0 + (PI/(b-a)) * x.a) by A243;
+        (x*T).t = x.(T.t) & (y*T).t = y.(T.t)
+          by A5,A30,A31,A32,A33,A96,A99,A245,FUNCT_1:12; then
+          x1.t = PI/(b-a) * x.(T.t)
+        & y1.t = PI/(b-a) * y.(T.t) by VALUED_1:6; then
+          (b-a)/PI * x1.t = (b-a)/PI * (PI/(b-a)) * x.(T.t)
+        & (b-a)/PI * y1.t = (b-a)/PI * (PI/(b-a)) * y.(T.t); then
+            PI/(b-a) * ((b-a)/PI * y1.t)
+          = PI/(b-a) * ((b-a)/PI * (-sin.t))
+        & PI/(b-a) * ((b-a)/PI * x1.t)
+          = PI/(b-a) * ((b-a)/PI * (cos.t - cos.0 + PI/(b-a) * x.a))
+            by A219,A244,A246; then
+            PI/(b-a) * (b-a)/PI * y1.t
+          = PI/(b-a) * (b-a)/PI * (-sin.t)
+        & PI/(b-a) * (b-a)/PI * x1.t
+          = PI/(b-a) * (b-a)/PI * (cos.t - cos.0 + PI/(b-a) * x.a);
+        hence y1.t = -sin.t
+            & x1.t =  cos.t - cos.0 + x1.0 by A113,A219;
+      end;
+      hence integral(y(#)(x`|dom x),a,b)
+       = (b-a)^2 / PI^2 * (1/2 * PI)
+        by A114,A125,A131,A209,A211,A213,A214,XCMPLX_1:76
+      .= (PI * (b-a)^2) / PI^2 * (1/2)
+      .= (PI/PI) * ((b-a)^2 / PI) * (1/2) by XCMPLX_1:76
+      .= 1 * ((b-a)^2 / PI) * (1/2) by LmPI,XCMPLX_1:60
+      .= (1/2) * (b-a)^2 /PI;
+    end;
+end;
+
+theorem
+  for a,b,l be Real,
+      x,y be PartFunc of REAL,REAL
+  st a < b
+   & ArcLenP(x,y,a,b).b = l
+   & y.a = 0 & y.b = 0
+   & x is differentiable
+   & y is differentiable
+   & [.a,b.] c= dom x & [.a,b.] c= dom y
+   & x`|dom x is continuous
+   & y`|dom y is continuous
+   & for t be Real st t in dom x /\ dom y
+     holds 0 < diff(x,t)^2 + diff(y,t)^2
+  holds
+  integral(y(#)(x`|dom x),a,b) <= 1/2 * l^2 / PI
+  &
+  (integral(y(#)(x`|dom x),a,b) = 1/2 * l^2 / PI
+      iff
+  ((for s be Real st s in [.a,b.]
+    holds y.s = l/PI *   sin.(PI * ArcLenP(x,y,a,b).s / l)
+        & x.s = l/PI * (-cos.(PI * ArcLenP(x,y,a,b).s / l)
+              + cos.0 + PI/l * x.a))
+    or
+   (for s be Real st s in [.a,b.]
+    holds y.s = -l/PI * sin.(PI * ArcLenP(x,y,a,b).s / l)
+        & x.s = l/PI * (cos.(PI * ArcLenP(x,y,a,b).s / l)
+              - cos.0 + PI/l * x.a))))
+proof
+  let a,b,l be Real,
+      x,y be PartFunc of REAL,REAL;
+  assume
+  A1: a < b
+    & ArcLenP(x,y,a,b).b = l
+    & y.a = 0 & y.b = 0
+    & x is differentiable
+    & y is differentiable
+    & [.a,b.] c= dom x & [.a,b.] c= dom y
+    & x`|dom x is continuous
+    & y`|dom y is continuous
+    & for t be Real st t in dom x /\ dom y
+      holds 0 < diff(x,t)^2 + diff(y,t)^2; then
+  consider a1,b1 be Real,
+           L be one-to-one PartFunc of REAL,REAL
+  such that
+  A2: a1 < a & b < b1
+     & [.a1,b1.] c= dom x /\ dom y
+     & dom L = ].a1,b1.[
+     & (for t be Real st t in ].a1,b1.[
+        holds L.t = integral(( #R (1/2)) * ((x`|dom x)(#)(x`|dom x) +
+                              (y`|dom y)(#)(y`|dom y)),a1,t))
+     & (for t be Real st t in [.a,b.]
+        holds ArcLenP(x,y,a,b).t = L.t - L.a)
+     & L is increasing
+     & L | [.a,b.] is continuous
+     & L.: [.a,b.] = [.L.a,L.b.]
+     & (for t be Real st t in ].a1,b1.[
+        holds L is_differentiable_in t)
+     & L is_differentiable_on ].a1,b1.[
+     & (for t be Real st t in ].a1,b1.[ holds
+        diff(L,t) = (diff(x,t)^2 + diff(y,t)^2) #R (1/2))
+     & L" is_differentiable_on dom(L")
+     & (for t be Real st t in dom(L")
+        holds diff(L",t) = 1 / diff(L,L".t))
+     & L" is continuous
+     & (for s be Real st s in rng L
+        holds x*L" is_differentiable_in s
+            & y*L" is_differentiable_in s
+            & diff(x*L",s) = diff(x,L".s) * diff(L",s)
+            & diff(y*L",s) = diff(y,L".s) * diff(L",s)
+            & diff(x*L",s)^2 + diff(y*L",s)^2 = 1)
+     & (x*L") `| dom(x*L") = ((x`|dom x) * L")(#)(L" `|dom(L"))
+     & (y*L") `| dom(y*L") = ((y`|dom y) * L")(#)(L" `|dom(L"))
+     & (L" `|dom(L")) = ((L`|dom L) * L")^
+     & (L" `|dom(L")) is continuous
+     & [.L.a,L.b.] c= dom(L")
+     & [.L.a,L.b.] c= dom(x*L")
+     & [.L.a,L.b.] c= dom(y*L")
+     & [.L.a,L.b.] c= rng L
+     & dom(x*L") = dom(L")
+     & dom(y*L") = dom(L")
+     & x*L" is differentiable
+     & y*L" is differentiable
+     & (x*L") `| dom(x*L") is continuous
+     & (y*L") `| dom(y*L") is continuous
+     & (for s be Real st s in dom(x*L") /\ dom(y*L")
+        holds diff(x*L",s)^2 + diff(y*L",s)^2 = 1)
+     & integral(y(#)(x`|dom x),a,b)
+     = integral((y*L")(#)((x*L")`|dom(x*L")),L.a,L.b) by Th4;
+  B1: [.a,b.] c= ].a1,b1.[ by A2,XXREAL_1:47;
+  a1 < a < b1 & a1 < b < b1 by A1,A2,XXREAL_0:2; then
+  a in ].a1,b1.[ & b in ].a1,b1.[; then
+  a in dom L & b in dom L by A2; then
+  B2: L.a < L.b by A1,A2; then
+  A3: L.a in [.L.a,L.b.] & L.b in [.L.a,L.b.];
+  A4: a in [.a,b.] & b in [.a,b.] by A1;
+  A5: (y*L").(L.a) = y.(L".(L.a)) by A2,A3,FUNCT_1:13
+                  .= 0 by A1,A2,A4,B1,FUNCT_1:34;
+  A6: (y*L").(L.b) = y.(L".(L.b)) by A2,A3,FUNCT_1:13
+                  .= 0 by A1,A2,A4,B1,FUNCT_1:34;
+  A7: ['L.a,L.b'] = [.L.a,L.b.] by B2,INTEGRA5:def 3;
+
+  set x1 = x*L";
+  set y1 = y*L";
+  set a2 = L.a;
+  set b2 = L.b;
+  b in [.a,b.] by A1; then
+  A9: ArcLenP(x,y,a,b).b = b2 - a2 by A2;
+  A14: (x*L").(L.a) = x.(L".(L.a)) by A2,A3,FUNCT_1:13
+                   .= x.a by A2,A4,B1,FUNCT_1:34;
+
+  thus integral(y(#)(x`|dom x),a,b) <= 1/2 * l^2 / PI
+    by A1,A2,A5,A6,A7,A9,B2,Lm3;
+
+    hereby
+      assume integral(y(#)(x`|dom x),a,b) = 1/2 * l^2 / PI;
+      then per cases by A1,A2,A5,A6,A7,A9,B2,Lm3;
+      suppose
+        A16: for t be Real st t in [.a2,b2.]
+             holds y1.t = (b2-a2)/PI *   sin.(PI * (t-a2)/(b2-a2))
+                 & x1.t = (b2-a2)/PI * (-cos.(PI * (t-a2)/(b2-a2))
+                        + cos.0 + PI/(b2-a2) * x1.a2);
+
+        for s be Real st s in [.a,b.]
+        holds y.s = l/PI *   sin.(PI * ArcLenP(x,y,a,b).s / l)
+            & x.s = l/PI * (-cos.(PI * ArcLenP(x,y,a,b).s / l)
+                           + cos.0 + PI/l * x.a)
+        proof
+          let s be Real;
+          assume
+          A17: s in [.a,b.]; then
+          A19: L.s in [.L.a,L.b.] by A2,B1,FUNCT_1:def 6;
+          set t = L.s;
+          A23: ArcLenP(x,y,a,b).s = L.s - L.a by A2,A17;
+          A24: (y*L").(L.s) = y.(L".(L.s)) by A2,A19,FUNCT_1:13
+                           .= y.s by A2,A17,B1,FUNCT_1:34;
+          (x*L").(L.s) = x.(L".(L.s)) by A2,A19,FUNCT_1:13
+                      .= x.s by A2,A17,B1,FUNCT_1:34;
+          hence y.s = l/PI *   sin.(PI * ArcLenP(x,y,a,b).s / l)
+              & x.s = l/PI * (-cos.(PI * ArcLenP(x,y,a,b).s / l)
+                    + cos.0 + PI/l * x.a) by A1,A9,A14,A16,A19,A23,A24;
+        end;
+        hence (for s be Real st s in [.a,b.]
+               holds y.s = l/PI *   sin.(PI * ArcLenP(x,y,a,b).s / l)
+                   & x.s = l/PI * (-cos.(PI * ArcLenP(x,y,a,b).s / l)
+                                + cos.0 + PI/l * x.a))
+                or
+              (for s be Real st s in [.a,b.]
+               holds y.s = -l/PI *  sin.(PI * ArcLenP(x,y,a,b).s / l)
+                   & x.s =  l/PI * (cos.(PI * ArcLenP(x,y,a,b).s / l)
+                                 - cos.0 + PI/l * x.a));
+      end;
+      suppose
+        A25: for t be Real st t in [.a2,b2.]
+             holds y1.t = -(b2-a2)/PI *  sin.(PI * (t-a2)/(b2-a2))
+                 & x1.t =  (b2-a2)/PI * (cos.(PI * (t-a2)/(b2-a2))
+                        - cos.0 + PI/(b2-a2) * x1.a2);
+
+        for s be Real st s in [.a,b.]
+        holds y.s = -l/PI *  sin.(PI * ArcLenP(x,y,a,b).s / l)
+            & x.s =  l/PI * (cos.(PI * ArcLenP(x,y,a,b).s / l)
+                  - cos.0 + PI/l * x.a)
+        proof
+          let s be Real;
+          assume
+          A26: s in [.a,b.]; then
+          A27: L.s in [.L.a,L.b.] by A2,B1,FUNCT_1:def 6;
+          set t = L.s;
+          A31: ArcLenP(x,y,a,b).s = L.s - L.a by A2,A26;
+          A32: (y*L").(L.s) = y.(L".(L.s)) by A2,A27,FUNCT_1:13
+                           .= y.s by A2,A26,B1,FUNCT_1:34;
+          (x*L").(L.s) = x.(L".(L.s)) by A2,A27,FUNCT_1:13
+                      .= x.s by A2,A26,B1,FUNCT_1:34;
+          hence y.s = -l/PI *  sin.(PI * ArcLenP(x,y,a,b).s / l)
+              & x.s =  l/PI * (cos.(PI * ArcLenP(x,y,a,b).s / l)
+                    - cos.0 + PI/l * x.a) by A1,A9,A14,A25,A27,A31,A32;
+        end;
+        hence (for s be Real st s in [.a,b.]
+               holds y.s = l/PI *   sin.(PI * ArcLenP(x,y,a,b).s / l)
+                   & x.s = l/PI * (-cos.(PI * ArcLenP(x,y,a,b).s / l)
+                         + cos.0 + PI/l * x.a))
+                or
+              (for s be Real st s in [.a,b.]
+               holds y.s = -l/PI *  sin.(PI * ArcLenP(x,y,a,b).s / l)
+                   & x.s =  l/PI * (cos.(PI * ArcLenP(x,y,a,b).s / l)
+                         - cos.0 + PI/l * x.a));
+      end;
+    end;
+    assume (for s be Real st s in [.a,b.]
+            holds y.s = l/PI *   sin.(PI * ArcLenP(x,y,a,b).s / l)
+                & x.s = l/PI * (-cos.(PI * ArcLenP(x,y,a,b).s / l)
+                      + cos.0 + PI/l * x.a))
+             or
+           (for s be Real st s in [.a,b.]
+            holds y.s = -l/PI *  sin.(PI * ArcLenP(x,y,a,b).s / l)
+                & x.s =  l/PI * (cos.(PI * ArcLenP(x,y,a,b).s / l)
+                      - cos.0 + PI/l * x.a));
+    then per cases;
+    suppose
+      A33: for s be Real st s in [.a,b.]
+           holds y.s = l/PI *   sin.(PI * ArcLenP(x,y,a,b).s / l)
+               & x.s = l/PI * (-cos.(PI * ArcLenP(x,y,a,b).s / l)
+                     + cos.0 + PI/l * x.a);
+
+      for t be Real st t in [.a2,b2.]
+      holds y1.t = (b2-a2)/PI *   sin.(PI * (t-a2)/(b2-a2))
+          & x1.t = (b2-a2)/PI * (-cos.(PI * (t-a2)/(b2-a2))
+                 + cos.0 + PI/(b2-a2) * x1.a2)
+      proof
+        let t be Real;
+        assume
+        A34: t in [.a2,b2.]; then
+        consider s be object such that
+        A35: s in dom L & s in [.a,b.] & t = L.s by A2,FUNCT_1:def 6;
+        A38: ArcLenP(x,y,a,b).s = L.s - L.a by A2,A35;
+        A40: (y*L").t = y.(L".(L.s)) by A2,A34,A35,FUNCT_1:13
+                     .= y.s by A35,FUNCT_1:34;
+        (x*L").t = x.(L".(L.s)) by A2,A34,A35,FUNCT_1:13
+                .= x.s by A35,FUNCT_1:34;
+        hence y1.t = (b2-a2)/PI *   sin.(PI * (t-a2)/(b2-a2))
+            & x1.t = (b2-a2)/PI * (-cos.(PI * (t-a2)/(b2-a2))
+                   + cos.0 + PI/(b2-a2) * x1.a2)
+        by A1,A9,A14,A33,A35,A38,A40;
+      end;
+      hence integral(y(#)(x`|dom x),a,b) = 1/2 * l^2 / PI
+        by A1,A2,A5,A6,A7,A9,B2,Lm3;
+    end;
+    suppose
+      A41: for s be Real st s in [.a,b.]
+           holds y.s = -l/PI *  sin.(PI * ArcLenP(x,y,a,b).s / l)
+               & x.s =  l/PI * (cos.(PI * ArcLenP(x,y,a,b).s / l)
+                    - cos.0 + PI/l * x.a);
+
+      for t be Real st t in [.a2,b2.]
+      holds y1.t = -(b2-a2)/PI *  sin.(PI * (t-a2)/(b2-a2))
+          & x1.t =  (b2-a2)/PI * (cos.(PI * (t-a2)/(b2-a2))
+                  - cos.0 + PI/(b2-a2) * x1.a2)
+      proof
+        let t be Real;
+        assume
+        A42: t in [.a2,b2.]; then
+        consider s be object such that
+        A43: s in dom L & s in [.a,b.]
+           & t = L.s by A2,FUNCT_1:def 6;
+        A44: y.s = -l/PI *  sin.(PI * ArcLenP(x,y,a,b).s / l)
+           & x.s =  l/PI * (cos.(PI * ArcLenP(x,y,a,b).s / l)
+                - cos.0 + PI/l * x.a) by A41,A43;
+        A48: (y*L").t = y.(L".(L.s)) by A2,A42,A43,FUNCT_1:13
+                     .= y.s by A43,FUNCT_1:34;
+        (x*L").t = x.(L".(L.s)) by A2,A42,A43,FUNCT_1:13
+                .= x.s by A43,FUNCT_1:34;
+        hence y1.t = -(b2-a2)/PI *  sin.(PI * (t-a2)/(b2-a2))
+            & x1.t =  (b2-a2)/PI * (cos.(PI * (t-a2)/(b2-a2))
+                  - cos.0 + PI/(b2-a2) * x1.a2)
+          by A1,A2,A9,A14,A43,A44,A48;
+      end;
+      hence integral(y(#)(x`|dom x),a,b) = 1/2 * l^2 / PI
+        by A1,A2,A5,A6,A7,A9,B2,Lm3;
+    end;
+end;

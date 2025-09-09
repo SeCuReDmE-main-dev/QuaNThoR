@@ -1,0 +1,3464 @@
+:: Formalization of Trellises and Tolerance Relations
+::  by Adam Grabowski and Franciszek Turowski
+:: 
+:: Received December 27, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies EQREL_1, LATTICES, STRUCT_0, PBOOLE, CARD_1, FUNCT_1, XXREAL_0,
+      ZFMISC_1, FILTER_0, SGRAPH1, GRAPH_1, FILTER_1, SHEFFER1, XBOOLE_0,
+      SUBSET_1, ROBBINS1, BINOP_1, LATTICE3, ORDERS_2, RELAT_2, PCS_0, JORDAN6,
+      RELAT_1, PARTFUN1, TARSKI, LATTAD_1, LATWAL_1, ROBBINS3, LATWAL_2,
+      ORDINAL1, GLIB_002;
+ notations TARSKI, ENUMSET1, ZFMISC_1, XXREAL_0, SUBSET_1, ORDINAL1, XBOOLE_0,
+      RELAT_1, RELAT_2, RELSET_1, EQREL_1, PARTFUN1, STRUCT_0, LATTICES,
+      BINOP_1, ORDERS_2, ROBBINS1, SHEFFER1, LATTICE3, PCS_0, LATTAD_1,
+      ROBBINS3, LATWAL_1;
+ constructors BINOP_1, RELSET_1, SHEFFER1, LATTICE3, PCS_0, LATTAD_1, ROBBINS3,
+      LATWAL_1, XXREAL_0;
+ registrations RELSET_1, STRUCT_0, LATTICES, XXREAL_0, ORDINAL1, LATTAD_1,
+      ORDERS_2, LATTICE3, ZFMISC_1, RELAT_2, LATWAL_1, ROBBINS3, PCS_0;
+ requirements SUBSET, NUMERALS, BOOLE, REAL;
+ definitions LATTICES, TARSKI, RELAT_1, LATTICE3, ROBBINS1, SHEFFER1;
+ equalities LATTICES, LATTICE3, RELAT_1, LATTAD_1, PCS_0;
+ theorems LATTICES, XXREAL_0, ENUMSET1, BINOP_1, STRUCT_0, SHEFFER1, ROBBINS1,
+      ORDERS_1, LATTICE3, LATTAD_1, PARTFUN1, PCS_0, EQREL_1, RELAT_2,
+      XBOOLE_0, ZFMISC_1, PREFER_1, YELLOW_0, TARSKI, ORDERS_2, PARTIT_2,
+      RELAT_1, XTUPLE_0, RELSET_1, LATWAL_1, FILTER_1;
+ schemes BINOP_1, RELSET_1;
+
+begin :: Preliminaries
+
+:: reflexive antisymmetric = pseudo-order
+
+registration
+  cluster reflexive antisymmetric with_suprema with_infima for
+    non empty RelStr;
+  existence
+  proof
+    set T = the RelStr of TrivLattRelStr;
+    reconsider T as non empty strict RelStr;
+    T is reflexive;
+    hence thesis;
+  end;
+end;
+
+definition
+  mode RT-Lattice is antisymmetric with_suprema with_infima
+    non empty RelStr;
+end;
+
+definition
+  mode WA-Lattice is reflexive antisymmetric with_suprema with_infima
+    non empty RelStr;
+end;
+
+ reserve W for WA-Lattice;
+ reserve a,b,c for Element of W;
+
+theorem Lemat0:
+  a <= b iff a "\/" b = b by YELLOW_0:24;
+
+theorem Lemat01:
+  a <= b iff a "/\" b = a by YELLOW_0:25;
+
+theorem LemmaId:
+  a "/\" a = a by YELLOW_0:25;
+
+theorem LemmaId2:
+  a "\/" a = a
+  proof
+    a <= a;
+    hence thesis by YELLOW_0:24;
+  end;
+
+theorem
+  a "/\" b = b "/\" a;
+
+theorem
+  a "\/" b = b "\/" a;
+
+theorem LemmaX1:
+  (a "/\" b) "\/" a = a by LATTICE3:17;
+
+theorem LemmaX2:
+  (a "\/" b) "/\" a = a by LATTICE3:18;
+
+theorem
+  W is transitive implies
+    (a "\/" b) "\/" c = a "\/" (b "\/" c) by LATTICE3:14;
+
+theorem
+  W is transitive implies
+    (a "/\" b) "/\" c = a "/\" (b "/\" c) by LATTICE3:16;
+
+theorem LatWal1:
+  a <= c & b <= c implies a "\/" b <= c by YELLOW_0:22;
+
+theorem LatWal2:
+  a <= a "\/" b by YELLOW_0:22;
+
+theorem LatWal3:
+  c <= a & c <= b implies c <= a "/\" b by YELLOW_0:23;
+
+theorem :: 4.
+  ((a "/\" c) "\/" (b "/\" c)) "\/" c = c
+  proof
+    (a "/\" c) "\/" c = c by LemmaX1; then
+A1: a "/\" c <= c by Lemat0;
+    (b "/\" c) "\/" c = c by LemmaX1; then
+    b "/\" c <= c by Lemat0; then
+    (a "/\" c) "\/" (b "/\" c) <= c by LatWal1, A1;
+    hence thesis by Lemat0;
+  end;
+
+theorem :: 4.  :: in LATWAL_1 appears [= instead of <=
+  ((a "\/" c) "/\" (b "\/" c)) "/\" c = c
+  proof
+A2: a "\/" c >= c by LatWal2;
+    (b "\/" c) "/\" c = c by LemmaX2; then
+    b "\/" c >= c by Lemat01; then
+    (a "\/" c) "/\" (b "\/" c) >= c by A2,LatWal3;
+    hence thesis by Lemat01;
+  end;
+
+begin :: Tolerance Structures
+
+:: Definition 3
+
+registration let D be trivial non empty set;
+  cluster pcs-total D -> antisymmetric;
+  coherence
+  proof
+    set T = pcs-total D;
+    T is trivial; then
+    for x,y being Element of T st x <= y & y <= x holds
+      x = y by STRUCT_0:def 10;
+    hence thesis by YELLOW_0:def 3;
+  end;
+end;
+
+registration
+  cluster reflexive antisymmetric with_suprema with_infima
+    non empty for pcs-Str;
+  existence
+  proof
+    set A = the trivial non empty set;
+    set T = pcs-total A;
+    take T;
+    for x,y being Element of T
+     ex z being Element of T st x <= z & y <= z &
+    for z9 being Element of T st x <= z9 & y <= z9 holds z <= z9
+    proof
+      let x,y be Element of T;
+      T is trivial; then
+T0:   x = y by STRUCT_0:def 10;
+      ex z being Element of T st x <= z & y <= z &
+      for z9 being Element of T st x <= z9 & y <= z9 holds z <= z9
+      proof
+        take z = x;
+        thus x <= z & y <= z by T0;
+        let z9 be Element of T;
+        assume x <= z9 & y <= z9;
+        hence thesis;
+      end;
+      hence thesis;
+    end; then
+B1: T is with_suprema by LATTICE3:def 10;
+    for x,y being Element of T
+     ex z being Element of T st z <= x & z <= y &
+    for z9 being Element of T st z9 <= x & z9 <= y holds z9 <= z
+    proof
+      let x,y be Element of T;
+      T is trivial; then
+T0:   x = y by STRUCT_0:def 10;
+      ex z being Element of T st z <= x & z <= y &
+      for z9 being Element of T st z9 <= x & z9 <= y holds z9 <= z
+      proof
+        take z = x;
+        thus z <= x & z <= y by T0;
+        let z9 be Element of T;
+        assume z9 <= x & z9 <= y;
+        hence thesis;
+      end;
+      hence thesis;
+    end;
+    hence thesis by B1,LATTICE3:def 11;
+  end;
+end;
+
+definition
+  mode WAP-Lattice is reflexive antisymmetric with_suprema with_infima
+    non empty pcs-Str;
+end;
+
+:: Compatibility in Tolerance Structures
+
+definition
+  let P be pcs-Str;
+:: a (--) b means that a tolerates b
+:: T is compatible with P
+  attr P is pcs-Compatible means :CompDef:
+  for a1,a2,b1,b2 being Element of P holds
+  a1 (--) b1 & a2 (--) b2
+    implies
+    (a1 "\/" a2) (--) (b1 "\/" b2) & (a1 "/\" a2) (--) (b1 "/\" b2);
+end;
+
+:: Theorem 1
+
+registration
+  cluster trivial total pcs-Compatible for WAP-Lattice;
+  existence
+  proof
+    {} in {{}} by TARSKI:def 1; then
+    reconsider D = {{}} as non empty set;
+    reconsider iD = id D as Relation of D;
+    reconsider nD = nabla D as Relation of D;
+    set P = pcs-Str (#D, iD, nD#);
+AA: for x,y being Element of P holds x (--) y
+    proof
+      let x,y be Element of P;
+      [x,y] in [:D,D:] by ZFMISC_1:87; then
+      [x,y] in nabla D by EQREL_1:def 1;
+      hence thesis by PCS_0:def 7;
+    end;
+A1: P is trivial;
+B1: the InternalRel of P is_reflexive_in the carrier of P
+      by EQREL_1:2;
+    field id D = D by PARTIT_2:18; then
+    field the InternalRel of P = the carrier of P; then
+B3: the InternalRel of P is_antisymmetric_in the carrier of P
+      by RELAT_2:def 12;
+    for x,y being Element of P
+    ex z being Element of P st x <= z & y <= z &
+    for z9 being Element of P st x <= z9 & y <= z9 holds z <= z9
+    proof
+      let x,y be Element of P;
+      reconsider z = {} as Element of P by TARSKI:def 1;
+      take z;
+B4:   x = z & y = z by A1,STRUCT_0:def 10; then
+      [x,z] in id D & [y,z] in id D by RELAT_1:def 10; then
+      [x,z] in the InternalRel of P & [y,z] in the InternalRel of P;
+      hence thesis by B4,ORDERS_2:def 5;
+    end; then
+B4: P is with_suprema by LATTICE3:def 10;
+    for x,y being Element of P
+    ex z being Element of P st z <= x & z <= y &
+    for z9 being Element of P st z9 <= x & z9 <= y holds z9 <= z
+    proof
+      let x,y be Element of P;
+      reconsider z = {} as Element of P by TARSKI:def 1;
+      take z;
+B4:   x = z & y = z by A1,STRUCT_0:def 10; then
+      [x,z] in id D & [y,z] in id D by RELAT_1:def 10;
+      hence thesis by B4,ORDERS_2:def 5;
+    end; then
+    P is with_infima by LATTICE3:def 11; then
+    P is reflexive antisymmetric with_suprema with_infima
+      by B1,B3,B4,ORDERS_2:def 2,def 4; then
+    reconsider P as WAP-Lattice;
+    take P;
+    thus thesis by AA;
+  end;
+end;
+
+:: Definition 4: Segment
+
+definition let W be WA-Lattice;
+  let a,b be Element of W;
+  func Segment (a,b) -> Subset of W equals
+    { x where x is Element of W : a <= x <= b or b <= x <= a };
+  coherence
+  proof
+    set T = { x where x is Element of W : a <= x <= b or b <= x <= a };
+    T c= the carrier of W
+    proof
+      let x be object;
+      assume x in T; then
+      consider x1 being Element of W such that
+A1:   x1 = x & (a <= x1 <= b or b <= x1 <= a);
+      thus thesis by A1;
+    end;
+    hence thesis;
+  end;
+end;
+
+:: Section 2, before Proposition 1
+:: The definition of a symmetric hull
+
+definition let W be non empty RelStr;
+  func SymmetricHull W -> Relation of the carrier of W means :SymHull:
+    for x,y being Element of W holds
+      [x,y] in it iff x <= y or y <= x;
+  existence
+  proof
+    defpred P[object,object] means
+    ex w1,w2 being Element of W st w1 = $1 & w2 = $2 &
+      (w1 <= w2 or w2 <= w1);
+    ex R being Relation of the carrier of W
+      st for x,y being object holds
+        [x,y] in R iff
+      x in the carrier of W & y in the carrier of W & P[x,y]
+        from RELSET_1:sch 1; then
+    consider R being Relation of the carrier of W such that
+A1: for x,y being object holds
+      [x,y] in R iff x in the carrier of W & y in the carrier of W & P[x,y];
+    take R;
+    let x,y be Element of W;
+    [x,y] in R iff x in the carrier of W & y in the carrier of W & P[x,y]
+      by A1;
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    let R1,R2 be Relation of the carrier of W such that
+A1: for x,y being Element of W holds
+      [x,y] in R1 iff x <= y or y <= x and
+A2: for x,y being Element of W holds
+      [x,y] in R2 iff x <= y or y <= x;
+A3: R1 c= R2
+    proof
+      let x,y be object;
+      assume
+A4:   [x,y] in R1; then
+      reconsider x1 = x, y1 = y as Element of W by ZFMISC_1:87;
+      x1 <= y1 or y1 <= x1 by A1,A4;
+      hence thesis by A2;
+    end;
+    R2 c= R1
+    proof
+      let x,y be object;
+      assume
+A4:   [x,y] in R2; then
+      x in the carrier of W &
+        y in the carrier of W by ZFMISC_1:87; then
+      reconsider x1 = x, y1 = y as Element of W;
+      x1 <= y1 or y1 <= x1 by A2,A4;
+      hence thesis by A1;
+    end;
+    hence thesis by XBOOLE_0:def 10,A3;
+  end;
+end;
+
+registration let W be WA-Lattice;
+  cluster SymmetricHull W -> total;
+  coherence
+  proof
+    set R = SymmetricHull W;
+    the carrier of W c= dom R
+    proof
+      let t be object;
+      assume t in the carrier of W; then
+      reconsider tt = t as Element of W;
+      tt <= tt; then
+      [tt,tt] in R by SymHull;
+      hence thesis by XTUPLE_0:def 12;
+    end; then
+    dom R = the carrier of W by XBOOLE_0:def 10;
+    hence thesis by PARTFUN1:def 2;
+  end;
+end;
+
+registration let W be WA-Lattice;
+  cluster SymmetricHull W -> reflexive symmetric;
+  coherence
+  proof
+    set R = SymmetricHull W;
+    for x being Element of W holds [x,x] in R
+    proof
+      let x be Element of W;
+      x <= x; then
+      [x,x] in R by SymHull;
+      hence thesis;
+    end; then
+T1: R is reflexive by LATTAD_1:1;
+    for x,y being object holds [x,y] in R implies [y,x] in R
+    proof
+      let x,y be object;
+      assume
+A1:   [x,y] in R; then
+      [x,y] in [:the carrier of W,the carrier of W:]; then
+      reconsider x1 = x, y1 = y as Element of W by ZFMISC_1:87;
+      x1 <= y1 or y1 <= x1 by A1,SymHull;
+      hence thesis by SymHull;
+    end;
+    hence thesis by T1,PREFER_1:20;
+  end;
+end;
+
+registration let L be WA-Lattice;
+  cluster total reflexive symmetric for Relation of the carrier of L;
+  existence
+  proof
+    take W = SymmetricHull L;
+    thus thesis;
+  end;
+end;
+
+theorem
+  for W being WA-Lattice holds
+    SymmetricHull W is Tolerance of the carrier of W;
+
+definition let S be non empty RelStr;
+  attr S is tournament means
+    for x, y being Element of S holds
+      x <= y or y <= x;
+end;
+
+theorem :: Proposition 1
+  for S being non empty RelStr holds
+:::  st the InternalRel of S is antisymmetric holds
+     S is tournament
+      iff
+    SymmetricHull S = nabla the carrier of S
+  proof
+    let S be non empty RelStr;
+:::    assume the InternalRel of S is antisymmetric;
+    thus S is tournament implies
+    SymmetricHull S = nabla the carrier of S
+    proof
+      assume S is tournament; then
+Aa1:  for a,b being Element of S holds
+        a <= b or b <= a;
+      for a,b being object holds
+        [a,b] in SymmetricHull S
+            implies
+          [a,b] in nabla the carrier of S
+      proof
+        let a,b be object;
+        assume [a,b] in SymmetricHull S; then
+        [a,b] in [:the carrier of S, the carrier of S:];
+        hence thesis by EQREL_1:def 1;
+      end; then
+A1:   SymmetricHull S c= nabla the carrier of S by RELAT_1:def 3;
+      for a,b being object holds
+        [a,b] in nabla the carrier of S implies
+          [a,b] in SymmetricHull S
+      proof
+        let a,b be object;
+        assume [a,b] in nabla the carrier of S; then
+Z9:     [a,b] in [:the carrier of S,the carrier of S:]; then
+        reconsider aa = a as Element of S by ZFMISC_1:87;
+        reconsider bb = b as Element of S by Z9,ZFMISC_1:87;
+        aa <= bb or bb <= aa by Aa1;
+        hence [a,b] in SymmetricHull S by SymHull;
+      end; then
+      nabla the carrier of S c= SymmetricHull S by RELAT_1:def 3;
+      hence thesis by A1,XBOOLE_0:def 10;
+    end;
+    assume
+W0: SymmetricHull S = nabla the carrier of S;
+    for x, y being Element of S holds
+      x <= y or y <= x
+    proof
+      let x, y be Element of S;
+      [x,y] in [:the carrier of S,the carrier of S:] by ZFMISC_1:87; then
+      [x,y] in nabla the carrier of S by EQREL_1:def 1;
+      hence thesis by W0,SymHull;
+    end;
+    hence thesis;
+  end;
+
+begin :: Compatibility Relation Revisited
+
+theorem NablaCompat:
+  for P be non empty pcs-Str st
+    the ToleranceRel of P = nabla the carrier of P holds
+      P is pcs-Compatible
+  proof
+    let P be non empty pcs-Str;
+    assume
+A1: the ToleranceRel of P = nabla the carrier of P;
+    for a1,a2,b1,b2 being Element of P holds
+      (a1 "\/" a2) (--) (b1 "\/" b2) & (a1 "/\" a2) (--) (b1 "/\" b2)
+    proof
+      let a1,a2,b1,b2 be Element of P;
+      set X = the carrier of P;
+      [a1 "\/" a2,b1 "\/" b2] in [:X,X:] &
+        [a1 "/\" a2,b1 "/\" b2] in [:X,X:] by ZFMISC_1:def 2; then
+      [a1 "\/" a2,b1 "\/" b2] in nabla the carrier of P &
+        [a1 "/\" a2,b1 "/\" b2] in nabla the carrier of P
+          by EQREL_1:def 1;
+      hence thesis by A1,PCS_0:def 7;
+    end;
+    hence thesis;
+  end;
+
+theorem
+  for P be non empty pcs-Str st
+    the ToleranceRel of P = id the carrier of P holds
+      P is pcs-Compatible
+  proof
+    let P be non empty pcs-Str;
+    assume
+A1: the ToleranceRel of P = id the carrier of P;
+    for a1,a2,b1,b2 being Element of P holds
+      a1 (--) b1 & a2 (--) b2
+    implies
+      (a1 "\/" a2) (--) (b1 "\/" b2) & (a1 "/\" a2) (--) (b1 "/\" b2)
+    proof
+      let a1,a2,b1,b2 be Element of P;
+      assume a1 (--) b1 & a2 (--) b2; then
+      [a1,b1] in the ToleranceRel of P &
+        [a2,b2] in the ToleranceRel of P by PCS_0:def 7; then
+      a1 = b1 & a2 = b2 by A1,RELAT_1:def 10; then
+      [a1 "\/" a2,b1 "\/" b2] in id the carrier of P &
+        [a1 "/\" a2,b1 "/\" b2] in id the carrier of P
+          by RELAT_1:def 10;
+      hence thesis by A1,PCS_0:def 7;
+    end;
+    hence thesis;
+  end;
+
+registration
+  cluster pcs-Compatible pcs-tol-reflexive pcs-tol-symmetric for WAP-Lattice;
+  existence
+  proof
+    set A = the trivial non empty set;
+    set T = pcs-total A;
+    for x,y being Element of T
+     ex z being Element of T st x <= z & y <= z &
+    for z9 being Element of T st x <= z9 & y <= z9 holds z <= z9
+    proof
+      let x,y be Element of T;
+      T is trivial; then
+T0:   x = y by STRUCT_0:def 10;
+      ex z being Element of T st x <= z & y <= z &
+      for z9 being Element of T st x <= z9 & y <= z9 holds z <= z9
+      proof
+        take z = x;
+        thus x <= z & y <= z by T0;
+        let z9 be Element of T;
+        assume x <= z9 & y <= z9;
+        hence thesis;
+      end;
+      hence thesis;
+    end; then
+B1: T is with_suprema by LATTICE3:def 10;
+    for x,y being Element of T
+     ex z being Element of T st z <= x & z <= y &
+    for z9 being Element of T st z9 <= x & z9 <= y holds z9 <= z
+    proof
+      let x,y be Element of T;
+      T is trivial; then
+T0:   x = y by STRUCT_0:def 10;
+      ex z being Element of T st z <= x & z <= y &
+      for z9 being Element of T st z9 <= x & z9 <= y holds z9 <= z
+      proof
+        take z = x;
+        thus z <= x & z <= y by T0;
+        let z9 be Element of T;
+        assume z9 <= x & z9 <= y;
+        hence thesis;
+      end;
+      hence thesis;
+    end; then
+B2: T is with_infima by LATTICE3:def 11;
+    T is pcs-Compatible by NablaCompat;
+    hence thesis by B1,B2;
+  end;
+end;
+
+ reserve W for pcs-Compatible pcs-tol-reflexive pcs-tol-symmetric WAP-Lattice;
+ reserve a,b for Element of W;
+
+theorem LemmaRefl:
+  for x being Element of W holds
+    x (--) x
+  proof
+    let x be Element of W;
+A1: the ToleranceRel of W is_reflexive_in the carrier of W by PCS_0:def 9;
+    [x,x] in the ToleranceRel of W by A1,RELAT_2:def 1;
+    hence thesis by PCS_0:def 7;
+  end;
+
+theorem
+  for x,y being Element of W st
+    x (--) y holds y (--) x;   :: x T y -> y T x
+
+theorem
+  for a, b being Element of W holds
+    a (--) b & b (--) b implies (a "/\" b) (--) (b "/\" b)
+      by CompDef;
+
+theorem
+  for a, b being Element of W holds
+    a (--) b & b (--) b implies (a "/\" b) (--) b
+  proof
+    let a, b be Element of W;
+    assume a (--) b & b (--) b; then
+    (a "/\" b) (--) (b "/\" b) by CompDef;
+    hence thesis by LemmaId;
+  end;
+
+theorem
+  for a, b being Element of W holds
+    a (--) b & a (--) a implies (a "/\" b) (--) a
+  proof
+    let a, b be Element of W;
+    assume a (--) b & a (--) a; then
+    (a "/\" b) (--) (a "/\" a) by CompDef;
+    hence thesis by LemmaId;
+  end;
+
+theorem
+  for a, b being Element of W holds
+    a (--) b & a (--) a implies (a "\/" b) (--) a
+  proof
+    let a, b be Element of W;
+    assume a (--) b & a (--) a; then
+    (a "\/" b) (--) (a "\/" a) by CompDef;
+    hence thesis by LemmaId2;
+  end;
+
+theorem :: Theorem 1
+  for W being pcs-Compatible pcs-tol-reflexive
+          pcs-tol-symmetric WAP-Lattice
+  for a,b being Element of W holds
+    a (--) b
+     implies  :: (--) tolerates
+      for x,y being Element of W st
+      x in Segment (a "/\" b, a "\/" b) &
+      y in Segment (a "/\" b, a "\/" b) holds
+         x (--) y
+  proof
+    let W be pcs-Compatible
+       pcs-tol-reflexive pcs-tol-symmetric WAP-Lattice;
+    let a,b be Element of W;
+    assume
+A1: a (--) b;
+    let x,y be Element of W;
+    assume
+A2: x in Segment (a "/\" b, a "\/" b) &
+    y in Segment (a "/\" b, a "\/" b); then
+    consider x2 being Element of W such that
+A3: x = x2 &
+    (a "/\" b <= x2 <= a "\/" b or a "\/" b <= x2 <= a "/\" b);
+AA3:a "/\" b <= x <= a "\/" b or a "\/" b <= x <= a "/\" b by A3;
+    consider y2 being Element of W such that
+BA3: y = y2 &
+    (a "/\" b <= y2 <= a "\/" b or a "\/" b <= y2 <= a "/\" b) by A2;
+AA4:  a "/\" b <= y <= a "\/" b or a "\/" b <= y <= a "/\" b by BA3;
+C1:   b "/\" b = b by LemmaId;
+W0:   x (--) x & y (--) y by LemmaRefl;
+      b (--) b by LemmaRefl; then
+W1:   (a "/\" b) (--) b by C1,A1,CompDef;
+      b (--) a & a (--) a by A1,LemmaRefl; then
+      (a "/\" b) (--) (a "/\" a) by CompDef; then
+      (a "/\" b) (--) a by LemmaId; then
+      (a "/\" b) "\/" (a "/\" b) (--) a "\/" b by CompDef,W1; then
+YY:   (a "/\" b) (--) a "\/" b by LemmaId2;
+
+    per cases by AA3,AA4;
+
+    suppose
+XX1:  a "/\" b <= x <= a "\/" b & a "/\" b <= y <= a "\/" b; then
+U9:   x "/\" (a "\/" b) = x by Lemat01;
+U8:   (a "\/" b) "/\" y = y by XX1,Lemat01;
+U4:   (a "/\" b) (--) a "\/" b by YY; then
+U1:   ((a "/\" b) "\/" x) (--) ((a "\/" b) "\/" x) by W0,CompDef;
+      (a "/\" b) "\/" x = x by XX1,Lemat0; then
+UU:   x (--) (a "\/" b) by U1,XX1,Lemat0;
+W1:   ((a "/\" b) "\/" y) (--) ((a "\/" b) "\/" y) by U4,W0,CompDef;
+      (a "/\" b) "\/" y = y by XX1,Lemat0; then
+      y (--) (a "\/" b) by W1,XX1,Lemat0;
+      hence thesis by U8,U9,UU,CompDef;
+    end;
+
+    suppose
+XX1:  a "\/" b <= x <= a "/\" b & a "/\" b <= y <= a "\/" b; then
+Y2:   (a "/\" b) "\/" x = a "/\" b by Lemat0;
+      a "/\" b (--) a "\/" b by YY; then
+Y1:   (a "/\" b) "\/" x (--) (a "\/" b) "\/" x by CompDef,W0;
+s1:   a "/\" b (--) x by Y2,Y1,XX1,Lemat0;
+S1:   (a "/\" b) "\/" y = y by XX1,Lemat0;
+Y3:   (a "\/" b) "\/" y = a "\/" b by XX1,Lemat0;
+      (a "/\" b) "\/" y (--) (a "\/" b) "\/" y by CompDef,W0,YY; then
+s2:   y (--) (a "\/" b) by S1,Y3;
+      x = x "\/" (a "\/" b) by XX1,Lemat0;
+      hence thesis by S1,s1,s2,CompDef;
+    end;
+
+    suppose
+XX1:  a "\/" b <= x <= a "/\" b & a "\/" b <= y <= a "/\" b; then
+U2:   (a "\/" b) "\/" x = x by Lemat0;
+U4:   (a "/\" b) (--) a "\/" b by YY; then
+U1:   ((a "/\" b) "\/" x) (--) ((a "\/" b) "\/" x) by W0,CompDef;
+u1:   ((a "/\" b) "\/" y) (--) ((a "\/" b) "\/" y) by W0,CompDef,U4;
+      (a "/\" b) "\/" x = a "/\" b by XX1,Lemat0; then
+UU:   x (--) (a "/\" b) by U1,U2;
+U2:   (a "\/" b) "\/" y = y by XX1,Lemat0;
+      (a "/\" b) "\/" y = a "/\" b by XX1,Lemat0; then
+Uu:   y (--) (a "/\" b) by u1,U2;
+U9:   x "/\" (a "/\" b) = x by XX1,Lemat01;
+      (a "/\" b) "/\" y = y by XX1,Lemat01;
+      hence thesis by Uu,U9,UU,CompDef;
+    end;
+
+    suppose
+XX1:  a "/\" b <= x <= a "\/" b & a "\/" b <= y <= a "/\" b; then
+S1:   (a "/\" b) "\/" x = x by Lemat0;
+      a "/\" b (--) a "\/" b by YY; then
+Y1:   (a "/\" b) "\/" y (--) (a "\/" b) "\/" y by CompDef,W0;
+      (a "/\" b) "\/" y = a "/\" b by XX1,Lemat0; then
+s1:   a "/\" b (--) y by Y1,XX1,Lemat0;
+Y3:   (a "\/" b) "\/" x = a "\/" b by XX1,Lemat0;
+      (a "/\" b) "\/" x (--) (a "\/" b) "\/" x by CompDef,W0,YY; then
+s2:   x (--) (a "\/" b) by S1,Y3;
+      y = y "\/" (a "\/" b) by XX1,Lemat0;
+      hence thesis by S1,s1,s2,CompDef;
+    end;
+  end;
+
+begin :: WA-Lattices and Pseudo-Orders
+
+ reserve L for WA_Lattice;
+
+theorem Idem2: ::: WA version of LATTAD_1:27
+  for L being WA_Lattice,
+      x, y being Element of L holds
+    [x,y] in LatOrder L iff x [= y
+  proof
+    let L be WA_Lattice,
+        x, y be Element of L;
+    hereby assume [x,y] in LatOrder L; then
+      consider a1, b1 being Element of L such that
+A1:   [a1,b1] = [x,y] & a1 [= b1;
+      a1 = x & b1 = y by A1,XTUPLE_0:1;
+      hence x [= y by A1;
+    end;
+    assume x [= y;
+    hence thesis;
+  end;
+
+theorem Th32:
+  dom LatOrder L = the carrier of L &
+    rng LatOrder L = the carrier of L &
+    field LatOrder L = the carrier of L
+  proof
+    now
+      let x be object;
+      thus x in the carrier of L implies
+      ex y being object st [x,y] in LatOrder L
+      proof
+        assume x in the carrier of L;
+        then reconsider p = x as Element of L;
+        [p,p] in LatOrder L by Idem2;
+        hence thesis;
+      end;
+      given y being object such that
+A1:   [x,y] in LatOrder L;
+      consider p,q being Element of L such that
+A2:   [x,y] = [p,q] and
+      p [= q by A1;
+      x = p by A2,XTUPLE_0:1;
+      hence x in the carrier of L;
+    end;
+    hence
+A3: dom LatOrder L = the carrier of L by XTUPLE_0:def 12;
+T1: now
+      let x be object;
+      thus x in the carrier of L implies
+        ex y being object st [y,x] in LatOrder L
+      proof
+        assume x in the carrier of L;
+        then reconsider p = x as Element of L;
+        [p,p] in LatOrder L by Idem2;
+        hence thesis;
+      end;
+      given y being object such that
+A4:   [y,x] in LatOrder L;
+      consider p,q being Element of L such that
+A5:   [y,x] = [p,q] and
+      p [= q by A4;
+      x = q by A5,XTUPLE_0:1;
+      hence x in the carrier of L;
+    end;
+    hence rng LatOrder L = the carrier of L by XTUPLE_0:def 13;
+    thus field LatOrder L = (the carrier of L) \/ the carrier of L
+      by A3,XTUPLE_0:def 13,T1
+      .= the carrier of L;
+  end;
+
+definition let L;
+  redefine func LatOrder L -> Relation of the carrier of L;
+  correctness
+  proof
+    dom LatOrder L = the carrier of L &
+    rng LatOrder L = the carrier of L by Th32;
+    hence thesis by RELSET_1:4;
+  end;
+end;
+
+registration let W be non empty WA_Lattice;
+  cluster LatOrder W -> (the carrier of W)-defined;
+  coherence;
+  cluster LatOrder W -> (the carrier of W)-valued;
+  coherence;
+end;
+
+registration let L;
+  cluster LatOrder L -> total for Relation of the carrier of L;
+  correctness
+  proof
+    set R = LatOrder L;
+    dom R = the carrier of L by Th32;
+    hence thesis by PARTFUN1:def 2;
+  end;
+end;
+
+registration let W be non empty WA_Lattice;
+  cluster LatOrder W -> reflexive;
+  coherence
+  proof
+    set R = LatOrder W;
+    for x being Element of W holds [x,x] in R
+    proof
+      let x be Element of W;
+      x [= x;
+      hence thesis;
+    end;
+    hence thesis by LATTAD_1:1;
+  end;
+end;
+
+registration let W be non empty WA_Lattice;
+  cluster LatOrder W -> antisymmetric;
+  coherence
+  proof
+    set R = LatOrder W;
+    for x, y being object st [x,y] in R & [y,x] in R holds x = y
+    proof
+      let x,y be object;
+      assume
+A1:   [x,y] in R & [y,x] in R; then
+      reconsider x1 = x, y1 = y as Element of W by ZFMISC_1:87;
+      x1 [= y1 & y1 [= x1 by A1, Idem2;
+      hence thesis by LATTICES:8;
+    end;
+    hence thesis by PREFER_1:31;
+  end;
+end;
+
+::: theorem :: automatically understood
+:::  ExNearLattice is
+:::    join-idempotent meet-idempotent join-commutative meet-commutative;
+
+begin :: ExNearLattice as an Example of WA-Lattice
+
+PomocU21:
+  for a,b being Element of ExNearLattice st
+    a = 2 & b = 1 holds
+      a "\/" b = 2
+  proof
+    let a,b be Element of ExNearLattice;
+    reconsider aa = a, bb = b as Element of {0,1,2} by LATWAL_1:def 10;
+    assume
+A1: a = 2 & b = 1;
+    a "\/" b = aa ex123"\/" bb by LATWAL_1:def 8,def 10
+            .= max (2,1) by A1,LATWAL_1:def 7
+            .= 2 by XXREAL_0:def 10;
+    hence thesis;
+  end;
+
+PomocU12:
+  for a,b being Element of ExNearLattice st
+    a = 1 & b = 2 holds
+      a "\/" b = 2
+  proof
+    let a,b be Element of ExNearLattice;
+    reconsider aa = a, bb = b as Element of {0,1,2} by LATWAL_1:def 10;
+    assume
+A1: a = 1 & b = 2;
+    a "\/" b = aa ex123"\/" bb by LATWAL_1:def 8,def 10
+            .= max (1,2) by A1,LATWAL_1:def 7
+            .= 2 by XXREAL_0:def 10;
+    hence thesis;
+  end;
+
+PomocU01:
+ for a,b being Element of ExNearLattice st
+    a = 0 & b = 1 holds
+      a "\/" b = 1
+  proof
+    let a,b be Element of ExNearLattice;
+    reconsider aa = a, bb = b as Element of {0,1,2} by LATWAL_1:def 10;
+    assume
+A1: a = 0 & b = 1;
+    a "\/" b = aa ex123"\/" bb by LATWAL_1:def 8,def 10
+            .= max (0,1) by A1,LATWAL_1:def 7
+            .= 1 by XXREAL_0:def 10;
+    hence thesis;
+  end;
+
+PomocU20:
+  for a,b being Element of ExNearLattice st
+    a = 2 & b = 0 holds
+      a "\/" b = 0
+  proof
+    let a,b be Element of ExNearLattice;
+    reconsider aa = a, bb = b as Element of {0,1,2} by LATWAL_1:def 10;
+    assume
+A1: a = 2 & b = 0;
+    a "\/" b = aa ex123"\/" bb by LATWAL_1:def 8,def 10
+            .= 0 by A1,LATWAL_1:def 7;
+    hence thesis;
+  end;
+
+PomocU10:
+  for a,b being Element of ExNearLattice st
+    a = 1 & b = 0 holds
+      a "\/" b = 1
+  proof
+    let a,b be Element of ExNearLattice;
+    reconsider aa = a, bb = b as Element of {0,1,2} by LATWAL_1:def 10;
+    assume
+A1: a = 1 & b = 0;
+    a "\/" b = aa ex123"\/" bb by LATWAL_1:def 8,def 10
+            .= max (1,0) by A1,LATWAL_1:def 7
+            .= 1 by XXREAL_0:def 10;
+    hence thesis;
+  end;
+
+PomocU02:
+  for a,b being Element of ExNearLattice st
+    a = 0 & b = 2 holds
+      a "\/" b = 0
+  proof
+    let a,b be Element of ExNearLattice;
+    reconsider aa = a, bb = b as Element of {0,1,2} by LATWAL_1:def 10;
+    assume
+A1: a = 0 & b = 2;
+    a "\/" b = aa ex123"\/" bb by LATWAL_1:def 8,def 10
+            .= 0 by A1,LATWAL_1:def 7;
+    hence thesis;
+  end;
+
+PomocL21:
+  for a,b being Element of ExNearLattice st
+    a = 2 & b = 1 holds
+      a "/\" b = 1
+  proof
+    let a,b be Element of ExNearLattice;
+    reconsider aa = a, bb = b as Element of {0,1,2} by LATWAL_1:def 10;
+    assume
+A1: a = 2 & b = 1;
+    a "/\" b = aa ex123"/\" bb by LATWAL_1:def 9,def 10
+            .= min (2,1) by A1,LATWAL_1:def 6
+            .= 1 by XXREAL_0:def 9;
+    hence thesis;
+  end;
+
+PomocL01:
+ for a,b being Element of ExNearLattice st
+    a = 0 & b = 1 holds
+      a "/\" b = 0
+  proof
+    let a,b be Element of ExNearLattice;
+    reconsider aa = a, bb = b as Element of {0,1,2} by LATWAL_1:def 10;
+    assume
+A1: a = 0 & b = 1;
+    a "/\" b = aa ex123"/\" bb by LATWAL_1:def 9,def 10
+            .= min (0,1) by A1,LATWAL_1:def 6
+            .= 0 by XXREAL_0:def 9;
+    hence thesis;
+  end;
+
+PomocL20:
+  for a,b being Element of ExNearLattice st
+    a = 2 & b = 0 holds
+      a "/\" b = 2
+  proof
+    let a,b be Element of ExNearLattice;
+    reconsider aa = a, bb = b as Element of {0,1,2} by LATWAL_1:def 10;
+    assume
+A1: a = 2 & b = 0;
+    a "/\" b = aa ex123"/\" bb by LATWAL_1:def 9,def 10
+            .= 2 by A1,LATWAL_1:def 6;
+    hence thesis;
+  end;
+
+PomocL02:
+ for a,b being Element of ExNearLattice st
+    a = 0 & b = 2 holds
+      a "/\" b = 2 by PomocL20;
+
+PomocL12:
+ for a,b being Element of ExNearLattice st
+    a = 1 & b = 2 holds
+      a "/\" b = 1
+  proof
+    let a,b be Element of ExNearLattice;
+    reconsider aa = a, bb = b as Element of {0,1,2} by LATWAL_1:def 10;
+    assume
+A1: a = 1 & b = 2;
+    a "/\" b = aa ex123"/\" bb by LATWAL_1:def 9,def 10
+            .= min (1,2) by A1,LATWAL_1:def 6
+            .= 1 by XXREAL_0:def 9;
+    hence thesis;
+  end;
+
+PomocL10:
+ for a,b being Element of ExNearLattice st
+    a = 1 & b = 0 holds
+      a "/\" b = 0
+  proof
+    let a,b be Element of ExNearLattice;
+    reconsider aa = a, bb = b as Element of {0,1,2} by LATWAL_1:def 10;
+    assume
+A1: a = 1 & b = 0;
+    a "/\" b = aa ex123"/\" bb by LATWAL_1:def 9,def 10
+            .= min (1,0) by A1,LATWAL_1:def 6
+            .= 0 by XXREAL_0:def 9;
+    hence thesis;
+  end;
+
+ExW31:
+  ExNearLattice is satisfying_W3
+  proof
+    set L = ExNearLattice;
+    for v2,v1,v0 being Element of L holds
+      ((v0 "\/" v1) "/\" (v2 "\/" v1)) "/\" v1 = v1
+    proof
+      let v2,v1,v0 be Element of L;
+a1:   v2 in {0,1,2} by LATWAL_1:def 10; then
+A1:   v2 = 2 or v2 = 1 or v2 = 0 by ENUMSET1:def 1;
+a2:   v1 in {0,1,2} by LATWAL_1:def 10; then
+A2:   v1 = 2 or v1 = 1 or v1 = 0 by ENUMSET1:def 1;
+a3:   v0 in {0,1,2} by LATWAL_1:def 10; then
+A3:   v0 = 2 or v0 = 1 or v0 = 0 by ENUMSET1:def 1;
+      reconsider a = v0, b = v1, c = v2 as Element of {0,1,2}
+         by a1,a2,a3;
+      per cases by A1,A2,A3;
+      suppose v2 = 2 & v1 = 2 & v0 = 2;
+        hence thesis;
+      end;
+      suppose B1: v2 = 2 & v1 = 2 & v0 = 1;
+        v0 "\/" v1 = a ex123"\/" b by LATWAL_1:def 8,def 10
+                  .= max (1,2) by B1,LATWAL_1:def 7
+                  .= 2 by XXREAL_0:def 10;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 2 & v0 = 0;
+B3:     v0 "/\" v1 = a ex123"/\" b by LATWAL_1:def 9,def 10
+                  .= 2 by B1,LATWAL_1:def 6;
+B2:     v0 "\/" v1 = a ex123"\/" b by LATWAL_1:def 8,def 10
+                  .= v0 by B1,LATWAL_1:def 7;
+        ((v0 "\/" v1) "/\" (v2 "\/" v1)) "/\" v1 = 2 by B1,B3,B2
+             .= v1 by B1;
+        hence thesis;
+      end;
+      suppose v2 = 1 & v1 = 1 & v0 = 1;
+        hence thesis;
+      end;
+      suppose v2 = 0 & v1 = 0 & v0 = 0;
+        hence thesis;
+      end;
+      suppose B1: v2 = 2 & v1 = 0 & v0 = 2; then
+        v2 "\/" v1 = 0 by PomocU02;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 2; then
+B2:     v0 "\/" v1 = 2;
+        v2 "\/" v1 = 0 by B1,PomocU02; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,PomocL02;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 1; then
+B2:     v0 "\/" v1 = 1;
+        v2 "\/" v1 = 2 by B1,PomocU21; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,PomocL12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 0 & v0 = 1; then
+        v0 "\/" v1 = 1 by PomocU10; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 0 by B1,PomocL10;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 0 & v0 = 2; then
+        v0 "\/" v1 = 0 by PomocU20;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 0 & v0 = 1; then
+        v0 "\/" v1 = 1 by PomocU10; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 0 by B1,PomocL10;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 0; then
+        v0 "\/" v1 = 1 by PomocU01;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 1; then
+        v2 "\/" v1 = 1 by PomocU01;
+        hence thesis by B1;
+      end;
+       suppose B1: v2 = 0 & v1 = 1 & v0 = 2; then
+B2:     v0 "\/" v1 = 2 by PomocU21;
+        v2 "\/" v1 = 1 by B1,PomocU01; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,PomocL21;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 0; then
+        v2 "\/" v1 = 0 by PomocU02;
+        hence thesis by B1,PomocL02;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 1; then
+B2:     v0 "\/" v1 = 2 by PomocU12;
+        v2 "\/" v1 = 0 by B1,PomocU02; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,PomocL02;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 0 & v0 = 0; then
+B2:     v0 "\/" v1 = 0;
+        v2 "\/" v1 = 1 by B1,PomocU10; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 0 by B2,PomocL01;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 0 & v0 = 1; then
+        v2 "\/" v1 = 1 by PomocU10;
+        hence thesis by B1,PomocL10;
+      end;
+      suppose B1: v2 = 1 & v1 = 0 & v0 = 2; then
+B2:     v0 "\/" v1 = 0 by PomocU20;
+        v2 "\/" v1 = 1 by B1,PomocU10; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 0 by B2,PomocL01;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 0; then
+        v0 "\/" v1 = 1 by PomocU01;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 2; then
+B2:     v0 "\/" v1 = 2 by PomocU21;
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B1,B2,PomocL21;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 0; then
+B2:     v0 "\/" v1 = 0 by PomocU02;
+        v2 "\/" v1 = 2 by B1,PomocU12; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,PomocL02;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 1; then
+        v0 "\/" v1 = 2 by PomocU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 2; then
+        v2 "\/" v1 = 2 by PomocU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 2; then
+        v2 "\/" v1 = 2 by PomocU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 0 & v0 = 0; then
+        v2 "\/" v1 = 0 by PomocU20;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 0 & v0 = 1; then
+B2:     v0 "\/" v1 = 1 by PomocU10;
+        v2 "\/" v1 = 0 by B1,PomocU20; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 0 by B2,PomocL01;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 0; then
+B2:     v0 "\/" v1 = 1 by PomocU01;
+        v2 "\/" v1 = 2 by B1,PomocU21; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,PomocL21;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 2; then
+        v0 "\/" v1 = 2 by PomocU21;
+        hence thesis by B1,PomocL21;
+      end;
+    end;
+    hence thesis by LATWAL_1:def 1;
+  end;
+
+ExW32:
+  ExNearLattice is satisfying_W3'
+  proof
+    set L = ExNearLattice;
+    for v2,v1,v0 being Element of L holds
+      ((v0 "/\" v1) "\/" (v2 "/\" v1)) "\/" v1 = v1
+    proof
+      let v2,v1,v0 be Element of L;
+a1:   v2 in {0,1,2} by LATWAL_1:def 10; then
+A1:   v2 = 2 or v2 = 1 or v2 = 0 by ENUMSET1:def 1;
+a2:   v1 in {0,1,2} by LATWAL_1:def 10; then
+A2:   v1 = 2 or v1 = 1 or v1 = 0 by ENUMSET1:def 1;
+a3:   v0 in {0,1,2} by LATWAL_1:def 10; then
+A3:   v0 = 2 or v0 = 1 or v0 = 0 by ENUMSET1:def 1;
+      reconsider a = v0, b = v1, c = v2 as Element of {0,1,2}
+         by a1,a2,a3;
+      per cases by A1,A2,A3;
+      suppose v2 = 2 & v1 = 2 & v0 = 2;
+        hence thesis;
+      end;
+      suppose B1: v2 = 2 & v1 = 2 & v0 = 1;
+B2:     v0 "/\" v1 = a ex123"/\" b by LATWAL_1:def 9,def 10
+                  .= min (1,2) by B1,LATWAL_1:def 6
+                  .= 1 by XXREAL_0:def 9;
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B1,B2,PomocU21;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 2 & v0 = 0;
+B3:     v0 "/\" v1 = a ex123"/\" b by LATWAL_1:def 9,def 10
+                  .= 2 by B1,LATWAL_1:def 6;
+        ((v0 "/\" v1) "\/" (v2 "/\" v1)) "\/" v1 = v1 by B1,B3;
+        hence thesis;
+      end;
+      suppose v2 = 1 & v1 = 1 & v0 = 1;
+        hence thesis;
+      end;
+      suppose v2 = 0 & v1 = 0 & v0 = 0;
+        hence thesis;
+      end;
+      suppose B1: v2 = 2 & v1 = 0 & v0 = 2; then
+        v2 "/\" v1 = 2 by PomocL20;
+        hence thesis by B1,PomocU20;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 2; then
+        v2 "/\" v1 = 2 by PomocL02;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 1; then
+        v2 "/\" v1 = 1 by PomocL21;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 0 & v0 = 1; then
+        v0 "/\" v1 = 0 by PomocL10;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 0 & v0 = 2; then
+        v0 "/\" v1 = 2 by PomocL20; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 0 by B1,PomocU02;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 0 & v0 = 1; then
+        v0 "/\" v1 = 0 by PomocL10;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 0; then
+        v2 "/\" v1 = 0 by PomocL01;
+        hence thesis by B1,PomocU10;
+      end;
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 1; then
+        v2 "/\" v1 = 0 by PomocL01; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B1,PomocU10;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 2; then
+B2:     v0 "/\" v1 = 1 by PomocL21;
+        v2 "/\" v1 = 0 by B1,PomocL01; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B2,PomocU10;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 0; then
+        v2 "/\" v1 = 2 by PomocL02;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 1; then
+B2:     v0 "/\" v1 = 1 by PomocL12;
+        v2 "/\" v1 = 2 by B1,PomocL02; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,PomocU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 0 & v0 = 0; then
+        v2 "/\" v1 = 0 by PomocL10;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 0 & v0 = 1; then
+        v2 "/\" v1 = 0 by PomocL10;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 0 & v0 = 2; then
+B2:     v0 "/\" v1 = 2 by PomocL20;
+        v2 "/\" v1 = 0 by B1,PomocL10; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 0 by B2,PomocU20;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 0; then
+        v0 "/\" v1 = 0 by PomocL01; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B1,PomocU01;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 2; then
+        v0 "/\" v1 = 1 by PomocL21;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 0; then
+B2:     v0 "/\" v1 = 2 by PomocL20;
+        v2 "/\" v1 = 1 by B1,PomocL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,PomocU21;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 1; then
+        v0 "/\" v1 = 1 by PomocL12;
+        hence thesis by B1,PomocU12;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 2; then
+        v2 "/\" v1 = 1 by PomocL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B1,PomocU21;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 2; then
+        v2 "/\" v1 = 1 by PomocL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B1,PomocU21;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 0 & v0 = 0; then
+        v2 "/\" v1 = 2 by PomocL20; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 0 by B1,PomocU20;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 0 & v0 = 1; then
+B2:     v0 "/\" v1 = 0 by PomocL10;
+        v2 "/\" v1 = 2 by B1,PomocL20; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 0 by B2,PomocU02;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 0; then
+B2:     v0 "/\" v1 = 0 by PomocL01;
+        v2 "/\" v1 = 1 by B1,PomocL21; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B2,PomocU01;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 2; then
+        v2 "/\" v1 = 1 by PomocL21;
+        hence thesis by B1;
+      end;
+    end;
+    hence thesis by LATWAL_1:def 2;
+  end;
+
+registration
+  cluster ExNearLattice -> satisfying_W3 satisfying_W3';
+  coherence by ExW31,ExW32;
+end;
+
+:::theorem :: automatically understood
+:::  ExNearLattice is WA_Lattice;
+
+begin :: WA-Lattices (as lattices) and WA_Lattices (as relational structures)
+
+definition
+  let L be WA_Lattice;
+  func LatRelStr L -> strict RelStr equals
+:: LATTAD_1:def 12 is the version for generalized almost distributive
+  RelStr (# the carrier of L, LatOrder L #);
+  coherence;
+end;
+
+theorem LemmaEqual0:
+  for L being WA_Lattice
+  for x,y being Element of L,
+      xx,yy being Element of LatRelStr L st
+    x = xx & y = yy holds
+  x [= y iff xx <= yy
+  proof
+    let L be WA_Lattice;
+    let x,y be Element of L,
+        xx,yy be Element of LatRelStr L;
+    assume
+A1: x = xx & y = yy;
+    thus x [= y implies xx <= yy
+    proof
+      assume x [= y; then
+      [xx,yy] in LatOrder L by A1;
+      hence thesis by ORDERS_2:def 5;
+    end;
+    assume xx <= yy; then
+    [xx,yy] in the InternalRel of LatRelStr L by ORDERS_2:def 5;
+    hence thesis by A1,Idem2;
+  end;
+
+definition
+  let L be WA_Lattice, p be Element of L;
+  func p% -> Element of LatRelStr L equals
+  p;
+  coherence;
+end;
+
+definition
+  let L be WA_Lattice, p be Element of LatRelStr L;
+  func %p -> Element of L equals
+  p;
+  coherence;
+end;
+
+registration let L be WA_Lattice;
+  cluster LatRelStr L -> reflexive antisymmetric;
+  coherence;
+end;
+
+registration let L be WA_Lattice;
+  cluster LatRelStr L -> with_suprema with_infima;
+  coherence
+  proof
+    set LL = LatRelStr L;
+    thus LL is with_suprema
+    proof
+      let x,y be Element of LL;
+      reconsider xx = x, yy = y as Element of L;
+      reconsider z = xx "\/" yy as Element of LL;
+      take z;
+A1:   xx [= xx "\/" yy by LATWAL_1:9;
+      yy [= yy "\/" xx by LATWAL_1:9;
+      hence x <= z & y <= z by A1,LemmaEqual0;
+      let z9 be Element of LL;
+      reconsider zz9 = z9 as Element of L;
+      reconsider zzz9 = zz9 as Element of LL;
+      assume that
+A6:   x <= z9 and
+A7:   y <= z9;
+A8:   %x [= zz9 by A6,LemmaEqual0;
+      %y [= %z9 by A7,LemmaEqual0;
+      then %x "\/" %y [= %z9 by A8,LATWAL_1:11;
+      hence thesis by LemmaEqual0;
+    end;
+    let x,y be Element of LL;
+    take z = (%x "/\" %y)%;
+A9: %x "/\" %y [= %x by LATTICES:6;
+    %y "/\" %x [= %y by LATTICES:6;
+    hence z <= x & z <= y by A9,LemmaEqual0;
+    let z9 be Element of LatRelStr L;
+    assume that
+A14: z9 <= x and
+A15: z9 <= y;
+A16: %z9 [= %x by A14,LemmaEqual0;
+    %z9 [= %y by A15,LemmaEqual0;
+    then %z9 [= %x "/\" %y by A16,LATWAL_1:13;
+    hence thesis by LemmaEqual0;
+  end;
+end;
+
+registration
+  cluster strict for WA_Lattice;
+  existence by LATWAL_1:def 10;
+end;
+
+begin
+
+ deffunc carr(LattStr) = the carrier of $1;
+ deffunc join(LattStr) = the L_join of $1;
+ deffunc met(LattStr) = the L_meet of $1;
+
+theorem Th6:
+  for L1,L2 being WA_Lattice st LatRelStr L1 = LatRelStr L2 holds
+    the LattStr of L1 = the LattStr of L2
+  proof
+    let L1,L2 be WA_Lattice such that
+A1: LatRelStr L1 = LatRelStr L2;
+    reconsider j = the L_join of L2, m = the L_meet of L2
+      as BinOp of the carrier of L1 by A1;
+    now
+      let a,b be Element of L1;
+      reconsider x = a, y = b, xy = a "\/" b as Element of L2 by A1;
+      reconsider ab = x "\/" y as Element of L1 by A1;
+      a [= a "\/" b by LATWAL_1:9; then
+A6:   [x,xy] in LatOrder L2 by A1;
+      b [= b "\/" a by LATWAL_1:9; then
+A7:   [y,xy] in LatOrder L2 by A1;
+      x [= x "\/" y by LATWAL_1:9; then
+A8:   [a,ab] in LatOrder L1 by A1;
+      y [= y "\/" x by LATWAL_1:9; then
+A9:   [b,ab] in LatOrder L1 by A1;
+A10:  a [= ab by A8,Idem2;
+A11:  b [= ab by A9,Idem2;
+A12:  x [= xy by A6,Idem2;
+A13:  y [= xy by A7,Idem2;
+A14:  a "\/" b [= ab by A10,A11,LATWAL_1:11;
+      x "\/" y [= xy by A12,A13,LATWAL_1:11;
+      then [ab,a "\/" b] in LatOrder L1 by A1;
+      then ab [= a "\/" b by Idem2;
+      hence join(L1).(a,b) = j.(a,b) by A14,LATTICES:8;
+    end; then
+A15: join(L1) = j by BINOP_1:2;
+    now
+      let a,b be Element of L1;
+      reconsider x = a, y = b, xy = a "/\" b as Element of L2 by A1;
+      reconsider ab = x "/\" y as Element of L1 by A1;
+      x "/\" y [= x by LATTICES:6; then
+      [ab,a] in LatOrder L1 by A1; then
+A24:  ab [= a by Idem2;
+      y "/\" x [= y by LATTICES:6; then
+      [ab,b] in LatOrder L1 by A1; then
+A25:  ab [= b by Idem2;
+      a "/\" b [= a by LATTICES:6; then
+      [xy,x] in LatOrder L2 by A1; then
+A26:  xy [= x by Idem2;
+      b "/\" a [= b by LATTICES:6; then
+      [xy,y] in LatOrder L2 by A1; then
+A27:  xy [= y by Idem2;
+A28:  ab [= a "/\" b by A24,A25,LATWAL_1:13;
+      xy [= x "/\" y by A26,A27,LATWAL_1:13;
+      then [a "/\" b,ab] in LatOrder L1 by A1;
+      then a "/\" b [= ab by Idem2;
+      hence met(L1).(a,b) = m.(a,b) by A28,LATTICES:8;
+    end;
+    hence thesis by A1,A15,BINOP_1:2;
+  end;
+
+Lm1: now
+  let A be non empty antisymmetric with_suprema RelStr;
+  let a,b be Element of A;
+  thus for c being Element of A holds c = a "\/" b iff
+  a <= c & b <= c &
+  for d being Element of A st a <= d & b <= d holds c <= d
+    by YELLOW_0:22;
+end;
+
+theorem Th19:
+  for A being with_suprema with_infima WA-Lattice
+   ex L being strict WA_Lattice st the RelStr of A = LatRelStr L
+  proof
+    let A be with_suprema with_infima WA-Lattice;
+    defpred X[Element of A,Element of A,set] means
+    for x9,y9 being Element of A st x9 = $1 & y9 = $2 holds
+      $3 = x9 "\/" y9;
+A1: for x,y being Element of A ex u being Element of A st X[x,y,u]
+    proof
+      let x,y be Element of A;
+      reconsider x1 = x, y1 = y as Element of A;
+      take x1 "\/" y1;
+      thus thesis;
+    end;
+    consider j being BinOp of the carrier of A such that
+A2: for x,y being Element of A holds X[x,y,j.(x,y)] from BINOP_1:sch 3(A1);
+    defpred Y[Element of A,Element of A,set] means
+      for x1,y1 being Element of A st x1 = $1 & y1 = $2 holds $3 = x1"/\"y1;
+A3: for x,y being Element of A ex u being Element of A st Y[x,y,u]
+    proof
+      let x,y be Element of A;
+      reconsider x1 = x, y1 = y as Element of A;
+      take x1 "/\" y1;
+      thus thesis;
+    end;
+    consider m being BinOp of the carrier of A such that
+A4: for x,y being Element of A holds Y[x,y,m.(x,y)] from BINOP_1:sch 3(A3);
+    set L = LattStr (# the carrier of A, j, m #);
+A5: L is join-commutative
+    proof
+      let a,b be Element of L;
+      reconsider x = a, y = b as Element of A;
+      j.(x,y) = x "\/"y by A2;
+      hence a "\/" b = b "\/" a by A2;
+    end;
+A8: L is meet-commutative
+    proof
+      let a,b be Element of L;
+      reconsider x = a, y = b as Element of A;
+      m.(x,y) = x "/\" y by A4;
+      hence a "/\" b = b "/\" a by A4;
+    end;
+B1: L is meet-idempotent
+    proof
+      let a be Element of L;
+      reconsider x = a as Element of A;
+      x "/\" x = x by Lemat01;
+      hence a "/\" a = a by A4;
+    end;
+B2: L is join-idempotent
+    proof
+      let a be Element of L;
+      reconsider x = a as Element of A;
+      x "\/" x = x by Lemat0;
+      hence a "\/" a = a by A2;
+    end;
+    for v2,v1,v0 being Element of L holds
+      ((v0 "/\" v1) "\/" (v2 "/\" v1)) "\/" v1 = v1
+    proof
+      let v2,v1,v0 be Element of L;
+      reconsider a = v0, c = v1, b = v2 as Element of A;
+      reconsider ww = (v0 "\/" v1) "/\" (v2 "\/" v1) as Element of A;
+      (a "/\" c) "\/" c = c by LemmaX1; then
+a2:   a "/\" c <= c by Lemat0;
+      (b "/\" c) "\/" c = c by LemmaX1; then
+      b "/\" c <= c by Lemat0; then
+WW:   ((a "/\" c) "\/" (b "/\" c)) "\/" c = c by Lemat0,a2,LatWal1;
+      ((a "/\" c) "\/" (b "/\" c))"\/"c = j.(((a "/\" c) "\/" (b "/\" c)),c)
+         by A2
+               .= j.((j.(a "/\" c,b "/\" c)),c) by A2
+               .= j.((j.(m.(a,c),b "/\" c)),c) by A4
+               .= ((v0 "/\" v1) "\/" (v2 "/\" v1)) "\/" v1 by A4;
+      hence thesis by WW;
+    end; then
+b3:  L is satisfying_W3' by LATWAL_1:def 2;
+    for v2,v1,v0 being Element of L holds
+      ((v0 "\/" v1) "/\" (v2 "\/" v1)) "/\" v1 = v1
+    proof
+      let v2,v1,v0 be Element of L;
+      reconsider a = v0, c = v1, b = v2 as Element of A;
+      reconsider ww = (v0"\/"v1) "/\" (v2"\/"v1) as Element of A;
+a2:   a "\/" c >= c by LatWal2;
+      (b "\/" c) "/\" c = c by LemmaX2; then
+      b "\/" c >= c by Lemat01; then
+WW:   ((a "\/" c) "/\" (b "\/" c)) "/\" c = c by Lemat01,a2,LatWal3;
+      ((a "\/" c) "/\" (b "\/" c)) "/\" c =
+                  m.(((a "\/" c) "/\" (b "\/" c)),c) by A4
+               .= m.((m.(a "\/" c,b "\/" c)),c) by A4
+               .= m.((m.(j.(a,c),b "\/" c)),c) by A2
+               .= ((v0 "\/" v1) "/\" (v2 "\/" v1)) "/\" v1 by A2;
+      hence thesis by WW;
+    end; then
+    reconsider L as strict WA_Lattice by A5,A8,B1,B2,b3,LATWAL_1:def 1;
+    take L;
+    LatOrder L = the InternalRel of A
+    proof
+      let x,y be object;
+      thus [x,y] in LatOrder L implies [x,y] in the InternalRel of A
+      proof
+        assume [x,y] in LatOrder L;
+        then consider p,q being Element of L such that
+A11:    [x,y] = [p,q] and
+A12:    p [= q;
+        reconsider p9 = p, q9 = q as Element of A;
+        p9 "\/" q9 = p "\/" q by A2
+          .= q by A12,LATTICES:def 3;
+        then p9 <= q9 by Lm1;
+        hence thesis by A11,ORDERS_2:def 5;
+      end;
+      assume
+A13:  [x,y] in the InternalRel of A;
+      then consider x1,x2 being object such that
+A14:  x1 in the carrier of A and
+A15:  x2 in the carrier of A and
+A16:  [x,y] = [x1,x2] by ZFMISC_1:84;
+      reconsider x1, x2 as Element of A by A14,A15;
+      reconsider y1 = x1, y2 = x2 as Element of L;
+A17:  x1 <= x2 by A13,A16,ORDERS_2:def 5;
+      x2 <= x2; then
+A18:  x1 "\/" x2 <= x2 by A17,Lm1;
+      x2 <= x1"\/"x2 by Lm1;
+      then x2 = x1 "\/" x2 by A18,ORDERS_2:2
+        .= y1 "\/" y2 by A2;
+      then y1 [= y2 by LATTICES:def 3;
+      hence thesis by A16;
+    end;
+    hence thesis;
+  end;
+
+theorem :: automatically understood
+  LatRelStr ExNearLattice is WA-Lattice;
+
+definition :: LATTICE3:def 15
+  let A be RelStr such that
+A1: A is with_suprema with_infima reflexive antisymmetric;
+  func wlatt A -> strict WA_Lattice means :WLatDef:
+  the RelStr of A = LatRelStr it;
+  existence by A1,Th19;
+  uniqueness by Th6;
+end;
+
+theorem
+  wlatt LatRelStr ExNearLattice is WA_Lattice;
+
+registration ::: move to LATWAL_1
+  cluster -> satisfying_W3 for meet-associative join-absorbing Lattice;
+  coherence
+  proof
+    let L be join-associative meet-absorbing Lattice;
+    for v2,v1,v0 be Element of L holds
+      ((v0 "\/" v1) "/\" (v2 "\/" v1)) "/\" v1 = v1
+    proof
+      let v2,v1,v0 be Element of L;
+      ((v0 "\/" v1) "/\" (v2 "\/" v1)) "/\" v1 =
+        (v0 "\/" v1) "/\" ((v2 "\/" v1) "/\" v1) by LATTICES:def 7
+           .= (v0 "\/" v1) "/\" v1 by LATTICES:def 9
+           .= v1 by LATTICES:def 9;
+      hence thesis;
+    end;
+    hence thesis by LATWAL_1:def 1;
+  end;
+end;
+
+registration
+  cluster -> join-idempotent meet-idempotent for Lattice;
+  coherence
+  proof
+    let L be Lattice;
+    for x being Element of L holds x "\/" x = x;
+    hence L is join-idempotent by ROBBINS1:def 7;
+    for x being Element of L holds x "/\" x = x;
+    hence L is meet-idempotent by SHEFFER1:def 9;
+  end;
+end;
+
+theorem Eq0:
+  for L being Lattice holds
+    LattRel L = LatOrder L
+  proof
+    let L be Lattice;
+    LattRel L = LatOrder L
+    proof
+T1:   LattRel L c= LatOrder L
+      proof
+        let x,y be object;
+        assume [x,y] in LattRel L; then
+        [x,y] in { [xx,yy] where xx,yy is Element of L : xx [= yy }
+          by FILTER_1:def 8; then
+        consider xx,yy being Element of L such that
+ZZ:     [xx,yy] = [x,y] & xx [= yy;
+        thus thesis by ZZ;
+      end;
+      LatOrder L c= LattRel L
+      proof
+        let x,y be object;
+        assume [x,y] in LatOrder L; then
+        consider xx,yy being Element of L such that
+ZZ:     [xx,yy] = [x,y] & xx [= yy;
+        [x,y] in { [x1,y1] where x1,y1 is Element of L : x1 [= y1 }
+          by ZZ;
+        hence thesis by FILTER_1:def 8;
+      end;
+      hence thesis by T1,XBOOLE_0:def 10;
+    end;
+    hence thesis;
+  end;
+
+theorem Eq1:
+  for L being with_suprema with_infima Poset,
+      a,b being Element of L,
+      aa,bb being Element of latt L st
+   a = aa & b = bb holds
+    aa [= bb iff a <= b
+  proof
+    let L being with_suprema with_infima Poset,
+        a,b being Element of L,
+        aa,bb being Element of latt L;
+    assume
+AA: a = aa & b = bb;
+WW: LattPOSet latt L = the RelStr of L by LATTICE3:def 15;
+    thus aa [= bb implies a <= b
+    proof
+      assume aa [= bb; then
+      [aa,bb] in LatOrder latt L; then
+      [a,b] in LattRel latt L by AA,Eq0;
+      hence thesis by WW,ORDERS_2:def 5;
+    end;
+    assume a <= b; then
+    [a,b] in the InternalRel of L by ORDERS_2:def 5; then
+    [a,b] in { [x,y] where x,y is Element of latt L : x [= y }
+      by WW,FILTER_1:def 8; then
+    consider xx,yy being Element of latt L such that
+A1: [a,b] = [xx,yy] & xx [= yy;
+    a = xx & b = yy by XTUPLE_0:1,A1;
+    hence thesis by A1,AA;
+  end;
+
+theorem Eq2:
+  for L being WA-Lattice,
+      a,b being Element of L,
+      aa,bb being Element of wlatt L st a = aa & b = bb holds
+    aa [= bb iff a <= b
+  proof
+    let L be WA-Lattice,
+        a,b be Element of L,
+        aa,bb be Element of wlatt L;
+    assume
+AA: a = aa & b = bb;
+WW: LatRelStr wlatt L = the RelStr of L by WLatDef;
+    thus aa [= bb implies a <= b
+    proof
+      assume aa [= bb; then
+      consider xx,yy being Element of wlatt L such that
+A1:   [aa,bb] = [xx,yy] & xx [= yy;
+      [a,b] in { [x,y] where x,y is Element of wlatt L : x [= y }
+        by AA,A1;
+      hence thesis by WW,ORDERS_2:def 5;
+    end;
+    assume a <= b; then
+    [a,b] in the InternalRel of L by ORDERS_2:def 5; then
+    consider xx,yy being Element of wlatt L such that
+A1: [a,b] = [xx,yy] & xx [= yy by WW;
+    a = xx & b = yy by XTUPLE_0:1,A1;
+    hence thesis by A1,AA;
+  end;
+
+theorem
+  for L being WA-Lattice st
+    the InternalRel of L is transitive holds
+      wlatt L is Lattice
+  proof
+    let L be WA-Lattice;
+A1: field the InternalRel of L = the carrier of L by ORDERS_1:12;
+    assume the InternalRel of L is transitive; then
+    the InternalRel of L is_transitive_in field the InternalRel of L
+      by RELAT_2:def 16; then
+    reconsider LL = L as with_suprema with_infima Poset
+      by ORDERS_2:def 3,A1;
+B1: the RelStr of LL = LatRelStr wlatt LL by WLatDef;
+BC: the RelStr of LL = LattPOSet latt LL by LATTICE3:def 15; then
+BB: LatRelStr wlatt LL = LattPOSet latt LL by B1;
+    set L1 = latt LL;
+    set L2 = wlatt LL;
+D2: the carrier of L1 = the carrier of L2 by BB;
+    LatOrder latt LL = LatOrder wlatt LL
+    proof
+T1:   LatOrder latt LL c= LatOrder wlatt LL
+      proof
+        let x,y be object;
+        assume [x,y] in LatOrder latt LL; then
+        consider a,b being Element of latt LL such that
+A1:     [x,y] = [a,b] & a [= b;
+        reconsider aa = a, bb = b as Element of wlatt LL by D2;
+        reconsider a1 = a, b1 = b as Element of L by BC;
+        a1 <= b1 by A1,Eq1; then
+        [aa,bb] = [x,y] & aa [= bb by A1,Eq2;
+        hence thesis;
+      end;
+      LatOrder wlatt LL c= LatOrder latt LL
+      proof
+        let x,y be object;
+        assume [x,y] in LatOrder wlatt LL; then
+        consider a,b being Element of wlatt LL such that
+A1:     [x,y] = [a,b] & a [= b;
+        reconsider aa = a, bb = b as Element of latt LL by D2;
+        reconsider a1 = a, b1 = b as Element of L by B1;
+        a1 <= b1 by A1,Eq2; then
+        [aa,bb] = [x,y] & aa [= bb by A1,Eq1;
+        hence thesis;
+      end;
+      hence thesis by T1,XBOOLE_0:def 10;
+    end; then
+    LatRelStr L1 = LatRelStr L2 by D2;
+    hence thesis by Th6;
+  end;
+
+begin :: Cycles and Tournaments
+
+definition let L be WA-Lattice;
+           let A be set;
+  pred A is_cycle_of L means
+  for a,b being Element of L st
+    a <> b & a in A & b in A holds
+      A = Segment (a,b);
+end;
+
+theorem SingleCycle:
+  for L being WA-Lattice
+  for a being Element of L holds
+    {a} is_cycle_of L
+  proof
+    let L be WA-Lattice;
+    let a be Element of L;
+    set A = {a};
+    for x,y being Element of L st
+    x <> y & x in A & y in A holds
+      A = Segment (x,y)
+    proof
+      let x,y be Element of L;
+      assume A1: x <> y & x in A & y in A; then
+      x = a & y = a by TARSKI:def 1;
+      hence thesis by A1;
+    end;
+    hence thesis;
+  end;
+
+definition
+  let L be WA-Lattice;
+  let A be Subset of L;
+  attr A is cyclic means
+    A is_cycle_of L;
+end;
+
+registration let L be WA-Lattice;
+  cluster cyclic for Subset of L;
+  existence
+  proof
+    reconsider A = {the Element of L} as Subset of L by ZFMISC_1:31;
+    A is cyclic by SingleCycle;
+    hence thesis;
+  end;
+end;
+
+definition let L be WA-Lattice;
+  mode Cycle of L is cyclic Subset of L;
+end;
+
+theorem
+  for L being WA-Lattice,
+      a,b,x being Element of L st
+    x in Segment (a,b) holds
+      a <= x <= b or b <= x <= a
+  proof
+    let L be WA-Lattice,
+        a,b,x be Element of L;
+    assume x in Segment (a,b); then
+    consider xx being Element of L such that
+D1: x = xx & (a <= xx <= b or b <= xx <= a);
+    thus thesis by D1;
+  end;
+
+definition let L be WA-Lattice;
+  let A be Subset of L;
+  attr A is tournament means
+    for a,b being Element of L st a in A & b in A holds
+      a <= b or b <= a;
+end;
+
+notation
+  let L be WA-Lattice;
+  let A be Subset of L;
+  antonym A is acyclic for A is cyclic;
+end;
+
+begin :: Another Example of Weakly-Associative Lattice
+
+::     function(^(_,_), [
+::         0,0,0,0,0,
+::         0,1,1,3,1,
+::         0,1,2,2,2,
+::         0,3,2,3,3,
+::         0,1,2,3,4]),
+::     function(v(_,_), [
+::         0,1,2,3,4,
+::         1,1,2,1,4,
+::         2,2,2,3,4,
+::         3,1,3,3,4,
+::         4,4,4,4,4]),
+
+registration
+  cluster {0,1,2,3,4} -> non empty;
+  coherence by ENUMSET1:def 3;
+end;
+
+registration
+  cluster -> natural for Element of {0,1,2,3,4};
+  coherence by ENUMSET1:def 3;
+end;
+
+LmA:
+1 in {0,1,2,3,4} & for x,y being Element of {0,1,2,3,4} holds
+   min (x,y) in {0,1,2,3,4}
+proof
+  now let x,y be Element of {0,1,2,3,4};
+    min (x,y) = x or min (x,y) = y by XXREAL_0:15;
+    hence min (x,y) in {0,1,2,3,4};
+  end;
+  hence thesis by ENUMSET1:def 3;
+end;
+
+LmB:
+3 in {0,1,2,3,4} & for x,y being Element of {0,1,2,3,4} holds
+   max (x,y) in {0,1,2,3,4}
+proof
+  now let x,y be Element of {0,1,2,3,4};
+    max (x,y) = x or max (x,y) = y by XXREAL_0:16;
+    hence max (x,y) in {0,1,2,3,4};
+  end;
+  hence thesis by ENUMSET1:def 3;
+end;
+
+definition
+  let x,y be Element of {0,1,2,3,4};
+  func x ex1234"\/" y -> Element of {0,1,2,3,4} equals :UPDef:
+  1 if (x = 1 & y = 3) or (x = 3 & y = 1),
+  max (x,y) if not ((x = 1 & y = 3) or (x = 3 & y = 1));
+  coherence by LmB;
+  consistency;
+  func x ex1234"/\" y -> Element of {0,1,2,3,4} equals :ExMeetDef:
+  3 if (x = 1 & y = 3) or (x = 3 & y = 1),
+  min (x,y) if not ((x = 1 & y = 3) or (x = 3 & y = 1));
+  correctness by LmA;
+end;
+
+definition
+  func ex1234\/ -> BinOp of {0,1,2,3,4} means :EXUDef:
+  for x,y being Element of {0,1,2,3,4} holds it.(x,y) = x ex1234"\/" y;
+  existence
+  proof
+    deffunc O(Element of {0,1,2,3,4}, Element of {0,1,2,3,4}) =
+      $1 ex1234"\/" $2;
+    ex o being BinOp of {0,1,2,3,4} st
+      for a,b being Element of {0,1,2,3,4} holds
+        o.(a,b) = O(a,b) from BINOP_1:sch 4;
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    let o1,o2 be BinOp of {0,1,2,3,4} such that
+A1: for x,y being Element of {0,1,2,3,4} holds o1.(x,y) = x ex1234"\/" y and
+A2: for x,y being Element of {0,1,2,3,4} holds o2.(x,y) = x ex1234"\/" y;
+    now
+      let x,y be Element of {0,1,2,3,4};
+      thus o1.(x,y) = x ex1234"\/" y by A1
+        .= o2.(x,y) by A2;
+    end;
+    hence thesis by BINOP_1:2;
+  end;
+  func ex1234/\ -> BinOp of {0,1,2,3,4} means :EXNDef:
+  for x,y being Element of {0,1,2,3,4} holds it.(x,y) = x ex1234"/\" y;
+  existence
+  proof
+    deffunc O(Element of {0,1,2,3,4}, Element of {0,1,2,3,4}) =
+      $1 ex1234"/\" $2;
+    ex o being BinOp of {0,1,2,3,4} st
+      for a,b being Element of {0,1,2,3,4} holds
+        o.(a,b) = O(a,b) from BINOP_1:sch 4;
+    hence thesis;
+  end;
+  uniqueness
+  proof
+    let o1,o2 be BinOp of {0,1,2,3,4} such that
+A1: for x,y being Element of {0,1,2,3,4} holds o1.(x,y) = x ex1234"/\" y and
+A2: for x,y being Element of {0,1,2,3,4} holds o2.(x,y) = x ex1234"/\" y;
+    now
+      let x,y be Element of {0,1,2,3,4};
+      thus o1.(x,y) = x ex1234"/\" y by A1
+        .= o2.(x,y) by A2;
+    end;
+    hence thesis by BINOP_1:2;
+  end;
+end;
+
+definition
+  func ExWALattice -> non empty LattStr equals
+    LattStr (#{0,1,2,3,4}, ex1234\/, ex1234/\ #);
+  coherence;
+end;
+
+:: We should show that the lattice doesn't satisfy lattice axioms
+:: (see similar work in LATQUASI)
+:: but obviously it's an example of a near lattice
+
+:: (0 v 1) v 2 = 1 v 2 = 2
+:: 0 v (1 v 2) = 0 v 2 = 0
+
+:: (0 ^ 1) ^ 2 = 0 ^ 2 = 2
+:: 0 ^ (1 ^ 2) = 0 ^ 1 = 0
+
+::    function(^(_,_), [
+::        0,0,2,
+::        0,1,1,
+::        2,1,2]),
+::    function(v(_,_), [
+::        0,1,0,
+::        1,1,2,
+::        0,2,2]),
+
+ExJoinAbs:
+  ExWALattice is join-absorbing
+  proof
+    set L = ExWALattice;
+    for a,b being Element of L holds a "/\" (a "\/" b) = a
+    proof
+      let a,b be Element of L;
+      reconsider aa = a, bb = b as Element of {0,1,2,3,4};
+      per cases;
+      suppose
+B1:     a = 1 & b = 3; then
+        aa ex1234"\/" bb = aa by UPDef; then
+        a "/\" (a "\/" b) = a "/\" a by EXUDef
+           .= aa ex1234"/\" aa by EXNDef
+           .= min(aa,aa) by ExMeetDef,B1
+           .= aa;
+        hence thesis;
+      end;
+      suppose
+B1:     a = 3 & b = 1; then
+        aa ex1234"\/" bb = bb by UPDef; then
+        a "/\" (a "\/" b) = a "/\" b by EXUDef
+           .= aa ex1234"/\" bb by EXNDef
+           .= aa by ExMeetDef,B1;
+        hence thesis;
+      end;
+      suppose
+B1:     not ((a = 1 & b = 3) or (a = 3 & b = 1));
+        per cases by XXREAL_0:16;
+        suppose
+E:        max(aa,bb) = aa;
+A3:       a "\/" b = aa ex1234"\/" bb by EXUDef
+            .= aa by B1,UPDef,E;
+WW:       not ((a = 1 & a = 3) or (a = 3 & a = 1));
+          a "/\"(a "\/" b) = aa ex1234"/\" aa by EXNDef,A3
+            .= min(aa,aa) by ExMeetDef,WW
+            .= aa;
+          hence thesis;
+        end;
+        suppose
+E:        max(aa,bb) = bb;
+A3:       a "\/" b = aa ex1234"\/" bb by EXUDef
+                 .= bb by E,B1,UPDef;
+          a "/\" (a "\/" b) = aa ex1234"/\" bb by EXNDef,A3
+                 .= min(aa,bb) by ExMeetDef,B1
+                 .= aa by E,XXREAL_0:def 9,XXREAL_0:25;
+          hence thesis;
+        end;
+      end;
+    end;
+    hence thesis by LATTICES:def 9;
+  end;
+
+ExMeetAbs:
+  ExWALattice is meet-absorbing
+  proof
+    set L = ExWALattice;
+    for a,b being Element of L holds (a "/\" b) "\/" b = b
+    proof
+      let a,b be Element of L;
+      reconsider aa = a, bb = b as Element of {0,1,2,3,4};
+a0:   a "/\" b = aa ex1234"/\" bb by EXNDef;
+      per cases;
+      suppose
+B1:     a = 1 & b = 3; then
+        aa ex1234"/\" bb = bb by ExMeetDef; then
+        (a "/\" b) "\/" b = b "\/" b by EXNDef
+           .= bb ex1234"\/" bb by EXUDef
+           .= max(bb,bb) by UPDef, B1
+           .= bb;
+        hence thesis;
+      end;
+      suppose
+B1:     a = 3 & b = 1; then
+        (a "/\" b) "\/" b = a "\/" b by a0,ExMeetDef
+           .= aa ex1234"\/" bb by EXUDef
+           .= bb by UPDef, B1;
+        hence thesis;
+      end;
+      suppose
+B1:     not ((a = 1 & b = 3) or (a = 3 & b = 1));
+        per cases by XXREAL_0:15;
+        suppose
+B2:       min(aa,bb) = aa; then
+          (a "/\" b) "\/" b = a "\/" b by a0,B1,ExMeetDef
+           .= aa ex1234"\/" bb by EXUDef
+           .= max(aa,bb) by UPDef,B1
+           .= bb by B2,XXREAL_0:def 10,17;
+          hence thesis;
+        end;
+        suppose
+B4:       min(aa,bb) = bb;
+A5:       not ((b = 1 & b = 3) or (b = 3 & b = 1));
+          (a "/\" b) "\/" b = b "\/" b by B4,a0,B1,ExMeetDef
+             .= bb ex1234"\/" bb by EXUDef
+             .= max(bb,bb) by UPDef,A5
+             .= bb;
+          hence thesis;
+        end;
+      end;
+    end;
+    hence thesis by LATTICES:def 8;
+  end;
+
+Lemacik1:
+  for x,y being Element of ExWALattice holds
+    ex1234/\.(x,y) = ex1234/\.(y,x)
+  proof
+    let x,y be Element of ExWALattice;
+    reconsider xx = x, yy = y as Element of {0,1,2,3,4};
+    per cases;
+    suppose
+      x = 0 & y = 0;
+      hence thesis;
+    end;
+    suppose
+X1:   x = 1 & y = 3;
+      ex1234/\.(x,y) = xx ex1234"/\" yy by EXNDef
+         .= 3 by ExMeetDef,X1
+         .= yy ex1234"/\" xx by ExMeetDef,X1
+         .= ex1234/\.(y,x) by EXNDef;
+      hence thesis;
+    end;
+    suppose
+X1:   x = 3 & y = 1;
+      ex1234/\.(x,y) = xx ex1234"/\" yy by EXNDef
+         .= 3 by ExMeetDef,X1
+         .= yy ex1234"/\" xx by ExMeetDef,X1
+         .= ex1234/\.(y,x) by EXNDef;
+      hence thesis;
+    end;
+    suppose
+X1:   not ((x = 1 & y = 3) or (x = 3 & y = 1));
+      ex1234/\.(x,y) = xx ex1234"/\" yy by EXNDef
+         .= min (xx,yy) by ExMeetDef,X1
+         .= yy ex1234"/\" xx by ExMeetDef,X1
+         .= ex1234/\.(y,x) by EXNDef;
+      hence thesis;
+    end;
+end;
+
+Lemacik1A:
+  for x,y being Element of ExWALattice holds
+    ex1234\/.(x,y) = ex1234\/.(y,x)
+  proof
+    let x,y be Element of ExWALattice;
+    reconsider xx = x, yy = y as Element of {0,1,2,3,4};
+    per cases;
+    suppose
+V1:   not ((x = 1 & y = 3) or (x = 3 & y = 1)); then
+      xx ex1234"\/" yy = max (xx,yy) by UPDef; then
+V3:   ex1234\/.(x,y) = max (xx,yy) by EXUDef;
+      yy ex1234"\/" xx = max (yy,xx) by V1,UPDef;
+      hence thesis by V3,EXUDef;
+    end;
+    suppose
+V1:   x = 1 & y = 3 or (x = 3 & y = 1); then
+      xx ex1234"\/" yy = 1 by UPDef; then
+V3:   ex1234\/.(x,y) = 1 by EXUDef;
+      yy ex1234"\/" xx = 1 by V1,UPDef;
+      hence thesis by V3,EXUDef;
+    end;
+end;
+
+Cosik1:
+  not ExWALattice is join-associative
+  proof
+    set L = ExWALattice;
+    reconsider x = 1, y = 2, z = 3 as Element of L by ENUMSET1:def 3;
+    reconsider xx = x, yy = y, zz = z as Element of {0,1,2,3,4};
+    yy ex1234"\/" zz = max(yy,zz) by UPDef
+        .= 3 by XXREAL_0:def 10; then
+t1: x "\/" (y "\/" z) = x "\/" z by EXUDef
+        .= xx ex1234"\/" zz by EXUDef
+        .= 1 by UPDef;
+    xx ex1234"\/" yy = max(xx,yy) by UPDef
+        .= 2 by XXREAL_0:def 10; then
+    (x "\/" y) "\/" z = y "\/" z by EXUDef
+         .= yy ex1234"\/" zz by EXUDef
+         .= max(yy,zz) by UPDef
+         .= 3 by XXREAL_0:def 10;
+    hence thesis by LATTICES:def 5,t1;
+  end;
+
+Cosik2:
+  not ExWALattice is meet-associative
+  proof
+    set L = ExWALattice;
+    reconsider x = 1, y = 2, z = 3 as Element of L by ENUMSET1:def 3;
+    reconsider xx = x, yy = y, zz = z as Element of {0,1,2,3,4};
+    yy ex1234"/\" zz = min(yy,zz) by ExMeetDef
+        .= 2 by XXREAL_0:def 9; then
+t1: x "/\" (y "/\" z) = x "/\" y by EXNDef
+        .= xx ex1234"/\" yy by EXNDef
+        .= min (xx,yy) by ExMeetDef
+        .= 1 by XXREAL_0:def 9;
+    xx ex1234"/\" yy = min(xx,yy) by ExMeetDef
+        .= 1 by XXREAL_0:def 9; then
+    (x "/\" y) "/\" z = x "/\" z by EXNDef
+         .= xx ex1234"/\" zz by EXNDef
+         .= 3 by ExMeetDef;
+     hence thesis by LATTICES:def 7,t1;
+  end;
+
+registration
+  cluster ExWALattice -> non join-associative non meet-associative;
+  coherence by Cosik1,Cosik2;
+end;
+
+ExJoinComm: ExWALattice is join-commutative
+  proof
+    set L = ExWALattice;
+    for x,y being Element of L holds x "\/" y = y "\/" x by Lemacik1A;
+    hence thesis by LATTICES:def 4;
+  end;
+
+ExMeetComm:  ExWALattice is meet-commutative
+  proof
+    set L = ExWALattice;
+    for x,y being Element of L holds x "/\" y = y "/\" x by Lemacik1;
+    hence thesis by LATTICES:def 6;
+  end;
+
+registration
+  cluster ExWALattice -> join-commutative meet-commutative
+    ::: join-idempotent meet-idempotent
+    join-absorbing meet-absorbing;
+  coherence by ExJoinComm,ExMeetComm,ExMeetAbs,ExJoinAbs;
+end;
+
+HelpL0:
+ for a,b being Element of ExWALattice st
+    b = 0 holds a "/\" b = 0
+  proof
+    let a,b be Element of ExWALattice;
+    reconsider aa = a, bb = b as Element of {0,1,2,3,4};
+A0: 0 <= aa by ENUMSET1:def 3;
+    assume
+A1: b = 0;
+    a "/\" b = aa ex1234"/\" bb by EXNDef
+            .= min (aa,0) by A1,ExMeetDef
+            .= bb by A0,A1,XXREAL_0:def 9;
+    hence thesis by A1;
+  end;
+
+HelpU0:
+ for a,b being Element of ExWALattice st
+    b = 0 holds a "\/" b = a
+  proof
+    let a,b be Element of ExWALattice;
+    reconsider aa = a, bb = b as Element of {0,1,2,3,4};
+A0: 0 <= aa by ENUMSET1:def 3;
+    assume
+A1: b = 0;
+    a "\/" b = aa ex1234"\/" bb by EXUDef
+            .= max (aa,0) by A1,UPDef
+            .= aa by A0,XXREAL_0:def 10;
+    hence thesis;
+  end;
+
+HelpU12:
+ for a,b being Element of ExWALattice st
+    a = 1 & b = 2 holds a "\/" b = 2
+  proof
+    let a,b be Element of ExWALattice;
+    reconsider aa = a, bb = b as Element of {0,1,2,3,4};
+    assume
+A1: a = 1 & b = 2;
+    a "\/" b = aa ex1234"\/" bb by EXUDef
+            .= max(aa,bb) by A1,UPDef;
+    hence thesis by A1,XXREAL_0:def 10;
+  end;
+
+HelpU13:
+ for a,b being Element of ExWALattice st
+    a = 1 & b = 3 holds a "\/" b = 1
+  proof
+    let a,b be Element of ExWALattice;
+    reconsider aa = a, bb = b as Element of {0,1,2,3,4};
+    assume
+A1: a = 1 & b = 3;
+    a "\/" b = aa ex1234"\/" bb by EXUDef
+            .= aa by A1,UPDef;
+    hence thesis by A1;
+  end;
+
+HelpU23:
+ for a,b being Element of ExWALattice st
+    a = 2 & b = 3 holds a "\/" b = 3
+  proof
+    let a,b be Element of ExWALattice;
+    reconsider aa = a, bb = b as Element of {0,1,2,3,4};
+    assume
+A1: a = 2 & b = 3;
+    a "\/" b = aa ex1234"\/" bb by EXUDef
+            .= max(aa,bb) by A1,UPDef
+            .= bb by A1,XXREAL_0:def 10;
+    hence thesis by A1;
+  end;
+
+HelpU4:
+ for a,b being Element of ExWALattice st
+    b = 4 holds a "\/" b = 4
+  proof
+    let a,b be Element of ExWALattice;
+    reconsider aa = a, bb = b as Element of {0,1,2,3,4};
+A0: aa = 0 or aa = 1 or aa = 2 or aa = 3 or aa = 4 by ENUMSET1:def 3;
+    assume
+A1: b = 4;
+    a "\/" b = aa ex1234"\/" bb by EXUDef
+            .= max (aa,4) by A1,UPDef
+            .= 4 by A0,XXREAL_0:def 10;
+    hence thesis;
+  end;
+
+HelpL12:
+ for a,b being Element of ExWALattice st
+    a = 1 & b = 2 holds a "/\" b = 1
+  proof
+    let a,b be Element of ExWALattice;
+    reconsider aa = a, bb = b as Element of {0,1,2,3,4};
+    assume
+A1: a = 1 & b = 2;
+    a "/\" b = aa ex1234"/\" bb by EXNDef
+            .= min(aa,bb) by A1,ExMeetDef;
+    hence thesis by A1,XXREAL_0:def 9;
+  end;
+
+HelpL13:
+ for a,b being Element of ExWALattice st
+    a = 1 & b = 3 holds a "/\" b = 3
+  proof
+    let a,b be Element of ExWALattice;
+    reconsider aa = a, bb = b as Element of {0,1,2,3,4};
+    assume
+A1: a = 1 & b = 3;
+    a "/\" b = aa ex1234"/\" bb by EXNDef
+            .= bb by A1,ExMeetDef;
+    hence thesis by A1;
+  end;
+
+HelpL23:
+ for a,b being Element of ExWALattice st
+    a = 2 & b = 3 holds a "/\" b = 2
+  proof
+    let a,b be Element of ExWALattice;
+    reconsider aa = a, bb = b as Element of {0,1,2,3,4};
+    assume
+A1: a = 2 & b = 3;
+    a "/\" b = aa ex1234"/\" bb by EXNDef
+            .= min (aa,bb) by A1,ExMeetDef
+            .= aa by A1,XXREAL_0:def 9;
+    hence thesis by A1;
+  end;
+
+HelpL4:
+ for a,b being Element of ExWALattice st
+    b = 4 holds a "/\" b = a
+  proof
+    let a,b be Element of ExWALattice;
+    reconsider aa = a, bb = b as Element of {0,1,2,3,4};
+A0: aa = 0 or aa = 1 or aa = 2 or aa = 3 or aa = 4 by ENUMSET1:def 3;
+    assume
+A1: b = 4;
+    a "/\" b = aa ex1234"/\" bb by EXNDef
+            .= min (aa,4) by A1,ExMeetDef
+            .= aa by A0,XXREAL_0:def 9;
+    hence thesis;
+  end;
+
+ExW31:
+  ExWALattice is satisfying_W3
+  proof
+    set L = ExWALattice;
+    for v2,v1,v0 being Element of L holds
+      ((v0 "\/" v1) "/\" (v2 "\/" v1)) "/\" v1 = v1
+    proof
+      set W = {0,1,2,3,4};
+      let v2,v1,v0 be Element of L;
+      reconsider a = v0, b = v1, c = v2 as Element of W;
+      per cases by ENUMSET1:def 3;
+      suppose v1 = 0;
+        hence thesis by HelpL0;
+      end;
+
+      suppose B1: v1 = 4; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 4 by B1,HelpU4;
+        hence thesis by B1,B2;
+      end;
+
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 0; then
+        v0 "\/" v1 = 1 by HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 1; then
+        v2 "\/" v1 = 1 by HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 2; then
+B2:     v0 "\/" v1 = 2 by HelpU12;
+        v2 "\/" v1 = 1 by B1,HelpU0; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,HelpL12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 3; then
+B2:     v0 "\/" v1 = 1 by HelpU13;
+        v2 "\/" v1 = 1 by B1,HelpU0;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 4; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 1 by B1,HelpU0; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,HelpL4;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 0; then
+        v2 "\/" v1 = 2 by HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 1; then
+B2:     v0 "\/" v1 = 2 by HelpU12;
+        v2 "\/" v1 = 2 by B1,HelpU0;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 2; then
+        v2 "\/" v1 = 2 by HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 3; then
+B2:     v0 "\/" v1 = 3 by HelpU23;
+        v2 "\/" v1 = 2 by B1,HelpU0; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,HelpL23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 4; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 2 by B1,HelpU0; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,HelpL4;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 0; then
+        v0 "\/" v1 = 3 by HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 1; then
+B2:     v0 "\/" v1 = 1 by HelpU13;
+        v2 "\/" v1 = 3 by B1,HelpU0; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3 by B2,HelpL13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 2; then
+B2:     v0 "\/" v1 = 3 by HelpU23;
+        v2 "\/" v1 = 3 by B1,HelpU0;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 3; then
+        v2 "\/" v1 = 3 by HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 4; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 3 by B1,HelpU0; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3 by B2,HelpL4;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 0; then
+        v0 "\/" v1 = 1 by HelpU0;
+        hence thesis by B1;
+      end;
+      suppose v2 = 1 & v1 = 1 & v0 = 1;
+        hence thesis;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 2; then
+        v0 "\/" v1 = 2 by HelpU12; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B1,HelpL12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 3; then
+        v0 "\/" v1 = 1 by HelpU13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 4; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1
+           by HelpL4,HelpU4;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 0; then
+B2:     v0 "\/" v1 = 2 by HelpU0;
+        v2 "\/" v1 = 2 by B1,HelpU12;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 1; then
+        v0 "\/" v1 = 2 by HelpU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 2; then
+        v2 "\/" v1 = 2 by HelpU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 3; then
+B2:     v0 "\/" v1 = 3 by HelpU23;
+        v2 "\/" v1 = 2 by B1,HelpU12; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,HelpL23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 4; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 2 by B1,HelpU12; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,HelpL4;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 0; then
+B2:     v0 "\/" v1 = 3 by HelpU0;
+        v2 "\/" v1 = 1 by B1,HelpU13; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3 by B2,HelpL13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 1; then
+        v2 "\/" v1 = 1 by HelpU13;
+        hence thesis by B1,HelpL13;
+      end;
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 2; then
+B2:     v0 "\/" v1 = 3 by HelpU23;
+        v2 "\/" v1 = 1 by B1,HelpU13; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3 by B2,HelpL13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 3; then
+B2:     v0 "\/" v1 = 3;
+        v2 "\/" v1 = 1 by B1,HelpU13; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3 by B2,HelpL13;
+       hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 4; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 1 by B1,HelpU13; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,HelpL4;
+        hence thesis by B1,HelpL13;
+      end;
+
+      suppose B1: v2 = 1 & v1 = 4 & v0 = 0; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 4 by B1,HelpU4;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 1 & v1 = 4 & v0 = 1; then
+        v2 "\/" v1 = 4 by HelpU4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 4 & v0 = 2; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 4 by B1,HelpU4;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 1 & v1 = 4 & v0 = 3; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 4 by B1,HelpU4;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 1 & v1 = 4 & v0 = 4; then
+        v2 "\/" v1 = 4 by HelpU4;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 0; then
+B2:     v0 "\/" v1 = 1 by HelpU0;
+        v2 "\/" v1 = 2 by B1,HelpU12; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,HelpL12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 1; then
+B2:     v0 "\/" v1 = 1;
+        v2 "\/" v1 = 2 by B1,HelpU12; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,HelpL12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 2; then
+        v2 "\/" v1 = 2 by HelpU12;
+        hence thesis by B1,HelpL12;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 3; then
+B2:     v0 "\/" v1 = 1 by HelpU13;
+        v2 "\/" v1 = 2 by B1,HelpU12; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,HelpL12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 4; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 2 by B1,HelpU12; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,HelpL4;
+        hence thesis by B1,HelpL12;
+      end;
+
+      suppose B1: v2 = 2 & v1 = 2 & v0 = 0; then
+        v0 "\/" v1 = 2 by HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 2 & v0 = 1; then
+        v0 "\/" v1 = 2 by HelpU12;
+        hence thesis by B1;
+      end;
+      suppose v2 = 2 & v1 = 2 & v0 = 2;
+        hence thesis;
+      end;
+      suppose B1: v2 = 2 & v1 = 2 & v0 = 3; then
+        v0 "\/" v1 = 3 by HelpU23; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B1,HelpL23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 2 & v0 = 4; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2
+          by HelpL4,HelpU4;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 2 & v1 = 3 & v0 = 0; then
+B2:     v0 "\/" v1 = 3 by HelpU0;
+        v2 "\/" v1 = 3 by B1,HelpU23;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 2 & v1 = 3 & v0 = 1; then
+B2:     v0 "\/" v1 = 1 by HelpU13;
+        v2 "\/" v1 = 3 by B1,HelpU23; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3 by B2,HelpL13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 3 & v0 = 2; then
+        v2 "\/" v1 = 3 by HelpU23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 3 & v0 = 3; then
+        v2 "\/" v1 = 3 by HelpU23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 3 & v0 = 4; then
+        v2 "\/" v1 = 3 by HelpU23; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3
+          by B1,HelpL4,HelpU4;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 2 & v1 = 4 & v0 = 0; then
+B2:     v0 "\/" v1 = 4 by HelpU0;
+        v2 "\/" v1 = 4 by B1,HelpU4;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 2 & v1 = 4 & v0 = 1; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 4 by B1,HelpU4;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 2 & v1 = 4 & v0 = 2; then
+        v2 "\/" v1 = 4 by HelpU4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 4 & v0 = 3; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 4 by B1,HelpU4;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 2 & v1 = 4 & v0 = 4; then
+        v2 "\/" v1 = 4 by HelpU4;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 3 & v1 = 1 & v0 = 0; then
+B2:     v0 "\/" v1 = 1 by HelpU0;
+        v2 "\/" v1 = 1 by B1,HelpU13;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 3 & v1 = 1 & v0 = 1; then
+        v2 "\/" v1 = 1 by HelpU13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 1 & v0 = 2; then
+B2:     v0 "\/" v1 = 2 by HelpU12;
+        v2 "\/" v1 = 1 by B1,HelpU13; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,HelpL12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 1 & v0 = 3; then
+        v2 "\/" v1 = 1 by HelpU13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 1 & v0 = 4; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 1 by B1,HelpU13; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,HelpL4;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 3 & v1 = 2 & v0 = 0; then
+B2:     v0 "\/" v1 = 2 by HelpU0;
+        v2 "\/" v1 = 3 by B1,HelpU23; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,HelpL23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 2 & v0 = 1; then
+B2:     v0 "\/" v1 = 2 by HelpU12;
+        v2 "\/" v1 = 3 by B1,HelpU23; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,HelpL23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 2 & v0 = 2; then
+B2:     v0 "\/" v1 = 2;
+        v2 "\/" v1 = 3 by B1,HelpU23; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,HelpL23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 2 & v0 = 3; then
+        v2 "\/" v1 = 3 by HelpU23;
+        hence thesis by B1,HelpL23;
+      end;
+      suppose B1: v2 = 3 & v1 = 2 & v0 = 4; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 3 by B1,HelpU23; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3 by B2,HelpL4;
+        hence thesis by B1,HelpL23;
+      end;
+
+      suppose B1: v2 = 3 & v1 = 3 & v0 = 0; then
+        v0 "\/" v1 = 3 by HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 3 & v0 = 1; then
+        v0 "\/" v1 = 1 by HelpU13; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3 by B1,HelpL13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 3 & v0 = 2; then
+        v0 "\/" v1 = 3 by HelpU23;
+        hence thesis by B1;
+      end;
+      suppose v2 = 3 & v1 = 3 & v0 = 3;
+        hence thesis;
+      end;
+      suppose B1: v2 = 3 & v1 = 3 & v0 = 4; then
+        v0 "\/" v1 = 4 by HelpU4; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3 by B1,HelpL4;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 3 & v1 = 4 & v0 = 0; then
+B2:     v0 "\/" v1 = 4 by HelpU0;
+        v2 "\/" v1 = 4 by B1,HelpU4;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 3 & v1 = 4 & v0 = 1; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 4 by B1,HelpU4;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 3 & v1 = 4 & v0 = 2; then
+B2:     v0 "\/" v1 = 4 by HelpU4;
+        v2 "\/" v1 = 4 by B1,HelpU4;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 3 & v1 = 4 & v0 = 3; then
+        v0 "\/" v1 = 4 by HelpU4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 4 & v0 = 4; then
+        v2 "\/" v1 = 4 by HelpU4;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 4 & v1 = 1 & v0 = 0; then
+B2:     v0 "\/" v1 = 1 by HelpU0;
+        v2 "\/" v1 = 4 by B1,HelpU4; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 1 & v0 = 1; then
+B2:     v0 "\/" v1 = 1;
+        v2 "\/" v1 = 4 by B1,HelpU4; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1 by B2,HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 1 & v0 = 2; then
+B2:     v0 "\/" v1 = 2 by HelpU12;
+        v2 "\/" v1 = 4 by B1,HelpU4; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,HelpL4;
+        hence thesis by B1,HelpL12;
+      end;
+      suppose B1: v2 = 4 & v1 = 1 & v0 = 3; then
+        v0 "\/" v1 = 1 by HelpU13; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1
+          by B1,HelpL4,HelpU4;
+        hence thesis by B1;
+      end;
+      suppose v2 = 4 & v1 = 1 & v0 = 4;
+        hence thesis by HelpL4,HelpU4;
+      end;
+
+      suppose B1: v2 = 4 & v1 = 2 & v0 = 0; then
+B2:     v0 "\/" v1 = 2 by HelpU0;
+        v2 "\/" v1 = 4 by B1,HelpU4; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 2 & v0 = 1; then
+B2:     v0 "\/" v1 = 2 by HelpU12;
+        v2 "\/" v1 = 4 by B1,HelpU4; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 2 & v0 = 2; then
+B2:     v0 "\/" v1 = 2;
+        v2 "\/" v1 = 4 by B1,HelpU4; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 2 by B2,HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 2 & v0 = 3; then
+        v0 "\/" v1 = 3 by HelpU23; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3
+          by B1,HelpL4,HelpU4;
+        hence thesis by B1,HelpL23;
+      end;
+      suppose v2 = 4 & v1 = 2 & v0 = 4;
+        hence thesis by HelpL4,HelpU4;
+      end;
+
+      suppose B1: v2 = 4 & v1 = 3 & v0 = 0; then
+B2:     v0 "\/" v1 = 3 by HelpU0;
+        v2 "\/" v1 = 4 by B1,HelpU4; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3 by B2,HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 3 & v0 = 1; then
+        v0 "\/" v1 = 1 by HelpU13; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 1
+          by B1,HelpL4,HelpU4;
+        hence thesis by B1,HelpL13;
+      end;
+      suppose B1: v2 = 4 & v1 = 3 & v0 = 2; then
+        v0 "\/" v1 = 3 by HelpU23; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3
+          by B1,HelpL4,HelpU4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 3 & v0 = 3; then
+        (v0 "\/" v1) "/\" (v2 "\/" v1) = 3
+          by HelpL4,HelpU4;
+        hence thesis by B1;
+      end;
+      suppose v2 = 4 & v1 = 3 & v0 = 4;
+        hence thesis by HelpL4,HelpU4;
+      end;
+
+      suppose B1: v2 = 4 & v1 = 4 & v0 = 0; then
+        v0 "\/" v1 = 4 by HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 4 & v0 = 1; then
+        v0 "\/" v1 = 4 by HelpU4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 4 & v0 = 2; then
+        v0 "\/" v1 = 4 by HelpU4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 4 & v0 = 3; then
+        v0 "\/" v1 = 4 by HelpU4;
+        hence thesis by B1;
+      end;
+      suppose v2 = 4 & v1 = 4 & v0 = 4;
+        hence thesis;
+      end;
+    end;
+    hence thesis by LATWAL_1:def 1;
+  end;
+
+ExW32:
+  ExWALattice is satisfying_W3'
+  proof
+    set L = ExWALattice;
+    for v2,v1,v0 being Element of L holds
+      ((v0 "/\" v1) "\/" (v2 "/\" v1)) "\/" v1 = v1
+    proof
+      set W = {0,1,2,3,4};
+      let v2,v1,v0 be Element of L;
+      reconsider a = v0, b = v1, c = v2 as Element of W;
+      per cases by ENUMSET1:def 3;
+      suppose v1 = 4;
+        hence thesis by HelpU4;
+      end;
+
+      suppose B1: v1 = 0; then
+B2:     v0 "/\" v1 = 0 by HelpL0;
+        v2 "/\" v1 = 0 by B1,HelpL0;
+        hence thesis by B1,B2;
+      end;
+
+      suppose B1: v2 = 4 & v1 = 3 & v0 = 4; then
+        v0 "/\" v1 = 3 by HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 3 & v0 = 3; then
+        v2 "/\" v1 = 3 by HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 3 & v0 = 2; then
+B2:     v0 "/\" v1 = 2 by HelpL23;
+        v2 "/\" v1 = 3 by B1,HelpL4; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B2,HelpU23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 3 & v0 = 1; then
+B2:     v0 "/\" v1 = 3 by HelpL13;
+        v2 "/\" v1 = 3 by B1,HelpL4;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 4 & v1 = 3 & v0 = 0; then
+        v2 "/\" v1 = 3 by HelpL4; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3
+          by B1,HelpU0,HelpL0;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 4 & v1 = 2 & v0 = 4; then
+        v2 "/\" v1 = 2 by HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 2 & v0 = 3; then
+B2:     v0 "/\" v1 = 2 by HelpL23;
+        v2 "/\" v1 = 2 by B1,HelpL4;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 4 & v1 = 2 & v0 = 2; then
+        v2 "/\" v1 = 2 by HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 2 & v0 = 1; then
+B2:     v0 "/\" v1 = 1 by HelpL12;
+        v2 "/\" v1 = 2 by B1,HelpL4; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,HelpU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 2 & v0 = 0; then
+B2:     v0 "/\" v1 = 0 by HelpL0;
+        v2 "/\" v1 = 2 by B1,HelpL4; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 4 & v1 = 1 & v0 = 4; then
+        v0 "/\" v1 = 1 by HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 1 & v0 = 3; then
+B2:     v0 "/\" v1 = 3 by HelpL13;
+        v2 "/\" v1 = 1 by B1,HelpL4; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B2,HelpU13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 1 & v0 = 2; then
+B2:     v0 "/\" v1 = 1 by HelpL12;
+        v2 "/\" v1 = 1 by B1,HelpL4;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 4 & v1 = 1 & v0 = 1; then
+        v2 "/\" v1 = 1 by HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 4 & v1 = 1 & v0 = 0; then
+B2:     v0 "/\" v1 = 0 by HelpL0;
+        v2 "/\" v1 = 1 by B1,HelpL4; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 3 & v1 = 3 & v0 = 4; then
+        v0 "/\" v1 = 3 by HelpL4;
+        hence thesis by B1;
+      end;
+      suppose v2 = 3 & v1 = 3 & v0 = 3;
+        hence thesis;
+      end;
+      suppose B1: v2 = 3 & v1 = 3 & v0 = 2; then
+        v0 "/\" v1 = 2 by HelpL23; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B1,HelpU23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 3 & v0 = 1; then
+        v0 "/\" v1 = 3 by HelpL13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 3 & v0 = 0; then
+        v0 "/\" v1 = 0 by HelpL0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B1,HelpU0;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 3 & v1 = 2 & v0 = 4; then
+B2:     v0 "/\" v1 = 2 by HelpL4;
+        v2 "/\" v1 = 2 by B1,HelpL23;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 3 & v1 = 2 & v0 = 3; then
+        v0 "/\" v1 = 2 by HelpL23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 2 & v0 = 2; then
+        v2 "/\" v1 = 2 by HelpL23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 2 & v0 = 1; then
+B2:     v0 "/\" v1 = 1 by HelpL12;
+        v2 "/\" v1 = 2 by B1,HelpL23; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,HelpU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 2 & v0 = 0; then
+B2:     v0 "/\" v1 = 0 by HelpL0;
+        v2 "/\" v1 = 2 by B1,HelpL23; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 3 & v1 = 1 & v0 = 4; then
+B2:     v0 "/\" v1 = 1 by HelpL4;
+        v2 "/\" v1 = 3 by B1,HelpL13; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B2,HelpU13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 1 & v0 = 3; then
+        v2 "/\" v1 = 3 by HelpL13;
+        hence thesis by B1,HelpU13;
+      end;
+      suppose B1: v2 = 3 & v1 = 1 & v0 = 2; then
+B2:     v0 "/\" v1 = 1 by HelpL12;
+        v2 "/\" v1 = 3 by B1,HelpL13; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B2,HelpU13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 1 & v0 = 1; then
+        v2 "/\" v1 = 3 by HelpL13; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B1,HelpU13;
+       hence thesis by B1;
+      end;
+      suppose B1: v2 = 3 & v1 = 1 & v0 = 0; then
+B2:     v0 "/\" v1 = 0 by HelpL0;
+        v2 "/\" v1 = 3 by B1,HelpL13; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B2,HelpU0;
+        hence thesis by B1,HelpU13;
+      end;
+
+      suppose B1: v2 = 2 & v1 = 3 & v0 = 4; then
+B2:     v0 "/\" v1 = 3 by HelpL4;
+        v2 "/\" v1 = 2 by B1,HelpL23; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B2,HelpU23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 3 & v0 = 3; then
+        v2 "/\" v1 = 2 by HelpL23; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B1,HelpU23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 3 & v0 = 2; then
+        v2 "/\" v1 = 2 by HelpL23;
+        hence thesis by B1,HelpU23;
+      end;
+      suppose B1: v2 = 2 & v1 = 3 & v0 = 1; then
+B2:     v0 "/\" v1 = 3 by HelpL13;
+        v2 "/\" v1 = 2 by B1,HelpL23; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B2,HelpU23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 3 & v0 = 0; then
+B2:     v0 "/\" v1 = 0 by HelpL0;
+        v2 "/\" v1 = 2 by B1,HelpL23; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,HelpU0;
+        hence thesis by B1,HelpU23;
+      end;
+
+      suppose B1: v2 = 2 & v1 = 2 & v0 = 4; then
+        v0 "/\" v1 = 2 by HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 2 & v0 = 3; then
+        v0 "/\" v1 = 2 by HelpL23;
+        hence thesis by B1;
+      end;
+      suppose v2 = 2 & v1 = 2 & v0 = 2;
+        hence thesis;
+      end;
+      suppose B1: v2 = 2 & v1 = 2 & v0 = 1; then
+        v0 "/\" v1 = 1 by HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B1,HelpU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 2 & v0 = 0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2
+          by HelpU0,HelpL0;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 4; then
+B2:     v0 "/\" v1 = 1 by HelpL4;
+        v2 "/\" v1 = 1 by B1,HelpL12;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 3; then
+B2:     v0 "/\" v1 = 3 by HelpL13;
+        v2 "/\" v1 = 1 by B1,HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B2,HelpU13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 2; then
+        v2 "/\" v1 = 1 by HelpL12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 1; then
+        v2 "/\" v1 = 1 by HelpL12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 2 & v1 = 1 & v0 = 0; then
+B2:     v0 "/\" v1 = 0 by HelpL0;
+        v2 "/\" v1 = 1 by B1,HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 4; then
+B2:     v0 "/\" v1 = 3 by HelpL4;
+        v2 "/\" v1 = 3 by B1,HelpL13;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 3; then
+        v2 "/\" v1 = 3 by HelpL13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 2; then
+B2:     v0 "/\" v1 = 2 by HelpL23;
+        v2 "/\" v1 = 3 by B1,HelpL13; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B2,HelpU23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 1; then
+        v2 "/\" v1 = 3 by HelpL13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 0; then
+B2:     v0 "/\" v1 = 0 by HelpL0;
+        v2 "/\" v1 = 3 by B1,HelpL13; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 4; then
+B2:     v0 "/\" v1 = 2 by HelpL4;
+        v2 "/\" v1 = 1 by B1,HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,HelpU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 3; then
+B2:     v0 "/\" v1 = 2 by HelpL23;
+        v2 "/\" v1 = 1 by B1,HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,HelpU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 2; then
+        v2 "/\" v1 = 1 by HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B1,HelpU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 1; then
+        v2 "/\" v1 = 1 by HelpL12;
+        hence thesis by B1,HelpU12;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 0; then
+B2:     v0 "/\" v1 = 0 by HelpL0;
+        v2 "/\" v1 = 1 by B1,HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B2,HelpU0;
+        hence thesis by B1,HelpU12;
+      end;
+
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 4; then
+        v0 "/\" v1 = 1 by HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 3; then
+        v0 "/\" v1 = 3 by HelpL13; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B1,HelpU13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 2; then
+        v0 "/\" v1 = 1 by HelpL12;
+        hence thesis by B1;
+      end;
+      suppose v2 = 1 & v1 = 1 & v0 = 1;
+        hence thesis;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 0; then
+        v0 "/\" v1 = 0 by HelpL0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B1,HelpU0;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 4; then
+B2:     v0 "/\" v1 = 3 by HelpL4;
+        v2 "/\" v1 = 0 by B1,HelpL0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 3; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by HelpU0,HelpL0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 2; then
+        v0 "/\" v1 = 2 by HelpL23; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2
+          by B1,HelpU0,HelpL0;
+        hence thesis by B1,HelpU23;
+      end;
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 1; then
+B2:     v0 "/\" v1 = 3 by HelpL13;
+        v2 "/\" v1 = 0 by B1,HelpL0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+      suppose v2 = 0 & v1 = 3 & v0 = 0;
+        hence thesis by HelpU0,HelpL0;
+      end;
+
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 4; then
+B2:     v0 "/\" v1 = 2 by HelpL4;
+        v2 "/\" v1 = 0 by B1,HelpL0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 3; then
+        v0 "/\" v1 = 2 by HelpL23; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2
+          by B1,HelpU0,HelpL0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 2; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by HelpU0,HelpL0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 1; then
+        v0 "/\" v1 = 1 by HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B1,HelpU0,HelpL0;
+        hence thesis by B1,HelpU12;
+      end;
+      suppose v2 = 0 & v1 = 2 & v0 = 0;
+        hence thesis by HelpU0,HelpL0;
+      end;
+
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 4; then
+B2:     v0 "/\" v1 = 3 by HelpL4;
+        v2 "/\" v1 = 3 by B1,HelpL13;
+        hence thesis by B1,B2;
+      end;
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 3; then
+        v2 "/\" v1 = 3 by HelpL13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 2; then
+B2:     v0 "/\" v1 = 2 by HelpL23;
+        v2 "/\" v1 = 3 by B1,HelpL13; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B2,HelpU23;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 1; then
+        v2 "/\" v1 = 3 by HelpL13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 3 & v0 = 0; then
+        v2 "/\" v1 = 3 by HelpL13; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B1,HelpU0,HelpL0;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 4; then
+B2:     v0 "/\" v1 = 2 by HelpL4;
+        v2 "/\" v1 = 1 by B1,HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,HelpU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 3; then
+B2:     v0 "/\" v1 = 2 by HelpL23;
+        v2 "/\" v1 = 1 by B1,HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,HelpU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 2; then
+        v2 "/\" v1 = 1 by HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B1,HelpU12;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 1; then
+        v2 "/\" v1 = 1 by HelpL12;
+        hence thesis by B1,HelpU12;
+      end;
+      suppose B1: v2 = 1 & v1 = 2 & v0 = 0; then
+        v2 "/\" v1 = 1 by HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B1,HelpU0,HelpL0;
+        hence thesis by B1,HelpU12;
+      end;
+
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 4; then
+        v0 "/\" v1 = 1 by HelpL4;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 3; then
+        v0 "/\" v1 = 3 by HelpL13; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B1,HelpU13;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 2; then
+        v0 "/\" v1 = 1 by HelpL12;
+        hence thesis by B1;
+      end;
+      suppose v2 = 1 & v1 = 1 & v0 = 1;
+        hence thesis;
+      end;
+      suppose B1: v2 = 1 & v1 = 1 & v0 = 0; then
+        v0 "/\" v1 = 0 by HelpL0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B1,HelpU0;
+        hence thesis by B1;
+      end;
+
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 4; then
+        v0 "/\" v1 = 3 by HelpL4; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B1,HelpU0,HelpL0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 3; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by HelpU0,HelpL0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 2; then
+        v0 "/\" v1 = 2 by HelpL23; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B1,HelpU0,HelpL0;
+        hence thesis by B1,HelpU23;
+      end;
+      suppose B1: v2 = 0 & v1 = 3 & v0 = 1; then
+B2:     v0 "/\" v1 = 3 by HelpL13;
+        v2 "/\" v1 = 0 by B1,HelpL0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+      suppose v2 = 0 & v1 = 3 & v0 = 0;
+        hence thesis by HelpU0,HelpL0;
+      end;
+
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 4; then
+        v0 "/\" v1 = 2 by HelpL4; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B1,HelpU0,HelpL0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 3; then
+B2:     v0 "/\" v1 = 2 by HelpL23;
+        v2 "/\" v1 = 0 by B1,HelpL0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 2; then
+B2:     v0 "/\" v1 = 2;
+        v2 "/\" v1 = 0 by B1,HelpL0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 2 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 2 & v0 = 1; then
+        v0 "/\" v1 = 1 by HelpL12; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B1,HelpU0,HelpL0;
+        hence thesis by B1,HelpU12;
+      end;
+      suppose v2 = 0 & v1 = 2 & v0 = 0;
+        hence thesis by HelpU0,HelpL0;
+      end;
+
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 4; then
+        v0 "/\" v1 = 1 by HelpL4; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B1,HelpU0,HelpL0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 3; then
+B2:     v0 "/\" v1 = 3 by HelpL13;
+        v2 "/\" v1 = 0 by B1,HelpL0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 3 by B2,HelpU0;
+        hence thesis by B1,HelpU13;
+      end;
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 2; then
+B2:     v0 "/\" v1 = 1 by HelpL12;
+        v2 "/\" v1 = 0 by B1,HelpL0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+      suppose B1: v2 = 0 & v1 = 1 & v0 = 1; then
+B2:     v0 "/\" v1 = 1;
+        v2 "/\" v1 = 0 by B1,HelpL0; then
+        (v0 "/\" v1) "\/" (v2 "/\" v1) = 1 by B2,HelpU0;
+        hence thesis by B1;
+      end;
+      suppose v2 = 0 & v1 = 1 & v0 = 0;
+        hence thesis by HelpU0,HelpL0;
+      end;
+    end;
+    hence thesis by LATWAL_1:def 2;
+  end;
+
+registration
+  cluster ExWALattice -> satisfying_W3 satisfying_W3';
+  coherence by ExW31,ExW32;
+end;

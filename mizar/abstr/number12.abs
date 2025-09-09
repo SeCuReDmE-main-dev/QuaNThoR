@@ -1,0 +1,443 @@
+:: Elementary Number Theory Problems. {P}art {XII}
+::  by Adam Grabowski
+:: 
+:: Received December 18, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, NAT_1, RELAT_1, FUNCT_1, XXREAL_0, ARYTM_3, XCMPLX_0,
+      CARD_1, INT_1, NEWTON, INT_2, ARYTM_1, SUBSET_1, XBOOLE_0, TARSKI,
+      FINSET_1, COMPLEX1, ABIAN, NAT_6, SQUARE_1, ZFMISC_1, POWER, PREPOWER,
+      REAL_1, VALUED_0, PYTHTRIP, NUMPOLY1, EUCLID_3, FUNCT_7, ORDINAL2,
+      MOEBIUS1, FINSEQ_1, CARD_3, NUMBER02, NUMBER06, NUMBER12, INT_5, PEPIN,
+      ORDINAL4, FUNCOP_1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ENUMSET1, ORDINAL1, CARD_1,
+      NUMBERS, XCMPLX_0, RELAT_1, FUNCT_1, FINSET_1, FUNCOP_1, FUNCT_2,
+      FINSEQ_1, SQUARE_1, VALUED_0, XREAL_0, INT_1, INT_2, NAT_1, NAT_D,
+      XXREAL_0, PREPOWER, POWER, NEWTON, ABIAN, PEPIN, INT_5, WSIERP_1,
+      PYTHTRIP, NAT_6, MOEBIUS1, NUMPOLY1, NUMBER02, NUMBER06;
+ constructors NAT_D, RELSET_1, ABIAN, NAT_6, ENUMSET1, PEPIN, PYTHTRIP,
+      PREPOWER, SERIES_1, NUMPOLY1, MOEBIUS1, INT_5, NEWTON03, NUMBER02,
+      NUMBER06, WSIERP_1, RECDEF_1, INT_6;
+ registrations ORDINAL1, RELSET_1, FINSET_1, NUMBERS, XCMPLX_0, XXREAL_0,
+      XREAL_0, NAT_1, INT_1, MEMBERED, VALUED_0, CARD_1, SQUARE_1, NEWTON,
+      NEWTON02, NEWTON03, FOMODEL0, ABIAN, NAT_6, POWER, RELAT_1, XBOOLE_0,
+      FUNCT_1, NUMPOLY1, NUMBER02, NUMBER06, NEWTON04, FINSEQ_1, NUMBER09;
+ requirements REAL, NUMERALS, BOOLE, SUBSET, ARITHM;
+
+
+begin :: Preliminaries
+
+theorem :: NUMBER12:1
+  for x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 being object holds
+    {x1,x2,x3,x4,x5,x6,x7,x8,x9,x10} =
+       {x1,x2,x3,x4,x5} \/ {x6,x7,x8,x9,x10};
+
+registration ::: generalizes registration in NUMBER02
+  let m be composite Integer, n be non zero Nat;
+  cluster m * n -> composite;
+end;
+
+registration ::: generalizes registration in NUMBER02
+  let m, n be non zero non trivial Nat;
+  cluster m * n -> composite;
+end;
+
+registration let r be Real;
+  cluster r |^ 2 -> non negative;
+end;
+
+registration let k be Nat;
+             let n be non zero non trivial Nat;
+  cluster k + n -> non trivial non zero;
+end;
+
+registration let k be Nat;
+  cluster k + 1 -> non zero;
+  cluster k + 2 -> non trivial non zero;
+  cluster k + 3 -> non trivial non zero;
+end;
+
+theorem :: NUMBER12:2
+  for n being Nat st n mod 11 = 1 & n mod 2 = 1 holds
+    n mod 22 = 1;
+
+:: Formalization of Sierpinski Theorem on the
+:: Divisors in the Progression of Primes
+
+theorem :: NUMBER12:3  :: Sierpinski, Theorem 5, p. 121
+  for m,n,r being Nat st n > 1 &
+    (for i being Nat st i < n holds ArProg (m,r).i is odd prime) holds
+   for p being Prime st p < n holds
+     p divides r;
+
+begin :: Problem 42
+:: Prove that there exists an increasing infinite sequence of triangular
+:: numbers (i.e. numbers of the form t_n = 1/2 n(n+1), n = 1, 2, ... )
+:: such that every two of them are relatively prime.
+
+theorem :: NUMBER12:4   :: see WSIERP_1:16
+  for a,m,n being Nat st a,m are_coprime & n divides a holds
+    n,m are_coprime;
+
+theorem :: NUMBER12:5
+  for a being Nat holds
+    a,2 * a + 1 are_coprime;
+
+theorem :: NUMBER12:6
+  for a being Nat holds
+    a,6 * a + 1 are_coprime;
+
+theorem :: NUMBER12:7
+  for a being Nat holds
+    a,3 * a + 1 are_coprime;
+
+theorem :: NUMBER12:8
+  for f being increasing FinSequence of NAT,
+      x being Nat st
+    (for i being Nat st i in dom f holds f.i < x) holds
+   f ^ <*x*> is increasing;
+
+theorem :: NUMBER12:9
+  for n being Nat holds
+    (Seg 1) --> n is increasing FinSequence of NAT;
+
+theorem :: NUMBER12:10 :: Problem 42
+  for n being Nat holds
+  ex f being increasing non-empty FinSequence of NAT st
+    dom f = Seg (n + 1) &
+   (for i being Nat st i in dom f holds f.i is triangular) &
+::: maybe better: triangular-valued
+     f is with_all_coprime_terms;
+
+::: NAT_6:7 = INT_5:7
+::: NEWTON02:2 = NEWTON03:5
+::: EULER_1:13 = INT_2:25
+
+begin :: Problem 43
+:: Prove that there exists an increasing infinite sequence of tetrahedral
+:: numbers (i.e. numbers of the form T_n = 1/6 n(n+1)(n+2), n = 1, 2, ...),
+:: such that every two of them are relatively prime.
+
+definition let n be Nat;
+  func Tetrahedron n -> Nat equals
+:: NUMBER12:def 1
+    n * (n+1) * (n+2) / 6;
+end;
+
+definition let n be Nat;
+  attr n is tetrahedral means
+:: NUMBER12:def 2
+    ex k being Nat st n = Tetrahedron k;
+end;
+
+theorem :: NUMBER12:11 :: Problem 43
+  for n being Nat holds
+  ex f being increasing non-empty FinSequence of NAT st
+    dom f = Seg (n + 1) &
+   (for i being Nat st i in dom f holds f.i is tetrahedral) &
+     f is with_all_coprime_terms;
+
+begin :: Problem 51
+:: Prove that (n,2^{2^n} + 1) = 1 for n = 1, 2, ...
+
+theorem :: NUMBER12:12  :: Problem 51
+  for n being non zero Nat holds
+    n gcd (Fermat n) = 1;
+
+theorem :: NUMBER12:13
+  for n being non zero Nat holds n, Fermat n are_coprime;
+
+begin :: Problem 51a
+:: Prove that there exist infinitely many positive integers n such that
+:: (n, 2^n-1) > 1, and find the least of them.
+
+theorem :: NUMBER12:14
+  for n,k,m being Nat holds
+    n divides k * m implies
+      ex a,b being Nat st a divides k & b divides m & n = a * b;
+
+theorem :: NUMBER12:15 :: Problem 51a
+  for A being set st
+    A = { n where n is non zero Nat : n gcd (2 |^ n - 1) > 1 } holds
+     A is infinite &
+     :: min A = 6;
+    for k being Nat st k in A holds k >= 6;
+
+begin :: Problem 57
+:: Give a necessary and sufficient condition for an arithmetic progression
+:: ak+b (k = 0, 1, 2, ... ) with positive integer a and b to contain
+:: infinitely many squares of integers.
+
+theorem :: NUMBER12:16
+  for a,b being positive Nat, k,x,m being Nat st
+    ArProg (b,a).k = x ^2 holds
+      ArProg (b,a).(m ^2 * a + 2 * m * x + k) = (m * a + x) ^2;
+
+theorem :: NUMBER12:17
+  for a,b being positive Nat, k,x,m being Nat st
+    ArProg (b,a).k = x^2 holds
+      ArProg (b,a).(m ^2 * a + 2 * m * x + k) is square;
+
+theorem :: NUMBER12:18
+  for m, n being non zero Nat st
+    m is_quadratic_residue_mod n holds
+      ex i being Nat st ArProg (m,n).i is square;
+
+theorem :: NUMBER12:19 :: Problem 57
+  for m, n being non zero Nat,
+      A being set st
+    A = { i where i is Nat : ArProg (m,n).i is square } holds
+      A is infinite iff m is_quadratic_residue_mod n;
+
+begin :: Problem 59
+:: Prove that there is no infinite arithmetic progression formed of
+:: different positive integers such that each term is a power of
+:: a positive integer with an integer exponent > 1.
+
+theorem :: NUMBER12:20
+  for k being Nat st k > 1 holds
+    not (k*k) divides k;
+
+registration
+  cluster non-empty natural-valued increasing for Arithmetic_Progression;
+end;
+
+theorem :: NUMBER12:21
+  for n being Nat, p being Prime st n is perfect_power & p divides n
+    holds
+      p |^ 2 divides n;
+
+theorem :: NUMBER12:22 :: Problem 59
+  not ex f being non-empty natural-valued increasing Arithmetic_Progression st
+    for i,fi being Nat st fi = f.i holds
+      fi is perfect_power;
+
+begin :: Problem 72
+:: Find an increasing arithmetic progression with ten terms, formed
+:: of primes, with the least possible last term.
+
+theorem :: NUMBER12:23
+  for f being Arithmetic_Progression st
+    for i being Nat holds f.i is Prime holds
+      difference f is Integer;
+
+theorem :: NUMBER12:24
+  for p, q being Prime st
+    p - q is odd holds p = 2 or q = 2;
+
+registration let p, q be Prime;
+  cluster p - q -> integer;
+end;
+
+registration let p, q be 2_greater Prime;
+  cluster p - q -> even;
+end;
+
+theorem :: NUMBER12:25
+  for f being increasing Arithmetic_Progression st
+    for i being Nat holds f.i is Prime holds
+      f.1 > 2;
+
+theorem :: NUMBER12:26
+  for f being increasing Arithmetic_Progression st
+    for i being Nat holds f.i is Prime holds
+      difference f is even Nat;
+
+theorem :: NUMBER12:27
+  ArProg (199,210).0 = 199;
+
+theorem :: NUMBER12:28
+  ArProg (199,210).1 = 409;
+
+theorem :: NUMBER12:29
+  ArProg (199,210).2 = 619;
+
+theorem :: NUMBER12:30
+  ArProg (199,210).3 = 829;
+
+theorem :: NUMBER12:31
+  ArProg (199,210).4 = 1039;
+
+theorem :: NUMBER12:32
+  ArProg (199,210).5 = 1249;
+
+theorem :: NUMBER12:33
+  ArProg (199,210).6 = 1459;
+
+theorem :: NUMBER12:34
+  ArProg (199,210).7 = 1669;
+
+theorem :: NUMBER12:35
+  ArProg (199,210).8 = 1879;
+
+theorem :: NUMBER12:36
+  ArProg (199,210).9 = 2089;
+
+:: Hence 2089 is the least possible prime
+
+registration let f be natural-valued Arithmetic_Progression;
+  cluster difference f -> integer;
+end;
+
+theorem :: NUMBER12:37  :: from Cantor Theorem 5, p. 121
+  for f being increasing natural-valued Arithmetic_Progression
+    st for i being Nat st i < 10 holds f.i is odd Prime holds
+      210 divides difference f;
+
+theorem :: NUMBER12:38
+  for f being increasing natural-valued Arithmetic_Progression
+    st for i being Nat st i < 10 holds f.i is odd Prime holds
+      difference f >= 210;
+
+theorem :: NUMBER12:39
+  for f being increasing natural-valued Arithmetic_Progression
+    st (for i being Nat st i < 10 holds f.i is odd Prime) &
+    difference f = 210 holds
+       for f0 being Nat st f0 = f.0 holds f0 mod 11 = 1;
+
+theorem :: NUMBER12:40
+  for f being increasing natural-valued Arithmetic_Progression
+    st (for i being Nat st i < 10 holds f.i is odd Prime) &
+      difference f = 210 holds
+        f.0 >= 199;
+
+theorem :: NUMBER12:41 :: Problem 72
+  for f being increasing natural-valued Arithmetic_Progression
+    st for i being Nat st i < 10 holds f.i is odd Prime holds
+      f.9 >= 2089;
+
+theorem :: NUMBER12:42
+  rng (ArProg(199,210) | 10) =
+    {199, 409, 619, 829, 1039, 1249, 1459, 1669, 1879, 2089};
+
+theorem :: NUMBER12:43
+  card (rng (ArProg(199,210) | 10) /\ SetPrimes) = 10;
+
+begin :: Problem 135
+:: Find all numbers p such that all six numbers p, p+2, p+6, p+8,
+:: p+12, and p+14 are primes.
+
+theorem :: NUMBER12:44 :: Problem 135
+  for p being Prime st
+    p+2 is Prime & p+6 is Prime & p+8 is Prime & p+12 is Prime & p+14 is Prime
+      holds
+   p = 5;
+
+begin :: Problem 136
+:: Prove that there exist infinitely many pairs of different positive
+:: integers m and n such that (1) m and n have the same prime divisors, and
+:: (2) m + 1 and n + 1 have the same prime divisors.
+
+definition
+  let n be Integer;
+  func PrimeDivisors n -> Subset of NAT equals
+:: NUMBER12:def 3
+    { k where k is Prime : k divides n };
+end;
+
+theorem :: NUMBER12:45
+  for i being Integer holds PrimeDivisors i c= SetPrimes;
+
+theorem :: NUMBER12:46
+  for n being non zero Nat holds PrimeDivisors n c= Seg n;
+
+theorem :: NUMBER12:47
+  for n being Nat holds
+    PrimeDivisors n c= NatDivisors n;
+
+theorem :: NUMBER12:48
+  for a,b being Nat holds
+    PrimeDivisors (a * b) = PrimeDivisors a \/ PrimeDivisors b;
+
+theorem :: NUMBER12:49
+  for n being Nat, a being Nat st n >= 1 holds
+    PrimeDivisors (a |^ n) = PrimeDivisors a;
+
+theorem :: NUMBER12:50
+  for k being Nat, p being Prime st k >= 1 holds
+    PrimeDivisors (p |^ k) = {p};
+
+theorem :: NUMBER12:51
+  PrimeDivisors 1 = {};
+
+theorem :: NUMBER12:52
+  for k being Nat st k >= 1 holds
+    PrimeDivisors ((2 |^ k) * (2 |^ k - 2)) =
+       {2} \/ PrimeDivisors (2 |^ (k-'1) - 1);
+
+theorem :: NUMBER12:53
+  for k being Nat st k >= 1 holds
+    PrimeDivisors (2 |^ k - 2) =
+       {2} \/ PrimeDivisors (2 |^ (k-'1) - 1);
+
+theorem :: NUMBER12:54  :: 2nd Step
+  for k being Nat holds
+    PrimeDivisors ((2 |^ k) * (2 |^ k - 2) + 1) =
+       PrimeDivisors (2 |^ k - 1);
+
+theorem :: NUMBER12:55
+  for a being Nat holds
+    PrimeDivisors (a * a) = PrimeDivisors a;
+
+theorem :: NUMBER12:56 :: Problem 136
+  for k,m,n being Nat st
+   k >= 1 & m = 2 |^ k - 2 & n = (2 |^ k) * (2 |^ k - 2)
+    holds
+      PrimeDivisors m = PrimeDivisors n &
+      PrimeDivisors (m+1) = PrimeDivisors (n+1);
+
+theorem :: NUMBER12:57 :: Problem 136 Remark
+  PrimeDivisors (75) = PrimeDivisors (1215) &
+    PrimeDivisors (75 + 1) = PrimeDivisors (1215 + 1);
+
+begin :: Problem 153
+:: Prove that the equation
+:: x / y + y / z + z / x = 1
+:: has no solutions in positive integers x, y, z.
+
+theorem :: NUMBER12:58
+  for x,y,z being positive Real holds
+    (x / y) * (y / z) * (z / x) = 1;
+
+theorem :: NUMBER12:59 :: Problem 153
+  not ex x,y,z being positive Nat st
+    x / y + y / z + z / x = 1;
+
+begin :: Problem 154
+:: Prove that the equation
+:: x / y + y / z + z / x = 2
+:: has no solutions in positive integers x, y, z.
+
+theorem :: NUMBER12:60
+  for a being positive Real,
+      n being positive Nat holds
+    n-root a is positive;
+
+theorem :: NUMBER12:61  :: see SERIES_3:16
+  for a,b,c being positive Real st
+    not (a = b & b = c) holds
+      ((a + b + c) / 3) |^ 3 > a * b * c;
+
+theorem :: NUMBER12:62 :: Problem 154
+  not ex x,y,z being positive Nat st
+    x / y + y / z + z / x = 2;
+
+begin :: Problem 155
+:: Find all solutions in positive integers x, y, z of the equation
+:: x / y + y / z + z / x = 3.
+
+theorem :: NUMBER12:63 :: Problem 155
+  for x,y,z being positive Nat st
+    x / y + y / z + z / x = 3 holds
+      x = y & y = z;
+

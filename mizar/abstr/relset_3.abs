@@ -1,0 +1,422 @@
+:: Some Number Relations
+::  by Sebastian Koch
+:: 
+:: Received December 27, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies XBOOLE_0, FUNCT_1, XCMPLX_0, NUMBERS, RAT_1, INT_1, ZFMISC_1,
+      ARYTM_1, RELAT_1, ARYTM_3, CARD_1, BINOP_2, NAT_1, REAL_1, RELSET_3,
+      ORDINAL1, RELAT_2, TARSKI, MEMBERED, WELLORD1, FUNCT_5;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, RELAT_1, RELSET_1, RELAT_2,
+      MEMBERED, FUNCT_1, FUNCT_2, BINOP_1, SETWISEO, WELLORD1, ENUMSET1,
+      ORDINAL1, XCMPLX_0, XREAL_0, XXREAL_0, NAT_1, INT_1, NUMBERS, RAT_1,
+      VALUED_0, TOLER_1, BINOP_2, FUNCT_5;
+ constructors BINOP_1, SETWISEO, XCMPLX_0, RAT_1, RELSET_1, VALUED_0, NUMBERS,
+      RELAT_2, MEMBERED, BINOP_2, WELLORD1, FUNCT_5, CARD_1, TOLER_1;
+ registrations ORDINAL1, NUMBERS, XCMPLX_0, XREAL_0, NAT_1, INT_1, RAT_1,
+      RELSET_1, VALUED_0, MEMBERED, FUNCT_1, XBOOLE_0, CARD_1, RELAT_1;
+ requirements BOOLE, SUBSET, ARITHM, NUMERALS, REAL;
+
+
+begin :: Preliminaries
+
+:: not necessarily into MEMBERED - will cause unneeded expansions
+registration
+  cluster -> natural-membered for Nat;
+end;
+
+:: Succ Relation
+
+ reserve X, Y for set, A for Ordinal;
+
+definition
+  let X;
+  func succRel(X) -> Relation of X means
+:: RELSET_3:def 1
+
+  for x,y being set holds [x,y] in it iff x in X & y in X & y = succ x;
+end;
+
+registration
+  let X;
+  cluster succRel(X) -> asymmetric;
+end;
+
+registration
+  cluster succRel {} -> empty;
+  let X be trivial set;
+  cluster succRel(X) -> empty;
+end;
+
+theorem :: RELSET_3:1
+  X c= Y implies succRel(X) c= succRel(Y);
+
+theorem :: RELSET_3:2
+  succRel(X /\ Y) = succRel(X) /\ succRel(Y);
+
+theorem :: RELSET_3:3
+  succRel(X) \/ succRel(Y) c= succRel(X \/ Y);
+
+theorem :: RELSET_3:4
+  for B,C being Ordinal holds [B,C] in succRel(A) iff succ B in A & C = succ B;
+
+theorem :: RELSET_3:5
+  for B being Ordinal st succ B in A holds [B, succ B] in succRel(A);
+
+theorem :: RELSET_3:6
+  succRel(2) = {[0,1]};
+
+theorem :: RELSET_3:7
+  succRel(3) = {[0,1], [1,2]};
+
+theorem :: RELSET_3:8
+  succRel(4) = {[0,1], [1,2], [2,3]};
+
+theorem :: RELSET_3:9
+  succRel(5) = {[0,1], [1,2], [2,3], [3,4]};
+
+theorem :: RELSET_3:10
+  succRel(omega) = the set of all [n,n+1] where n is Nat;
+
+begin :: Add Relation
+
+ reserve z,z1,z2 for Complex;
+ reserve r,r1,r2 for Real;
+ reserve q,q1,q2 for Rational;
+ reserve i,i1,i2 for Integer;
+ reserve n,n1,n2 for Nat;
+
+registration
+  let z;
+  cluster (curry addcomplex).z -> Function-like Relation-like;
+end;
+
+definition
+  let X be complex-membered set;
+  let z;
+  func addRel(X,z) -> Relation of X equals
+:: RELSET_3:def 2
+  ((curry addcomplex).z) |_2 X;
+end;
+
+registration
+  let z;
+  cluster addRel({},z) -> empty;
+end;
+
+theorem :: RELSET_3:11
+  for X being complex-membered set
+  holds [z1,z2] in addRel(X,z) iff z1 in X & z2 in X & z2 = z + z1;
+
+theorem :: RELSET_3:12
+  for X being complex-membered set holds addRel(X,0) = id X;
+
+registration
+  let X be complex-membered set;
+  let z be non zero Complex;
+  cluster addRel(X,z) -> asymmetric;
+end;
+
+theorem :: RELSET_3:13
+  for X, Y being complex-membered set
+  holds X c= Y implies addRel(X,z) c= addRel(Y,z);
+
+theorem :: RELSET_3:14
+  for X, Y being complex-membered set holds
+    addRel(X /\ Y,z) = addRel(X,z) /\ addRel(Y,z);
+
+theorem :: RELSET_3:15
+  for X, Y being complex-membered set holds
+    addRel(X,z) \/ addRel(Y,z) c= addRel(X \/ Y,z);
+
+theorem :: RELSET_3:16
+  for X being complex-membered set holds addRel(X,z)~ = addRel(X,-z);
+
+theorem :: RELSET_3:17
+  for X being complex-membered set holds
+    addRel(X,z1) * addRel(X,z2) c= addRel(X,z1+z2);
+
+theorem :: RELSET_3:18
+  addRel(COMPLEX,z1) * addRel(COMPLEX,z2) = addRel(COMPLEX,z1+z2);
+
+theorem :: RELSET_3:19
+  [z1,z1+z] in addRel(COMPLEX,z);
+
+theorem :: RELSET_3:20
+  addRel(COMPLEX,z) = the set of all [z1,z1+z] where z1;
+
+registration
+  let r;
+  cluster (curry addreal).r -> Function-like Relation-like;
+end;
+
+theorem :: RELSET_3:21
+  for X being real-membered set holds addRel(X,r) = ((curry addreal).r) |_2 X;
+
+theorem :: RELSET_3:22
+  for X being real-membered set holds
+    [r1,r2] in addRel(X,r) iff r1 in X & r2 in X & r2 = r + r1;
+
+theorem :: RELSET_3:23
+  addRel(REAL,r1) * addRel(REAL,r2) = addRel(REAL,r1+r2);
+
+theorem :: RELSET_3:24
+  [r1,r1+r] in addRel(REAL,r);
+
+theorem :: RELSET_3:25
+  addRel(REAL,r) = the set of all [r1,r1+r] where r1;
+
+registration
+  let q;
+  cluster (curry addrat).q -> Function-like Relation-like;
+end;
+
+theorem :: RELSET_3:26
+  for X being rational-membered set holds
+    addRel(X,q) = ((curry addrat).q) |_2 X;
+
+theorem :: RELSET_3:27
+  for X being rational-membered set holds
+    [q1,q2] in addRel(X,q) iff q1 in X & q2 in X & q2 = q + q1;
+
+theorem :: RELSET_3:28
+  addRel(RAT,q1) * addRel(RAT,q2) = addRel(RAT,q1+q2);
+
+theorem :: RELSET_3:29
+  [q1,q1+q] in addRel(RAT,q);
+
+theorem :: RELSET_3:30
+  addRel(RAT,q) = the set of all [q1,q1+q] where q1;
+
+registration
+  let i;
+  cluster (curry addint).i -> Function-like Relation-like;
+end;
+
+theorem :: RELSET_3:31
+  for X being integer-membered set holds
+    addRel(X,i) = ((curry addint).i) |_2 X;
+
+theorem :: RELSET_3:32
+  for X being integer-membered set holds
+    [i1,i2] in addRel(X,i) iff i1 in X & i2 in X & i2 = i + i1;
+
+theorem :: RELSET_3:33
+  addRel(INT,i1) * addRel(INT,i2) = addRel(INT,i1+i2);
+
+theorem :: RELSET_3:34
+  [i1,i1+i] in addRel(INT,i);
+
+theorem :: RELSET_3:35
+  addRel(INT,i) = the set of all [i1,i1+i] where i1;
+
+registration
+  let n;
+  cluster (curry addnat).n -> Function-like Relation-like;
+end;
+
+theorem :: RELSET_3:36
+  for X being natural-membered set holds
+    addRel(X,n) = ((curry addnat).n) |_2 X;
+
+theorem :: RELSET_3:37
+  for X being natural-membered set
+  holds [n1,n2] in addRel(X,n) iff n1 in X & n2 in X & n2 = n + n1;
+
+theorem :: RELSET_3:38
+  addRel(NAT,n1) * addRel(NAT,n2) = addRel(NAT,n1+n2);
+
+theorem :: RELSET_3:39
+  [n1,n1+n] in addRel(NAT,n);
+
+theorem :: RELSET_3:40
+  addRel(NAT,n) = the set of all [n1,n1+n] where n1;
+
+theorem :: RELSET_3:41
+  for X being natural-membered set holds addRel(X,1) = succRel(X);
+
+begin :: Mult Relation
+
+registration
+  let z;
+  cluster (curry multcomplex).z -> Function-like Relation-like;
+end;
+
+definition
+  let X be complex-membered set;
+  let z;
+  func multRel(X,z) -> Relation of X equals
+:: RELSET_3:def 3
+  ((curry multcomplex).z) |_2 X;
+end;
+
+registration
+  let z;
+  cluster multRel({},z) -> empty;
+end;
+
+theorem :: RELSET_3:42
+  for X being complex-membered set
+  holds [z1,z2] in multRel(X,z) iff z1 in X & z2 in X & z2 = z * z1;
+
+theorem :: RELSET_3:43
+  for X being complex-membered set st 0 in X
+  holds multRel(X,0) = [: X, {0} :];
+
+theorem :: RELSET_3:44
+  for X being complex-membered set holds multRel(X,1) = id X;
+
+theorem :: RELSET_3:45
+  for X being complex-membered set st z <> 1 & z <> -1 & not 0 in X
+  holds multRel(X,z) is asymmetric;
+
+theorem :: RELSET_3:46
+  for X, Y being complex-membered set
+  holds X c= Y implies multRel(X,z) c= multRel(Y,z);
+
+theorem :: RELSET_3:47
+  for X, Y being complex-membered set
+  holds multRel(X /\ Y,z) = multRel(X,z) /\ multRel(Y,z);
+
+theorem :: RELSET_3:48
+  for X, Y being complex-membered set
+  holds multRel(X,z) \/ multRel(Y,z) c= multRel(X \/ Y,z);
+
+theorem :: RELSET_3:49
+  for X being complex-membered set st z <> 0
+  holds multRel(X,z)~ = multRel(X,z");
+
+theorem :: RELSET_3:50
+  for X being complex-membered set
+  holds multRel(X,z1) * multRel(X,z2) c= multRel(X,z1*z2);
+
+theorem :: RELSET_3:51
+  multRel(COMPLEX,z1) * multRel(COMPLEX,z2) = multRel(COMPLEX,z1*z2);
+
+theorem :: RELSET_3:52
+  [z1,z1*z] in multRel(COMPLEX,z);
+
+theorem :: RELSET_3:53
+  multRel(COMPLEX,z) = the set of all [z1,z1*z] where z1;
+
+registration
+  let r;
+  cluster (curry multreal).r -> Function-like Relation-like;
+end;
+
+theorem :: RELSET_3:54
+  for X being real-membered set
+  holds multRel(X,r) = ((curry multreal).r) |_2 X;
+
+theorem :: RELSET_3:55
+  for X being real-membered set
+  holds [r1,r2] in multRel(X,r) iff r1 in X & r2 in X & r2 = r * r1;
+
+theorem :: RELSET_3:56
+  multRel(REAL,r1) * multRel(REAL,r2) = multRel(REAL,r1*r2);
+
+theorem :: RELSET_3:57
+  [r1,r1*r] in multRel(REAL,r);
+
+theorem :: RELSET_3:58
+  multRel(REAL,r) = the set of all [r1,r1*r] where r1;
+
+registration
+  let q;
+  cluster (curry multrat).q -> Function-like Relation-like;
+end;
+
+theorem :: RELSET_3:59
+  for X being rational-membered set
+  holds multRel(X,q) = ((curry multrat).q) |_2 X;
+
+theorem :: RELSET_3:60
+  for X being rational-membered set
+  holds [q1,q2] in multRel(X,q) iff q1 in X & q2 in X & q2 = q * q1;
+
+theorem :: RELSET_3:61
+  multRel(RAT,q1) * multRel(RAT,q2) = multRel(RAT,q1*q2);
+
+theorem :: RELSET_3:62
+  [q1,q1*q] in multRel(RAT,q);
+
+theorem :: RELSET_3:63
+  multRel(RAT,q) = the set of all [q1,q1*q] where q1;
+
+registration
+  let i;
+  cluster (curry multint).i -> Function-like Relation-like;
+end;
+
+theorem :: RELSET_3:64
+  for X being integer-membered set
+  holds multRel(X,i) = ((curry multint).i) |_2 X;
+
+theorem :: RELSET_3:65
+  for X being integer-membered set
+  holds [i1,i2] in multRel(X,i) iff i1 in X & i2 in X & i2 = i * i1;
+
+theorem :: RELSET_3:66
+  multRel(INT,i1) * multRel(INT,i2) = multRel(INT,i1*i2);
+
+theorem :: RELSET_3:67
+  [i1,i1*i] in multRel(INT,i);
+
+theorem :: RELSET_3:68
+  multRel(INT,i) = the set of all [i1,i1*i] where i1;
+
+registration
+  let n;
+  cluster (curry multnat).n -> Function-like Relation-like;
+end;
+
+theorem :: RELSET_3:69
+  for X being natural-membered set
+  holds multRel(X,n) = ((curry multnat).n) |_2 X;
+
+theorem :: RELSET_3:70
+  for X being natural-membered set
+  holds [n1,n2] in multRel(X,n) iff n1 in X & n2 in X & n2 = n * n1;
+
+theorem :: RELSET_3:71
+  multRel(NAT,n1) * multRel(NAT,n2) = multRel(NAT,n1*n2);
+
+theorem :: RELSET_3:72
+  [n1,n1*n] in multRel(NAT,n);
+
+theorem :: RELSET_3:73
+  multRel(NAT,n) = the set of all [n1,n1*n] where n1;
+
+begin :: Mod Relation
+
+definition
+  let n be non zero Nat;
+  func modRel(n) -> Relation of n equals
+:: RELSET_3:def 4
+  addRel(n,1) \/ {[n-1,0]};
+end;
+
+theorem :: RELSET_3:74
+  modRel(1) = {[0,0]};
+
+theorem :: RELSET_3:75
+  modRel(2) = {[0,1], [1,0]};
+
+theorem :: RELSET_3:76
+  modRel(3) = {[0,1], [1,2], [2,0]};
+
+theorem :: RELSET_3:77
+  modRel(4) = {[0,1], [1,2], [2,3], [3,0]};
+
+theorem :: RELSET_3:78
+  modRel(5) = {[0,1], [1,2], [2,3], [3,4], [4,0]};

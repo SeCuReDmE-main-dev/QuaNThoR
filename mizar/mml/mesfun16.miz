@@ -1,0 +1,4191 @@
+:: Integral of Continuous Functions of Two Variables
+::  by Noboru Endou and Yasunari Shidama
+:: 
+:: Received December 18, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MEASUR12, NUMBERS, XXREAL_0, SUBSET_1, CARD_1, ARYTM_3, ARYTM_1,
+      RELAT_1, REAL_1, FUNCT_1, XBOOLE_0, TARSKI, ZFMISC_1, PROB_1, SUPINF_2,
+      VALUED_0, PARTFUN1, MEASURE1, MESFUNC5, MESFUNC1, MEASUR10, MEASUR11,
+      COMPLEX1, MESFUN12, RFUNCT_3, ORDINAL2, INTEGRA1, INTEGRA5, MEASURE6,
+      NAT_1, FUNCT_2, CARD_3, ORDINAL1, SUPINF_1, SEQ_2, MEASURE3, MEASURE5,
+      XXREAL_1, SEQ_1, MEASURE8, XREAL_0, FUNCT_7, XXREAL_2, MEMBERED, SEQ_4,
+      STRUCT_0, PRE_TOPC, NORMSP_1, NFCONT_2, SQUARE_1, FCONT_1, REALSET1,
+      DUALSP02, RCOMP_1, CFCONT_1, RAT_1, METRIC_1, FCONT_2;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, FUNCT_1, ORDINAL1, SETFAM_1,
+      RELSET_1, PARTFUN1, MCART_1, FUNCT_2, BINOP_1, DOMAIN_1, CARD_3, NUMBERS,
+      MEMBERED, XXREAL_3, XCMPLX_0, XXREAL_0, SQUARE_1, XREAL_0, VALUED_0,
+      RAT_1, NAT_1, VALUED_1, XXREAL_1, XXREAL_2, EXTREAL1, COMPLEX1, MESFUNC1,
+      FCONT_1, FCONT_2, SUPINF_1, SUPINF_2, PROB_1, RCOMP_1, FINSUB_1,
+      MEASURE1, MEASURE3, MEASURE5, MEASUR12, MESFUNC2, MESFUNC5, MESFUNC6,
+      INTEGRA5, MEASURE8, MEASUR10, MEASUR11, MESFUN12, SEQ_1, SEQ_2, SEQ_4,
+      STRUCT_0, ALGSTR_0, PRE_TOPC, NORMSP_0, NORMSP_1, NFCONT_1, LOPBAN_5,
+      PRVECT_3, NFCONT_2, DUALSP02;
+ constructors EXTREAL1, SUPINF_1, MESFUNC2, MEASUR11, MESFUN12, MESFUNC6,
+      DOMAIN_1, FCONT_1, FCONT_2, MEASUR12, INTEGRA1, COMSEQ_2, PROB_3, EUCLID,
+      NEWTON, MEASURE3, INTEGRA5, SEQ_2, SEQ_4, BINOP_2, SQUARE_1, NFCONT_1,
+      PRVECT_3, NFCONT_2, DUALSP02, LOPBAN_5, NDIFF_8, LPSPACE1, VFUNCT_1;
+ registrations ORDINAL1, XBOOLE_0, RELAT_1, SUBSET_1, XREAL_0, NAT_1, NUMBERS,
+      VALUED_0, RELSET_1, MEASURE1, XXREAL_3, MEMBERED, XXREAL_2, SQUARE_1,
+      XXREAL_1, INTEGRA1, FINSUB_1, FCONT_1, TOPGEN_4, STRUCT_0, NORMSP_0,
+      NORMSP_1, PRVECT_3, RAT_1, MEASURE3, COMPLEX1, MEASURE5, FOMODEL0;
+ requirements BOOLE, SUBSET, NUMERALS, REAL, ARITHM;
+ equalities RCOMP_1, MEASUR10, BINOP_1, MESFUNC6, INTEGRA5, ALGSTR_0, NORMSP_0,
+      PRVECT_3, SQUARE_1, DUALSP02, LOPBAN_5;
+ expansions TARSKI, XBOOLE_0, MESFUNC1, MEASURE1, FCONT_1, MESFUNC6, INTEGRA5,
+      NORMSP_1, NFCONT_1, NFCONT_2;
+ theorems XBOOLE_0, FUNCT_1, XXREAL_0, XBOOLE_1, XXREAL_3, MEASURE1, VALUED_0,
+      FUNCT_2, RELAT_1, MESFUNC5, EXTREAL1, PARTFUN1, MESFUNC1, MESFUNC2,
+      MEASUR10, SUBSET_1, MEASUR11, MESFUN11, MESFUN12, RELSET_1, MESFUNC6,
+      TARSKI, ZFMISC_1, XREAL_1, PROB_1, ORDINAL1, MEASURE8, XTUPLE_0, CARD_3,
+      PRVECT_3, XREAL_0, MESFUN13, MESFUN14, FINSUB_1, MEASUR12, NUMBERS,
+      MEASUR13, EUCLID, COMPLEX1, FCONT_1, VALUED_1, INTEGRA5, RCOMP_1,
+      ABSVALUE, INT_1, INTEGRA6, XCMPLX_1, MEASURE5, SEQ_2, NDIFF_8, SEQ_4,
+      RLVECT_1, XXREAL_2, CARD_4, NORMSP_0, NORMSP_1, NFCONT_1, NFCONT_2,
+      DUALSP03, NDIFF_9, NDIFF_1, MEMBERED, RAT_1, LOPBAN_3, SQUARE_1,
+      XXREAL_1, INTEGR26, FCONT_2;
+ schemes FUNCT_2;
+
+begin :: Preliminaries
+
+theorem Th1:
+for X being non empty set, S being SigmaField of X, M being sigma_Measure of S,
+ f being PartFunc of X,ExtREAL st dom f = {} holds Integral(M,f) = 0
+proof
+    let X be non empty set, S be SigmaField of X, M be sigma_Measure of S,
+    f be PartFunc of X,ExtREAL;
+    assume
+A1:  dom f = {}; then
+    reconsider E = dom f as Element of S by MEASURE1:7;
+A2: E = dom(max+f) & E = dom(max-f) by MESFUNC2:def 2,def 3;
+A3: M.E = 0 by A1,VALUED_0:def 19;
+    max+f is E-measurable & max-f is E-measurable by A1; then
+A4: integral+(M,(max+f)|E) = 0 & integral+(M,(max-f)|E) = 0
+     by A2,A3,MESFUNC5:82,MESFUN11:5; then
+    Integral(M,f) = integral+(M,max+f)-0 by A2,MESFUNC5:def 16;
+    hence thesis by A2,A4,XXREAL_3:15;
+end;
+
+theorem
+for X being non empty set, S be SigmaField of X, M being sigma_Measure of S,
+ f being PartFunc of X,REAL st dom f = {} holds Integral(M,f) = 0
+proof
+    let X be non empty set, S be SigmaField of X, M be sigma_Measure of S,
+    f be PartFunc of X,REAL;
+    assume dom f = {}; then
+    dom(R_EAL f) = {} by MESFUNC5:def 7;
+    hence thesis by Th1;
+end;
+
+theorem Th3:
+for X be non empty set, S be SigmaField of X, M be sigma_Measure of S st
+ M is sigma_finite holds COM M is sigma_finite
+proof
+    let X be non empty set, S be SigmaField of X, M be sigma_Measure of S;
+    assume M is sigma_finite; then
+    consider E be Set_Sequence of S such that
+A1:  for n be Nat holds M.(E.n) < +infty and
+A2:  Union E = X by MEASUR11:def 12;
+
+    for n be Nat holds E.n in COM(S,M)
+    proof
+     let n be Nat;
+     E.n is Element of COM(S,M) by MESFUN14:27;
+     hence E.n in COM(S,M);
+    end; then
+    reconsider E1=E as Set_Sequence of COM(S,M) by MEASURE8:def 2;
+    for n be Nat holds (COM M).(E1.n) < +infty
+    proof
+     let n be Nat;
+     M.(E.n) < +infty by A1;
+     hence (COM M).(E1.n) < +infty by MESFUN14:35;
+    end;
+    hence COM M is sigma_finite by A2,MEASUR11:def 12;
+end;
+
+theorem Th4:
+B-Meas is sigma_finite
+proof
+    deffunc S(Nat) = In([.-$1,$1.],bool REAL);
+    consider E be Function of NAT,bool REAL such that
+A1: for i being Element of NAT holds E.i = S(i) from FUNCT_2:sch 4;
+
+    reconsider E as SetSequence of REAL;
+A2: for n being Nat holds E.n =[.-n,n.]
+    proof
+     let n be Nat;
+     n is Element of NAT by ORDINAL1:def 12; then
+     E.n =In([.-n,n.],bool REAL) by A1;
+     hence thesis;
+    end;
+
+    for n being Nat holds E.n in Borel_Sets
+    proof
+     let n be Nat;
+     E.n =[.-n,n.] by A2;
+     hence E.n in Borel_Sets by MEASUR10:5;
+    end; then
+    reconsider E as Set_Sequence of Borel_Sets by MEASURE8:def 2;
+
+A3: for n being Nat holds (B-Meas).(E.n) < +infty
+    proof
+     let n be Nat;
+     -n in INT by INT_1:def 1; then
+     -n in REAL & n in REAL by ORDINAL1:def 12,NUMBERS:15,19; then
+     reconsider a= -n, b= n as R_eal by NUMBERS:31;
+     E.n =[.a,b.] by A2; then
+     (B-Meas).(E.n) = diameter([.a,b.]) by MEASUR12:71; then
+     (B-Meas).(E.n) = b-a by  MEASURE5:6;
+     hence (B-Meas).(E.n) < +infty by XREAL_0:def 1,XXREAL_0:9;
+    end;
+
+    now let z be object;
+     assume z in REAL; then
+     reconsider r=z as Real;
+     consider n be Nat such that
+A4:   |.r.| < n by SEQ_4:3;
+     -n <= r & r <= n by ABSVALUE:5,A4; then
+     r in [.-n,n.]; then
+A5:  r in E.n by A2;
+     dom E = NAT by FUNCT_2:def 1; then
+     E.n in rng E by FUNCT_1:3,ORDINAL1:def 12;
+     hence z in union rng E by A5,TARSKI:def 4;
+    end; then
+    REAL c= union rng E; then
+    Union E = REAL by CARD_3:def 4;
+    hence thesis by A3,MEASUR11:def 12;
+end;
+
+theorem Th5:
+L-Meas is sigma_finite by Th4,Th3,MEASUR12:def 11,def 12;
+
+theorem
+Prod_Measure(L-Meas,L-Meas) is sigma_finite by Th5,MEASUR13:27;
+
+theorem Th7:
+for I be closed_interval Subset of REAL, E be Subset of RNS_Real
+ st I = E holds E is compact
+proof
+    let I be closed_interval Subset of REAL, E be Subset of RNS_Real;
+    assume
+A1:  I = E;
+
+    for s1 being sequence of RNS_Real st rng s1 c= E holds
+     ex s2 being sequence of RNS_Real st
+      s2 is subsequence of s1 & s2 is convergent & lim s2 in E
+    proof
+     let s1 be sequence of RNS_Real;
+     assume
+A2:   rng s1 c= E;
+
+     reconsider t1=s1 as Real_Sequence;
+
+     consider t2 being Real_Sequence such that
+A3:   t2 is subsequence of t1 & t2 is convergent
+    & lim t2 in I by A1,A2,RCOMP_1:def 3;
+     consider N1 being increasing sequence of NAT such that
+A4:   t2 = t1*N1 by A3,VALUED_0:def 17;
+
+     reconsider s2=s1*N1 as sequence of RNS_Real;
+
+     take s2;
+     thus s2 is subsequence of s1;
+     reconsider s0=lim t2 as Point of RNS_Real by XREAL_0:def 1;
+
+A5:  now let r be Real;
+      assume 0 < r; then
+      consider n be Nat such that
+A6:    for m be Nat st n<=m holds |.t2.m-lim t2.|< r by A3,SEQ_2:def 7;
+
+      take n;
+      let m be Nat;
+      assume n<=m; then
+A7:   |.t2.m-lim t2.|< r by A6;
+      t2.m-lim t2 =s2.m -s0 by A4,DUALSP03:4;
+      hence ||.s2.m-s0.||< r by A7,EUCLID:def 2;
+     end;
+     hence s2 is convergent;
+     hence lim s2 in E by A1,A3,A5,NORMSP_1:def 7;
+    end;
+    hence E is compact;
+end;
+
+definition
+  let S1, S2 be RealNormSpace, D1 be Subset of S1, D2 be Subset of S2;
+  redefine func [:D1,D2:] -> Subset of [:S1,S2:];
+  coherence
+  proof
+    [:D1,D2:] c= [:the carrier of S1,the carrier of S2:];
+    hence thesis;
+  end;
+end;
+
+theorem Th8:
+for P,Q be RealNormSpace, E be Subset of P, F be Subset of Q
+  st E is compact & F is compact holds
+   [:E,F:] is Subset of [:P,Q:] & [:E,F:] is compact
+proof
+    let P,Q be RealNormSpace, E be Subset of P, F be Subset of Q;
+    assume
+A1:  E is compact & F is compact;
+    set S = [:P,Q:];
+    set X = [:E,F:];
+    reconsider X as Subset of S;
+
+    for s1 be sequence of S st rng s1 c= X
+     ex s2 be sequence of S st
+      s2 is subsequence of s1 & s2 is convergent & lim s2 in X
+    proof
+     let u1 be sequence of S;
+     assume
+A2:   rng u1 c= X;
+
+     defpred S1[Nat,object] means
+      ex u be Point of S,x1 be Point of P, x2 be Point of Q
+       st u=u1.$1 & u=[x1,x2] & $2=x1;
+
+A3:  for i being Element of NAT
+      ex y being Element of the carrier of P st S1[i,y]
+     proof
+      let i be Element of NAT;
+      reconsider u=u1.i as Point of S;
+
+      consider xx1 be Point of P, xx2 be Point of Q such that
+A4:    u=[xx1,xx2] by PRVECT_3:18;
+      reconsider xx1 as Element of the carrier of P;
+      take y=xx1;
+      thus thesis by A4;
+     end;
+
+     consider s1 being Function of NAT,the carrier of P such that
+A5:   for i being Element of NAT holds S1[i,s1.i] from FUNCT_2:sch 3(A3);
+
+     defpred T1[Nat,object] means
+      ex u be Point of S,x1 be Point of P,x2 be Point of Q
+       st u=u1.$1 & u=[x1,x2] & $2=x2;
+
+A6:  for i being Element of NAT
+      ex y being Element of the carrier of Q st T1[i,y]
+     proof
+      let i be Element of NAT;
+      reconsider u=u1.i as Point of S;
+
+      consider xx1 be Point of P ,xx2 be Point of Q such that
+A7:    u=[xx1,xx2] by PRVECT_3:18;
+      reconsider xx2 as Element of the carrier of Q;
+      take y=xx2;
+      thus thesis by A7;
+     end;
+
+     consider t1 being Function of NAT,the carrier of Q such that
+A8:  for i being Element of NAT holds T1[i,t1.i] from FUNCT_2:sch 3(A6);
+
+     reconsider s1 as sequence of P;
+     reconsider t1 as sequence of Q;
+
+A9:  for i be Nat holds u1.i =[s1.i,t1.i]
+     proof
+      let i be Nat;
+A10:  i is Element of NAT by ORDINAL1:def 12; then
+A11:  ex u be Point of S, x1 be Point of P, x2 be Point of Q st
+       u=u1.i & u=[x1,x2] & s1.i=x1 by A5;
+      ex v be Point of S, y1 be Point of P, y2 be Point of Q st
+       v=u1.i & v=[y1,y2] & t1.i=y2 by A8,A10;
+      hence thesis by A11,XTUPLE_0:1;
+     end;
+
+     now let z be object;
+      assume z in rng s1; then
+      consider i be Element of NAT such that
+A12:   i in dom s1 & z = s1.i by PARTFUN1:3;
+A13:  i in NAT;
+      consider u be Point of S, x1 be Point of P, x2 be Point of Q such that
+A14:   u=u1.i & u=[x1,x2] & s1.i=x1 by A5;
+
+      i in dom u1 by A13,FUNCT_2:def 1; then
+      u in X by A2,A14,FUNCT_1:3;
+      hence z in E by A14,A12,ZFMISC_1:87;
+     end; then
+     rng s1 c= E; then
+     consider s2 being sequence of P such that
+A15:  s2 is subsequence of s1 & s2 is convergent & lim s2 in E by A1;
+
+     consider N1 being increasing sequence of NAT such that
+A16:  s2 = s1 * N1 by A15,VALUED_0:def 17;
+
+A17: now let z be object;
+      assume z in rng t1; then
+      consider i be Element of NAT such that
+A18:   i in dom t1 & z =t1.i by PARTFUN1:3;
+
+      consider u be Point of S,x1 be Point of P,x2 be Point of Q such that
+A19:   u=u1.i & u=[x1,x2] & t1.i=x2 by A8;
+
+      i in NAT; then
+      i in dom u1 by FUNCT_2:def 1; then
+      u in X by A2,A19,FUNCT_1:3;
+      hence z in F by A19,A18,ZFMISC_1:87;
+     end;
+
+     reconsider t2=t1*N1 as sequence of Q;
+     rng t2 c= rng t1 by VALUED_0:21; then
+     rng t2 c= F by A17; then
+     consider t3 being sequence of Q such that
+A20:  t3 is subsequence of t2 & t3 is convergent & lim t3 in F by A1;
+     consider N2 being increasing sequence of NAT such that
+A21:  t3 = t2 * N2 by A20,VALUED_0:def 17;
+
+     reconsider s3= (s1*N1)*N2 as sequence of P;
+A22: s3 is convergent & lim s3 = lim s2 by A15,A16,LOPBAN_3:7,8;
+
+     reconsider u2= u1*N1 as sequence of S;
+     reconsider u3= u2*N2 as sequence of S;
+
+     take u3;
+     thus u3 is subsequence of u1 by VALUED_0:20;
+
+A23: for i be Nat holds u3.i =[s3.i,t3.i]
+     proof
+      let i be Nat;
+      i in NAT by ORDINAL1:def 12; then
+A24:  i in dom N2 by FUNCT_2:def 1;
+
+      N2.i in NAT by ORDINAL1:def 12; then
+A25:  N2.i in dom N1 by FUNCT_2:def 1;
+
+      u3.i = u2.(N2.i) by A24,FUNCT_1:13; then
+      u3.i = u1.(N1.((N2.i))) by A25,FUNCT_1:13; then
+A26:  u3.i = [s1.(N1.((N2.i))),t1.(N1.((N2.i)))] by A9;
+
+      s3.i = (s1*N1).(N2.i) by A24,FUNCT_1:13; then
+A27:  s3.i = s1.(N1.((N2.i))) by A25,FUNCT_1:13;
+
+      t3.i = (t1*N1).(N2.i) by A21,A24,FUNCT_1:13;
+      hence thesis by A26,A27,A25,FUNCT_1:13;
+     end;
+
+     reconsider v3= [lim s3,lim t3] as Point of S;
+
+A28: for r be Real st 0 < r ex m be Nat st
+      for n be Nat st m <= n holds ||.(u3.n) - v3.|| < r
+     proof
+      let r be Real;
+      assume 0 < r; then
+A29:  0 < r/2 by XREAL_1:215; then
+      consider m1 be Nat such that
+A30:   for n be Nat st m1 <= n holds ||.(s3.n) - lim s3.|| < r/2
+         by A22,NORMSP_1:def 7;
+      consider m2 be Nat such that
+A31:   for n be Nat st m2 <= n holds ||.(t3.n) - lim t3.|| < r/2
+         by A20,NORMSP_1:def 7,A29;
+
+      reconsider m =max (m1,m2) as Nat by XXREAL_0:16;
+A32:  m1 <= m & m2 <= m by XXREAL_0:25;
+      take m;
+      let n be Nat;
+      assume
+A33:   m <= n; then
+      m1 <= n by A32,XXREAL_0:2; then
+A34:  ||.(s3.n) - lim s3.|| < r/2 by A30;
+
+      m2 <= n by A32,A33,XXREAL_0:2; then
+A35:  ||.(t3.n) - lim t3.|| < r/2 by A31;
+
+A36:  u3.n = [s3.n,t3.n] by A23;
+
+      set x1=s3.n,y1=t3.n,x2=lim s3,y2=lim t3;
+      reconsider z1=[x1,y1], z2=[x2,y2] as Point of S;
+      -z2 = [-x2,-y2] by PRVECT_3:18; then
+      z1 - z2 = [x1-x2,y1-y2] by PRVECT_3:18; then
+A37:  ||.z1 - z2.|| <= ||.x1-x2.|| +||.y1-y2.|| by NDIFF_9:6;
+
+      ||.x1-x2.|| + ||.y1-y2.|| < r/2 + r/2 by A34,A35,XREAL_1:8;
+      hence ||.(u3.n) - v3.|| < r by A36,A37,XXREAL_0:2;
+     end; then
+     u3 is convergent; then
+     lim u3=[lim s3,lim t3] by A28,NORMSP_1:def 7;
+     hence thesis by A15,A28,A20,A22,ZFMISC_1:87;
+    end;
+    hence thesis;
+end;
+
+theorem Th9:
+for I,J be closed_interval Subset of REAL, E be Subset of [:RNS_Real,RNS_Real:]
+ st E = [:I,J:] holds E is compact
+proof
+    let I,J be closed_interval Subset of REAL,
+    E be Subset of [:RNS_Real,RNS_Real:];
+    assume
+A1:  E = [:I,J:];
+    reconsider A = I, B = J as Subset of RNS_Real;
+    A is compact & B is compact by Th7;
+    hence thesis by A1,Th8;
+end;
+
+theorem Th10:
+for E be set, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL st f = g & E c= dom f holds
+  f is_uniformly_continuous_on E iff
+   for e be Real st 0 < e ex r be Real st 0 < r
+    & for x1,x2,y1,y2 be Real st [x1,y1] in E & [x2,y2] in E &
+         |.x2-x1.| < r & |.y2-y1.| < r
+          holds |. g.([x2,y2])-g.([x1,y1]) .| < e
+proof
+    let E be set, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL;
+    assume that
+A1:  f = g and
+A2:  E c= dom f;
+
+    hereby assume
+A3:  f is_uniformly_continuous_on E;
+     thus for e be Real st 0 < e ex r be Real st 0 < r
+    & for x1,x2,y1,y2 be Real st [x1,y1] in E & [x2,y2] in E &
+         |.x2-x1.| < r & |.y2-y1.| < r
+          holds |. g.([x2,y2])-g.([x1,y1]) .| < e
+     proof
+      let e be Real;
+      assume 0 < e; then
+      consider r be Real such that
+A4:    0 < r
+     & for z1,z2 be Point of [:RNS_Real,RNS_Real:] st
+        z1 in E & z2 in E & ||. z1-z2 .|| < r holds ||. f/.z1-f/.z2 .|| < e
+         by A3;
+      set r1=r/2;
+      take r1;
+      thus 0< r1 by A4,XREAL_1:215;
+      let x1,x2,y1,y2 be Real;
+      assume
+A5:    [x1,y1] in E & [x2,y2] in E & |.x2-x1.| < r1 & |.y2-y1.| < r1;
+
+      reconsider xx1=x1,yy1=y1,xx2=x2,yy2=y2 as Point of RNS_Real
+        by XREAL_0:def 1;
+      reconsider z1 = [xx1,yy1], z2 = [xx2,yy2]
+        as Point of [:RNS_Real,RNS_Real:];
+
+      -z2 = [-xx2,-yy2] by PRVECT_3:18; then
+A6:   z1-z2 = [xx1-xx2,yy1-yy2] by PRVECT_3:18;
+
+A7:   xx1-xx2 = x1-x2 & yy1-yy2 = y1-y2 by DUALSP03:4; then
+      ||.xx1-xx2.|| = |.x1-x2.| by EUCLID:def 2; then
+A8:   ||.xx1-xx2.|| = |.x2-x1.| by COMPLEX1:60;
+
+      ||.yy1-yy2.|| = |.y1-y2.| by A7,EUCLID:def 2; then
+      ||.yy1-yy2.|| = |.y2-y1.| by COMPLEX1:60; then
+A9:   ||.z1 - z2.|| <= |.x2-x1.| + |.y2-y1.| by A6,A8,NDIFF_9:6;
+
+      |.x2-x1.| + |.y2-y1.| < r1 + r1 by A5,XREAL_1:8; then
+      ||.z1 - z2.|| < r by A9,XXREAL_0:2; then
+A10:  ||. f/.z1-f/.z2 .|| < e by A5,A4;
+
+A11:  f/.z1 = g.([x1,y1]) by A1,A2,A5,PARTFUN1:def 6;
+
+      f/.z2 = f.z2 by A2,A5,PARTFUN1:def 6; then
+      f/.z1 - f/.z2  = g.([x1,y1]) -g.([x2,y2]) by A1,A11,DUALSP03:4; then
+      ||. f/.z1-f/.z2.|| = |. g.([x1,y1]) - g.([x2,y2]) .| by EUCLID:def 2;
+      hence thesis by A10,COMPLEX1:60;
+     end;
+    end;
+    assume
+A12:for e be Real st 0 < e ex r be Real st 0 < r
+    & for x1,x2,y1,y2 be Real st [x1,y1] in E & [x2,y2] in E &
+         |.x2-x1.| < r & |.y2-y1.| < r
+          holds |. g.([x2,y2])-g.([x1,y1]) .| < e;
+
+    for e be Real st 0 < e holds
+     ex r be Real st 0 < r &
+      for z1,z2 be Point of [:RNS_Real,RNS_Real:] st z1 in E & z2 in E
+       & ||. z1-z2 .|| < r holds ||. f/.z1-f/.z2 .|| < e
+    proof
+     let e be Real;
+     assume 0 < e; then
+     consider r be Real such that
+A13: 0 < r &
+     for x1,x2,y1,y2 be Real st [x1,y1] in E & [x2,y2] in E &
+       |.x2-x1.| < r & |.y2-y1.| < r holds
+         |. g.([x2,y2])-g.([x1,y1]) .| < e by A12;
+     take r;
+     thus 0 < r by A13;
+     thus for z1,z2 be Point of [:RNS_Real,RNS_Real:] st z1 in E & z2 in E
+       & ||. z1-z2 .|| < r holds ||. f/.z1-f/.z2 .|| < e
+     proof
+      let z1,z2 be Point of [:RNS_Real,RNS_Real:];
+      assume that
+A14:  z1 in E & z2 in E and
+A15:  ||. z1-z2 .|| < r;
+
+      consider xx1 be Point of RNS_Real, yy1 be Point of RNS_Real such that
+A16:  z1 = [xx1,yy1] by PRVECT_3:18;
+      consider xx2 be Point of RNS_Real, yy2 be Point of RNS_Real such that
+A17:  z2 = [xx2,yy2] by PRVECT_3:18;
+      reconsider x1 = xx1, y1 = yy1, x2 = xx2, y2 = yy2 as Real;
+
+      -z2 = [-xx2,-yy2] by A17,PRVECT_3:18; then
+A18:  z1-z2 = [xx1-xx2,yy1-yy2] by A16,PRVECT_3:18;
+
+A19:  xx1-xx2 = x1-x2 & yy1-yy2 = y1-y2 by DUALSP03:4; then
+      ||.xx1-xx2.|| = |.x1-x2.| by EUCLID:def 2; then
+A20:  ||.xx1-xx2.|| = |.x2-x1.| by COMPLEX1:60;
+
+      ||.yy1-yy2.|| = |.y1-y2.| by A19,EUCLID:def 2; then
+      ||.yy1-yy2.|| = |.y2-y1.| by COMPLEX1:60; then
+      |. x2-x1 .| <= ||. z1-z2 .|| & |. y2-y1 .| <= ||. z1-z2 .||
+        by A18,A20,NDIFF_8:21; then
+      |. x2-x1 .| < r & |. y2-y1 .| < r by A15,XXREAL_0:2; then
+A21:  |. g.([x2,y2])-g.([x1,y1]) .| < e by A13,A14,A16,A17;
+
+A22:  f/.z1 = g.([x1,y1]) by A1,A2,A14,A16,PARTFUN1:def 6;
+      f/.z2 = f.z2 by A2,A14,PARTFUN1:def 6; then
+      f/.z1 - f/.z2 = g.([x1,y1]) - g.([x2,y2]) by A1,A17,A22,DUALSP03:4; then
+      ||. f/.z1-f/.z2 .|| = |. g.([x1,y1]) - g.([x2,y2]) .| by EUCLID:def 2;
+      hence thesis by A21,COMPLEX1:60;
+     end;
+    end;
+    hence f is_uniformly_continuous_on E by A2;
+end;
+
+theorem Th11:
+for I,J be Interval holds [:I,J:] is Subset of [:RNS_Real,RNS_Real:]
+ & [:I,J:] in sigma measurable_rectangles(L-Field,L-Field)
+proof
+    let I,J be Interval;
+    I in L-Field & J in L-Field by MEASUR10:5,MEASUR12:75; then
+A1: [:I,J:] in measurable_rectangles(L-Field,L-Field);
+    measurable_rectangles(L-Field,L-Field)
+     c= sigma measurable_rectangles(L-Field,L-Field) by PROB_1:def 9;
+    hence thesis by A1;
+end;
+
+theorem Th12:
+for z being Point of RNS_Real, x,r be Real st x = z holds
+ Ball(z,r) = ].x-r,x+r.[
+proof
+    let z be Point of RNS_Real, x,r be Real;
+    assume
+A1:  x = z;
+
+    for p be object holds p in Ball(z,r) iff p in ]. x-r,x+r .[
+    proof
+     let p be object;
+     hereby assume p in Ball(z,r); then
+      consider y be Point of RNS_Real such that
+A2:    p = y & ||. z-y .|| < r;
+      reconsider u = y as Real;
+A3:   u - x = y - z by A1,DUALSP03:4;
+      ||. y-z .|| < r by A2,NORMSP_1:7; then
+      |. u-x .| < r by A3,EUCLID:def 2;
+      hence p in ].x-r,x+r.[ by A2,RCOMP_1:1;
+     end;
+     assume
+A4:   p in ]. x-r, x+r .[; then
+     reconsider u=p as Real;
+A5:  |. u-x .| < r by A4,RCOMP_1:1;
+     reconsider y = u as Point of RNS_Real by XREAL_0:def 1;
+     u-x = y-z by A1,DUALSP03:4; then
+     ||. y-z .|| < r by A5,EUCLID:def 2; then
+     ||. z-y .|| < r by NORMSP_1:7;
+     hence p in Ball(z,r);
+    end;
+    hence thesis by TARSKI:2;
+end;
+
+theorem Th13:
+for z being Point of [:RNS_Real,RNS_Real:], r be Real st 0 < r holds
+  ex s be Real, x,y be Real st 0 < s & s < r & z = [x,y]
+      & [: ].x-s,x+s.[, ].y-s,y+s.[ :] c= Ball(z,r)
+proof
+    let z be Point of [:RNS_Real,RNS_Real:], r be Real;
+    assume
+A1:  0 < r;
+    consider xx,yy be Point of RNS_Real such that
+A2:  z = [xx,yy] by PRVECT_3:18;
+    reconsider x=xx,y=yy as Real;
+
+    consider s being Real such that
+A3:  0 < s & s < r & [:Ball (xx,s),Ball (yy,s):] c= Ball (z,r)
+       by A1,A2,NDIFF_8:22;
+    Ball(xx,s) = ].x-s,x+s.[ & Ball(yy,s) = ].y-s,y+s.[ by Th12;
+    hence thesis by A2,A3;
+end;
+
+Lm1:
+for x,a be Real ex r be Real st 0 < r & x in ]. a-r,a+r .[
+proof
+    let x,a be Real;
+    consider r be Real such that
+A1:  |.x-a.| < r by XREAL_1:1;
+    take r;
+    thus 0 < r by A1;
+    thus x in ]. a-r,a+r .[ by A1,RCOMP_1:1;
+end;
+
+Lm2:
+for x,a,b be Real st a <= b holds ]. x-a,x+a .[ c= ]. x-b,x+b .[
+proof
+    let x,a,b be Real;
+    assume
+A1:  a <= b;
+    now let r be Real;
+     assume r in ]. x-a,x+a .[; then
+A2:  x-a < r & r < x+a by XXREAL_1:4;
+
+     x-b <= x-a by A1,XREAL_1:13; then
+A3:  x-b < r by A2,XXREAL_0:2;
+
+     x+a <= x+b by A1,XREAL_1:7; then
+     r < x+b by A2,XXREAL_0:2;
+     hence r in ].x-b,x+b.[ by A3;
+    end;
+    hence thesis;
+end;
+
+theorem Th14:
+for A be Subset of [:RNS_Real,RNS_Real:] st
+ (for a,b be Real st [a,b] in A holds
+   ex Rx be real-membered set st Rx is non empty bounded_above &
+      Rx = {r where r is Real : 0 < r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A })
+holds
+  ex F be Function of A,REAL st
+   for a,b be Real st [a,b] in A holds
+    ex Rx be real-membered set st Rx is non empty bounded_above
+      & Rx = {r where r is Real :0 < r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A }
+      & F.([a,b]) = (upper_bound Rx) / 2
+proof
+    let A be Subset of [:RNS_Real,RNS_Real:];
+    assume
+A1:  for a,b be Real st [a,b] in A holds
+      ex Rx be real-membered set st Rx is non empty bounded_above
+       & Rx = {r where r is Real :0 < r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A };
+
+    defpred P[object,object] means
+     ex a,b be Real, Rx be real-membered set st $1 = [a,b]
+      & Rx is non empty bounded_above
+      & Rx = {r where r is Real :0 < r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A }
+      & $2= (upper_bound Rx)/2;
+
+A2: for x being object st x in A ex y being object st y in REAL & P[x,y]
+    proof
+     let x be object;
+     assume
+A3:   x in A; then
+     consider a1 be Point of RNS_Real ,b1 be Point of RNS_Real such that
+A4:   x = [a1,b1] by PRVECT_3:18;
+     reconsider a=a1,b=b1 as Real;
+     consider Rx be real-membered set such that
+A5:   Rx is non empty bounded_above
+    & Rx = {r where r is Real :0< r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A }
+        by A1,A3,A4;
+
+     take y = (upper_bound Rx)/2;
+     thus y in REAL by XREAL_0:def 1;
+     thus thesis by A4,A5;
+    end;
+
+    consider F being Function of A,REAL such that
+A6:  for x being object st x in A holds P[x,F.x] from FUNCT_2:sch 1(A2);
+
+    take F;
+    thus for a,b be Real st [a,b] in A holds
+      ex Rx be real-membered set st Rx is non empty bounded_above
+       & Rx = {r where r is Real :0 < r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A}
+       & F.([a,b]) = (upper_bound Rx)/2
+    proof
+     let a,b be Real;
+     assume [a,b] in A; then
+     consider a1,b1 be Real, Rx be real-membered set such that
+A7:  [a,b] = [a1,b1] & Rx is non empty bounded_above
+    & Rx = {r where r is Real : 0 < r & [: ].a1-r,a1+r.[,].b1-r,b1+r.[ :] c= A}
+    & F.([a,b]) = (upper_bound Rx)/2 by A6;
+
+     a=a1 & b=b1 by A7,XTUPLE_0:1;
+     hence thesis by A7;
+    end;
+end;
+
+Lm3:
+for A be set st A c= [:REAL,REAL:] & A /\ [:RAT,RAT:] <> {} holds
+ ex p be sequence of [:REAL,REAL:] st rng p = A /\ [:RAT,RAT:]
+proof
+    let A be set;
+    assume that
+A1:  A c= [:REAL,REAL:] and
+A2:  A /\ [:RAT,RAT:] <> {};
+
+    [:RAT,RAT:] is countable by CARD_4:7; then
+    A /\ [:RAT,RAT:] is countable by CARD_3:94; then
+    consider f being Function of omega, A /\ [:RAT,RAT:] such that
+A3:  rng f = A /\ [:RAT,RAT:] by A2,CARD_3:96;
+
+    A /\ [:RAT,RAT:] c= A by XBOOLE_1:17; then
+    rng f c= [:REAL,REAL:] by A1; then
+    reconsider f as sequence of [:REAL,REAL:] by A2,FUNCT_2:6;
+    take f;
+    thus thesis by A3;
+end;
+
+theorem Th15:
+for A be Subset of [:RNS_Real,RNS_Real:] st A is open holds
+ A in sigma measurable_rectangles(L-Field,L-Field)
+proof
+    let A be Subset of [:RNS_Real,RNS_Real:];
+    assume
+A1:  A is open;
+
+    per cases;
+    suppose A = {};
+     hence A in sigma measurable_rectangles(L-Field,L-Field) by PROB_1:4;
+    end;
+    suppose A2: A <> {};
+     per cases;
+     suppose
+      not (
+       for a,b be Real st [a,b] in A holds
+            ex Rx be real-membered set st Rx is non empty bounded_above
+            & Rx = {r where r is Real : 0 < r
+                     & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A}
+      ); then
+      consider a,b be Real such that
+A3:   [a,b] in A
+    & not (ex Rx be real-membered set st Rx is non empty bounded_above
+       & Rx = {r where r is Real: 0 < r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A});
+      set Rx = {r where r is Real: 0 < r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A};
+      now let z be object;
+       assume z in Rx; then
+       ex r be Real st z=r & 0<r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A;
+       hence z is real;
+      end; then
+      reconsider Rx as real-membered set by MEMBERED:def 3;
+      reconsider a1=a,b1=b as Point of RNS_Real by XREAL_0:def 1;
+      reconsider x= [a1,b1] as Point of [:RNS_Real,RNS_Real:];
+
+      consider r0 being Real such that
+A4:   r0 > 0 & Ball(x,r0) c= A by A1,A3,NDIFF_8:20;
+      consider s be Real,aa,bb be Real such that
+A5:   0 < s & s < r0 & x = [aa,bb]
+    & [: ].aa-s,aa+s .[,].bb-s,bb+s.[ :] c= Ball(x,r0) by A4,Th13;
+A6:   [: ].aa-s,aa+s .[,].bb-s,bb+s.[ :] c= A by A5,A4;
+
+      a=aa & b=bb by A5,XTUPLE_0:1; then
+      s in Rx by A5,A6; then
+A7:   not Rx is bounded_above by A3;
+
+      now let z be object;
+       assume z in [:REAL,REAL:]; then
+       consider x1,y1 be object such that
+A8:    x1 in REAL & y1 in REAL & z = [x1,y1] by ZFMISC_1:def 2;
+       reconsider x1,y1 as Real by A8;
+
+       consider r1 be Real such that
+A9:    0 < r1 & x1 in ].a-r1,a+r1.[ by Lm1;
+
+       consider r2 be Real such that
+A10:   0 < r2 & y1 in ].b-r2,b+r2.[ by Lm1;
+
+       reconsider r = max(r1,r2) as Real;
+       ].a-r1,a+r1.[ c= ].a-r,a+r.[
+     & ].b-r2,b+r2.[ c= ].b-r,b+r.[ by Lm2,XXREAL_0:25; then
+A11:   z in [: ].a-r,a+r.[,].b-r,b+r.[ :] by A8,A9,A10,ZFMISC_1:87;
+
+       not r is UpperBound of Rx by A7,XXREAL_2:def 10; then
+       consider s being ExtReal such that
+A12:   s in Rx & r < s by XXREAL_2:def 1;
+       consider s0 be Real such that
+A13:   s = s0 & 0 < s0 & [: ].a-s0,a+s0.[,].b-s0,b+s0.[ :] c= A by A12;
+
+       ].a-r,a+r.[ c= ].a-s0,a+s0.[
+     & ].b-r,b+r.[ c= ].b-s0,b+s0.[ by A12,A13,Lm2; then
+       [: ].a-r,a+r.[,].b-r,b+r.[ :] c= [: ].a-s0,a+s0.[,].b-s0,b+s0.[ :]
+         by ZFMISC_1:96;
+       hence z in A by A11,A13;
+      end; then
+      [:REAL,REAL:] c= A; then
+A14:  A = [:REAL,REAL:];
+
+      REAL in L-Field by PROB_1:5; then
+A15:  [:REAL,REAL:] in measurable_rectangles(L-Field,L-Field);
+
+      measurable_rectangles(L-Field,L-Field)
+       c= sigma measurable_rectangles(L-Field,L-Field) by PROB_1:def 9;
+      hence thesis by A15,A14;
+     end;
+     suppose
+      for a,b be Real st [a,b] in A holds
+       ex Rx be real-membered set st Rx is non empty bounded_above
+        & Rx = {r where r is Real: 0 < r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A};
+      then consider F be Function of A,REAL such that
+A16:  for a,b be Real st [a,b] in A holds
+       ex Rx be real-membered set st Rx is non empty bounded_above
+        & Rx = {r where r is Real: 0 <r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A}
+        & F.([a,b]) = (upper_bound Rx)/2 by Th14;
+
+      A /\ [:RAT,RAT:] <> {}
+      proof
+       consider z be object such that
+A17:    z in A by A2,XBOOLE_0:def 1;
+       reconsider u=z as Point of [:RNS_Real,RNS_Real:] by A17;
+       consider e0 being Real such that
+A18:   e0 > 0 & Ball(u,e0) c= A by A17,A1,NDIFF_8:20;
+       set e = e0/4;
+A19:   0 < e & e < e0 by A18,XREAL_1:223,224; then
+A20:   Ball(u,e) c= Ball(u,e0) by NDIFF_8:15;
+A21:   e/2 < e by A18,XREAL_1:216,224;
+
+       consider x1 be Point of RNS_Real, y1 be Point of RNS_Real such that
+A22:    u = [x1,y1] by PRVECT_3:18;
+       reconsider xx1 = x1, yy1 = y1 as Real;
+
+       xx1 - e/4 < xx1 & xx1 < xx1 + e/4 by A19,XREAL_1:29,44,224; then
+       xx1 - e/4 < xx1 + e/4 by XXREAL_0:2; then
+       consider qx1 be Rational such that
+A23:   xx1 - e/4 < qx1 & qx1 < xx1 + e/4 by RAT_1:7;
+
+       yy1 - e/4 < yy1 & yy1 < yy1 +e/4 by A19,XREAL_1:29,44,224; then
+       yy1 - e/4 < yy1 + e/4 by XXREAL_0:2; then
+       consider qy1 be Rational such that
+A24:   yy1 - e/4 < qy1 & qy1 < yy1 + e/4 by RAT_1:7;
+
+       qx1 in ].xx1-e/4,xx1+e/4.[ & qy1 in ].yy1-e/4,yy1+e/4.[ by A23,A24; then
+A25:   |.qx1-xx1.| < e/4 & |.qy1-yy1.| < e/4 by RCOMP_1:1;
+
+       reconsider dx1=qx1, dy1=qy1 as Point of RNS_Real by XREAL_0:def 1;
+       reconsider v = [dx1,dy1] as Point of [:RNS_Real,RNS_Real:];
+
+       -v = [-dx1,-dy1] by PRVECT_3:18; then
+       u-v = [x1+-dx1,y1+-dy1] by A22,PRVECT_3:18; then
+       ||. u-v .|| <= ||.x1-dx1.|| + ||.y1-dy1.|| by NDIFF_9:6; then
+       ||. u-v .|| <= ||.dx1-x1.|| + ||.y1-dy1.|| by NORMSP_1:7; then
+A26:   ||. u-v .|| <= ||.dx1-x1.|| + ||.dy1-y1.|| by NORMSP_1:7;
+
+       dx1 - x1 = qx1 - xx1 & dy1 - y1 = qy1 - yy1 by DUALSP03:4; then
+       ||.dx1-x1.|| < e/4 & ||.dy1-y1.|| < e/4 by A25,EUCLID:def 2; then
+       ||.dx1-x1.|| + ||.dy1-y1.|| <= e/4 + e/4 by XREAL_1:7; then
+       ||. u-v .|| <= e/2 by A26,XXREAL_0:2; then
+       ||. u-v .|| < e by XXREAL_0:2,A21; then
+       v in Ball(u,e); then
+A27:   [qx1,qy1] in A by A18,A20;
+
+       qx1 in RAT & qy1 in RAT by RAT_1:def 2; then
+       [qx1,qy1] in [:RAT,RAT:] by ZFMISC_1:87;
+       hence thesis by A27,XBOOLE_0:def 4;
+      end; then
+      consider p be sequence of [:REAL,REAL:] such that
+A28:   rng p = A /\ [:RAT,RAT:] by Lm3;
+
+A29:  for a,b be Real st [a,b] in A
+       ex r be Real st 0 < r & r = F.([a,b])
+                  & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A
+      proof
+       let a,b be Real;
+       assume [a,b] in A; then
+       consider Rx be real-membered set such that
+A30:   Rx is non empty bounded_above
+     & Rx = {r where r is Real :0 <r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A}
+     & F.([a,b]) = (upper_bound Rx)/2 by A16;
+
+       take r0 = F.([a,b]);
+
+       consider r1 be Real such that
+A31:   r1 in Rx by A30;
+A32:   r1 <= upper_bound Rx by SEQ_4:def 1,A30,A31;
+
+A33:   ex r be Real st r1 = r & 0 <r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A
+         by A30,A31; then
+       0 < r0 & r0 < upper_bound Rx by A30,A32,XREAL_1:215,216; then
+       consider s be Real such that
+A34:   s in Rx & (upper_bound Rx) - r0 < s by A30,SEQ_4:def 1;
+A35:   ex r be Real st s = r & 0 < r
+         & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A by A34,A30;
+
+       ].a-r0,a+r0.[ c= ].a-s,a+s.[
+     & ].b-r0,b+r0.[ c= ].b-s,b+s.[ by A34,A30,Lm2; then
+       [: ].a-r0,a+r0.[,].b-r0,b+r0.[ :] c= [: ].a-s,a+s.[,].b-s,b+s.[ :]
+         by ZFMISC_1:96;
+       hence thesis by A32,A35,A30,A33,XREAL_1:215;
+      end;
+
+      defpred Q[object,object] means
+       ex a,b,r be Real, E be set st p.$1 =[a,b] & a in RAT & b in RAT
+        & 0 < r & r = F.([a,b]) & E = $2
+        & E = [: ].a-r,a+r.[,].b-r,b+r.[ :] & E c= A;
+
+A36:  for i being object st i in NAT
+       ex y being object st y in bool [:REAL,REAL:] & Q[i,y]
+      proof
+       let i be object;
+       assume i in NAT; then
+       i in dom p by FUNCT_2:def 1; then
+       p.i in rng p by FUNCT_1:3; then
+A37:   p.i in A & p.i in [:RAT,RAT:] by A28,XBOOLE_0:def 4; then
+       consider a,b be object such that
+A38:   a in RAT & b in RAT & p.i = [a,b] by ZFMISC_1:def 2;
+       reconsider a,b as Real by A38;
+
+       consider r be Real such that
+A39:   0 < r & r = F.([a,b]) & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A
+         by A29,A37,A38;
+       set E = [: ].a-r,a+r.[,].b-r,b+r.[ :];
+       take y = E;
+       thus y in bool [:REAL,REAL:];
+       thus thesis by A38,A39;
+      end;
+
+      consider B be Function of NAT,bool [:REAL,REAL:] such that
+A40:  for i being object st i in NAT holds Q[i,B.i] from FUNCT_2:sch 1(A36);
+
+      reconsider B as SetSequence of [:REAL,REAL:];
+
+A41:  for i be Element of NAT holds
+       ex a,b,r be Real st p.i = [a,b] & a in RAT & b in RAT
+       & 0 < r & r = F.([a,b]) & B.i = [: ].a-r,a+r.[,].b-r,b+r.[ :]
+       & B.i c= A
+      proof
+       let i be Element of NAT;
+       ex a,b,r be Real, E be set st p.i =[a,b] & a in RAT & b in RAT
+        & 0 < r & r =F.([a,b]) & E = B.i & E = [: ].a-r,a+r.[,].b-r,b+r.[ :]
+        & E c= A by A40;
+       hence thesis;
+      end;
+
+      now let z be object;
+       assume z in rng B; then
+       consider i be Element of NAT such that
+A42:   i in dom B & z = B.i by PARTFUN1:3;
+
+       consider a,b,r be Real such that
+A43:   p.i =[a,b] & a in RAT & b in RAT & 0 < r & r = F.([a,b])
+     & B.i = [: ].a-r,a+r.[,].b-r,b+r.[ :] & B.i c= A by A41;
+
+       ].a-r,a+r.[ in L-Field & ].b-r,b+r.[ in L-Field
+         by MEASUR10:5,MEASUR12:75; then
+A44:   B.i in measurable_rectangles(L-Field,L-Field) by A43;
+
+       measurable_rectangles(L-Field,L-Field)
+        c= sigma measurable_rectangles(L-Field,L-Field) by PROB_1:def 9;
+       hence z in sigma measurable_rectangles(L-Field,L-Field) by A44,A42;
+      end; then
+      rng B c= sigma measurable_rectangles(L-Field,L-Field); then
+      reconsider B as SetSequence of
+        sigma measurable_rectangles(L-Field,L-Field) by RELAT_1:def 19;
+
+      now let z be object;
+       assume z in union rng B; then
+       consider Y being set such that
+A45:   z in Y & Y in rng B by TARSKI:def 4;
+       consider i be Element of NAT such that
+A46:   i in dom B & Y =B.i by A45,PARTFUN1:3;
+
+       ex a,b,r be Real st p.i =[a,b] & a in RAT & b in RAT & 0 < r
+        & r =F.( [a,b]) & B.i = [: ].a-r,a+r.[,].b-r,b+r.[ :] & B.i c= A
+          by A41;
+       hence z in A by A45,A46;
+      end; then
+A47:  union rng B c= A;
+
+      now let z be object;
+       assume
+A48:   z in A; then
+       reconsider u=z as Point of [:RNS_Real,RNS_Real:];
+       consider e0 being Real such that
+A49:   e0 > 0 & Ball(u,e0) c= A by A48,A1,NDIFF_8:20;
+       set e=e0/4;
+A50:   0 < e & e < e0 by A49,XREAL_1:223,224; then
+A51:   Ball(u,e) c= Ball(u,e0) by NDIFF_8:15;
+
+       consider x1 be Point of RNS_Real, y1 be Point of RNS_Real such that
+A52:   u = [x1,y1] by PRVECT_3:18;
+
+       reconsider xx1=x1,yy1=y1 as Real;
+A53:   0 < e/2 & e/2 < e by A50,XREAL_1:215,216;
+
+       xx1 - e/4 < xx1 & xx1 < xx1 +e/4 by A50,XREAL_1:224,29,44; then
+       xx1 - e/4 < xx1 + e/4 by XXREAL_0:2; then
+       consider qx1 be Rational such that
+A54:   xx1 - e/4 < qx1 & qx1 < xx1+e/4 by RAT_1:7;
+       qx1 in ].xx1-e/4,xx1+e/4.[ by A54; then
+A55:   |.qx1-xx1.| < e/4 by RCOMP_1:1;
+
+       yy1 - e/4 < yy1 & yy1 < yy1 +e/4 by A50,XREAL_1:224,29,44; then
+       yy1-e/4 < yy1 +e/4 by XXREAL_0:2; then
+       consider qy1 be Rational such that
+A56:   yy1 - e/4 < qy1 & qy1 < yy1 + e/4 by RAT_1:7;
+       qy1 in ].yy1-e/4,yy1+e/4.[ by A56; then
+A57:   |.qy1-yy1.| < e/4 by RCOMP_1:1;
+
+       reconsider dx1=qx1,dy1=qy1 as Point of RNS_Real by XREAL_0:def 1;
+       reconsider v = [dx1,dy1] as Point of [:RNS_Real,RNS_Real:];
+
+       -v = [-dx1,-dy1] by PRVECT_3:18; then
+       u-v = [x1+-dx1,y1+-dy1] by A52,PRVECT_3:18; then
+       ||. u-v .|| <= ||.x1-dx1.|| +||.y1-dy1.|| by NDIFF_9:6; then
+       ||. u-v .|| <= ||.dx1-x1.|| +||.y1-dy1.|| by NORMSP_1:7; then
+A58:   ||. u-v .|| <= ||.dx1-x1.|| +||.dy1-y1.|| by NORMSP_1:7;
+
+       dx1-x1 = qx1-xx1 & dy1-y1 = qy1-yy1 by DUALSP03:4; then
+       ||.dx1-x1.|| < e/4 & ||.dy1-y1.|| < e/4 by A55,A57,EUCLID:def 2; then
+       ||.dx1-x1.|| +||.dy1-y1.|| <= e/4 + e/4 by XREAL_1:7; then
+       ||. u-v .|| <= e/2 by A58,XXREAL_0:2; then
+       ||. u-v .|| < e by XXREAL_0:2,A53; then
+A59:   v in Ball(u,e); then
+A60:   [qx1,qy1] in A by A49,A51;
+
+       qx1 in RAT & qy1 in RAT by RAT_1:def 2; then
+       [qx1,qy1] in [:RAT,RAT:] by ZFMISC_1:87; then
+       [qx1,qy1] in rng p by A28,A60,XBOOLE_0:def 4; then
+       consider k be Element of NAT such that
+A61:   k in dom p & p.k=[qx1,qy1] by PARTFUN1:3;
+       consider Rx be real-membered set such that
+A62:   Rx is non empty bounded_above
+     & Rx = {r where r is Real : 0 < r & [: ].qx1-r,qx1+r.[,].qy1-r,qy1+r.[ :]
+          c= A}
+     & F.([qx1,qy1]) =(upper_bound Rx)/2 by A49,A51,A59,A16;
+
+       consider ak,bk,rk be Real such that
+A63:   p.k =[ak,bk] & ak in RAT & bk in RAT & 0 < rk & rk =F.([ak,bk])
+     & B.k = [: ].ak-rk,ak+rk.[,].bk-rk,bk+rk.[ :] & B.k c= A by A41;
+
+       set d=e/4;
+
+A64:   ak=qx1 & bk=qy1 by A61,A63,XTUPLE_0:1; then
+A65:   |.xx1-ak.| < e/4 & |.yy1-bk.| < e/4 by A55,A57,COMPLEX1:60; then
+A66:   x1 in ].ak-d,ak+d.[ & y1 in ].bk-d,bk+d.[ by RCOMP_1:1;
+
+       now let z be object;
+        assume z in [: ].ak-e/2,ak+e/2.[,].bk-e/2,bk+e/2.[ :]; then
+        consider s,t be object such that
+A67:    s in ].ak-e/2,ak+e/2.[ & t in ].bk-e/2,bk+e/2.[
+      & z =[s,t] by ZFMISC_1:def 2;
+        reconsider s,t as Real by A67;
+        reconsider ss=s,tt=t as Point of RNS_Real by XREAL_0:def 1;
+        reconsider v = [ss,tt] as Point of [:RNS_Real,RNS_Real:];
+        |.s-ak.| < e/2 & |.t-bk.| < e/2 by A67,RCOMP_1:1; then
+A68:    |.ak-s.| < e/2 & |.bk-t.| < e/2 by COMPLEX1:60;
+
+        (e/2)/2 < e/2 by A50,XREAL_1:215,216; then
+        |.xx1-ak.| < e/2 & |.yy1-bk.| < e/2 by A65,XXREAL_0:2; then
+A69:    |.xx1-ak.| + |.ak-s.| <= e/2 + e/2
+      & |.yy1-bk.| + |.bk-t.| <= e/2 + e/2 by A68,XREAL_1:7;
+
+        |.xx1-s.| <=|.xx1-ak.| + |.ak-s.|
+      & |.yy1-t.| <=|.yy1-bk.| + |.bk-t.| by COMPLEX1:63; then
+A70:    |.xx1-s.| <= e & |.yy1-t.| <= e by A69,XXREAL_0:2;
+
+        x1-ss = xx1-s & y1-tt = yy1-t by DUALSP03:4; then
+        ||.x1-ss.|| <= e & ||.y1-tt.|| <= e by A70,EUCLID:def 2; then
+A71:    ||.x1-ss.|| +||.y1-tt.|| <= e + e by XREAL_1:7;
+
+        -v = [-ss,-tt] by PRVECT_3:18; then
+        u-v =[x1+-ss,y1+-tt] by A52,PRVECT_3:18; then
+        ||. u-v .|| <= ||.x1-ss.|| +||.y1-tt.|| by NDIFF_9:6; then
+A72:    ||. u-v .|| <= e0/2 by A71,XXREAL_0:2;
+
+        e0/2 < e0 by A49,XREAL_1:216; then
+        ||. u-v .|| < e0 by A72,XXREAL_0:2; then
+        v in Ball(u,e0);
+        hence z in A by A67,A49;
+       end; then
+       [: ].ak-e/2,ak+e/2.[,].bk-e/2,bk+e/2.[ :] c= A; then
+       e/2 in Rx by A53,A62,A64; then
+       e/2 <= upper_bound Rx by A62,SEQ_4:def 1; then
+       (e/2)/2 <= (upper_bound Rx)/2 by XREAL_1:72; then
+       ].ak-d,ak+d.[ c= ].ak-rk,ak+rk.[
+     & ].bk-d,bk+d.[ c= ].bk-rk,bk+rk.[ by A62,A63,A61,Lm2; then
+A73:   [x1,y1] in [: ].ak-rk,ak+rk.[,].bk-rk,bk+rk.[ :] by A66,ZFMISC_1:87;
+
+       k in NAT; then
+       k in dom B by FUNCT_2:def 1; then
+       B.k in rng B by FUNCT_1:3;
+       hence z in union rng B by A63,A52,A73,TARSKI:def 4;
+      end; then
+      A c= union rng B; then
+      Union B = A by A47,CARD_3:def 4;
+      hence A in sigma measurable_rectangles(L-Field,L-Field) by PROB_1:17;
+     end;
+    end;
+end;
+
+theorem
+for H be Subset of RNS_Real, I be open_interval Subset of REAL
+ st H = I holds H is open
+proof
+    let H be Subset of RNS_Real, I be open_interval Subset of REAL;
+    assume
+A1:  H = I;
+
+    for x be Point of RNS_Real st x in H holds
+     ex N be Neighbourhood of x st N c= H
+    proof
+     let x be Point of RNS_Real;
+     assume
+A2:  x in H;
+     reconsider s = x as Real;
+     reconsider s1 = s as R_eal by XXREAL_0:def 1;
+
+     consider a,b be R_eal such that
+A3:   I = ].a,b.[ by MEASURE5:def 2;
+
+A4:  a < s & s < b by A1,A2,A3,XXREAL_1:4; then
+     consider a1 be Real such that
+A5:  a < a1 & a1 < s1 by INTEGR26:18;
+     consider b1 be Real such that
+A6:  s1 < b1 & b1 < b by A4,INTEGR26:18;
+
+     set e = min(b1-s,s-a1);
+A7:  a1 <= s-e & s+e <= b1 by XREAL_1:11,19,XXREAL_0:17;
+
+     set N = { y where y is Point of RNS_Real : ||.y-x .|| < e};
+     now let z be object;
+      assume z in N; then
+      ex y be Point of RNS_Real st z=y & ||.y-x .|| < e;
+      hence z in the carrier of RNS_Real;
+     end; then
+     reconsider N as Subset of RNS_Real by TARSKI:def 3;
+
+     0 < b1-s & 0 < s-a1 by A5,A6,XREAL_1:50; then
+A8:  N is Neighbourhood of x by XXREAL_0:21,NFCONT_1:def 1;
+
+     now let z be object;
+      assume z in N; then
+      consider y be Point of RNS_Real such that
+A9:   z = y & ||. y-x .|| < e;
+      reconsider h = y as Real;
+      h-s = y-x by DUALSP03:4; then
+      ||.y-x .|| = |.h-s.| by EUCLID:def 2; then
+      h in ].s-e,s+e.[ by A9,RCOMP_1:1; then
+      s-e < h & h < s+e by XXREAL_1:4; then
+      a1 <= h & h <= b1 by A7,XXREAL_0:2; then
+      a < h & h < b by A5,A6,XXREAL_0:2;
+      hence z in H by A9,A1,A3;
+     end; then
+     N c= H;
+     hence thesis by A8;
+    end;
+    hence H is open by NDIFF_1:4;
+end;
+
+theorem Th17:
+for r be Real, X be set, g be PartFunc of X,REAL holds
+ less_dom(g,r) = g"(].-infty,r.[)
+proof
+    let r be Real, X be set, g be PartFunc of X,REAL;
+    for z be object holds
+     z in less_dom(g,r) iff z in g"(].-infty,r.[)
+    proof
+     let z be object;
+     hereby assume
+A1:   z in less_dom (g,r); then
+A2:   z in dom g & g.z < r by MESFUNC1:def 11;
+      -infty < g.z & g.z < r
+        by A1,XREAL_0:def 1,XXREAL_0:12,MESFUNC1:def 11; then
+      g.z in ].-infty,r.[;
+      hence z in g"(].-infty,r.[) by A2,FUNCT_1:def 7;
+     end;
+     assume z in g"(].-infty,r.[); then
+A3:  z in dom g & g.z in ].-infty,r.[ by FUNCT_1:def 7; then
+     ex t be Real st t=g.z & -infty < t & t < r;
+     hence z in less_dom (g,r) by A3,MESFUNC1:def 11;
+    end;
+    hence thesis by TARSKI:2;
+end;
+
+begin :: Continuity of two-variable functions
+
+theorem Th18:
+for I,J be closed_interval Subset of REAL,
+  f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL st f is_continuous_on [:I,J:] & f = g
+holds
+  for e be Real st 0 < e ex r be Real st 0 < r
+    & for x1,x2,y1,y2 be Real st [x1,y1] in [:I,J:] & [x2,y2] in [:I,J:] &
+       |.x2-x1.| < r & |.y2-y1.| < r holds |. g.([x2,y2])-g.([x1,y1]) .| < e
+proof
+    let I,J be closed_interval Subset of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL;
+    assume that
+A1: f is_continuous_on [:I,J:] and
+A2: f = g;
+    f is_uniformly_continuous_on [:I,J:] by A1,Th9,NFCONT_2:10;
+    hence thesis by A2,Th10;
+end;
+
+theorem Th19:
+for f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+g be PartFunc of [:REAL,REAL:],REAL st f = g holds ||.f.|| = |.g.|
+proof
+    let f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL;
+    assume
+A1: f = g;
+
+A2: dom ||.f.|| = dom f by NORMSP_0:def 3; then
+A3: dom ||.f.|| = dom |.g.| by A1,VALUED_1:def 11;
+    for x be object st x in dom ||.f.|| holds (||.f.||).x = (|.g.|).x
+    proof
+     let x be object;
+     assume
+A4:  x in dom ||.f.||; then
+A5:  (||.f.||).x = ||. f/.x .|| by NORMSP_0:def 3;
+
+     f/.x = f.x by A4,A2,PARTFUN1:def 6; then
+     ||. f/.x .|| = |. g.x .| by A1,EUCLID:def 2;
+     hence (||.f.||).x = (|.g.|).x by A3,A4,A5,VALUED_1:def 11;
+    end;
+    hence ||.f.|| = |.g.| by A3,FUNCT_1:2;
+end;
+
+theorem
+for X be non empty set, g be PartFunc of X,REAL, A be Subset of X holds
+ |. g|A .| = (|.g.|)|A
+proof
+    let X be non empty set, g be PartFunc of X,REAL, A be Subset of X;
+
+    reconsider gA = R_EAL(g|A) as PartFunc of X,ExtREAL;
+A1: |.g|A.| = |. R_EAL(g|A) .| by MESFUNC5:def 7;
+    dom(|.g|A.|) = dom (g|A) by MESFUNC1:def 10; then
+A2: dom(|.g|A.|) = dom g /\ A by RELAT_1:61;
+    dom((|.g.|)|A) = dom |.g.| /\ A by RELAT_1:61; then
+A3: dom(|.g|A.|) = dom((|.g.|)|A) by A2,VALUED_1:def 11;
+    for x be object st x in dom(|.g|A.|)
+      holds (|.g|A.|).x = ((|.g.|)|A).x
+    proof
+     let x be object;
+     assume
+A4:  x in dom(|.g|A.|); then
+     reconsider x1=x as Element of X;
+
+     x in dom(g|A) by A4,MESFUNC1:def 10; then
+A5:  x in dom g & x in A by RELAT_1:57; then
+     x in dom (R_EAL g) by MESFUNC5:def 7; then
+A6:  x in dom |. R_EAL g.| by MESFUNC1:def 10;
+A7:  (|.g|A.|).x = |. (R_EAL(g|A)).x1 .| by A4,A1,MESFUNC1:def 10;
+     (R_EAL(g|A)).x1 = (g|A).x1 by MESFUNC5:def 7; then
+     (R_EAL(g|A)).x1 = g.x1 by A5,FUNCT_1:49; then
+     |. (R_EAL(g|A)).x1 .| = |. (R_EAL g).x1 .| by MESFUNC5:def 7; then
+     (|.g|A.|).x = (|. R_EAL g .|).x1 by A7,A6,MESFUNC1:def 10; then
+     (|.g|A.|).x = (R_EAL abs g).x1 by MESFUNC6:1; then
+     (|.g|A.|).x = (|.g.|).x1 by MESFUNC5:def 7;
+     hence (|.g|A.|).x = ((|.g.|)|A).x by A5,FUNCT_1:49;
+    end;
+    hence |.g|A.| = (|.g.|)|A by A3,FUNCT_1:2;
+end;
+
+theorem Th21:
+for S be RealNormSpace, x0 be Point of S, f,g be PartFunc of S,RNS_Real st
+ f is_continuous_in x0 & g = ||.f.|| holds g is_continuous_in x0
+proof
+    let S be RealNormSpace, x0 be Point of S, f,g be PartFunc of S,RNS_Real;
+    assume that
+A1:  f is_continuous_in x0 and
+A2:  g = ||.f.||;
+
+A3: ||.f.|| is_continuous_in x0 by A1,NFCONT_1:17;
+
+    for s1 be sequence of S st rng s1 c= dom g & s1 is convergent & lim s1 = x0
+     holds g/*s1 is convergent & g/.x0 = lim(g/*s1)
+    proof
+     let s1 be sequence of S;
+     assume that
+A4:  rng s1 c= dom g and
+A5:  s1 is convergent and
+A6:  lim s1 = x0;
+
+     ||.f.||/*s1 is convergent & ||.f.||/.x0 = lim(||.f.||/*s1)
+       by A3,A2,A4,A5,A6;
+     hence g/*s1 is convergent & g/.x0 = lim(g/*s1) by A2,DUALSP03:5,6;
+    end;
+    hence g is_continuous_in x0 by A2,A1,NORMSP_0:def 2;
+end;
+
+theorem Th22:
+for X be set, S be RealNormSpace, f,g be PartFunc of S,RNS_Real st
+ f is_continuous_on X & g = ||.f.|| holds g is_continuous_on X
+proof
+    let X be set, S be RealNormSpace, f,g be PartFunc of S,RNS_Real;
+    assume that
+A1:  f is_continuous_on X and
+A2:  g = ||.f.||;
+
+    ||. f|X .|| = g|X by A2,NFCONT_1:35;
+    hence thesis by A1,A2,Th21,NORMSP_0:def 2;
+end;
+
+theorem Th23:
+for I,J be closed_interval Subset of REAL,
+  f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL st f is_continuous_on [:I,J:] & f = g
+holds
+  for e be Real st 0 < e ex r be Real st 0 < r
+   & for x1,x2,y1,y2 be Real st [x1,y1] in [:I,J:] & [x2,y2] in [:I,J:] &
+      |.x2-x1.| < r & |.y2-y1.| < r holds
+        |. (|.g.|).([x2,y2])-(|.g.|).([x1,y1]) .| < e
+proof
+    let I,J be closed_interval Subset of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL;
+    assume that
+A1: f is_continuous_on [:I,J:] and
+A2: f = g;
+
+    ||.f.|| = |.g.| by A2,Th19;
+    hence thesis by A1,Th22,Th18;
+end;
+
+theorem Th24:
+for r be Real, S be RealNormSpace, E be Subset of S,
+ f be PartFunc of S,RNS_Real st f is_continuous_on E & dom f = E holds
+  ex H be Subset of S st H /\ E = f"(].-infty,r.[) & H is open
+proof
+    let r be Real, S be RealNormSpace, E be Subset of S,
+    f be PartFunc of S,RNS_Real;
+    assume that
+A1: f is_continuous_on E and
+A2: dom f = E;
+
+A3: now let z be object;
+     assume
+A4:  z in f"(].-infty,r.[); then
+A5:  z in dom f & f.z in ].-infty,r.[ by FUNCT_1:def 7; then
+A6:  ex t be Real st t = f.z & -infty < t & t < r;
+     reconsider t = z as Point of S by A4;
+     take t;
+     thus t=z;
+
+     reconsider y = f.t as Real;
+     set e = r-y;
+     consider s be Real such that
+A7:  0 < s
+   & for t1 be Point of S st t1 in E & ||.t1- t.|| < s holds
+       ||. f/.t1 - f/.t.|| < e by A2,A5,A6,A1,NFCONT_1:19,XREAL_1:50;
+     take s;
+     thus 0 < s by A7;
+     thus for t1 be object
+      st t1 in E /\ {t1 where t1 is Point of S : ||.t1-t.|| < s}
+          holds f.t1 in ].-infty,r.[
+     proof
+      let t1 be object;
+      assume
+A8:   t1 in E/\ {t1 where t1 is Point of S : ||.t1-t.|| < s}; then
+A9:   t1 in E & t1 in {t1 where t1 is Point of S : ||.t1-t.|| < s}
+         by XBOOLE_0:def 4;
+      reconsider y0 = t1 as Point of S by A8;
+A10:  ex y1 be Point of S st y0 = y1 & ||.y1-t.|| < s by A9;
+
+      reconsider r1 = f/.y0, r2 = f/.t as Real;
+A11:  r2 = f.t by A5,PARTFUN1:def 6;
+      f/.y0 - f/.t = r1-r2 by DUALSP03:4; then
+      ||. f/.y0 - f/.t .|| =|.r1-r2.| by EUCLID:def 2; then
+      r1 in ]. r2-e,r2+e .[ by A7,A9,A10,RCOMP_1:1; then
+      ex g be Real st g = r1 & r2-e < g & g < r2+ e; then
+      -infty < r1 & r1 < r by A11,XXREAL_0:12; then
+      r1 in ].-infty,r.[;
+      hence f.t1 in ].-infty,r.[ by A9,A1,PARTFUN1:def 6;
+     end;
+    end;
+
+    defpred P[object,object] means
+     ex t be Point of S,s be Real st t=$1 & s=$2 & 0 < s &
+      for t1 be object
+       st t1 in E/\ {t1 where t1 is Point of S : ||.t1-t.|| < s}
+        holds f.t1 in ].-infty,r.[;
+
+A12:for z being object st z in f"(].-infty,r.[)
+      ex y being object st y in REAL & P[z,y]
+    proof
+     let z be object;
+     assume z in f"(].-infty,r.[); then
+     consider t be Point of S such that
+A13: t = z
+   & ex s be Real st 0 < s & for t1 be object st
+       t1 in E/\ {t1 where t1 is Point of S : ||.t1-t.|| < s}
+         holds f.t1 in ].-infty,r.[ by A3;
+     consider s be Real such that
+A14: 0 < s
+   & for t1 be object
+      st t1 in E /\ {t1 where t1 is Point of S : ||.t1-t.|| < s}
+       holds f.t1 in ].-infty,r.[ by A13;
+     reconsider y=s as Element of REAL by XREAL_0:def 1;
+     take y;
+     thus y in REAL;
+     thus thesis by A13,A14;
+    end;
+
+    consider R being Function of f"(].-infty,r.[),REAL such that
+A15: for x being object st x in f"(].-infty,r.[) holds P[x,R.x]
+       from FUNCT_2:sch 1(A12);
+
+    defpred Q[object,object] means
+     ex t be Point of S st t=$1 & 0 < R.$1
+      & $2 = {t1 where t1 is Point of S : ||.t1-t.|| < R.$1};
+
+A16:for z being object st z in f"(].-infty,r.[)
+     ex y being object st y in bool (the carrier of S) & Q[z,y]
+    proof
+     let z be object;
+     assume z in f"(].-infty,r.[); then
+     consider t be Point of S,s be Real such that
+A17: t=z & s=R.z & 0 < s
+   & for t1 be object st t1 in E/\ {t1 where t1 is Point of S : ||.t1-t.|| < s}
+       holds f.t1 in ].-infty,r.[ by A15;
+
+     set y = {t1 where t1 is Point of S : ||. t1-t.|| < s};
+     take y;
+
+     now let x be object;
+      assume x in y; then
+      ex t1 be Point of S st x=t1 & ||.t1-t.|| < s;
+      hence x in the carrier of S;
+     end; then
+     y c= the carrier of S;
+     hence thesis by A17;
+    end;
+
+    consider B being Function of f"(].-infty,r.[), bool(the carrier of S)
+     such that
+A18:for x being object st x in f"(].-infty,r.[) holds Q[x,B.x]
+       from FUNCT_2:sch 1(A16);
+
+    set H = union rng B;
+    reconsider H as Subset of S;
+    take H;
+    for z be object holds z in H /\ E iff z in f"(].-infty,r.[)
+    proof
+     let z be object;
+     hereby assume z in H /\ E; then
+A19:  z in H & z in E by XBOOLE_0:def 4; then
+      consider Y being set such that
+A20:  z in Y & Y in rng B by TARSKI:def 4;
+      consider x be object such that
+A21:  x in dom B & Y=B.x by FUNCT_1:def 3,A20;
+A22:  z in  E /\ B.x by A20,A21,A19,XBOOLE_0:def 4;
+
+A23:  ex t be Point of S st t = x & 0 < R.x
+      & B.x = {t1 where t1 is Point of S : ||.t1-t.|| < R.x} by A18,A21;
+
+      ex t be Point of S,s be Real st t=x & s=R.x & 0 < s
+       & for t1 be object
+          st t1 in E/\ {t1 where t1 is Point of S : ||. t1- t .|| < s}
+            holds f.t1 in ].-infty,r.[ by A15,A21; then
+      f.z in ].-infty,r.[ by A22,A23;
+      hence z in f"(].-infty,r.[) by A1,A19,FUNCT_1:def 7;
+     end;
+     assume
+A24: z in f"(].-infty,r.[); then
+     reconsider z0 =z as Point of S;
+A25: z in dom f & f.z in ].-infty,r.[ by A24,FUNCT_1:def 7;
+
+     consider t be Point of S such that
+A26: t=z & 0 < R.z
+   & B.z = {t1 where t1 is Point of S : ||.t1-t.|| < R.z} by A18,A24;
+
+     ||. z0-z0 .|| = ||. 0.S .|| by RLVECT_1:15; then
+A27: z0 in B.z0 by A26;
+
+     z0 in dom B by A24,FUNCT_2:def 1; then
+     B.z0 in rng B by FUNCT_1:3; then
+     z in union rng B by A27,TARSKI:def 4;
+     hence z in H /\ E by A2,A25,XBOOLE_0:def 4;
+    end;
+    hence H /\ E = f"(].-infty,r.[) by TARSKI:2;
+
+    for z be Point of S st z in H holds ex N be Neighbourhood of z st N c= H
+    proof
+     let z be Point of S;
+     assume z in H; then
+     consider Y being set such that
+A28: z in Y & Y in rng B by TARSKI:def 4;
+     consider x be object such that
+A29: x in dom B & Y=B.x by FUNCT_1:def 3,A28;
+     consider t be Point of S such that
+A30: t=x & 0 < R.x
+   & B.x = {t1 where t1 is Point of S : ||. t1- t .|| < R.x} by A18,A29;
+
+A31: ex t1 be Point of S st z = t1 & ||. t1- t .|| < R.x by A30,A28,A29;
+
+     set e = R.x - ||. z-t .||;
+     reconsider N = {y where y is Point of S : ||. y-z .|| < e}
+       as Neighbourhood of z by A31,XREAL_1:50,NFCONT_1:3;
+     take N;
+A32: now let p be object;
+      assume p in N; then
+      consider y be Point of S such that
+A33:  y = p & ||. y-z .|| < e;
+
+A34:  ||. y-t .|| <= ||. y-z .|| + ||. z-t .|| by NORMSP_1:10;
+
+      ||. y-z .|| + ||. z-t .|| < e + ||. z-t .|| by A33,XREAL_1:8; then
+      ||. y-t .|| < R.x by A34,XXREAL_0:2;
+      hence p in Y by A30,A29,A33;
+     end;
+     Y c= H by A28,ZFMISC_1:74;
+     hence N c= H by A32;
+    end;
+    hence H is open by NDIFF_1:5;
+end;
+
+begin :: Properties of Projective Functions
+
+theorem Th25:
+for X,Y,Z be non empty set, A be Subset of X, B be Subset of Y,
+ x be Element of X, f be PartFunc of [:X,Y:],Z st dom f = [:A,B:] holds
+  ( x in A implies dom ProjPMap1(f,x) = B ) &
+  ( not x in A implies dom ProjPMap1(f,x) = {} )
+proof
+    let X,Y,Z be non empty set, A be Subset of X, B be Subset of Y,
+    x be Element of X, f be PartFunc of [:X,Y:],Z;
+    assume
+A1:  dom f = [:A,B:];
+
+    hereby assume
+A2:  x in A;
+     for y be Element of Y holds y in X-section(dom f,x) iff y in B
+     proof
+      let y be Element of Y;
+      hereby assume y in X-section(dom f,x); then
+       [x,y] in dom f by MESFUN12:25;
+       hence y in B by A1,ZFMISC_1:87;
+      end;
+      assume y in B; then
+      [x,y] in dom f by A1,A2,ZFMISC_1:87; then
+      y in { y where y is Element of Y : [x,y] in dom f };
+      hence y in X-section(dom f,x) by MEASUR11:def 4;
+     end; then
+     X-section(dom f,x) = B by SUBSET_1:3;
+     hence dom ProjPMap1(f,x) = B by MESFUN12:def 3;
+    end;
+    assume A3: not x in A;
+    now assume X-section(dom f,x) <> {}; then
+     consider y be object such that
+A4:  y in X-section(dom f,x) by XBOOLE_0:def 1;
+     reconsider y as Element of Y by A4;
+     [x,y] in dom f by A4,MESFUN12:25;
+     hence contradiction by A1,A3,ZFMISC_1:87;
+    end;
+    hence dom ProjPMap1(f,x) = {} by MESFUN12:def 3;
+end;
+
+theorem Th26:
+for X,Y,Z be non empty set, A be Subset of X, B be Subset of Y,
+ y be Element of Y, f be PartFunc of [:X,Y:],Z st dom f = [:A,B:] holds
+  ( y in B implies dom ProjPMap2(f,y) = A ) &
+  ( not y in B implies dom ProjPMap2(f,y) = {} )
+proof
+    let X,Y,Z be non empty set, A be Subset of X, B be Subset of Y,
+    y be Element of Y, f be PartFunc of [:X,Y:],Z;
+    assume
+A1:  dom f = [:A,B:];
+    hereby assume
+A2:  y in B;
+     for x be Element of X holds x in Y-section(dom f,y) iff x in A
+     proof
+      let x be Element of X;
+      hereby assume x in Y-section(dom f,y); then
+       [x,y] in dom f by MESFUN12:25;
+       hence x in A by A1,ZFMISC_1:87;
+      end;
+      assume x in A; then
+      [x,y] in dom f by A1,A2,ZFMISC_1:87; then
+      x in { x where x is Element of X : [x,y] in dom f };
+      hence x in Y-section(dom f,y) by MEASUR11:def 5;
+     end; then
+     Y-section(dom f,y) = A by SUBSET_1:3;
+     hence dom ProjPMap2(f,y) = A by MESFUN12:def 4;
+    end;
+    assume A3: not y in B;
+    now assume Y-section(dom f,y) <> {}; then
+     consider x be object such that
+A4:  x in Y-section(dom f,y) by XBOOLE_0:def 1;
+     reconsider x as Element of X by A4;
+     [x,y] in dom f by A4,MESFUN12:25;
+     hence contradiction by A1,A3,ZFMISC_1:87;
+    end;
+    hence dom ProjPMap2(f,y) = {} by MESFUN12:def 4;
+end;
+
+theorem Th27:
+for X,Y be non empty set, A be Subset of X, B be Subset of Y,
+ x be Element of X, f be PartFunc of [:X,Y:],REAL st dom f = [:A,B:] holds
+  ( x in A implies
+      dom ProjPMap1(R_EAL f,x) = B & dom ProjPMap1(|.R_EAL f.|,x) = B ) &
+  ( not x in A implies
+      dom ProjPMap1(R_EAL f,x) = {} & dom ProjPMap1(|.R_EAL f.|,x) = {} )
+proof
+    let X,Y be non empty set, A be Subset of X, B be Subset of Y,
+    x be Element of X, f be PartFunc of [:X,Y:],REAL;
+    assume dom f = [:A,B:]; then
+A1: dom(R_EAL f) = [:A,B:] by MESFUNC5:def 7; then
+A2: dom |.R_EAL f.| = [:A,B:] by MESFUNC1:def 10;
+
+    hence x in A implies
+     dom ProjPMap1(R_EAL f,x) = B & dom ProjPMap1(|.R_EAL f.|,x) = B
+       by A1,Th25;
+    assume not x in A;
+    hence dom ProjPMap1(R_EAL f,x) = {} & dom ProjPMap1(|.R_EAL f.|,x) = {}
+      by A1,A2,Th25;
+end;
+
+theorem Th28:
+for X,Y be non empty set, A be Subset of X, B be Subset of Y,
+ y be Element of Y, f be PartFunc of [:X,Y:],REAL st dom f = [:A,B:] holds
+  ( y in B implies
+      dom ProjPMap2(R_EAL f,y) = A & dom ProjPMap2(|.R_EAL f.|,y) = A ) &
+  ( not y in B implies
+      dom ProjPMap2(R_EAL f,y) = {} & dom ProjPMap2(|.R_EAL f.|,y) = {} )
+proof
+    let X,Y be non empty set, A be Subset of X, B be Subset of Y,
+    y be Element of Y, f be PartFunc of [:X,Y:],REAL;
+    assume dom f = [:A,B:]; then
+A1: dom (R_EAL f) = [:A,B:] by MESFUNC5:def 7; then
+A2: dom |.R_EAL f.| = [:A,B:] by MESFUNC1:def 10;
+
+    hence y in B implies
+     dom ProjPMap2(R_EAL f,y) = A & dom ProjPMap2(|.R_EAL f.|,y) = A
+       by A1,Th26;
+    assume not y in B;
+    hence dom ProjPMap2(R_EAL f,y) = {} & dom ProjPMap2(|.R_EAL f.|,y) = {}
+      by A1,A2,Th26;
+end;
+
+theorem Th29:
+for X,Y be non empty set, Z be set, f be PartFunc of [:X,Y:],Z,
+ x be Element of X, y be Element of Y holds
+ rng(ProjPMap1(f,x)) c= rng f & rng(ProjPMap2(f,y)) c= rng f
+proof
+    let X,Y be non empty set, Z be set, f be PartFunc of [:X,Y:],Z,
+    x be Element of X, y be Element of Y;
+    now let z be Element of Z;
+     assume z in rng(ProjPMap1(f,x)); then
+     consider y be Element of Y such that
+A1:   y in dom(ProjPMap1(f,x)) & z = (ProjPMap1(f,x)).y by PARTFUN1:3;
+     y in X-section(dom f,x) by A1,MESFUN12:def 3; then
+     y in {y where y is Element of Y: [x,y] in dom f} by MEASUR11:def 4;
+     then
+A2:  ex y2 be Element of Y st y2 = y & [x,y2] in dom f; then
+     z = f.(x,y) by A1,MESFUN12:def 3;
+     hence z in rng f by A2,FUNCT_1:3;
+    end;
+    hence rng(ProjPMap1(f,x)) c= rng f;
+
+    now let z be Element of Z;
+     assume z in rng(ProjPMap2(f,y)); then
+     consider x be Element of X such that
+A3:   x in dom(ProjPMap2(f,y)) & z = (ProjPMap2(f,y)).x by PARTFUN1:3;
+     x in Y-section(dom f,y) by A3,MESFUN12:def 4; then
+     x in {x where x is Element of X: [x,y] in dom f} by MEASUR11:def 5;
+     then
+A4:  ex x2 be Element of X st x2 = x & [x2,y] in dom f; then
+     z = f.(x,y) by A3,MESFUN12:def 4;
+     hence z in rng f by A4,FUNCT_1:3;
+    end;
+    hence thesis;
+end;
+
+theorem Th30:
+for X,Y be non empty set, f be PartFunc of [:X,Y:],REAL,
+x be Element of X, y be Element of Y holds
+   ProjPMap1(R_EAL f,x) is PartFunc of Y,REAL
+ & ProjPMap1(|.R_EAL f.|,x) is PartFunc of Y,REAL
+ & ProjPMap2(R_EAL f,y) is PartFunc of X,REAL
+ & ProjPMap2(|.R_EAL f.|,y) is PartFunc of X,REAL
+proof
+    let X,Y be non empty set, f be PartFunc of [:X,Y:],REAL,
+    x be Element of X, y be Element of Y;
+    rng(ProjPMap1(R_EAL f,x)) c= rng(R_EAL f) by Th29; then
+    rng(ProjPMap1(R_EAL f,x)) c= rng f by MESFUNC5:def 7;
+    hence ProjPMap1(R_EAL f,x) is PartFunc of Y,REAL by RELSET_1:6,XBOOLE_1:1;
+    rng(ProjPMap1(|.R_EAL f.|,x)) c= rng(|.R_EAL f.|) by Th29; then
+    rng(ProjPMap1(|.R_EAL f.|,x)) c= rng(R_EAL abs f) by MESFUNC6:1; then
+    rng(ProjPMap1(|.R_EAL f.|,x)) c= rng (abs f) by MESFUNC5:def 7;
+    hence ProjPMap1(|.R_EAL f.|,x) is PartFunc of Y,REAL
+      by RELSET_1:6,XBOOLE_1:1;
+    rng(ProjPMap2(R_EAL f,y)) c= rng(R_EAL f) by Th29; then
+    rng(ProjPMap2(R_EAL f,y)) c= rng f by MESFUNC5:def 7;
+    hence ProjPMap2(R_EAL f,y) is PartFunc of X,REAL
+      by RELSET_1:6,XBOOLE_1:1;
+    rng(ProjPMap2(|.R_EAL f.|,y)) c= rng(|.R_EAL f.|) by Th29; then
+    rng(ProjPMap2(|.R_EAL f.|,y)) c= rng(R_EAL abs f) by MESFUNC6:1; then
+    rng(ProjPMap2(|.R_EAL f.|,y)) c= rng (abs f) by MESFUNC5:def 7;
+    hence ProjPMap2(|.R_EAL f.|,y) is PartFunc of X,REAL
+      by RELSET_1:6,XBOOLE_1:1;
+end;
+
+theorem Th31:
+for X,Y be non empty set, f be PartFunc of [:X,Y:],REAL,
+x be Element of X, y be Element of Y holds
+   ProjPMap1(R_EAL f,x) = R_EAL(ProjPMap1(f,x))
+ & ProjPMap1(|.R_EAL f.|,x) = |. R_EAL(ProjPMap1(f,x)) .|
+ & ProjPMap2(R_EAL f,y) = R_EAL(ProjPMap2(f,y))
+ & ProjPMap2(|.R_EAL f.|,y) = |. R_EAL(ProjPMap2(f,y)) .|
+proof
+    let X,Y be non empty set, f be PartFunc of [:X,Y:],REAL,
+    x be Element of X, y be Element of Y;
+A1: dom f = dom(R_EAL f) by MESFUNC5:def 7; then
+A2: dom ProjPMap1(R_EAL f,x) = X-section(dom f,x)
+  & dom ProjPMap2(R_EAL f,y) = Y-section(dom f,y) by MESFUN12:def 3,def 4;
+    dom R_EAL(ProjPMap1(f,x)) = dom ProjPMap1(f,x)
+  & dom R_EAL(ProjPMap2(f,y)) = dom ProjPMap2(f,y) by MESFUNC5:def 7; then
+A3: dom R_EAL(ProjPMap1(f,x)) = X-section(dom f,x)
+  & dom R_EAL(ProjPMap2(f,y)) = Y-section(dom f,y) by MESFUN12:def 3,def 4;
+
+    for y be Element of Y st y in dom ProjPMap1(R_EAL f,x) holds
+     (ProjPMap1(R_EAL f,x)).y = (R_EAL(ProjPMap1(f,x))).y
+    proof
+     let y be Element of Y;
+     assume y in dom ProjPMap1(R_EAL f,x); then
+A4:  y in X-section(dom f,x) by A1,MESFUN12:def 3;
+     X-section(dom f,x) = {y where y is Element of Y: [x,y] in dom f}
+       by MEASUR11:def 4; then
+A5:  ex y0 be Element of Y st y0 = y & [x,y0] in dom f by A4; then
+     (ProjPMap1(R_EAL f,x)).y = (R_EAL f).(x,y) by A1,MESFUN12:def 3; then
+A6:  (ProjPMap1(R_EAL f,x)).y = f.(x,y) by MESFUNC5:def 7;
+
+     (R_EAL(ProjPMap1(f,x))).y = (ProjPMap1(f,x)).y by MESFUNC5:def 7;
+     hence thesis by A6,A5,MESFUN12:def 3;
+    end;
+    hence
+    ProjPMap1(R_EAL f,x) = R_EAL(ProjPMap1(f,x)) by A2,A3,PARTFUN1:5;
+    hence ProjPMap1(|.R_EAL f.|,x) = |. R_EAL(ProjPMap1(f,x)) .|
+      by MESFUN13:7;
+
+    for x be Element of X st x in dom ProjPMap2(R_EAL f,y) holds
+     (ProjPMap2(R_EAL f,y)).x = (R_EAL(ProjPMap2(f,y))).x
+    proof
+     let x be Element of X;
+     assume x in dom ProjPMap2(R_EAL f,y); then
+A7:  x in Y-section(dom f,y) by A1,MESFUN12:def 4;
+     Y-section(dom f,y) = {x where x is Element of X: [x,y] in dom f}
+       by MEASUR11:def 5; then
+A8:  ex x0 be Element of X st x0 = x & [x0,y] in dom f by A7; then
+     (ProjPMap2(R_EAL f,y)).x = (R_EAL f).(x,y) by A1,MESFUN12:def 4; then
+A9:  (ProjPMap2(R_EAL f,y)).x = f.(x,y) by MESFUNC5:def 7;
+
+     (R_EAL(ProjPMap2(f,y))).x = (ProjPMap2(f,y)).x by MESFUNC5:def 7;
+     hence thesis by A9,A8,MESFUN12:def 4;
+    end;
+    hence
+    ProjPMap2(R_EAL f,y) = R_EAL(ProjPMap2(f,y)) by A2,A3,PARTFUN1:5;
+    hence ProjPMap2(|.R_EAL f.|,y) = |. R_EAL(ProjPMap2(f,y)) .|
+      by MESFUN13:7;
+end;
+
+theorem Th32:
+for X,Y be non empty set, f be PartFunc of [:X,Y:],REAL,
+ x be Element of X, y be Element of Y holds
+   ProjPMap1(|.f.|,x) = |. ProjPMap1(f,x) .|
+ & ProjPMap2(|.f.|,y) = |. ProjPMap2(f,y) .|
+proof
+    let X,Y be non empty set, f be PartFunc of [:X,Y:],REAL,
+    x be Element of X, y be Element of Y;
+
+A1: dom f = dom |.f.| by VALUED_1:def 11;
+A2: dom ProjPMap1(f,x) = dom |. ProjPMap1(f,x) .| &
+    dom ProjPMap2(f,y) = dom |. ProjPMap2(f,y) .| by VALUED_1:def 11;
+
+A3: dom ProjPMap1(|.f.|,x) = X-section(dom f,x) by A1,MESFUN12:def 3; then
+A4: dom ProjPMap1(|.f.|,x) = dom |. ProjPMap1(f,x) .| by A2,MESFUN12:def 3;
+
+    for y be Element of Y st y in dom ProjPMap1(|.f.|,x) holds
+     ProjPMap1(|.f.|,x).y = (|. ProjPMap1(f,x) .|).y
+    proof
+     let y be Element of Y;
+     assume
+A5:   y in dom ProjPMap1(|.f.|,x); then
+     y in {y where y is Element of Y: [x,y] in dom f}
+       by A3,MEASUR11:def 4; then
+A6:  ex y1 be Element of Y st y1 = y & [x,y1] in dom f; then
+A7:  ProjPMap1(|.f.|,x).y = (|.f.|).(x,y) by A1,MESFUN12:def 3;
+
+     ProjPMap1(f,x).y = f.(x,y) by A6,MESFUN12:def 3; then
+     (|. ProjPMap1(f,x) .|).y = |. f.([x,y]) .| by A5,A4,VALUED_1:def 11;
+     hence thesis by A1,A7,A6,VALUED_1:def 11;
+    end;
+    hence ProjPMap1(|.f.|,x) = |. ProjPMap1(f,x) .| by A4,PARTFUN1:5;
+
+A8: dom ProjPMap2(|.f.|,y) = Y-section(dom f,y) by A1,MESFUN12:def 4; then
+A9: dom ProjPMap2(|.f.|,y) = dom |. ProjPMap2(f,y) .| by A2,MESFUN12:def 4;
+
+    for x be Element of X st x in dom ProjPMap2(|.f.|,y) holds
+     ProjPMap2(|.f.|,y).x = (|. ProjPMap2(f,y) .|).x
+    proof
+     let x be Element of X;
+     assume
+A10:   x in dom ProjPMap2(|.f.|,y); then
+     x in {x where x is Element of X: [x,y] in dom f}
+       by A8,MEASUR11:def 5; then
+A11:  ex x1 be Element of X st x1 = x & [x1,y] in dom f; then
+A12:  ProjPMap2(|.f.|,y).x = (|.f.|).(x,y) by A1,MESFUN12:def 4;
+
+     ProjPMap2(f,y).x = f.(x,y) by A11,MESFUN12:def 4; then
+     (|. ProjPMap2(f,y) .|).x = |. f.([x,y]) .| by A10,A9,VALUED_1:def 11;
+     hence thesis by A1,A12,A11,VALUED_1:def 11;
+    end;
+    hence ProjPMap2(|.f.|,y) = |. ProjPMap2(f,y) .| by A9,PARTFUN1:5;
+end;
+
+theorem Th33:
+for f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, t be Element of REAL
+st f is_continuous_on dom f & f = g holds
+  ProjPMap1(g,t) is continuous & ProjPMap2(g,t) is continuous
+proof
+    let f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, t be Element of REAL;
+    assume that
+A1:  f is_continuous_on dom f and
+A2:  f = g;
+
+    for y0 be Real st y0 in dom ProjPMap1(g,t) holds
+     ProjPMap1(g,t) is_continuous_in y0
+    proof
+     let y0 be Real;
+     assume y0 in dom ProjPMap1(g,t); then
+A3:  y0 in X-section(dom g,t) by MESFUN12:def 3;
+
+A4:  X-section(dom g,t) = {y where y is Element of REAL : [t,y] in dom g}
+        by MEASUR11:def 4; then
+A5:  ex y be Element of REAL st y = y0 & [t,y] in dom g by A3;
+     reconsider xx = t as Point of RNS_Real;
+     reconsider yy0 = y0 as Point of RNS_Real by XREAL_0:def 1;
+     reconsider p0 = [xx,yy0] as Point of [:RNS_Real,RNS_Real:];
+
+     for r be Real st 0 < r ex s be Real st 0 < s
+      & for y1 be Real st y1 in dom ProjPMap1(g,t) & |. y1-y0 .| < s
+          holds |. ProjPMap1(g,t).y1 - ProjPMap1(g,t).y0 .| < r
+     proof
+      let r be Real;
+      assume 0 < r; then
+      consider s be Real such that
+A6:    0 < s and
+A7:   for p1 be Point of [:RNS_Real,RNS_Real:] st p1 in dom f &
+        ||. p1-p0 .|| < s holds ||. f/.p1 - f/.p0 .|| < r
+          by A1,A2,A5,NFCONT_1:19;
+
+      now let y1 be Real;
+       assume that
+A8:     y1 in dom ProjPMap1(g,t) and
+A9:     |. y1-y0 .| < s;
+
+       y1 in X-section(dom g,t) by A8,MESFUN12:def 3; then
+A10:   ex y be Element of REAL st y = y1 & [t,y] in dom g by A4;
+       reconsider yy1 = y1 as Point of RNS_Real by XREAL_0:def 1;
+       reconsider p1 = [xx,yy1] as Point of [:RNS_Real,RNS_Real:];
+
+A11:   yy1-yy0 = y1-y0 by DUALSP03:4;
+       p1-p0 = [xx,yy1] + [-xx,-yy0] by PRVECT_3:18; then
+       p1-p0 = [xx-xx,yy1-yy0] by PRVECT_3:18; then
+       p1-p0 = [0.RNS_Real,yy1-yy0] by RLVECT_1:15; then
+       ||. p1-p0 .|| = sqrt(||. 0.RNS_Real .||^2 + ||. yy1-yy0 .||^2)
+         by NDIFF_8:1; then
+       ||. p1-p0 .|| = ||. yy1-yy0 .|| by SQUARE_1:22; then
+       ||. p1-p0 .|| = |. y1-y0 .| by A11,EUCLID:def 2; then
+A12:   ||. f/.p1-f/.p0 .|| < r by A9,A2,A10,A7;
+
+       ProjPMap1(g,t).y1 = g.(t,y1) & ProjPMap1(g,t).y0 = g.(t,y0)
+         by A5,A10,MESFUN12:def 3; then
+       ProjPMap1(g,t).y1 = f/.p1 & ProjPMap1(g,t).y0 = f/.p0
+         by A2,A5,A10,PARTFUN1:def 6; then
+       ProjPMap1(g,t).y1 - ProjPMap1(g,t).y0 = f/.p1 - f/.p0
+         by DUALSP03:4;
+       hence |. ProjPMap1(g,t).y1 - ProjPMap1(g,t).y0 .| < r
+         by A12,EUCLID:def 2;
+      end;
+      hence thesis by A6;
+     end;
+     hence ProjPMap1(g,t) is_continuous_in y0 by FCONT_1:3;
+    end;
+    hence ProjPMap1(g,t) is continuous;
+
+    for x0 be Real st x0 in dom ProjPMap2(g,t) holds
+     ProjPMap2(g,t) is_continuous_in x0
+    proof
+     let x0 be Real;
+     assume x0 in dom ProjPMap2(g,t); then
+A13:  x0 in Y-section(dom g,t) by MESFUN12:def 4;
+
+A14:  Y-section(dom g,t) = {x where x is Element of REAL : [x,t] in dom g}
+        by MEASUR11:def 5; then
+A15:  ex x be Element of REAL st x = x0 & [x,t] in dom g by A13;
+     reconsider yy = t as Point of RNS_Real;
+     reconsider xx0 = x0 as Point of RNS_Real by XREAL_0:def 1;
+     reconsider p0 = [xx0,yy] as Point of [:RNS_Real,RNS_Real:];
+
+     for r be Real st 0 < r ex s be Real st 0 < s
+      & for x1 be Real st x1 in dom ProjPMap2(g,t) & |. x1-x0 .| < s
+          holds |. ProjPMap2(g,t).x1 - ProjPMap2(g,t).x0 .| < r
+     proof
+      let r be Real;
+      assume 0 < r; then
+      consider s be Real such that
+A16:    0 < s and
+A17:   for p1 be Point of [:RNS_Real,RNS_Real:] st p1 in dom f &
+        ||. p1-p0 .|| < s holds ||. f/.p1 - f/.p0 .|| < r
+          by A1,A2,A15,NFCONT_1:19;
+
+      now let x1 be Real;
+       assume that
+A18:     x1 in dom ProjPMap2(g,t) and
+A19:     |. x1-x0 .| < s;
+
+       x1 in Y-section(dom g,t) by A18,MESFUN12:def 4; then
+A20:   ex x be Element of REAL st x = x1 & [x,t] in dom g by A14;
+       reconsider xx1 = x1 as Point of RNS_Real by XREAL_0:def 1;
+       reconsider p1 = [xx1,yy] as Point of [:RNS_Real,RNS_Real:];
+
+A21:   xx1-xx0 = x1-x0 by DUALSP03:4;
+       p1-p0 = [xx1,yy] + [-xx0,-yy] by PRVECT_3:18; then
+       p1-p0 = [xx1-xx0,yy-yy] by PRVECT_3:18; then
+       p1-p0 = [xx1-xx0,0.RNS_Real] by RLVECT_1:15; then
+       ||. p1-p0 .|| = sqrt(||. 0.RNS_Real .||^2 + ||. xx1-xx0 .||^2)
+         by NDIFF_8:1; then
+       ||. p1-p0 .|| = ||. xx1-xx0 .|| by SQUARE_1:22; then
+       ||. p1-p0 .|| = |. x1-x0 .| by A21,EUCLID:def 2; then
+A22:   ||. f/.p1-f/.p0 .|| < r by A19,A2,A20,A17;
+
+       ProjPMap2(g,t).x1 = g.(x1,t) & ProjPMap2(g,t).x0 = g.(x0,t)
+         by A15,A20,MESFUN12:def 4; then
+       ProjPMap2(g,t).x1 = f/.p1 & ProjPMap2(g,t).x0 = f/.p0
+         by A2,A15,A20,PARTFUN1:def 6; then
+       ProjPMap2(g,t).x1 - ProjPMap2(g,t).x0 = f/.p1 - f/.p0
+         by DUALSP03:4;
+       hence |. ProjPMap2(g,t).x1 - ProjPMap2(g,t).x0 .| < r
+         by A22,EUCLID:def 2;
+      end;
+      hence thesis by A16;
+     end;
+     hence ProjPMap2(g,t) is_continuous_in x0 by FCONT_1:3;
+    end;
+    hence ProjPMap2(g,t) is continuous;
+end;
+
+theorem Th34:
+for f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, t be Element of REAL
+st f is_continuous_on dom f & f = g holds
+  ProjPMap1(|.g.|,t) is continuous & ProjPMap2(|.g.|,t) is continuous
+proof
+    let f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, t be Element of REAL;
+    assume that
+A1:  f is_continuous_on dom f and
+A2:  f = g;
+    set Y = dom ProjPMap1(g,t);
+
+A3: Y = dom |. ProjPMap1(g,t) .| by VALUED_1:def 11;
+
+    ProjPMap1(g,t)|Y is continuous by A1,A2,Th33; then
+    (abs ProjPMap1(g,t))|Y is continuous by FCONT_1:21;
+    hence ProjPMap1(|.g.|,t) is continuous by A3,Th32;
+
+    set Y2 = dom ProjPMap2(g,t);
+
+A4: Y2 = dom |. ProjPMap2(g,t) .| by VALUED_1:def 11;
+
+    ProjPMap2(g,t)|Y2 is continuous by A1,A2,Th33; then
+    (abs ProjPMap2(g,t))|Y2 is continuous by FCONT_1:21;
+    hence ProjPMap2(|.g.|,t) is continuous by A4,Th32;
+end;
+
+theorem
+for f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, t be Element of REAL
+st f is_uniformly_continuous_on dom f & f = g holds
+  ProjPMap1(g,t) is uniformly_continuous
+& ProjPMap2(g,t) is uniformly_continuous
+proof
+    let f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, t be Element of REAL;
+    assume that
+A1:  f is_uniformly_continuous_on dom f and
+A2:  f = g;
+
+    for r be Real st 0 < r ex s be Real st 0 < s &
+     for y1,y2 be Real st y1 in dom ProjPMap1(g,t)
+       & y2 in dom ProjPMap1(g,t) & |. y1-y2 .| < s
+      holds |. ProjPMap1(g,t).y1 - ProjPMap1(g,t).y2 .| < r
+    proof
+     let r be Real;
+     assume 0 < r; then
+     consider s be Real such that
+A3:   0 < s and
+A4:   for p1,p2 be Point of [:RNS_Real,RNS_Real:]
+       st p1 in dom f & p2 in dom f & ||. p1-p2 .|| < s
+        holds ||. f/.p1 - f/.p2 .|| < r by A1;
+
+     now let y1,y2 be Real;
+      assume that
+A5:    y1 in dom ProjPMap1(g,t) and
+A6:    y2 in dom ProjPMap1(g,t) and
+A7:    |. y1-y2 .| < s;
+
+A8:   X-section(dom g,t) = {y where y is Element of REAL : [t,y] in dom g}
+        by MEASUR11:def 4;
+A9:  y1 in X-section(dom g,t) & y2 in X-section(dom g,t)
+        by A5,A6,MESFUN12:def 3; then
+A10:  ex y be Element of REAL st y = y1 & [t,y] in dom g by A8;
+A11:  ex y be Element of REAL st y = y2 & [t,y] in dom g by A8,A9;
+      reconsider xx = t as Point of RNS_Real;
+      reconsider yy1 = y1 as Point of RNS_Real by XREAL_0:def 1;
+      reconsider yy2 = y2 as Point of RNS_Real by XREAL_0:def 1;
+      reconsider p1 = [xx,yy1] as Point of [:RNS_Real,RNS_Real:];
+      reconsider p2 = [xx,yy2] as Point of [:RNS_Real,RNS_Real:];
+
+A12:  yy1-yy2 = y1-y2 by DUALSP03:4;
+      p1-p2 = [xx,yy1] + [-xx,-yy2] by PRVECT_3:18; then
+      p1-p2 = [xx-xx,yy1-yy2] by PRVECT_3:18; then
+      p1-p2 = [0.RNS_Real,yy1-yy2] by RLVECT_1:15; then
+      ||. p1-p2 .|| = sqrt( ||. 0.RNS_Real .||^2 + ||. yy1-yy2 .||^2 )
+        by NDIFF_8:1; then
+      ||. p1-p2 .|| = ||. yy1-yy2 .|| by SQUARE_1:22; then
+      ||. p1-p2 .|| = |. y1-y2 .| by A12,EUCLID:def 2; then
+A13:  ||. f/.p1 - f/.p2 .|| < r by A4,A7,A2,A10,A11;
+
+      ProjPMap1(g,t).y1 = g.(t,y1) & ProjPMap1(g,t).y2 = g.(t,y2)
+      by A10,A11,MESFUN12:def 3; then
+      ProjPMap1(g,t).y1 = f/.p1 & ProjPMap1(g,t).y2 = f/.p2
+        by A2,A10,A11,PARTFUN1:def 6; then
+      ProjPMap1(g,t).y1 - ProjPMap1(g,t).y2 = f/.p1 - f/.p2
+        by DUALSP03:4;
+      hence |. ProjPMap1(g,t).y1 - ProjPMap1(g,t).y2 .| < r
+        by A13,EUCLID:def 2;
+     end;
+     hence thesis by A3;
+    end;
+    hence ProjPMap1(g,t) is uniformly_continuous by FCONT_2:def 1;
+
+    for r be Real st 0 < r ex s be Real st 0 < s &
+     for x1,x2 be Real st x1 in dom ProjPMap2(g,t)
+       & x2 in dom ProjPMap2(g,t) & |. x1-x2 .| < s
+      holds |. ProjPMap2(g,t).x1 - ProjPMap2(g,t).x2 .| < r
+    proof
+     let r be Real;
+     assume 0 < r; then
+     consider s be Real such that
+A14:   0 < s and
+A15:   for p1,p2 be Point of [:RNS_Real,RNS_Real:]
+       st p1 in dom f & p2 in dom f & ||. p1-p2 .|| < s
+        holds ||. f/.p1 - f/.p2 .|| < r by A1;
+
+     now let x1,x2 be Real;
+      assume that
+A16:    x1 in dom ProjPMap2(g,t) and
+A17:    x2 in dom ProjPMap2(g,t) and
+A18:    |. x1-x2 .| < s;
+
+A19:   Y-section(dom g,t) = {x where x is Element of REAL : [x,t] in dom g}
+        by MEASUR11:def 5;
+A20:  x1 in Y-section(dom g,t) & x2 in Y-section(dom g,t)
+        by A16,A17,MESFUN12:def 4; then
+A21:  ex x be Element of REAL st x = x1 & [x,t] in dom g by A19;
+A22:  ex x be Element of REAL st x = x2 & [x,t] in dom g by A19,A20;
+      reconsider yy = t as Point of RNS_Real;
+      reconsider xx1 = x1 as Point of RNS_Real by XREAL_0:def 1;
+      reconsider xx2 = x2 as Point of RNS_Real by XREAL_0:def 1;
+      reconsider p1 = [xx1,yy] as Point of [:RNS_Real,RNS_Real:];
+      reconsider p2 = [xx2,yy] as Point of [:RNS_Real,RNS_Real:];
+
+A23:  xx1-xx2 = x1-x2 by DUALSP03:4;
+      p1-p2 = [xx1,yy] + [-xx2,-yy] by PRVECT_3:18; then
+      p1-p2 = [xx1-xx2,yy-yy] by PRVECT_3:18; then
+      p1-p2 = [xx1-xx2,0.RNS_Real] by RLVECT_1:15; then
+      ||. p1-p2 .|| = sqrt( ||. 0.RNS_Real .||^2 + ||. xx1-xx2 .||^2 )
+        by NDIFF_8:1; then
+      ||. p1-p2 .|| = ||. xx1-xx2 .|| by SQUARE_1:22; then
+      ||. p1-p2 .|| = |. x1-x2 .| by A23,EUCLID:def 2; then
+A24:  ||. f/.p1 - f/.p2 .|| < r by A15,A18,A2,A21,A22;
+
+      ProjPMap2(g,t).x1 = g.(x1,t) & ProjPMap2(g,t).x2 = g.(x2,t)
+      by A21,A22,MESFUN12:def 4; then
+      ProjPMap2(g,t).x1 = f/.p1 & ProjPMap2(g,t).x2 = f/.p2
+        by A2,A21,A22,PARTFUN1:def 6; then
+      ProjPMap2(g,t).x1 - ProjPMap2(g,t).x2 = f/.p1 - f/.p2
+        by DUALSP03:4;
+      hence |. ProjPMap2(g,t).x1 - ProjPMap2(g,t).x2 .| < r
+        by A24,EUCLID:def 2;
+     end;
+     hence thesis by A14;
+    end;
+    hence ProjPMap2(g,t) is uniformly_continuous by FCONT_2:def 1;
+end;
+
+theorem Th36:
+for x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL
+ st f is_continuous_on dom f & f = g & Pg1 = ProjPMap1(R_EAL g,x) holds
+  Pg1 is continuous
+proof
+    let x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL;
+    assume that
+A1:  f is_continuous_on dom f and
+A2:  f = g and
+A3:  Pg1 = ProjPMap1(R_EAL g,x);
+
+    Pg1 = R_EAL(ProjPMap1(g,x)) by A3,Th31; then
+    Pg1 = ProjPMap1(g,x) by MESFUNC5:def 7;
+    hence thesis by A1,A2,Th33;
+end;
+
+theorem Th37:
+for y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL
+ st f is_continuous_on dom f & f = g & Pg2 = ProjPMap2(R_EAL g,y) holds
+  Pg2 is continuous
+proof
+    let y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL;
+    assume that
+A1:  f is_continuous_on dom f and
+A2:  f = g and
+A3:  Pg2 = ProjPMap2(R_EAL g,y);
+
+    Pg2 = R_EAL(ProjPMap2(g,y)) by A3,Th31; then
+    Pg2 = ProjPMap2(g,y) by MESFUNC5:def 7;
+    hence thesis by A1,A2,Th33;
+end;
+
+theorem Th38:
+for x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL
+  st f is_continuous_on dom f & f = g & Pg1 = ProjPMap1(|.R_EAL g.|,x)
+  holds Pg1 is continuous
+proof
+    let x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL;
+    assume that
+A1: f is_continuous_on dom f and
+A2: f = g and
+A3: Pg1 = ProjPMap1(|.R_EAL g.|,x);
+
+    Pg1 = |. R_EAL(ProjPMap1(g,x)) .| by A3,Th31; then
+    Pg1 = R_EAL abs(ProjPMap1(g,x)) by MESFUNC6:1; then
+    Pg1 = R_EAL ProjPMap1(|.g.|,x) by Th32; then
+    Pg1 = ProjPMap1(|.g.|,x) by MESFUNC5:def 7;
+    hence thesis by A1,A2,Th34;
+end;
+
+theorem Th39:
+for y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, p2 be PartFunc of REAL,REAL
+  st f is_continuous_on dom f & f = g & p2 = ProjPMap2(|.R_EAL g.|,y)
+  holds p2 is continuous
+proof
+    let y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, p2 be PartFunc of REAL,REAL;
+    assume that
+A1: f is_continuous_on dom f and
+A2: f = g and
+A3: p2 = ProjPMap2(|.R_EAL g.|,y);
+
+    p2 = |. R_EAL(ProjPMap2(g,y)) .| by A3,Th31; then
+    p2 = R_EAL abs(ProjPMap2(g,y)) by MESFUNC6:1; then
+    p2 = R_EAL ProjPMap2(|.g.|,y) by Th32; then
+    p2 = ProjPMap2(|.g.|,y) by MESFUNC5:def 7;
+    hence thesis by A1,A2,Th34;
+end;
+
+begin :: Integral of continuous two variables functions
+
+theorem Th40:
+for I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+  x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL
+ st x in I & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g &
+    Pg1 = ProjPMap1(R_EAL g,x) holds Pg1|J is bounded & Pg1 is_integrable_on J
+proof
+    let I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+    x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL;
+    assume that
+A1: x in I and
+A2: dom f = [:I,J:] and
+A3: f is_continuous_on [:I,J:] and
+A4: f = g and
+A5: Pg1 = ProjPMap1(R_EAL g,x);
+
+    Pg1 = R_EAL(ProjPMap1(g,x)) by A5,Th31; then
+A6: Pg1 = ProjPMap1(g,x) by MESFUNC5:def 7;
+
+    dom Pg1 = J by A1,A2,A4,A5,Th27;
+    hence thesis by A6,A2,A3,A4,Th33,INTEGRA5:10,11;
+end;
+
+theorem Th41:
+for I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+    x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL
+ st x in I & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g &
+    Pg1 = ProjPMap1(R_EAL g,x) holds Pg1 is_integrable_on L-Meas
+  & integral(Pg1,J) = Integral(L-Meas,Pg1)
+  & integral(Pg1,J) = Integral(L-Meas,(ProjPMap1(R_EAL g,x)))
+  & integral(Pg1,J) = (Integral2(L-Meas,R_EAL g)).x
+proof
+    let I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+    x be Element of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL,
+    Pg1 be PartFunc of REAL,REAL;
+    assume that
+A1:  x in I and
+A2:  dom f = [:I,J:] and
+A3:  f is_continuous_on [:I,J:] and
+A4:  f = g and
+A5:  Pg1 = ProjPMap1(R_EAL g,x);
+
+A6:J is Element of L-Field by MEASUR10:5,MEASUR12:75;
+A7:dom Pg1 = J by A1,A2,A4,A5,Th27;
+    Pg1|J is bounded & Pg1 is_integrable_on J by A1,A2,A3,A4,A5,Th40;
+    hence Pg1 is_integrable_on L-Meas
+  & integral(Pg1,J) = Integral(L-Meas,Pg1) by A6,A7,MESFUN14:49;
+    hence integral(Pg1,J) = Integral(L-Meas,ProjPMap1(R_EAL g,x))
+      by A5,MESFUNC5:def 7;
+    hence thesis by MESFUN12:def 8;
+end;
+
+theorem Th42:
+for I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+  y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL
+ st y in J & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g &
+    Pg2 = ProjPMap2(R_EAL g,y) holds Pg2|I is bounded & Pg2 is_integrable_on I
+proof
+    let I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+    y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL;
+    assume that
+A1:  y in J and
+A2:  dom f = [:I,J:] and
+A3:  f is_continuous_on [:I,J:] and
+A4:  f = g and
+A5:  Pg2 = ProjPMap2(R_EAL g,y);
+
+    Pg2 = R_EAL(ProjPMap2(g,y)) by A5,Th31; then
+A6: Pg2 = ProjPMap2(g,y) by MESFUNC5:def 7;
+
+    dom Pg2 = I by A1,A2,A4,A5,Th28;
+    hence thesis by A6,A2,A3,A4,Th33,INTEGRA5:10,11;
+end;
+
+theorem Th43:
+for I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+  y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL
+ st y in J & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g &
+    Pg2 = ProjPMap2(R_EAL g,y) holds Pg2 is_integrable_on L-Meas
+  & integral(Pg2,I) = Integral(L-Meas,Pg2)
+  & integral(Pg2,I) = Integral(L-Meas,(ProjPMap2(R_EAL g,y)))
+  & integral(Pg2,I) = (Integral1(L-Meas,R_EAL g)).y
+proof
+    let I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+    y be Element of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL,
+    Pg2 be PartFunc of REAL,REAL;
+    assume that
+A1:  y in J and
+A2:  dom f = [:I,J:] and
+A3:  f is_continuous_on [:I,J:] and
+A4:  f = g and
+A5:  Pg2 = ProjPMap2(R_EAL g,y);
+
+A6:I is Element of L-Field by MEASUR10:5,MEASUR12:75;
+A7:dom Pg2 = I by A1,A2,A4,A5,Th28;
+    Pg2|I is bounded & Pg2 is_integrable_on I by A1,A2,A3,A4,A5,Th42;
+    hence Pg2 is_integrable_on L-Meas
+  & integral(Pg2,I) = Integral(L-Meas,Pg2) by A6,A7,MESFUN14:49;
+    hence integral(Pg2,I) = Integral(L-Meas,ProjPMap2(R_EAL g,y))
+      by A5,MESFUNC5:def 7;
+    hence thesis by MESFUN12:def 7;
+end;
+
+theorem Th44:
+for I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+  x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL
+ st x in I & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g
+  & Pg1 = ProjPMap1(|.R_EAL g.|,x) holds
+    Pg1|J is bounded & Pg1 is_integrable_on J
+proof
+    let I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+    x be Element of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL,
+    Pg1 be PartFunc of REAL,REAL;
+    assume that
+A1:  x in I and
+A2:  dom f = [:I,J:] and
+A3:  f is_continuous_on [:I,J:] and
+A4:  f = g and
+A5:  Pg1 = ProjPMap1(|.R_EAL g.|,x);
+
+    dom Pg1 = J by A1,A2,A4,A5,Th27;
+    hence thesis by A2,A3,A4,A5,Th38,INTEGRA5:10,11;
+end;
+
+theorem Th45:
+for I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+  x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL,
+  E be Element of L-Field
+ st x in I & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g
+  & Pg1 = ProjPMap1(|.R_EAL g.|,x) & E = J holds Pg1 is E-measurable
+proof
+    let I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+    x be Element of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL,
+    Pg1 be PartFunc of REAL,REAL, E be Element of L-Field;
+    assume that
+A1:  x in I and
+A2:  dom f = [:I,J:] and
+A3:  f is_continuous_on [:I,J:] and
+A4:  f = g and
+A5:  Pg1 = ProjPMap1(|.R_EAL g.|,x) and
+A6:  E = J;
+
+A7: dom Pg1 = J by A1,A2,A4,A5,Th27;
+    Pg1|J is bounded & Pg1 is_integrable_on J by A1,A2,A3,A4,A5,Th44;
+    hence thesis by A7,A6,MESFUN14:49;
+end;
+
+theorem Th46:
+for I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+  x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL
+ st x in I & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g &
+    Pg1 = ProjPMap1(|.R_EAL g.|,x) holds Pg1 is_integrable_on L-Meas
+  & integral(Pg1,J) = Integral(L-Meas,Pg1)
+  & integral(Pg1,J) = Integral(L-Meas,(ProjPMap1(|.R_EAL g.|,x)))
+  & integral(Pg1,J) = (Integral2(L-Meas,|.R_EAL g.|)).x
+proof
+    let I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+    x be Element of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL,
+    Pg1 be PartFunc of REAL,REAL;
+    assume that
+A1:  x in I and
+A2:  dom f = [:I,J:] and
+A3:  f is_continuous_on [:I,J:] and
+A4:  f = g and
+A5:  Pg1 = ProjPMap1(|.R_EAL g.|,x);
+
+A6:J is Element of L-Field by MEASUR10:5,MEASUR12:75;
+A7: dom Pg1 = J by A1,A2,A4,A5,Th27;
+    Pg1|J is bounded & Pg1 is_integrable_on J by A1,A2,A3,A4,A5,Th44;
+    hence Pg1 is_integrable_on L-Meas
+  & integral(Pg1,J) = Integral(L-Meas,Pg1) by A7,A6,MESFUN14:49; then
+    integral(Pg1,J) = Integral(L-Meas,ProjPMap1(|.R_EAL g.|,x))
+      by A5,MESFUNC5:def 7;
+    hence thesis by MESFUN12:def 8;
+end;
+
+theorem Th47:
+for I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+  y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL
+ st y in J & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g
+  & Pg2 = ProjPMap2(|.R_EAL g.|,y) holds
+    Pg2|I is bounded & Pg2 is_integrable_on I
+proof
+    let I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+    y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL;
+    assume that
+A1:  y in J and
+A2:  dom f = [:I,J:] and
+A3:  f is_continuous_on [:I,J:] and
+A4:  f = g and
+A5:  Pg2 = ProjPMap2(|.R_EAL g.|,y);
+
+    dom Pg2 = I by A1,A2,A4,A5,Th28;
+    hence thesis by A2,A3,A4,A5,Th39,INTEGRA5:10,11;
+end;
+
+theorem Th48:
+for I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+  y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL,
+  E be Element of L-Field
+ st y in J & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g
+  & Pg2 = ProjPMap2(|.R_EAL g.|,y) & E = I holds Pg2 is E-measurable
+proof
+    let I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+    y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL,
+    E be Element of L-Field;
+    assume that
+A1:  y in J and
+A2:  dom f = [:I,J:] and
+A3:  f is_continuous_on [:I,J:] and
+A4:  f = g and
+A5:  Pg2 = ProjPMap2(|.R_EAL g.|,y) and
+A6:  E = I;
+
+A7: dom Pg2 = I by A1,A2,A4,A5,Th28;
+    Pg2|I is bounded & Pg2 is_integrable_on I by A1,A2,A3,A4,A5,Th47;
+    hence thesis by A7,A6,MESFUN14:49;
+end;
+
+theorem Th49:
+for I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+  y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL
+ st y in J & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g &
+    Pg2 = ProjPMap2(|.R_EAL g.|,y) holds Pg2 is_integrable_on L-Meas
+  & integral(Pg2,I) = Integral(L-Meas,Pg2)
+  & integral(Pg2,I) = Integral(L-Meas,(ProjPMap2(|.R_EAL g.|,y)))
+  & integral(Pg2,I) = (Integral1(L-Meas,|.R_EAL g.|)).y
+proof
+    let I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+    y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL;
+    assume that
+A1:  y in J and
+A2:  dom f = [:I,J:] and
+A3:  f is_continuous_on [:I,J:] and
+A4:  f = g and
+A5:  Pg2 = ProjPMap2(|.R_EAL g.|,y);
+
+A6:I is Element of L-Field by MEASUR10:5,MEASUR12:75;
+A7: dom Pg2 = I by A1,A2,A4,A5,Th28;
+    Pg2|I is bounded & Pg2 is_integrable_on I by A1,A2,A3,A4,A5,Th47;
+    hence Pg2 is_integrable_on L-Meas
+  & integral(Pg2,I) = Integral(L-Meas,Pg2) by A7,A6,MESFUN14:49; then
+    integral(Pg2,I) = Integral(L-Meas,ProjPMap2(|.R_EAL g.|,y))
+      by A5,MESFUNC5:def 7;
+    hence thesis by MESFUN12:def 7;
+end;
+
+theorem Th50:
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL,
+ E be Element of sigma measurable_rectangles(L-Field,L-Field)
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g & E = [:I,J:] holds
+   g is E-measurable
+proof
+    let I,J be non empty closed_interval Subset of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL,
+    E be Element of sigma measurable_rectangles(L-Field,L-Field);
+    assume that
+A1: [:I,J:] = dom f and
+A2: f is_continuous_on [:I,J:] and
+A3: f = g and
+A4: E = [:I,J:];
+
+    for r being Real holds E /\ (less_dom (g,r))
+     in sigma measurable_rectangles(L-Field,L-Field)
+    proof
+     let r be Real;
+A5:  less_dom(g,r) = g" ( ].-infty,r.[ ) by Th17;
+     consider H be Subset of [:RNS_Real,RNS_Real:] such that
+A6:   H /\ E = f" ( ].-infty,r.[ ) & H is open by Th24,A1,A2,A4;
+     H in sigma measurable_rectangles(L-Field,L-Field) by A6,Th15; then
+     f" ( ].-infty,r.[ ) in sigma measurable_rectangles(L-Field,L-Field)
+      by A6,FINSUB_1:def 2;
+     hence E /\ (less_dom (g,r)) in
+      sigma measurable_rectangles(L-Field,L-Field) by A3,A5,FINSUB_1:def 2;
+    end;
+    hence g is E-measurable by MESFUNC6:12;
+end;
+
+theorem Th51:
+for I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g holds
+   Integral2(L-Meas,|.R_EAL g.|)|I is PartFunc of REAL,REAL
+ & Integral2(L-Meas,R_EAL g)|I is PartFunc of REAL,REAL
+proof
+    let I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL;
+    assume that
+A1: [:I,J:] = dom f and
+A2: f is_continuous_on [:I,J:] and
+A3: f = g;
+
+    set Rg =R_EAL g;
+    set F = Integral2(L-Meas,|.Rg.|);
+    reconsider FI = F|I as PartFunc of REAL,ExtREAL;
+A4:dom F = REAL by FUNCT_2:def 1;
+
+    now let y be object;
+     assume y in rng FI; then
+     consider x be Element of REAL such that
+A5: x in dom FI & y = FI.x by PARTFUN1:3;
+     reconsider Pg = ProjPMap1(|.Rg.|,x) as PartFunc of REAL,REAL by Th30;
+     (Integral2(L-Meas,|.Rg.|)).x = integral(Pg,J)
+       by A5,A4,A1,A2,A3,Th46; then
+     (Integral2(L-Meas,|.Rg.|)).x in REAL by XREAL_0:def 1;
+     hence y in REAL by A5,A4,FUNCT_1:49;
+    end; then
+    rng FI c= REAL & dom FI c= REAL;
+    hence Integral2(L-Meas,|.R_EAL g.|)|I is PartFunc of REAL,REAL
+      by RELSET_1:4;
+
+    set G = Integral2(L-Meas,Rg);
+    reconsider GI = G|I as PartFunc of REAL,ExtREAL;
+A6:dom G = REAL by FUNCT_2:def 1;
+
+    now let y be object;
+     assume y in rng GI; then
+     consider x be Element of REAL such that
+A7: x in dom GI & y= GI.x by PARTFUN1:3;
+     reconsider Pg = ProjPMap1(Rg,x) as PartFunc of REAL,REAL by Th30;
+     (Integral2(L-Meas,R_EAL g)).x = integral(Pg,J)
+       by A7,A6,A1,A2,A3,Th41; then
+     (Integral2(L-Meas,Rg)).x in REAL by XREAL_0:def 1;
+     hence y in REAL by A7,A6,FUNCT_1:49;
+    end; then
+    rng GI c= REAL & dom GI c= REAL;
+    hence Integral2(L-Meas,R_EAL g)|I is PartFunc of REAL,REAL by RELSET_1:4;
+end;
+
+theorem Th52:
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, G2 be PartFunc of REAL,REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g
+ & G2 = Integral2(L-Meas,|.R_EAL g.|)|I holds G2 is continuous
+proof
+    let I,J be non empty closed_interval Subset of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL,
+    G2 be PartFunc of REAL,REAL;
+    assume that
+A1: [:I,J:] = dom f and
+A2: f is_continuous_on [:I,J:] and
+A3: f = g and
+A4: G2 = Integral2(L-Meas,|.R_EAL g.|)|I;
+
+    consider c,d be Real such that
+A5: J = [.c,d.] by MEASURE5:def 3;
+A6: c <= d by A5,XXREAL_1:29; then
+A7:c in J & d in J by A5;
+A8: [.c,d.] = ['c,d'] by A5,XXREAL_1:29,INTEGRA5:def 3;
+
+A9:for e be Real st 0 < e holds ex r be Real st 0 < r
+     & for x1,x2 be Real st |.x2-x1.| < r & x1 in I & x2 in I
+        holds for y be Real st y in J holds
+         |. (|.g.|).([x2,y])-(|.g.|).([x1,y]) .| < e
+    proof
+     let e be Real;
+     assume 0 < e; then
+     consider r be Real such that
+A10:  0 < r
+    & for x1,x2,y1,y2 be Real st [x1,y1] in [:I,J:] & [x2,y2] in [:I,J:] &
+       |.x2-x1.| < r & |.y2-y1.| < r
+          holds |. (|.g.|).([x2,y2])-(|.g.|).([x1,y1]) .| < e by A2,A3,Th23;
+     take r;
+     thus 0 < r by A10;
+     let x1,x2 be Real;
+     assume
+A11:  |.x2-x1.| < r & x1 in I & x2 in I;
+
+     let y be Real;
+     assume y in J; then
+A12: [x1,y] in [:I,J:] & [x2,y] in [:I,J:] by A11,ZFMISC_1:87;
+
+     |.y-y.| < r by A10;
+     hence |. (|.g.|).([x2,y])-(|.g.|).([x1,y]) .| < e by A10,A11,A12;
+    end;
+
+    set Rg = R_EAL g;
+
+    dom |.Rg.| = dom Rg by MESFUNC1:def 10; then
+A13:dom |.Rg.| = [:I,J:] by A1,A3,MESFUNC5:def 7;
+
+A14:for x,y be Element of REAL st x in I & y in J holds
+     (ProjPMap1(|.Rg.|,x)).y =(|.Rg.|).(x,y)
+   & (|.Rg.|).(x,y) = |. g.([x,y]) .| & (|.Rg.|).(x,y) = (|.g.|).([x,y])
+    proof
+     let x,y be Element of REAL;
+     assume
+A15:  x in I & y in J;
+     hence (ProjPMap1(|.Rg.|,x)).y =(|.Rg.|).(x,y)
+      by A13,ZFMISC_1:87,MESFUN12:def 3;
+
+     [x,y] in dom g by A15,A1,A3,ZFMISC_1:87; then
+A16: [x,y] in dom |.g.| by VALUED_1:def 11;
+
+A17: Rg.([x,y]) = g.([x,y]) by MESFUNC5:def 7;
+
+     (|.Rg.|).(x,y) = |. Rg.([x,y]) .|
+       by A15,A13,ZFMISC_1:87,MESFUNC1:def 10;
+     hence (|.Rg.|).(x,y) = |. g.([x,y]) .| by A17,EXTREAL1:12;
+     hence (|.Rg.|).(x,y) = (|.g.|).([x,y]) by VALUED_1:def 11,A16;
+    end;
+
+A18:for e be Real st 0 < e holds ex r be Real st 0 < r
+    & for x1,x2 be Element of REAL st |.x2-x1.| < r & x1 in I
+       & x2 in I holds for y be Element of REAL st y in J
+          holds |. (ProjPMap1(|.Rg.|,x2)).y-(ProjPMap1(|.Rg.|,x1)).y .| < e
+    proof
+     let e be Real;
+     assume 0 < e; then
+     consider r be Real such that
+A19: 0 < r
+   & for x1,x2 be Real st |.x2-x1.| < r & x1 in I & x2 in I holds
+      for y be Real st y in J holds
+        |. (|.g.|).([x2,y])-(|.g.|).([x1,y]) .| < e by A9;
+     take r;
+     thus 0 < r by A19;
+
+     let x1,x2 be Element of REAL;
+     assume
+A20: |.x2-x1.| < r & x1 in I & x2 in I;
+     let y be Element of REAL;
+     assume
+A21: y in J; then
+A22: |. (|.g.|).([x2,y])-(|.g.|).([x1,y]) .| < e by A19,A20;
+a22: (|.g.|).([x2,y])-(|.g.|).([x1,y])
+     = (|.g.|).([x2,y]) qua ExtReal -(|.g.|).([x1,y]);
+
+     (ProjPMap1(|.Rg.|,x1)).y =(|.Rg.|).(x1,y)
+   & (|.Rg.|).(x1,y) = (|.g.|).([x1,y])
+   & (ProjPMap1(|.Rg.|,x2)).y =(|.Rg.|).(x2,y)
+   & (|.Rg.|).(x2,y) = (|.g.|).([x2,y]) by A14,A20,A21;
+     hence thesis by A22,a22,EXTREAL1:12;
+    end;
+
+    set F = Integral2(L-Meas,|.Rg.|);
+A23:dom F = REAL by FUNCT_2:def 1;
+
+    for x0,r be Real st x0 in I & 0 < r
+     ex s be Real st 0<s & for x1 be Real
+      st x1 in I & |.x1-x0.| < s holds |.G2.x1-G2.x0.| < r
+    proof
+     let xx0,r be Real;
+     assume
+A24: xx0 in I & 0 < r;
+
+     reconsider x0=xx0 as Element of REAL by XREAL_0:def 1;
+     reconsider Pg0 = ProjPMap1(|.Rg.|,x0) as PartFunc of REAL,REAL by Th30;
+A25: dom Pg0 = J by A24,A1,A3,Th27;
+A26: Pg0|(dom Pg0) is continuous by A1,A2,A3,Th38;
+A27: Pg0|J is bounded & Pg0 is_integrable_on J by A24,A1,A2,A3,Th44;
+A28: (Integral2(L-Meas,|.Rg.|)).x0 = integral(Pg0,J) by A24,A1,A2,A3,Th46;
+
+     per cases;
+     suppose A29: c = d;
+      consider s be Real such that
+A30:  0 < s
+    & for x1,x2 be Element of REAL st |.x2-x1.| < s & x1 in I & x2 in I
+       holds for y be Element of REAL st y in J holds
+        |. (ProjPMap1(|.Rg.|,x2)).y-(ProjPMap1(|.Rg.|,x1)).y .| < r
+           by A18,A24;
+
+      for x1 be Real st x1 in I & |.x1-x0.| < s holds |.G2.x1-G2.xx0 .| < r
+      proof
+       let xx1 be Real;
+       assume
+A31:   xx1 in I & |.xx1-x0.| < s;
+
+       reconsider x1=xx1 as Element of REAL by XREAL_0:def 1;
+       reconsider Pg1 = ProjPMap1(|.Rg.|,x1) as PartFunc of REAL,REAL by Th30;
+A32:   dom Pg1 = J by A31,A1,A3,Th27;
+A33:   Pg1|(dom Pg1) is continuous by A1,A2,A3,Th38;
+A34:   Pg1|J is bounded & Pg1 is_integrable_on J by A31,A1,A2,A3,Th44;
+       (Integral2(L-Meas,|.Rg.|)).x1 = integral(Pg1,J)
+         by A31,A1,A2,A3,Th46; then
+       G2.xx0 = integral(Pg0,J) & G2.xx1 = integral(Pg1,J)
+         by A4,A24,A28,A31,FUNCT_1:49; then
+A35:   G2.xx0 = integral(Pg0,c,d) & G2.xx1 = integral(Pg1,c,d)
+         by A5,A8,XXREAL_1:29,INTEGRA5:def 4;
+
+A36:   dom(Pg1-Pg0) = J /\ J by A25,A32,VALUED_1:12; then
+A37:   (Pg1-Pg0)|J is bounded & (Pg1-Pg0) is_integrable_on J
+         by A26,A33,INTEGRA5:10,11;
+
+       for y be Real st y in J holds |. (Pg1-Pg0).y .| <= r
+       proof
+        let y be Real;
+        assume
+A38:    y in J; then
+A39:    |. (ProjPMap1(|.Rg.|,x1)).y-(ProjPMap1(|.Rg.|,x0)).y .| < r
+          by A30,A31,A24;
+
+A40:    -(ProjPMap1(|.Rg.|,x0)).y = -Pg0.y by XXREAL_3:def 3;
+
+        (ProjPMap1(|.Rg.|,x1)).y-(ProjPMap1(|.Rg.|,x0)).y
+          = (ProjPMap1(|.Rg.|,x1)).y  +-(ProjPMap1(|.Rg.|,x0)).y
+           by XXREAL_3:def 4; then
+        (ProjPMap1(|.Rg.|,x1)).y-(ProjPMap1(|.Rg.|,x0)).y = Pg1.y + -Pg0.y
+           by A40,XXREAL_3:def 2; then
+        (ProjPMap1(|.Rg.|,x1)).y-(ProjPMap1(|.Rg.|,x0)).y = Pg1.y - Pg0.y; then
+        (ProjPMap1(|.Rg.|,x1)).y-(ProjPMap1(|.Rg.|,x0)).y = (Pg1-Pg0).y
+           by A36,A38,VALUED_1:13;
+        hence |. (Pg1-Pg0).y .| <= r by A39,EXTREAL1:12;
+       end; then
+       |. integral(Pg1-Pg0,c,d) .| <= r * (d-c)
+         by A6,A5,A8,A36,A37,A7,INTEGRA6:23;
+       hence |. G2.xx1-G2.xx0 .| < r
+         by A29,A24,A35,A5,A8,A32,A34,A25,A27,INTEGRA6:12;
+      end;
+      hence
+       ex s be Real st 0<s & for x1 be Real
+        st x1 in I & |.x1-xx0.| < s holds |.G2.x1-G2.xx0.| < r by A30;
+     end;
+
+     suppose c <> d; then
+      c < d by A6,XXREAL_0:1; then
+A41:  0 < d - c by XREAL_1:50;
+      set r1 = r/2;
+A42:  0 < r1 & r1 < r by A24,XREAL_1:215,XREAL_1:216;
+      consider s be Real such that
+A43:  0 < s
+    & for x1,x2 be Element of REAL st |.x2-x1.| < s & x1 in I
+      & x2 in I holds for y be Element of REAL st y in J holds
+        |. (ProjPMap1(|.Rg.|,x2)).y-(ProjPMap1(|.Rg.|,x1)).y .| < r1/(d-c)
+            by A18,XREAL_1:139,A42,A41;
+      take s;
+      thus 0 < s by A43;
+
+      let xx1 be Real;
+      assume
+A44:  xx1 in I & |.xx1-xx0.| < s;
+
+      reconsider x1=xx1 as Element of REAL by XREAL_0:def 1;
+      reconsider Pg1 = ProjPMap1(|.Rg.|,x1) as PartFunc of REAL,REAL by Th30;
+A45:  dom Pg1 = J by A44,A1,A3,Th27;
+A46:  Pg1|(dom Pg1) is continuous by A1,A2,A3,Th38;
+A47:   Pg1|J is bounded & Pg1 is_integrable_on J by A44,A1,A2,A3,Th44;
+      (Integral2(L-Meas,|.Rg.|)).x1 = integral(Pg1,J)
+        by A44,A1,A2,A3,Th46; then
+      G2.xx0 = integral(Pg0,J) & G2.xx1 = integral(Pg1,J)
+       by A4,A24,A28,A44,FUNCT_1:49; then
+      G2.xx0 = integral(Pg0,c,d) & G2.xx1 = integral(Pg1,c,d)
+        by A5,A8,XXREAL_1:29,INTEGRA5:def 4; then
+A48:  |. G2.xx1-G2.xx0 .| = |. integral(Pg1-Pg0,c,d) .|
+       by A6,A5,A8,A45,A47,A25,A27,INTEGRA6:12;
+
+A49:  dom(Pg1-Pg0) = J /\ J by A25,A45,VALUED_1:12; then
+A50:  (Pg1-Pg0)|J is bounded & (Pg1-Pg0) is_integrable_on J
+        by A26,A46,INTEGRA5:10,11;
+
+      for y be Real st y in J holds |. (Pg1-Pg0).y .| <= r1 / (d-c)
+      proof
+       let y be Real;
+       assume
+A51:   y in J; then
+A52:   |. (ProjPMap1(|.Rg.|,x1)).y-(ProjPMap1(|.Rg.|,x0)).y .| < r1/(d-c)
+         by A43,A44,A24;
+
+A53:   -(ProjPMap1(|.Rg.|,x0)).y = -Pg0.y by XXREAL_3:def 3;
+
+       (ProjPMap1(|.Rg.|,x1)).y-(ProjPMap1(|.Rg.|,x0)).y
+        = (ProjPMap1(|.Rg.|,x1)).y  +-(ProjPMap1(|.Rg.|,x0)).y
+          by XXREAL_3:def 4; then
+       (ProjPMap1(|.Rg.|,x1)).y-(ProjPMap1(|.Rg.|,x0)).y = Pg1.y + -Pg0.y
+          by A53,XXREAL_3:def 2; then
+       (ProjPMap1(|.Rg.|,x1)).y-(ProjPMap1(|.Rg.|,x0)).y = Pg1.y - Pg0.y; then
+       (ProjPMap1(|.Rg.|,x1)).y-(ProjPMap1(|.Rg.|,x0)).y = (Pg1-Pg0).y
+          by A49,A51,VALUED_1:13;
+       hence thesis by A52,EXTREAL1:12;
+      end; then
+      |. integral(Pg1-Pg0,c,d) .| <= (r1/(d-c)) * (d-c)
+        by A6,A5,A8,A49,A50,A7,INTEGRA6:23; then
+      |. integral(Pg1-Pg0,c,d) .| <= r1 by A41,XCMPLX_1:87;
+      hence |. G2.xx1-G2.xx0 .| < r by A48,XXREAL_0:2,A42;
+     end;
+    end; then
+    G2|I is continuous by A4,A23,FCONT_1:14;
+    hence G2 is continuous by A4;
+end;
+
+theorem Th53:
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, G2 be PartFunc of REAL,REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g
+ & G2 = Integral2(L-Meas,R_EAL g)|I holds G2 is continuous
+proof
+    let I,J be non empty closed_interval Subset of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL,
+    G2 be PartFunc of REAL,REAL;
+    assume that
+A1: [:I,J:] = dom f and
+A2: f is_continuous_on [:I,J:] and
+A3: f = g and
+A4: G2 = Integral2(L-Meas,R_EAL g)|I;
+
+    consider c,d be Real such that
+A5: J = [.c,d.] by MEASURE5:def 3;
+A6: c <= d by A5,XXREAL_1:29; then
+A7:c in J & d in J by A5;
+A8: [.c,d.] = ['c,d'] by A5,XXREAL_1:29,INTEGRA5:def 3;
+
+A9:for e be Real st 0 < e holds ex r be Real st 0 < r
+     & for x1,x2 be Real st |.x2-x1.| < r & x1 in I & x2 in I
+        holds for y be Real st y in J holds
+         |. g.([x2,y])-g.([x1,y]) .| < e
+    proof
+     let e be Real;
+     assume 0 < e; then
+     consider r be Real such that
+A10:  0 < r
+    & for x1,x2,y1,y2 be Real st [x1,y1] in [:I,J:] & [x2,y2] in [:I,J:] &
+       |.x2-x1.| < r & |.y2-y1.| < r
+          holds |. g.([x2,y2])-g.([x1,y1]) .| < e by A2,A3,Th18;
+
+     take r;
+     thus 0 < r by A10;
+     let x1,x2 be Real;
+     assume
+A11:  |.x2-x1.| < r & x1 in I & x2 in I;
+
+     let y be Real;
+     assume y in J; then
+A12: [x1,y] in [:I,J:] & [x2,y] in [:I,J:] by A11,ZFMISC_1:87;
+
+     |.y-y.| < r by A10;
+     hence |. g.([x2,y])-g.([x1,y]) .| < e by A10,A11,A12;
+    end;
+
+    set Rg = R_EAL g;
+A13:dom Rg = [:I,J:] by A1,A3,MESFUNC5:def 7;
+
+A14:for e be Real st 0 < e holds ex r be Real st 0 < r
+    & for x1,x2 be Element of REAL st |.x2-x1.| < r & x1 in I
+       & x2 in I holds for y be Element of REAL st y in J
+          holds |. (ProjPMap1(Rg,x2)).y-(ProjPMap1(Rg,x1)).y .| < e
+    proof
+     let e be Real;
+     assume 0 < e; then
+     consider r be Real such that
+A15: 0 < r
+   & for x1,x2 be Real st |.x2-x1.| < r & x1 in I & x2 in I holds
+      for y be Real st y in J holds
+        |. g.([x2,y])-g.([x1,y]) .| < e by A9;
+     take r;
+     thus 0 < r by A15;
+
+     let x1,x2 be Element of REAL;
+     assume
+A16: |.x2-x1.| < r & x1 in I & x2 in I;
+     let y be Element of REAL;
+     assume
+A17: y in J; then
+A18: |. g.([x2,y])-g.([x1,y]) .| < e by A15,A16;
+a18: g.([x2,y])-g.([x1,y]) = g.([x2,y]) qua ExtReal-g.([x1,y]);
+
+     (ProjPMap1(Rg,x1)).y =Rg.(x1,y) & Rg.(x1,y) = g.([x1,y])
+   & (ProjPMap1(Rg,x2)).y =Rg.(x2,y) & Rg.(x2,y) = g.([x2,y])
+      by A13,A16,A17,ZFMISC_1:87,MESFUN12:def 3,MESFUNC5:def 7;
+     hence thesis by A18,a18,EXTREAL1:12;
+    end;
+
+    set F = Integral2(L-Meas,Rg);
+A19:dom F = REAL by FUNCT_2:def 1;
+
+    for x0,r be Real st x0 in I & 0 < r
+     ex s be Real st 0<s & for x1 be Real
+      st x1 in I & |.x1-x0.| < s holds |.G2.x1-G2.x0.| < r
+    proof
+     let xx0,r be Real;
+     assume
+A20: xx0 in I & 0 < r;
+
+     reconsider x0=xx0 as Element of REAL by XREAL_0:def 1;
+     reconsider Pg0 = ProjPMap1(Rg,x0) as PartFunc of REAL,REAL by Th30;
+A21: dom Pg0 = J by A20,A1,A3,Th27;
+A22:  Pg0 is continuous by A1,A2,A3,Th36;
+A23:  Pg0|J is bounded & Pg0 is_integrable_on J by A20,A1,A2,A3,Th40;
+A24:  (Integral2(L-Meas,Rg)).x0 = integral(Pg0,J) by A20,A1,A2,A3,Th41;
+
+     per cases;
+     suppose A25: c = d;
+      consider s be Real such that
+A26:  0 < s
+    & for x1,x2 be Element of REAL st |.x2-x1.| < s & x1 in I & x2 in I
+       holds for y be Element of REAL st y in J holds
+        |. (ProjPMap1(Rg,x2)).y-(ProjPMap1(Rg,x1)).y .| < r
+           by A14,A20;
+
+      for x1 be Real st x1 in I & |.x1-x0.| < s holds |.G2.x1-G2.xx0 .| < r
+      proof
+       let xx1 be Real;
+       assume
+A27:   xx1 in I & |.xx1-x0.| < s;
+
+       reconsider x1=xx1 as Element of REAL by XREAL_0:def 1;
+       reconsider Pg1 = ProjPMap1(Rg,x1) as PartFunc of REAL,REAL by Th30;
+A28:   dom Pg1 = J by A27,A1,A3,Th27;
+A29:    Pg1 is continuous by A1,A2,A3,Th36;
+A30:    Pg1|J is bounded & Pg1 is_integrable_on J by A27,A1,A2,A3,Th40;
+       (Integral2(L-Meas,Rg)).x1 = integral(Pg1,J)
+         by A27,A1,A2,A3,Th41; then
+       G2.xx0 = integral(Pg0,J) & G2.xx1 = integral(Pg1,J)
+         by A4,A20,A24,A27,FUNCT_1:49; then
+A31:   G2.xx0 = integral(Pg0,c,d) & G2.xx1 = integral(Pg1,c,d)
+         by A5,A8,XXREAL_1:29,INTEGRA5:def 4;
+
+A32:   dom(Pg1-Pg0) = J /\ J by A21,A28,VALUED_1:12; then
+A33:   (Pg1-Pg0)|J is bounded & (Pg1-Pg0) is_integrable_on J
+         by A22,A29,INTEGRA5:10,11;
+
+       for y be Real st y in J holds |. (Pg1-Pg0).y .| <= r
+       proof
+        let y be Real;
+        assume
+A34:    y in J; then
+A35:    |. (ProjPMap1(Rg,x1)).y-(ProjPMap1(Rg,x0)).y .| < r
+          by A26,A27,A20;
+
+A36:    -(ProjPMap1(Rg,x0)).y = -Pg0.y by XXREAL_3:def 3;
+
+        (ProjPMap1(Rg,x1)).y-(ProjPMap1(Rg,x0)).y
+          = (ProjPMap1(Rg,x1)).y  +-(ProjPMap1(Rg,x0)).y
+           by XXREAL_3:def 4; then
+        (ProjPMap1(Rg,x1)).y-(ProjPMap1(Rg,x0)).y = Pg1.y + -Pg0.y
+           by A36,XXREAL_3:def 2; then
+        (ProjPMap1(Rg,x1)).y-(ProjPMap1(Rg,x0)).y = Pg1.y - Pg0.y; then
+        (ProjPMap1(Rg,x1)).y-(ProjPMap1(Rg,x0)).y = (Pg1-Pg0).y
+           by A32,A34,VALUED_1:13;
+        hence |. (Pg1-Pg0).y .| <= r by A35,EXTREAL1:12;
+       end; then
+       |. integral(Pg1-Pg0,c,d) .| <= r * (d-c)
+         by A6,A5,A8,A32,A33,A7,INTEGRA6:23;
+       hence |. G2.xx1-G2.xx0 .| < r
+         by A25,A20,A31,A5,A8,A28,A30,A21,A23,INTEGRA6:12;
+      end;
+      hence
+       ex s be Real st 0<s & for x1 be Real
+        st x1 in I & |.x1-xx0.| < s holds |.G2.x1-G2.xx0.| < r by A26;
+     end;
+
+     suppose c <> d; then
+      c < d by A6,XXREAL_0:1; then
+A37:  0 < d - c by XREAL_1:50;
+      set r1 = r/2;
+A38:  0 < r1 & r1 < r by A20,XREAL_1:215,XREAL_1:216;
+      consider s be Real such that
+A39:  0 < s
+    & for x1,x2 be Element of REAL st |.x2-x1.| < s & x1 in I
+      & x2 in I holds for y be Element of REAL st y in J holds
+        |. (ProjPMap1(Rg,x2)).y-(ProjPMap1(Rg,x1)).y .| < r1/(d-c)
+            by A14,XREAL_1:139,A38,A37;
+      take s;
+      thus 0 < s by A39;
+
+      let xx1 be Real;
+      assume
+A40:  xx1 in I & |.xx1-xx0.| < s;
+
+      reconsider x1=xx1 as Element of REAL by XREAL_0:def 1;
+      reconsider Pg1 = ProjPMap1(Rg,x1) as PartFunc of REAL,REAL by Th30;
+A41:  dom Pg1 = J by A40,A1,A3,Th27;
+A42:   Pg1 is continuous by A1,A2,A3,Th36;
+A43:   Pg1|J is bounded & Pg1 is_integrable_on J by A40,A1,A2,A3,Th40;
+      (Integral2(L-Meas,Rg)).x1 = integral(Pg1,J)
+        by A40,A1,A2,A3,Th41; then
+      G2.xx0 = integral(Pg0,J) & G2.xx1 = integral(Pg1,J)
+       by A4,A20,A24,A40,FUNCT_1:49; then
+      G2.xx0 = integral(Pg0,c,d) & G2.xx1 = integral(Pg1,c,d)
+        by A5,A8,XXREAL_1:29,INTEGRA5:def 4; then
+A44:  |. G2.xx1-G2.xx0 .| = |. integral(Pg1-Pg0,c,d) .|
+       by A6,A5,A8,A41,A43,A21,A23,INTEGRA6:12;
+
+A45:  dom(Pg1-Pg0) = J /\ J by A21,A41,VALUED_1:12; then
+A46:  (Pg1-Pg0)|J is bounded & (Pg1-Pg0) is_integrable_on J
+        by A22,A42,INTEGRA5:10,11;
+
+      for y be Real st y in J holds |. (Pg1-Pg0).y .| <= r1 / (d-c)
+      proof
+       let y be Real;
+       assume
+A47:   y in J; then
+A48:   |. (ProjPMap1(Rg,x1)).y-(ProjPMap1(Rg,x0)).y .| < r1/(d-c)
+         by A39,A40,A20;
+
+A49:   -(ProjPMap1(Rg,x0)).y = -Pg0.y by XXREAL_3:def 3;
+
+       (ProjPMap1(Rg,x1)).y-(ProjPMap1(Rg,x0)).y
+        = (ProjPMap1(Rg,x1)).y  +-(ProjPMap1(Rg,x0)).y
+          by XXREAL_3:def 4; then
+       (ProjPMap1(Rg,x1)).y-(ProjPMap1(Rg,x0)).y = Pg1.y + -Pg0.y
+          by A49,XXREAL_3:def 2; then
+       (ProjPMap1(Rg,x1)).y-(ProjPMap1(Rg,x0)).y = Pg1.y - Pg0.y; then
+       (ProjPMap1(Rg,x1)).y-(ProjPMap1(Rg,x0)).y = (Pg1-Pg0).y
+          by A45,A47,VALUED_1:13;
+       hence thesis by A48,EXTREAL1:12;
+      end; then
+      |. integral(Pg1-Pg0,c,d) .| <= (r1/(d-c)) * (d-c)
+        by A6,A5,A8,A45,A46,A7,INTEGRA6:23; then
+      |. integral(Pg1-Pg0,c,d) .| <= r1 by A37,XCMPLX_1:87;
+      hence |. G2.xx1-G2.xx0 .| < r by A44,XXREAL_0:2,A38;
+     end;
+    end; then
+    G2|I is continuous by A4,A19,FCONT_1:14;
+    hence G2 is continuous by A4;
+end;
+
+Lm4:
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g holds
+   g is_integrable_on Prod_Measure(L-Meas,L-Meas)
+ & (for x being Element of REAL
+       holds Integral2(L-Meas,|.R_EAL g.|).x < +infty)
+ & (for U being Element of L-Field
+       holds Integral2(L-Meas,R_EAL g) is U-measurable)
+ & Integral2(L-Meas,R_EAL g) is_integrable_on L-Meas
+ & Integral(Prod_Measure(L-Meas,L-Meas),g)
+      = Integral(L-Meas,Integral2(L-Meas,R_EAL g))
+proof
+    let I,J be non empty closed_interval Subset of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL;
+    assume that
+A1: [:I,J:] = dom f and
+A2: f is_continuous_on [:I,J:] and
+A3: f = g;
+
+    consider E be Subset of [:RNS_Real,RNS_Real:] such that
+A4: E = [:I,J:] & E is compact by Th9;
+    reconsider E as Element of sigma measurable_rectangles(L-Field,L-Field)
+      by A4,Th11;
+A5: g is E-measurable by A1,A2,A3,A4,Th50;
+
+    set Rg =R_EAL g;
+
+A6:dom g = dom Rg by MESFUNC5:def 7; then
+A7:dom |.Rg.| = [:I,J:] by A1,A3,MESFUNC1:def 10;
+
+A8:for x be Element of REAL st x in REAL \ I holds
+     (Integral2(L-Meas,|.Rg.|)).x  = 0
+    proof
+     let x be Element of REAL;
+     assume x in REAL\I; then
+     not x in I by XBOOLE_0:def 5; then
+     dom ProjPMap1(|.Rg.|,x) = {} by A1,A3,Th27; then
+     Integral(L-Meas,ProjPMap1(|.Rg.|,x)) = 0 by Th1;
+     hence (Integral2(L-Meas,|.Rg.|)).x = 0 by MESFUN12:def 8;
+    end;
+
+A9:for x,y be Element of REAL st x in I & y in J holds
+     (ProjPMap1(|.Rg.|,x)).y =(|.Rg.|).(x,y)
+   & (|.Rg.|).(x,y) = |. g.([x,y]) .| & (|.Rg.|).(x,y) = (|.g.|).([x,y])
+    proof
+     let x,y be Element of REAL;
+     assume
+A10:  x in I & y in J;
+     hence (ProjPMap1(|.Rg.|,x)).y =(|.Rg.|).(x,y)
+      by A7,ZFMISC_1:87,MESFUN12:def 3;
+
+     [x,y] in dom g by A10,A1,A3,ZFMISC_1:87; then
+A11: [x,y] in dom |.g.| by VALUED_1:def 11;
+
+A12: Rg.([x,y]) = g.([x,y]) by MESFUNC5:def 7;
+
+     (|.Rg.|).(x,y) = |. Rg.([x,y]) .|
+       by A10,A7,ZFMISC_1:87,MESFUNC1:def 10;
+     hence (|.Rg.|).(x,y) = |. g.([x,y]) .| by A12,EXTREAL1:12;
+     hence (|.Rg.|).(x,y) = (|.g.|).([x,y]) by VALUED_1:def 11,A11;
+    end;
+
+A13:for x be Element of REAL st x in I holds 0 <= Integral2(L-Meas,|.Rg.|).x
+    proof
+     let x be Element of REAL;
+     assume A14: x in I;
+
+     reconsider CD = J as Element of L-Field by MEASUR10:5,MEASUR12:75;
+     reconsider Pg = ProjPMap1(|.Rg.|,x) as PartFunc of REAL,REAL by Th30;
+A15:  dom Pg = J by A14,A1,A3,Th27;
+A16:  Pg is CD-measurable by A14,A1,A2,A3,Th45;
+A17:  integral(Pg,J) = Integral(L-Meas,Pg)
+   & integral(Pg,J) = (Integral2(L-Meas,|.Rg.|)).x by A14,A1,A2,A3,Th46;
+
+     for y being object st y in dom(Pg|J) holds 0 <= (Pg|J).y
+     proof
+      let y be object;
+      assume
+A18:  y in dom(Pg|J); then
+      y in dom Pg /\ J by RELAT_1:61; then
+      reconsider y as Element of REAL;
+
+      (ProjPMap1(|.Rg.|,x)).y = (|.Rg.|).(x,y)
+    & (|.Rg.|).(x,y) = |. g.([x,y]) .| by A14,A18,A9;
+      hence thesis by A15;
+     end;
+     hence thesis by A15,A16,A17,MESFUNC6:52,84;
+    end;
+
+    set F = Integral2(L-Meas,|.Rg.|);
+    reconsider G = F|I as PartFunc of REAL,REAL by A1,A2,A3,Th51;
+
+A19:I is Element of L-Field by MEASUR10:5,MEASUR12:75;
+    reconsider H = REAL as Element of L-Field by PROB_1:5;
+
+    set NI = H \ I;
+    set F0 = F|I;
+    set F1 = F|NI;
+
+A20:dom F = REAL by FUNCT_2:def 1; then
+A21:dom(F|I) = I & dom(F|NI) = NI; then
+    G||I is bounded & G is_integrable_on I
+      by A1,A2,A3,Th52,INTEGRA5:10,11; then
+    G is_integrable_on L-Meas by A19,A21,MESFUN14:49; then
+A22:F0 is_integrable_on L-Meas by MESFUNC5:def 7; then
+A23:Integral(L-Meas,F0) < +infty by MESFUNC5:96;
+
+A24: NI is Element of L-Field by A19,PROB_1:6;
+
+A25:I \/ NI = REAL by XBOOLE_1:45; then
+A26:F|(I \/ NI) = F;
+
+A27:I /\ NI = {} by XBOOLE_1:85,XBOOLE_0:def 7;
+
+A28:for r being Element of REAL holds 0 <= F.r
+    proof
+     let r being Element of REAL;
+     r in I or r in NI by A25,XBOOLE_0:def 3;
+     hence 0 <= F.r by A13,A8;
+    end; then
+A29:F is nonnegative;
+
+    for r being Real holds H /\ (less_dom(F,r)) in L-Field
+    proof
+     let r be Real;
+     consider H0 being Element of L-Field such that
+A30: H0 = dom F0 & F0 is H0 -measurable by A22,MESFUNC5:def 17;
+
+     per cases;
+     suppose
+A31:  r <= 0;
+      less_dom (F,r) = {}
+      proof
+       assume less_dom (F,r) <> {}; then
+       consider x be object such that
+A32:   x in less_dom(F,r) by XBOOLE_0:def 1;
+       x in dom F & F.x < r by MESFUNC1:def 11,A32;
+       hence contradiction by A28,A31;
+      end;
+      hence H /\ (less_dom (F,r)) in L-Field by PROB_1:4;
+     end;
+     suppose
+A33:  0 < r;
+      for z be object holds z in less_dom(F,r) iff z in less_dom(F0,r) \/ NI
+      proof
+       let z be object;
+       hereby assume
+A34:    z in less_dom(F,r); then
+A35:    z in dom F & F.z < r by MESFUNC1:def 11;
+        reconsider x=z as Element of REAL by A34;
+        per cases by A34,A25,XBOOLE_0:def 3;
+        suppose
+A36:     z in I; then
+         F0.z < r  by FUNCT_1:49,A35; then
+         z in less_dom (F0,r) by A36,A21,MESFUNC1:def 11;
+         hence z in less_dom (F0,r) \/ NI by XBOOLE_0:def 3;
+        end;
+        suppose z in NI;
+         hence z in less_dom (F0,r) \/ NI by XBOOLE_0:def 3;
+        end;
+       end;
+       assume z in less_dom (F0,r) \/ NI; then
+       per cases by XBOOLE_0:def 3;
+       suppose
+A37:    z in less_dom (F0,r); then
+        z in dom F0 & F0.z < r by MESFUNC1:def 11; then
+A38:    F.z < r by FUNCT_1:49;
+        dom F = REAL by FUNCT_2:def 1;
+        hence z in less_dom (F,r) by A37,A38,MESFUNC1:def 11;
+       end;
+       suppose
+A39:    z in NI; then
+        reconsider x=z as Element of REAL;
+A40:    F.x < r by A33,A39,A8;
+        dom F = REAL by FUNCT_2:def 1;
+        hence z in less_dom (F,r) by A40,MESFUNC1:def 11;
+       end;
+      end; then
+      less_dom(F,r) = less_dom (F0,r) \/ NI by TARSKI:2; then
+A41:  H /\ less_dom(F,r) = I /\ (less_dom (F0,r) \/ NI)
+             \/ NI /\ (less_dom (F0,r) \/ NI) by A25,XBOOLE_1:23;
+      I /\ (less_dom (F0,r) \/ NI)
+       = I /\ less_dom (F0,r) \/ {} by A27,XBOOLE_1:23; then
+A42:  I /\ (less_dom (F0,r) \/ NI) in L-Field by A20,A30;
+
+A43:  less_dom(F0,r) c= I by A21,MESFUNC1:def 11;
+
+      NI /\ (less_dom (F0,r) \/ NI)
+       = (NI /\ less_dom(F0,r)) \/ (NI /\ NI) by XBOOLE_1:23; then
+      NI /\ (less_dom (F0,r) \/ NI)
+       = {} \/ (NI /\ NI) by A43;
+      hence H /\ less_dom (F,r) in L-Field by A24,A41,A42,PROB_1:3;
+     end;
+    end; then
+    F is H -measurable; then
+A44:Integral(L-Meas,F) = Integral(L-Meas,F0) + Integral(L-Meas,F1)
+      by A20,A19,A24,A26,A29,MESFUNC5:91,XBOOLE_1:79;
+
+    for x being object st x in dom F1 holds F1.x = 0
+    proof
+     let x be object;
+     assume A45: x in dom F1; then
+     reconsider r=x as Element of REAL;
+A46: x in dom F & x in NI by A45,RELAT_1:57;
+     (Integral2(L-Meas,|.Rg.|)).r = 0 by A45,A8,RELAT_1:57;
+     hence thesis by A46,FUNCT_1:49;
+    end; then
+    Integral(L-Meas,F1) = 0 * (L-Meas.(dom F1))
+      by A19,A20,PROB_1:6,MEASUR10:27; then
+    Integral(L-Meas,F0) = Integral(L-Meas,F) by A44,XXREAL_3:4; then
+A47:R_EAL g is_integrable_on Prod_Measure(L-Meas,L-Meas)
+      by A4,A5,A1,A3,A6,A23,Th5,MESFUN13:11;
+
+    for x being Element of REAL holds Integral2(L-Meas,|.Rg.|).x < +infty
+    proof
+     let x be Element of REAL;
+     per cases by A25,XBOOLE_0:def 3;
+     suppose
+A48:  x in I; then
+      Integral2(L-Meas,|.Rg.|).x = G.x by FUNCT_1:49; then
+      Integral2(L-Meas,|.Rg.|).x in rng G by A21,A48,FUNCT_1:3;
+      hence Integral2(L-Meas,|.Rg.|).x < +infty by XXREAL_0:9;
+     end;
+     suppose x in NI; then
+      Integral2(L-Meas,|.Rg.|).x = 0 by A8;
+      hence Integral2(L-Meas,|.Rg.|).x < +infty by XREAL_0:def 1,XXREAL_0:9;
+     end;
+    end;
+    hence thesis by A47,Th5,MESFUN13:32;
+end;
+
+theorem Th54:
+for I,J be non empty closed_interval Subset of REAL,
+ g being PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ f be PartFunc of [:REAL,REAL:],REAL
+ st [:I,J:] = dom g & g is_continuous_on [:I,J:] & g = f holds
+   Integral1(L-Meas,|.R_EAL f.|)|J is PartFunc of REAL,REAL
+ & Integral1(L-Meas,R_EAL f)|J is PartFunc of REAL,REAL
+proof
+    let I,J be non empty closed_interval Subset of REAL,
+    g be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    f be PartFunc of [:REAL,REAL:],REAL;
+    assume that
+A1:  [:I,J:] = dom g and
+A2:  g is_continuous_on [:I,J:] and
+A3:  g = f;
+
+    set g1 =R_EAL f;
+
+    set T = Integral1(L-Meas,|.g1.|);
+A4:dom T = REAL by FUNCT_2:def 1;
+    reconsider T0 = T|J as PartFunc of REAL,ExtREAL;
+
+    set RT = Integral1(L-Meas,g1);
+A5:dom RT = REAL by FUNCT_2:def 1;
+    reconsider RT0 = RT|J as PartFunc of REAL,ExtREAL;
+
+    now let x be object;
+     assume x in rng T0; then
+     consider y be Element of REAL such that
+A6:  y in dom T0 & x = T0.y by PARTFUN1:3;
+
+     reconsider Pg = ProjPMap2(|.g1.|,y) as PartFunc of REAL,REAL
+      by Th30;
+     (Integral1(L-Meas,|.g1.|)).y = integral(Pg,I)
+       by A6,A4,A1,A2,A3,Th49; then
+     (Integral1(L-Meas,|.g1.|)).y in REAL by XREAL_0:def 1;
+     hence x in REAL by A6,A4,FUNCT_1:49;
+    end; then
+    rng T0 c= REAL & dom T0 c= REAL;
+    hence Integral1(L-Meas,|.R_EAL f.|)|J is PartFunc of REAL,REAL
+      by RELSET_1:4;
+
+    now let x be object;
+     assume x in rng RT0; then
+     consider y be Element of REAL such that
+A7: y in dom RT0 & x= RT0.y by PARTFUN1:3;
+
+     reconsider Pg = ProjPMap2(g1,y) as PartFunc of REAL,REAL by Th30;
+     (Integral1(L-Meas,R_EAL f)).y = integral(Pg,I)
+       by A7,A5,A1,A2,A3,Th43; then
+     (Integral1(L-Meas,g1)).y in REAL by XREAL_0:def 1;
+     hence x in REAL by A7,A5,FUNCT_1:49;
+    end; then
+    rng RT0 c= REAL & dom RT0 c= REAL;
+    hence Integral1(L-Meas,R_EAL f)|J is PartFunc of REAL,REAL by RELSET_1:4;
+end;
+
+theorem Th55:
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, G1 be PartFunc of REAL,REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g
+ & G1 = Integral1(L-Meas,|.R_EAL g.|)|J holds G1 is continuous
+proof
+    let I,J be non empty closed_interval Subset of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL,
+    G1 be PartFunc of REAL,REAL;
+    assume that
+A1:  [:I,J:] = dom f and
+A2:  f is_continuous_on [:I,J:] and
+A3:  f = g and
+A4:  G1 = Integral1(L-Meas,|.R_EAL g.|)|J;
+
+    consider a,b be Real such that
+A5:  I = [.a,b.] by MEASURE5:def 3;
+A6: a <= b by A5,XXREAL_1:29; then
+A7:  a in I & b in I by A5;
+A8: [.a,b.] = ['a,b'] by A5,XXREAL_1:29,INTEGRA5:def 3;
+
+A9:for e be Real st 0 < e holds ex r be Real st 0 < r
+     & for y1,y2 be Real st |.y2-y1.| < r & y1 in J & y2 in J
+        holds for x be Real st x in I holds
+         |. (|.g.|).([x,y2])-(|.g.|).([x,y1]) .| < e
+    proof
+     let e be Real;
+     assume 0 < e; then
+     consider r be Real such that
+A10:  0 < r
+    & for x1,x2,y1,y2 be Real st [x1,y1] in [:I,J:] & [x2,y2] in [:I,J:] &
+       |.x2-x1.| < r & |.y2-y1.| < r
+          holds |. (|.g.|).([x2,y2])-(|.g.|).([x1,y1]) .| < e by A2,A3,Th23;
+     take r ;
+     thus 0 < r by A10;
+     let y1,y2 be Real;
+     assume
+A11: |.y2-y1.| < r & y1 in J & y2 in J;
+
+     let x be Real;
+     assume x in I; then
+A12: [x,y1] in [:I,J:] & [x,y2] in [:I,J:] by A11,ZFMISC_1:87;
+
+     |.x-x.| < r by A10;
+     hence |. (|.g.|).([x,y2])-(|.g.|).([x,y1]) .| < e by A10,A11,A12;
+    end;
+
+    set Rg =R_EAL g;
+
+    dom |.Rg.| = dom Rg by MESFUNC1:def 10; then
+A13:dom |.Rg.| = [:I,J:] by A1,A3,MESFUNC5:def 7;
+
+A14:for x,y be Element of REAL st x in I & y in J holds
+     (ProjPMap2(|.Rg.|,y)).x =(|.Rg.|).(x,y)
+   & (|.Rg.|).(x,y) = |. g.([x,y]) .| & (|.Rg.|).(x,y) = (|.g.|).([x,y])
+    proof
+     let x,y be Element of REAL;
+     assume
+A15:  x in I & y in J;
+     hence (ProjPMap2(|.Rg.|,y)).x =(|.Rg.|).(x,y)
+      by A13,ZFMISC_1:87,MESFUN12:def 4;
+
+     [x,y] in dom g by A15,A1,A3,ZFMISC_1:87; then
+A16: [x,y] in dom |.g.| by VALUED_1:def 11;
+
+A17: Rg.([x,y]) = g.([x,y]) by MESFUNC5:def 7;
+
+     (|.Rg.|).(x,y) = |. Rg.([x,y]) .|
+       by A15,A13,ZFMISC_1:87,MESFUNC1:def 10;
+     hence (|.Rg.|).(x,y) = |.g.([x,y]).| by A17,EXTREAL1:12;
+     hence (|.Rg.|).(x,y) = (|.g.|).([x,y]) by VALUED_1:def 11,A16;
+    end;
+
+A18:for e be Real st 0 < e holds ex r be Real st 0 < r
+    & for y1,y2 be Element of REAL st |.y2-y1.| < r & y1 in J
+       & y2 in J holds for x be Element of REAL st x in I
+          holds |. (ProjPMap2(|.Rg.|,y2)).x-(ProjPMap2(|.Rg.|,y1)).x .| < e
+    proof
+     let e be Real;
+     assume 0 < e; then
+     consider r be Real such that
+A19: 0 < r
+    & for y1,y2 be Real st |.y2-y1.| < r & y1 in J & y2 in J
+       holds for x be Real st x in I holds
+        |. (|.g.|).([x,y2])-(|.g.|).([x,y1]) .| < e by A9;
+
+     take r;
+     thus 0 < r by A19;
+
+     let y1,y2 be Element of REAL;
+     assume
+A20: |.y2-y1.| < r & y1 in J & y2 in J;
+     let x be Element of REAL;
+     assume
+A21: x in I; then
+A22: |. (|.g.|).([x,y2])-(|.g.|).([x,y1]) .| < e by A19,A20;
+a22: (|.g.|).([x,y2])-(|.g.|).([x,y1]) =
+     (|.g.|).([x,y2]) qua ExtReal -(|.g.|).([x,y1]);
+
+     (ProjPMap2(|.Rg.|,y1)).x =(|.Rg.|).(x,y1)
+   & (|.Rg.|).(x,y1) = (|.g.|).([x,y1])
+   & (ProjPMap2(|.Rg.|,y2)).x =(|.Rg.|).(x,y2)
+   & (|.Rg.|).(x,y2) = (|.g.|).([x,y2]) by A14,A20,A21;
+     hence thesis by A22,a22,EXTREAL1:12;
+    end;
+
+    set T = Integral1(L-Meas,|.Rg.|);
+A23:dom T = REAL by FUNCT_2:def 1;
+
+    for y0,r be Real st y0 in J & 0 < r
+     ex s be Real st 0<s & for y1 be Real
+      st y1 in J & |.y1-y0.| < s holds |.G1.y1-G1.y0.| < r
+    proof
+     let yy0,r be Real;
+     assume
+A24: yy0 in J & 0 < r;
+
+     reconsider y0=yy0 as Element of REAL by XREAL_0:def 1;
+     reconsider Pg0 = ProjPMap2(|.Rg.|,y0) as PartFunc of REAL,REAL by Th30;
+A25: dom Pg0 = I by A24,A1,A3,Th28;
+A26: Pg0|(dom Pg0) is continuous by A1,A2,A3,Th39;
+A27:  Pg0|I is bounded & Pg0 is_integrable_on I by A24,A1,A2,A3,Th47;
+A28:  (Integral1(L-Meas,|.Rg.|)).y0 = integral(Pg0,I) by A24,A1,A2,A3,Th49;
+     per cases;
+     suppose A29: a = b;
+      consider s be Real such that
+A30:  0 < s
+    & for y1,y2 be Element of REAL st |.y2-y1.| < s & y1 in J & y2 in J
+        holds for x be Element of REAL st x in I holds
+         |. (ProjPMap2(|.Rg.|,y2)).x-(ProjPMap2(|.Rg.|,y1)).x .| < r
+           by A18,A24;
+
+      for y1 be Real st y1 in J & |.y1-y0.| < s holds |.G1.y1-G1.yy0 .| < r
+      proof
+       let yy1 be Real;
+       assume
+A31:   yy1 in J & |.yy1-y0.| < s;
+
+       reconsider y1=yy1 as Element of REAL by XREAL_0:def 1;
+       reconsider Pg1 = ProjPMap2(|.Rg.|,y1) as PartFunc of REAL,REAL
+         by Th30;
+A32:   dom Pg1 = I by A31,A1,A3,Th28;
+A33:   Pg1|(dom Pg1) is continuous by A1,A2,A3,Th39;
+A34:    Pg1|I is bounded & Pg1 is_integrable_on I by A31,A1,A2,A3,Th47;
+       (Integral1(L-Meas,|.Rg.|)).y1 = integral(Pg1,I)
+        by A31,A1,A2,A3,Th49; then
+       G1.yy0 = integral(Pg0,I) & G1.yy1 = integral(Pg1,I)
+         by A4,A24,A28,A31,FUNCT_1:49; then
+A35:   G1.yy0 = integral(Pg0,a,b) & G1.yy1 = integral(Pg1,a,b)
+         by A5,A8,XXREAL_1:29,INTEGRA5:def 4;
+
+A36:   dom(Pg1-Pg0) = I /\ I by A25,A32,VALUED_1:12; then
+A37:   (Pg1-Pg0)|I is bounded & (Pg1-Pg0) is_integrable_on I
+         by A26,A33,INTEGRA5:10,11;
+
+       for x be Real st x in I holds |. (Pg1-Pg0).x .| <= r
+       proof
+        let x be Real;
+        assume
+A38:    x in I; then
+A39:    |. (ProjPMap2(|.Rg.|,y1)).x-(ProjPMap2(|.Rg.|,y0)).x .| < r
+            by A30,A31,A24;
+
+A40:   -(ProjPMap2(|.Rg.|,y0)).x = -Pg0.x by XXREAL_3:def 3;
+
+        (ProjPMap2(|.Rg.|,y1)).x-(ProjPMap2(|.Rg.|,y0)).x
+         = (ProjPMap2(|.Rg.|,y1)).x  +-(ProjPMap2(|.Rg.|,y0)).x
+           by XXREAL_3:def 4; then
+        (ProjPMap2(|.Rg.|,y1)).x-(ProjPMap2(|.Rg.|,y0)).x = Pg1.x + -Pg0.x
+           by A40,XXREAL_3:def 2; then
+        (ProjPMap2(|.Rg.|,y1)).x-(ProjPMap2(|.Rg.|,y0)).x = Pg1.x - Pg0.x; then
+        (ProjPMap2(|.Rg.|,y1)).x-(ProjPMap2(|.Rg.|,y0)).x = (Pg1-Pg0).x
+           by A36,A38,VALUED_1:13;
+        hence |. (Pg1-Pg0).x .| <= r by A39,EXTREAL1:12;
+       end; then
+       |. integral(Pg1-Pg0,a,b) .| <= r * (b-a)
+         by A6,A5,A8,A36,A37,A7,INTEGRA6:23;
+       hence |. G1.yy1-G1.yy0 .| < r
+         by A29,A24,A35,A5,A8,A32,A34,A25,A27,INTEGRA6:12;
+      end;
+      hence
+       ex s be Real st 0<s & for y1 be Real
+        st y1 in J & |.y1-yy0.| < s holds |.G1.y1-G1.yy0.| < r by A30;
+     end;
+     suppose a <> b; then
+      a < b by A6,XXREAL_0:1; then
+A41: 0 < b-a by XREAL_1:50;
+      set r1=r/2;
+A42: 0 < r1 & r1 < r by A24,XREAL_1:215,XREAL_1:216;
+      consider s be Real such that
+A43:  0 < s
+    & for y1,y2 be Element of REAL st |.y2-y1.| < s & y1 in J
+       & y2 in J holds for x be Element of REAL st x in I holds
+        |. (ProjPMap2(|.Rg.|,y2)).x-(ProjPMap2(|.Rg.|,y1)).x .| < r1/(b-a)
+            by A18,XREAL_1:139,A42,A41;
+      take s;
+      thus 0 < s by A43;
+
+      let yy1 be Real;
+      assume
+A44:  yy1 in J & |.yy1-yy0.| < s;
+
+      reconsider y1=yy1 as Element of REAL by XREAL_0:def 1;
+      reconsider Pg1 = ProjPMap2(|.Rg.|,y1) as PartFunc of REAL,REAL
+         by Th30;
+A45:  dom Pg1 = I by A44,A1,A3,Th28;
+A46:  Pg1|(dom Pg1) is continuous by A1,A2,A3,Th39;
+A47:   Pg1|I is bounded & Pg1 is_integrable_on I
+        by A44,A1,A2,A3,Th47;
+      (Integral1(L-Meas,|.Rg.|)).y1 = integral(Pg1,I)
+         by A44,A1,A2,A3,Th49; then
+      G1.yy0 = integral(Pg0,I) & G1.yy1 = integral(Pg1,I)
+       by A4,A24,A28,A44,FUNCT_1:49; then
+      G1.yy0 = integral(Pg0,a,b) & G1.yy1 = integral(Pg1,a,b)
+        by A5,A8,XXREAL_1:29,INTEGRA5:def 4; then
+A48:  |.G1.yy1-G1.yy0.| = |. integral(Pg1-Pg0,a,b) .|
+       by A6,A5,A8,A45,A47,A25,A27,INTEGRA6:12;
+
+A49:  dom(Pg1-Pg0) = I /\ I by A25,A45,VALUED_1:12; then
+A50:  (Pg1-Pg0)|I is bounded & (Pg1-Pg0) is_integrable_on I
+        by A26,A46,INTEGRA5:10,11;
+
+      for x be Real st x in I holds |. (Pg1-Pg0).x .| <= r1/(b-a)
+      proof
+       let x be Real;
+       assume
+A51:   x in I; then
+A52:  |. (ProjPMap2(|.Rg.|,y1)).x-(ProjPMap2(|.Rg.|,y0)).x .| < r1/(b-a)
+         by A43,A44,A24;
+
+A53:  -(ProjPMap2(|.Rg.|,y0)).x = -Pg0.x by XXREAL_3:def 3;
+
+       (ProjPMap2(|.Rg.|,y1)).x-(ProjPMap2(|.Rg.|,y0)).x
+        = (ProjPMap2(|.Rg.|,y1)).x  +-(ProjPMap2(|.Rg.|,y0)).x
+          by XXREAL_3:def 4; then
+       (ProjPMap2(|.Rg.|,y1)).x-(ProjPMap2(|.Rg.|,y0)).x = Pg1.x + -Pg0.x
+          by A53,XXREAL_3:def 2; then
+       (ProjPMap2(|.Rg.|,y1)).x-(ProjPMap2(|.Rg.|,y0)).x = Pg1.x - Pg0.x; then
+       (ProjPMap2(|.Rg.|,y1)).x-(ProjPMap2(|.Rg.|,y0)).x = (Pg1-Pg0).x
+          by A49,A51,VALUED_1:13;
+       hence thesis by A52,EXTREAL1:12;
+      end; then
+      |. integral(Pg1-Pg0,a,b) .| <= (r1/(b-a)) * (b-a)
+        by A6,A5,A7,A8,A49,A50,INTEGRA6:23; then
+      |. integral(Pg1-Pg0,a,b) .| <= r1 by A41,XCMPLX_1:87;
+      hence |. G1.yy1-G1.yy0 .| < r by A48,XXREAL_0:2,A42;
+     end;
+    end; then
+    G1|J is continuous by A4,A23,FCONT_1:14;
+    hence G1 is continuous by A4;
+end;
+
+theorem Th56:
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, G1 be PartFunc of REAL,REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g
+ & G1 = Integral1(L-Meas,R_EAL g)|J holds G1 is continuous
+proof
+    let I,J be non empty closed_interval Subset of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL,
+    G1 be PartFunc of REAL,REAL;
+    assume that
+A1:  [:I,J:] = dom f and
+A2:  f is_continuous_on [:I,J:] and
+A3:  f = g and
+A4:  G1 = Integral1(L-Meas,R_EAL g)|J;
+
+    consider a,b be Real such that
+A5: I = [.a,b.] by MEASURE5:def 3;
+A6: a <= b by A5,XXREAL_1:29; then
+A7: a in I & b in I by A5;
+A8: [.a,b.] = ['a,b'] by A5,XXREAL_1:29,INTEGRA5:def 3;
+
+A9:for e be Real st 0 < e holds ex r be Real st 0 < r
+     & for y1,y2 be Real st |.y2-y1.| < r & y1 in J & y2 in J
+        holds for x be Real st x in I holds
+         |. g.([x,y2]) - g.([x,y1]) .| < e
+    proof
+     let e be Real;
+     assume 0 < e; then
+     consider r be Real such that
+A10:  0 < r
+    & for x1,x2,y1,y2 be Real st [x1,y1] in [:I,J:] & [x2,y2] in [:I,J:] &
+       |.x2-x1.| < r & |.y2-y1.| < r
+          holds |. g.([x2,y2]) - g.([x1,y1]) .| < e by A2,A3,Th18;
+     take r ;
+     thus 0 < r by A10;
+     let y1,y2 be Real;
+     assume
+A11: |.y2-y1.| < r & y1 in J & y2 in J;
+
+     let x be Real;
+     assume x in I; then
+A12: [x,y1] in [:I,J:] & [x,y2] in [:I,J:] by A11,ZFMISC_1:87;
+
+     |.x-x.| < r by A10;
+     hence |. g.([x,y2]) - g.([x,y1]) .| < e by A10,A11,A12;
+    end;
+
+    set Rg =R_EAL g;
+
+A13:dom Rg = [:I,J:] by A1,A3,MESFUNC5:def 7;
+
+A14:for e be Real st 0 < e holds ex r be Real st 0 < r
+    & for y1,y2 be Element of REAL st |.y2-y1.| < r & y1 in J
+       & y2 in J holds for x be Element of REAL st x in I
+          holds |. (ProjPMap2(Rg,y2)).x-(ProjPMap2(Rg,y1)).x .| < e
+    proof
+     let e be Real;
+     assume 0 < e; then
+     consider r be Real such that
+A15: 0 < r
+    & for y1,y2 be Real st |.y2-y1.| < r & y1 in J & y2 in J
+       holds for x be Real st x in I holds
+        |. g.([x,y2]) - g.([x,y1]) .| < e by A9;
+
+     take r;
+     thus 0 < r by A15;
+
+     let y1,y2 be Element of REAL;
+     assume
+A16: |.y2-y1.| < r & y1 in J & y2 in J;
+     let x be Element of REAL;
+     assume
+A17: x in I; then
+A18: |. g.([x,y2]) - g.([x,y1]) .| < e by A15,A16;
+a18: g.([x,y2]) - g.([x,y1]) = g.([x,y2]) qua ExtReal - g.([x,y1]);
+
+     (ProjPMap2(Rg,y1)).x = Rg.(x,y1) & Rg.(x,y1) = g.([x,y1])
+   & (ProjPMap2(Rg,y2)).x = Rg.(x,y2) & Rg.(x,y2) = g.([x,y2])
+       by A16,A17,A13,ZFMISC_1:87,MESFUN12:def 4,MESFUNC5:def 7;
+     hence thesis by A18,a18,EXTREAL1:12;
+    end;
+
+    set T = Integral1(L-Meas,Rg);
+A19:dom T = REAL by FUNCT_2:def 1;
+
+    for y0,r be Real st y0 in J & 0 < r
+     ex s be Real st 0<s & for y1 be Real
+      st y1 in J & |.y1-y0.| < s holds |.G1.y1-G1.y0.| < r
+    proof
+     let yy0,r be Real;
+     assume
+A20: yy0 in J & 0 < r;
+
+     reconsider y0=yy0 as Element of REAL by XREAL_0:def 1;
+     reconsider Pg0 = ProjPMap2(Rg,y0) as PartFunc of REAL,REAL by Th30;
+A21: dom Pg0 = I by A20,A1,A3,Th28;
+A22:  Pg0 is continuous by A1,A2,A3,Th37;
+A23:  Pg0|I is bounded & Pg0 is_integrable_on I by A20,A1,A2,A3,Th42;
+A24:  (Integral1(L-Meas,Rg)).y0 = integral(Pg0,I) by A20,A1,A2,A3,Th43;
+     per cases;
+     suppose A25: a = b;
+      consider s be Real such that
+A26:  0 < s
+    & for y1,y2 be Element of REAL st |.y2-y1.| < s & y1 in J & y2 in J
+        holds for x be Element of REAL st x in I holds
+         |. (ProjPMap2(Rg,y2)).x-(ProjPMap2(Rg,y1)).x .| < r
+           by A14,A20;
+
+      for y1 be Real st y1 in J & |.y1-y0.| < s holds |.G1.y1-G1.yy0 .| < r
+      proof
+       let yy1 be Real;
+       assume
+A27:   yy1 in J & |.yy1-y0.| < s;
+
+       reconsider y1=yy1 as Element of REAL by XREAL_0:def 1;
+       reconsider Pg1 = ProjPMap2(Rg,y1) as PartFunc of REAL,REAL
+         by Th30;
+A28:   dom Pg1 = I by A27,A1,A3,Th28;
+A29:    Pg1 is continuous by A1,A2,A3,Th37;
+A30:    Pg1|I is bounded & Pg1 is_integrable_on I by A27,A1,A2,A3,Th42;
+       (Integral1(L-Meas,Rg)).y1 = integral(Pg1,I)
+        by A27,A1,A2,A3,Th43; then
+       G1.yy0 = integral(Pg0,I) & G1.yy1 = integral(Pg1,I)
+         by A4,A20,A24,A27,FUNCT_1:49; then
+A31:   G1.yy0 = integral(Pg0,a,b) & G1.yy1 = integral(Pg1,a,b)
+         by A5,A8,XXREAL_1:29,INTEGRA5:def 4;
+
+A32:   dom(Pg1-Pg0) = I /\ I by A21,A28,VALUED_1:12; then
+A33:   (Pg1-Pg0)|I is bounded & (Pg1-Pg0) is_integrable_on I
+         by A22,A29,INTEGRA5:10,11;
+
+       for x be Real st x in I holds |. (Pg1-Pg0).x .| <= r
+       proof
+        let x be Real;
+        assume
+A34:    x in I; then
+A35:    |. (ProjPMap2(Rg,y1)).x-(ProjPMap2(Rg,y0)).x .| < r
+            by A26,A27,A20;
+
+A36:   -(ProjPMap2(Rg,y0)).x = -Pg0.x by XXREAL_3:def 3;
+
+        (ProjPMap2(Rg,y1)).x-(ProjPMap2(Rg,y0)).x
+         = (ProjPMap2(Rg,y1)).x  +-(ProjPMap2(Rg,y0)).x
+           by XXREAL_3:def 4; then
+        (ProjPMap2(Rg,y1)).x-(ProjPMap2(Rg,y0)).x = Pg1.x + -Pg0.x
+           by A36,XXREAL_3:def 2; then
+        (ProjPMap2(Rg,y1)).x-(ProjPMap2(Rg,y0)).x = Pg1.x - Pg0.x; then
+        (ProjPMap2(Rg,y1)).x-(ProjPMap2(Rg,y0)).x = (Pg1-Pg0).x
+           by A32,A34,VALUED_1:13;
+        hence |. (Pg1-Pg0).x .| <= r by A35,EXTREAL1:12;
+       end; then
+       |. integral(Pg1-Pg0,a,b) .| <= r * (b-a)
+         by A6,A5,A8,A32,A33,A7,INTEGRA6:23;
+       hence |. G1.yy1-G1.yy0 .| < r
+         by A25,A20,A31,A5,A8,A28,A30,A21,A23,INTEGRA6:12;
+      end;
+      hence
+       ex s be Real st 0<s & for y1 be Real
+        st y1 in J & |.y1-yy0.| < s holds |.G1.y1-G1.yy0.| < r by A26;
+     end;
+     suppose a <> b; then
+      a < b by A6,XXREAL_0:1; then
+A37: 0 < b-a by XREAL_1:50;
+      set r1=r/2;
+A38: 0 < r1 & r1 < r by A20,XREAL_1:215,XREAL_1:216;
+      consider s be Real such that
+A39:  0 < s
+    & for y1,y2 be Element of REAL st |.y2-y1.| < s & y1 in J
+       & y2 in J holds for x be Element of REAL st x in I holds
+        |. (ProjPMap2(Rg,y2)).x-(ProjPMap2(Rg,y1)).x .| < r1/(b-a)
+            by A14,XREAL_1:139,A38,A37;
+      take s;
+      thus 0 < s by A39;
+
+      let yy1 be Real;
+      assume
+A40:  yy1 in J & |.yy1-yy0.| < s;
+
+      reconsider y1=yy1 as Element of REAL by XREAL_0:def 1;
+      reconsider Pg1 = ProjPMap2(Rg,y1) as PartFunc of REAL,REAL by Th30;
+A41:  dom Pg1 = I by A40,A1,A3,Th28;
+A42:   Pg1 is continuous by A1,A2,A3,Th37;
+A43:   Pg1|I is bounded & Pg1 is_integrable_on I
+        by A40,A1,A2,A3,Th42;
+      (Integral1(L-Meas,Rg)).y1 = integral(Pg1,I)
+         by A40,A1,A2,A3,Th43; then
+      G1.yy0 = integral(Pg0,I) & G1.yy1 = integral(Pg1,I)
+       by A4,A20,A24,A40,FUNCT_1:49; then
+      G1.yy0 = integral(Pg0,a,b) & G1.yy1 = integral(Pg1,a,b)
+        by A5,A8,XXREAL_1:29,INTEGRA5:def 4; then
+A44:  |.G1.yy1-G1.yy0.| = |. integral(Pg1-Pg0,a,b) .|
+       by A6,A5,A8,A41,A43,A21,A23,INTEGRA6:12;
+
+A45:  dom(Pg1-Pg0) = I /\ I by A21,A41,VALUED_1:12; then
+A46:  (Pg1-Pg0)|I is bounded & (Pg1-Pg0) is_integrable_on I
+        by A22,A42,INTEGRA5:10,11;
+
+      for x be Real st x in I holds |. (Pg1-Pg0).x .| <= r1/(b-a)
+      proof
+       let x be Real;
+       assume
+A47:   x in I;
+A48:  |. (ProjPMap2(Rg,y1)).x-(ProjPMap2(Rg,y0)).x .| < r1/(b-a)
+         by A39,A40,A20,A47;
+
+A49:  -(ProjPMap2(Rg,y0)).x = -Pg0.x by XXREAL_3:def 3;
+
+       (ProjPMap2(Rg,y1)).x-(ProjPMap2(Rg,y0)).x
+        = (ProjPMap2(Rg,y1)).x  +-(ProjPMap2(Rg,y0)).x
+          by XXREAL_3:def 4; then
+       (ProjPMap2(Rg,y1)).x-(ProjPMap2(Rg,y0)).x = Pg1.x + -Pg0.x
+          by A49,XXREAL_3:def 2; then
+       (ProjPMap2(Rg,y1)).x-(ProjPMap2(Rg,y0)).x = Pg1.x - Pg0.x; then
+       (ProjPMap2(Rg,y1)).x-(ProjPMap2(Rg,y0)).x = (Pg1-Pg0).x
+          by A45,A47,VALUED_1:13;
+       hence thesis by A48,EXTREAL1:12;
+      end; then
+      |. integral(Pg1-Pg0,a,b) .| <= (r1/(b-a)) * (b-a)
+        by A6,A5,A7,A8,A45,A46,INTEGRA6:23; then
+      |. integral(Pg1-Pg0,a,b) .| <= r1 by A37,XCMPLX_1:87;
+      hence |. G1.yy1-G1.yy0 .| < r by A44,XXREAL_0:2,A38;
+     end;
+    end; then
+    G1|J is continuous by A4,A19,FCONT_1:14;
+    hence G1 is continuous by A4;
+end;
+
+Lm5:
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g holds
+   g is_integrable_on Prod_Measure(L-Meas,L-Meas)
+ & (for y being Element of REAL
+       holds Integral1(L-Meas,|.R_EAL g.|).y < +infty)
+ & (for V being Element of L-Field
+       holds Integral1(L-Meas,R_EAL g) is V-measurable)
+ & Integral1(L-Meas,R_EAL g) is_integrable_on L-Meas
+ & Integral(Prod_Measure(L-Meas,L-Meas),g)
+      = Integral(L-Meas,Integral1(L-Meas,R_EAL g))
+proof
+    let I,J be non empty closed_interval Subset of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL;
+    assume that
+A1:  [:I,J:] = dom f and
+A2:  f is_continuous_on [:I,J:] and
+A3:  f = g;
+
+    consider E be Subset of [:RNS_Real,RNS_Real:] such that
+A4:  E = [:I,J:] & E is compact by Th9;
+    reconsider E as Element of sigma measurable_rectangles(L-Field,L-Field)
+      by A4,Th11;
+A5: g is E-measurable by A1,A2,A3,A4,Th50;
+
+    set Rg =R_EAL g;
+
+A6:dom g = dom Rg by MESFUNC5:def 7; then
+A7:dom |.Rg.| = [:I,J:] by A1,A3,MESFUNC1:def 10;
+
+A8:for y be Element of REAL st y in REAL\J holds
+     (Integral1(L-Meas,|.Rg.|)).y  = 0
+    proof
+     let y be Element of REAL;
+     assume y in REAL\J; then
+     not y in J by XBOOLE_0:def 5; then
+A9: dom ProjPMap2(|.Rg.|,y) = {} by A1,A3,Th28;
+     (Integral1(L-Meas,|.Rg.|)).y = Integral(L-Meas,(ProjPMap2(|.Rg.|,y)))
+       by MESFUN12:def 7;
+     hence (Integral1(L-Meas,|.Rg.|)).y = 0 by A9,Th1;
+    end;
+
+A10:for x,y be Element of REAL st x in I & y in J holds
+     (ProjPMap2(|.Rg.|,y)).x =(|.Rg.|).(x,y)
+   & (|.Rg.|).(x,y) = |. g.([x,y]) .| & (|.Rg.|).(x,y) = (|.g.|).([x,y])
+    proof
+     let x,y be Element of REAL;
+     assume that
+A11:  x in I and
+A12:  y in J;
+     thus (ProjPMap2(|.Rg.|,y)).x =(|.Rg.|).(x,y)
+      by A7,A11,A12,ZFMISC_1:87,MESFUN12:def 4;
+
+     [x,y] in dom g by A11,A1,A3,A12,ZFMISC_1:87; then
+A13: [x,y] in dom |.g.| by VALUED_1:def 11;
+
+A14: Rg.([x,y]) = g.([x,y]) by MESFUNC5:def 7;
+
+     (|.Rg.|).(x,y) = |. Rg.([x,y]) .|
+       by A11,A7,A12,ZFMISC_1:87,MESFUNC1:def 10;
+     hence (|.Rg.|).(x,y) = |.g.([x,y]).| by A14,EXTREAL1:12;
+     hence (|.Rg.|).(x,y) = (|.g.|).([x,y]) by VALUED_1:def 11,A13;
+    end;
+
+A15:
+    for y be Element of REAL st y in J holds 0 <= Integral1(L-Meas,|.Rg.|).y
+    proof
+     let y be Element of REAL;
+     assume A16: y in J;
+
+     reconsider AB = I as Element of L-Field by MEASUR10:5,MEASUR12:75;
+     reconsider Pg = ProjPMap2(|.Rg.|,y) as PartFunc of REAL,REAL by Th30;
+
+A17:  dom Pg = I by A16,A1,A3,Th28;
+A18:  Pg is AB-measurable by A16,A1,A2,A3,Th48;
+A19:  integral(Pg,I) = Integral(L-Meas,Pg)
+   & integral(Pg,I) = (Integral1(L-Meas,|.Rg.|)).y
+       by A16,A1,A2,A3,Th49;
+
+     for x being object st x in dom(Pg|I) holds 0 <= (Pg|I).x
+     proof
+      let x be object;
+      assume
+A20:  x in dom(Pg|I); then
+      x in dom Pg /\ I by RELAT_1:61; then
+      reconsider x as Element of REAL;
+
+      (ProjPMap2(|.Rg.|,y)).x = (|.Rg.|).(x,y)
+      & (|.Rg.|).(x,y) = |. g.([x,y]) .| by A16,A20,A10;
+      hence thesis by A17;
+     end;
+     hence thesis by A17,A18,A19,MESFUNC6:52,84;
+    end;
+
+    set T = Integral1(L-Meas,|.Rg.|);
+    reconsider S = T|J as PartFunc of REAL,REAL by A1,A2,A3,Th54;
+
+A21:J is Element of L-Field by MEASUR10:5,MEASUR12:75;
+    reconsider H = REAL as Element of L-Field by PROB_1:5;
+
+    set NJ = H \ J;
+    set T0 = T|J;
+    set T1 = T|NJ;
+
+A22:dom T = REAL by FUNCT_2:def 1; then
+A23:dom(T|J) = J & dom(T|NJ) = NJ; then
+    S||J is bounded & S is_integrable_on J
+      by A1,A2,A3,Th55,INTEGRA5:10,11; then
+    S is_integrable_on L-Meas by A21,A23,MESFUN14:49; then
+A24:T0 is_integrable_on L-Meas by MESFUNC5:def 7; then
+A25:Integral(L-Meas,T0) < +infty by MESFUNC5:96;
+
+A26: NJ is Element of L-Field by A21,PROB_1:6;
+
+A27:J \/ NJ = REAL by XBOOLE_1:45; then
+A28:T|(J \/ NJ) = T;
+
+A29:J /\ NJ = {} by XBOOLE_1:85,XBOOLE_0:def 7;
+
+A30:for r being Element of REAL holds 0 <= T.r
+    proof
+     let r be Element of REAL;
+     r in J or r in NJ by A27,XBOOLE_0:def 3;
+     hence 0 <= T.r by A15,A8;
+    end; then
+A31:T is nonnegative;
+
+    for r being Real holds H /\ (less_dom(T,r)) in L-Field
+    proof
+     let r be Real;
+     consider H0 being Element of L-Field such that
+A32: H0 = dom T0 & T0 is H0 -measurable by A24,MESFUNC5:def 17;
+
+     per cases;
+     suppose
+A33:  r <= 0;
+      less_dom (T,r) = {}
+      proof
+       assume less_dom (T,r) <> {}; then
+       consider y be object such that
+A34:   y in less_dom(T,r) by XBOOLE_0:def 1;
+       y in dom T & T.y < r by MESFUNC1:def 11,A34;
+       hence contradiction by A30,A33;
+      end;
+      hence H /\ (less_dom (T,r)) in L-Field by PROB_1:4;
+     end;
+     suppose
+A35:  0 < r;
+      for z be object holds z in less_dom (T,r) iff z in less_dom (T0,r) \/ NJ
+      proof
+       let z be object;
+       hereby assume
+A36:   z in less_dom (T,r); then
+A37:   z in dom T & T.z < r by MESFUNC1:def 11;
+        reconsider y=z as Element of REAL by A36;
+        per cases by A36,A27,XBOOLE_0:def 3;
+        suppose
+A38:    z in J; then
+         T0.z < r  by FUNCT_1:49,A37; then
+         z in less_dom (T0,r) by A38,A23,MESFUNC1:def 11;
+         hence z in less_dom (T0,r) \/ NJ by XBOOLE_0:def 3;
+        end;
+        suppose z in NJ;
+         hence z in less_dom (T0,r) \/ NJ by XBOOLE_0:def 3;
+        end;
+       end;
+       assume z in less_dom (T0,r) \/ NJ; then
+       per cases by XBOOLE_0:def 3;
+       suppose
+A39:    z in less_dom (T0,r); then
+        z in dom T0 & T0.z < r by MESFUNC1:def 11; then
+A40:    T.z < r by FUNCT_1:49;
+        dom T = REAL by FUNCT_2:def 1;
+        hence z in less_dom (T,r) by A39,A40,MESFUNC1:def 11;
+       end;
+       suppose
+A41:    z in NJ; then
+        reconsider y=z as Element of REAL;
+A42:    T.y < r by A35,A41,A8;
+        dom T = REAL by FUNCT_2:def 1;
+        hence z in less_dom (T,r) by A42,MESFUNC1:def 11;
+       end;
+      end; then
+      less_dom(T,r) = less_dom (T0,r) \/ NJ by TARSKI:2; then
+A43:  H /\ less_dom(T,r) = J /\ (less_dom (T0,r) \/ NJ)
+             \/ NJ /\ (less_dom (T0,r) \/ NJ) by A27,XBOOLE_1:23;
+      J /\ (less_dom (T0,r) \/ NJ)
+       = J /\ less_dom (T0,r) \/ {} by A29,XBOOLE_1:23; then
+A44:  J /\ (less_dom (T0,r) \/ NJ) in L-Field by A22,A32;
+
+A45:  less_dom(T0,r) c= J by A23,MESFUNC1:def 11;
+
+      NJ /\ (less_dom (T0,r) \/ NJ)
+       = (NJ /\ less_dom(T0,r)) \/ (NJ /\ NJ) by XBOOLE_1:23; then
+      NJ /\ (less_dom (T0,r) \/ NJ)
+       = {} \/ (NJ /\ NJ) by A45;
+      hence H /\ less_dom (T,r) in L-Field by A26,A43,A44,PROB_1:3;
+     end;
+    end; then
+    T is H-measurable; then
+A46:Integral(L-Meas,T) = Integral(L-Meas,T0) + Integral(L-Meas,T1)
+      by A22,A21,A26,A28,A31,MESFUNC5:91,XBOOLE_1:79;
+
+    for y being object st y in dom T1 holds T1.y = 0
+    proof
+     let y be object;
+     assume A47: y in dom T1; then
+     reconsider r=y as Element of REAL;
+A48: y in dom T & y in NJ by A47,RELAT_1:57;
+     (Integral1(L-Meas,|.Rg.|)).r = 0 by A47,A8,RELAT_1:57;
+     hence thesis by A48,FUNCT_1:49;
+    end; then
+    Integral(L-Meas,T1) = 0 * (L-Meas.(dom T1))
+      by A22,A21,PROB_1:6,MEASUR10:27; then
+    Integral(L-Meas,T0) = Integral(L-Meas,T) by A46,XXREAL_3:4; then
+A49:R_EAL g is_integrable_on Prod_Measure(L-Meas,L-Meas)
+      by MESFUN13:10,A4,A5,A1,A3,A6,Th5,A25;
+
+    for y being Element of REAL holds Integral1(L-Meas,|.Rg.|).y < +infty
+    proof
+     let y be Element of REAL;
+     per cases by A27,XBOOLE_0:def 3;
+     suppose
+A50:  y in J; then
+      Integral1(L-Meas,|.Rg.|).y = S.y by FUNCT_1:49; then
+      Integral1(L-Meas,|.Rg.|).y in rng S by A23,A50,FUNCT_1:3;
+      hence Integral1(L-Meas,|.Rg.|).y < +infty by XXREAL_0:9;
+     end;
+     suppose y in NJ; then
+      Integral1(L-Meas,|.Rg.|).y = 0 by A8;
+      hence Integral1(L-Meas,|.Rg.|).y < +infty by XREAL_0:def 1,XXREAL_0:9;
+     end;
+    end;
+    hence thesis by A49,Th5,MESFUN13:33;
+end;
+
+theorem
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g holds
+   g is_integrable_on Prod_Measure(L-Meas,L-Meas)
+ & (for x being Element of REAL
+       holds Integral2(L-Meas,|.R_EAL g.|).x < +infty)
+ & (for y being Element of REAL
+       holds Integral1(L-Meas,|.R_EAL g.|).y < +infty)
+ & (for U being Element of L-Field
+       holds Integral2(L-Meas,R_EAL g) is U-measurable)
+ & (for V being Element of L-Field
+       holds Integral1(L-Meas,R_EAL g) is V-measurable)
+ & Integral2(L-Meas,R_EAL g) is_integrable_on L-Meas
+ & Integral1(L-Meas,R_EAL g) is_integrable_on L-Meas
+ & Integral(Prod_Measure(L-Meas,L-Meas),g)
+      = Integral(L-Meas,Integral2(L-Meas,R_EAL g))
+ & Integral(Prod_Measure(L-Meas,L-Meas),g)
+      = Integral(L-Meas,Integral1(L-Meas,R_EAL g)) by Lm4,Lm5;
+
+theorem
+for I,J be non empty closed_interval Subset of REAL,
+ f being PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g being PartFunc of [:REAL,REAL:],REAL, G2 be PartFunc of REAL,REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g
+  & G2 = Integral2(L-Meas,R_EAL g)|I holds
+   Integral(Prod_Measure(L-Meas,L-Meas),R_EAL g) = integral(G2,I)
+proof
+    let I,J be non empty closed_interval Subset of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, G2 be PartFunc of REAL,REAL;
+    assume that
+A1:  [:I,J:] = dom f and
+A2:  f is_continuous_on [:I,J:] and
+A3:  f = g and
+A4:  G2 = Integral2(L-Meas,R_EAL g)|I;
+
+    set Rg =R_EAL g;
+    set NI = REAL \ I;
+    set RG2 = Integral2(L-Meas,Rg);
+    set F0 = RG2|I, F1 = RG2|NI;
+
+A5:dom RG2 = REAL by FUNCT_2:def 1; then
+A6:dom G2 = I by A4;
+
+A7:I is Element of L-Field by MEASUR10:5,MEASUR12:75;
+
+    G2 is continuous by A1,A2,A3,A4,Th53; then
+    G2|I is bounded & G2 is_integrable_on I by A4,A5,INTEGRA5:10,11; then
+A8:Integral(L-Meas,G2|I) = integral(G2,I) by A6,A7,MESFUN14:49;
+
+    REAL in L-Field by PROB_1:5; then
+A9: NI is Element of L-Field by A7,PROB_1:6;
+
+A10:Integral(Prod_Measure(L-Meas,L-Meas),g)
+     = Integral(L-Meas,Integral2(L-Meas,R_EAL g)) by A2,A1,A3,Lm4;
+
+    I \/ NI = REAL by XBOOLE_1:45; then
+A11:RG2|(I \/ NI) = RG2;
+
+    RG2 is_integrable_on L-Meas by A2,A3,A1,Lm4; then
+A12:Integral(L-Meas,RG2) = Integral (L-Meas,F0) + Integral (L-Meas,F1)
+      by A7,A9,A11,XBOOLE_1:85,MESFUNC5:98;
+
+    for x being Element of REAL st x in dom F1 holds F1.x = 0
+    proof
+     let x be Element of REAL;
+     assume
+A13: x in dom F1; then
+     not x in I by XBOOLE_0:def 5; then
+A14: dom ProjPMap1(Rg,x) = {} by A1,A3,Th27;
+     (Integral2(L-Meas,Rg)).x = Integral(L-Meas,(ProjPMap1(Rg,x)))
+       by MESFUN12:def 8; then
+     (Integral2 (L-Meas,Rg)).x = 0 by A14,Th1;
+     hence thesis by A13,FUNCT_1:49;
+    end; then
+    Integral(L-Meas,F1) = 0 by A9,A5,MESFUN12:57; then
+    Integral(Prod_Measure(L-Meas,L-Meas),Rg) = Integral(L-Meas,F0)
+      by A10,A12,XXREAL_3:4;
+    hence thesis by A4,A8,MESFUNC5:def 7;
+end;
+
+theorem
+for I,J be non empty closed_interval Subset of REAL,
+ f being PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g being PartFunc of [:REAL,REAL:],REAL, G1 be PartFunc of REAL,REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g
+  & G1 = Integral1(L-Meas,R_EAL g)|J holds
+   Integral(Prod_Measure(L-Meas,L-Meas),R_EAL g) = integral(G1,J)
+proof
+    let I,J be non empty closed_interval Subset of REAL,
+    f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, G1 be PartFunc of REAL,REAL;
+    assume that
+A1: [:I,J:] = dom f and
+A2: f is_continuous_on [:I,J:] and
+A3: f = g and
+A4: G1 = Integral1(L-Meas,R_EAL g)|J;
+
+    set Rg =R_EAL g;
+    set NJ = REAL \ J;
+    set RG1 = Integral1(L-Meas,Rg);
+    set F0 = RG1|J, F1 = RG1|NJ;
+
+A5:dom RG1 = REAL by FUNCT_2:def 1; then
+A6:dom(RG1|J) = J;
+
+A7:J is Element of L-Field by MEASUR10:5,MEASUR12:75;
+
+    G1|J is bounded & G1 is_integrable_on J
+      by A6,A1,A2,A3,A4,Th56,INTEGRA5:10,11; then
+A8:Integral(L-Meas,G1|J) = integral(G1,J) by A4,A7,A6,MESFUN14:49;
+
+    REAL in L-Field by PROB_1:5; then
+A9: NJ is Element of L-Field by A7,PROB_1:6;
+
+A10:Integral(Prod_Measure(L-Meas,L-Meas),g)
+     = Integral(L-Meas,Integral1(L-Meas,R_EAL g)) by A2,A1,A3,Lm5;
+
+    J \/ NJ = REAL by XBOOLE_1:45; then
+A11:RG1|(J \/ NJ) = RG1;
+
+    RG1 is_integrable_on L-Meas by A2,A1,A3,Lm5; then
+A12:Integral(L-Meas,RG1) = Integral(L-Meas,F0) + Integral(L-Meas,F1)
+      by A7,A9,A11,XBOOLE_1:85,MESFUNC5:98;
+
+    for y being Element of REAL st y in dom F1 holds F1.y = 0
+    proof
+     let y be Element of REAL;
+     assume
+A13: y in dom F1; then
+     not y in J by XBOOLE_0:def 5; then
+A14: dom ProjPMap2(Rg,y) = {} by A1,A3,Th28;
+     (Integral1(L-Meas,Rg)).y = Integral(L-Meas,(ProjPMap2(Rg,y)))
+       by MESFUN12:def 7; then
+     (Integral1 (L-Meas,Rg)).y = 0 by A14,Th1;
+     hence thesis by FUNCT_1:49,A13;
+    end; then
+    Integral(L-Meas,F1) = 0 by A9,A5,MESFUN12:57; then
+    Integral(Prod_Measure(L-Meas,L-Meas),Rg) = Integral(L-Meas,F0)
+      by A10,A12,XXREAL_3:4;
+    hence thesis by A4,A8,MESFUNC5:def 7;
+end;

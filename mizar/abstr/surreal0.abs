@@ -1,0 +1,508 @@
+:: Conway Numbers -- Formal Introduction
+::  by Karol P\kak
+:: 
+:: Received December 12, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MCART_1, FACIRC_1, RELAT_1, TARSKI, XBOOLE_0, LFUZZY_0, SUBSET_1,
+      XXREAL_0, FUNCT_1, ZFMISC_1, CARD_1, ORDINAL1, WAYBEL_3, ORDINAL6,
+      SURREAL0;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, XTUPLE_0, SUBSET_1, RELAT_1, FUNCT_1,
+      RELSET_1, ORDINAL1, ORDINAL6;
+ constructors RELSET_1, ORDINAL6;
+ registrations XBOOLE_0, RELAT_1, SUBSET_1, XTUPLE_0, ORDINAL1, ORDINAL3,
+      FUNCT_1, ORDINAL6, FOMODEL0, FACIRC_1;
+ requirements BOOLE, SUBSET;
+
+
+begin :: Construction of Games on $\alpha$-day
+
+reserve A,A1,A2,B,B1,B2,C,O for Ordinal,
+      R,S for Relation,
+      a,b,c,o,l,r for object;
+
+notation
+  let x be object;
+  synonym L_x for x`1;
+  synonym R_x for x`2;
+end;
+
+definition
+   let x be object;
+   redefine func L_x -> set;
+end;
+
+definition
+   let x be object;
+   redefine func R_x -> set;
+ end;
+
+definition ::: generalize ARROW:def 4 to include this
+  let a,b;
+  let O be set;
+  pred a <=O, b means
+:: SURREAL0:def 1
+    [a,b] in O;
+end;
+
+notation
+  let a,b;
+  let O be set;
+  synonym b >=O, a for a <=O, b;
+end;
+
+definition
+  let L,R be set;
+  let O be set;
+  pred L >>=O, R means
+:: SURREAL0:def 2
+     l in L & r in R implies l >=O, r;
+end;
+
+definition
+  let L,R be set;
+  let O be set;
+  pred L <<O, R means
+:: SURREAL0:def 3
+     l in L & r in R implies not l >=O, r;
+end;
+
+definition
+  let A;
+  func Games A -> set means
+:: SURREAL0:def 4
+  ex L be Sequence st it = L.A & dom L = succ A &
+    for O st O in succ A holds
+      L.O = [:bool union rng (L|O), bool union rng (L|O):];
+end;
+
+registration
+  let A;
+  cluster Games A -> non empty Relation-like;
+end;
+
+theorem :: SURREAL0:1
+   A c= B implies Games A c= Games B;
+
+theorem :: SURREAL0:2
+  Games 0 = {[{},{}]};
+
+theorem :: SURREAL0:3
+  for L be Sequence,O st
+      dom L = succ O &
+      for A st A in succ O holds
+          L.A = [:bool union rng (L|A), bool union rng (L|A):]
+  holds for A st A in succ O holds L.A = Games A;
+
+theorem :: SURREAL0:4
+  o in Games O iff
+     o is pair & for a st a in L_o \/ R_o
+       ex A st A in O & a in Games A;
+
+definition
+  let A;
+  func BeforeGames A -> Subset of Games A means
+:: SURREAL0:def 5
+    a in it iff ex O st O in A & a in Games O;
+end;
+
+theorem :: SURREAL0:5
+  A c= B implies BeforeGames A c= BeforeGames B;
+
+definition
+  let O,R;
+  func Day(R,O) -> Subset of Games O means
+:: SURREAL0:def 6
+    ex L be Sequence st it = L.O & dom L = succ O &
+      for A st A in succ O holds
+          L.A = {x where x is Element of Games A:
+                   L_x c= union rng (L|A) & R_x c= union rng (L|A) &
+                   L_x <<R, R_x};
+end;
+
+begin :: Construction of Order on the $\alpha$-day
+
+definition
+  let R;
+  attr R is almost-No-order means
+:: SURREAL0:def 7
+    ex O st R c= [:Day(R,O),Day(R,O):];
+end;
+
+theorem :: SURREAL0:6
+  for L be Sequence st
+    dom L = succ O &
+    for A st A in succ O holds
+      L.A = {x where x is Element of Games A:
+             L_x c= union rng (L|A) & R_x c= union rng (L|A) & L_x <<R, R_x}
+   holds for A st A in succ O holds L.A = Day(R,A);
+
+theorem :: SURREAL0:7
+  for x be Element of Games O holds
+    x in Day(R,O) iff L_x <<R, R_x &
+      for o st o in L_x \/ R_x
+        ex A st A in O & o in Day(R,A);
+
+theorem :: SURREAL0:8
+  Day(R,0) = Games 0;
+
+theorem :: SURREAL0:9
+   A c= B implies Day(R,A) c= Day(R,B);
+
+registration
+  let R,A;
+  cluster Day(R,A) -> non empty;
+end;
+
+theorem :: SURREAL0:10
+  B c= A &
+  R /\ [:BeforeGames A,BeforeGames A:] = S /\ [:BeforeGames A,BeforeGames A:]
+    implies Day(R,B) = Day(S,B);
+
+definition
+  let R,o;
+  assume  ex O st o in Day(R,O);
+  func born(R,o) -> Ordinal means
+:: SURREAL0:def 8
+    o in Day(R,it) & for O st o in Day(R,O) holds it c= O;
+end;
+
+theorem :: SURREAL0:11
+  R /\ [:BeforeGames A,BeforeGames A:] = S /\ [:BeforeGames A,BeforeGames A:]
+    implies for a st a in Day(R,A) holds born(R,a) = born(S,a);
+
+theorem :: SURREAL0:12
+  o in Games O & not o in Day(R,O) implies not o in Day(R,A);
+
+definition
+  let R,A,B;
+  func OpenProd(R,A,B) -> Relation of Day(R,A) means
+:: SURREAL0:def 9
+    for x,y be Element of Day(R,A) holds
+      [x,y] in it iff (born(R,x) in A & born(R,y) in A) or
+        (born(R,x) = A & born(R,y) in B) or
+        (born(R,x) in B & born(R,y) = A);
+end;
+
+definition
+  let R,A,B;
+  func ClosedProd(R,A,B) -> Relation of Day(R,A) means
+:: SURREAL0:def 10
+    for x,y be Element of Day(R,A) holds
+      [x,y] in it iff (born(R,x) in A & born(R,y) in A) or
+        (born(R,x) = A & born(R,y) c= B) or
+        (born(R,x) c= B & born(R,y) = A);
+end;
+
+theorem :: SURREAL0:13
+  A1 in A2 or (A1=A2 & B1 c= B2) implies
+    OpenProd(R,A1,B1) c= OpenProd(R,A2,B2);
+
+theorem :: SURREAL0:14
+    R /\ [:BeforeGames A,BeforeGames A:] =
+    S /\ [:BeforeGames A,BeforeGames A:]
+  implies OpenProd(R,A,B) = OpenProd(S,A,B);
+
+theorem :: SURREAL0:15
+    R /\ [:BeforeGames A,BeforeGames A:] =
+    S /\ [:BeforeGames A,BeforeGames A:]
+  implies ClosedProd(R,A,B) = ClosedProd(S,A,B);
+
+theorem :: SURREAL0:16
+  OpenProd(R,A,B) c= ClosedProd(R,A,B);
+
+theorem :: SURREAL0:17
+  A1 in A2 or (A1=A2 & B1 c= B2) implies
+    ClosedProd(R,A1,B1) c= ClosedProd(R,A2,B2);
+
+theorem :: SURREAL0:18
+  B in C implies ClosedProd(R,A,B) c= OpenProd(R,A,C);
+
+theorem :: SURREAL0:19
+  A in B implies ClosedProd(R,A,B) c= OpenProd(R,A,B);
+
+definition
+  let X,R be set;
+  pred R preserves_No_Comparison_on X means
+:: SURREAL0:def 11
+    for a,b be object st [a,b] in X holds
+        a <=R, b iff L_a <<R, {b} & {a} <<R, R_b;
+end;
+
+theorem :: SURREAL0:20
+    R is almost-No-order & S is almost-No-order &
+    R /\ OpenProd(R,A,B) = S /\ OpenProd(S,A,B)
+  implies R /\ [:BeforeGames A,BeforeGames A:] =
+          S /\ [:BeforeGames A,BeforeGames A:];
+
+theorem :: SURREAL0:21
+    R is almost-No-order & S is almost-No-order &
+    R /\ OpenProd(R,A,B) = S /\ OpenProd(S,A,B) &
+    R preserves_No_Comparison_on ClosedProd(R,A,B) &
+    S preserves_No_Comparison_on ClosedProd(S,A,B)
+  implies R /\ ClosedProd(R,A,B) = S /\ ClosedProd(S,A,B);
+
+theorem :: SURREAL0:22
+    R is almost-No-order & S is almost-No-order &
+    R /\ OpenProd(R,A,0) = S /\ OpenProd(S,A,0) &
+    R preserves_No_Comparison_on ClosedProd(R,A,B) &
+    S preserves_No_Comparison_on ClosedProd(S,A,B)
+  implies R /\ ClosedProd(R,A,B) = S /\ ClosedProd(S,A,B);
+
+theorem :: SURREAL0:23
+    R is almost-No-order & S is almost-No-order &
+    R preserves_No_Comparison_on ClosedProd(R,A,B) &
+    S preserves_No_Comparison_on ClosedProd(S,A,B)
+  implies
+      R /\ ClosedProd(R,A,B) = S /\ ClosedProd(S,A,B);
+
+theorem :: SURREAL0:24
+  for Lp,Lr be Sequence st dom Lp =dom Lr &
+     for A st A in dom Lp holds
+       (ex a,b be Ordinal,R be Relation st
+          R =Lr.A & Lp.A = ClosedProd(R,a,b)) &
+       Lr.A is Relation &
+       (for R be Relation st R=Lr.A holds
+          R preserves_No_Comparison_on Lp.A & R c= Lp.A)
+   holds union rng Lr is Relation &
+     for R st R = union rng Lr holds
+       R preserves_No_Comparison_on union rng Lp & R c= union rng Lp
+       & for A,a,b be Ordinal,S st
+           A in dom Lp & S=Lr.A & Lp.A=ClosedProd(S,a,b)
+         holds
+  R /\ [:BeforeGames a,BeforeGames a:] = S /\ [:BeforeGames a,BeforeGames a:];
+
+theorem :: SURREAL0:25
+  [a,b] in ClosedProd(R,A,B)\OpenProd(R,A,B) iff
+     a in Day(R,A) & b in Day(R,A)&
+     (born(R,a) = A & born(R,b) = B or born(R,a) = B & born(R,b) = A);
+
+theorem :: SURREAL0:26
+  R preserves_No_Comparison_on OpenProd(R,A,B) & R c= OpenProd(R,A,B) implies
+    ex S st R c= S & S preserves_No_Comparison_on ClosedProd(S,A,B) &
+       S c= ClosedProd(S,A,B);
+
+theorem :: SURREAL0:27
+  (ex R st R preserves_No_Comparison_on OpenProd(R,A,{}) &
+       R c= OpenProd(R,A,{}))
+    implies ex S st S preserves_No_Comparison_on ClosedProd(S,A,B) &
+             S c= ClosedProd(S,A,B);
+
+theorem :: SURREAL0:28
+  ex R st R preserves_No_Comparison_on ClosedProd(R,A,B) &
+  R c= ClosedProd(R,A,B);
+
+theorem :: SURREAL0:29
+  A in B implies ClosedProd(R,A,A) = OpenProd(R,A,B);
+
+theorem :: SURREAL0:30
+  A c= B implies ClosedProd(R,A,A) c= ClosedProd(R,B,B);
+
+begin :: The Order on the $\alpha$-day
+
+definition
+  let A;
+  func No_Ord A -> Relation means
+:: SURREAL0:def 12
+    it preserves_No_Comparison_on [:Day(it,A),Day(it,A):] &
+    it c= [:Day(it,A),Day(it,A):];
+end;
+
+registration
+  let A;
+  cluster No_Ord A -> almost-No-order;
+end;
+
+definition
+  let A;
+  func Day A -> non empty Subset of Games A equals
+:: SURREAL0:def 13
+    Day(No_Ord A,A);
+end;
+
+begin :: Surreal Number as a Special Type of Abstract Game
+
+definition
+  let o;
+  attr o is surreal means
+:: SURREAL0:def 14
+    ex A st o in Day A;
+end;
+
+registration
+  cluster [{},{}]-> surreal;
+  cluster surreal for set;
+end;
+
+registration
+  let A be Ordinal;
+  cluster -> surreal for Element of Day A;
+end;
+
+definition
+  mode Surreal is surreal set;
+end;
+
+reserve x,y,z,t,r,l for Surreal,
+        X,Y,Z for set;
+
+definition
+  func 0_No -> Surreal equals
+:: SURREAL0:def 15
+    [{},{}];
+end;
+
+registration
+  cluster -> pair for Surreal;
+end;
+
+registration
+  cluster surreal -> non empty for set;
+end;
+
+definition
+  let X be set;
+  attr X is surreal-membered means
+:: SURREAL0:def 16
+     o in X implies o is surreal;
+end;
+
+registration
+  cluster surreal-membered for set;
+end;
+
+registration
+  let x;
+  cluster {x} -> surreal-membered;
+  cluster L_x -> surreal-membered for set;
+  cluster R_x -> surreal-membered for set;
+end;
+
+registration
+  let X,Y be surreal-membered set;
+  cluster X\/Y -> surreal-membered;
+  cluster X\Y -> surreal-membered;
+  cluster X/\Y -> surreal-membered;
+end;
+
+registration
+  cluster non empty surreal-membered for set;
+end;
+
+begin :: The Preorder of Surreal Numbers
+
+definition
+  let x,y;
+  pred x <= y means
+:: SURREAL0:def 17
+    ex A st x <=No_Ord A,y;
+end;
+
+theorem :: SURREAL0:31
+  for A,B,X be Ordinal st X c= A & X c= B holds
+     No_Ord A /\ [:BeforeGames X,BeforeGames X:] =
+     No_Ord B /\ [:BeforeGames X,BeforeGames X:];
+
+theorem :: SURREAL0:32
+  A c= B implies
+    ClosedProd(No_Ord A,A,A) = ClosedProd(No_Ord B,A,A);
+
+theorem :: SURREAL0:33
+  [a,b] in ClosedProd(No_Ord A,A,A) iff a in Day A & b in Day A;
+
+theorem :: SURREAL0:34
+  A c= B implies
+    No_Ord A = No_Ord B /\ ClosedProd(No_Ord B,A,A);
+
+theorem :: SURREAL0:35
+  A c= B implies Day A c= Day B;
+
+theorem :: SURREAL0:36
+  o in Day(No_Ord A,B) & B c= A implies o in Day B;
+
+definition
+  let x;
+  func born x -> Ordinal means
+:: SURREAL0:def 18
+    x in Day it & for O st x in Day O holds it c= O;
+end;
+
+theorem :: SURREAL0:37
+  born x = {} iff x = 0_No;
+
+theorem :: SURREAL0:38
+  x in Day A implies born x = born(No_Ord A,x);
+
+theorem :: SURREAL0:39
+  a <=No_Ord A,b & a in Day B & b in Day B
+    implies a <=No_Ord B,b;
+
+theorem :: SURREAL0:40
+  x <= y iff
+    for A st x in Day A & y in Day A holds x <=No_Ord A,y;
+
+definition
+  let L,R be set;
+  pred L >>= R means
+:: SURREAL0:def 19
+    for l,r st l in L & r in R holds r <= l;
+end;
+
+notation
+  let R,L be set;
+  synonym L <<= R for R >>= L;
+end;
+
+definition
+  let L,R be set;
+  pred L << R means
+:: SURREAL0:def 20
+   for l,r st l in L & r in R holds not r <= l;
+end;
+
+notation
+  let L,R be set;
+  synonym R >> L for L << R;
+end;
+
+theorem :: SURREAL0:41
+  for X1,X2,Y be set st X1 << Y & X2 << Y holds
+    X1\/X2 << Y;
+
+theorem :: SURREAL0:42
+  for X,Y1,Y2 be set st X << Y1 & X << Y2 holds
+    X << Y1\/Y2;
+
+theorem :: SURREAL0:43
+  x <= y iff L_x << {y} & {x} << R_y;
+
+theorem :: SURREAL0:44 ::: move to preliminaries
+  for X1,X2,Y1,Y2 be set st
+    (for x st x in X1 ex y st y in X2 & x <= y) &
+    (for x st x in Y2 ex y st y in Y1 & y <= x) &
+     x = [X1,Y1] & y = [X2,Y2]
+  holds x <= y;
+
+theorem :: SURREAL0:45
+  L_x << R_x;
+
+theorem :: SURREAL0:46
+  for X,Y be set, A holds
+    [X,Y] in Day A iff X << Y &
+       for o be object st o in X \/ Y
+          ex O st O in A & o in Day O;
+
+theorem :: SURREAL0:47
+  X is surreal-membered implies
+   ex M be Ordinal st
+     for o st o in X ex A be Ordinal st A in M & o in Day A;

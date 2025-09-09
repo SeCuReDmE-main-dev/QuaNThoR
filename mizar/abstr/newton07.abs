@@ -1,0 +1,560 @@
+:: Pascal's Triangle and {L}ucas's Theorem
+::  by Rafa{\l} Ziobro
+::
+:: Received December 24, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, NAT_1, FINSEQ_1, ARYTM_3, XXREAL_0, CARD_1, ARYTM_1,
+      RELAT_1, FUNCT_1, XCMPLX_0, NEWTON, ABIAN, SUBSET_1, VALUED_0, FOMODEL0,
+      VALUED_1, INT_1, ORDINAL1, ORDINAL4, CARD_3, REALSET1, NEWTON05,
+      EUCLID_3, NEWTON07, ZFMISC_1;
+ notations ORDINAL1, XCMPLX_0, NUMBERS, XXREAL_0, CARD_1, RELAT_1, FUNCT_1,
+      INT_1, INT_2, NAT_1, NEWTON, RVSUM_1, FINSEQ_1, NAT_D, ABIAN, SUBSET_1,
+      VALUED_0, NEWTON04, VALUED_1, FOMODEL0, AOFA_A00, NEWTON05, FINSEQ_4,
+      NUMPOLY1, NOMIN_9;
+ constructors ABIAN, SQUARE_1, NAT_D, NEWTON, WSIERP_1, RELSET_1, NEWTON04,
+      AOFA_A00, NEWTON05, FINSEQ_4, NUMPOLY1, NOMIN_9;
+ registrations ABIAN, ORDINAL1, RELSET_1, XXREAL_0, XREAL_0, NAT_1, INT_1,
+      FINSEQ_1, NEWTON, XBOOLE_0, XCMPLX_0, VALUED_0, NAT_6, RVSUM_1, FOMODEL0,
+      NEWTON02, NEWTON04, VALUED_1, LAGRA4SQ, REAL_3, EUCLID_9, FINSEQ_4,
+      AOFA_A00, NEWTON05, FINSEQ_9;
+ requirements REAL, NUMERALS, SUBSET, ARITHM;
+
+
+begin
+
+:: NAT_D
+
+theorem :: NEWTON07:1
+for k,n be non zero Nat
+  holds k mod n = 0 implies (k - 1) mod n = n - 1;
+
+theorem :: NEWTON07:2
+  for k be Nat, n be non zero Nat holds
+    (k + 1) mod n = 0 implies (k + 1) div n = (k div n) + 1;
+
+registration
+  let a be non zero Nat;
+  reduce (a - 1) mod a to a - 1;
+end;
+
+theorem :: NEWTON07:3
+  for n,k be non zero Nat holds
+  n mod k > 0 implies (n - 1) mod k = (n mod k) - 1;
+
+theorem :: NEWTON07:4
+  for n,k be non zero Nat holds n mod k > 0 implies n div k = (n - 1) div k;
+
+:: Factorial
+
+registration
+  let a be trivial Nat;
+  cluster a! -> trivial non zero;
+end;
+
+registration
+  reduce 1! to 1;
+  reduce 2! to 2;
+  let a,b be Nat;
+  cluster (a + b)! mod b -> zero;
+end;
+
+theorem :: NEWTON07:5
+  for n,k be Nat holds n! divides (n+k)!;
+
+theorem :: NEWTON07:6
+  for n,k be Nat holds (min (n,k))! divides n!;
+
+registration
+  let n be Nat;
+  reduce n choose 1 to n;
+  let k be Nat;
+  cluster (n + k)!/(n!) -> natural;
+  cluster (n + k)!/((n!)*(k!)) -> natural;
+  cluster n!/((min(n,k))!) -> natural;
+  cluster (n + k)!/((min(n,k))!)|^2 -> natural;
+end;
+
+theorem :: NEWTON07:7
+  for n,k be Nat holds (n!)|^k divides (n*k)!;
+
+theorem :: NEWTON07:8
+  for n,k be Nat holds k >= 2*n implies 2|^n divides k!;
+
+:: n choose k
+registration
+  let n be non zero Nat;
+  reduce 0 choose n to 0;
+  let m be Nat;
+  cluster (m mod n) choose n -> zero;
+end;
+
+theorem :: NEWTON07:9
+  for k, n be Nat holds ((k + n) choose n) = ((k + n) choose k);
+
+theorem :: NEWTON07:10
+  for n be odd Nat holds n choose ((n + 1)/2) = n choose ((n - 1)/2);
+
+theorem :: NEWTON07:11
+  for n be Nat holds (2*(n + 1)) choose (n + 1) = 2*((2*n + 1) choose n);
+
+theorem :: NEWTON07:12
+  for n be Nat holds (n + 1) choose 2 - (n choose 2) = n;
+
+registration
+  let n be Nat;
+  reduce (n + 1) choose 0 to 1;
+  reduce ((n+1) choose 2) - (n choose 2) to n;
+  cluster (2*(n + 1)) choose (n + 1) -> even;
+end;
+
+theorem :: NEWTON07:13
+  for n be Nat, m be non zero Nat holds (n mod m) choose (m - 1) < 2;
+
+registration
+  let m,n be Nat;
+  cluster (n mod (m + 1)) choose m -> trivial;
+end;
+
+theorem :: NEWTON07:14
+  for n be Nat, m be non zero Nat holds
+    (n mod m) choose (m - 1) = 1 iff n mod m = m - 1;
+
+theorem :: NEWTON07:15
+  for p be odd Prime holds p divides ((p + 1) choose ((p + 1)/2));
+
+theorem :: NEWTON07:16
+  for p be odd Prime, k be non zero Nat st k + 1 < p holds
+    p divides ((p + 1) choose (k + 1));
+
+theorem :: NEWTON07:17
+  for p be Prime, k be non zero Nat st k <> p holds (p choose k) mod p = 0;
+
+theorem :: NEWTON07:18
+  for p be Prime, k be non zero Nat st not p divides k holds
+    (p choose (k mod p)) mod p = 0;
+
+theorem :: NEWTON07:19
+  for p be Prime, n be odd Nat st n < p holds
+    ((p - 1) choose n) mod p = p - 1 & ((p - 1) choose (n - 1)) mod p = 1;
+
+theorem :: NEWTON07:20
+  for p be Prime, n be even Nat st n < p holds
+    ((p - 1) choose n) mod p = 1;
+
+theorem :: NEWTON07:21
+  for p be Prime, n be Nat, k be non zero Nat holds n + k < p implies
+    ((p + n) choose (k+n)) mod p = 0;
+
+theorem :: NEWTON07:22
+  for p be Prime, n be Nat st n + 2 < p holds ((p + 1) choose (n+2)) mod p = 0;
+
+theorem :: NEWTON07:23
+  for p be Prime, n be Nat holds n < p implies ((p + n) choose n) mod p = 1;
+
+theorem :: NEWTON07:24
+  for p be Prime, n be Nat, k be Nat holds
+    k <= n < p implies
+      ((p + n) choose k) mod p = (n choose k) mod p;
+
+theorem :: NEWTON07:25
+  for p be Prime, n be non zero Nat st n < p holds ((2*p) choose n) mod p = 0;
+
+theorem :: NEWTON07:26
+  for p be Prime, k,n be Nat holds k < n <= p implies
+     ((p + n) choose k) mod p = ((n choose k) mod p);
+
+theorem :: NEWTON07:27 :: N02119:
+  for p be Prime, n be Nat st not p divides n holds (p choose n) mod p = 0;
+
+theorem :: NEWTON07:28
+  for a,b be non zero Nat holds ((a*b) choose 1) mod b = 0;
+
+theorem :: NEWTON07:29
+  for a,b be Nat holds ((a*b + 1) choose 1) mod b = 1 mod b;
+
+theorem :: NEWTON07:30
+  for a,b,c be Nat holds ((a + 1) choose (b + 1)) mod c =
+  (((a choose b) mod c) + ((a choose (b + 1)) mod c)) mod c;
+
+theorem :: NEWTON07:31
+  for p be Prime, n,k be Nat st k <> p holds
+    (((n mod p) + 1) choose k) mod p = (((n + 1) mod p) choose k) mod p;
+
+:: recurrence of PT mod p
+
+:: Anton's lemma
+theorem :: NEWTON07:32
+  for p be Prime, n be Nat,k be Nat holds
+  (n choose k) mod p =
+     (((n mod p) choose (k mod p))*((n div p) choose (k div p))) mod p;
+
+theorem :: NEWTON07:33
+  for p be Prime, n be Nat holds (n choose p) mod p = (n div p) mod p;
+
+theorem :: NEWTON07:34
+  for p be Prime, n be Nat holds
+    ((p + n) choose p) mod p = ((n div p) + 1) mod p;
+
+theorem :: NEWTON07:35
+for p be Prime, n be Nat holds ((p*n) choose p) mod p = n mod p;
+
+:: the way below is obviously ineffective for proving AL, remove if you wish
+theorem :: NEWTON07:36
+  for p be Prime, n,k be Nat st k < p holds
+    (n choose k) mod p = ((n mod p) choose k) mod p;
+
+theorem :: NEWTON07:37
+  for n,k be Nat, p be Prime st k < p holds
+    ((n*p + k) choose k) mod p = 1;
+
+theorem :: NEWTON07:38
+  for n,k be Nat, p be Prime st k < p holds
+    ((n*p + k) choose (n*p)) mod p = 1;
+
+theorem :: NEWTON07:39
+  for p be Prime holds ((2*p) choose p) mod p = 2 mod p;
+
+theorem :: NEWTON07:40
+  for p be Prime, n be Nat holds
+  (n choose (p - 1)) mod p = ((n mod p) choose (p - 1)) mod p;
+
+theorem :: NEWTON07:41
+  for k be non zero Nat, i be Nat, p be Prime holds
+  ((i*p + (p -' k)) choose (p -' k)) mod p = 1;
+
+theorem :: NEWTON07:42
+  for p be Prime, n,k be Nat holds k < p implies
+    ((n*p + k) choose p) mod p = ((n*p) choose p) mod p;
+
+theorem :: NEWTON07:43
+  for p be Prime, n,k be Nat holds (((n + k)*p) choose p) mod p = (n + k) mod p
+;
+
+theorem :: NEWTON07:44
+  for p be Prime, k, n be Nat, m be non zero Nat st k + m < p holds
+    ((n*p + k) choose (m + k)) mod p = 0;
+
+theorem :: NEWTON07:45
+  for n be Nat holds Parity ((n+1)!) = (Parity (n+1))*(Parity (n!));
+
+theorem :: NEWTON07:46
+  for n be even Nat holds Parity (n!) = Parity ((n+1)!);
+
+theorem :: NEWTON07:47
+  for n be Nat holds
+    Parity ((n+2)!) = 2*Parity(Triangle (n+1))*Parity (n!);
+
+:: Pascal's Triangle step by step:
+
+registration
+  let f be 1-element FinSequence;
+  reduce <*f.1*> to f;
+end;
+
+registration
+  let f be 2-element FinSequence;
+  reduce <*f.1,f.2*> to f;
+end;
+
+registration
+  let f be 3-element FinSequence;
+  reduce <*f.1,f.2,f.3*> to f;
+end;
+
+registration
+  let f be 4-element FinSequence;
+  reduce <*f.1,f.2,f.3,f.4*> to f;
+end;
+
+registration
+  let f be 5-element FinSequence;
+  reduce <*f.1,f.2,f.3,f.4,f.5*> to f;
+end;
+
+registration
+  let f be 6-element FinSequence;
+  reduce <*f.1,f.2,f.3,f.4,f.5,f.6*> to f;
+end;
+
+registration
+  let f be 7-element FinSequence;
+  reduce <*f.1,f.2,f.3,f.4,f.5,f.6,f.7*> to f;
+end;
+
+registration
+  let f be 8-element FinSequence;
+  reduce <*f.1,f.2,f.3,f.4,f.5,f.6,f.7,f.8*> to f;
+end;
+
+registration
+  let n be Nat;
+  reduce <*0*>.n to 0;
+end;
+
+registration
+  let a1,a2,a3,a4,a5 be Complex;
+  cluster <*a1,a2,a3,a4,a5*> -> complex-valued;
+  let a6 be Complex;
+  cluster <*a1,a2,a3,a4,a5,a6*> -> complex-valued;
+  let a7 be Complex;
+  cluster <*a1,a2,a3,a4,a5,a6,a7*> -> complex-valued;
+  let a8 be Complex;
+  cluster <*a1,a2,a3,a4,a5,a6,a7,a8*> -> complex-valued;
+end;
+
+:: FINSEQ_1:65
+theorem :: NEWTON07:48
+  for n be non zero Nat, f,g be FinSequence holds
+    (f^g).(len f + n) = g.n;
+
+theorem :: NEWTON07:49
+  for n be non zero Nat, c be Complex, f be FinSequence holds
+    (<*c*>^f).(n + 1) = f.n;
+
+theorem :: NEWTON07:50
+  for f be FinSequence, n be Nat holds (f^<*0*>).n = f.n;
+
+theorem :: NEWTON07:51
+  for n be Nat holds
+    Newton_Coeff (n + 1) = (<*0*>^(Newton_Coeff n))+((Newton_Coeff n)^<*0*>);
+
+theorem :: NEWTON07:52
+  for a1,a2,b1,b2 be Complex, n be Nat,
+      f,g be n-element complex-valued FinSequence holds
+  (f^<*a1,a2*>) + (g^<*b1,b2*>) = (f+g)^<*a1+b1,a2+b2*>;
+
+theorem :: NEWTON07:53
+  for a1,a2,a3,b1,b2,b3 be Complex, n be Nat,
+      f,g be n-element complex-valued FinSequence holds
+  (f^<*a1,a2,a3*>) + (g^<*b1,b2,b3*>) = (f+g)^<*a1+b1,a2+b2,a3+b3*>;
+
+theorem :: NEWTON07:54
+  for a1,a2,a3,a4,a5,b1,b2,b3,b4,b5 be Complex holds
+  <*a1,a2,a3,a4,a5*> + <*b1,b2,b3,b4,b5*> = <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5*>;
+
+theorem :: NEWTON07:55
+  for a1,a2,a3,a4,a5,a6,b1,b2,b3,b4,b5,b6 be Complex holds
+  <*a1,a2,a3,a4,a5,a6*> + <*b1,b2,b3,b4,b5,b6*> =
+    <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5,a6+b6*>;
+
+theorem :: NEWTON07:56
+  for a1,a2,a3,a4,a5,a6,a7,b1,b2,b3,b4,b5,b6,b7 be Complex holds
+    <*a1,a2,a3,a4,a5,a6,a7*> + <*b1,b2,b3,b4,b5,b6,b7*> =
+      <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5,a6+b6,a7+b7*>;
+
+theorem :: NEWTON07:57
+  for a1,a2,a3,a4,a5,a6,a7,a8,b1,b2,b3,b4,b5,b6,b7,b8 be Complex holds
+  <*a1,a2,a3,a4,a5,a6,a7,a8*> + <*b1,b2,b3,b4,b5,b6,b7,b8*> =
+    <*a1+b1,a2+b2,a3+b3,a4+b4,a5+b5,a6+b6,a7+b7,a8+b8*>;
+
+theorem :: NEWTON07:58
+  Newton_Coeff 0 = <*1*>;
+
+theorem :: NEWTON07:59
+  Newton_Coeff 1 = <*1,1*>;
+
+theorem :: NEWTON07:60
+  Newton_Coeff 2 = <*1,2,1*>;
+
+theorem :: NEWTON07:61
+  Newton_Coeff 3 = <*1,3,3,1*>;
+
+theorem :: NEWTON07:62
+  Newton_Coeff 4 = <*1,4,6,4,1*>;
+
+theorem :: NEWTON07:63
+  Newton_Coeff 5 = <*1,5,10,10,5,1*>;
+
+theorem :: NEWTON07:64
+  Newton_Coeff 6 = <*1,6,15,20,15,6,1*>;
+
+theorem :: NEWTON07:65
+  Newton_Coeff 7 = <*1,7,21,35,35,21,7,1*>;
+
+theorem :: NEWTON07:66
+  Newton_Coeff 8 = <*1,8,28,56,70,56,28,8,1*>;
+
+:: The Little Hockey Stick and Puck Theorem
+theorem :: NEWTON07:67
+for n be Nat holds
+  (n choose 0) + ((n+2) choose 1) + ((n+4) choose 2) =
+    ((n+5) choose 2) - (n+5) choose 0;
+
+:: The Big Hockey Stick and Puck Theorem
+
+theorem :: NEWTON07:68
+for n be Nat holds
+  (n choose 0) + ((n+2) choose 1) +
+    ((n + 4) choose 2) + ((n + 6) choose 3) =
+      ((n + 7) choose 3) - ((n + 6) choose 1);
+
+theorem :: NEWTON07:69
+  for n,k be Nat st k in Seg (n+1) holds ex l,m be Nat st
+  l = k - 1 & m = n - l;
+
+theorem :: NEWTON07:70
+  for a,b be Complex, n,k be Nat st k in Seg(n+1)
+    ex c be object, l,m be Nat st m = k-1 & l = n-m & c = a|^l*b|^m;
+
+:: Pascal's Triangle: https://oeis.org/A007318
+
+:: Harmonic Triangle, https://www.deltami.edu.pl/media/articles/2020/02/delta-2020-02-trojkat-harmoniczny-blizniak-trojkata-pascala.pdf
+
+definition let n be non zero Nat;
+  func RHartr n -> FinSequence equals
+:: NEWTON07:def 1
+  n(#)(Newton_Coeff (n-1));
+end;
+
+registration
+  let n be non zero Nat;
+  cluster RHartr n -> n-element;
+  cluster RHartr n -> NAT-valued;
+end;
+
+theorem :: NEWTON07:71
+  for n,k be non zero Nat holds (RHartr n).k = n*((n-1) choose (k-1));
+
+theorem :: NEWTON07:72
+  RHartr 1 = <*1*>;
+
+theorem :: NEWTON07:73
+  RHartr 2 = <*2,2*>;
+
+theorem :: NEWTON07:74
+  RHartr 3 = <*3,6,3*>;
+
+theorem :: NEWTON07:75
+  RHartr 4 = <*4,12,12,4*>;
+
+theorem :: NEWTON07:76
+  RHartr 5 = <*5,20,30,20,5*>;
+
+theorem :: NEWTON07:77
+  RHartr 6 = <*6,30,60,60,30,6*>;
+
+theorem :: NEWTON07:78
+  RHartr 7 = <*7,42,105,140,105,42,7*>;
+
+theorem :: NEWTON07:79
+  RHartr 8 = <*8,56,168,280,280,168,56,8*>;
+
+definition let n be non zero Nat;
+  func Hartr n -> FinSequence equals
+:: NEWTON07:def 2
+::  :Def3:
+  (RHartr n)";
+end;
+
+registration
+  let n be non zero Nat;
+  cluster Hartr n -> n-element;
+  cluster Hartr n -> REAL-valued;
+end;
+
+theorem :: NEWTON07:80 :: HAT:
+  for n,k be non zero Nat holds (Hartr n).k = 1/(n*((n-1) choose (k-1)));
+
+theorem :: NEWTON07:81
+for n be non zero Nat holds Sum (RHartr n) = n*2|^(n - 1);
+
+theorem :: NEWTON07:82
+Hartr 1 = <*1*>;
+
+theorem :: NEWTON07:83
+Hartr 2 = <*1/2,1/2*>;
+
+theorem :: NEWTON07:84
+Hartr 3 = <*1/3,1/6,1/3*>;
+
+theorem :: NEWTON07:85
+Hartr 4 = <*1/4,1/12,1/12,1/4*>;
+
+theorem :: NEWTON07:86
+Hartr 5 = <*1/5,1/20,1/30,1/20,1/5*>;
+
+theorem :: NEWTON07:87
+Hartr 6 = <*1/6,1/30,1/60,1/60,1/30,1/6*>;
+
+theorem :: NEWTON07:88
+Hartr 7 = <*1/7,1/42,1/105,1/140,1/105,1/42,1/7*>;
+
+theorem :: NEWTON07:89
+Hartr 8 = <*1/8,1/56,1/168,1/280,1/280,1/168,1/56,1/8*>;
+
+::   https://mathworld.wolfram.com/RascalTriangle.html
+
+definition let n be natural Number;
+  func Rascal n -> FinSequence means
+:: NEWTON07:def 3
+
+  dom it = Seg(n + 1) & for i be Nat st i in dom it holds
+  it.i = (i-1)*(n+1-i) + 1;
+end;
+
+registration
+  let n be Nat;
+  cluster Rascal n -> (n+1)-element;
+end;
+
+theorem :: NEWTON07:90
+Rascal 0 = <*1*>;
+
+theorem :: NEWTON07:91
+Rascal 1 = <*1,1*>;
+
+theorem :: NEWTON07:92
+Rascal 2 = <*1,2,1*>;
+
+theorem :: NEWTON07:93
+Rascal 3 = <*1,3,3,1*>;
+
+theorem :: NEWTON07:94
+Rascal 4 = <*1,4,5,4,1*>;
+
+theorem :: NEWTON07:95
+Rascal 5 = <*1,5,7,7,5,1*>;
+
+theorem :: NEWTON07:96
+Rascal 6 = <*1,6,9,10,9,6,1*>;
+
+theorem :: NEWTON07:97
+  Rascal 7 = <*1,7,11,13,13,11,7,1*>;
+
+theorem :: NEWTON07:98
+(Rascal 7).4 = 13;
+
+theorem :: NEWTON07:99
+for n be Nat holds (Rascal n).1 = 1;
+
+theorem :: NEWTON07:100
+for n be non zero Nat holds (Rascal n).2 = n;
+
+registration
+  let n,m be Nat;
+  cluster (Rascal n).m -> natural;
+end;
+
+:: https://www.artofmathematics.org/sites/default/files/rascalstackled.pdf
+
+theorem :: NEWTON07:101
+  for k,n be Nat holds
+    (Rascal (k + n)).(n+1) + (Rascal (k + n + 2)).(n+2) =
+      (Rascal (k + n + 1)).(n+1) + (Rascal (k + n + 1)).(n + 2) + 1;
+
+theorem :: NEWTON07:102
+  for k,n be Nat holds
+    (Rascal (k + n)).(n+1) * (Rascal (k + n + 2)).(n+2) =
+      (Rascal (k + n + 1)).(n+1) * (Rascal (k + n + 1)).(n + 2) + 1;
+

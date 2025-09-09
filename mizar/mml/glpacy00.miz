@@ -1,0 +1,4633 @@
+:: About Path and Cycle Graphs
+::  by Sebastian Koch
+::
+:: Received December 9, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, FINSET_1, RELAT_1, FUNCT_1, XBOOLE_0, TARSKI, SUBSET_1,
+      FINSEQ_1, NAT_1, FUNCT_4, FUNCOP_1, ZFMISC_1, CARD_1, ARYTM_3, CARD_2,
+      ORDINAL2, XXREAL_0, PBOOLE, XCMPLX_0, RELAT_2, PARTFUN1, RING_3, FUNCT_2,
+      TREES_1, MOD_4, GLIB_000, GLIB_001, GLIB_002, CHORD, SCMYCIEL, SIMPLEX0,
+      GLIB_006, GLIB_010, GLIB_011, GLIB_012, GLIB_013, GLIB_014, FINSEQ_8,
+      GRAPH_2, RFINSEQ, INT_1, SQUARE_1, GLIB_016, HELLY, MSAFREE2, GLIB_007,
+      ORDINAL1, ORDINAL4, ARYTM_1, REWRITE1, GRAPH_1, RCOMP_1, ABIAN;
+ notations TARSKI, XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, RELSET_1,
+      PARTFUN1, FUNCT_2, DOMAIN_1, SETFAM_1, ABIAN, SQUARE_1, FUNCOP_1,
+      FUNCT_4, FINSET_1, CARD_1, PBOOLE, NUMBERS, XCMPLX_0, XXREAL_0, NAT_1,
+      NAT_D, CARD_2, FINSEQ_1, FINSEQ_4, RFINSEQ, FINSEQ_6, GLIB_000, FINSEQ_8,
+      GLIB_001, GLIB_002, CHORD, GLIB_006, GLIB_007, HELLY, GLIB_008, GLIB_010,
+      GLIB_011, GLIB_012, GLIB_013, GLIB_014, ENUMSET1, GLIB_016;
+ constructors DOMAIN_1, FINSOP_1, RVSUM_1, FINSEQ_5, FIB_NUM2, FINSEQ_8, HELLY,
+      CHORD, NAT_D, RFINSEQ, FINSEQ_6, CARD_2, GLIB_007, GLIB_008, SQUARE_1,
+      GLIB_011, GLIB_012, GLIB_014, GLIB_016;
+ registrations XBOOLE_0, RELAT_1, FUNCT_1, ORDINAL1, FUNCOP_1, FINSET_1, ABIAN,
+      XREAL_0, NAT_1, MEMBERED, FINSEQ_1, GLIB_000, GLIB_001, HELLY, GLIB_002,
+      CHORD, INT_1, CARD_1, FUNCT_2, RELSET_1, SUBSET_1, GLIB_006, GLIB_007,
+      MSAFREE5, GLIB_009, GLIB_010, GLIB_012, GLIB_008, GLIB_013, GLIB_014,
+      GLIBPRE1, SQUARE_1, GLIB_016, GLIB_011;
+ requirements ARITHM, BOOLE, NUMERALS, REAL, SUBSET;
+ equalities GLIB_000, GLIB_001, ORDINAL1, XBOOLE_0;
+ theorems FUNCOP_1, ORDINAL1, FUNCT_1, TARSKI, GLIB_010, GLIB_001, GLIB_000,
+      PARTFUN1, RELAT_1, XBOOLE_1, FUNCT_2, GLIB_012, GLIB_013, GLIB_014,
+      CARD_1, GLIBPRE0, ZFMISC_1, ENUMSET1, XBOOLE_0, CHORD, GLIB_002, NAT_D,
+      GLIB_008, FINSEQ_1, GLIB_006, NAT_1, XXREAL_0, FINSEQ_3, FINSEQ_6,
+      FINSEQ_5, RFINSEQ, FINSEQ_8, XREAL_1, GLIB_011, GLIBPRE1, CARD_2,
+      POLYFORM, SQUARE_1, INT_1, GLIB_016, FIELD_5, NOMIN_2, PENCIL_1,
+      FINSEQ_4, GLIB_007, HELLY, FINSEQ_2;
+ schemes NAT_1, FUNCT_2;
+
+begin :: Preliminaries
+
+registration
+  cluster _trivial non-Dmulti loopfull for _Graph;
+  existence
+  proof
+    set H = the _trivial edgeless _Graph, v = the Vertex of H;
+    take G = the addEdge of H,v,the_Edges_of H,v;
+    G is addLoops of H,{v} by GLIB_012:27;
+    hence thesis;
+  end;
+  let G be non acyclic _Graph;
+  cluster non acyclic for Subgraph of G;
+  existence
+  proof
+    reconsider H = G as Subgraph of G by GLIB_000:40;
+    take H;
+    thus thesis;
+  end;
+end;
+
+:: variant of GLIB_000:81 for possibly infinite graphs
+:: into GLIB_000 ?
+theorem Th1:
+  for G1 being _Graph, G2 being Subgraph of G1
+  for v1 being Vertex of G1, v2 being Vertex of G2 st v1 = v2
+  holds v2.inDegree() c= v1.inDegree() &
+    v2.outDegree() c= v1.outDegree() & v2.degree() c= v1.degree()
+proof
+  let G1 be _Graph, G2 be Subgraph of G1;
+  let v1 be Vertex of G1, v2 be Vertex of G2;
+  assume A1: v1 = v2;
+  then v2.edgesIn() c= v1.edgesIn() by GLIB_000:78;
+  hence A2: v2.inDegree() c= v1.inDegree() by CARD_1:11;
+  thus v2.outDegree() c= v1.outDegree() by A1, GLIB_000:78, CARD_1:11;
+  hence v2.degree() c= v1.degree() by A2, CARD_2:83;
+end;
+
+::: into GLIB_001 ?
+theorem Th4:
+  for G being _Graph, T being Trail of G holds T.length() = card(T.edges())
+proof
+  let G be _Graph, T be Trail of G;
+  A1: T.edgeSeq() is one-to-one by GLIB_001:def 27;
+  thus T.length() = card dom(T.edgeSeq()) by CARD_1:62
+    .= card(T.edges()) by A1, CARD_1:70;
+end;
+
+Th5:
+  for G being _Graph, C being Walk of G, u,v,w being object
+  st C is Cycle-like & u in C.vertices() & v in C.vertices() & u <> w & v <> w
+  ex W being Path of G st W is_Walk_from u,v & not w in W.vertices()
+    by GLIBPRE1:130;
+
+::: into GLIB_002
+registration
+  let G be non acyclic _Graph;
+  cluster Cycle-like for Walk of G;
+  existence by GLIB_002:def 2;
+end;
+
+::: into GLIB_002
+Lm1:
+  for T being non _trivial Tree-like _Graph, v being Vertex of T
+  for F being removeVertex of T,v, C being Component of F
+  for w1, w2 being Vertex of F st w1 <> w2 &
+    w1 in the_Vertices_of C & w2 in the_Vertices_of C
+  holds not w1 in v.allNeighbors() or not w2 in v.allNeighbors()
+proof
+  let T be non _trivial Tree-like _Graph, v being Vertex of T;
+  let F be removeVertex of T,v, C be Component of F;
+  let w1, w2 be Vertex of F;
+  assume that A1: w1 <> w2 and
+    A2: w1 in the_Vertices_of C & w2 in the_Vertices_of C and
+    A3: w1 in v.allNeighbors() & w2 in v.allNeighbors();
+  the_Vertices_of C = F.reachableFrom(w1) by A2, GLIB_002:33;
+  then consider W9 being Walk of F such that
+    A5: W9 is_Walk_from w1,w2 by A2, GLIB_002:def 5;
+  the_Vertices_of F = the_Vertices_of T \ {v} &
+    v in the_Vertices_of T by GLIB_000:47;
+  then A6: not v in W9.vertices() by ZFMISC_1:56;
+  reconsider W = W9 as Walk of T by GLIB_001:167;
+  set P8 = the Path of W;
+  consider e1 being object such that
+    A7: e1 Joins v,w1,T by A3, GLIB_000:71;
+  consider e2 being object such that
+    A8: e2 Joins v,w2,T by A3, GLIB_000:71;
+  A9: e2 Joins w2,v,T by A8, GLIB_000:14;
+  set P9 = P8.addEdge(e2), P = P9.addEdge(e1);
+  W is_Walk_from w1,w2 by A5, GLIB_001:19;
+  then A10: P8 is_Walk_from w1,w2 by GLIB_001:160;
+  then A11: e2 Joins P8.last(),v,T by A9, GLIB_001:def 23;
+  not v in W.vertices() by A6, GLIB_001:98;
+  then A12: not v in P8.vertices() by GLIB_001:163, TARSKI:def 3;
+  P8.first() = w1 & P8.last() = w2 by A10, GLIB_001:def 23;
+  then P8 is open by A1, GLIB_001:def 24;
+  then A13: P9 is Path-like by A11, A12, GLIB_001:151;
+  A14: P9 is_Walk_from w1,v by A9, A10, GLIB_001:66;
+  then A15: P9.last() = v by GLIB_001:def 23;
+  then A17: P is non trivial by A7, GLIB_001:132;
+  A18: P is closed by A7, A14, GLIB_001:66, GLIB_001:119;
+  A19: not e1 in P9.edges()
+  proof
+    assume e1 in P9.edges();
+    then e1 in P8.edges() \/ {e2} by A11, GLIB_001:111;
+    then per cases by ZFMISC_1:136;
+    suppose e1 in P8.edges();
+      then e1 in W.edges() by GLIB_001:163, TARSKI:def 3;
+      then v in W.vertices() by A7, GLIB_001:105;
+      hence contradiction by A6, GLIB_001:98;
+    end;
+    suppose e1 = e2;
+      then W9 is_Walk_from v,w2 by A1, A5, A7, A8, GLIB_000:15;
+      then W9.first() = v by GLIB_001:def 23;
+      hence contradiction by A6, GLIB_001:88;
+    end;
+  end;
+  e1 in P9.last().edgesInOut() by A7, A15, GLIB_000:62;
+  then P is Path-like by A13, A19, GLIB_002:42;
+  hence contradiction by A17, A18;
+end;
+
+::: into CHORD
+theorem Th6:
+  for T being non _trivial Tree-like _Graph, v being Vertex of T
+  for F being removeVertex of T,v holds F.numComponents() = v.degree()
+proof
+  let T be non _trivial Tree-like _Graph, v being Vertex of T;
+  let F be removeVertex of T,v;
+  deffunc H(Vertex of F) = F.reachableFrom($1);
+  A1: for w being Vertex of F holds H(w) in F.componentSet() by GLIB_002:def 8;
+  consider h9 being Function of the_Vertices_of F, F.componentSet() such that
+    A2: for w being Vertex of F holds h9.w = H(w) from FUNCT_2:sch 8(A1);
+  set h = h9|v.allNeighbors();
+  now
+    let x be object;
+    assume A3: x in v.allNeighbors();
+    x <> v by A3, GLIB_000:112;
+    then x in the_Vertices_of T \ {v} by A3, ZFMISC_1:56;
+    then x in the_Vertices_of F by GLIB_000:47;
+    hence x in dom h9 by FUNCT_2:def 1;
+  end;
+  then A5: dom h = v.allNeighbors() by TARSKI:def 3, RELAT_1:62;
+  now
+    let y be object;
+    assume y in F.componentSet();
+    then consider w being Vertex of F such that
+      A7: y = F.reachableFrom(w) by GLIB_002:def 8;
+    the_Vertices_of F c= the_Vertices_of T;
+    then reconsider u = w as Vertex of T by TARSKI:def 3;
+    consider W being Walk of T such that
+      A8: W is_Walk_from u,v by GLIB_002:def 1;
+    set P = the Path of W;
+    A9: P is_Walk_from u,v by A8, GLIB_001:160;
+    the_Vertices_of F = the_Vertices_of T \ {v} &
+      v in the_Vertices_of T by GLIB_000:47;
+    then u <> v by ZFMISC_1:56;
+    then A10: P.first() <> v by A9, GLIB_001:def 23;
+    then P.first() <> P.last() by A9, GLIB_001:def 23;
+    then A11: 3 <= len P by GLIB_001:125, GLIB_001:127;
+    then reconsider m = len P - 2 as Element of NAT by XXREAL_0:2, INT_1:5;
+    A12: m < len P - 0 by XREAL_1:15;
+    A13: m is odd & 1 is odd by POLYFORM:4, POLYFORM:5;
+    then P.(m+1) Joins P.m,P.(m+2),T by A12, GLIB_001:def 3;
+    then P.(m+1) Joins P.last(),P.m,T by GLIB_000:14;
+    then P.(m+1) Joins v,P.m,T by A9, GLIB_001:def 23;
+    then A14: P.m in dom h by A5, GLIB_000:71;
+    set P9 = P.cut(1,m);
+    A15: 3-2 <= m by A11, XREAL_1:9;
+    A16: m <= len P - 0 by XREAL_1:10;
+    A17: P9 is_Walk_from P.1,P.m by A13, A15, A16, GLIB_001:37;
+    not v in P9.vertices()
+    proof
+      assume v in P9.vertices();
+      then consider n being odd Element of NAT such that
+        A18: n <= len P9 & P9.n = v by GLIB_001:87;
+      reconsider n1 = n-1 as Nat by CHORD:1;
+      reconsider n1 as Element of NAT by ORDINAL1:def 12;
+      A19: n1+1 < len P9 + 1 by A18, NAT_1:13;
+      then n1 < len P9 by XREAL_1:6;
+      then A20: P9.(n1+1) = P.(1+n1) by A13, A15, A16, GLIB_001:36;
+      A21: len P9 + 1 = m + 1 by A13, A15, A16, GLIB_001:36;
+      m + 1 <= len P by A12, NAT_1:13;
+      then A22: n < len P by A19, A21, XXREAL_0:2;
+      P.len P = P.last()
+        .= P.n by A9, A18, A20, GLIB_001:def 23;
+      hence contradiction by A10, A18, A20, A22, GLIB_001:def 28;
+    end;
+    then reconsider P9 as Walk of F by GLIB_001:171;
+    P9 is_Walk_from P.first(),P.m by A17, GLIB_001:19;
+    then A23: P9 is_Walk_from u,P.m by A9, GLIB_001:def 23;
+    then reconsider z = P.m as Vertex of F by GLIB_001:18;
+    z in F.reachableFrom(w) by A23, GLIB_002:def 5;
+    then y = F.reachableFrom(z) by A7, GLIB_002:12;
+    then h9.(P.m) = y by A2;
+    then h.(P.m) = y by A14, FUNCT_1:47;
+    hence y in rng h by A14, FUNCT_1:def 3;
+  end;
+  then F.componentSet() c= rng h by TARSKI:def 3;
+  then A24: F.componentSet() = rng h by XBOOLE_0:def 10;
+  now
+    let x1,x2 be object;
+    assume A25: x1 in dom h & x2 in dom h & h.x1 = h.x2 & x1 <> x2;
+    then reconsider x1, x2 as Vertex of F;
+    A26: h.x1 = h9.x1 & h.x2 = h9.x2 by A25, FUNCT_1:47;
+    h9.x1 = H(x1) & h9.x2 = H(x2) by A2;
+    then A27: x2 in H(x1) by A25, A26, GLIB_002:9;
+    set C = the inducedSubgraph of F, H(x1);
+    the_Vertices_of C = H(x1) by GLIB_000:def 37;
+    then x2 in the_Vertices_of C & x1 in the_Vertices_of C by A27, GLIB_002:9;
+    hence contradiction by A5, A25, Lm1;
+  end;
+  then A29: h is one-to-one by FUNCT_1:def 4;
+  thus F.numComponents() = card F.componentSet() by GLIB_002:def 9
+    .= card dom h by A24, A29, CARD_1:70
+    .= v.degree() by A5, GLIB_000:111;
+end;
+
+::: into GLIBPRE0
+theorem Th7:
+  for T being non _trivial _finite Tree-like _Graph, v being Vertex of T
+  for F being removeVertex of T,v, C being Component of F
+  ex w being Vertex of T st w is endvertex & w in the_Vertices_of C
+proof
+  let T be non _trivial _finite Tree-like _Graph, v be Vertex of T;
+  let F be removeVertex of T,v, C be Component of F;
+  A1: the_Vertices_of C c= the_Vertices_of F;
+  A2: the_Vertices_of F c= the_Vertices_of T;
+  per cases;
+  suppose C is _trivial;
+    then consider w8 being Vertex of C such that
+      A4: the_Vertices_of C = {w8} by GLIB_000:22;
+    reconsider w9 = w8 as Vertex of F by A1, TARSKI:def 3;
+    reconsider w = w9 as Vertex of T by A2, TARSKI:def 3;
+    take w;
+    set P = T.pathBetween(v,w);
+    the_Vertices_of F = the_Vertices_of T \ {v} by GLIB_000:47;
+    then A6: v <> w by ZFMISC_1:56;
+    A7: len P = 3
+    proof
+      assume len P <> 3;
+      then per cases by XXREAL_0:1;
+      suppose len P < 3;
+        then P.first() = P.last() by GLIB_001:125, GLIB_001:127;
+        then v = P.last() by HELLY:28;
+        hence contradiction by A6, HELLY:28;
+      end;
+      suppose A8: 3 < len P;
+        then reconsider m = len P - 2 as Element of NAT by XXREAL_0:2, INT_1:5;
+        A9: m < len P - 0 by XREAL_1:15;
+        A10: m is odd & 1 is odd by POLYFORM:4, POLYFORM:5;
+        then P.(m+1) Joins P.m,P.(m+2),T by A9, GLIB_001:def 3;
+        then P.(m+1) Joins P.last(),P.m,T by GLIB_000:14;
+        then A11: P.(m+1) Joins w,P.m,T by HELLY:28;
+        per cases;
+        suppose P.m <> v;
+          then A13: P.m in the_Vertices_of T \ {v}
+            by A9, A10, ZFMISC_1:56, GLIB_001:7;
+          w in the_Vertices_of T \ {v} by A6, ZFMISC_1:56;
+          then P.(m+1) in T.edgesBetween(the_Vertices_of T \ {v})
+            by A11, A13, GLIB_000:32;
+          then P.(m+1) in the_Edges_of F by GLIB_000:47;
+          then A14: P.(m+1) Joins w,P.m,F by A11, GLIB_000:73;
+          A15: {w9} = F.reachableFrom(w9) by A4, GLIB_002:33;
+          then w in F.reachableFrom(w9) by TARSKI:def 1;
+          then P.m in F.reachableFrom(w9) by A14, GLIB_002:10;
+          then P.(m+1) Joins w,w,T by A15, A11, TARSKI:def 1;
+          hence contradiction by GLIB_000:18;
+        end;
+        suppose P.m = v;
+          then A16: P.m = P.first() by HELLY:28
+            .= P.1;
+          3-2 < m & m <= len P by A8, A9, XREAL_1:9;
+          then m = len P by A10, A16, GLIB_001:def 28;
+          hence contradiction;
+        end;
+      end;
+    end;
+    then P.(1+1) Joins P.1,P.(1+2),T by POLYFORM:4, GLIB_001:def 3;
+    then P.2 Joins P.first(),P.last(),T by A7;
+    then P.2 Joins v,P.last(),T by HELLY:28;
+    then A17: P.2 Joins v,w,T by HELLY:28;
+    A18: not P.2 Joins w,w,T by GLIB_000:18;
+    now
+      let x be object;
+      hereby
+        assume x in w.edgesInOut();
+        then consider u being Vertex of T such that
+          A19: x Joins w,u,T by GLIB_000:64;
+        u = v
+        proof
+          assume u <> v;
+          then A20: u in the_Vertices_of T \ {v} by ZFMISC_1:56;
+          w in the_Vertices_of T \ {v} by A6, ZFMISC_1:56;
+          then x in T.edgesBetween(the_Vertices_of T \ {v})
+            by A19, A20, GLIB_000:32;
+          then x in the_Edges_of F by GLIB_000:47;
+          then A21: x Joins w,u,F by A19, GLIB_000:73;
+          A22: {w9} = F.reachableFrom(w9) by A4, GLIB_002:33;
+          then w in F.reachableFrom(w9) by TARSKI:def 1;
+          then u in F.reachableFrom(w9) by A21, GLIB_002:10;
+          then x Joins w,w,T by A19, A22, TARSKI:def 1;
+          hence contradiction by GLIB_000:18;
+        end;
+        then x Joins v,w,T by A19, GLIB_000:14;
+        hence x = P.2 by A17, GLIB_000:def 20;
+      end;
+      assume x = P.2;
+      hence x in w.edgesInOut() by A17, GLIB_000:14, GLIB_000:62;
+    end;
+    then w.edgesInOut() = {P.2} by TARSKI:def 1;
+    hence thesis by A18, GLIB_000:def 51;
+  end;
+  suppose A23: C is non _trivial;
+    the_Edges_of C <> {}
+    proof
+      assume the_Edges_of C = {};
+      then C.size() = 0;
+      then C.order() = 0+1 by GLIB_002:46;
+      hence contradiction by A23, GLIB_000:def 19;
+    end;
+    then consider w1, w2 being Vertex of C such that
+      A25: w1 <> w2 & w1 is endvertex & w2 is endvertex and
+      w2 in C.reachableFrom(w1) by A23, GLIB_002:43;
+    w1 in the_Vertices_of F & w2 in the_Vertices_of F by A1, TARSKI:def 3;
+    then per cases by A25, Lm1;
+    suppose A26: not w1 in v.allNeighbors();
+      w1 in the_Vertices_of C;
+      then reconsider w = w1 as Vertex of T by A2, TARSKI:def 3;
+      reconsider w9 = w1 as Vertex of F by A1, TARSKI:def 3;
+      take w;
+      consider e being object such that
+        A27: w1.edgesInOut() = {e} & not e Joins w1,w1,C
+        by A25, GLIB_000:def 51;
+      A28: not e Joins w,w,T by GLIB_000:18;
+      C is Subgraph of T by GLIB_000:43;
+      then A29: w1.edgesInOut() c= w.edgesInOut() by GLIB_000:78;
+      now
+        let x be object;
+        hereby
+          assume x in w.edgesInOut();
+          then consider u being Vertex of T such that
+            A30: x Joins w,u,T by GLIB_000:64;
+          w in u.allNeighbors() by A30, GLIB_000:14, GLIB_000:71;
+          then A31: u in the_Vertices_of T \ {v} by A26, ZFMISC_1:56;
+          w1 in the_Vertices_of F by A1, TARSKI:def 3;
+          then w in the_Vertices_of T \ {v} by GLIB_000:47;
+          then x in T.edgesBetween(the_Vertices_of T \ {v})
+            by A30, A31, GLIB_000:32;
+          then x in the_Edges_of F by GLIB_000:47;
+          then x Joins w9,u,F by A30, GLIB_000:73;
+          then x in w9.edgesInOut() by GLIB_000:62;
+          then x in w1.edgesInOut() by GLIBPRE0:44;
+          hence x = e by A27, TARSKI:def 1;
+        end;
+        assume x = e;
+        then x in w1.edgesInOut() by A27, TARSKI:def 1;
+        hence x in w.edgesInOut() by A29;
+      end;
+      then {e} = w.edgesInOut() by TARSKI:def 1;
+      hence thesis by A28, GLIB_000:def 51;
+    end;
+    suppose A26: not w2 in v.allNeighbors();
+      w2 in the_Vertices_of C;
+      then reconsider w = w2 as Vertex of T by A2, TARSKI:def 3;
+      reconsider w9 = w2 as Vertex of F by A1, TARSKI:def 3;
+      take w;
+      consider e being object such that
+        A27: w2.edgesInOut() = {e} & not e Joins w2,w2,C
+        by A25, GLIB_000:def 51;
+      A28: not e Joins w,w,T by GLIB_000:18;
+      C is Subgraph of T by GLIB_000:43;
+      then A29: w2.edgesInOut() c= w.edgesInOut() by GLIB_000:78;
+      now
+        let x be object;
+        hereby
+          assume x in w.edgesInOut();
+          then consider u being Vertex of T such that
+            A30: x Joins w,u,T by GLIB_000:64;
+          w in u.allNeighbors() by A30, GLIB_000:14, GLIB_000:71;
+          then A31: u in the_Vertices_of T \ {v} by A26, ZFMISC_1:56;
+          w2 in the_Vertices_of F by A1, TARSKI:def 3;
+          then w in the_Vertices_of T \ {v} by GLIB_000:47;
+          then x in T.edgesBetween(the_Vertices_of T \ {v})
+            by A30, A31, GLIB_000:32;
+          then x in the_Edges_of F by GLIB_000:47;
+          then x Joins w9,u,F by A30, GLIB_000:73;
+          then x in w9.edgesInOut() by GLIB_000:62;
+          then x in w2.edgesInOut() by GLIBPRE0:44;
+          hence x = e by A27, TARSKI:def 1;
+        end;
+        assume x = e;
+        then x in w2.edgesInOut() by A27, TARSKI:def 1;
+        hence x in w.edgesInOut() by A29;
+      end;
+      then {e} = w.edgesInOut() by TARSKI:def 1;
+      hence thesis by A28, GLIB_000:def 51;
+    end;
+  end;
+end;
+
+::: into GLIBPRE0
+theorem Th9:
+  for G2 being _Graph, v,e,w being object, v2 being Vertex of G2
+  for G1 being addAdjVertex of G2,v,e,w for v1 being Vertex of G1
+  st v1 <> v & v1 <> w & v1 = v2 holds
+    v1.edgesIn() = v2.edgesIn() & v1.inDegree() = v2.inDegree() &
+    v1.edgesOut() = v2.edgesOut() & v1.outDegree() = v2.outDegree() &
+    v1.edgesInOut() = v2.edgesInOut() & v1.degree() = v2.degree()
+proof
+  let G2 be _Graph, v,e,w be object, v2 be Vertex of G2;
+  let G1 be addAdjVertex of G2,v,e,w, v1 be Vertex of G1;
+  assume A1: v1 <> v & v1 <> w & v1 = v2;
+  per cases;
+  suppose v in the_Vertices_of G2 & not w in the_Vertices_of G2 &
+      not e in the_Edges_of G2;
+    then consider G3 being addVertex of G2,w such that
+      A2: G1 is addEdge of G3,v,e,w by GLIB_006:125;
+    reconsider v3 = v2 as Vertex of G3 by GLIB_006:68;
+    v3.edgesIn() = v2.edgesIn() & v3.inDegree() = v2.inDegree() &
+      v3.edgesOut() = v2.edgesOut() & v3.outDegree() = v2.outDegree() &
+      v3.edgesInOut() = v2.edgesInOut() & v3.degree() = v2.degree()
+      by GLIBPRE0:45;
+    hence thesis by A1, A2, GLIBPRE0:46;
+  end;
+  suppose not v in the_Vertices_of G2 & w in the_Vertices_of G2 &
+      not e in the_Edges_of G2;
+    then consider G3 being addVertex of G2,v such that
+      A3: G1 is addEdge of G3,v,e,w by GLIB_006:126;
+    reconsider v3 = v2 as Vertex of G3 by GLIB_006:68;
+    v3.edgesIn() = v2.edgesIn() & v3.inDegree() = v2.inDegree() &
+      v3.edgesOut() = v2.edgesOut() & v3.outDegree() = v2.outDegree() &
+      v3.edgesInOut() = v2.edgesInOut() & v3.degree() = v2.degree()
+      by GLIBPRE0:45;
+    hence thesis by A1, A3, GLIBPRE0:46;
+  end;
+  suppose not((v in the_Vertices_of G2 & not w in the_Vertices_of G2 &
+      not e in the_Edges_of G2)or(not v in the_Vertices_of G2 &
+      w in the_Vertices_of G2 & not e in the_Edges_of G2));
+    then G1 == G2 by GLIB_006:def 12;
+    hence thesis by A1, GLIB_000:96;
+  end;
+end;
+
+::: into GLIBPRE0
+theorem Th10:
+  for G2 being _Graph, v being Vertex of G2, e,w being object
+  for G1 being addAdjVertex of G2,v,e,w for v1 being Vertex of G1
+  st not e in the_Edges_of G2 & not w in the_Vertices_of G2 & v1 = v holds
+    v1.edgesIn() = v.edgesIn() & v1.inDegree() = v.inDegree() &
+    v1.edgesOut() = v.edgesOut() \/ {e} & v1.outDegree() = v.outDegree() +` 1 &
+    v1.edgesInOut() = v.edgesInOut() \/ {e} & v1.degree() = v.degree() +` 1
+proof
+  let G2 be _Graph, v being Vertex of G2, e,w be object;
+  let G1 be addAdjVertex of G2,v,e,w, v1 be Vertex of G1;
+  assume A1: not e in the_Edges_of G2 & not w in the_Vertices_of G2 & v1 = v;
+  then consider G3 being addVertex of G2,w such that
+    A2: G1 is addEdge of G3,v,e,w by GLIB_006:125;
+  reconsider v3 = v as Vertex of G3 by GLIB_006:68;
+  A3: v3.edgesIn() = v.edgesIn() & v3.inDegree() = v.inDegree() &
+    v3.edgesOut() = v.edgesOut() & v3.outDegree() = v.outDegree() &
+    v3.edgesInOut() = v.edgesInOut() & v3.degree() = v.degree()
+    by GLIBPRE0:45;
+  A4: the_Edges_of G3 = the_Edges_of G2 by GLIB_006:def 10;
+  w in {w} by TARSKI:def 1;
+  then A5: w is Vertex of G3 by GLIB_006:86;
+  v <> w by A1;
+  hence thesis by A1, A2, A3, A4, A5, GLIBPRE0:47;
+end;
+
+::: into GLIBPRE0
+theorem Th11:
+  for G2 being _Graph, v, e being object, w being Vertex of G2
+  for G1 being addAdjVertex of G2,v,e,w for w1 being Vertex of G1
+  st not e in the_Edges_of G2 & not v in the_Vertices_of G2 & w1 = w holds
+    w1.edgesIn() = w.edgesIn() \/ {e} & w1.inDegree() = w.inDegree() +` 1 &
+    w1.edgesOut() = w.edgesOut() & w1.outDegree() = w.outDegree() &
+    w1.edgesInOut() = w.edgesInOut() \/ {e} & w1.degree() = w.degree() +` 1
+proof
+  let G2 be _Graph, v, e be object, w be Vertex of G2;
+  let G1 be addAdjVertex of G2,v,e,w, w1 be Vertex of G1;
+  assume A1: not e in the_Edges_of G2 & not v in the_Vertices_of G2 & w1 = w;
+  then consider G3 being addVertex of G2,v such that
+    A2: G1 is addEdge of G3,v,e,w by GLIB_006:126;
+  reconsider w3 = w as Vertex of G3 by GLIB_006:68;
+  A3: w3.edgesIn() = w.edgesIn() & w3.inDegree() = w.inDegree() &
+    w3.edgesOut() = w.edgesOut() & w3.outDegree() = w.outDegree() &
+    w3.edgesInOut() = w.edgesInOut() & w3.degree() = w.degree()
+    by GLIBPRE0:45;
+  A4: the_Edges_of G3 = the_Edges_of G2 by GLIB_006:def 10;
+  v in {v} by TARSKI:def 1;
+  then A5: v is Vertex of G3 by GLIB_006:86;
+  v <> w by A1;
+  hence thesis by A1, A2, A3, A4, A5, GLIBPRE0:48;
+end;
+
+::: into GLIBPRE0
+theorem Th12:
+  for G being _Graph, C being Component of G
+  holds Endvertices C c= Endvertices G
+proof
+  let G be _Graph, C be Component of G;
+  now
+    let x be object;
+    assume x in Endvertices C;
+    then consider v being Vertex of C such that
+      A1: x = v & v is endvertex by GLIB_006:def 8;
+    the_Vertices_of C c= the_Vertices_of G;
+    then reconsider w = v as Vertex of G by TARSKI:def 3;
+    1 = v.degree() by A1, GLIB_000:174
+     .= w.degree() by GLIBPRE0:44;
+    hence x in Endvertices G by A1, GLIB_000:174, GLIB_006:56;
+  end;
+  hence thesis by TARSKI:def 3;
+end;
+
+::: into GLIB_006
+registration
+  let G be edgeless _Graph;
+  cluster Endvertices G -> empty;
+  coherence
+  proof
+    assume Endvertices G is non empty;
+    then consider x being object such that
+      A1: x in Endvertices G by XBOOLE_0:def 1;
+    reconsider x as Vertex of G by A1;
+    thus contradiction by A1, GLIB_006:56;
+  end;
+end;
+
+Th8:
+  for G being complete _Graph st 3 c= G.order() holds G is non acyclic
+    by GLIB_013:100;
+
+Th13:
+  for G being _Graph, n being Nat
+  st for v being Vertex of G holds v.degree() c= n
+  holds G is with_max_degree by GLIB_013:101;
+
+Th16:
+  for G being _Graph, C being Component of G holds
+    G.minDegree() c= C.minDegree() &
+    G.minInDegree() c= C.minInDegree() &
+    G.minOutDegree() c= C.minOutDegree() by GLIB_013:104;
+
+begin :: Path Graphs
+
+:: this definition includes the ray and the double ray
+definition
+  let G be _Graph;
+  attr G is Path-like means
+  :Def1:
+  G is Tree-like & for v being Vertex of G holds v.degree() c= 2;
+end;
+
+registration
+  cluster Path-like -> Tree-like locally-finite with_max_degree for _Graph;
+  coherence
+  proof
+    let P be _Graph;
+    assume A1: P is Path-like;
+    hence P is Tree-like;
+    now
+      let v be Vertex of P;
+      v.degree() c= 2 by A1;
+      hence v.degree() is finite;
+    end;
+    hence P is locally-finite by GLIB_013:23;
+    thus P is with_max_degree by A1, Th13;
+  end;
+  cluster _trivial edgeless -> Path-like for _Graph;
+  coherence;
+  cluster _trivial Path-like -> edgeless for _Graph;
+  coherence;
+  cluster _finite Path-like for _Graph;
+  existence
+  proof
+    take the _trivial edgeless _Graph;
+    thus thesis;
+  end;
+end;
+
+theorem Th17:
+  for G being locally-finite _Graph holds G is Path-like iff
+    G is Tree-like & for v being Vertex of G holds v.degree() <= 2
+proof
+  let G be locally-finite _Graph;
+  hereby
+    assume A1: G is Path-like;
+    hence G is Tree-like;
+    let v be Vertex of G;
+    Segm v.degree() c= Segm 2 by A1;
+    hence v.degree() <= 2 by NAT_1:39;
+  end;
+  assume A2: G is Tree-like;
+  assume A3: for v being Vertex of G holds v.degree() <= 2;
+  thus G is Tree-like by A2;
+  let v be Vertex of G;
+  Segm v.degree() c= Segm 2 by A3, NAT_1:39;
+  hence v.degree() c= 2;
+end;
+
+definition
+  let F be Graph-yielding Function;
+  attr F is Path-like means
+  :Def2:
+  for x being object st x in dom F
+    ex G being _Graph st F.x = G & G is Path-like;
+end;
+
+registration
+  let P be Path-like _Graph;
+  cluster <* P *> -> Path-like;
+  coherence
+  proof
+    let x be object;
+    assume A1: x in dom <* P *>;
+    then reconsider n = x as Nat;
+    1 <= n <= len <* P *> by A1, FINSEQ_3:25;
+    then 1 <= n <= 1 by FINSEQ_1:40;
+    then n = 1 by XXREAL_0:1;
+    hence thesis;
+  end;
+  cluster NAT --> P -> Path-like;
+  coherence by FUNCOP_1:7;
+end;
+
+definition
+  let F be non empty Graph-yielding Function;
+  redefine attr F is Path-like means
+  :Def3:
+  for x being Element of dom F holds F.x is Path-like;
+  compatibility
+  proof
+    hereby
+      assume A1: F is Path-like;
+      let x be Element of dom F;
+      consider G being _Graph such that
+        A2: F.x = G & G is Path-like by A1;
+      thus F.x is Path-like by A2;
+    end;
+    assume A3: for x being Element of dom F holds F.x is Path-like;
+    let x be object;
+    assume x in dom F;
+    then reconsider y = x as Element of dom F;
+    take F.y;
+    thus thesis by A3;
+  end;
+end;
+
+Lm2: :: copied from GLIB_000
+  for F being ManySortedSet of NAT, n being object
+  holds n is Nat iff n in dom F
+proof
+  let F be ManySortedSet of NAT, n being object;
+  hereby
+    assume n is Nat;
+    then n in NAT by ORDINAL1:def 12;
+    hence n in dom F by PARTFUN1:def 2;
+  end;
+  assume n in dom F;
+  hence n is Nat;
+end;
+
+definition
+  let S be GraphSeq;
+  redefine attr S is Path-like means
+  :Def4:
+  for n being Nat holds S.n is Path-like;
+  compatibility
+  proof
+    hereby
+      assume A1: S is Path-like;
+      let x be Nat;
+      x in dom S by Lm2;
+      hence S.x is Path-like by A1;
+    end;
+    assume A2: for x being Nat holds S.x is Path-like;
+    let x be Element of dom S;
+    thus thesis by A2;
+  end;
+end;
+
+registration
+  cluster empty -> Path-like for Graph-yielding Function;
+  coherence;
+  cluster _trivial edgeless -> Path-like for Graph-yielding Function;
+  coherence
+  proof
+    let F be Graph-yielding Function;
+    assume A1: F is _trivial edgeless;
+    let x be object;
+    assume A2: x in dom F;
+    then consider G1 being _Graph such that
+      A3: G1 = F.x & G1 is _trivial by A1, GLIB_000:def 60;
+    consider G2 being _Graph such that
+      A4: G2 = F.x & G2 is edgeless by A1, A2, GLIB_008:def 2;
+    take G1;
+    thus thesis by A3, A4;
+  end;
+  cluster Path-like -> Tree-like for Graph-yielding Function;
+  coherence
+  proof
+    let F be Graph-yielding Function;
+    assume A5: F is Path-like;
+    now
+      let x be object;
+      assume x in dom F;
+      then consider G being _Graph such that
+        A7: G = F.x & G is Path-like by A5;
+      take G;
+      thus G = F.x & G is Tree-like by A7;
+    end;
+    hence thesis by GLIB_002:def 14;
+  end;
+  cluster non empty Path-like for GraphSeq;
+  existence
+  proof
+    take the non empty _trivial edgeless GraphSeq;
+    thus thesis;
+  end;
+end;
+
+registration
+  let F be Path-like non empty Graph-yielding Function, x be Element of dom F;
+  cluster F.x -> Path-like;
+  coherence by Def3;
+end;
+
+registration
+  let S be Path-like GraphSeq, n be Nat;
+  cluster S.n -> Path-like;
+  coherence by Def4;
+end;
+
+registration
+  let p be Path-like Graph-yielding FinSequence, n be Nat;
+  cluster p | n -> Path-like;
+  coherence
+  proof
+    A1: p|n = p|Seg n by FINSEQ_1:def 16;
+    now
+      let x be object;
+      assume A2: x in dom(p|n);
+      then x in dom p by A1, RELAT_1:60, TARSKI:def 3;
+      then consider G being _Graph such that
+        A3: p.x = G & G is Path-like by Def2;
+      take G;
+      thus (p|n).x = G & G is Path-like by A1, A3, A2, FUNCT_1:47;
+    end;
+    hence thesis;
+  end;
+  cluster p /^ n -> Path-like;
+  coherence
+  proof
+    per cases;
+    suppose A4: n <= len p;
+      now
+        let x be object;
+        assume A5: x in dom(p /^ n);
+        then reconsider i = x as Nat;
+        n+i in dom p by A5, FINSEQ_5:26;
+        then consider G being _Graph such that
+          A6: p.(n+i) = G & G is Path-like by Def2;
+        take G;
+        thus (p /^ n).x = G & G is Path-like by A4, A5, A6, RFINSEQ:def 1;
+      end;
+      hence thesis;
+    end;
+    suppose not (n <= len p);
+      hence thesis by RFINSEQ:def 1;
+    end;
+  end;
+  let m be Nat;
+  cluster smid(p,m,n) -> Path-like;
+  coherence
+  proof
+    smid(p,m,n) = (p/^(m-'1))|(n+1-'m) by FINSEQ_8:def 1;
+    hence thesis;
+  end;
+  cluster (m,n)-cut p -> Path-like;
+  coherence
+  proof
+    per cases;
+    suppose 1 <= m & m <= n & n <= len p;
+      then 1 <= m & m <= len p & 1 <= n & n <= len p by XXREAL_0:2;
+      then m in dom p & n in dom p by FINSEQ_3:25;
+      then smid(p,m,n) = (m,n)-cut p by FINSEQ_8:29;
+      hence thesis;
+    end;
+    suppose not(1 <= m & m <= n & n <= len p);
+      hence thesis by FINSEQ_6:def 4;
+    end;
+  end;
+end;
+
+registration
+  let p, q be Path-like Graph-yielding FinSequence;
+  cluster p ^ q -> Path-like;
+  coherence
+  proof
+    for x being object st x in dom (p^q) ex G being _Graph st
+      G = (p^q).x & G is Path-like
+    proof
+      let x be object;
+      assume A1: x in dom (p^q);
+      then reconsider k = x as Nat;
+      per cases by A1, FINSEQ_1:25;
+      suppose k in dom p;
+        then (p^q).k = p.k & ex G being _Graph st p.k = G & G is Path-like
+          by Def2, FINSEQ_1:def 7;
+        hence ex G being _Graph st (p^q).x = G & G is Path-like;
+      end;
+      suppose ex n being Nat st n in dom q & k = len p + n;
+        then consider n being Nat such that
+          A2: n in dom q & k = len p + n;
+        (p^q).(len p + n) = q.n & ex G being _Graph st q.n = G & G is Path-like
+          by A2, Def2, FINSEQ_1:def 7;
+        hence ex G being _Graph st (p^q).x = G & G is Path-like by A2;
+      end;
+    end;
+    hence thesis;
+  end;
+  cluster p ^' q -> Path-like;
+  coherence
+  proof
+    p ^' q = p^(2,len q)-cut q by FINSEQ_6:def 5;
+    hence thesis;
+  end;
+end;
+
+registration
+  let P1, P2 be Path-like _Graph;
+  cluster <* P1, P2 *> -> Path-like;
+  coherence
+  proof
+    <* P1, P2 *> = <* P1 *> ^ <* P2 *> by FINSEQ_1:def 9;
+    hence thesis;
+  end;
+  let P3 be Path-like _Graph;
+  cluster <* P1, P2, P3 *> -> Path-like;
+  coherence
+  proof
+    <* P1, P2, P3 *> = <* P1 *> ^ <* P2 *> ^ <* P3 *> by FINSEQ_1:def 10;
+    hence thesis;
+  end;
+end;
+
+definition
+  let S be Graph-membered set;
+  attr S is Path-like means
+  :Def5:
+  for G being _Graph st G in S holds G is Path-like;
+end;
+
+registration
+  cluster empty -> Path-like for Graph-membered set;
+  coherence;
+  cluster Path-like -> Tree-like for Graph-membered set;
+  coherence
+  proof
+    let S be Graph-membered set;
+    assume A1: S is Path-like;
+    now
+      let G be _Graph;
+      assume G in S;
+      then G is Path-like by A1;
+      hence G is Tree-like;
+    end;
+    hence thesis by GLIB_014:def 10;
+  end;
+end;
+
+registration
+  let P1 be Path-like _Graph;
+  cluster {P1} -> Path-like;
+  coherence by TARSKI:def 1;
+  let P2 be Path-like _Graph;
+  cluster {P1, P2} -> Path-like;
+  coherence
+  proof
+    let x be _Graph;
+    assume x in {P1, P2};
+    then per cases by TARSKI:def 2;
+    suppose x = P1;
+      hence thesis;
+    end;
+    suppose x = P2;
+      hence thesis;
+    end;
+  end;
+end;
+
+registration
+  let F be Path-like Graph-yielding Function;
+  cluster rng F -> Path-like;
+  coherence
+  proof
+    let G be _Graph;
+    assume G in rng F;
+    then consider x being object such that
+      A1: x in dom F & F.x = G by FUNCT_1:def 3;
+    consider G0 being _Graph such that
+      A2: F.x = G0 & G0 is Path-like by A1, Def2;
+    thus G is Path-like by A1, A2;
+  end;
+end;
+
+registration
+  let X be Path-like Graph-membered set;
+  cluster -> Path-like for Subset of X;
+  coherence by Def5;
+end;
+
+registration
+  let X be Path-like Graph-membered set, Y be set;
+  cluster X /\ Y -> Path-like;
+  coherence
+  proof
+    X /\ Y c= X by XBOOLE_1:17;
+    hence thesis;
+  end;
+  cluster X \ Y -> Path-like;
+  coherence;
+end;
+
+registration
+  let X, Y be Path-like Graph-membered set;
+  cluster X \/ Y -> Path-like;
+  coherence
+  proof
+    let x be _Graph;
+    assume x in X \/ Y;
+    then per cases by XBOOLE_0:def 3;
+    suppose x in X;
+      hence thesis by Def5;
+    end;
+    suppose x in Y;
+      hence thesis by Def5;
+    end;
+  end;
+  cluster X \+\ Y -> Path-like;
+  coherence;
+end;
+
+registration
+  cluster non empty Path-like for Graph-membered set;
+  existence
+  proof
+    take {the Path-like _Graph};
+    thus thesis;
+  end;
+end;
+
+registration
+  let S be non empty Path-like Graph-membered set;
+  cluster -> Path-like for Element of S;
+  coherence by Def5;
+end;
+
+Lm3:
+  for G1, G2 being _Graph st G1 == G2
+  holds G1 is Path-like implies G2 is Path-like
+proof
+  let G1, G2 be _Graph;
+  assume A1: G1 == G2 & G1 is Path-like;
+  hence G2 is Tree-like by GLIB_002:48;
+  let v2 be Vertex of G2;
+  reconsider v1 = v2 as Vertex of G1 by A1, GLIB_000:def 34;
+  v1.degree() = v2.degree() by A1, GLIB_000:96;
+  hence thesis by A1;
+end;
+
+:: adding a vertex incident with an endvertex of a path results in a path
+theorem Th18:
+  for P2 being Path-like _Graph, v2 being Vertex of P2, e,w2 being object
+  for P1 being addAdjVertex of P2,v2,e,w2
+  st v2 is endvertex or P2 is _trivial holds P1 is Path-like
+proof
+  let P2 be Path-like _Graph, v2 be Vertex of P2, e,w2 be object;
+  let P1 be addAdjVertex of P2,v2,e,w2;
+  per cases;
+  suppose A1: not e in the_Edges_of P2 & not w2 in the_Vertices_of P2;
+    assume A2: v2 is endvertex or P2 is _trivial;
+    thus P1 is Tree-like;
+    per cases by A2;
+    suppose A3: v2 is endvertex;
+      reconsider v1 = v2 as Vertex of P1 by GLIB_006:68;
+      reconsider w1 = w2 as Vertex of P1 by A1, GLIB_006:129;
+      let v be Vertex of P1;
+      per cases;
+      suppose v = v1;
+        then v.degree() = v2.degree() +` 1 by A1, Th10
+          .= 1 +` 1 by A3, GLIB_000:174
+          .= 2;
+        hence v.degree() c= 2;
+      end;
+      suppose v = w1;
+        then v.degree() = 1 by A1, GLIB_006:141, GLIB_000:174;
+        then v.degree() in 2 by CARD_1:50, TARSKI:def 2;
+        hence v.degree() c= 2 by ORDINAL1:def 2;
+      end;
+      suppose A4: v <> v1 & v <> w1;
+        then A5: not v in {w2} by TARSKI:def 1;
+        the_Vertices_of P1 = the_Vertices_of P2 \/ {w2} by A1, GLIB_006:def 12;
+        then reconsider v9 = v as Vertex of P2 by A5, XBOOLE_0:def 3;
+        v.degree() = v9.degree() by A4, Th9;
+        hence v.degree() c= 2 by Def1;
+      end;
+    end;
+    suppose A6: P2 is _trivial;
+      let v be Vertex of P1;
+      A7: P1.order() = P2.order() +` 1 by A1, GLIB_006:150
+        .= 1 +` 1 by A6, GLIB_000:26
+        .= 2;
+      then A8: P1 is vertex-finite;
+      P1 is non _trivial by A7, GLIB_000:26;
+      then A9: v.degree() = 1 by A7, A8, GLIB_008:27, GLIB_000:174;
+      1 c= succ 1 by XBOOLE_1:7;
+      hence v.degree() c= 2 by A9;
+    end;
+  end;
+  suppose not(not e in the_Edges_of P2 & not w2 in the_Vertices_of P2);
+    then P1 == P2 by GLIB_006:def 12;
+    hence thesis by Lm3;
+  end;
+end;
+
+theorem Th19:
+  for P2 being Path-like _Graph, v2,e being object, w2 being Vertex of P2
+  for P1 being addAdjVertex of P2,v2,e,w2
+  st w2 is endvertex or P2 is _trivial holds P1 is Path-like
+proof
+  let P2 be Path-like _Graph, v2,e be object, w2 be Vertex of P2;
+  let P1 be addAdjVertex of P2,v2,e,w2;
+  per cases;
+  suppose A1: not e in the_Edges_of P2 & not v2 in the_Vertices_of P2;
+    assume A2: w2 is endvertex or P2 is _trivial;
+    thus P1 is Tree-like;
+    per cases by A2;
+    suppose A3: w2 is endvertex;
+      reconsider v1 = v2 as Vertex of P1 by A1, GLIB_006:130;
+      reconsider w1 = w2 as Vertex of P1 by GLIB_006:68;
+      let v be Vertex of P1;
+      per cases;
+      suppose v = w1;
+        then v.degree() = w2.degree() +` 1 by A1, Th11
+          .= 1 +` 1 by A3, GLIB_000:174
+          .= 2;
+        hence v.degree() c= 2;
+      end;
+      suppose v = v1;
+        then v.degree() = 1 by A1, GLIB_006:142, GLIB_000:174;
+        then v.degree() in 2 by CARD_1:50, TARSKI:def 2;
+        hence v.degree() c= 2 by ORDINAL1:def 2;
+      end;
+      suppose A4: v <> v1 & v <> w1;
+        then A5: not v in {v2} by TARSKI:def 1;
+        the_Vertices_of P1 = the_Vertices_of P2 \/ {v2} by A1, GLIB_006:def 12;
+        then reconsider v9 = v as Vertex of P2 by A5, XBOOLE_0:def 3;
+        v.degree() = v9.degree() by A4, Th9;
+        hence v.degree() c= 2 by Def1;
+      end;
+    end;
+    suppose A6: P2 is _trivial;
+      let v be Vertex of P1;
+      A7: P1.order() = P2.order() +` 1 by A1, GLIB_006:151
+        .= 1 +` 1 by A6, GLIB_000:26
+        .= 2;
+      then A8: P1 is vertex-finite;
+      P1 is non _trivial by A7, GLIB_000:26;
+      then A9: v.degree() = 1 by A7, A8, GLIB_008:27, GLIB_000:174;
+      1 c= succ 1 by XBOOLE_1:7;
+      hence v.degree() c= 2 by A9;
+    end;
+  end;
+  suppose not(not e in the_Edges_of P2 & not v2 in the_Vertices_of P2);
+    then P1 == P2 by GLIB_006:def 12;
+    hence thesis by Lm3;
+  end;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+1)-vertex n-edge Path-like for _Graph;
+  existence
+  proof
+    defpred P[Nat] means ex G being _Graph, v being Vertex of G
+      st G is ($1+1)-vertex $1-edge Path-like &
+        (G is non _trivial implies v is endvertex);
+    A1: P[0]
+    proof
+      take G = the _trivial edgeless _Graph, the Vertex of G;
+      thus thesis;
+    end;
+    A2: for m being Nat st P[m] holds P[m+1]
+    proof
+      let m be Nat;
+      assume P[m];
+      then consider G2 being _Graph, v2 being Vertex of G2 such that
+        A3: G2 is (m+1)-vertex m-edge Path-like and
+        A4: G2 is non _trivial implies v2 is endvertex;
+      take G1 = the addAdjVertex of G2,v2,the_Edges_of G2,the_Vertices_of G2;
+      A5: not the_Edges_of G2 in the_Edges_of G2 &
+        not the_Vertices_of G2 in the_Vertices_of G2;
+      reconsider v1 = the_Vertices_of G2 as Vertex of G1 by A5, GLIB_006:129;
+      take v1;
+      G1.order() = G2.order() +` 1 by A5, GLIB_006:150
+        .= (m+1) +` 1 by A3, GLIB_013:def 3
+        .= m + 1 + 1;
+      hence G1 is ((m+1)+1)-vertex by GLIB_013:def 3;
+      G1.size() = G2.size() +` 1 by A5, GLIB_006:150
+        .= m +` 1 by A3, GLIB_013:def 4
+        .= m + 1;
+      hence G1 is (m+1)-edge by GLIB_013:def 4;
+      thus G1 is Path-like by A3, A4, Th18;
+      assume G1 is non _trivial;
+      thus v1 is endvertex by A5, GLIB_006:141;
+    end;
+    for m being Nat holds P[m] from NAT_1:sch 2(A1,A2);
+    then consider G being _Graph, v being Vertex of G such that
+      A8: G is (n+1)-vertex n-edge Path-like and
+      G is non _trivial implies v is endvertex;
+    take G;
+    thus thesis by A8;
+  end;
+end;
+
+registration
+  let n be non zero Nat;
+  cluster n-vertex (n-'1)-edge Path-like for _Graph;
+  existence
+  proof
+    take P = the (n-'1+1)-vertex (n-'1)-edge Path-like _Graph;
+    1-1 <= n-1 by CHORD:1, XREAL_1:9;
+    then n-'1+1 = n by NAT_D:72;
+    hence P is n-vertex;
+    thus thesis;
+  end;
+  cluster (n+1)-vertex n-edge Path-like non _trivial for _Graph;
+  existence
+  proof
+    take P = the (n+1)-vertex n-edge Path-like _Graph;
+    1 <= n by CHORD:1;
+    then 1+0 < n+1 by XREAL_1:8;
+    then P.order() <> 1 by GLIB_013:def 3;
+    hence thesis by GLIB_013:def 3;
+  end;
+end;
+
+registration
+  let P be Path-like _Graph;
+  cluster connected -> Path-like for Subgraph of P;
+  coherence
+  proof
+    let H be Subgraph of P;
+    assume H is connected;
+    hence H is Tree-like;
+    let v2 be Vertex of H;
+    the_Vertices_of H c= the_Vertices_of P;
+    then reconsider v1 = v2 as Vertex of P by TARSKI:def 3;
+    A2: v2.degree() c= v1.degree() by Th1;
+    v1.degree() c= 2 by Def1;
+    hence v2.degree() c= 2 by A2, XBOOLE_1:1;
+  end;
+end;
+
+theorem
+  for G2 being _Graph, v1,e,v2 being object
+  for G1 being addAdjVertex of G2,v1,e,v2
+  st G1 is Path-like holds G2 is Path-like
+proof
+  let G2 be _Graph, v1,e,v2 be object;
+  let G1 be addAdjVertex of G2,v1,e,v2;
+  assume A1: G1 is Path-like;
+  then A2: G2 is connected;
+  G2 is Subgraph of G1 by GLIB_006:57;
+  hence thesis by A1, A2;
+end;
+
+:: removing an endvertex from a path results in a path
+theorem Th21:
+  for P1 being Path-like _Graph, v being Vertex of P1
+  for P2 being removeVertex of P1,v
+  st v is endvertex or P1 is _trivial holds P2 is Path-like
+proof
+  let P1 be Path-like _Graph, v be Vertex of P1;
+  let P2 be removeVertex of P1,v;
+  assume v is endvertex or P1 is _trivial;
+  then per cases;
+  suppose P1 is non _trivial & v is endvertex;
+    then P2 is connected by GLIB_002:4;
+    hence thesis;
+  end;
+  suppose P1 is _trivial;
+    hence thesis;
+  end;
+end;
+
+:: copied from GLIB_008
+::: original type of n was Element of dom(p^<*x*>)
+Lm4:
+  for p being non empty FinSequence, x being object
+  for n being Nat st n <= len(p^<*x*>) - 1
+  holds n = len(p^<*x*>) - 1 or n <= len p - 1
+proof
+  let p be non empty FinSequence, x be object, n be Nat;
+  A1: len(p^<*x*>) = len p + len <*x*> by FINSEQ_1:22
+    .= len p + 1 by FINSEQ_1:39;
+  assume A2: n <= len(p^<*x*>) - 1;
+  assume not n = len(p^<*x*>) - 1;
+  then A3: n < len p - 1 + 1 by A1, A2, XXREAL_0:1;
+  len p - 1 is Nat by CHORD:1;
+  hence n <= len p - 1 by A3, NAT_1:13;
+end;
+
+:: mostly copied from GLIB_008
+theorem Th22:
+  for G being _finite Path-like _Graph, H being connected Subgraph of G
+  ex p being non empty _finite Path-like Graph-yielding FinSequence
+  st p.1 == H & p.len p = G & len p = G.order() - H.order() + 1 &
+    for n being Element of dom p st n <= len p - 1
+    ex v1,v2 being Vertex of G, e being object
+    st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+      e in the_Edges_of G \ the_Edges_of p.n &
+      ( (v1 in the_Vertices_of p.n & not v2 in the_Vertices_of p.n &
+          (p.n is non _trivial implies v1 in Endvertices(p.n))) or
+        (not v1 in the_Vertices_of p.n & v2 in the_Vertices_of p.n &
+          (p.n is non _trivial implies v2 in Endvertices(p.n))))
+proof
+  defpred P[Nat] means for G being _finite Path-like _Graph
+    for H being connected Subgraph of G st $1 = G.order() - H.order()
+    ex p being non empty _finite Path-like Graph-yielding FinSequence
+    st p.1 == H & p.len p = G & len p = G.order() - H.order() + 1 &
+      for n being Element of dom p st n <= len p - 1
+      ex v1,v2 being Vertex of G, e being object
+      st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+        e in the_Edges_of G \ the_Edges_of p.n &
+      ( (v1 in the_Vertices_of p.n & not v2 in the_Vertices_of p.n &
+          (p.n is non _trivial implies v1 in Endvertices(p.n))) or
+        (not v1 in the_Vertices_of p.n & v2 in the_Vertices_of p.n &
+          (p.n is non _trivial implies v2 in Endvertices(p.n))));
+  A1: P[0]
+  proof
+    let G be _finite Path-like _Graph, H be connected Subgraph of G;
+    assume A2: 0 = G.order() - H.order();
+    then H is spanning by GLIB_000:117;
+    then A3: G == H by GLIB_008:21;
+    reconsider p = <* G *>
+      as non empty _finite Path-like Graph-yielding FinSequence;
+    take p;
+    thus p.1 == H by A3;
+    thus p.len p = p.1 by FINSEQ_1:40
+      .= G;
+    thus len p = G.order() - H.order() + 1 by A2, FINSEQ_1:40;
+    let n be Element of dom p;
+    1 <= n & n <= len p by FINSEQ_3:25;
+    then 1 <= n & n <= 1 by FINSEQ_1:40;
+    then A4: n = 1 by XXREAL_0:1;
+    assume n <= len p - 1;
+    then n <= 1 - 1 by FINSEQ_1:40;
+    hence thesis by A4; :: by contradiction
+  end;
+  A5: for k being Nat st P[k] holds P[k+1]
+  proof
+    let k be Nat;
+    assume A6: P[k];
+    let G be _finite Path-like _Graph, H be connected Subgraph of G;
+    assume A7: k+1 = G.order() - H.order();
+    then A8: G.order() = H.order() + k + 1;
+    G.order() <> H.order() by A7;
+    then A9: H is non spanning by GLIB_000:117;
+    G.order() <> 1 by A8;
+    then A10: G is non _trivial by GLIB_000:26;
+    then consider v being Vertex of G such that
+      A11: v is endvertex & not v in the_Vertices_of H by A9, GLIB_008:31;
+    consider e0 being object such that
+      A12: v.edgesInOut() = {e0} & not e0 Joins v,v,G by A11, GLIB_000:def 51;
+    set G2 = the removeVertex of G, v;
+    A13: G2.order() + 1 = G.order() by A10, GLIB_000:48;
+    then A14: k = G2.order() - H.order() by A7;
+    A15: the_Edges_of G2 = G.edgesBetween(the_Vertices_of G \ {v})
+        by A10, GLIB_000:47
+      .= G.edgesBetween(the_Vertices_of G) \ v.edgesInOut() by GLIB_000:107
+      .= the_Edges_of G \ {e0} by A12, GLIB_000:34;
+    A16: H is Subgraph of G2
+    proof
+      the_Vertices_of H misses {v} by A11, ZFMISC_1:50;
+      then the_Vertices_of H c= the_Vertices_of G \ {v} by XBOOLE_1:86;
+      then A17: the_Vertices_of H c= the_Vertices_of G2 by A10, GLIB_000:47;
+      not e0 in the_Edges_of H
+      proof
+        assume A18: e0 in the_Edges_of H;
+        e0 in v.edgesInOut() by A12, TARSKI:def 1;
+        then per cases by GLIB_000:61;
+        suppose (the_Source_of G).e0 = v;
+          then (the_Source_of H).e0 = v by A18, GLIB_000:def 32;
+          hence contradiction by A11, A18, FUNCT_2:5;
+        end;
+        suppose (the_Target_of G).e0 = v;
+          then (the_Target_of H).e0 = v by A18, GLIB_000:def 32;
+          hence contradiction by A11, A18, FUNCT_2:5;
+        end;
+      end;
+      then the_Edges_of H misses {e0} by ZFMISC_1:50;
+      hence thesis by A15, A17, GLIB_000:44, XBOOLE_1:86;
+    end;
+    A19: G2 is connected by A10, A11;
+    then consider p
+      being non empty _finite Path-like Graph-yielding FinSequence such that
+      A20: p.1 == H & p.len p = G2 & len p = G2.order() - H.order() + 1 and
+      A21: for n being Element of dom p st n <= len p - 1
+        ex v1,v2 being Vertex of G2, e being object
+        st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+          e in the_Edges_of G2 \ the_Edges_of p.n &
+          ( (v1 in the_Vertices_of p.n & not v2 in the_Vertices_of p.n &
+              (p.n is non _trivial implies v1 in Endvertices(p.n))) or
+            (not v1 in the_Vertices_of p.n & v2 in the_Vertices_of p.n &
+              (p.n is non _trivial implies v2 in Endvertices(p.n))))
+      by A6, A14, A16;
+    reconsider q = p ^ <* G *>
+      as non empty _finite Path-like Graph-yielding FinSequence;
+    take q;
+    1 <= len p by FINSEQ_1:20;
+    then 1 in dom p by FINSEQ_3:25;
+    hence q.1 == H by A20, FINSEQ_1:def 7;
+    A22: len q = len p + len <* G *> by FINSEQ_1:22
+      .= len p + 1 by FINSEQ_1:40;
+    hence A23: q.len q = G by FINSEQ_1:42;
+    thus len q = G.order() - H.order() + 1 by A13, A20, A22;
+    let n be Element of dom q;
+    assume n <= len q - 1;
+    then per cases by Lm4;
+    suppose A24: n = len q - 1;
+      then A25: q.(n+1) = G by A23;
+      A26: 1 <= n by FINSEQ_3:25;
+      A27: n = len p by A22, A24;
+      then n in dom p by A26, FINSEQ_3:25;
+      then A28: q.n = G2 by A20, A27, FINSEQ_1:def 7;
+      A29: e0 in v.edgesInOut() by A12, TARSKI:def 1;
+      then A30: e0 in the_Edges_of G;
+      e0 in {e0} by TARSKI:def 1;
+      then A31: not e0 in the_Edges_of q.n by A15, A28, XBOOLE_0:def 5;
+      v in {v} by TARSKI:def 1;
+      then not v in the_Vertices_of G \ {v} by XBOOLE_0:def 5;
+      then A32: not v in the_Vertices_of q.n by A10, A28, GLIB_000:47;
+      v.adj(e0) <> v by A12, A29, GLIB_000:67;
+      then not v.adj(e0) in {v} by TARSKI:def 1;
+      then v.adj(e0) in the_Vertices_of G \ {v} by XBOOLE_0:def 5;
+      then A33: v.adj(e0) in the_Vertices_of q.n by A10, A28, GLIB_000:47;
+      per cases by A10, A12, GLIB_008:38;
+      suppose A34: G is addAdjVertex of G2, v.adj(e0), e0, v;
+        take v.adj(e0), v, e0;
+        thus q.(n+1) is addAdjVertex of q.n, v.adj(e0), e0, v by A25, A28, A34;
+        q.n is non _trivial implies v.adj(e0) in Endvertices(q.n)
+        proof
+          assume q.n is non _trivial;
+          then A35: G2 is non _trivial by A28;
+          A36: G2 is Path-like by A11, Th21;
+          reconsider w = v.adj(e0) as Vertex of G2 by A28, A33;
+          w.degree() in succ 2 by A36, ORDINAL1:22;
+          then A37: w.degree() in {0,1,2} by CARD_1:51;
+          A38: not w.degree() = 2
+          proof
+            assume A39: w.degree() = 2;
+            v.adj(e0).degree() = w.degree() +` 1
+                by A28, A31, A32, A34, Th10
+              .= 2 + 1 by A39;
+            then succ 2 c= 2 by Def1;
+            then 2 in 2 by ORDINAL1:21;
+            hence contradiction;
+          end;
+          not w.degree() = 0 by A19, A35, GLIB_000:157;
+          then w.degree() = 1 by A37, A38, ENUMSET1:def 1;
+          hence thesis by A28, GLIB_006:56, GLIB_000:174;
+        end;
+        hence thesis by A30, A31, A32, A33, XBOOLE_0:def 5;
+      end;
+      suppose A40: G is addAdjVertex of G2, v, e0, v.adj(e0);
+        take v, v.adj(e0), e0;
+        thus q.(n+1) is addAdjVertex of q.n, v, e0, v.adj(e0) by A25, A28, A40;
+        q.n is non _trivial implies v.adj(e0) in Endvertices(q.n)
+        proof
+          assume q.n is non _trivial;
+          then A41: G2 is non _trivial by A28;
+          A42: G2 is Path-like by A11, Th21;
+          reconsider w = v.adj(e0) as Vertex of G2 by A28, A33;
+          w.degree() in succ 2 by A42, ORDINAL1:22;
+          then A43: w.degree() in {0,1,2} by CARD_1:51;
+          A44: not w.degree() = 2
+          proof
+            assume A45: w.degree() = 2;
+            v.adj(e0).degree() = w.degree() +` 1
+                by A28, A31, A32, A40, Th11
+              .= 2 + 1 by A45;
+            then succ 2 c= 2 by Def1;
+            then 2 in 2 by ORDINAL1:21;
+            hence contradiction;
+          end;
+          not w.degree() = 0 by A19, A41, GLIB_000:157;
+          then w.degree() = 1 by A43, A44, ENUMSET1:def 1;
+          hence thesis by A28, GLIB_006:56, GLIB_000:174;
+        end;
+        hence thesis by A30, A31, A32, A33, XBOOLE_0:def 5;
+      end;
+    end;
+    suppose A46: n <= len p - 1;
+      then A47: n+0 <= len p - 1 + 1 by XREAL_1:7;
+      1 <= n by FINSEQ_3:25;
+      then reconsider m = n as Element of dom p by A47, FINSEQ_3:25;
+      consider v1,v2 being Vertex of G2, e being object
+        such that A48: p.(m+1) is addAdjVertex of p.m,v1,e,v2 &
+          e in the_Edges_of G2 \ the_Edges_of p.m &
+          ( (v1 in the_Vertices_of p.m & not v2 in the_Vertices_of p.m &
+              (p.m is non _trivial implies v1 in Endvertices(p.m))) or
+            (not v1 in the_Vertices_of p.m & v2 in the_Vertices_of p.m &
+              (p.m is non _trivial implies v2 in Endvertices(p.m))))
+        by A21, A46;
+      1+0 <= n+1 & n+1 <= len p - 1 + 1 by A46, XREAL_1:6;
+      then n+1 in dom p by FINSEQ_3:25;
+      then A49: q.(n+1) = p.(m+1) by FINSEQ_1:def 7;
+      A50: q.n = p.m by FINSEQ_1:def 7;
+      the_Vertices_of G2 c= the_Vertices_of G;
+      then reconsider v1,v2 as Vertex of G by TARSKI:def 3;
+      take v1,v2,e;
+      the_Edges_of G2 \ the_Edges_of p.m c= the_Edges_of G \ the_Edges_of p.m
+        by XBOOLE_1:33;
+      hence thesis by A48, A49, A50;
+    end;
+  end;
+  A51: for k being Nat holds P[k] from NAT_1:sch 2(A1,A5);
+  let G be _finite Path-like _Graph;
+  let H be connected Subgraph of G;
+  G.order() - H.order() is Nat by GLIB_000:75, NAT_1:21;
+  hence thesis by A51;
+end;
+
+:: finite paths can be finitely constructed by adding
+:: a vertex incident with an endvertex at a time
+theorem Th23:
+  for G being _finite Path-like _Graph
+  ex p being non empty _finite Path-like Graph-yielding FinSequence
+  st p.1 is _trivial edgeless & p.len p = G & len p = G.order() &
+    for n being Element of dom p st n <= len p - 1
+    ex v1,v2 being Vertex of G, e being object
+    st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+      e in the_Edges_of G \ the_Edges_of p.n &
+      ((v1 in the_Vertices_of p.n & (n >= 2 implies v1 in Endvertices(p.n)) &
+          not v2 in the_Vertices_of p.n) or
+        (not v1 in the_Vertices_of p.n & v2 in the_Vertices_of p.n &
+          (n >= 2 implies v2 in Endvertices(p.n))))
+proof
+  let G be _finite Path-like _Graph;
+  set H = the _trivial Subgraph of G;
+  consider p being non empty _finite Path-like Graph-yielding FinSequence
+  such that
+    A1: p.1 == H & p.len p = G & len p = G.order() - H.order() + 1 and
+    A2: for n being Element of dom p st n <= len p - 1
+      ex v1,v2 being Vertex of G, e being object
+      st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+        e in the_Edges_of G \ the_Edges_of p.n &
+        ( (v1 in the_Vertices_of p.n & not v2 in the_Vertices_of p.n &
+            (p.n is non _trivial implies v1 in Endvertices(p.n))) or
+          (not v1 in the_Vertices_of p.n & v2 in the_Vertices_of p.n &
+            (p.n is non _trivial implies v2 in Endvertices(p.n)))) by Th22;
+  take p;
+  thus p.1 is _trivial edgeless by A1, GLIB_008:52, GLIB_000:89;
+  thus p.len p = G by A1;
+  H.order() = 1 by GLIB_000:26;
+  hence len p = G.order() by A1;
+  let n be Element of dom p;
+  assume A3: n <= len p - 1;
+  then consider v1,v2 being Vertex of G, e being object such that
+    A4: p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+      e in the_Edges_of G \ the_Edges_of p.n &
+      ( (v1 in the_Vertices_of p.n & not v2 in the_Vertices_of p.n &
+          (p.n is non _trivial implies v1 in Endvertices(p.n))) or
+        (not v1 in the_Vertices_of p.n & v2 in the_Vertices_of p.n &
+          (p.n is non _trivial implies v2 in Endvertices(p.n)))) by A2;
+  take v1, v2, e;
+  thus p.(n+1) is addAdjVertex of p.n,v1,e,v2 by A4;
+  thus e in the_Edges_of G \ the_Edges_of p.n by A4;
+  n >= 2 implies p.n is non _trivial
+  proof
+    assume n >= 2;
+    then A6: n-1 >= 2-1 by XREAL_1:9;
+    n - 1 <= n - 0 by XREAL_1:10;
+    then A7: n - 1 <= len p - 1 by A3, XXREAL_0:2;
+    len p - 1 <= len p - 0 by XREAL_1:10;
+    then A8: n - 1 <= len p by A7, XXREAL_0:2;
+    reconsider n1 = n - 1 as Element of NAT by A6, INT_1:3;
+    reconsider n1 as Element of dom p by A6, A8, FINSEQ_3:25;
+    consider w1,w2 being Vertex of G, e9 being object such that
+      A9: p.(n1+1) is addAdjVertex of p.n1,w1,e9,w2 &
+        e9 in the_Edges_of G \ the_Edges_of p.n1 &
+        ( (w1 in the_Vertices_of p.n1 & not w2 in the_Vertices_of p.n1 &
+            (p.n1 is non _trivial implies w1 in Endvertices(p.n1))) or
+          (not w1 in the_Vertices_of p.n1 & w2 in the_Vertices_of p.n1 &
+            (p.n1 is non _trivial implies w2 in Endvertices(p.n1)))) by A2, A7;
+    not e9 in the_Edges_of p.n1 by A9, XBOOLE_0:def 5;
+    hence thesis by A9, GLIB_006:143, GLIB_006:144;
+  end;
+  hence thesis by A4;
+end;
+
+theorem
+  for p being non empty Graph-yielding FinSequence
+  st p.1 is Path-like &
+    for n being Element of dom p st n <= len p - 1
+    ex v1,e,v2 being object st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+      (p.n is _trivial or v1 in Endvertices(p.n) or v2 in Endvertices(p.n))
+  holds p.(len p) is Path-like
+proof
+  let p be non empty Graph-yielding FinSequence;
+  assume that
+    A1: p.1 is Path-like and
+    A2: for n being Element of dom p st n <= len p - 1
+      ex v1,e,v2 being object st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+        (p.n is _trivial or v1 in Endvertices(p.n) or v2 in Endvertices(p.n));
+  defpred P[Nat] means $1 <= len p - 1 implies p.($1+1) is Path-like _Graph;
+  A3: P[0] by A1;
+  A4: for n being Nat st P[n] holds P[n+1]
+  proof
+    let n be Nat;
+    assume A5: P[n];
+    assume A6: n+1 <= len p - 1;
+    n+0 <= n+1 by XREAL_1:6;
+    then reconsider G2 = p.(n+1) as Path-like _Graph by A5, A6, XXREAL_0:2;
+    len p - 1 <= len p - 0 by XREAL_1:10;
+    then A7: n+1 <= len p by A6, XXREAL_0:2;
+    0+1 <= n+1 by XREAL_1:6;
+    then reconsider n1 = n+1 as Element of dom p by A7, FINSEQ_3:25;
+    consider v1,e,v2 being object such that
+      A8: p.(n1+1) is addAdjVertex of p.n1,v1,e,v2 and
+      A9: p.n1 is _trivial or v1 in Endvertices(p.n1) or
+        v2 in Endvertices(p.n1) by A2, A6;
+    per cases by A9;
+    suppose A10: v1 in Endvertices(p.n1);
+      then reconsider v1 as Vertex of G2;
+      v1 is endvertex by A10, GLIB_006:56;
+      hence thesis by A8, Th18;
+    end;
+    suppose A11: v2 in Endvertices(p.n1);
+      then reconsider v2 as Vertex of G2;
+      v2 is endvertex by A11, GLIB_006:56;
+      hence thesis by A8, Th19;
+    end;
+    suppose A12: p.n1 is _trivial;
+      per cases;
+      suppose v1 in the_Vertices_of G2 or v2 in the_Vertices_of G2;
+        hence thesis by A8, A12, Th18, Th19;
+      end;
+      suppose A13: not v1 in the_Vertices_of G2 & not v2 in the_Vertices_of G2;
+        reconsider G1 = p.(n1+1) as addAdjVertex of p.n1,v1,e,v2 by A8;
+        G2 == G1 by A13, GLIB_006:def 12;
+        hence thesis by Lm3;
+      end;
+    end;
+  end;
+  A14: for n being Nat holds P[n] from NAT_1:sch 2(A3, A4);
+  len p - 1 >= 1 - 1 by FINSEQ_1:20, XREAL_1:9;
+  then len p - 1 in NAT by INT_1:3;
+  then reconsider k = len p - 1 as Nat;
+  P[k] by A14;
+  hence thesis;
+end;
+
+:: version with K_1 skipped
+theorem Th25:
+  for G being non _trivial _finite Path-like _Graph
+  ex p being non empty _finite Path-like Graph-yielding FinSequence
+  st p.1 is 2-vertex Path-like & p.len p = G & len p + 1 = G.order() &
+    for n being Element of dom p st n <= len p - 1
+    ex v1,v2 being Vertex of G, e being object
+    st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+      e in the_Edges_of G \ the_Edges_of p.n &
+      ((v1 in Endvertices(p.n) & not v2 in the_Vertices_of p.n) or
+        (not v1 in the_Vertices_of p.n & v2 in Endvertices(p.n)))
+proof
+  let G be non _trivial _finite Path-like _Graph;
+  consider p being non empty _finite Path-like Graph-yielding FinSequence
+  such that
+    A1: p.1 is _trivial edgeless & p.len p = G & len p = G.order() and
+    A2: for n being Element of dom p st n <= len p - 1
+      ex v1,v2 being Vertex of G, e being object
+      st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+         e in the_Edges_of G \ the_Edges_of p.n &
+        ((v1 in the_Vertices_of p.n & (n>=2 implies v1 in Endvertices(p.n)) &
+            not v2 in the_Vertices_of p.n) or
+          (not v1 in the_Vertices_of p.n & v2 in the_Vertices_of p.n &
+            (n >= 2 implies v2 in Endvertices(p.n)))) by Th23;
+  A3: G.order() <> 1 by GLIB_000:26;
+  G.order() > 0;
+  then G.order() >= 0 + 1 by INT_1:7;
+  then G.order() > 1 by A3, XXREAL_0:1;
+  then A4: G.order() >= 1 + 1 by INT_1:7;
+  A5: len p >= 1 by FINSEQ_1:20;
+  then A6: len(p/^1) = len p - 1 by RFINSEQ:def 1;
+  then len(p/^1) + 1 = G.order() by A1;
+  then A7: len(p/^1) >= 1 by A4, XREAL_1:6;
+  then reconsider p1 = p/^1 as non empty _finite Path-like Graph-yielding
+    FinSequence;
+  take p1;
+  1 in dom p1 by A7, FINSEQ_3:25;
+  then A8: p1.1 = p.(1+1) by A5, RFINSEQ:def 1;
+  A9: len p - 1 >= 1 + 1 - 1 by A1, A4, XREAL_1:9;
+  reconsider k = 1 as Element of dom p by A5, FINSEQ_3:25;
+  consider v0,w0 being Vertex of G, e0 being object such that
+    A10: p.(k+1) is addAdjVertex of p.k,v0,e0,w0 &
+       e0 in the_Edges_of G \ the_Edges_of p.k &
+      ((v0 in the_Vertices_of p.k & (k>=2 implies v0 in Endvertices(p.k)) &
+          not w0 in the_Vertices_of p.k) or
+        (not v0 in the_Vertices_of p.k & w0 in the_Vertices_of p.k &
+          (k >= 2 implies w0 in Endvertices(p.k)))) by A2, A9;
+  A11: not e0 in the_Edges_of p.k by A10, XBOOLE_0:def 5;
+  reconsider G1 = p.(k+1) as addAdjVertex of p.k,v0,e0,w0 by A10;
+  G1.order() = (p.k).order() + 1 by A10, A11, GLIB_006:152, GLIB_006:153
+    .= 1 + 1 by A1, GLIB_000:26;
+  hence p1.1 is 2-vertex by A8, GLIB_013:def 3;
+  thus p1.1 is Path-like by A1, A8, A10, Th18, Th19;
+  len p1 in dom p1 by A7, FINSEQ_3:25;
+  hence p1.len p1 = p.(1+len p1) by A5, RFINSEQ:def 1
+    .= G by A1, A6;
+  thus len p1 + 1 = G.order() by A1, A6;
+  let n be Element of dom p1;
+  assume n <= len p1 - 1;
+  then A13: n+1 <= len p - 1 - 1 + 1 by A6, XREAL_1:6;
+  len p - 1 <= len p - 0 by XREAL_1:10;
+  then A14: n+1 <= len p by A13, XXREAL_0:2;
+  A15: 1 <= n by FINSEQ_3:25;
+  A16: 1+0 <= n+1 by XREAL_1:7;
+  then reconsider m = n+1 as Element of dom p by A14, FINSEQ_3:25;
+  consider v1,v2 being Vertex of G, e being object such that
+    A17: p.(m+1) is addAdjVertex of p.m,v1,e,v2 &
+      e in the_Edges_of G \ the_Edges_of p.m &
+      ((v1 in the_Vertices_of p.m & (m>=2 implies v1 in Endvertices(p.m)) &
+          not v2 in the_Vertices_of p.m) or
+        (not v1 in the_Vertices_of p.m & v2 in the_Vertices_of p.m &
+          (m >= 2 implies v2 in Endvertices(p.m)))) by A2, A13;
+  take v1, v2, e;
+  m in dom p1 by A6, A13, A16, FINSEQ_3:25;
+  then A18: p1.m = p.(m+1) by A5, RFINSEQ:def 1;
+  A19: p1.n = p.(n+1) by A5, RFINSEQ:def 1;
+  hence p1.(n+1) is addAdjVertex of p1.n,v1,e,v2 by A17, A18;
+  thus e in the_Edges_of G \ the_Edges_of p1.n by A17, A19;
+  m >= 1 + 1 by A15, XREAL_1:6;
+  hence thesis by A17, A19;
+end;
+
+theorem
+  for p being non empty Graph-yielding FinSequence
+  st p.1 is non _trivial Path-like &
+    for n being Element of dom p st n <= len p - 1
+    ex v1,e,v2 being object st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+      (v1 in Endvertices(p.n) or v2 in Endvertices(p.n))
+  holds p.len p is Path-like
+proof
+  let p be non empty Graph-yielding FinSequence;
+  assume that
+    A1: p.1 is non _trivial Path-like and
+    A2: for n being Element of dom p st n <= len p - 1
+      ex v1,e,v2 being object st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+        (v1 in Endvertices(p.n) or v2 in Endvertices(p.n));
+  defpred P[Nat] means $1 <= len p - 1 implies p.($1+1) is Path-like _Graph;
+  A3: P[0] by A1;
+  A4: for n being Nat st P[n] holds P[n+1]
+  proof
+    let n be Nat;
+    assume A5: P[n];
+    assume A6: n+1 <= len p - 1;
+    n+0 <= n+1 by XREAL_1:6;
+    then reconsider G2 = p.(n+1) as Path-like _Graph by A5, A6, XXREAL_0:2;
+    len p - 1 <= len p - 0 by XREAL_1:10;
+    then A7: n+1 <= len p by A6, XXREAL_0:2;
+    0+1 <= n+1 by XREAL_1:6;
+    then reconsider n1 = n+1 as Element of dom p by A7, FINSEQ_3:25;
+    consider v1,e,v2 being object such that
+      A8: p.(n1+1) is addAdjVertex of p.n1,v1,e,v2 and
+      A9: v1 in Endvertices(p.n1) or v2 in Endvertices(p.n1) by A2, A6;
+    per cases by A9;
+    suppose A10: v1 in Endvertices(p.n1);
+      then reconsider v1 as Vertex of G2;
+      v1 is endvertex by A10, GLIB_006:56;
+      hence thesis by A8, Th18;
+    end;
+    suppose A11: v2 in Endvertices(p.n1);
+      then reconsider v2 as Vertex of G2;
+      v2 is endvertex by A11, GLIB_006:56;
+      hence thesis by A8, Th19;
+    end;
+  end;
+  A12: for n being Nat holds P[n] from NAT_1:sch 2(A3, A4);
+  len p - 1 >= 1 - 1 by FINSEQ_1:20, XREAL_1:9;
+  then len p - 1 in NAT by INT_1:3;
+  then reconsider k = len p - 1 as Nat;
+  P[k] by A12;
+  hence thesis;
+end;
+
+Lm5:
+  for G1, G2 being _Graph, F being PGraphMapping of G1, G2
+  st F is isomorphism holds (G2 is Path-like implies G1 is Path-like)
+proof
+  let G1, G2 be _Graph, F being PGraphMapping of G1, G2;
+  assume A1: F is isomorphism & G2 is Path-like;
+  then G1 is connected acyclic by GLIB_010:140;
+  hence G1 is Tree-like;
+  let v be Vertex of G1;
+  (F_V/.v).degree() c= 2 by A1;
+  hence v.degree() c= 2 by A1, GLIBPRE0:93;
+end;
+
+theorem Th27:
+  for G1, G2 being _Graph, F being PGraphMapping of G1, G2
+  st F is isomorphism holds (G1 is Path-like iff G2 is Path-like)
+proof
+  let G1, G2 be _Graph, F be PGraphMapping of G1, G2;
+  assume A1: F is isomorphism;
+  then reconsider F0 = F as one-to-one PGraphMapping of G1, G2;
+  F0" is isomorphism by A1, GLIB_010:75;
+  hence G1 is Path-like implies G2 is Path-like by Lm5;
+  thus thesis by A1, Lm5;
+end;
+
+theorem
+  for G1, G2 being _Graph st G1 == G2
+  holds G1 is Path-like implies G2 is Path-like by Lm3;
+
+theorem
+  for G1 being _Graph, E being set, G2 being reverseEdgeDirections of G1, E
+  holds G1 is Path-like iff G2 is Path-like
+proof
+  let G1 be _Graph, E be set, G2 be reverseEdgeDirections of G1, E;
+  consider F being PGraphMapping of G1, G2 such that
+    A1: F = id G1 & F is isomorphism by GLIBPRE0:77;
+  thus thesis by A1, Th27;
+end;
+
+registration
+  let P2 be 2-vertex Path-like _Graph;
+  cluster -> endvertex for Vertex of P2;
+  coherence;
+end;
+
+theorem Th30:
+  for P being _finite non _trivial Path-like _Graph holds P.minDegree() = 1
+proof
+  let P be _finite non _trivial Path-like _Graph;
+  consider p being non empty _finite Path-like Graph-yielding FinSequence
+  such that
+    A1: p.1 is 2-vertex Path-like & p.len p = P & len p + 1 = P.order() and
+    A2: for n being Element of dom p st n <= len p - 1
+      ex v1,v2 being Vertex of P, e being object
+      st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+        e in the_Edges_of P \ the_Edges_of p.n &
+        ((v1 in Endvertices(p.n) & not v2 in the_Vertices_of p.n) or
+          (not v1 in the_Vertices_of p.n & v2 in Endvertices(p.n))) by Th25;
+  defpred P[Nat] means for H being _Graph st H = p.($1+1) & $1 <= len p - 1
+    holds H.minDegree() = 1;
+  A3: P[0]
+  proof
+    let H be _Graph;
+    assume H = p.(0+1) & 0 <= len p - 1;
+    then A4: H is 2-vertex Path-like by A1;
+    now
+      take v = the Vertex of H;
+      thus A6: v.degree() = 1 by A4, GLIB_000:174;
+      let w be Vertex of H;
+      thus v.degree() c= w.degree() by A4, A6, GLIB_000:174;
+    end;
+    hence thesis by GLIB_013:36;
+  end;
+  A7: for k being Nat st P[k] holds P[k+1]
+  proof
+    let k be Nat;
+    assume A8: P[k];
+    let H be _Graph;
+    assume A9: H = p.(k+1+1) & k+1 <= len p - 1;
+    len p - 1 <= len p - 0 by XREAL_1:10;
+    then A10: k+1 <= len p by A9, XXREAL_0:2;
+    0+1 <= k+1 by XREAL_1:6;
+    then reconsider n = k+1 as Element of dom p by A10, FINSEQ_3:25;
+    consider v1, v2 being Vertex of P, e being object such that
+      A11: H is addAdjVertex of p.n,v1,e,v2 and
+      A12: e in the_Edges_of P \ the_Edges_of p.n and
+      A13: ((v1 in Endvertices(p.n) & not v2 in the_Vertices_of p.n) or
+        (not v1 in the_Vertices_of p.n & v2 in Endvertices(p.n))) by A2, A9;
+    k+1-1 <= len p - 1 by A10, XREAL_1:9;
+    then A14: (p.n).minDegree() = 1 by A8;
+    A15: not e in the_Edges_of p.n by A12, XBOOLE_0:def 5;
+    per cases by A13; :: symmetric cases
+    suppose A16: v1 in Endvertices(p.n) & not v2 in the_Vertices_of p.n;
+      then reconsider v1 as Vertex of p.n;
+      now
+        A17: the_Vertices_of H = (the_Vertices_of p.n) \/ {v2}
+          by A11, A15, A16, GLIB_006:def 12;
+        v2 in {v2} by TARSKI:def 1;
+        then reconsider v2 as Vertex of H by A17, XBOOLE_0:def 3;
+        take v2;
+        thus A18: v2.degree() = 1 by A11, A15, A16, GLIB_006:141, GLIB_000:174;
+        let w be Vertex of H;
+        per cases;
+        suppose w = v2;
+          hence v2.degree() c= w.degree();
+        end;
+        suppose w <> v2;
+          then not w in {v2} by TARSKI:def 1;
+          then reconsider u = w as Vertex of p.n by A17, XBOOLE_0:def 3;
+          A19: 1 c= u.degree() by A14, GLIB_013:35;
+          p.n is Subgraph of H by A11, GLIB_006:57;
+          then u.degree() c= w.degree() by Th1;
+          hence v2.degree() c= w.degree() by A18, A19, XBOOLE_1:1;
+        end;
+      end;
+      hence thesis by GLIB_013:36;
+    end;
+    suppose A20: not v1 in the_Vertices_of p.n & v2 in Endvertices(p.n);
+      then reconsider v2 as Vertex of p.n;
+      now
+        A21: the_Vertices_of H = (the_Vertices_of p.n) \/ {v1}
+          by A11, A15, A20, GLIB_006:def 12;
+        v1 in {v1} by TARSKI:def 1;
+        then reconsider v1 as Vertex of H by A21, XBOOLE_0:def 3;
+        take v1;
+        thus A22: v1.degree() = 1 by A11, A15, A20, GLIB_006:142, GLIB_000:174;
+        let w be Vertex of H;
+        per cases;
+        suppose w = v1;
+          hence v1.degree() c= w.degree();
+        end;
+        suppose w <> v1;
+          then not w in {v1} by TARSKI:def 1;
+          then reconsider u = w as Vertex of p.n by A21, XBOOLE_0:def 3;
+          A23: 1 c= u.degree() by A14, GLIB_013:35;
+          p.n is Subgraph of H by A11, GLIB_006:57;
+          then u.degree() c= w.degree() by Th1;
+          hence v1.degree() c= w.degree() by A22, A23, XBOOLE_1:1;
+        end;
+      end;
+      hence thesis by GLIB_013:36;
+    end;
+  end;
+  A24: for k being Nat holds P[k] from NAT_1:sch 2(A3,A7);
+  0 < len p;
+  then 0+1 < len p + 1 by XREAL_1:6;
+  then 1 <= len p by NAT_1:13;
+  then 1-1 <= len p - 1 by XREAL_1:9;
+  then len p -' 1 + 1 = len p by NAT_D:72;
+  hence thesis by A1, A24;
+end;
+
+Lm6:
+for P being Path-like _Graph st P.order() = 2
+  holds Endvertices P = the_Vertices_of P
+proof
+  let P be Path-like _Graph;
+  assume A1: P.order() = 2;
+  then consider v,w being object such that
+    A2: v <> w & the_Vertices_of P = {v,w} by CARD_2:60;
+  reconsider v,w as Vertex of P by A2, TARSKI:def 2;
+  A3: P is 2-vertex by A1, GLIB_013:def 3;
+  for u being object st u in {v,w} holds u in Endvertices P by A3, GLIB_006:56;
+  then {v,w} c= Endvertices P by TARSKI:def 3;
+  hence thesis by A2, XBOOLE_0:def 10;
+end;
+
+theorem Th31:
+  for P being _finite Path-like _Graph ex P0 being vertex-distinct Path of P
+  st P0.vertices() = the_Vertices_of P & P0.edges() = the_Edges_of P &
+    (Endvertices P = {P0.first(),P0.last()} iff P is non _trivial) &
+    (P0 is trivial iff P is _trivial) & (P0 is closed iff P is _trivial) &
+    P0 is minlength
+proof
+  defpred P[Nat] means for P being _finite Path-like _Graph
+    st P.order() = $1+1 ex P0 being vertex-distinct Path of P
+    st P0.vertices() = the_Vertices_of P & P0.edges() = the_Edges_of P &
+    (Endvertices P = {P0.first(),P0.last()} iff P is non _trivial) &
+    (P0 is closed iff P is _trivial) & P0 is minlength;
+  A1: P[0]
+  proof
+    let P be _finite Path-like _Graph;
+    assume P.order() = 0+1;
+    then A2: P is _trivial by GLIB_000:26;
+    then consider v being Vertex of P such that
+      A3: the_Vertices_of P = {v} by GLIB_000:22;
+    take P0 = P.walkOf(v);
+    thus P0.vertices() = the_Vertices_of P by A3, GLIB_001:90;
+    thus P0.edges() = the_Edges_of P by A2;
+    thus thesis by A2;
+  end;
+  A4: for n being Nat st P[n] holds P[n+1]
+  proof
+    let n be Nat;
+    assume A5: P[n];
+    let P be _finite Path-like _Graph;
+    assume A6: P.order() = n+1+1;
+    then P.order() <> 1;
+    then A7: P is non _trivial by GLIB_000:26;
+    then A8: P.minDegree() = 1 by Th30;
+    set v = the with_min_degree Vertex of P;
+    v.degree() = 1 by A8, GLIB_013:def 15;
+    then A9: v is endvertex by GLIB_000:174;
+    set H = the removeVertex of P,v;
+    reconsider H as _finite Path-like _Graph by A9, Th21;
+    H.order() + 1 = P.order() by A7, GLIB_000:48;
+    then A10: H.order() = n+1 by A6;
+    then consider P9 being vertex-distinct Path of H such that
+      A11: P9.vertices()=the_Vertices_of H & P9.edges()=the_Edges_of H and
+      A12: Endvertices H = {P9.first(),P9.last()} iff H is non _trivial and
+      A13: P9 is closed iff H is _trivial and
+      A14: P9 is minlength by A5;
+    reconsider P8 = P9 as Walk of P by GLIB_001:167;
+    reconsider P8 as vertex-distinct Path of P by GLIB_001:176;
+    consider e being object such that
+      A15: v.edgesInOut() = {e} & not e Joins v,v,P by A9, GLIB_000:def 51;
+    set w = v.adj(e);
+    e in {e} by TARSKI:def 1;
+    then A16: e Joins v,w,P by A15, GLIB_000:67;
+    then A17: v <> w by A15;
+    then A18: not w in {v} by TARSKI:def 1;
+    A19: the_Vertices_of H = the_Vertices_of P \ {v} by A7, GLIB_000:47;
+    then reconsider u = w as Vertex of H by A18, XBOOLE_0:def 5;
+    v in {v} by TARSKI:def 1;
+    then A20: not v in the_Vertices_of H by A19, XBOOLE_0:def 5;
+    A21: not e in the_Edges_of H
+    proof
+      assume e in the_Edges_of H;
+      then e Joins v,w,H by A16, GLIB_000:73;
+      hence contradiction by A20, GLIB_000:13;
+    end;
+    A22: P is addAdjVertex of H,u,e,v or P is addAdjVertex of H,v,e,u
+      by A7, A15, GLIB_008:38;
+    then A23: the_Vertices_of P = the_Vertices_of H \/ {v} &
+      the_Edges_of P = the_Edges_of H \/ {e} by A20, A21, GLIB_006:def 12;
+    per cases;
+    suppose A24: H is _trivial;
+      then A25: the_Vertices_of H = {u} by ZFMISC_1:132;
+      set P0 = P8.addEdge(e);
+      P8.last() = P9.last()
+        .= u by A25, TARSKI:def 1;
+      then A26: e Joins P8.last(),v,P by A16, GLIB_000:14;
+      not v in P9.vertices() by A20;
+      then not v in P8.vertices() by GLIB_001:98;
+      then reconsider P0 as vertex-distinct Walk of P by A26, GLIB_001:155;
+      reconsider P0 as vertex-distinct Path of P;
+      take P0;
+      thus P0.vertices() = P8.vertices() \/ {v} by A26, GLIB_001:95
+        .= the_Vertices_of P by A11, A23, GLIB_001:98;
+      thus P0.edges() = P8.edges() \/ {e} by A26, GLIB_001:111
+        .= the_Edges_of P by A11, A23, GLIB_001:110;
+      A27: u = P9.first() by A25, TARSKI:def 1
+        .= P8.first()
+        .= P0.first() by A26, GLIB_001:63;
+      A28: v = P0.last() by A26, GLIB_001:63;
+      H.order() = 1 by A24, GLIB_000:26;
+      then A29: Endvertices P = {u} \/ {v} by A6, A10, A23, A25, Lm6
+        .= {P0.first(),P0.last()} by A27, A28, ENUMSET1:1;
+      P9.first() = u & P9.last() = u by A25, TARSKI:def 1;
+      then P9 is_Walk_from u,u by GLIB_001:def 23;
+      then P0 is minlength by A14, A21, A22, GLIBPRE1:62, GLIBPRE1:63;
+      hence thesis by A17, A27, A28, A29, GLIB_001:def 24;
+    end;
+    suppose A30: H is non_trivial;
+      then A31: Endvertices H = {P9.first(),P9.last()} by A12;
+      u is endvertex
+      proof
+        assume u is non endvertex;
+        then u.degree() <> 1 by GLIB_000:174;
+        then A33: 2 <= u.degree() by A30, GLIB_000:157, NAT_1:23;
+        u.degree() <= 2 by Th17;
+        then A34: u.degree() = 2 by A33, XXREAL_0:1;
+        w.degree() = u.degree() +` 1 by A20, A21, A22, Th10, Th11;
+        hence contradiction by A34, Th17;
+      end;
+      then u in Endvertices H by GLIB_006:def 8;
+      then per cases by A31, TARSKI:def 2;
+      suppose A35: u = P9.last(); :: partly same as trivial case
+        then A36: e Joins P8.last(),v,P by A16, GLIB_000:14;
+        set P0 = P8.addEdge(e);
+        not v in P9.vertices() by A20;
+        then not v in P8.vertices() by GLIB_001:98;
+        then reconsider P0 as vertex-distinct Walk of P by A36, GLIB_001:155;
+        reconsider P0 as vertex-distinct Path of P;
+        take P0;
+        thus A37: P0.vertices() = P8.vertices() \/ {v} by A36, GLIB_001:95
+          .= the_Vertices_of P by A11, A23, GLIB_001:98;
+        thus P0.edges() = P8.edges() \/ {e} by A36, GLIB_001:111
+          .= the_Edges_of P by A11, A23, GLIB_001:110;
+        now
+          let x be object;
+          thus x in Endvertices P implies x = P0.first() or x = P0.last()
+          proof
+            assume x in Endvertices P;
+            then consider p being Vertex of P such that
+              A38: x = p & p is endvertex by GLIB_006:def 8;
+            thus thesis by A37, A38, GLIB_001:143;
+          end;
+          assume x = P0.first() or x = P0.last();
+          then per cases;
+          suppose x = P0.first();
+            then A39: x = P8.first() by A36, GLIB_001:63
+              .= P9.first();
+            then reconsider u9 = x as Vertex of H;
+            reconsider v9 = u9 as Vertex of P by A23, XBOOLE_0:def 3;
+            A40: u9 <> v by A19, ZFMISC_1:56;
+            u9 <> w by A13, A30, A35, A39, GLIB_001:def 24;
+            then A41: u9.degree() = v9.degree() by A40, A22, Th9;
+            u9 in Endvertices H by A31, A39, TARSKI:def 2;
+            then v9.degree() = 1 by A41, GLIB_006:56, GLIB_000:174;
+            hence x in Endvertices P by GLIB_006:56, GLIB_000:174;
+          end;
+          suppose x = P0.last();
+            then A42: x = v by A36, GLIB_001:63;
+            v is endvertex by A20, A21, A22, GLIB_006:141, GLIB_006:142;
+            hence x in Endvertices P by A42, GLIB_006:56;
+          end;
+        end;
+        then A43: Endvertices P = {P0.first(),P0.last()} by TARSKI:def 2;
+        P0.first() = P8.first() by A36, GLIB_001:63
+          .= P9.first();
+        then P0.first() in the_Vertices_of H;
+        then A44: P0.first() <> P0.last() by A20, A36, GLIB_001:63;
+        P9 is_Walk_from P9.first(), u by A35, GLIB_001:def 23;
+        then P0 is minlength by A14, A21, A22, GLIBPRE1:62, GLIBPRE1:63;
+        hence thesis by A43, A44, GLIB_001:def 24;
+      end;
+      suppose A45: u = P9.first();
+        then u = P8.first()
+          .= P8.reverse().last() by GLIB_001:22;
+        then A47: e Joins P8.reverse().last(),v,P by A16, GLIB_000:14;
+        set P0 = P8.reverse().addEdge(e);
+        not v in P9.vertices() by A20;
+        then not v in P8.vertices() by GLIB_001:98;
+        then not v in P8.reverse().vertices() by GLIB_001:92;
+        then reconsider P0 as vertex-distinct Walk of P by A47, GLIB_001:155;
+        reconsider P0 as vertex-distinct Path of P;
+        take P0;
+        thus A48: P0.vertices()
+           = P8.reverse().vertices() \/ {v} by A47, GLIB_001:95
+          .= P8.vertices() \/ {v} by GLIB_001:92
+          .= the_Vertices_of P by A11, A23, GLIB_001:98;
+        thus P0.edges() = P8.reverse().edges() \/ {e} by A47, GLIB_001:111
+          .= P8.edges() \/ {e} by GLIB_001:107
+          .= the_Edges_of P by A11, A23, GLIB_001:110;
+        now
+          let x be object;
+          thus x in Endvertices P implies x = P0.first() or x = P0.last()
+          proof
+            assume x in Endvertices P;
+            then consider p being Vertex of P such that
+              A49: x = p & p is endvertex by GLIB_006:def 8;
+            thus thesis by A48, A49, GLIB_001:143;
+          end;
+          assume x = P0.first() or x = P0.last();
+          then per cases;
+          suppose x = P0.first();
+            then A50: x = P8.reverse().first() by A47, GLIB_001:63
+              .= P8.last() by GLIB_001:22
+              .= P9.last();
+            then reconsider u9 = x as Vertex of H;
+            reconsider v9 = u9 as Vertex of P by A23, XBOOLE_0:def 3;
+            A51: u9 <> v by A19, ZFMISC_1:56;
+            u9 <> w by A13, A30, A45, A50, GLIB_001:def 24;
+            then A52: u9.degree() = v9.degree() by A51, A22, Th9;
+            u9 in Endvertices H by A31, A50, TARSKI:def 2;
+            then v9.degree() = 1 by A52, GLIB_006:56, GLIB_000:174;
+            hence x in Endvertices P by GLIB_006:56, GLIB_000:174;
+          end;
+          suppose x = P0.last();
+            then A53: x = v by A47, GLIB_001:63;
+            v is endvertex by A20, A21, A22, GLIB_006:141, GLIB_006:142;
+            hence x in Endvertices P by A53, GLIB_006:56;
+          end;
+        end;
+        then A54: Endvertices P = {P0.first(),P0.last()} by TARSKI:def 2;
+        P0.first() = P8.reverse().first() by A47, GLIB_001:63
+          .= P8.last() by GLIB_001:22
+          .= P9.last();
+        then P0.first() in the_Vertices_of H;
+        then A55: P0.first() <> P0.last() by A20, A47, GLIB_001:63;
+        P9.reverse() is_Walk_from P9.last(),u
+          by A45, GLIB_001:def 23, GLIB_001:23;
+        then P0 is minlength by A14, A21, A22, GLIBPRE1:62, GLIBPRE1:63;
+        hence thesis by A54, A55, GLIB_001:def 24;
+      end;
+    end;
+  end;
+  A58: for n being Nat holds P[n] from NAT_1:sch 2(A1,A4);
+  let P be _finite Path-like _Graph;
+  consider n being Nat such that
+    A59: P.order() = n+1 by NAT_1:6;
+  consider P0 being vertex-distinct Path of P such that
+    A60: P0.vertices() = the_Vertices_of P & P0.edges() = the_Edges_of P &
+      (Endvertices P = {P0.first(),P0.last()} iff P is non _trivial) and
+    A61: (P0 is closed iff P is _trivial) & P0 is minlength by A58, A59;
+  take P0;
+  now
+    thus P0 is trivial implies P is _trivial
+    proof
+      assume P0 is trivial;
+      then consider v being Vertex of P such that
+        A62: P0 = P.walkOf(v) by GLIB_001:128;
+      the_Vertices_of P = {v} by A60, A62, GLIB_001:90;
+      then P.order() = 1 by GLIB_000:27;
+      hence thesis by GLIB_000:26;
+    end;
+    assume P is _trivial;
+    hence P0 is trivial;
+  end;
+  hence thesis by A60, A61;
+end;
+
+theorem Th32:
+  for n being non zero Nat, P1, P2 being n-vertex Path-like _Graph
+  holds P2 is P1-isomorphic
+proof
+  let n be non zero Nat, P1, P2 be n-vertex Path-like _Graph;
+  consider P7 being vertex-distinct Path of P1 such that
+    A1: P7.vertices() = the_Vertices_of P1 & P7.edges() = the_Edges_of P1 and
+    Endvertices P1 = {P7.first(),P7.last()} iff P1 is non _trivial and
+    P7 is trivial iff P1 is _trivial and
+    P7 is closed iff P1 is _trivial and
+    P7 is minlength by Th31;
+  consider P8 being vertex-distinct Path of P2 such that
+    A4: P8.vertices() = the_Vertices_of P2 & P8.edges() = the_Edges_of P2 and
+    Endvertices P2 = {P8.first(),P8.last()} iff P2 is non _trivial and
+    P8 is trivial iff P2 is _trivial and
+    P8 is closed iff P2 is _trivial and
+    P8 is minlength by Th31;
+  set p1 = P7.vertexSeq(), p2 = P8.vertexSeq();
+  P1.order() = n & P2.order() = n by GLIB_013:def 3;
+  then A7: card the_Vertices_of P1 = card the_Vertices_of P2;
+  set f = p2*(p1");
+  A8: card p2 = card dom p2 by CARD_1:62
+    .= card the_Vertices_of P2 by A4, CARD_1:70
+    .= card dom p1 by A1, A7, CARD_1:70
+    .= card p1 by CARD_1:62;
+  A9: dom p2 = Seg len p2 by FINSEQ_1:def 3
+    .= dom p1 by A8, FINSEQ_1:def 3;
+  then A10: dom p2 = rng(p1") by FUNCT_1:33;
+  then A11: dom f = dom(p1") by RELAT_1:27
+    .= the_Vertices_of P1 by A1, FUNCT_1:33;
+  A12: len p1 = len p2 by A9, FINSEQ_3:29;
+  A13: rng f = the_Vertices_of P2 by A4, A10, RELAT_1:28;
+  then reconsider f as Function of the_Vertices_of P1, the_Vertices_of P2
+    by A11, FUNCT_2:1;
+  :: show that adjacency is preserved
+  now
+    let v,w,e be object;
+    assume A14: v in dom f & w in dom f & e Joins v,w,P1;
+    then A15: v in P7.vertices() by A1;
+    A16: w in P7.vertices() by A1, A14;
+    consider n being odd Element of NAT such that
+      A17: n <= len P7 & P7.n = v by A15, GLIB_001:87;
+    consider m being odd Element of NAT such that
+      A18: m <= len P7 & P7.m = w by A16, GLIB_001:87;
+    set i = (n+1) div 2, j = (m+1) div 2;
+    A19: 2 * i - 1 = n & 1 <= i & i <= len p1 by A17, GLIB_001:68;
+    then A20: p1.i = v by A17, GLIB_001:def 14;
+    A21: i in dom p1 by A19, FINSEQ_3:25;
+    A22: f.v = p2.(p1".v) by A14, FUNCT_1:12
+      .= p2.i by A20, A21, FUNCT_1:34
+      .= P8.n by A12, A19, GLIB_001:def 14;
+    A23: 2 * j - 1 = m & 1 <= j & j <= len p1 by A18, GLIB_001:68;
+    then A24: p1.j = w by A18, GLIB_001:def 14;
+    A25: j in dom p1 by A23, FINSEQ_3:25;
+    A26: f.w = p2.(p1".w) by A14, FUNCT_1:12
+      .= p2.j by A24, A25, FUNCT_1:34
+      .= P8.m by A12, A23, GLIB_001:def 14;
+    2 * len p1 = len P7 + 1 & 2 * len p2 = len P8 + 1 by GLIB_001:def 14;
+    then A27: len P7 = len P8 by A12;
+    :: show that either n = m+2 or m = n+2
+    e in P7.edges() by A1, A14, GLIB_000:def 13;
+    then consider k being odd Element of NAT such that
+      A28: k < len P7 & P7.(k+1) = e by GLIB_001:100;
+    A29: k <= len P7 & k+2 <= len P7 by A28, CHORD:4;
+    e Joins P7.k, P7.(k+2), P1 by A28, GLIB_001:def 3;
+    then per cases by A17, A18, A14, GLIB_000:15;
+    suppose P7.k = P7.n & P7.(k+2) = P7.m;
+      then k = n & k+2 = m by A17, A18, A29, GLIB_001:def 29;
+      then A30: n+2 = m;
+      A31: n < len P8
+      proof
+        assume n >= len P8;
+        then A32: n+2 >= len P7 + 2 by A27, XREAL_1:6;
+        m+2 <= len P7 + 2 by A18, XREAL_1:6;
+        then m+0 >= m+2 by A30, A32, XXREAL_0:2;
+        hence contradiction by XREAL_1:6;
+      end;
+      reconsider e9 = P8.(n+1) as object;
+      take e9;
+      e9 Joins f.v,P8.(n+2),P2 by A22, A31, GLIB_001:def 3;
+      hence e9 Joins f.v,f.w,P2 by A30, A26;
+    end;
+    suppose P7.k = P7.m & P7.(k+2) = P7.n;
+      then k = m & k+2 = n by A17, A18, A29, GLIB_001:def 29;
+      then A33: m+2 = n;
+      A34: m < len P8
+      proof
+        assume m >= len P8;
+        then A35: m+2 >= len P7 + 2 by A27, XREAL_1:6;
+        n+2 <= len P7 + 2 by A17, XREAL_1:6;
+        then n+0 >= n+2 by A33, A35, XXREAL_0:2;
+        hence contradiction by XREAL_1:6;
+      end;
+      reconsider e9 = P8.(m+1) as object;
+      take e9;
+      e9 Joins P8.m,P8.(m+2),P2 by A34, GLIB_001:def 3;
+      hence e9 Joins f.v,f.w,P2 by A26, A33, A22, GLIB_000:14;
+    end;
+  end;
+  then reconsider f as PVertexMapping of P1, P2 by GLIB_011:1;
+  :: show continuous property (analogously to before)
+  now
+    let v,w,e9 be object;
+    assume A36: v in dom f & w in dom f & e9 Joins f.v,f.w,P2;
+    then A37: f.v in P8.vertices() by A4, GLIB_000:13;
+    A38: f.w in P8.vertices() by A4, A36, GLIB_000:13;
+    consider n being odd Element of NAT such that
+      A39: n <= len P8 & P8.n = f.v by A37, GLIB_001:87;
+    consider m being odd Element of NAT such that
+      A40: m <= len P8 & P8.m = f.w by A38, GLIB_001:87;
+    set i = (n+1) div 2, j = (m+1) div 2;
+    A41: 2 * i - 1 = n & 1 <= i & i <= len p2 by A39, GLIB_001:68;
+    then A42: p2.i = f.v by A39, GLIB_001:def 14;
+    A43: i in dom p2 by A41, FINSEQ_3:25;
+    A44: v = f".(p2.i) by A36, A42, FUNCT_1:34
+      .= (p1""*p2").(p2.i) by FUNCT_1:44
+      .= (p1*p2").(p2.i) by FUNCT_1:43
+      .= ((p1*p2")*p2).i by A43, FUNCT_1:13
+      .= (p1*(p2"*p2)).i by RELAT_1:36
+      .= (p1*id dom p2).i by FUNCT_1:39
+      .= p1.i by A9, RELAT_1:52
+      .= P7.n by A12, A41, GLIB_001:def 14;
+    A45: 2 * j - 1 = m & 1 <= j & j <= len p2 by A40, GLIB_001:68;
+    then A46: p2.j = f.w by A40, GLIB_001:def 14;
+    A47: j in dom p2 by A45, FINSEQ_3:25;
+    A48: w = f".(p2.j) by A36, A46, FUNCT_1:34
+      .= (p1""*p2").(p2.j) by FUNCT_1:44
+      .= (p1*p2").(p2.j) by FUNCT_1:43
+      .= ((p1*p2")*p2).j by A47, FUNCT_1:13
+      .= (p1*(p2"*p2)).j by RELAT_1:36
+      .= (p1*id dom p2).j by FUNCT_1:39
+      .= p1.j by A9, RELAT_1:52
+      .= P7.m by A12, A45, GLIB_001:def 14;
+    2 * len p2 = len P8 + 1 & 2 * len p1 = len P7 + 1 by GLIB_001:def 14;
+    then A49: len P7 = len P8 by A12;
+    :: show that either n = m+2 or m = n+2
+    e9 in P8.edges() by A4, A36, GLIB_000:def 13;
+    then consider k being odd Element of NAT such that
+      A50: k < len P8 & P8.(k+1) = e9 by GLIB_001:100;
+    A51: k <= len P8 & k+2 <= len P8 by A50, CHORD:4;
+    e9 Joins P8.k, P8.(k+2), P2 by A50, GLIB_001:def 3;
+    then per cases by A39, A40, A36, GLIB_000:15;
+    suppose P8.k = P8.n & P8.(k+2) = P8.m;
+      then k = n & k+2 = m by A39, A40, A51, GLIB_001:def 29;
+      then A52: n+2 = m;
+      A53: n < len P7
+      proof
+        assume n >= len P7;
+        then A54: n+2 >= len P8 + 2 by A49, XREAL_1:6;
+        m+2 <= len P8 + 2 by A40, XREAL_1:6;
+        then m+0 >= m+2 by A52, A54, XXREAL_0:2;
+        hence contradiction by XREAL_1:6;
+      end;
+      reconsider e = P7.(n+1) as object;
+      take e;
+      e Joins P7.n,P7.(n+2),P1 by A53, GLIB_001:def 3;
+      hence e Joins v,w,P1 by A44, A52, A48;
+    end;
+    suppose P8.k = P8.m & P8.(k+2) = P8.n;
+      then k = m & k+2 = n by A39, A40, A51, GLIB_001:def 29;
+      then A55: m+2 = n;
+      A56: m < len P7
+      proof
+        assume m >= len P7;
+        then A57: m+2 >= len P8 + 2 by A49, XREAL_1:6;
+        n+2 <= len P8 + 2 by A39, XREAL_1:6;
+        then n+0 >= n+2 by A55, A57, XXREAL_0:2;
+        hence contradiction by XREAL_1:6;
+      end;
+      reconsider e = P7.(m+1) as object;
+      take e;
+      e Joins P7.m,P7.(m+2),P1 by A56, GLIB_001:def 3;
+      hence e Joins v,w,P1 by A48, A55, A44, GLIB_000:14;
+    end;
+  end;
+  then A58: f is continuous by GLIB_011:2;
+  f is total onto by A13, FUNCT_2:def 3;
+  hence thesis by A58, GLIB_011:49;
+end;
+
+theorem
+  for n being Nat, P1, P2 being n-edge Path-like _Graph
+  holds P2 is P1-isomorphic
+proof
+  let n be Nat, P1, P2 be n-edge Path-like _Graph;
+  P1.size() = n & P2.size() = n by GLIB_013:def 4;
+  then P1.order() = n + 1 & P2.order() = n + 1 by GLIB_002:46;
+  then P1 is (n+1)-vertex & P2 is (n+1)-vertex by GLIB_013:def 3;
+  hence thesis by Th32;
+end;
+
+Lm7:
+  for P being non _trivial Path-like _Graph holds
+    (P.order() = 2 implies P.maxDegree() = 1) &
+    (P.order() <> 2 implies P.maxDegree() = 2)
+proof
+  let P be non _trivial Path-like _Graph;
+  hereby
+    assume P.order() = 2;
+    then A1: P is 2-vertex by GLIB_013:def 3;
+    now
+      set v = the Vertex of P;
+      take v;
+      thus A2: v.degree() = 1 by A1, GLIB_000:174;
+      let w be Vertex of P;
+      thus w.degree() c= v.degree() by A1, A2, GLIB_000:174;
+    end;
+    hence P.maxDegree() = 1 by GLIB_013:48;
+  end;
+  assume A3: P.order() <> 2;
+  per cases;
+  suppose A4: for v being Vertex of P holds v is non endvertex;
+    now
+      take v = the Vertex of P;
+      A5: 2 c= v.degree()
+      proof
+        assume not 2 c= v.degree();
+        then v.degree() in {0,1} by ORDINAL1:16, CARD_1:50;
+        then v.degree() = 0 or v.degree() = 1 by TARSKI:def 2;
+        hence contradiction by A4, GLIB_000:157, GLIB_000:174;
+      end;
+      v.degree() c= 2 by Def1;
+      hence A6: v.degree() = 2 by A5, XBOOLE_0:def 10;
+      let w be Vertex of P;
+      thus w.degree() c= v.degree() by A6, Def1;
+    end;
+    hence P.maxDegree() = 2 by GLIB_013:48;
+  end;
+  suppose ex v being Vertex of P st v is endvertex;
+    then consider v being Vertex of P such that
+      A7: v is endvertex;
+    3 c= P.order()
+    proof
+      assume not 3 c= P.order();
+      then P.order() in {0,1,2} by ORDINAL1:16, CARD_1:51;
+      then P.order() = 0 or P.order() = 1 by A3, ENUMSET1:def 1;
+      hence contradiction by GLIB_000:26;
+    end;
+    then consider u,w being Vertex of P such that
+      A8: u <> v & w <> v & u <> w & u,v are_adjacent & not v,w are_adjacent
+      by A7, GLIBPRE0:95;
+    consider e being object such that
+      A9: e Joins u,v,P by A8, CHORD:def 3;
+    consider W being Walk of P such that
+      A10: W is_Walk_from u,w by GLIB_002:def 1;
+    set T = the Trail of W;
+    T is_Walk_from u,w by A10, GLIB_001:160;
+    then A11: T.first() = u & T.last() = w by GLIB_001:def 23;
+    then A12: 3 <= len T by A8, GLIB_001:127, GLIB_001:125;
+    1 < len T by A12, XXREAL_0:2;
+    then T.(1+1) Joins T.1,T.(1+2),P by POLYFORM:4, GLIB_001:def 3;
+    then A13: T.2 Joins u,T.3,P by A11;
+    A14: T.3 <> v
+    proof
+      assume T.3 = v;
+      then v in T.vertices() by A12, GLIB_001:87, POLYFORM:6;
+      hence contradiction by A7, A8, A11, GLIB_001:143;
+    end;
+    A16: e <> T.2
+    proof
+      assume e = T.2;
+      then per cases by A9, A13, GLIB_000:15;
+      suppose u = u & v = T.3;
+        hence contradiction by A14;
+      end;
+      suppose u = T.3 & u = v;
+        hence contradiction by A14;
+      end;
+    end;
+    now
+      take u;
+      T.2 in u.edgesInOut() & e in u.edgesInOut() by A9, A13, GLIB_000:62;
+      then card {T.2,e} c= card u.edgesInOut() by CARD_1:11, ZFMISC_1:32;
+      then 2 c= card u.edgesInOut() by A16, CARD_2:57;
+      then A17: 2 c= u.degree() by GLIB_000:19;
+      u.degree() c= 2 by Def1;
+      hence u.degree() = 2 by A17, XBOOLE_0:def 10;
+      let x be Vertex of P;
+      x.degree() c= 2 by Def1;
+      hence x.degree() c= u.degree() by A17, XBOOLE_1:1;
+    end;
+    hence P.maxDegree() = 2 by GLIB_013:48;
+  end;
+end;
+
+theorem
+  for P being non _trivial Path-like _Graph holds
+    (P.order() = 2 iff P.maxDegree() = 1) &
+    (P.order() <> 2 iff P.maxDegree() = 2) by Lm7;
+
+theorem Th35:
+  for P being non _trivial Path-like _Graph, v being Vertex of P
+  st v is non endvertex holds v.degree() = 2
+proof
+  let P be non _trivial Path-like _Graph, v be Vertex of P;
+  assume v is non endvertex;
+  then A1: v.degree() <> 1 by GLIB_000:174;
+  v.degree() <> 0 by GLIB_000:157;
+  then not v.degree() in {0,1} by A1, TARSKI:def 2;
+  then A2: 2 c= v.degree() by CARD_1:50, ORDINAL1:16;
+  v.degree() c= 2 by Def1;
+  hence thesis by A2, XBOOLE_0:def 10;
+end;
+
+theorem Th36:
+  for P being _finite non _trivial Path-like _Graph
+  ex v1, v2 being Vertex of P st v1 <> v2 & Endvertices P = {v1,v2}
+proof
+  let P be _finite non _trivial Path-like _Graph;
+  consider P0 being vertex-distinct Path of P such that
+     P0.vertices() = the_Vertices_of P & P0.edges() = the_Edges_of P and
+    A1: Endvertices P = {P0.first(),P0.last()} iff P is non _trivial and
+    (P0 is trivial iff P is _trivial) and
+    A2: P0 is closed iff P is _trivial and
+    P0 is minlength by Th31;
+  take P0.first(),P0.last();
+  thus thesis by A1, A2, GLIB_001:def 24;
+end;
+
+theorem Th37:
+  for P being _finite non _trivial Path-like _Graph
+  holds card Endvertices P = 2
+proof
+  let P be _finite non _trivial Path-like _Graph;
+  consider v1,v2 being Vertex of P such that
+    A1: v1 <> v2 & Endvertices P = {v1,v2} by Th36;
+  thus thesis by A1, CARD_2:57;
+end;
+
+theorem
+  for G being _finite non _trivial _Graph
+  st G is acyclic & G.minDegree() = 1 & card Endvertices G = 2
+  holds G is Path-like
+proof
+  let G be _finite non _trivial _Graph;
+  assume A1: G is acyclic & G.minDegree() = 1 & card Endvertices G = 2;
+  :: show that G is connected
+  now
+    :: if G is non connected, it has at least 2 finite Tree-like components,
+    :: giving us at least 2 endvertices per component which are also
+    :: endvertices of G
+    assume G is non connected;
+    then consider v,w being Vertex of G such that
+      A2: for W being Walk of G holds not W is_Walk_from v,w by GLIB_002:def 1;
+    set C1 = the inducedSubgraph of G,G.reachableFrom(v);
+    set C2 = the inducedSubgraph of G,G.reachableFrom(w);
+    not w in G.reachableFrom(v) by A2, GLIB_002:def 5;
+    then A3: G.reachableFrom(v) misses G.reachableFrom(w) by GLIB_008:22;
+    A4: the_Vertices_of C1 = G.reachableFrom(v) by GLIB_000:def 37;
+    A5: the_Vertices_of C2 = G.reachableFrom(w) by GLIB_000:def 37;
+    reconsider v9 = v as Vertex of C1 by A4, GLIB_002:9;
+    1 c= C1.minDegree() by A1, Th16;
+    then C1.minDegree() <> 0;
+    then C1 is non edgeless;
+    then C1 is non _trivial & the_Edges_of C1 <> {} by A1;
+    then consider v1,v2 being Vertex of C1 such that
+      A6: v1 <> v2 & v1 is endvertex & v2 is endvertex and
+      v2 in C1.reachableFrom(v1) by A1, GLIB_002:43;
+    1 c= C2.minDegree() by A1, Th16;
+    then C2.minDegree() <> 0;
+    then C2 is non edgeless;
+    then C2 is non _trivial & the_Edges_of C2 <> {} by A1;
+    then consider w1,w2 being Vertex of C2 such that
+      A7: w1 <> w2 & w1 is endvertex & w2 is endvertex and
+      w2 in C2.reachableFrom(w1) by A1, GLIB_002:43;
+    v1 in Endvertices C1 & v2 in Endvertices C1 by A6, GLIB_006:56;
+    then A8: {v1,v2} c= Endvertices C1 by ZFMISC_1:32;
+    A9: {w1} c= Endvertices C2 by A7, GLIB_006:56, ZFMISC_1:31;
+    Endvertices C1 c= Endvertices G & Endvertices C2 c= Endvertices G by Th12;
+    then {v1,v2} c= Endvertices G & {w1} c= Endvertices G
+      by A8, A9, XBOOLE_1:1;
+    then {v1,v2}\/{w1} c= Endvertices G by XBOOLE_1:8;
+    then {v1,v2,w1} c= Endvertices G by ENUMSET1:3;
+    then A10: card {v1,v2,w1} c= card Endvertices G by CARD_1:11;
+    A11: v1 <> w1 by A3, A4, A5, XBOOLE_0:3;
+    v2 <> w1 by A3, A4, A5, XBOOLE_0:3;
+    then A12: 3 c= 2 by A1, A6, A10, A11, CARD_2:58;
+    2 in 3 by CARD_1:51, ENUMSET1:def 1;
+    then 2 in 2 by A12;
+    hence contradiction;
+  end;
+  hence A13: G is Tree-like by A1;
+  let v be Vertex of G;
+  set F = the removeVertex of G,v;
+  :: show that if G has a vertex of degree at least 3
+  :: we can remove that vertex and collect at least 3 endvertices of G
+  :: from the at least 3 components of G with v removed
+  assume not v.degree() c= 2;
+  then succ 2 c= v.degree() by ORDINAL1:16, ORDINAL1:21;
+  then 3 c= F.numComponents() by A13, Th6;
+  then 3 c= card F.componentSet() by GLIB_002:def 9;
+  then consider c1,c2,c3 being object such that
+    A14: c1 in F.componentSet() & c2 in F.componentSet() and
+    A15: c3 in F.componentSet() & c1 <> c2 & c1 <> c3 & c2 <> c3 by PENCIL_1:5;
+  consider v1 being Vertex of F such that
+    A16: c1 = F.reachableFrom(v1) by A14, GLIB_002:def 8;
+  consider v2 being Vertex of F such that
+    A17: c2 = F.reachableFrom(v2) by A14, GLIB_002:def 8;
+  consider v3 being Vertex of F such that
+    A18: c3 = F.reachableFrom(v3) by A15, GLIB_002:def 8;
+  set C1 = the inducedSubgraph of F,F.reachableFrom(v1);
+  set C2 = the inducedSubgraph of F,F.reachableFrom(v2);
+  set C3 = the inducedSubgraph of F,F.reachableFrom(v3);
+  A19: the_Vertices_of C1 = F.reachableFrom(v1) by GLIB_000:def 37;
+  A20: the_Vertices_of C2 = F.reachableFrom(v2) by GLIB_000:def 37;
+  A21: the_Vertices_of C3 = F.reachableFrom(v3) by GLIB_000:def 37;
+  consider w1 being Vertex of G such that
+    A22: w1 is endvertex & w1 in the_Vertices_of C1 by A13, Th7;
+  consider w2 being Vertex of G such that
+    A23: w2 is endvertex & w2 in the_Vertices_of C2 by A13, Th7;
+  consider w3 being Vertex of G such that
+    A24: w3 is endvertex & w3 in the_Vertices_of C3 by A13, Th7;
+  :: only thing left to show is that the 3 vertices are in fact mut. distinct
+  A25: w1 <> w2
+  proof
+    reconsider u1 = w1 as Vertex of F by A22;
+    F.reachableFrom(v1) = F.reachableFrom(u1) by A19, A22, GLIB_002:12;
+    hence thesis by A15, A16, A17, A20, A23, GLIB_002:12;
+  end;
+  A26: w2 <> w3
+  proof
+    reconsider u2 = w2 as Vertex of F by A23;
+    F.reachableFrom(v2) = F.reachableFrom(u2) by A20, A23, GLIB_002:12;
+    hence thesis by A15, A17, A18, A21, A24, GLIB_002:12;
+  end;
+  w3 <> w1
+  proof
+    reconsider u3 = w3 as Vertex of F by A24;
+    F.reachableFrom(v3) = F.reachableFrom(u3) by A21, A24, GLIB_002:12;
+    hence thesis by A15, A16, A18, A19, A22, GLIB_002:12;
+  end;
+  then A27: card {w1,w2,w3} = 3 by A25, A26, CARD_2:58;
+  w1 in Endvertices G & w2 in Endvertices G & w3 in Endvertices G
+    by A22, A23, A24, GLIB_006:def 8;
+  then A28: 3 c= card Endvertices G by A27, CARD_1:11, ZFMISC_1:133;
+  2 in 3 by CARD_1:51, ENUMSET1:def 1;
+  then 2 in 2 by A1, A28;
+  hence contradiction;
+end;
+
+registration
+  cluster 2-vertex simple connected -> Path-like for _Graph;
+  coherence
+  proof
+    let G be _Graph;
+    assume A1: G is 2-vertex simple connected;
+    then reconsider G9 = G as _finite _Graph;
+    (G9.order()^2 - G9.order())/ 2
+       = (G9.order()^2 - 2)/ 2 by A1, GLIB_013:def 3
+      .= (2^2-2)/2 by A1, GLIB_013:def 3
+      .= (2*2 -2)/2 by SQUARE_1:def 1
+      .= 1;
+    then A2: G9.size() <= 1 by A1, GLIB_013:12;
+    now
+      given W being Walk of G9 such that
+        A3: W is Cycle-like;
+      card W.length() <= card G9.size() by A3, GLIBPRE1:27, NAT_1:43;
+      then W.length() <= 1 by A2, XXREAL_0:2;
+      then W.length() = 1 by A3, NAT_1:25, GLIB_001:def 26;
+      then consider e being object such that
+        A4: e Joins W.first(),W.last(),G9 and
+        W = G9.walkOf(W.first(),e,W.last()) by GLIBPRE1:28;
+      W.first() = W.last() by A3, GLIB_001:def 24;
+      hence contradiction by A1, A4, GLIB_000:18;
+    end;
+    then A5: G9 is acyclic by GLIB_002:def 2;
+    now
+      let v be Vertex of G9;
+      card(v.edgesInOut()) <= G9.size() by NAT_1:43;
+      then v.degree() <= G9.size() by A1, GLIB_000:19;
+      then v.degree() <= 1 by A2, XXREAL_0:2;
+      hence v.degree() <= 2 by XXREAL_0:2;
+    end;
+    hence thesis by A1, A5, Th17;
+  end;
+  cluster 2-vertex Path-like -> complete for _Graph;
+  coherence by GLIB_000:26;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+3)-vertex Path-like -> non complete for _Graph;
+  coherence;
+end;
+
+begin :: Cycle graphs
+
+:: this definition includes the 1- and 2-cycle
+definition
+  let G be _Graph;
+  attr G is Cycle-like means
+  G is connected non acyclic 2-regular;
+end;
+
+registration
+  cluster non _trivial Cycle-like for _Graph;
+  existence
+  proof
+    reconsider c = 2+`1 as non empty Cardinal;
+    take G = the c-vertex simple complete _Graph;
+    G is (0+3)-vertex;
+    hence thesis;
+  end;
+  cluster connected non acyclic 2-regular -> Cycle-like for _Graph;
+  coherence;
+  cluster Cycle-like -> connected non acyclic 2-regular for _Graph;
+  coherence;
+end;
+
+theorem Th39:
+  for G being Cycle-like _Graph, C being Circuit-like Walk of G
+  holds C.vertices() = the_Vertices_of G & C.edges() = the_Edges_of G
+proof
+  let G be Cycle-like _Graph, C be Circuit-like Walk of G;
+  now
+    given x being object such that
+      A1: x in the_Vertices_of G & not x in C.vertices();
+    reconsider x as Vertex of G by A1;
+    consider W being Walk of G such that
+      A2: W is_Walk_from C.first(),x by GLIB_002:def 1;
+    :: get the "first" vertex not on C
+    defpred P[Nat] means $1 is odd & $1 <= len W & not W.$1 in C.vertices();
+    A3: ex k being Nat st P[k]
+    proof
+      take k = len W;
+      thus k is odd;
+      W.last() = x by A2, GLIB_001:def 23;
+      hence thesis by A1;
+    end;
+    consider k being Nat such that
+      A4: P[k] & for n being Nat st P[n] holds k <= n from NAT_1:sch 5(A3);
+    :: W.(k-2) is a vertex of C adjacent to two other C vertices AND W.k
+    2 < k
+    proof
+      assume k <= 2;
+      then not W.first() in C.vertices() by A4, CHORD:6;
+      then not C.first() in C.vertices() by A2, GLIB_001:def 23;
+      hence contradiction by GLIB_001:88;
+    end;
+    then reconsider k2 = k-2 as odd Element of NAT by A4, INT_1:5, POLYFORM:5;
+    A5: k2 <= k-0 & k2 < k-0 by XREAL_1:10;
+    then k2 <= len W by A4, XXREAL_0:2;
+    then A7: W.k2 in C.vertices() by A4, A5;
+    then consider m being odd Element of NAT such that
+      A8: m <= len C & C.m = W.k2 by GLIB_001:87;
+    reconsider w = W.k2 as Vertex of G by A7;
+    k2 < len W by A4, A5, XXREAL_0:2;
+    then A9: W.(k2+1) Joins W.k2, W.(k2+2),G by GLIB_001:def 3;
+    3 c= w.degree()
+    proof
+      A10: len C >= 3 by GLIB_001:125;
+      then reconsider n = len C - 2 as odd Element of NAT
+        by INT_1:5, POLYFORM:5, XXREAL_0:2;
+      n < len C - 0 by XREAL_1:10;
+      then A11: C.(n+1) Joins C.n, C.(n+2), G by GLIB_001:def 3;
+      per cases;
+      suppose A12: m = 1;
+        then m < len C by A10, XXREAL_0:2;
+        then A13: C.(m+1) Joins C.m, C.(m+2), G by GLIB_001:def 3;
+        3-2 <= n by A10, XREAL_1:9;
+        then per cases by A12, XXREAL_0:1;
+        suppose n > m;
+          then A14: n+1 > m+1 by XREAL_1:6;
+          A15: 1+0 <= 1+m by XREAL_1:6;
+          n+1 <= len C - 2 + 2 by XREAL_1:6;
+          then A17: C.(m+1) <> C.(n+1) by A14, A15, GLIB_001:138;
+          set M = {C.(m+1), W.(k2+1), C.(n+1)};
+          W.(k2+1) <> C.(m+1) & W.(k2+1) <> C.(n+1)
+          proof
+            assume W.(k2+1) = C.(m+1) or W.(k2+1) = C.(n+1);
+            then per cases;
+            suppose W.(k2+1) = C.(m+1);
+              then A18: W.k = C.m or W.k = C.(m+2) by A9, A13, GLIB_000:15;
+              m <= len C & m+2 <= len C by A10, A12, XXREAL_0:2;
+              hence contradiction by A4, A18, GLIB_001:87;
+            end;
+            suppose W.(k2+1) = C.(n+1);
+              then A19: W.k = C.n or W.k = C.(n+2) by A9, A11, GLIB_000:15;
+              n+0 <= n+2 by XREAL_1:6;
+              hence contradiction by A4, A19, GLIB_001:87;
+            end;
+          end;
+          then A20: card M = 3 by A17, CARD_2:58;
+          now
+            let x be object;
+            assume x in M;
+            then per cases by ENUMSET1:def 1;
+            suppose x = C.(m+1);
+              hence x in w.edgesInOut() by A8, A13, GLIB_000:62;
+            end;
+            suppose x = W.(k2+1);
+              hence x in w.edgesInOut() by A9, GLIB_000:62;
+            end;
+            suppose x = C.(n+1);
+              then x Joins C.last(),C.n,G by A11, GLIB_000:14;
+              then x Joins C.first(),C.n,G by GLIB_001:def 24;
+              hence x in w.edgesInOut() by A8, A12, GLIB_000:62;
+            end;
+          end;
+          then A21: 3 c= card(w.edgesInOut()) by A20, CARD_1:11, TARSKI:def 3;
+          card(w.edgesInOut()) c= w.degree() by CARD_2:34;
+          hence thesis by A21, XBOOLE_1:1;
+        end;
+        suppose n = m; :: loop
+          then C.3 = w by A8, A12, GLIB_001:118;
+          then A23: C.2 Joins w,w,G by A8, A12, A13;
+          A24: C.2 <> W.(k2+1) by A4, A7, A9, A23, GLIB_000:15;
+          A25: C.2 in w.edgesIn() & C.2 in w.edgesOut() by A23, GLIB_000:63;
+          per cases by A9, GLIB_000:16;
+          suppose W.(k2+1) DJoins w, W.(k2+2),G;
+            then W.(k2+1) in w.edgesOut() by GLIB_000:59;
+            then card {C.2, W.(k2+1)} c= w.outDegree()
+              by A25, ZFMISC_1:32, CARD_1:11;
+            then A26: 2 c= w.outDegree() by A24, CARD_2:57;
+            card {C.2} c= w.inDegree() by A25, ZFMISC_1:31, CARD_1:11;
+            then 1 c= w.inDegree() by CARD_1:30;
+            then 2+`1 c= w.degree() by A26, CARD_2:83;
+            hence thesis;
+          end;
+          suppose W.(k2+1) DJoins W.(k2+2),w,G;
+            then W.(k2+1) in w.edgesIn() by GLIB_000:57;
+            then card {C.2, W.(k2+1)} c= w.inDegree()
+              by A25, ZFMISC_1:32, CARD_1:11;
+            then A27: 2 c= w.inDegree() by A24, CARD_2:57;
+            card {C.2} c= w.outDegree() by A25, ZFMISC_1:31, CARD_1:11;
+            then 1 c= w.outDegree() by CARD_1:30;
+            then 1+`2 c= w.degree() by A27, CARD_2:83;
+            hence thesis;
+          end;
+        end;
+      end;
+      suppose A28: m = len C;
+        reconsider l = 1 as odd Element of NAT by POLYFORM:4;
+        l < len C by A10, XXREAL_0:2;
+        then A29: C.(l+1) Joins C.l,C.(l+2),G by GLIB_001:def 3;
+        3-2 <= n by A10, XREAL_1:9;
+        then per cases by XXREAL_0:1;
+        suppose n > 1;
+          then A30: n+1 > l+1 & 1+0 <= 1+k by XREAL_1:6;
+          n+1 <= len C - 2 + 2 by XREAL_1:6;
+          then A31: C.(l+1) <> C.(n+1) by A30, GLIB_001:138;
+          set M = {C.(l+1), W.(k2+1), C.(n+1)};
+          W.(k2+1) <> C.(l+1) & W.(k2+1) <> C.(n+1)
+          proof
+            assume W.(k2+1) = C.(l+1) or W.(k2+1) = C.(n+1);
+            then per cases;
+            suppose W.(k2+1) = C.(l+1);
+              then A32: W.k = C.l or W.k = C.(l+2) by A9, A29, GLIB_000:15;
+              l <= len C & l+2 <= len C by A10, XXREAL_0:2;
+              hence contradiction by A4, A32, GLIB_001:87;
+            end;
+            suppose W.(k2+1) = C.(n+1);
+              then A33: W.k = C.n or W.k = C.(n+2) by A9, A11, GLIB_000:15;
+              n+0 <= n+2 by XREAL_1:6;
+              hence contradiction by A4, A33, GLIB_001:87;
+            end;
+          end;
+          then A34: card M = 3 by A31, CARD_2:58;
+          now
+            let x be object;
+            assume x in M;
+            then per cases by ENUMSET1:def 1;
+            suppose x = C.(l+1);
+              then x Joins C.first(),C.(l+2),G by A29;
+              then x Joins C.last(),C.(l+2),G by GLIB_001:def 24;
+              hence x in w.edgesInOut() by A8, A28, GLIB_000:62;
+            end;
+            suppose x = W.(k2+1);
+              hence x in w.edgesInOut() by A9, GLIB_000:62;
+            end;
+            suppose x = C.(n+1);
+              hence x in w.edgesInOut()
+                by A8, A11, A28, GLIB_000:14, GLIB_000:62;
+            end;
+          end;
+          then A35: 3 c= card(w.edgesInOut()) by A34, CARD_1:11, TARSKI:def 3;
+          card(w.edgesInOut()) c= w.degree() by CARD_2:34;
+          hence thesis by A35, XBOOLE_1:1;
+        end;
+        suppose n = 1; :: loop again
+          then A37: len C = 3;
+          then A38: C.3 = w by A8, A28;
+          then w = C.last() by A37;
+          then w = C.first() by GLIB_001:def 24;
+          then A39: C.2 Joins w,w,G by A29, A38;
+          A40: C.2 <> W.(k2+1) by A4, A7, A9, A39, GLIB_000:15;
+          A41: C.2 in w.edgesIn() & C.2 in w.edgesOut() by A39, GLIB_000:63;
+          per cases by A9, GLIB_000:16;
+          suppose W.(k2+1) DJoins w, W.(k2+2),G;
+            then W.(k2+1) in w.edgesOut() by GLIB_000:59;
+            then card {C.2, W.(k2+1)} c= w.outDegree()
+              by A41, ZFMISC_1:32, CARD_1:11;
+            then A42: 2 c= w.outDegree() by A40, CARD_2:57;
+            card {C.2} c= w.inDegree() by A41, ZFMISC_1:31, CARD_1:11;
+            then 1 c= w.inDegree() by CARD_1:30;
+            then 2+`1 c= w.degree() by A42, CARD_2:83;
+            hence thesis;
+          end;
+          suppose W.(k2+1) DJoins W.(k2+2),w,G;
+            then W.(k2+1) in w.edgesIn() by GLIB_000:57;
+            then card {C.2, W.(k2+1)} c= w.inDegree()
+              by A41, ZFMISC_1:32, CARD_1:11;
+            then A43: 2 c= w.inDegree() by A40, CARD_2:57;
+            card {C.2} c= w.outDegree() by A41, ZFMISC_1:31, CARD_1:11;
+            then 1 c= w.outDegree() by CARD_1:30;
+            then 1+`2 c= w.degree() by A43, CARD_2:83;
+            hence thesis;
+          end;
+        end;
+      end;
+      suppose A44: m <> 1 & m <> len C;
+        then A45: m < len C by A8, XXREAL_0:1;
+        then A46: C.(m+1) Joins C.m, C.(m+2), G by GLIB_001:def 3;
+        0 < m;
+        then 0+1 <= m by INT_1:7;
+        then m > 1 by A44, XXREAL_0:1;
+        then m >= 1+1 by INT_1:7;
+        then reconsider l = m-2 as odd Element of NAT by INT_1:5, POLYFORM:5;
+        A48: l < m - 0 by XREAL_1:10;
+        then A49: l < len C by A45, XXREAL_0:2;
+        then A50: C.(l+1) Joins C.l, C.(l+2), G by GLIB_001:def 3;
+        A51: m+1 > l+1 by A48, XREAL_1:6;
+        A52: 1+0 <= l+1 by XREAL_1:6;
+        m+1 <= len C by A45, INT_1:7;
+        then A53: C.(m+1) <> C.(l+1) by A51, A52, GLIB_001:138;
+        set M = {C.(m+1), W.(k2+1), C.(l+1)};
+        W.(k2+1) <> C.(m+1) & W.(k2+1) <> C.(l+1)
+        proof
+          assume W.(k2+1) = C.(m+1) or W.(k2+1) = C.(l+1);
+          then per cases;
+          suppose W.(k2+1) = C.(m+1);
+            then A54: W.k = C.m or W.k = C.(m+2) by A9, A46, GLIB_000:15;
+            m <= len C & m+2 <= len C by A45, CHORD:4;
+            hence contradiction by A4, A54, GLIB_001:87;
+          end;
+          suppose W.(k2+1) = C.(l+1);
+            then W.k = C.l or W.k = C.(l+2) by A9, A50, GLIB_000:15;
+            hence contradiction by A4, A45, A49, GLIB_001:87;
+          end;
+        end;
+        then A56: card M = 3 by A53, CARD_2:58;
+        now
+          let x be object;
+          assume x in M;
+          then per cases by ENUMSET1:def 1;
+          suppose x = C.(m+1);
+            hence x in w.edgesInOut() by A8, A46, GLIB_000:62;
+          end;
+          suppose x = W.(k2+1);
+            hence x in w.edgesInOut() by A9, GLIB_000:62;
+          end;
+          suppose x = C.(l+1);
+            hence x in w.edgesInOut() by A8, A50, GLIB_000:14, GLIB_000:62;
+          end;
+        end;
+        then A57: 3 c= card(w.edgesInOut()) by A56, CARD_1:11, TARSKI:def 3;
+        card(w.edgesInOut()) c= w.degree() by CARD_2:34;
+        hence thesis by A57, XBOOLE_1:1;
+      end;
+    end;
+    then Segm 3 c= Segm 2 by GLIB_016:def 4;
+    hence contradiction by NAT_1:39;
+  end;
+  then the_Vertices_of G c= C.vertices() by TARSKI:def 3;
+  hence A58: C.vertices() = the_Vertices_of G by XBOOLE_0:def 10;
+  now
+    given x being object such that
+      A59: x in the_Edges_of G & not x in C.edges();
+    set w = (the_Source_of G).x;
+    reconsider w as Vertex of G by A59, FUNCT_2:5;
+    consider m being odd Element of NAT such that
+      A60: m <= len C & C.m = w by A58, GLIB_001:87;
+    3 c= w.degree()
+    proof
+      A61: len C >= 3 by GLIB_001:125;
+      then reconsider n = len C - 2 as odd Element of NAT
+        by INT_1:5, POLYFORM:5, XXREAL_0:2;
+      A62: n < len C - 0 by XREAL_1:10;
+      then A63: C.(n+1) Joins C.n, C.(n+2), G by GLIB_001:def 3;
+      per cases;
+      suppose A64: m = 1;
+        m < len C by A61, A64, XXREAL_0:2;
+        then A65: C.(m+1) Joins C.m, C.(m+2), G by GLIB_001:def 3;
+        3-2 <= n by A61, XREAL_1:9;
+        then per cases by A64, XXREAL_0:1;
+        suppose A66: n > m;
+          then A67: n+1 > m+1 by XREAL_1:6;
+          A68: 1+0 <= 1+m by XREAL_1:6;
+          n+1 <= len C - 2 + 2 by XREAL_1:6;
+          then A70: C.(m+1) <> C.(n+1) by A67, A68, GLIB_001:138;
+          set M = {C.(m+1), x, C.(n+1)};
+          x <> C.(m+1) & x <> C.(n+1)
+          proof
+            m < len C by A62, A66, XXREAL_0:2;
+            hence thesis by A59, A62, GLIB_001:100;
+          end;
+          then A71: card M = 3 by A70, CARD_2:58;
+          now
+            let y be object;
+            assume y in M;
+            then per cases by ENUMSET1:def 1;
+            suppose y = C.(m+1);
+              hence y in w.edgesInOut() by A60, A65, GLIB_000:62;
+            end;
+            suppose y = x;
+              hence y in w.edgesInOut() by A59, GLIB_000:61;
+            end;
+            suppose y = C.(n+1);
+              then y Joins C.last(),C.n,G by A63, GLIB_000:14;
+              then y Joins C.first(),C.n,G by GLIB_001:def 24;
+              hence y in w.edgesInOut() by A60, A64, GLIB_000:62;
+            end;
+          end;
+          then A72: 3 c= card(w.edgesInOut()) by A71, CARD_1:11, TARSKI:def 3;
+          card(w.edgesInOut()) c= w.degree() by CARD_2:34;
+          hence thesis by A72, XBOOLE_1:1;
+        end;
+        suppose n = m; :: loop
+          then A74: len C = 3 by A64;
+          then A75: C.2 Joins w,w,G by A60, A64, A65, GLIB_001:118;
+          A76: C.2 <> x
+          proof
+            C.(1+1) in C.edges() by A74, POLYFORM:4, GLIB_001:100;
+            hence thesis by A59;
+          end;
+          A77: C.2 in w.edgesIn() & C.2 in w.edgesOut() by A75, GLIB_000:63;
+          x in w.edgesOut() by A59, GLIB_000:58;
+          then card {C.2, x} c= w.outDegree() by A77, ZFMISC_1:32, CARD_1:11;
+          then A78: 2 c= w.outDegree() by A76, CARD_2:57;
+          card {C.2} c= w.inDegree() by CARD_1:11, A77, ZFMISC_1:31;
+          then 1 c= w.inDegree() by CARD_1:30;
+          then 2+`1 c= w.degree() by A78, CARD_2:83;
+          hence thesis;
+        end;
+      end;
+      suppose A79: m = len C;
+        reconsider l = 1 as odd Element of NAT by POLYFORM:4;
+        A80: l < len C by A61, XXREAL_0:2;
+        then A81: C.(l+1) Joins C.l,C.(l+2),G by GLIB_001:def 3;
+        3-2 <= n by A61, XREAL_1:9;
+        then per cases by XXREAL_0:1;
+        suppose n > 1;
+          then A82: n+1 > l+1 & 1+0 <= 1+l by XREAL_1:6;
+          n+1 <= len C - 2 + 2 by XREAL_1:6;
+          then A83: C.(l+1) <> C.(n+1) by A82, GLIB_001:138;
+          set M = {C.(l+1), x, C.(n+1)};
+          x <> C.(l+1) & x <> C.(n+1) by A59, A62, A80, GLIB_001:100;
+          then A84: card M = 3 by A83, CARD_2:58;
+          now
+            let y be object;
+            assume y in M;
+            then per cases by ENUMSET1:def 1;
+            suppose y = C.(l+1);
+              then y Joins C.first(),C.(l+2),G by A81;
+              then y Joins C.last(),C.(l+2),G by GLIB_001:def 24;
+              hence y in w.edgesInOut() by A60, A79, GLIB_000:62;
+            end;
+            suppose y = x;
+              hence y in w.edgesInOut() by A59, GLIB_000:61;
+            end;
+            suppose y = C.(n+1);
+              hence y in w.edgesInOut() by A60, A63, A79, GLIB_000:14, 62;
+            end;
+          end;
+          then A85: 3 c= card(w.edgesInOut()) by A84, CARD_1:11, TARSKI:def 3;
+          card(w.edgesInOut()) c= w.degree() by CARD_2:34;
+          hence thesis by A85, XBOOLE_1:1;
+        end;
+        suppose n = 1; :: loop again
+          then A87: len C = 3;
+          then A88: C.3 = w by A60, A79;
+          then w = C.last() by A87;
+          then w = C.first() by GLIB_001:def 24;
+          then A89: C.2 Joins w,w,G by A81, A88;
+          A90: C.2 <> x
+          proof
+            C.(1+1) in C.edges() by A87, POLYFORM:4, GLIB_001:100;
+            hence thesis by A59;
+          end;
+          A91: C.2 in w.edgesIn() & C.2 in w.edgesOut() by A89, GLIB_000:63;
+          x in w.edgesOut() by A59, GLIB_000:58;
+          then card {C.2, x} c= w.outDegree() by A91, ZFMISC_1:32, CARD_1:11;
+          then A92: 2 c= w.outDegree() by A90, CARD_2:57;
+          card {C.2} c= w.inDegree() by A91, ZFMISC_1:31, CARD_1:11;
+          then 1 c= w.inDegree() by CARD_1:30;
+          then 2+`1 c= w.degree() by A92, CARD_2:83;
+          hence thesis;
+        end;
+      end;
+      suppose A93: m <> 1 & m <> len C;
+        then A94: m < len C by A60, XXREAL_0:1;
+        then A95: C.(m+1) Joins C.m, C.(m+2), G by GLIB_001:def 3;
+        0 < m;
+        then 0+1 <= m by INT_1:7;
+        then m > 1 by A93, XXREAL_0:1;
+        then m >= 1+1 by INT_1:7;
+        then reconsider l = m-2 as odd Element of NAT by INT_1:5, POLYFORM:5;
+        A97: l < m - 0 by XREAL_1:10;
+        then A98: l < len C by A94, XXREAL_0:2;
+        then A99: C.(l+1) Joins C.l, C.(l+2), G by GLIB_001:def 3;
+        A100: m+1 > l+1 by A97, XREAL_1:6;
+        A101: 1+0 <= l+1 by XREAL_1:6;
+        m+1 <= len C by A94, INT_1:7;
+        then A102: C.(m+1) <> C.(l+1) by A100, A101, GLIB_001:138;
+        set M = {C.(m+1), x, C.(l+1)};
+        x <> C.(m+1) & x <> C.(l+1) by A59, A94, A98, GLIB_001:100;
+        then A103: card M = 3 by A102, CARD_2:58;
+        now
+          let y be object;
+          assume y in M;
+          then per cases by ENUMSET1:def 1;
+          suppose y = C.(m+1);
+            hence y in w.edgesInOut() by A60, A95, GLIB_000:62;
+          end;
+          suppose y = x;
+            hence y in w.edgesInOut() by A59, GLIB_000:61;
+          end;
+          suppose y = C.(l+1);
+            hence y in w.edgesInOut() by A60, A99, GLIB_000:14, GLIB_000:62;
+          end;
+        end;
+        then A104: 3 c= card(w.edgesInOut()) by A103, CARD_1:11, TARSKI:def 3;
+        card(w.edgesInOut()) c= w.degree() by CARD_2:34;
+        hence thesis by A104, XBOOLE_1:1;
+      end;
+    end;
+    then Segm 3 c= Segm 2 by GLIB_016:def 4;
+    hence contradiction by NAT_1:39;
+  end;
+  then the_Edges_of G c= C.edges() by TARSKI:def 3;
+  hence thesis by XBOOLE_0:def 10;
+end;
+
+registration
+  cluster Cycle-like -> non edgeless _finite with_max_degree for _Graph;
+  coherence
+  proof
+    let G be _Graph;
+    assume A1: G is Cycle-like;
+    hence G is non edgeless;
+    reconsider G9 = G as Cycle-like _Graph by A1;
+    set C = the Cycle-like Walk of G9;
+    C.vertices() = the_Vertices_of G & C.edges() = the_Edges_of G by Th39;
+    hence G is _finite with_max_degree by GLIB_000:def 17;
+  end;
+end;
+
+theorem Th40:
+  for G being Cycle-like _Graph holds G.order() = G.size()
+proof
+  let G be Cycle-like _Graph;
+  2*G.size() = 2*`G.size() by FIELD_5:2
+    .= 2*`G.order() by GLIB_016:58
+    .= 2*G.order() by FIELD_5:2;
+  hence thesis;
+end;
+
+registration
+  cluster _trivial non-Dmulti loopfull -> Cycle-like for _Graph;
+  coherence
+  proof
+    let G be _Graph;
+    assume A1: G is _trivial non-Dmulti loopfull;
+    now
+      let v be Vertex of G;
+      A2: G.size() = 1
+      proof
+        consider e being object such that
+          A3: e Joins v,v,G by A1, GLIB_012:def 1;
+        A4: e in the_Edges_of G by A3, GLIB_000:def 13;
+        for e1,e2 being object st e1 in the_Edges_of G & e2 in the_Edges_of G
+          holds e1 = e2 by A1, ZFMISC_1:def 10;
+        then ex e9 being object st the_Edges_of G = {e9}
+          by A4, ZFMISC_1:def 10, ZFMISC_1:131;
+        hence thesis by CARD_1:30;
+      end;
+      thus v.degree() = 1+`1 by A1, A2, GLIB_000:149
+        .= 2;
+    end;
+    hence thesis by A1, GLIB_016:def 4;
+  end;
+  cluster _trivial Cycle-like -> non-multi loopfull for _Graph;
+  coherence
+  proof
+    let G be _Graph;
+    assume A6: G is _trivial Cycle-like;
+    then 1 = G.order() by GLIB_000:26
+      .= G.size() by A6, Th40;
+    then consider e being object such that
+      A7: the_Edges_of G = {e} by CARD_2:42;
+    now
+      let e1,e2,v1,v2 be object;
+      assume e1 Joins v1,v2,G & e2 Joins v1,v2,G;
+      then e1 in the_Edges_of G & e2 in the_Edges_of G by GLIB_000:def 13;
+      hence e1 = e2 by A7, ZFMISC_1:def 10;
+    end;
+    hence G is non-multi by GLIB_000:def 20;
+    now
+      let v be Vertex of G;
+      take e;
+      set u = (the_Source_of G).e, w = (the_Target_of G).e;
+      e in the_Edges_of G by A7, TARSKI:def 1;
+      then A8: e Joins u,w,G by GLIB_000:def 13;
+      then reconsider u,w as Vertex of G by GLIB_000:13;
+      v = u & v = w by A6, ZFMISC_1:def 10;
+      hence e Joins v,v,G by A8;
+    end;
+    hence G is loopfull by GLIB_012:def 1;
+  end;
+  cluster non _trivial Cycle-like -> loopless for _Graph;
+  coherence
+  proof
+    let G  be _Graph;
+    assume A9: G is non _trivial Cycle-like;
+    then consider C being Walk of G such that
+      A10: C is Cycle-like by GLIB_002:def 2;
+    assume G is non loopless;
+    then consider v,e being object such that
+      A11: e Joins v,v,G by GLIB_000:18;
+    e in the_Edges_of G by A11, GLIB_000:def 13;
+    then e in C.edges() by A9, A10, Th39;
+    then consider n being odd Element of NAT such that
+      A12: n < len C & C.(n+1) = e by GLIB_001:100;
+    C.(n+1) Joins C.n,C.(n+2),G by A12, GLIB_001:def 3;
+    then A13: C.n = v & C.(n+2) = v by A11, A12, GLIB_000:15;
+    A14: n+0 < n+2 by XREAL_1:8;
+    n+2 <= len C by A12, CHORD:4;
+    then n = 1 & n+2 = len C by A10, A13, A14, GLIB_001:def 28;
+    then 2 + 1 = 2*C.length() + 1 by GLIB_001:112;
+    then 1 = card(C.edges()) by A10, Th4
+      .= G.size() by A9, A10, Th39
+      .= G.order() by A9, Th40;
+    hence contradiction by A9, GLIB_000:26;
+  end;
+  cluster _trivial Cycle-like for _Graph;
+  existence
+  proof
+    take the _trivial non-Dmulti loopfull _Graph;
+    thus thesis;
+  end;
+end;
+
+definition
+  let F be Graph-yielding Function;
+  attr F is Cycle-like means
+  :Def7:
+  for x being object st x in dom F
+    ex G being _Graph st F.x = G & G is Cycle-like;
+end;
+
+registration
+  let C be Cycle-like _Graph;
+  cluster <* C *> -> Cycle-like;
+  coherence
+  proof
+    let x be object;
+    assume A1: x in dom <* C *>; then
+    reconsider n = x as Nat;
+    n in Seg 1 by A1,FINSEQ_1:def 8; then
+    n = 1 by TARSKI:def 1, FINSEQ_1:2;
+    hence thesis;
+  end;
+  cluster NAT --> C -> Cycle-like;
+  coherence by FUNCOP_1:7;
+end;
+
+definition
+  let F be non empty Graph-yielding Function;
+  redefine attr F is Cycle-like means
+  :Def8:
+  for x being Element of dom F holds F.x is Cycle-like;
+  compatibility
+  proof
+    hereby
+      assume A1: F is Cycle-like;
+      let x be Element of dom F;
+      consider G being _Graph such that
+        A2: F.x = G & G is Cycle-like by A1;
+      thus F.x is Cycle-like by A2;
+    end;
+    assume A3: for x being Element of dom F holds F.x is Cycle-like;
+    let x be object;
+    assume x in dom F;
+    then reconsider y = x as Element of dom F;
+    take F.y;
+    thus thesis by A3;
+  end;
+end;
+
+definition
+  let S be GraphSeq;
+  redefine attr S is Cycle-like means
+  :Def9:
+  for n being Nat holds S.n is Cycle-like;
+  compatibility
+  proof
+    hereby
+      assume A1: S is Cycle-like;
+      let x be Nat;
+      x in dom S by Lm2;
+      hence S.x is Cycle-like by A1;
+    end;
+    assume A2: for x being Nat holds S.x is Cycle-like;
+    let x be Element of dom S;
+    thus thesis by A2;
+  end;
+end;
+
+registration
+  cluster empty -> Cycle-like for Graph-yielding Function;
+  coherence;
+  cluster _trivial non-Dmulti loopfull -> Cycle-like
+    for Graph-yielding Function;
+  coherence
+  proof
+    let F be Graph-yielding Function;
+    assume A1: F is _trivial non-Dmulti loopfull;
+    let x be object;
+    assume A2: x in dom F;
+    then consider G1 being _Graph such that
+      A3: G1 = F.x & G1 is _trivial by A1, GLIB_000:def 60;
+    consider G2 being _Graph such that
+      A4: G2 = F.x & G2 is non-Dmulti by A1, A2, GLIB_000:def 63;
+    consider G3 being _Graph such that
+      A5: G3 = F.x & G3 is loopfull by A1, A2, GLIB_012:def 2;
+    take G1;
+    thus thesis by A3, A4, A5;
+  end;
+  cluster Cycle-like -> connected for Graph-yielding Function;
+  coherence
+  proof
+    let F be Graph-yielding Function;
+    assume A6: F is Cycle-like;
+    now
+      let x be object;
+      assume x in dom F;
+      then consider G being _Graph such that
+        A7: G = F.x & G is Cycle-like by A6;
+      take G;
+      thus G = F.x & G is connected by A7;
+    end;
+    hence thesis by GLIB_002:def 12;
+  end;
+  cluster non empty Cycle-like for GraphSeq;
+  existence
+  proof
+    take NAT --> the Cycle-like _Graph;
+    thus thesis;
+  end;
+end;
+
+registration
+  let F be Cycle-like non empty Graph-yielding Function, x be Element of dom F;
+  cluster F.x -> Cycle-like;
+  coherence by Def8;
+end;
+
+registration
+  let S be Cycle-like GraphSeq, n be Nat;
+  cluster S.n -> Cycle-like;
+  coherence by Def9;
+end;
+
+registration
+  let p be Cycle-like Graph-yielding FinSequence, n be Nat;
+  cluster p | n -> Cycle-like;
+  coherence
+  proof
+    A1: p|n = p|Seg n by FINSEQ_1:def 16;
+    now
+      let x be object;
+      assume A2: x in dom(p|n);
+      then x in dom p by A1, RELAT_1:60, TARSKI:def 3;
+      then consider G being _Graph such that
+        A3: p.x = G & G is Cycle-like by Def7;
+      take G;
+      thus (p|n).x = G & G is Cycle-like by A1, A3, A2, FUNCT_1:47;
+    end;
+    hence thesis;
+  end;
+  cluster p /^ n -> Cycle-like;
+  coherence
+  proof
+    per cases;
+    suppose A4: n <= len p;
+      now
+        let x be object;
+        assume A5: x in dom(p /^ n);
+        then reconsider i = x as Nat;
+        n+i in dom p by A5, FINSEQ_5:26;
+        then consider G being _Graph such that
+          A6: p.(n+i) = G & G is Cycle-like by Def7;
+        take G;
+        thus (p /^ n).x = G & G is Cycle-like by A4, A5, A6, RFINSEQ:def 1;
+      end;
+      hence thesis;
+    end;
+    suppose not (n <= len p);
+      hence thesis by RFINSEQ:def 1;
+    end;
+  end;
+  let m be Nat;
+  cluster smid(p,m,n) -> Cycle-like;
+  coherence
+  proof
+    smid(p,m,n) = (p/^(m-'1))|(n+1-'m) by FINSEQ_8:def 1;
+    hence thesis;
+  end;
+  cluster (m,n)-cut p -> Cycle-like;
+  coherence
+  proof
+    per cases;
+    suppose 1 <= m & m <= n & n <= len p;
+      then 1 <= m & m <= len p & 1 <= n & n <= len p by XXREAL_0:2;
+      then m in dom p & n in dom p by FINSEQ_3:25;
+      then smid(p,m,n) = (m,n)-cut p by FINSEQ_8:29;
+      hence thesis;
+    end;
+    suppose not(1 <= m & m <= n & n <= len p);
+      hence thesis by FINSEQ_6:def 4;
+    end;
+  end;
+end;
+
+registration
+  let p, q be Cycle-like Graph-yielding FinSequence;
+  cluster p ^ q -> Cycle-like;
+  coherence
+  proof
+    for x being object st x in dom (p^q) ex G being _Graph st
+      G = (p^q).x & G is Cycle-like
+    proof
+      let x be object;
+      assume A1: x in dom (p^q);
+      then reconsider k = x as Nat;
+      per cases by A1, FINSEQ_1:25;
+      suppose k in dom p;
+        then (p^q).k = p.k & ex G being _Graph st p.k = G & G is Cycle-like
+          by Def7, FINSEQ_1:def 7;
+        hence ex G being _Graph st (p^q).x = G & G is Cycle-like;
+      end;
+      suppose ex n being Nat st n in dom q & k = len p + n;
+        then consider n being Nat such that
+          A2: n in dom q & k = len p + n;
+        (p^q).(len p +n) = q.n & ex G being _Graph st q.n = G & G is Cycle-like
+          by A2, Def7, FINSEQ_1:def 7;
+        hence ex G being _Graph st (p^q).x = G & G is Cycle-like by A2;
+      end;
+    end;
+    hence thesis;
+  end;
+  cluster p ^' q -> Cycle-like;
+  coherence
+  proof
+    p ^' q = p^(2,len q)-cut q by FINSEQ_6:def 5;
+    hence thesis;
+  end;
+end;
+
+registration
+  let C1, C2 be Cycle-like _Graph;
+  cluster <* C1, C2 *> -> Cycle-like;
+  coherence
+  proof
+    <* C1, C2 *> = <* C1 *> ^ <* C2 *> by FINSEQ_1:def 9;
+    hence thesis;
+  end;
+  let C3 be Cycle-like _Graph;
+  cluster <* C1, C2, C3 *> -> Cycle-like;
+  coherence
+  proof
+    <* C1, C2, C3 *> = <* C1 *> ^ <* C2 *> ^ <* C3 *> by FINSEQ_1:def 10;
+    hence thesis;
+  end;
+end;
+
+definition
+  let S be Graph-membered set;
+  attr S is Cycle-like means
+  :Def10:
+  for G being _Graph st G in S holds G is Cycle-like;
+end;
+
+registration
+  cluster empty -> Cycle-like for Graph-membered set;
+  coherence;
+  cluster Cycle-like -> connected for Graph-membered set;
+  coherence
+  proof
+    let S be Graph-membered set;
+    assume A1: S is Cycle-like;
+    now
+      let G be _Graph;
+      assume G in S;
+      then G is Cycle-like by A1;
+      hence G is connected;
+    end;
+    hence thesis by GLIB_014:def 9;
+  end;
+end;
+
+registration
+  let C1 be Cycle-like _Graph;
+  cluster {C1} -> Cycle-like;
+  coherence by TARSKI:def 1;
+  let C2 be Cycle-like _Graph;
+  cluster {C1, C2} -> Cycle-like;
+  coherence
+  proof
+    let x be _Graph;
+    assume x in {C1, C2};
+    then per cases by TARSKI:def 2;
+    suppose x = C1;
+      hence thesis;
+    end;
+    suppose x = C2;
+      hence thesis;
+    end;
+  end;
+end;
+
+registration
+  let F be Cycle-like Graph-yielding Function;
+  cluster rng F -> Cycle-like;
+  coherence
+  proof
+    let G be _Graph;
+    assume G in rng F;
+    then consider x being object such that
+      A1: x in dom F & F.x = G by FUNCT_1:def 3;
+    consider G0 being _Graph such that
+      A2: F.x = G0 & G0 is Cycle-like by A1, Def7;
+    thus G is Cycle-like by A1, A2;
+  end;
+end;
+
+registration
+  let X be Cycle-like Graph-membered set;
+  cluster -> Cycle-like for Subset of X;
+  coherence by Def10;
+end;
+
+registration
+  let X be Cycle-like Graph-membered set, Y be set;
+  cluster X /\ Y -> Cycle-like;
+  coherence
+  proof
+    X /\ Y c= X by XBOOLE_1:17;
+    hence thesis;
+  end;
+  cluster X \ Y -> Cycle-like;
+  coherence;
+end;
+
+registration
+  let X, Y be Cycle-like Graph-membered set;
+  cluster X \/ Y -> Cycle-like;
+  coherence
+  proof
+    let x be _Graph;
+    assume x in X \/ Y;
+    then per cases by XBOOLE_0:def 3;
+    suppose x in X;
+      hence thesis by Def10;
+    end;
+    suppose x in Y;
+      hence thesis by Def10;
+    end;
+  end;
+  cluster X \+\ Y -> Cycle-like;
+  coherence;
+end;
+
+registration
+  cluster non empty Cycle-like for Graph-membered set;
+  existence
+  proof
+    take {the Cycle-like _Graph};
+    thus thesis;
+  end;
+end;
+
+registration
+  let S be non empty Cycle-like Graph-membered set;
+  cluster -> Cycle-like for Element of S;
+  coherence by Def10;
+end;
+
+:: this was essentially proven above with the registrations:
+:: the 1-cycle is the trivial graph with a loop Part I
+theorem Th41:
+  for G2 being _trivial edgeless _Graph, v being Vertex of G2, e being object
+  for G1 being addEdge of G2,v,e,v holds G1 is Cycle-like
+proof
+  let G2 be _trivial edgeless _Graph, v be Vertex of G2, e be object;
+  let G1 be addEdge of G2,v,e,v;
+  A1: the_Edges_of G1 = the_Edges_of G2 \/ {e} by GLIB_006:def 11
+    .= {e};
+  now
+    let e1,e2,v1,v2 be object;
+    assume e1 DJoins v1,v2,G1 & e2 DJoins v1,v2,G1;
+    then e1 in the_Edges_of G1 & e2 in the_Edges_of G1 by GLIB_000:def 14;
+    hence e1 = e2 by A1, ZFMISC_1:def 10;
+  end;
+  then A2: G1 is non-Dmulti by GLIB_000:def 21;
+  not e in the_Edges_of G2;
+  then G1 is non loopless by GLIB_006:113;
+  hence thesis by A2;
+end;
+
+:: connecting endvertices of path graphs creates cycle graphs
+theorem Th42:
+  for P being _finite non _trivial Path-like _Graph
+  for v1,v2 being Element of Endvertices(P), e being object
+  for C being addEdge of P,v1,e,v2
+  st v1 <> v2 & not e in the_Edges_of P
+  holds C is Cycle-like
+proof
+  let P be _finite non _trivial Path-like _Graph;
+  let v1,v2 be Element of Endvertices P, e be object;
+  let C be addEdge of P,v1,e,v2;
+  assume A1: v1 <> v2 & not e in the_Edges_of P;
+  A2: card Endvertices P = 2 by Th37;
+  then A3: Endvertices P <> {};
+  then reconsider v1,v2 as Vertex of P by TARSKI:def 3;
+  A4: C is addEdge of P,v1,e,v2;
+  A5: v1 is endvertex & v2 is endvertex by A3, GLIB_006:56;
+  now
+    let v be Vertex of C;
+    reconsider w = v as Vertex of P by A4, GLIB_006:102;
+    per cases;
+    suppose A6: w <> v1 & w <> v2;
+      A7: not w is endvertex
+      proof
+        assume w is endvertex;
+        then w in Endvertices P & v1 in Endvertices P & v2 in Endvertices P
+          by A3, GLIB_006:def 8;
+        then card {w,v1,v2} c= card Endvertices P by NOMIN_2:1, CARD_1:11;
+        then 3 c= card Endvertices P by A1, A6, CARD_2:58;
+        then A8: {0,1,2} c= 2 by Th37, CARD_1:51;
+        2 in {0,1,2} by ENUMSET1:def 1;
+        then 2 in 2 by A8;
+        hence contradiction;
+      end;
+      thus v.degree() = w.degree() by A6, GLIBPRE0:46
+        .= 2 by A7, Th35;
+    end;
+    suppose w = v1;
+      hence v.degree() = v1.degree() +` 1 by A1, A4, GLIBPRE0:47
+        .= 1 +` 1 by A5, GLIB_000:174
+        .= 2;
+    end;
+    suppose w = v2;
+      hence v.degree() = v2.degree() +` 1 by A1, A4, GLIBPRE0:48
+        .= 1 +` 1 by A5, GLIB_000:174
+        .= 2;
+    end;
+  end;
+  then A9: C is 2-regular by GLIB_016:def 4;
+  A10: e DJoins v1, v2, C by A1, GLIB_006:105;
+  now
+    consider P0 being vertex-distinct Path of P such that
+      P0.vertices() = the_Vertices_of P & P0.edges() = the_Edges_of P and
+      A11: Endvertices P = {P0.first(),P0.last()} iff P is non _trivial and
+      A12: P0 is trivial iff P is _trivial and
+      A13: P0 is closed iff P is _trivial and
+      P0 is minlength by Th31;
+    reconsider P9 = P0 as Walk of C by GLIB_006:75;
+    take C0 = P9.addEdge(e);
+    A14: e Joins P9.last(),P9.first(),C
+    proof
+      (v1 = P0.first() or v1 = P0.last()) &
+         (v2 = P0.first() or v2 = P0.last()) by A11, TARSKI:def 2;
+      then per cases by A1;
+      suppose v1 = P0.first() & v2 = P0.last();
+        hence thesis by A10, GLIB_000:16;
+      end;
+      suppose v1 = P0.last() & v2 = P0.first();
+        hence thesis by A10, GLIB_000:16;
+      end;
+    end;
+    3 <= len P9 by A12, GLIB_001:125;
+    then per cases by XXREAL_0:1;
+    suppose A15: 3 < len P9;
+      P is Subgraph of C by GLIB_006:57;
+      then A16: P9 is Path-like by GLIB_001:176;
+      P9 is open by A13, GLIB_001:121;
+      hence C0 is Cycle-like by A14, A15, A16, CHORD:33;
+    end;
+    suppose A17: 3 = len P9;
+      then consider e0 being object such that
+        A18: e0 Joins P0.first(),P0.last(),P and
+        A19: P0 = P.walkOf(P0.first(),e0,P0.last()) by GLIBPRE1:28;
+      C0.first() = P9.first() by A14, GLIB_001:63
+        .= C0.last() by A14, GLIB_001:63;
+      then A21: C0 is closed by GLIB_001:def 24;
+      A22: len C0 = len P9 + 2 by A14, GLIB_001:64
+        .= 5 by A17;
+      then A23: C0 is non trivial by GLIB_001:126;
+      A24: C0 is Trail-like
+      proof
+        A25: C0.edgeSeq() = P9.edgeSeq() ^ <* e *> by A14, GLIB_001:82
+          .= P0.edgeSeq() ^ <* e *> by GLIB_001:86
+          .= <* e0 *> ^ <* e *> by A18, A19, GLIB_001:83
+          .= <* e0, e *> by FINSEQ_1:def 9;
+        e0 <> e by A1, A18, GLIB_000:def 13;
+        then C0.edgeSeq() is one-to-one by A25, FINSEQ_3:94;
+        hence thesis by GLIB_001:def 27;
+      end;
+      for m,n being odd Element of NAT
+        st m < n & n <= len C0 & C0.m = C0.n holds m = 1 & n = len C0
+      proof
+        let m,n be odd Element of NAT;
+        A26: 1 in dom P9 & 3 in dom P9 by A17, FINSEQ_3:25;
+        then A27: C0.1 = P0.first() by A14, GLIB_001:65;
+        A28: C0.3 = P9.3 by A14, A26, GLIB_001:65
+          .= <* P0.first(),e0,P0.last() *>.3 by A18, A19, GLIB_001:def 5
+          .= P0.last();
+        A29: C0.5 = C0.(len P9 + 2) by A17
+          .= P0.first() by A14, GLIB_001:65;
+        A30: P0.first() <> P0.last()
+        proof
+          assume P0.first() = P0.last();
+          then Endvertices P = {P0.first()} by A11, ENUMSET1:29;
+          hence contradiction by A2, CARD_1:30;
+        end;
+        assume A31: m < n & n <= len C0 & C0.m = C0.n;
+        then n = 0 or ... or n = 5 by A22;
+        then per cases;
+        suppose n = 0;
+          hence thesis; :: by contradiction
+        end;
+        suppose n = 1;
+          hence thesis by A31, CHORD:2; :: by contradiction
+        end;
+        suppose n = 2;
+          hence thesis by POLYFORM:5; :: by contradiction
+        end;
+        suppose A33: n = 3;
+          then A34: m <= 3 - 2 by A31, CHORD:3;
+          1 <= m by CHORD:2;
+          then m = 1 by A34, XXREAL_0:1;
+          hence thesis by A27, A28, A30, A31, A33; :: by contradiction
+        end;
+        suppose n = 4;
+          hence thesis by POLYFORM:7; :: by contradiction
+        end;
+        suppose A36: n = 5;
+          then A37: m <= 5 - 2 by A31, CHORD:3;
+          1 <= m by CHORD:2;
+          then m = 1+0 or ... or m = 1+2 by A37, NAT_1:62;
+          then per cases;
+          suppose m = 1;
+            hence thesis by A22, A36;
+          end;
+          suppose m = 2;
+            hence thesis by POLYFORM:5; :: by contradiction
+          end;
+          suppose m = 3;
+            hence thesis by A28, A29, A30, A31, A36; :: by contradiction
+          end;
+        end;
+      end;
+      then C0 is Path-like by A24, GLIB_001:def 28;
+      hence C0 is Cycle-like by A21, A23;
+    end;
+  end;
+  hence thesis by A9;
+end;
+
+:: removing an edge from a cycle results in a path graph
+theorem Th43:
+  for C being Cycle-like _Graph, e being Edge of C
+  for P being removeEdge of C,e holds P is _finite Path-like
+proof
+  let C be Cycle-like _Graph, e be Edge of C;
+  let P be removeEdge of C,e;
+  thus P is _finite;
+  A1: the_Edges_of P = the_Edges_of C \ {e} by GLIB_000:51;
+  now
+    given W being Walk of P such that
+      A2: W is Cycle-like;
+    reconsider W9 = W as Walk of C by GLIB_001:167;
+    W9 is Cycle-like by A2, GLIB_006:24;
+    then the_Edges_of C = W9.edges() by Th39
+      .= W.edges() by GLIB_001:110;
+    then e in W.edges();
+    hence contradiction by A1, ZFMISC_1:56;
+  end;
+  then A3: P is acyclic by GLIB_002:def 2;
+  now
+    consider W being Walk of C such that
+      A4: W is Cycle-like by GLIB_002:def 2;
+    take W;
+    the_Edges_of C = W.edges() by A4, Th39;
+    hence W is Cycle-like & e in W.edges() by A4;
+  end;
+  then P is connected by GLIB_002:5;
+  hence P is Tree-like by A3;
+  let v be Vertex of P;
+  reconsider w = v as Vertex of C by GLIB_000:def 33;
+  v.degree() <= w.degree() by GLIB_000:81;
+  then v.degree() <= 2 by GLIB_016:def 4;
+  hence v.degree() c= 2 by FIELD_5:3;
+end;
+
+registration
+  let C be Cycle-like _Graph, e be Edge of C;
+  cluster -> _finite Path-like for removeEdge of C,e;
+  coherence by Th43;
+end;
+
+:: the 1-cycle is the trivial graph with a loop Part II
+:: actually already done with previous cluster
+:: theorem
+  :: for G1 being _trivial Cycle-like _Graph, e being Edge of G1
+  :: for G2 being removeEdge of G1,e holds G2 is _trivial edgeless;
+
+:: the 1-cycle is the trivial graph with a loop Part III
+theorem
+  for G1 being _trivial Cycle-like _Graph
+  for v being Vertex of G1, e being Edge of G1
+  ex G2 being _trivial edgeless _Graph st G1 is addEdge of G2,v,e,v
+proof
+  let G1 be _trivial Cycle-like _Graph;
+  let v be Vertex of G1, e be Edge of G1;
+  take G2 = the removeEdge of G1,e;
+  set u = (the_Source_of G1).e, w = (the_Target_of G1).e;
+  u = v & w = v by ZFMISC_1:def 10;
+  hence thesis by GLIB_008:37;
+end;
+
+:: all other cycles can be constructed from finite paths
+:: by connecting the endvertices
+theorem Th45:
+  for C being non _trivial Cycle-like _Graph
+  for v1, v2 being Vertex of C, e being Edge of C st e DJoins v1,v2,C
+  ex P being non _trivial _finite Path-like _Graph
+  st not e in the_Edges_of P & C is addEdge of P,v1,e,v2 &
+    Endvertices P = {v1,v2}
+proof
+  let C be non _trivial Cycle-like _Graph;
+  let v1, v2 be Vertex of C, e be Edge of C;
+  assume A1: e DJoins v1,v2,C;
+  then A2: v1 = (the_Source_of C).e & v2 = (the_Target_of C).e &
+    e in the_Edges_of C by GLIB_000:def 14;
+  take P = the removeEdge of C,e;
+  the_Edges_of P = the_Edges_of C \ {e} by GLIB_000:51;
+  hence A3: not e in the_Edges_of P by ZFMISC_1:56;
+  reconsider w1 = v1, w2 = v2 as Vertex of P by GLIB_000:def 33;
+  thus C is addEdge of P,v1,e,v2 by A2, GLIB_008:37;
+  then A4: C is addEdge of P,w1,e,w2;
+  A5: v1 <> v2 by A1, GLIB_000:136;
+  1 + 1 = v1.degree() by GLIB_016:def 4
+    .= w1.degree() +` 1 by A3, A4, A5, GLIBPRE0:47;
+  then w1 is endvertex by GLIB_000:174;
+  then A6: w1 in Endvertices P by GLIB_006:56;
+  1 + 1 = v2.degree() by GLIB_016:def 4
+    .= w2.degree() +` 1 by A3, A4, A5, GLIBPRE0:48;
+  then w2 in Endvertices P by GLIB_000:174, GLIB_006:56;
+  then A7: {w1,w2} c= Endvertices P by A6, ZFMISC_1:32;
+  consider x,y being Vertex of P such that
+    A8: x <> y & Endvertices P = {x,y} by Th36;
+  (w1 = x or w1 = y) & (w2 = x or w2 = y) by A7, A8, ZFMISC_1:22;
+  hence thesis by A5, A8;
+end;
+
+theorem
+  for C being Cycle-like _Graph
+  holds C.order() = 2 iff C is non non-multi
+proof
+  let C be Cycle-like _Graph;
+  hereby
+    assume A1: C.order() = 2;
+    then A2: C is non _trivial by GLIB_000:26;
+    consider v1,v2 being object such that
+      A3: v1 <> v2 & the_Vertices_of C = {v1,v2} by A1, CARD_2:60;
+    reconsider v1, v2 as Vertex of C by A3, TARSKI:def 2;
+    2 = v1.degree() by GLIB_016:def 4
+      .= card v1.edgesInOut() by A2, GLIB_000:19;
+    then consider e1,e2 being object such that
+      A4: e1 <> e2 & v1.edgesInOut() = {e1,e2} by CARD_2:60;
+    e1 in v1.edgesInOut() by A4, TARSKI:def 2;
+    then consider w1 being Vertex of C such that
+      A5: e1 Joins v1,w1,C by GLIB_000:64;
+    e2 in v1.edgesInOut() by A4, TARSKI:def 2;
+    then consider w2 being Vertex of C such that
+      A6: e2 Joins v1,w2,C by GLIB_000:64;
+    v1 <> w1 & v1 <> w2 by A2, A5, A6, GLIB_000:18;
+    then w1 = v2 & w2 = v2 by A3, TARSKI:def 2;
+    hence C is non non-multi by A4, A5, A6, GLIB_000:def 20;
+  end;
+  assume C is non non-multi;
+  then consider e1,e2,v1,v2 being object such that
+    A7: e1 Joins v1,v2,C & e2 Joins v1,v2,C & e1 <> e2 by GLIB_000:def 20;
+  reconsider v1,v2 as Vertex of C by A7, GLIB_000:13;
+  reconsider e1, e2 as set by TARSKI:1;
+  set W1 = C.walkOf(v1,e1,v2), W2 = W1.addEdge(e2);
+  A8: W1.first() = v1 & W1.last() = v2 by A7, GLIB_001:15;
+  then A9: e2 Joins W1.last(),v1,C by A7, GLIB_000:14;
+  then A10: W2 is closed by A8, GLIB_001:63, GLIB_001:119;
+  len W1 = 3 by A7, GLIB_001:14;
+  then A11: len W2 = 3 + 2 by A9, GLIB_001:64;
+  then A12: W2 is non trivial by GLIB_001:126;
+  W2.edgeSeq() = W1.edgeSeq() ^ <* e2 *> by A9, GLIB_001:82
+    .= <* e1 *> ^ <* e2 *> by A7, GLIB_001:83
+    .= <* e1,e2 *> by FINSEQ_1:def 9;
+  then W2.edgeSeq() is one-to-one by A7, FINSEQ_3:94;
+  then A13: W2 is Trail-like by GLIB_001:def 27;
+  A14: v1 <> v2
+  proof
+    assume v1 = v2;
+    then A15: e1 DJoins v1,v1,C & e2 DJoins v1,v1,C by A7, GLIB_000:16;
+    then e1 in v1.edgesIn() & e2 in v1.edgesIn() by GLIB_000:57;
+    then card{e1,e2} c= v1.inDegree() by CARD_1:11, ZFMISC_1:32;
+    then A16: 2 c= v1.inDegree() by A7, CARD_2:57;
+    {e1} c= v1.edgesOut() by A15, GLIB_000:59, ZFMISC_1:31;
+    then card{e1} c= v1.outDegree() by CARD_1:11;
+    then 1 c= v1.outDegree() by CARD_1:30;
+    then 2+`1 c= v1.degree() by A16, CARD_2:83;
+    then A17: 3 c= 2 by GLIB_016:def 4;
+    2 in {0,1,2} by ENUMSET1:def 1;
+    then 2 in 2 by A17, CARD_1:51;
+    hence contradiction;
+  end;
+  now
+    let m,n be odd Element of NAT;
+    A18: W2 = W1^<*e2,v1*> by A9, GLIB_001:62
+      .= <*v1,e1,v2*>^<*e2,v1*> by A7, GLIB_001:def 5
+      .= <*v1,e1,v2,e2,v1*> by FINSEQ_4:75;
+    assume A19: m < n & n <= len W2 & W2.m = W2.n;
+    assume m <> 1 or n <> len W2;
+    then per cases;
+    suppose A20: m <> 1;
+      m < 4+1 by A11, A19, XXREAL_0:2;
+      then A21: m = 3 by A20, NAT_1:13, CHORD:7;
+      n+0 <= 5+1 by A11, A19, XREAL_1:7;
+      then n = 1 or n = 3 or n = 5 by CHORD:8;
+      then W2.m = v2 & W2.n = v1 by A18, A19, A21, FINSEQ_4:78;
+      hence contradiction by A14, A19;
+    end;
+    suppose n <> len W2;
+      then n < 4+1 by A11, A19, XXREAL_0:1;
+      then A22: n <= 4 by NAT_1:13;
+      1 <= m by CHORD:2;
+      then A23: n = 3 by A19, A22, CHORD:7;
+      then m < 2+1 by A19;
+      then m = 1 by CHORD:6, NAT_1:13;
+      then W2.m = v1 & W2.n = v2 by A18, A23, FINSEQ_4:78;
+      hence contradiction by A14, A19;
+    end;
+  end;
+  then W2 is Path-like by A13, GLIB_001:def 28;
+  then the_Vertices_of C = W2.vertices() by A10, A12, Th39
+    .= W1.vertices() \/ {v1} by A9, GLIB_001:95
+    .= {v1} \/ {v1,v2}  by A7, GLIB_001:91
+    .= {v1,v1,v2} by ENUMSET1:2
+    .= {v1,v2} by ENUMSET1:30;
+  hence thesis by A14, CARD_2:57;
+end;
+
+registration
+  let n be Nat;
+  cluster n-vertex Cycle-like -> n-edge for _Graph;
+  coherence
+  proof
+    let G be _Graph;
+    assume A1: G is n-vertex Cycle-like;
+    then reconsider C = G as Cycle-like _Graph;
+    set e = the Edge of C;
+    reconsider P = the removeEdge of C,e as _finite Path-like _Graph;
+    C.size() = P.size() + 1 by GLIB_000:52
+      .= P.order() by GLIB_002:46
+      .= C.order() by GLIB_000:def 33
+      .= n by A1, GLIB_013:def 3;
+    hence thesis by GLIB_013:def 4;
+  end;
+  cluster n-edge Cycle-like -> n-vertex for _Graph;
+  coherence
+  proof
+    let G be _Graph;
+    assume A2: G is n-edge Cycle-like;
+    then reconsider C = G as Cycle-like _Graph;
+    set e = the Edge of C;
+    reconsider P = the removeEdge of C,e as _finite Path-like _Graph;
+    G.order() = P.order() by GLIB_000:def 33
+      .= P.size() + 1 by GLIB_002:46
+      .= C.size() by GLIB_000:52
+      .= n by A2, GLIB_013:def 4;
+    hence thesis by GLIB_013:def 3;
+  end;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+1)-vertex (n+1)-edge Cycle-like for _Graph;
+  existence
+  proof
+    set P = the (n+1)-vertex Path-like _Graph;
+    per cases;
+    suppose A1: n = 0;
+      set v = the Vertex of P;
+      take C = the addEdge of P,v,{},v;
+      C is Cycle-like by A1, Th41;
+      hence thesis;
+    end;
+    suppose n > 0;
+      then n + 1 > 0 + 1 by XREAL_1:6;
+      then P.order() > 0+1 by GLIB_013:def 3;
+      then A3: P is non _trivial by GLIB_000:26;
+      consider P0 being vertex-distinct Path of P such that
+        P0.vertices() = the_Vertices_of P & P0.edges() = the_Edges_of P and
+        A4: Endvertices P = {P0.first(),P0.last()} iff P is non _trivial and
+        P0 is trivial iff P is _trivial and
+        A5: P0 is closed iff P is _trivial and
+        P0 is minlength by Th31;
+      reconsider v1 = P0.first(), v2 = P0.last() as Element of Endvertices P
+        by A3, A4, TARSKI:def 2;
+      A6: P0.first() <> P0.last() by A3, A5, GLIB_001:def 24;
+      take C = the addEdge of P,v1,the_Edges_of P,v2;
+      not the_Edges_of P in the_Edges_of P;
+      then C is Cycle-like by A3, A6, Th42;
+      hence thesis;
+    end;
+  end;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+2)-vertex Cycle-like -> loopless for _Graph;
+  coherence
+  proof
+    let C be _Graph;
+    assume A1: C is (n+2)-vertex Cycle-like;
+    assume C is non loopless;
+    then consider v,e being object such that
+      A2: e Joins v,v,C by GLIB_000:18;
+    C.walkOf(v,e,v) is Cycle-like by A2, GLIB_001:156;
+    then the_Vertices_of C = C.walkOf(v,e,v).vertices() by A1, Th39
+      .= {v, v} by A2, GLIB_001:91
+      .= {v} by ENUMSET1:29;
+    then A3: C.order() = 1 by CARD_1:30;
+    A4: C.order() = n+2 by A1, GLIB_013:def 3;
+    n+2 >= 0+2 by XREAL_1:6;
+    hence contradiction by A3, A4;
+  end;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+3)-vertex Cycle-like -> simple for _Graph;
+  coherence
+  proof
+    let C be _Graph;
+    assume A1: C is (n+3)-vertex Cycle-like;
+    assume A2: C is non simple;
+    C is ((n+1)+2)-vertex by A1;
+    then C is non non-multi by A1, A2;
+    then consider e1,e2,v1,v2 being object such that
+      A3: e1 Joins v1,v2,C & e2 Joins v1,v2,C & e1 <> e2 by GLIB_000:def 20;
+    A4: e2 Joins v2,v1,C by A3, GLIB_000:14;
+    set W1 = C.walkOf(v1,e1,v2), W2 = W1.addEdge(e2);
+    A5: W1.last() = v2 by A3, GLIB_001:15;
+    W2.first() = W1.first() by A4, A5, GLIB_001:63
+      .= v1 by A3, GLIB_001:15
+      .= W2.last() by A4, A5, GLIB_001:63;
+    then A6: W2 is closed by GLIB_001:def 24;
+    A7: W2.edgeSeq() = W1.edgeSeq() ^ <* e2 *> by A4, A5, GLIB_001:82
+      .= <* e1 *> ^ <* e2 *> by A3, GLIB_001:83
+      .= <* e1, e2 *> by FINSEQ_1:def 9;
+    then W2.edgeSeq() is one-to-one by A3, FINSEQ_3:94;
+    then A8: W2 is Trail-like by GLIB_001:def 27;
+    len W2 = len W1 + 2 by A4, A5, GLIB_001:64
+      .= len <* v1,e1,v2 *> + 2 by A3, GLIB_001:def 5
+      .= 3 + 2 by FINSEQ_1:45;
+    then W2 is non trivial by GLIB_001:126;
+    then the_Edges_of C = W2.edges() by A1, A6, A8, Th39
+      .= {e1, e2} by A7, FINSEQ_2:127;
+    then A9: C.size() = 2 by A3, CARD_2:57;
+    A10: C.size() = n+3 by A1, GLIB_013:def 4;
+    n+3 >= 0+3 by XREAL_1:6;
+    hence contradiction by A9, A10;
+  end;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+2)-vertex (n+2)-edge loopless Cycle-like for _Graph;
+  existence
+  proof
+    take C = the ((n+1)+1)-vertex Cycle-like _Graph;
+    C is (n+2)-vertex;
+    hence thesis;
+  end;
+  cluster (n+3)-vertex (n+3)-edge simple Cycle-like for _Graph;
+  existence
+  proof
+    take C = the ((n+2)+1)-vertex Cycle-like _Graph;
+    C is (n+3)-vertex;
+    hence thesis;
+  end;
+end;
+
+registration
+  let n be non zero Nat;
+  reconsider m=n-1 as Nat by CHORD:1;
+  cluster n-vertex n-edge Cycle-like for _Graph;
+  existence
+  proof
+    take the (m+1)-vertex Cycle-like _Graph;
+    thus thesis;
+  end;
+  cluster (n+1)-vertex Cycle-like -> loopless for _Graph;
+  coherence
+  proof
+    let C be _Graph;
+    assume C is (n+1)-vertex Cycle-like;
+    then C is (m+2)-vertex Cycle-like;
+    hence thesis;
+  end;
+  cluster (n+2)-vertex Cycle-like -> simple for _Graph;
+  coherence
+  proof
+    let C be _Graph;
+    assume C is (n+2)-vertex Cycle-like;
+    then C is (m+3)-vertex Cycle-like;
+    hence thesis;
+  end;
+  cluster (n+1)-vertex (n+1)-edge Cycle-like loopless for _Graph;
+  existence
+  proof
+    take the (m+2)-vertex (m+2)-edge Cycle-like loopless _Graph;
+    thus thesis;
+  end;
+  cluster (n+2)-vertex (n+2)-edge Cycle-like simple for _Graph;
+  existence
+  proof
+    take the (m+3)-vertex (m+3)-edge Cycle-like simple _Graph;
+    thus thesis;
+  end;
+end;
+
+theorem
+  for C1 being Cycle-like _Graph, C2 being non acyclic Subgraph of C1
+  holds C1 == C2
+proof
+  let C1 be Cycle-like _Graph, C2 be non acyclic Subgraph of C1;
+  consider W2 being Walk of C2 such that
+    A1: W2 is Cycle-like by GLIB_002:def 2;
+  reconsider W1 = W2 as Walk of C1 by GLIB_001:167;
+  W1 is Cycle-like by A1, GLIB_006:24;
+  then W1.vertices() = the_Vertices_of C1 & W1.edges() = the_Edges_of C1
+    by Th39;
+  then W2.vertices() = the_Vertices_of C1 & W2.edges() = the_Edges_of C1
+    by GLIB_001:98, GLIB_001:110;
+  then A2: the_Vertices_of C1 c= the_Vertices_of C2 &
+    the_Edges_of C1 c= the_Edges_of C2;
+  C1 is Subgraph of C1 by GLIB_000:40;
+  then C1 is Subgraph of C2 by A2, GLIB_000:44;
+  hence thesis by GLIB_000:87;
+end;
+
+theorem Th48:
+  for G1, G2 being _Graph, F being PGraphMapping of G1, G2
+  st F is isomorphism holds (G1 is Cycle-like iff G2 is Cycle-like)
+  by GLIB_010:140, GLIB_016:30;
+
+theorem
+  for G1, G2 being _Graph st G1 == G2
+  holds G1 is Cycle-like implies G2 is Cycle-like
+proof
+  let G1, G2 be _Graph;
+  assume G1 == G2;
+  then consider F being PGraphMapping of G1, G2 such that
+    A1: F = id G1 & F is Disomorphism by GLIBPRE0:75;
+  thus thesis by A1, Th48;
+end;
+
+theorem
+  for G1 being _Graph, E being set, G2 being reverseEdgeDirections of G1, E
+  holds G1 is Cycle-like iff G2 is Cycle-like
+proof
+  let G1 be _Graph, E be set, G2 be reverseEdgeDirections of G1, E;
+  consider F being PGraphMapping of G1, G2 such that
+    A1: F = id G1 & F is isomorphism by GLIBPRE0:77;
+  thus thesis by A1, Th48;
+end;
+
+Lm8:
+  for G2 being _Graph, v,e,w being object, G1 being addEdge of G2,v,e,w
+  holds the_Vertices_of G1 = the_Vertices_of G2
+proof
+  let G2 be _Graph, v,e,w be object;
+  let G1 be addEdge of G2,v,e,w;
+  per cases;
+  suppose v in the_Vertices_of G2 & w in the_Vertices_of G2 &
+      not e in the_Edges_of G2;
+    hence thesis by GLIB_006:def 11;
+  end;
+  suppose not(v in the_Vertices_of G2 & w in the_Vertices_of G2 &
+      not e in the_Edges_of G2);
+    then G1 == G2 by GLIB_006:def 11;
+    hence thesis by GLIB_000:def 34;
+  end;
+end;
+
+theorem Th51:
+  for n being non zero Nat, C1, C2 being n-vertex Cycle-like _Graph
+  holds C2 is C1-isomorphic
+proof
+  let n being non zero Nat, C1, C2 being n-vertex Cycle-like _Graph;
+  per cases;
+  suppose n = 1;
+    then A1: C1 is _trivial & C2 is _trivial;
+    C1.size() = n & C2.size() = n by GLIB_013:def 4;
+    then ex F being PGraphMapping of C1, C2 st F is Disomorphism
+      by A1, GLIB_010:177;
+    then C2 is C1-Disomorphic by GLIB_010:def 24;
+    hence thesis;
+  end;
+  suppose n <> 1;
+    then C1.order() <> 1 & C2.order() <> 1 by GLIB_013:def 3;
+    then A2: C1 is non _trivial & C2 is non _trivial by GLIB_000:26;
+    set e1 = the Edge of C1, e2 = the Edge of C2;
+    set v1 = (the_Source_of C1).e1, w1 = (the_Target_of C1).e1;
+    set v2 = (the_Source_of C2).e2, w2 = (the_Target_of C2).e2;
+    A3: e1 DJoins v1,w1,C1 & e2 DJoins v2,w2,C2 by GLIB_000:def 14;
+    consider P1 being non _trivial _finite Path-like _Graph such that
+      A4: not e1 in the_Edges_of P1 & C1 is addEdge of P1,v1,e1,w1 and
+      A5: Endvertices P1 = {v1,w1} by A2, A3, Th45;
+    reconsider v1,w1 as Vertex of P1 by A4, Lm8;
+    consider P2 being non _trivial _finite Path-like _Graph such that
+      A6: not e2 in the_Edges_of P2 & C2 is addEdge of P2,v2,e2,w2 and
+      A7: Endvertices P2 = {v2,w2} by A2, A3, Th45;
+    reconsider v2,w2 as Vertex of P2 by A6, Lm8;
+    P1.order() = C1.order() by A4, Lm8
+      .= n by GLIB_013:def 3;
+    then A8: P1 is n-vertex by GLIB_013:def 3;
+    P2.order() = C2.order() by A6, Lm8
+      .= n by GLIB_013:def 3;
+    then P2 is n-vertex by GLIB_013:def 3;
+    then P2 is P1-isomorphic by A8, Th32;
+    then consider F0 being PGraphMapping of P1, P2 such that
+      A9: F0 is isomorphism by GLIB_010:def 23;
+    A10: dom F0_V = the_Vertices_of P1 by A9, GLIB_010:def 11;
+    v1 in Endvertices P1 by A5, TARSKI:def 2;
+    then 1 = v1.degree() by GLIB_006:56, GLIB_000:174
+      .= (F0_V/.v1).degree() by A9, GLIBPRE0:93;
+    then F0_V/.v1 in {v2,w2} by A7, GLIB_006:56, GLIB_000:174;
+    then F0_V.v1 in {v2,w2} by A10, PARTFUN1:def 6;
+    then A11: F0_V.v1 = v2 or F0_V.v1 = w2 by TARSKI:def 2;
+    w1 in Endvertices P1 by A5, TARSKI:def 2;
+    then 1 = w1.degree() by GLIB_006:56, GLIB_000:174
+      .= (F0_V/.w1).degree() by A9, GLIBPRE0:93;
+    then F0_V/.w1 in {v2,w2} by A7, GLIB_006:56, GLIB_000:174;
+    then F0_V.w1 in {v2,w2} by A10, PARTFUN1:def 6;
+    then A12: F0_V.w1 = v2 or F0_V.w1 = w2 by TARSKI:def 2;
+    v1 <> w1
+    proof
+      assume v1 = w1;
+      then Endvertices P1 = {v1} by A5, ENUMSET1:29;
+      then card Endvertices P1 = 1 by CARD_1:30;
+      hence contradiction by Th37;
+    end;
+    then A13: (F0_V.v1 = v2 & F0_V.w1 = w2) or
+      (F0_V.v1 = w2 & F0_V.w1 = v2) by A9, A10, A11, A12, FUNCT_1:def 4;
+    consider F being PGraphMapping of C1, C2 such that
+      F = [F0_V, F0_E +* (e1 .--> e2)] and
+      F0 is weak_SG-embedding implies F is weak_SG-embedding and
+      A14: F0 is isomorphism implies F is isomorphism
+      by A4, A6, A10, A13, GLIB_010:153;
+    thus thesis by A9, A14, GLIB_010:def 23;
+  end;
+end;
+
+theorem
+  for n being non zero Nat, C1, C2 being n-edge Cycle-like _Graph
+  holds C2 is C1-isomorphic by Th51;
+
+theorem
+  for P being _finite non _trivial Path-like _Graph, v being object
+  for C being addAdjVertexAll of P,v,Endvertices P
+  st not v in the_Vertices_of P holds C is simple Cycle-like
+proof
+  let P be _finite non _trivial Path-like _Graph, v be object;
+  let C be addAdjVertexAll of P,v,Endvertices P;
+  assume A1: not v in the_Vertices_of P;
+  thus C is simple;
+  card Endvertices P <> 0 by Th37;
+  then Endvertices P <> {};
+  hence C is connected;
+  consider w1,w2 being Vertex of P such that
+    A2: w1 <> w2 & Endvertices P = {w1,w2} by Th36;
+  ex G3 being Component of P, w1, w2 being Vertex of G3
+    st w1 in Endvertices P & w2 in Endvertices P & w1 <> w2
+  proof
+    reconsider G3 = P as Component of P by GLIB_002:30;
+    reconsider w1,w2 as Vertex of G3;
+    take G3,w1,w2;
+    thus thesis by A2, TARSKI:def 2;
+  end;
+  hence C is non acyclic by A1, GLIB_007:71;
+  now
+    let u be Vertex of C;
+    A3: w1 in Endvertices P & w2 in Endvertices P by A2, TARSKI:def 2;
+    per cases;
+    suppose u = w1;
+      hence u.degree() = w1.degree() +` 1 by A1, A3, GLIBPRE0:57
+        .= 1 +` 1 by A3, GLIB_000:def 52, GLIB_006:56
+        .= 2;
+    end;
+    suppose u = w2;
+      hence u.degree() = w2.degree() +` 1 by A1, A3, GLIBPRE0:57
+        .= 1 +` 1 by A3, GLIB_000:def 52, GLIB_006:56
+        .= 2;
+    end;
+    suppose u = v;
+      hence u.degree() = card Endvertices P by A1, GLIBPRE0:55
+        .= 2 by A2, CARD_2:57;
+    end;
+    suppose A4: u <> w1 & u <> w2 & u <> v;
+      then A5: not u in Endvertices P by A2, TARSKI:def 2;
+      A6: the_Vertices_of C = the_Vertices_of P \/ {v} by A1, GLIB_007:def 4;
+      not u in {v} by A4, TARSKI:def 1;
+      then reconsider u9 = u as Vertex of P by A6, XBOOLE_0:def 3;
+      A7: u9 is non endvertex by A5, GLIB_006:56;
+      thus u.degree() = u9.degree() by A5, GLIBPRE0:56
+        .= 2 by A7, Th35;
+    end;
+  end;
+  hence thesis by GLIB_016:def 4;
+end;
+
+theorem Th54:
+  for C being non _trivial Cycle-like _Graph, v being Vertex of C
+  for P being removeVertex of C,v holds P is _finite Path-like
+proof
+  let C be non _trivial Cycle-like _Graph, v be Vertex of C;
+  let P be removeVertex of C,v;
+  thus P is _finite;
+  A1: the_Vertices_of P = the_Vertices_of C \ {v} by GLIB_000:47;
+  now
+    given W being Walk of P such that
+      A2: W is Cycle-like;
+    reconsider W9 = W as Walk of C by GLIB_001:167;
+    W9 is Cycle-like by A2, GLIB_006:24;
+    then the_Vertices_of C = W9.vertices() by Th39
+      .= W.vertices() by GLIB_001:98;
+    then v in W.vertices();
+    hence contradiction by A1, ZFMISC_1:56;
+  end;
+  then A3: P is acyclic by GLIB_002:def 2;
+  now
+    let u,w be Vertex of P;
+    consider C9 being Walk of C such that
+      A4: C9 is Cycle-like by GLIB_002:def 2;
+    the_Vertices_of P c= the_Vertices_of C;
+    then the_Vertices_of P c= C9.vertices() by A4, Th39;
+    then A5: u in C9.vertices() & w in C9.vertices() by TARSKI:def 3;
+    v in {v} by TARSKI:def 1;
+    then u <> v & w <> v by A1, XBOOLE_0:def 5;
+    then consider W being Path of C such that
+      A6: W is_Walk_from u,w & not v in W.vertices() by A4, A5, Th5;
+    reconsider W as Walk of P by A6, GLIB_001:171;
+    take W;
+    thus W is_Walk_from u,w by A6, GLIB_001:19;
+  end;
+  then P is connected by GLIB_002:def 1;
+  hence P is Tree-like by A3;
+  let u be Vertex of P;
+  reconsider w = u as Vertex of C by A1, XBOOLE_0:def 5;
+  u.degree() <= w.degree() by GLIB_000:81;
+  then u.degree() <= 2 by GLIB_016:def 4;
+  hence u.degree() c= 2 by FIELD_5:3;
+end;
+
+theorem
+  for C being simple Cycle-like _Graph, v being Vertex of C
+  ex P being non _trivial Path-like _Graph
+  st not v in the_Vertices_of P & C is addAdjVertexAll of P,v,Endvertices P
+proof
+  let C be simple Cycle-like _Graph, v be Vertex of C;
+  set P = the removeVertex of C,v;
+  A1: C is non _trivial;
+  then A2: P is Path-like by Th54;
+  P is non _trivial
+  proof
+    assume P is _trivial;
+    then A4: P.order() = 1 by GLIB_000:26;
+    C.order() = P.order() + 1 by A1, GLIB_000:48;
+    then C is (0+2)-vertex by A4, GLIB_013:def 3;
+    hence contradiction;
+  end;
+  then reconsider P as non _trivial Path-like _Graph by A2;
+  take P;
+  A5: the_Vertices_of P = the_Vertices_of C \ {v} by A1, GLIB_000:47;
+  hence A6: not v in the_Vertices_of P by ZFMISC_1:56;
+  A7: C is Supergraph of P by GLIB_006:57;
+  A8: the_Edges_of P = C.edgesBetween(the_Vertices_of C \ {v})
+    by A1, GLIB_000:47;
+  now
+    thus the_Vertices_of C = the_Vertices_of P \/ {v} by A5, ZFMISC_1:116;
+    hereby
+      let e be object;
+      thus A10: not e Joins v,v,C by GLIB_000:18;
+      let v1 be object;
+      hereby
+        assume A11: not v1 in Endvertices P & e Joins v1,v,C;
+        then reconsider v1 as Vertex of C by GLIB_000:13;
+        v <> v1 by A10, A11;
+        then reconsider v2 = v1 as Vertex of P by A5, ZFMISC_1:56;
+        v2.degree() <= 2 by Th17;
+        then v2.degree() = 0 or ... or v2.degree() = 2;
+        then per cases;
+        suppose v2.degree() = 0;
+          hence contradiction by GLIB_000:def 50;
+        end;
+        suppose v2.degree() = 1;
+          hence contradiction by A11, GLIB_006:56, GLIB_000:def 52;
+        end;
+        suppose v2.degree() = 2;
+          then card(v2.allNeighbors()) = 2 by GLIB_000:111;
+          then consider x,y being object such that
+            A14: x <> y & v2.allNeighbors() = {x,y} by CARD_2:60;
+          now
+            let z be object;
+            assume z in {x,y,v};
+            then per cases by ENUMSET1:def 1;
+            suppose z = x or z = y;
+              then A15: z in v2.allNeighbors() by A14, TARSKI:def 2;
+              v2.allNeighbors() c= v1.allNeighbors() by GLIB_000:82;
+              hence z in v1.allNeighbors() by A15;
+            end;
+            suppose z = v;
+              hence z in v1.allNeighbors() by A11, GLIB_000:71;
+            end;
+          end;
+          then card {x,y,v} c= card v1.allNeighbors()
+            by TARSKI:def 3, CARD_1:11;
+          then A16: card {x,y,v} c= v1.degree() by GLIB_000:111;
+          v <> x & v <> y
+          proof
+            x in v2.allNeighbors() & y in v2.allNeighbors()
+              by A14, TARSKI:def 2;
+            hence thesis by A5, ZFMISC_1:56;
+          end;
+          then 3 c= v1.degree() by A14, A16, CARD_2:58;
+          then Segm 3 c= Segm 2 by GLIB_016:def 4;
+          hence contradiction by NAT_1:39;
+        end;
+      end;
+      let v2 be object;
+      assume A17: v1 <> v & v2 <> v & e DJoins v1,v2,C;
+      then A18: e Joins v1,v2,C by GLIB_000:16;
+      then v1 in the_Vertices_of C & v2 in the_Vertices_of C by GLIB_000:13;
+      then v1 in the_Vertices_of C \ {v} & v2 in the_Vertices_of C \ {v}
+        by A17, ZFMISC_1:56;
+      then A19: e in the_Edges_of P by A8, A18, GLIB_000:32;
+      e is set & v1 is set & v2 is set by TARSKI:1;
+      hence e DJoins v1,v2,P by A17, A19, GLIB_000:73;
+    end;
+    thus ex E being set st
+      card Endvertices P = card E & E misses the_Edges_of P &
+      the_Edges_of C = the_Edges_of P \/ E &
+      for v1 being object st v1 in Endvertices P
+        ex e1 being object st e1 in E & e1 Joins v1,v,C &
+        for e2 being object st e2 Joins v1,v,C holds e1 = e2
+    proof
+      take E = v.edgesInOut();
+      consider P0 being vertex-distinct Path of P such that
+        P0.vertices() = the_Vertices_of P & P0.edges() = the_Edges_of P and
+        A20: Endvertices P = {P0.first(),P0.last()} iff P is non _trivial and
+        P0 is trivial iff P is _trivial and
+        A21: P0 is closed iff P is _trivial and
+        P0 is minlength by Th31;
+      A22: P0.first() <> P0.last() by A21, GLIB_001:def 24;
+      thus card Endvertices P = 2 by A20, A22, CARD_2:57
+        .= v.degree() by GLIB_016:def 4
+        .= card E by GLIB_000:19;
+      thus E misses the_Edges_of P
+      proof
+        assume E meets the_Edges_of P;
+        then consider x being object such that
+          A23: x in E & x in the_Edges_of P by XBOOLE_0:3;
+        consider w being Vertex of C such that
+          A24: x Joins v,w,C by A23, GLIB_000:64;
+        x Joins v,w,P by A23, A24, GLIB_000:73;
+        then v in the_Vertices_of P by GLIB_000:13;
+        hence contradiction by A5, ZFMISC_1:56;
+      end;
+      for x being object holds x in the_Edges_of C
+        iff x in the_Edges_of P or x in E
+      proof
+        let x be object;
+        thus x in the_Edges_of C implies x in the_Edges_of P or x in E
+        proof
+          assume A25: x in the_Edges_of C;
+          set w1 = (the_Source_of C).x, w2 = (the_Target_of C).x;
+          A26: x Joins w1,w2,C by A25, GLIB_000:def 13;
+          then reconsider w1, w2 as Vertex of C by GLIB_000:13;
+          reconsider x as set by TARSKI:1;
+          per cases;
+          suppose w1 = v or w2 = v;
+            then x Joins v,w2,C or x Joins v,w1,C by A26, GLIB_000:14;
+            hence thesis by GLIB_000:64;
+          end;
+          suppose w1 <> v & w2 <> v;
+            then w1 in the_Vertices_of C \ {v} & w2 in the_Vertices_of C \ {v}
+              by ZFMISC_1:56;
+            hence thesis by A8, A26, GLIB_000:32;
+          end;
+        end;
+        assume x in the_Edges_of P or x in E;
+        then per cases;
+        suppose A28: x in the_Edges_of P;
+          the_Edges_of P c= the_Edges_of C by GLIB_000:def 32;
+          hence x in the_Edges_of C by A28;
+        end;
+        suppose x in E;
+          hence x in the_Edges_of C;
+        end;
+      end;
+      hence the_Edges_of C = the_Edges_of P \/ E by XBOOLE_0:def 3;
+      let v1 be object;
+      assume A29: v1 in Endvertices P;
+      then reconsider w1 = v1 as Vertex of P;
+      reconsider w2 = w1 as Vertex of C by A5, XBOOLE_0:def 5;
+      take e1 = the Element of w2.edgesInOut() \ w1.edgesInOut();
+      w2.edgesInOut() \ w1.edgesInOut() <> {}
+      proof
+        A30: card w2.edgesInOut() = w2.degree() by GLIB_000:19
+          .= 2 by GLIB_016:def 4;
+        consider e0 being object such that
+          A31: w1.edgesInOut() = {e0} & not e0 Joins w1,w1,P
+          by A29, GLIB_000:def 51, GLIB_006:56;
+        A32: card w1.edgesInOut() = 1 by A31, CARD_1:30;
+        1 in 2 by CARD_1:50, TARSKI:def 2;
+        hence thesis by A30, A32, CARD_1:68;
+      end;
+      then A33: e1 in w2.edgesInOut() & not e1 in w1.edgesInOut()
+        by XBOOLE_0:def 5;
+      then consider u being Vertex of C such that
+        A34: e1 Joins w2,u,C by GLIB_000:64;
+      A35: u = v
+      proof
+        assume u <> v;
+        then A36: u in the_Vertices_of C \ {v} by ZFMISC_1:56;
+        then A37: e1 in the_Edges_of P by A5, A8, A34, GLIB_000:32;
+        e1 Joins w1,u,P by A34, A37, GLIB_000:73;
+        then e1 in w1.edgesInOut() by A5, A36, GLIB_000:64;
+        hence contradiction by A33;
+      end;
+      hence e1 in E by A34, GLIB_000:14, GLIB_000:64;
+      thus thesis by A34, A35, GLIB_000:def 20;
+    end;
+  end;
+  hence thesis by A6, A7, GLIB_007:def 4;
+end;
+
+registration
+  cluster 3-vertex simple complete -> Cycle-like for _Graph;
+  coherence
+  proof
+    let C be _Graph;
+    assume A1: C is 3-vertex simple complete;
+    hence C is connected;
+    C.order() = 3 by A1, GLIB_013:def 3;
+    hence C is non acyclic by A1, Th8;
+    C is (2+`1)-vertex by A1;
+    hence C is 2-regular by A1;
+  end;
+  cluster 3-vertex Cycle-like -> simple complete chordal for _Graph;
+  coherence
+  proof
+    let C be _Graph;
+    assume A2: C is 3-vertex Cycle-like;
+    then C is (0+3)-vertex Cycle-like;
+    hence A3: C is simple;
+    now
+      let v,w be Vertex of C;
+      assume A4: v <> w;
+      2 = v.degree() by A2, GLIB_016:def 4
+        .= card v.allNeighbors() by A3, GLIB_000:111;
+      then consider x,y being object such that
+        A5: x <> y & v.allNeighbors() = {x,y} by CARD_2:60;
+      w = x or w = y
+      proof
+        assume A6: w <> x & w <> y;
+        A7: v.allNeighbors() c= the_Vertices_of C \ {v} by A3, GLIB_000:175;
+        v in {v} by TARSKI:def 1;
+        then not v in v.allNeighbors() by A7, XBOOLE_0:def 5;
+        then A8: v <> x & v <> y by A5, TARSKI:def 2;
+        {v,w} \/ {x,y} c= the_Vertices_of C by A5, XBOOLE_1:8;
+        then {v,w,x,y} c= the_Vertices_of C by ENUMSET1:5;
+        then card{v,w,x,y} c= C.order() by CARD_1:11;
+        then 4 c= C.order() by A4, A5, A6, A8, CARD_2:59;
+        then Segm 4 c= Segm 3 by A2, GLIB_013:def 3;
+        hence thesis by NAT_1:39; :: by contradiction
+      end;
+      then w in v.allNeighbors() by A5, TARSKI:def 2;
+      then ex e being object st e Joins v,w,C by GLIB_000:71;
+      hence v,w are_adjacent by CHORD:def 3;
+    end;
+    hence C is complete by CHORD:def 6;
+    now
+      let P be Walk of C;
+      assume A9: P.length() > 3 & P is Cycle-like;
+      then A10: 3 in Segm P.length() by NAT_1:44;
+      P.length() c= C.order() by A9, GLIBPRE1:26;
+      then P.length() c= 3 by A2, GLIB_013:def 3;
+      then 3 in 3 by A10;
+      hence P is chordal; :: by contradiction
+    end;
+    hence thesis by CHORD:def 11;
+  end;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+4)-vertex Cycle-like -> non chordal non complete for _Graph;
+  coherence
+  proof
+    let C be _Graph;
+    assume A1: C is (n+4)-vertex Cycle-like;
+    ex P being Walk of C st P.length() > 3 & P is Cycle-like & P is non chordal
+    proof
+      consider P being Walk of C such that
+        A2: P is Cycle-like by A1, GLIB_002:def 2;
+      reconsider P as Path of C by A2;
+      take P;
+      A3: P.length() = card(P.edges()) by Th4
+        .= C.size() by A1, A2, Th39
+        .= C.order() by A1, Th40
+        .= n+4 by A1, GLIB_013:def 3;
+      (n+1)+3 > 0 + 3 by XREAL_1:8;
+      hence P.length() > 3 by A3;
+      now
+        let m,n be odd Nat;
+        assume m+2 < n & n <= len P & P.m <> P.n;
+        given e being object such that
+          A4: e Joins P.m,P.n,C;
+        take e;
+        e in the_Edges_of C by A4, GLIB_000:def 13;
+        hence e in P.edges() by A1, A2, Th39;
+        thus e Joins P.m,P.n,C by A4;
+      end;
+      hence thesis by A2, CHORD:def 10;
+    end;
+    hence C is non chordal non complete by CHORD:def 11;
+  end;
+end;
+
+registration
+  let n be non zero Nat;
+  reconsider m=n-1 as Nat by CHORD:1;
+  cluster (n+3)-vertex Cycle-like -> non chordal non complete for _Graph;
+  coherence
+  proof
+    let C be _Graph;
+    assume C is (n+3)-vertex Cycle-like;
+    then C is (m+4)-vertex Cycle-like;
+    hence thesis;
+  end;
+end;
+
+registration
+  cluster Cycle-like non complete non chordal for _Graph;
+  existence
+  proof
+    take the (0+4)-vertex Cycle-like _Graph;
+    thus thesis;
+  end;
+end;

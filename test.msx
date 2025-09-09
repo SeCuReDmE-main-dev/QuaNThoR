@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<Text-Proper articleid="TEST" articleext=".miz" line="3" col="5">
+ <Item kind="Section-Pragma" line="3" col="5" posline="3" poscol="5">
+ </Item>
+ <Item kind="Theorem-Item" line="5" col="7" posline="5" poscol="17">
+  <Proposition>
+   <Label idnr="1" spelling="T1" line="5" col="10" serialnr="1" labelnr="1"/>
+   <Predicative-Formula nr="1" spelling="=" line="5" col="15">
+    <Arguments>
+     <Numeral-Term number="1" line="5" col="13"/>
+    </Arguments>
+    <Arguments>
+     <Numeral-Term number="1" line="5" col="17"/>
+    </Arguments>
+   </Predicative-Formula>
+  </Proposition>
+  <Straightforward-Justification line="5" col="17"/>
+ </Item>
+ <Item kind="Regular-Statement" shape="Compact-Statement" line="6" col="5" posline="9" poscol="3">
+  <Proposition>
+   <Label idnr="0" spelling="" line="6" col="5" serialnr="2" labelnr="0"/>
+   <Formula-Error line="6" col="5"/>
+  </Proposition>
+  <Block kind="Proof" line="6" col="5" posline="9" poscol="3">
+   <Item kind="Conclusion" shape="Compact-Statement" line="8" col="8" posline="8" poscol="12">
+    <Proposition>
+     <Label idnr="0" spelling="" line="8" col="8" serialnr="3" labelnr="0"/>
+     <Predicative-Formula nr="1" spelling="=" line="8" col="10">
+      <Arguments>
+       <Numeral-Term number="1" line="8" col="8"/>
+      </Arguments>
+      <Arguments>
+       <Numeral-Term number="1" line="8" col="12"/>
+      </Arguments>
+     </Predicative-Formula>
+    </Proposition>
+    <Straightforward-Justification line="8" col="12"/>
+   </Item>
+  </Block>
+ </Item>
+ <Item kind="Incorrect-Item" line="11" col="4" posline="11" poscol="4">
+ </Item>
+</Text-Proper>

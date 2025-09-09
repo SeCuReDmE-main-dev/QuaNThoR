@@ -1,0 +1,1778 @@
+:: Elementary Number Theory Problems. Part {XIII}
+::  by Artur Korni{\l}owicz and Rafa{\l} Ziobro
+:: 
+:: Received June 18, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, NAT_1, RELAT_1, FUNCT_1, XXREAL_0, ARYTM_3, XCMPLX_0,
+      CARD_1, INT_1, NEWTON, INT_2, ARYTM_1, SUBSET_1, XBOOLE_0, TARSKI, ABIAN,
+      REAL_1, VALUED_0, CARD_3, FINSEQ_1, NUMBER02, ORDINAL1, SQUARE_1,
+      ORDINAL4, ORDINAL2, PARTFUN3, COMPLEX1, RAT_1, POWER, FUNCT_7, NUMBER10,
+      NUMBER13;
+ notations TARSKI, XBOOLE_0, SUBSET_1, DOMAIN_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      RELAT_1, FUNCT_1, VALUED_0, XREAL_0, RAT_1, INT_1, INT_2, NAT_D,
+      XXREAL_0, SQUARE_1, FINSEQ_1, PARTFUN3, RVSUM_1, NEWTON, POWER, WSIERP_1,
+      ABIAN, NUMBER02, NUMBER10;
+ constructors NAT_D, RELSET_1, ABIAN, PEPIN, NUMBER02, PYTHTRIP, MOEBIUS1,
+      PARTFUN3, NEWTON03, POWER, DOMAIN_1, WSIERP_1, NUMBER10;
+ registrations ORDINAL1, NUMBERS, XCMPLX_0, XXREAL_0, XREAL_0, NAT_1, INT_1,
+      VALUED_0, CARD_1, NEWTON, NEWTON02, NEWTON03, ABIAN, NAT_6, JORDAN1D,
+      FINSEQ_1, RVSUM_1, FUNCT_1, RELAT_1, NUMBER02, PYTHTRIP, FINSEQ_9, RAT_1,
+      SQUARE_1, POWER, NUMBER08, RVSUM_4, NEWTON04, COMPLEX3, NEWTON05;
+ requirements REAL, NUMERALS, BOOLE, SUBSET, ARITHM;
+ definitions INT_1, FINSEQ_1, INT_2, NUMBER02, PARTFUN3, RVSUM_3, EUCLID_7;
+ equalities SQUARE_1, FINSEQ_1, XCMPLX_0, PEPIN;
+ expansions INT_2, ABIAN, NAT_D, NUMBER02;
+ theorems NEWTON, INT_1, INT_2, NAT_D, PEPIN, XREAL_1, XXREAL_0, NAT_1, NAT_3,
+      FUNCT_1, INT_4, TARSKI, POLYEQ_5, ABIAN, FINSEQ_1, FINSEQ_3, NUMBER02,
+      INT_5, NUMBER05, COMPLEX1, MOEBIUS2, PRIMRECI, PYTHTRIP, RING_3, POWER,
+      NEWTON02, NUMBER10, RAT_1, WSIERP_1, EULER_1, NUMBER03, XCMPLX_1, NAT_6,
+      XPRIMES0, ENUMSET1, XPRIMES1, POLYNOM9, NEWTON01, PREPOWER, GR_CY_3,
+      RVSUM_1, FINSEQ_5;
+ schemes NAT_1, FINSEQ_2;
+
+begin :: Preliminaries
+
+Lm1: 2|^0 = 1 by NEWTON:4;
+Lm2: 2|^2 = 2*2 by NEWTON:81;
+Lm3: 2|^3 = 2*2*2 by POLYEQ_5:2;
+Lm4: 2|^4 = 2*2*2*2 by POLYEQ_5:3;
+Lm5: 2|^5 = 2*2*2*2*2 by NUMBER02:1;
+Lm6: 2|^8 = 2*2*2*2*2*2*2*2 by NUMBER02:4;
+Lm7: 2|^(8+8) = 2|^8*2|^8 by NEWTON:8
+      .= 65536 by Lm6;
+Lm8: 1 mod 3 = 1 by NAT_D:24;
+Lm9: 2 mod 3 = 2 by NAT_D:24;
+     4 = 1+3*1;
+     then
+Lm10: 4 mod 3 = 1 mod 3 by NAT_D:61;
+
+reserve a,b,c,k,m,n for Nat;
+reserve i,j for Integer;
+reserve p for Prime;
+
+theorem Th1:
+  n < 3 implies n = 0 or n = 1 or n = 2
+  proof
+    assume n < 3;
+    then n < 2+1;
+    then n <= 2 by NAT_1:13;
+    then n = 0 or ... or n = 2;
+    hence thesis;
+  end;
+
+theorem
+  n < 4 implies n = 0 or n = 1 or n = 2 or n = 3
+  proof
+    assume n < 4;
+    then n < 3+1;
+    then n <= 3 by NAT_1:13;
+    then n = 0 or ... or n = 3;
+    hence thesis;
+  end;
+
+theorem Th3:
+  n < 5 implies n = 0 or n = 1 or n = 2 or n = 3 or n = 4
+  proof
+    assume n < 5;
+    then n < 4+1;
+    then n <= 4 by NAT_1:13;
+    then n = 0 or ... or n = 4;
+    hence thesis;
+  end;
+
+registration
+  cluster 1/2 -> non integer;
+  coherence
+  proof
+    denominator(1/2) = 2 / (1 gcd 2) by RING_3:16;
+    hence thesis by RAT_1:21;
+  end;
+end;
+
+registration
+  cluster non natural for Rational;
+  existence
+  proof
+    take 1/2;
+    thus thesis;
+  end;
+end;
+
+registration
+  cluster non integer for Rational;
+  existence
+  proof
+    take 1/2;
+    thus thesis;
+  end;
+end;
+
+theorem Th4:
+  j <> 0 & i / j is integer implies j divides i
+  proof
+    assume
+A1: j <> 0;
+    assume i / j is integer;
+    then reconsider z = i/j as Integer;
+    take z;
+    thus thesis by A1,XCMPLX_1:87;
+  end;
+
+registration
+  let q be non integer Rational;
+  cluster q^2 -> non integer;
+  coherence
+  proof
+    assume
+A1: q^2 is integer;
+    consider m,n being Integer such that
+A2: n > 0 and
+A3: q = m/n by RAT_1:2;
+    q^2 = m^2/n^2 by A3,XCMPLX_1:76;
+    then n divides m by A1,A2,Th4,POLYNOM9:3;
+    then m mod n = 0 by A2,INT_1:62;
+    then m / n = m div n by PEPIN:63;
+    hence thesis by A3;
+  end;
+end;
+
+theorem Th5:
+  a/b*c is natural & b <> 0 & a,b are_coprime implies
+   ex d being Nat st c = b*d
+  proof
+    assume a/b*c is natural;
+    then reconsider n = a/b*c as Nat;
+    assume that
+A1: b <> 0 and
+A2: a,b are_coprime;
+    n*b = a/b*b*c
+    .= a*c by A1,XCMPLX_1:87;
+    then b divides a*c;
+    then b divides c by A2,EULER_1:13;
+    hence thesis;
+  end;
+
+begin :: Problem 41
+
+:: Problem 41 a
+theorem
+  for k being Integer holds 2*k+1, 9*k+4 are_coprime
+  proof
+    let k be Integer;
+    thus (2*k + 1) gcd (9*k + 4) = (2*k + 1) gcd ((9*k + 4) - 4*(2*k + 1))
+    by NEWTON02:5
+    .= 1 gcd k by NEWTON02:5
+    .= 1;
+  end;
+
+:: Problem 41 b
+theorem
+  for k being Integer holds (2*k - 1) gcd (9*k + 4) = (k + 8) gcd 17
+  proof
+    let k be Integer;
+    thus (2*k - 1) gcd (9*k + 4) = (2*k - 1) gcd ((9*k + 4) - 4*(2*k - 1))
+    by NEWTON02:5
+    .= ((2*k - 1) - 2*(k + 8)) gcd (k + 8) by NEWTON02:5
+    .= (-17) gcd (k + 8)
+    .= (k + 8) gcd 17 by NEWTON02:1;
+  end;
+
+begin :: Problem 92
+
+theorem Th8:
+  m > 1 & n > 1 & m,n are_coprime implies
+  ex p,q being Prime st p divides m & not p divides n &
+   q divides n & not q divides m & p <> q
+  proof
+    assume m > 1;
+    then
+A1: m >= 1+1 by NAT_1:13;
+    assume n > 1;
+    then
+A2: n >= 1+1 by NAT_1:13;
+    assume
+A3: m,n are_coprime;
+    consider p being Element of NAT such that
+A4: p is prime and
+A5: p divides m by A1,INT_2:31;
+    consider q being Element of NAT such that
+A6: q is prime and
+A7: q divides n by A2,INT_2:31;
+    reconsider p as Prime by A4;
+    reconsider q as Prime by A6;
+    take p,q;
+    thus thesis by A3,A5,A7,PYTHTRIP:def 2;
+  end;
+
+definition
+  let k;
+  func primesFinS(k) -> FinSequence of NAT means :Def1:
+  len it = k &
+  for i being Nat st i < k holds it.(i+1) = primenumber i;
+  existence
+  proof
+    deffunc F(Nat) = In(primenumber($1-'1),NAT);
+    consider f being FinSequence of NAT such that
+A1: len f = k and
+A2: for j being Nat st j in dom f holds f.j = F(j) from FINSEQ_2:sch 1;
+    take f;
+    thus len f = k by A1;
+    let i be Nat;
+    assume i < k;
+    then 0+1 <= i+1 <= k by NAT_1:13;
+    hence f.(i+1) = F(i+1) by A1,A2,FINSEQ_3:25
+    .= primenumber i;
+  end;
+  uniqueness
+  proof
+    let f,g be FinSequence of NAT such that
+A3: len f = k and
+A4: for i being Nat st i < k holds f.(i+1) = primenumber i and
+A5: len g = k and
+A6: for i being Nat st i < k holds g.(i+1) = primenumber i;
+    thus len f = len g by A3,A5;
+    let i be Nat;
+    assume that
+A7: 1 <= i and
+A8: i <= len f;
+    i-1 >= 1-1 by A7,XREAL_1:9;
+    then
+A9: i = i-'1+1 by NAT_D:72;
+    i < k+1 by A3,A8,NAT_1:13;
+    then
+A10: i-1 < k+1-1 by XREAL_1:8;
+    hence f.i = primenumber(i-'1) by A4,A9
+    .= g.i by A6,A9,A10;
+  end;
+end;
+
+registration
+  cluster primesFinS 0 -> empty;
+  coherence
+  proof
+    len primesFinS 0 = 0 by Def1;
+    hence thesis;
+  end;
+end;
+
+theorem
+  primesFinS 1 = <*2*>
+  proof
+    set f = primesFinS 1;
+A1: len f = 1 by Def1;
+    f.(0+1) = 2 by Def1,MOEBIUS2:8;
+    hence thesis by A1,FINSEQ_1:40;
+  end;
+
+theorem
+  primesFinS 2 = <*2,3*>
+  proof
+    set f = primesFinS 2;
+A1: len f = 2 by Def1;
+    f.(0+1) = 2 & f.(1+1) = 3 by Def1,MOEBIUS2:8,10;
+    hence thesis by A1,FINSEQ_1:44;
+  end;
+
+theorem Th11:
+  primesFinS 3 = <*2,3,5*>
+  proof
+    set f = primesFinS 3;
+A1: len f = 3 by Def1;
+    f.(0+1) = 2 & f.(1+1) = 3 & f.(2+1) = 5 by Def1,MOEBIUS2:8,10,12;
+    hence thesis by A1,FINSEQ_1:45;
+  end;
+
+theorem Th12:
+  p < primenumber(k) iff primeindex p < k
+  proof
+    primenumber primeindex p = p by NUMBER10:def 4;
+    hence thesis by MOEBIUS2:21;
+  end;
+
+theorem Th13:
+  primeindex p < k implies 1+primeindex p in dom primesFinS k
+  proof
+    set i = primeindex p;
+    assume i < k;
+    then
+A1: i+1 <= k by NAT_1:13;
+A2: len primesFinS k = k by Def1;
+    0+1 <= i+1 by XREAL_1:6;
+    hence thesis by A1,A2,FINSEQ_3:25;
+  end;
+
+theorem Th14:
+  primeindex p < k implies (primesFinS k).(1+primeindex p) = p
+  proof
+    set i = primeindex p;
+    assume i < k;
+    then primesFinS k.(i+1) = primenumber i by Def1;
+    hence thesis by NUMBER10:def 4;
+  end;
+
+theorem Th15:
+  p < primenumber(k) implies p in rng primesFinS k
+  proof
+    set f = primesFinS k;
+    set i = primeindex p;
+    assume
+A1: p < primenumber(k);
+    then
+A2: 1+i in dom f by Th13,Th12;
+    f.(1+i) = p by A1,Th12,Th14;
+    hence thesis by A2,FUNCT_1:def 3;
+  end;
+
+theorem Th16:
+  p,Product primesFinS k are_coprime implies primenumber(k) <= p
+  proof
+    set f = primesFinS k;
+    set P = Product f;
+    assume
+A1: p,P are_coprime;
+    assume primenumber(k) > p;
+    then p in rng f by Th15;
+    then p divides P by NAT_3:7;
+    hence contradiction by A1,PYTHTRIP:def 2;
+  end;
+
+registration
+  let k;
+  cluster primesFinS k -> positive-yielding;
+  coherence
+  proof
+    set f = primesFinS k;
+    let n;
+    assume
+A1: n in dom f;
+    then 1 <= n by FINSEQ_3:25;
+    then reconsider m = n-1 as Element of NAT by INT_1:3;
+A2: n <= len f by A1,FINSEQ_3:25;
+A3: len f = k by Def1;
+    m+0 < m+1 by XREAL_1:8;
+    then m < k by A2,A3,XXREAL_0:2;
+    then f.(m+1) = primenumber m by Def1;
+    hence f.n > 0;
+  end;
+end;
+
+registration
+  let k;
+  cluster primesFinS k -> increasing;
+  coherence
+  proof
+    set h = primesFinS k;
+    let i be Nat such that
+A1: 1 <= i and
+A2: i < len h;
+    reconsider j = i-1 as Element of NAT by A1,INT_1:3;
+A3: j+0 < j+1 by XREAL_1:8;
+A4: len h = k by Def1;
+    then j < k by A2,A3,XXREAL_0:2;
+    then
+A5: h.(j+1) = primenumber j by Def1;
+    h.(i+1) = primenumber i by A2,A4,Def1;
+    hence h.i < h.(i+1) by A3,A5,MOEBIUS2:21;
+  end;
+end;
+
+definition
+  let R be ext-real-valued Relation;
+  attr R is with_values_greater_or_equal_one means
+  for r being ExtReal st r in rng R holds r >= 1;
+end;
+
+registration
+  cluster <* 1 *> -> with_values_greater_or_equal_one;
+  coherence
+  proof
+    rng <*1*> = {1} by FINSEQ_1:38;
+    hence thesis by TARSKI:def 1;
+  end;
+end;
+
+registration
+  cluster with_values_greater_or_equal_one for natural-valued FinSequence;
+  existence
+  proof
+    take <*1*>;
+    thus thesis;
+  end;
+end;
+
+definition
+  let f be ext-real-valued Function;
+  redefine attr f is with_values_greater_or_equal_one means
+  for x being object st x in dom f holds f.x >= 1;
+  compatibility
+  proof
+    hereby
+      assume
+A1:   f is with_values_greater_or_equal_one;
+      let x be object;
+      assume x in dom f;
+      then f.x in rng f by FUNCT_1:def 3;
+      hence f.x >= 1 by A1;
+    end;
+    assume
+A2: for x being object st x in dom f holds f.x >= 1;
+    let r be ExtReal;
+    assume r in rng f;
+    then ex x being object st x in dom f & f.x = r by FUNCT_1:def 3;
+    hence r >= 1 by A2;
+  end;
+end;
+
+definition
+  let f be ext-real-valued FinSequence;
+  redefine attr f is with_values_greater_or_equal_one means
+  for n being Nat st 1 <= n <= len f holds f.n >= 1;
+  compatibility
+  proof
+    thus f is with_values_greater_or_equal_one implies
+    for n being Nat st 1 <= n <= len f holds f.n >= 1 by FINSEQ_3:25;
+    assume
+A1: for n being Nat st 1 <= n <= len f holds f.n >= 1;
+    let x be object;
+    assume
+A2: x in dom f;
+    then reconsider x as Element of NAT;
+    1 <= x <= len f by A2,FINSEQ_3:25;
+    hence thesis by A1;
+  end;
+end;
+
+registration
+  cluster empty -> with_values_greater_or_equal_one
+          for ext-real-valued Relation;
+  coherence;
+end;
+
+registration
+  cluster with_values_greater_or_equal_one -> positive-yielding
+          for ext-real-valued Relation;
+  coherence
+  proof
+    let R be ext-real-valued Relation such that
+A1: R is with_values_greater_or_equal_one;
+    let r be Real;
+    thus thesis by A1;
+  end;
+end;
+
+theorem Th17:
+  m <= n implies (primesFinS n) | m = primesFinS m
+  proof
+    set N = primesFinS n;
+    set M = primesFinS m;
+    assume
+A1: m <= n;
+A2: len N = n by Def1;
+A3: len M = m by Def1;
+    hence
+A4: len (N|m) = len M by A1,A2,FINSEQ_1:59;
+    let k such that
+A5: 1 <= k and
+A6: k <= len(N|m);
+    reconsider z = k-1 as Element of NAT by A5,INT_1:3;
+A7: k in Seg m by A3,A4,A5,A6;
+A8: z < m-0 by A3,A4,A6,XREAL_1:8;
+    then
+A9: z < n by A1,XXREAL_0:2;
+A10: k = z+1;
+    thus (N|m).k = N.k by A7,FUNCT_1:49
+    .= primenumber z by A9,A10,Def1
+    .= M.k by A8,A10,Def1;
+  end;
+
+theorem
+  for P,R being ext-real-valued Relation
+  st rng P c= rng R & R is with_values_greater_or_equal_one
+  holds P is with_values_greater_or_equal_one;
+
+theorem Th19:
+  for f,g being ext-real-valued FinSequence
+  st f^g is with_values_greater_or_equal_one
+  holds
+  f is with_values_greater_or_equal_one &
+  g is with_values_greater_or_equal_one
+  proof
+    let f,g being ext-real-valued FinSequence;
+    rng f c= rng(f^g) & rng g c= rng(f^g) by FINSEQ_1:29,30;
+    hence thesis;
+  end;
+
+theorem Th20:
+  for r being ExtReal holds
+  <* r *> is with_values_greater_or_equal_one implies r >= 1
+  proof
+    let r be ExtReal;
+    rng <*r*> = {r} by FINSEQ_1:38;
+    then r in rng <*r*> by TARSKI:def 1;
+    hence thesis;
+  end;
+
+theorem
+  for f being with_values_greater_or_equal_one real-valued FinSequence
+  holds Product f >= 1
+  proof
+    let f be with_values_greater_or_equal_one real-valued FinSequence;
+    defpred P[FinSequence of REAL] means
+    for g being with_values_greater_or_equal_one real-valued FinSequence st
+    g = $1 holds Product $1 >= 1;
+A1: P[<*>REAL] by RVSUM_1:94;
+A2: for p being FinSequence of REAL for x being Element of REAL
+    st P[p] holds P[p^<*x*>]
+    proof
+      let p be FinSequence of REAL;
+      let x be Element of REAL;
+      assume
+A3:   P[p];
+      let g be with_values_greater_or_equal_one real-valued FinSequence
+      such that
+A4:   g = p^<*x*>;
+      <*x*> is with_values_greater_or_equal_one by A4,Th19;
+      then
+A5:   x >= 1 by Th20;
+      p is with_values_greater_or_equal_one by A4,Th19;
+      then
+A6:   Product p >= 1 by A3;
+      Product(p^<*x*>) = x * Product p by RVSUM_1:96;
+      then Product(p^<*x*>) >= 1*1 by A5,A6,XREAL_1:66;
+      hence thesis;
+    end;
+A7: for p being FinSequence of REAL holds P[p] from FINSEQ_2:sch 2(A1,A2);
+    f is FinSequence of REAL by FINSEQ_1:106;
+    hence thesis by A7;
+  end;
+
+theorem Th22:
+  for f being with_values_greater_or_equal_one real-valued FinSequence
+  holds Product(f|n) <= Product f
+  proof
+    let f be with_values_greater_or_equal_one real-valued FinSequence;
+    per cases;
+    suppose
+A1:   n <= len f;
+      defpred P[FinSequence of REAL] means
+      for g being with_values_greater_or_equal_one real-valued FinSequence st
+      g = $1 & n <= len g holds Product(g|n) <= Product g;
+A2:   P[<*>REAL];
+A3:   for p being FinSequence of REAL for x being Element of REAL st
+      P[p] holds P[p^<*x*>]
+      proof
+        let p be FinSequence of REAL;
+        let x be Element of REAL such that
+A4:     P[p];
+        let g be with_values_greater_or_equal_one real-valued FinSequence
+        such that
+A5:     g = p^<*x*> and
+A6:     n <= len g;
+A7:     len g = len p + len <*x*> by A5,FINSEQ_1:22;
+A8:     len <*x*> = 1 by FINSEQ_1:39;
+        then per cases by A6,A7,XXREAL_0:1;
+        suppose
+A9:       n < len p + 1;
+          then n <= len p by NAT_1:13;
+          then
+A10:      (p^<*x*>)|n = p|n by FINSEQ_5:22;
+A11:      Product g = Product p * x by A5,RVSUM_1:96;
+A12:      p is with_values_greater_or_equal_one real-valued by A5,Th19;
+          then
+A13:      Product(p|n) <= Product p by A4,A9,NAT_1:13;
+          <*x*> is with_values_greater_or_equal_one real-valued by A5,Th19;
+          then Product p * 1 <= Product p * x by A12,XREAL_1:64,Th20;
+          hence Product(g|n) <= Product g by A5,A10,A11,A13,XXREAL_0:2;
+        end;
+        suppose n = len p + 1;
+          hence Product(g|n) <= Product g by A7,A8;
+        end;
+      end;
+A14:  for p being FinSequence of REAL holds P[p] from FINSEQ_2:sch 2(A2,A3);
+      f is FinSequence of REAL by FINSEQ_1:106;
+      hence thesis by A1,A14;
+    end;
+    suppose n > len f;
+      hence thesis by FINSEQ_1:58;
+    end;
+  end;
+
+registration
+  let k;
+  cluster primesFinS k -> with_values_greater_or_equal_one;
+  coherence
+  proof
+    set f = primesFinS k;
+    let n such that
+A1: 1 <= n and
+A2: n <= len f;
+    reconsider m = n-1 as Element of NAT by A1,INT_1:3;
+A3: len f = k by Def1;
+    m+0 < m+1 by XREAL_1:8;
+    then m < k by A2,A3,XXREAL_0:2;
+    then f.(m+1) = primenumber m by Def1;
+    hence f.n >= 1 by INT_2:def 4;
+  end;
+end;
+
+Lm12:
+now
+  let k;
+  set f = primesFinS k;
+  set g = primesFinS 3;
+  set x = primenumber 0 * primenumber 1 * primenumber 2;
+  assume 3 <= k;
+  then
+A1: g = f|3 by Th17;
+  x = Product g by Th11,RVSUM_1:100,MOEBIUS2:8,10,12;
+  hence Product f >= x by A1,Th22;
+end;
+
+:: Problem 92
+theorem
+  3 <= k implies primenumber(k) + primenumber(k+1) <= Product primesFinS k
+  proof
+    assume
+A1: 3 <= k;
+    set P = Product primesFinS k;
+    P >= primenumber 0 * primenumber 1 * primenumber 2 by A1,Lm12;
+    then P > 6 by XXREAL_0:2,MOEBIUS2:8,10,12;
+    then consider a,b such that
+A2: a > 1 and
+A3: b > 1 and
+A4: P = a+b and
+A5: a,b are_coprime by NUMBER05:22;
+    consider p,q being Prime such that
+A6: p divides a and
+A7: not p divides b and
+A8: q divides b and
+A9: not q divides a and
+A10: p <> q by A2,A3,A5,Th8;
+    p <= a & q <= b by A2,A3,A6,A8,NAT_D:7;
+    then
+A11: p+q <= a+b by XREAL_1:7;
+    per cases by A10,XXREAL_0:1;
+    suppose
+A12:  p < q;
+A13:  not p divides P
+      proof
+        assume p divides P;
+        then p divides a+b-a by A4,A6,INT_5:1;
+        hence contradiction by A7;
+      end;
+      now
+        assume not p,P are_coprime;
+        then consider z being Prime such that
+A14:    z divides p and
+A15:    z divides P by PYTHTRIP:def 2;
+        z = 1 or z = p by A14,INT_2:def 4;
+        hence contradiction by A13,A15,INT_2:def 4;
+      end;
+      then
+A16:  primenumber(k) <= p by Th16;
+      then per cases by XXREAL_0:1;
+      suppose primenumber(k) < p;
+        then primenumber(k+1) <= p by PRIMRECI:12;
+        then primenumber(k+1) < q by A12,XXREAL_0:2;
+        then primenumber(k) + primenumber(k+1) <= p+q by A16,XREAL_1:7;
+        hence thesis by A4,A11,XXREAL_0:2;
+      end;
+      suppose primenumber(k) = p;
+        then primenumber(k+1) <= q by A12,PRIMRECI:12;
+        then primenumber(k) + primenumber(k+1) <= p+q by A16,XREAL_1:7;
+        hence thesis by A4,A11,XXREAL_0:2;
+      end;
+    end;
+    suppose
+A17:  q < p;
+A18:  not q divides P
+      proof
+        assume q divides P;
+        then q divides a+b-b by A4,A8,INT_5:1;
+        hence contradiction by A9;
+      end;
+      now
+        assume not q,P are_coprime;
+        then consider z being Prime such that
+A19:    z divides q and
+A20:    z divides P by PYTHTRIP:def 2;
+        z = 1 or z = q by A19,INT_2:def 4;
+        hence contradiction by A18,A20,INT_2:def 4;
+      end;
+      then
+A21:  primenumber(k) <= q by Th16;
+      then per cases by XXREAL_0:1;
+      suppose primenumber(k) < q;
+        then primenumber(k+1) <= q by PRIMRECI:12;
+        then primenumber(k+1) < p by A17,XXREAL_0:2;
+        then primenumber(k) + primenumber(k+1) <= p+q by A21,XREAL_1:7;
+        hence thesis by A4,A11,XXREAL_0:2;
+      end;
+      suppose primenumber(k) = q;
+        then primenumber(k+1) <= p by A17,PRIMRECI:12;
+        then primenumber(k) + primenumber(k+1) <= p+q by A21,XREAL_1:7;
+        hence thesis by A4,A11,XXREAL_0:2;
+      end;
+    end;
+  end;
+
+begin :: Problem 121
+
+definition
+  let k, n be Nat;
+  pred n satisfies_Sierpinski_problem_121_for k means
+  k * 2|^(2|^n) + 1 is composite &
+  for m being positive Nat st m < n holds k * 2|^(2|^m) + 1 is non composite;
+end;
+
+:: Problem 121 a
+theorem Th24:
+  5 satisfies_Sierpinski_problem_121_for 1
+  proof
+    set n = 5;
+    2|^32 + 1 >= 1 + 1 by XREAL_1:6,NAT_1:14;
+    hence 1 * 2|^(2|^n) + 1 is composite by Lm5,NAT_6:44;
+    let m be positive Nat;
+    assume m < n;
+    then per cases by Th3;
+    suppose m = 0;
+      hence thesis;
+    end;
+    suppose m = 1;
+      hence thesis by Lm2,XPRIMES1:5;
+    end;
+    suppose m = 2;
+      hence thesis by Lm2,Lm4,XPRIMES1:17;
+    end;
+    suppose m = 3;
+      hence thesis by Lm3,Lm6,XPRIMES1:257;
+    end;
+    suppose m = 4;
+      hence thesis by Lm4,Lm7,PEPIN:62;
+    end;
+  end;
+
+:: Problem 121 b
+theorem
+  1 satisfies_Sierpinski_problem_121_for 2
+  proof
+    thus 2 * 2|^(2|^1) + 1 is composite by Lm2,XPRIMES0:9;
+    thus thesis by NAT_1:14;
+  end;
+
+:: Problem 121 c
+theorem Th26:
+  2 satisfies_Sierpinski_problem_121_for 3
+  proof
+    set n = 2;
+    thus 3 * 2|^(2|^n) + 1 is composite by Lm2,Lm4,XPRIMES0:49;
+    let m be positive Nat;
+    assume m < n;
+    then per cases by NAT_1:23;
+    suppose m = 0;
+      hence thesis;
+    end;
+    suppose m = 1;
+      hence thesis by Lm2,XPRIMES1:13;
+    end;
+  end;
+
+:: Problem 121 d
+theorem Th27:
+  2 satisfies_Sierpinski_problem_121_for 4
+  proof
+    set n = 2;
+    thus 4 * 2|^(2|^n) + 1 is composite by Lm2,Lm4,XPRIMES0:65;
+    let m be positive Nat;
+    assume m < n;
+    then per cases by NAT_1:23;
+    suppose m = 0;
+      hence thesis;
+    end;
+    suppose m = 1;
+      hence thesis by Lm2,XPRIMES1:17;
+    end;
+  end;
+
+:: Problem 121 e
+theorem
+  1 satisfies_Sierpinski_problem_121_for 5
+  proof
+    thus 5 * 2|^(2|^1) + 1 is composite by Lm2,XPRIMES0:21;
+    thus thesis by NAT_1:14;
+  end;
+
+:: Problem 121 f
+theorem
+  1 satisfies_Sierpinski_problem_121_for 6
+  proof
+    thus 6 * 2|^(2|^1) + 1 is composite by Lm2,XPRIMES0:25;
+    thus thesis by NAT_1:14;
+  end;
+
+:: Problem 121 g
+theorem Th30:
+  3 satisfies_Sierpinski_problem_121_for 7
+  proof
+    set n = 3;
+    thus 7 * 2|^(2|^n) + 1 is composite by Lm3,Lm6,XPRIMES0:1793;
+    let m be positive Nat;
+    assume m < n;
+    then per cases by Th1;
+    suppose m = 0;
+      hence thesis;
+    end;
+    suppose m = 1;
+      hence thesis by Lm2,XPRIMES1:29;
+    end;
+    suppose m = 2;
+      hence thesis by Lm2,Lm4,XPRIMES1:113;
+    end;
+  end;
+
+:: Problem 121 h
+theorem
+  1 satisfies_Sierpinski_problem_121_for 8
+  proof
+    thus 8 * 2|^(2|^1) + 1 is composite by Lm2,XPRIMES0:33;
+    thus thesis by NAT_1:14;
+  end;
+
+:: Problem 121 i
+theorem Th32:
+  2 satisfies_Sierpinski_problem_121_for 9
+  proof
+    set n = 2;
+    thus 9 * 2|^(2|^n) + 1 is composite by Lm2,Lm4,XPRIMES0:145;
+    let m be positive Nat;
+    assume m < n;
+    then per cases by NAT_1:23;
+    suppose m = 0;
+      hence thesis;
+    end;
+    suppose m = 1;
+      hence thesis by Lm2,XPRIMES1:37;
+    end;
+  end;
+
+:: Problem 121 j
+theorem Th33:
+  2 satisfies_Sierpinski_problem_121_for 10
+  proof
+    set n = 2;
+    thus 10 * 2|^(2|^n) + 1 is composite by Lm2,Lm4,XPRIMES0:161;
+    let m be positive Nat;
+    assume m < n;
+    then per cases by NAT_1:23;
+    suppose m = 0;
+      hence thesis;
+    end;
+    suppose m = 1;
+      hence thesis by Lm2,XPRIMES1:41;
+    end;
+  end;
+
+begin :: Problem 122
+
+Lm13:
+  for n being positive Nat holds 3 divides 2 * 2|^(2|^n) + 1
+  proof
+    let n be positive Nat;
+    2|^(n-1+1) = 2*2|^(n-1) by NEWTON:6;
+    then 2+1 divides 2|^(2|^n+1) + 1|^(2|^n+1) by NEWTON01:35;
+    hence thesis by NEWTON:6;
+  end;
+
+theorem Th34:
+  for n being positive Nat holds 3 divides (3*a+2) * 2|^(2|^n) + 1
+  proof
+    let n be positive Nat;
+A1: 3 divides 2 * 2|^(2|^n) + 1 by Lm13;
+A2: 3 divides 3*(a*2|^(2|^n));
+    (3*a+2) * 2|^(2|^n) + 1 = 3*a*2|^(2|^n) + (2*2|^(2|^n) + 1);
+    hence thesis by A1,A2,NAT_D:8;
+  end;
+
+  deffunc F(Nat,Nat) = $1 * 2|^(2|^$2) + 1;
+
+Lm14:
+    now
+      let n;
+      2|^n >= 2|^0 by PREPOWER:93;
+      hence 2|^(2|^n) >= 2|^(2|^0) by PREPOWER:93;
+    end;
+
+Lm15: now
+        let n;
+        2*2|^(2|^n) >= 2*2 by Lm1,Lm14,XREAL_1:64;
+        hence 2*2|^(2|^n)+1 >= 2*2+1 by XREAL_1:6;
+      end;
+
+Lm16: now
+        let n;
+        5*2|^(2|^n) >= 5*2 by Lm1,Lm14,XREAL_1:64;
+        hence 5*2|^(2|^n)+1 >= 5*2+1 by XREAL_1:6;
+      end;
+
+Lm17: now
+        let n;
+        8*2|^(2|^n) >= 8*2 by Lm1,Lm14,XREAL_1:64;
+        hence 8*2|^(2|^n)+1 >= 8*2+1 by XREAL_1:6;
+      end;
+
+theorem Th35:
+  for n being positive Nat holds 2 * 2|^(2|^n) + 1 is composite
+  proof
+    let n be positive Nat;
+    F(2,n) >= 2*2+1 by Lm15;
+    hence F(2,n) >= 2 by XXREAL_0:2;
+    2 * 2|^(2|^n) + 1 <> 3;
+    hence thesis by Lm13;
+  end;
+
+theorem Th36:
+  for n being positive Nat holds 5 * 2|^(2|^n) + 1 is composite
+  proof
+    let n be positive Nat;
+    F(5,n) >= 5*2+1 by Lm16;
+    hence F(5,n) >= 2 by XXREAL_0:2;
+A1: 5*2|^(2|^n) + 1 <> 3 by Lm16;
+    5 = 3*1+2;
+    hence thesis by A1,Th34;
+  end;
+
+theorem Th37:
+  for n being positive Nat holds 8 * 2|^(2|^n) + 1 is composite
+  proof
+    let n be positive Nat;
+    F(8,n) >= 8*2+1 by Lm17;
+    hence F(8,n) >= 2 by XXREAL_0:2;
+A1: 8*2|^(2|^n) + 1 <> 3 by Lm17;
+    8 = 3*2+2;
+    hence thesis by A1,Th34;
+  end;
+
+:: Problem 122
+theorem
+  for k being positive Nat holds
+  k <= 10 & (for n being positive Nat holds k * 2|^(2|^n) + 1 is composite)
+  iff k in { 2,5,8 }
+  proof
+    let k be positive Nat;
+    thus k <= 10 &
+    (for n being positive Nat holds k * 2|^(2|^n) + 1 is composite)
+    implies k in {2,5,8}
+    proof
+      assume that
+A1:   k <= 10 and
+A2:   for n being positive Nat holds F(k,n) is composite;
+      k = 0 or ... or k = 10 by A1;
+      then per cases;
+      suppose k = 0;
+        hence thesis;
+      end;
+      suppose
+A3:     k = 1;
+        F(1,1) = 2|^(2|^1) + 1;
+        hence thesis by A2,A3,Th24;
+      end;
+      suppose k = 2 or k = 5 or k = 8;
+        hence thesis by ENUMSET1:def 1;
+      end;
+      suppose
+A4:     k = 3;
+        F(3,1) = 3 * 2|^(2|^1) + 1;
+        hence thesis by A2,A4,Th26;
+      end;
+      suppose
+A5:     k = 4;
+        F(4,1) = 4 * 2|^(2|^1) + 1;
+        hence thesis by A2,A5,Th27;
+      end;
+      suppose
+A6:     k = 6;
+        F(6,2) = 97 by Lm2,Lm4;
+        hence thesis by A2,A6,XPRIMES1:97;
+      end;
+      suppose
+A7:     k = 7;
+        F(7,1) = 7 * 2|^(2|^1) + 1;
+        hence thesis by A2,A7,Th30;
+      end;
+      suppose
+A8:     k = 9;
+        F(9,1) = 9 * 2|^(2|^1) + 1;
+        hence thesis by A2,A8,Th32;
+      end;
+      suppose
+A9:     k = 10;
+        F(10,1) = 10 * 2|^(2|^1) + 1;
+        hence thesis by A2,A9,Th33;
+      end;
+    end;
+    assume k in {2,5,8};
+    then per cases by ENUMSET1:def 1;
+    suppose k = 2;
+      hence thesis by Th35;
+    end;
+    suppose k = 5;
+      hence thesis by Th36;
+    end;
+    suppose k = 8;
+      hence thesis by Th37;
+    end;
+  end;
+
+begin :: Problem 123
+
+theorem Th39:
+  2|^(2|^(n+1)) + 2|^(2|^n) + 1 >= 7
+  proof
+    n+1 >= 0+1 by XREAL_1:6;
+    then 2|^(n+1) >= 2|^1 by PREPOWER:93;
+    then
+A1: 2|^(2|^(n+1)) >= 2|^2 by PREPOWER:93;
+    2|^n >= 2|^0 by PREPOWER:93;
+    then 2|^(2|^n) >= 2|^(2|^0) by PREPOWER:93;
+    then 2|^(2|^n) >= 2|^1 by NEWTON:4;
+    then 2|^(2|^(n+1)) + 2|^(2|^n) >= 4 + 2 by A1,Lm2,XREAL_1:7;
+    then 2|^(2|^(n+1)) + 2|^(2|^n) + 1 >= 6 + 1 by XREAL_1:6;
+    hence thesis;
+  end;
+
+theorem
+  n > 0 implies 2|^(2|^(n+1)) + 2|^(2|^n) + 1 >= 21
+  proof
+    assume n > 0;
+    then
+A1: n >= 0+1 by NAT_1:13;
+    then n+1 >= 1+1 by XREAL_1:6;
+    then 2|^(n+1) >= 2|^2 by PREPOWER:93;
+    then
+A2: 2|^(2|^(n+1)) >= 2|^4 by Lm2,PREPOWER:93;
+    2|^n >= 2|^1 by A1,PREPOWER:93;
+    then 2|^(2|^n) >= 2|^2 by PREPOWER:93;
+    then 2|^(2|^(n+1)) + 2|^(2|^n) >= 16 + 4 by A2,Lm2,Lm4,XREAL_1:7;
+    then 2|^(2|^(n+1)) + 2|^(2|^n) + 1 >= 20 + 1 by XREAL_1:6;
+    hence thesis;
+  end;
+
+theorem Th41:
+  n > 1 implies 2|^(2|^(n+1)) + 2|^(2|^n) + 1 >= 273
+  proof
+    assume
+A1: n > 1;
+    then n+1 > 1+1 by XREAL_1:6;
+    then n+1 >= 2+1 by NAT_1:13;
+    then 2|^(n+1) >= 2|^3 by PREPOWER:93;
+    then
+A2: 2|^(2|^(n+1)) >= 2|^8 by Lm3,PREPOWER:93;
+    n >= 1+1 by A1,NAT_1:13;
+    then 2|^n >= 2|^2 by PREPOWER:93;
+    then 2|^(2|^n) >= 2|^4 by Lm2,PREPOWER:93;
+    then 2|^(2|^(n+1)) + 2|^(2|^n) >= 256 + 16 by A2,Lm4,Lm6,XREAL_1:7;
+    then 2|^(2|^(n+1)) + 2|^(2|^n) + 1 >= 272 + 1 by XREAL_1:6;
+    hence thesis;
+  end;
+
+theorem Th42:
+  (m is even or m = 2*n) implies 2|^m mod 3 = 1
+  proof
+    defpred P[Nat] means 2|^(2*$1) mod 3 = 1;
+A1: P[0] by Lm8,NEWTON:4;
+A2: for k st P[k] holds P[k+1]
+    proof
+      let k such that
+A3:   P[k];
+A4:   2*(k+1) = 2*k+2;
+      (2|^(2*k) * 4) mod 3 = (1 * 1) mod 3 by A3,Lm10,NAT_D:67
+      .= 1 by NAT_D:24;
+      hence thesis by A4,Lm2,NEWTON:8;
+    end;
+    for k holds P[k] from NAT_1:sch 2(A1,A2);
+    hence thesis;
+  end;
+
+theorem Th43:
+  (m is odd or m = 2*n+1) implies 2|^m mod 3 = 2
+  proof
+    defpred P[Nat] means 2|^(2*$1+1) mod 3 = 2;
+A1: P[0] by NAT_D:24;
+A2: for k st P[k] holds P[k+1]
+    proof
+      let k such that
+A3:   P[k];
+A4:   2*(k+1)+1 = 2*k+1+2;
+      (2|^(2*k+1) * 4) mod 3 = (2*1) mod 3 by A3,Lm8,Lm10,NAT_D:67
+      .= 2 by NAT_D:24;
+      hence thesis by A4,Lm2,NEWTON:8;
+    end;
+A5: for k holds P[k] from NAT_1:sch 2(A1,A2);
+    m is odd implies ex k st m = 2*k+1 by ABIAN:9;
+    hence thesis by A5;
+  end;
+
+theorem Th44:
+  for n being non zero Nat holds 3 divides 2|^(2|^(n+1)) + 2|^(2|^n) + 1
+  proof
+    let n be non zero Nat;
+A1: 2|^(2|^(n+1)) mod 3 = 1 by Th42;
+A2: 2|^(2|^n) mod 3 = 1 by Th42;
+    (2|^(2|^(n+1))+2|^(2|^n)+1) mod 3 = (1+1+1) mod 3 by A1,A2,Lm8,NUMBER05:8
+    .= 0;
+    hence thesis by INT_1:62;
+  end;
+
+theorem Th45:
+  7 divides 2|^(2|^(n+1)) + 2|^(2|^n) + 1
+  proof
+    per cases;
+    suppose
+A1:   n = 0;
+      2|^(2|^(0+1)) + 2|^(2|^0) + 1 = 2|^2 + 2|^1 + 1 by NEWTON:4
+      .= 7 by Lm2;
+      hence thesis by A1;
+    end;
+    suppose
+A2:   n > 0;
+      set m = 2|^(2|^(n+1)) + 2|^(2|^n) + 1;
+A3:   1 mod 7 = 1 by NAT_D:24;
+      8 = 1+7*1;
+      then
+A4:   8 mod 7 = 1 mod 7 by NAT_D:61;
+      2|^(n+1) = 2|^n*2|^1 by NEWTON:8;
+      then
+A5:   2|^(2|^(n+1)) = 2|^(2|^n)|^2 by NEWTON:9
+      .= 2|^(2|^n) * 2|^(2|^n) by WSIERP_1:1;
+      now per cases;
+        suppose n is even;
+          then 2|^n mod 3 = 1 by Th42;
+          then consider k being Integer such that
+A6:       2|^n = k*3+1 by Lm8,NAT_D:64,NAT_6:9;
+          now
+            assume k < 0;
+            then 3*k+1 < 0+1 by XREAL_1:6;
+            hence contradiction by A6,NAT_1:14;
+          end;
+          then reconsider k as Element of NAT by INT_1:3;
+A7:       1 mod 7 = 1 by NAT_D:24;
+A8:       2|^(2|^n) = 2|^(3*k) * 2|^1 by A6,NEWTON:8
+          .= 8|^k * 2 by Lm3,NEWTON:9;
+A9:       (8|^k) mod 7 = (8 mod 7)|^k mod 7 by GR_CY_3:30
+          .= 1 by A3,A4;
+A10:      8|^k * 2 mod 7 = ((8|^k mod 7) * (2 mod 7)) mod 7 by NAT_D:67
+          .= 2 by A9,NAT_D:24;
+          then 2|^(2|^(n+1)) mod 7 = (2*2) mod 7 by A5,A8,NAT_D:67
+          .= 4 by NAT_D:24;
+          hence m mod 7 = (4 + 2 + 1) mod 7 by A7,A8,A10,NUMBER05:8
+          .= 0;
+        end;
+        suppose n is odd;
+          then 2|^n mod 3 = 2 by Th43;
+          then consider k being Integer such that
+A11:      2|^n = k*3+2 by Lm9,NAT_D:64,NAT_6:9;
+          now
+            assume k < 0;
+            then 3*k+2 < 0+2 by XREAL_1:6;
+            then 2|^n = 1 by A11,NAT_1:23
+            .= 2|^0 by NEWTON:4;
+            hence contradiction by A2;
+          end;
+          then reconsider k as Element of NAT by INT_1:3;
+A12:      1 mod 7 = 1 by NAT_D:24;
+A13:      2|^(2|^n) = 2|^(3*k) * 2|^2 by A11,NEWTON:8
+          .= 8|^k * 4 by Lm2,Lm3,NEWTON:9;
+A14:      (8|^k) mod 7 = (8 mod 7)|^k mod 7 by GR_CY_3:30
+          .= 1 by A3,A4;
+A15:      8|^k * 4 mod 7 = ((8|^k mod 7) * (4 mod 7)) mod 7 by NAT_D:67
+          .= 4 by A14,NAT_D:24;
+          then 2|^(2|^(n+1)) mod 7 = (4*4) mod 7 by A5,A13,NAT_D:67
+          .= (2+7*2) mod 7
+          .= 2 mod 7 by NAT_D:61
+          .= 2 by NAT_D:24;
+          hence m mod 7 = (4 + 2 + 1) mod 7 by A12,A13,A15,NUMBER05:8
+          .= 0;
+        end;
+      end;
+      hence thesis by INT_1:62;
+    end;
+  end;
+
+registration
+  let n be non zero Nat;
+  cluster 1/3 * (2|^(2|^(n+1)) + 2|^(2|^n) + 1) -> natural;
+  coherence
+  proof
+    3 divides 2|^(2|^(n+1)) + 2|^(2|^n) + 1 by Th44;
+    hence thesis;
+  end;
+end;
+
+:: Problem 123
+theorem
+  for n being non zero Nat holds
+  n > 1 implies 1/3 * (2|^(2|^(n+1)) + 2|^(2|^n) + 1) is composite
+  proof
+    let n be non zero Nat;
+    assume
+A1: n > 1;
+    set m = 2|^(2|^(n+1)) + 2|^(2|^n) + 1;
+    1/3*m >= 1/3*7 by Th39,XREAL_1:64;
+    hence 1/3*m >= 2 by XXREAL_0:2;
+A2: 7 divides m by Th45;
+    3 divides m by Th44;
+    then 7*3 divides m by A2,PEPIN:4,INT_2:30,XPRIMES1:3,7;
+    then consider k such that
+A3: m = 7*3*k;
+    now
+      assume k < 2;
+      then per cases by NAT_1:23;
+      suppose k = 0;
+        hence contradiction by A3;
+      end;
+      suppose k = 1;
+        hence contradiction by A1,A3,Th41;
+      end;
+    end;
+    then 7*k is composite by NUMBER10:3;
+    hence thesis by A3;
+  end;
+
+begin :: Problem 172
+
+Lm18:
+  for n,x,y,z being positive Nat st x <= y holds
+  n|^x + n|^y = n|^z implies n = 2 & y = x & z = x+1
+  proof
+    let n,x,y,z be positive Nat such that
+A1: x <= y and
+A2: n|^x + n|^y = n|^z;
+    n >= 0+1 by NAT_1:13;
+    then per cases by XXREAL_0:1;
+    suppose n = 1;
+      hence thesis by A2;
+    end;
+    suppose
+A3:   n > 1;
+      n|^z - n|^x <= n|^z - 0 by XREAL_1:10;
+      then
+A4:   z >= y by A2,A3,PEPIN:66;
+      then reconsider zx = z-x as Element of NAT by A1,INT_1:5,XXREAL_0:2;
+      reconsider yx = y-x as Element of NAT by A1,INT_1:5;
+A5:   n|^x * n|^zx = n|^(x+zx) & n|^x * n|^yx = n|^(x+yx) by NEWTON:8;
+      n|^x = n|^z - n|^y by A2
+      .= n|^x * (n|^zx - n|^yx) by A5;
+      then
+A6:   n|^zx - n|^yx = 1 by XCMPLX_1:7;
+A7:   now
+        assume
+A8:     y > x;
+        then yx > x-x by XREAL_1:9;
+        then
+A9:     n divides n|^yx by NAT_3:3;
+        z > x by A4,A8,XXREAL_0:2;
+        then zx > x-x by XREAL_1:9;
+        then n divides n|^zx by NAT_3:3;
+        hence contradiction by A3,A6,A9,INT_5:1,NAT_D:7;
+      end;
+      then x = y by A1,XXREAL_0:1;
+      then
+A10:  n|^yx = 1 by NEWTON:4;
+      then zx = 1 by A6,NUMBER03:34,XPRIMES1:2;
+      hence thesis by A1,A6,A7,A10,XXREAL_0:1;
+    end;
+  end;
+
+:: Problem 172
+theorem
+  for n,x,y,z being positive Nat holds
+  n|^x + n|^y = n|^z iff n = 2 & y = x & z = x+1
+  proof
+    let n,x,y,z be positive Nat;
+    thus n|^x + n|^y = n|^z implies n = 2 & y = x & z = x+1
+    proof
+      assume
+A1:   n|^x + n|^y = n|^z;
+      per cases;
+      suppose x <= y;
+        hence thesis by A1,Lm18;
+      end;
+      suppose y <= x;
+        then n = 2 & y = x & z = y+1 by A1,Lm18;
+        hence thesis;
+      end;
+    end;
+    2|^x + 2|^x = 2*2|^x
+    .= 2|^(x+1) by NEWTON:6;
+    hence thesis;
+  end;
+
+begin :: Problem 182
+
+theorem Th48:
+  for a, b, c being Real st c > 1 & c to_power a = c to_power b holds a = b
+  proof
+    let a,b,c be Real such that
+A1: c > 1 and
+A2: c to_power a = c to_power b;
+    assume a <> b;
+    then a < b or a > b by XXREAL_0:1;
+    hence thesis by A1,A2,POWER:39;
+  end;
+
+theorem Th49:
+  for n,x,y,z,t being positive Nat st x <= y <= z holds
+  n|^x + n|^y + n|^z = n|^t iff
+  n = 2 & y = x & z = x+1 & t = x+2 or
+  n = 3 & y = x & z = x & t = x+1
+  proof
+    let n,x,y,z,t be positive Nat such that
+A1: x <= y and
+A2: y <= z;
+    thus n|^x + n|^y + n|^z = n|^t implies
+    n = 2 & y = x & z = x+1 & t = x+2 or
+    n = 3 & y = x & z = x & t = x+1
+    proof
+      assume
+A3:   n|^x + n|^y + n|^z = n|^t;
+      reconsider yx = y-x as Element of NAT by A1,INT_1:5;
+      reconsider zx = z-x as Element of NAT by A1,A2,XXREAL_0:2,INT_1:5;
+      n <> 1 by A3;
+      then
+A4:   n >= 2 by NAT_1:23;
+      then
+A5:   n >= 1 by XXREAL_0:2;
+      then
+A6:   n|^x <= n|^y by A1,PREPOWER:93;
+      n|^y <= n|^z by A2,A5,PREPOWER:93;
+      then
+A7:   n|^x + n|^y <= n|^y + n|^z by A6,XREAL_1:7;
+      per cases by A4,XXREAL_0:1;
+      suppose
+A8:     n = 2;
+A9:    now
+          assume t-x <= 1;
+          then
+A10:      t-x+x <= 1+x by XREAL_1:6;
+          n|^(1+x) = n|^1 * n|^x by NEWTON:8;
+          then n|^x + n|^y + n|^z - n|^x <= n * n|^x - n|^x
+          by A3,A5,A10,PREPOWER:93,XREAL_1:9;
+          then n|^x + n|^y <= (n-1) * n|^x by A7,XXREAL_0:2;
+          then n|^x + n|^y - n|^x <= (n-1) * n|^x - n|^x by XREAL_1:9;
+          then n|^y <= 0 by A8;
+          hence contradiction;
+        end;
+        then reconsider tx = t-x as non zero Element of NAT by INT_1:3;
+A11:    2 to_power yx = 2 to_power y / 2 to_power x &
+        2 to_power zx = 2 to_power z / 2 to_power x &
+        2 to_power tx = 2 to_power t / 2 to_power x by POWER:29;
+A12:    n|^x/n|^x + n|^y/n|^x + n|^z/n|^x = n|^t/n|^x by A3;
+        then
+A13:    1 + 2|^yx + 2|^zx = 2|^tx by A8,A11,XCMPLX_1:60;
+A14:    2 to_power (zx-1+1) = 2 to_power (zx-1) * 2 to_power 1 by POWER:27;
+A15:    2 to_power (tx-1+1) = 2 to_power (tx-1) * 2 to_power 1 by POWER:27;
+A16:    now
+          assume
+A17:      y > x;
+          then reconsider yx as non zero Element of NAT;
+          reconsider zx as non zero Element of NAT by A2,A17;
+          2|^yx is even & 2|^zx is even & 2|^tx is even;
+          hence contradiction by A8,A11,A12;
+        end;
+        then
+A18:    x = y by A1,XXREAL_0:1;
+        then
+A19:    1 + 1 + 2|^zx = 2|^tx by A13,NEWTON:4;
+        then 2 + 2|^(zx-1+1) = 2|^(tx-1+1);
+        then
+A20:    1 + 2 to_power (zx-1) = 2 to_power (tx-1) by A14,A15;
+A21:    now
+          assume zx <> 1;
+          then per cases by XXREAL_0:1;
+          suppose zx < 1;
+            then zx = 0 by NAT_1:14;
+            hence contradiction by A8,A11,A12,A18;
+          end;
+          suppose zx > 1;
+            then reconsider zx1 = zx-1 as non zero Element of NAT by INT_1:3;
+            reconsider tx1 = tx-1 as non zero Element of NAT by A9,INT_1:3;
+A22:        2/2 + 2|^zx/2 = 2|^tx/2 by A19;
+            2 to_power zx / 2 to_power 1 = 2 to_power zx1 &
+            2 to_power tx / 2 to_power 1 = 2 to_power tx1 by POWER:29;
+            hence contradiction by A22;
+          end;
+        end;
+        then 1 + 1 = 2 to_power (tx-1) by A20,POWER:24;
+        then 2 to_power 1 = 2 to_power (tx-1);
+        then tx-1 = 1 by Th48;
+        hence thesis by A1,A8,A16,A21,XXREAL_0:1;
+      end;
+      suppose
+A23:    n > 2;
+        reconsider yx = y-x as Element of NAT by A1,INT_1:5;
+        reconsider zx = z-x as Element of NAT by A1,A2,XXREAL_0:2,INT_1:5;
+        set tx = t-x;
+A24:    n to_power yx = n to_power y / n to_power x &
+        n to_power zx = n to_power z / n to_power x &
+        n to_power tx = n to_power t / n to_power x by POWER:29;
+A25:    n|^x/n|^x + n|^y/n|^x + n|^z/n|^x = n|^t/n|^x by A3;
+        then
+A26:    1 + n|^yx + n|^zx = n to_power tx by A24,XCMPLX_1:60;
+        1 + n|^yx > 1 + 0 by XREAL_1:6;
+        then
+A27:    1 + n|^yx + n|^zx > 1 + 0 by XREAL_1:8;
+A28:    n > 1 by A23,XXREAL_0:2;
+        now
+          assume x >= t;
+          then t-x <= t-t by XREAL_1:10;
+          then per cases;
+          suppose tx < 0;
+            hence contradiction by A26,A27,A28,POWER:36;
+          end;
+          suppose tx = 0;
+            hence contradiction by A24,A25;
+          end;
+        end;
+        then reconsider tx as non zero Element of NAT by INT_1:5;
+A29:    n|^yx mod n = (n mod n)|^yx mod n by GR_CY_3:30;
+A30:    n|^zx mod n = (n mod n)|^zx mod n by GR_CY_3:30;
+A31:    n|^tx mod n = (n mod n)|^tx mod n by GR_CY_3:30;
+        per cases;
+        suppose
+A32:      x < y;
+          then reconsider yx as non zero Element of NAT;
+          reconsider zx as non zero Element of NAT by A2,A32;
+          n|^x/n|^x + n|^y/n|^x + n|^z/n|^x = n|^t/n|^x by A3;
+          then
+A33:      1 + n|^yx + n|^zx = n to_power tx by A24,XCMPLX_1:60;
+          (1 + n|^yx + n|^zx) mod n
+          = ((1 mod n) + (n|^yx mod n) + (n|^zx mod n)) mod n by NUMBER05:8
+          .= 1 by A28,A29,A30,NAT_D:14;
+          hence thesis by A31,A33;
+        end;
+        suppose x >= y;
+          then
+A34:      x = y by A1,XXREAL_0:1;
+          then
+A35:      1 + 1 + n|^zx = n to_power tx by A26,NEWTON:4;
+A36:      2 mod n = 2 by A23,NAT_D:24;
+          per cases;
+          suppose zx <= 0;
+            then
+A37:        zx = 0;
+            n >= 2+1 by A23,NAT_1:13;
+            then per cases by XXREAL_0:1;
+            suppose n > 3;
+              then 3 = (2+1) mod n by NAT_D:24
+              .= (2 + n|^zx) mod n by A37,NEWTON:4;
+              hence thesis by A31,A35;
+            end;
+            suppose
+A38:          n = 3;
+              3*3|^x = 3|^(x+1) by NEWTON:6;
+              hence thesis by A3,A34,A37,A38,PEPIN:30;
+            end;
+          end;
+          suppose zx > 0;
+            then
+A39:        zx >= 0+1 by NAT_1:13;
+            (2 + n|^zx) mod n = (2 + (0|^zx mod n)) mod n by A30,A36,NAT_D:66
+            .= (2 + (0 mod n)) mod n by A39,NEWTON:11
+            .= 2 by A23,NAT_D:24;
+            hence thesis by A31,A35;
+          end;
+        end;
+      end;
+    end;
+    assume n = 2 & y = x & z = x+1 & t = x+2 or
+    n = 3 & y = x & z = x & t = x+1;
+    then per cases;
+    suppose
+A40:  n = 2 & y = x & z = x+1 & t = x+2;
+      2|^(x+1) = 2|^x*2|^1 & 2|^(x+2) = 2|^x*2|^2 by NEWTON:8;
+      hence thesis by A40,Lm2;
+    end;
+    suppose
+A41:  n = 3 & y = x & z = x & t = x+1;
+      3|^(x+1) = 3|^x*3 by NEWTON:6;
+      hence thesis by A41;
+    end;
+  end;
+
+:: Problem 182
+theorem Th50:
+  for n,x,y,z,t being positive Nat holds
+  n|^x + n|^y + n|^z = n|^t iff
+  n = 2 & y = x & z = x+1 & t = x+2 or
+  n = 2 & y = x+1 & z = x & t = x+2 or
+  n = 2 & z = y & x = y+1 & t = y+2 or
+  n = 3 & y = x & z = x & t = x+1
+  proof
+    let n,x,y,z,t be positive Nat;
+A1: n|^x + n|^y + n|^z = n|^z + n|^y + n|^x;
+A2: n|^x + n|^y + n|^z = n|^x + n|^z + n|^y;
+A3: n|^x + n|^y + n|^z = n|^y + n|^z + n|^x;
+A4: n|^x + n|^y + n|^z = n|^z + n|^x + n|^y;
+    thus n|^x + n|^y + n|^z = n|^t implies
+    n = 2 & y = x & z = x+1 & t = x+2 or
+    n = 2 & y = x+1 & z = x & t = x+2 or
+    n = 2 & z = y & x = y+1 & t = y+2 or
+    n = 3 & y = x & z = x & t = x+1
+    proof
+      assume
+A5:   n|^x + n|^y + n|^z = n|^t;
+      per cases;
+      suppose x <= y <= z;
+        hence thesis by A5,Th49;
+      end;
+      suppose x <= z <= y;
+        hence thesis by A2,A5,Th49;
+      end;
+      suppose y <= x <= z;
+        then n = 2 & y = x & z = y+1 & t = y+2 or
+        n = 3 & y = x & z = y & t = y+1 by A5,Th49;
+        hence thesis;
+      end;
+      suppose y <= z <= x;
+        then n = 2 & z = y & x = y+1 & t = y+2 or
+        n = 3 & z = y & x = y & t = y+1 by A3,A5,Th49;
+        hence thesis;
+      end;
+      suppose z <= x <= y;
+        then n = 2 & x = z & y = z+1 & t = z+2 or
+        n = 3 & x = z & y = z & t = z+1 by A4,A5,Th49;
+        hence thesis;
+      end;
+      suppose z <= y <= x;
+        then n = 2 & y = z & x = z+1 & t = z+2 or
+        n = 3 & y = z & z = x & t = z+1 by A1,A5,Th49;
+        hence thesis;
+      end;
+    end;
+A6: x+0 <= x+1 by XREAL_1:6;
+A7: y+0 <= y+1 by XREAL_1:6;
+    assume n = 2 & y = x & z = x+1 & t = x+2 or
+    n = 2 & y = x+1 & z = x & t = x+2 or
+    n = 2 & z = y & x = y+1 & t = y+2 or
+    n = 3 & y = x & z = x & t = x+1;
+    then per cases;
+    suppose n = 2 & y = x & z = x+1 & t = x+2;
+      hence thesis by A6,Th49;
+    end;
+    suppose n = 2 & y = x+1 & z = x & t = x+2;
+      hence thesis by A2,A6,Th49;
+    end;
+    suppose n = 2 & z = y & x = y+1 & t = y+2;
+      hence thesis by A1,A7,Th49;
+    end;
+    suppose n = 3 & y = x & z = x & t = x+1;
+      hence thesis by Th49;
+    end;
+  end;
+
+begin :: Problem 183
+
+:: Problem 183
+theorem
+  for x,y,z,t being positive Nat holds 4|^x + 4|^y + 4|^z <> 4|^t by Th50;
+
+begin :: Problem 191
+
+Lm19:
+  for x,y,z,t being positive Nat
+   st x^2 + 5*y^2 = z^2 & 5*x^2 + y^2 = t^2
+  ex x1,y1,z1,t1 being Nat st
+   x1^2 + 5*y1^2 = z1^2 & 5*x1^2 + y1^2 = t1^2 & x1,y1 are_coprime
+  proof
+    let x,y,z,t be positive Nat;
+    assume that
+A1: x^2 + 5*y^2 = z^2 and
+A2: 5*x^2 + y^2 = t^2;
+    set g = x gcd y;
+    consider x1, y1 being Nat such that
+A3: x = g * x1 & y = g * y1 and
+A4: x1,y1 are_coprime by NUMBER03:18;
+    take x1, y1;
+    take z1 = z div g;
+    take t1 = t div g;
+    g divides x by INT_2:def 2;
+    then
+A5: g^2 divides x^2 by NAT_3:1;
+    g divides y by INT_2:def 2;
+    then
+A6: g^2 divides y^2 by NAT_3:1;
+    then g^2 divides 5*y^2 by INT_2:2;
+    then g^2 divides z^2 by A1,A5,NAT_D:8;
+    then
+A7: z div g = z / g by RING_3:6,PYTHTRIP:6;
+A8: x1 = x / g & y1 = y / g by A3,XCMPLX_1:89;
+    hence x1^2 + 5*y1^2 = (x^2)/(g^2) + 5*(y/g)^2 by XCMPLX_1:76
+    .= x^2/g^2 + 5*(y^2/g^2) by XCMPLX_1:76
+    .= z^2/g^2 by A1
+    .= z1^2 by A7,XCMPLX_1:76;
+    g^2 divides 5*x^2 by A5,INT_2:2;
+    then g^2 divides t^2 by A2,A6,NAT_D:8;
+    then
+A9: t div g = t / g by RING_3:6,PYTHTRIP:6;
+    thus 5*x1^2 + y1^2 = 5*((x^2)/(g^2)) + (y/g)^2 by A8,XCMPLX_1:76
+    .= 5*(x^2/g^2) + (y^2/g^2) by XCMPLX_1:76
+    .= t^2/g^2 by A2
+    .= t1^2 by A9,XCMPLX_1:76;
+    thus x1,y1 are_coprime by A4;
+  end;
+
+Lm20:
+  for x,y,z,t being Nat st x,y are_coprime holds
+  x^2 + 5*y^2 <> z^2 or 5*x^2 + y^2 <> t^2
+  proof
+    let x,y,z,t be Nat;
+    assume
+A1: x,y are_coprime;
+    assume
+A2: x^2 + 5*y^2 = z^2 & 5*x^2 + y^2 = t^2;
+A3: z|^2 = z^2 & t|^2 = t^2 by WSIERP_1:1;
+A4: x|^2 = x^2 & y|^2 = y^2 by WSIERP_1:1;
+    3 divides 3*(2*(x^2+y^2));
+    then 3 divides z^2 + t^2 by A2;
+    then 3 divides z & 3 divides t by A3,NEWTON02:189;
+    then 3*3 divides z^2 & 3*3 divides t^2 by NAT_3:1;
+    then 9 divides z^2 + t^2 by NAT_D:8;
+    then consider a being Nat such that
+A5: 6*(x^2+y^2) = 9*a by A2;
+    x^2+y^2 = 3/2*a by A5;
+    then consider b being Nat such that
+A6: a = 2*b by Th5,XPRIMES1:2,3,INT_2:30;
+    2*(x^2+y^2) = 2*(3*b) by A5,A6;
+    then 3 divides x^2 + y^2;
+    then 3 divides x & 3 divides y by A4,NEWTON02:189;
+    hence contradiction by A1,PYTHTRIP:def 1;
+  end;
+
+Lm21:
+  for x,y,z,t being positive Nat holds
+  x^2 + 5*y^2 <> z^2 or 5*x^2 + y^2 <> t^2
+  proof
+    let x,y,z,t be positive Nat;
+    assume x^2 + 5*y^2 = z^2 & 5*x^2 + y^2 = t^2;
+    then ex x1,y1,z1,t1 being Nat st
+    x1^2 + 5*y1^2 = z1^2 & 5*x1^2 + y1^2 = t1^2 & x1,y1 are_coprime
+    by Lm19;
+    hence contradiction by Lm20;
+  end;
+
+:: Problem 191
+theorem
+  for x,y,z,t being non zero Integer holds
+  x^2 + 5*y^2 <> z^2 or 5*x^2 + y^2 <> t^2
+  proof
+    let x,y,z,t be non zero Integer;
+    |.x.|^2 = x^2 & |.y.|^2 = y^2 & |.z.|^2 = z^2 & |.t.|^2 = t^2
+    by COMPLEX1:75;
+    hence thesis by Lm21;
+  end;
+
+begin :: Problem 192
+
+Lm22:
+  for x,y,z,t being positive Nat st x^2 + 6*y^2 = z^2 & 6*x^2 + y^2 = t^2
+  ex x1,y1,z1,t1 being Nat st x1^2 + 6*y1^2 = z1^2 & 6*x1^2 + y1^2 = t1^2
+  & x1,y1 are_coprime
+  proof
+    let x,y,z,t be positive Nat such that
+A1: x^2 + 6*y^2 = z^2 and
+A2: 6*x^2 + y^2 = t^2;
+    set g = x gcd y;
+    consider x1, y1 being Nat such that
+A3: x = g * x1 & y = g * y1 and
+A4: x1,y1 are_coprime by NUMBER03:18;
+    take x1, y1;
+    take z1 = z div g;
+    take t1 = t div g;
+    g divides x by INT_2:def 2;
+    then
+A5: g^2 divides x^2 by NAT_3:1;
+    then
+A6: g^2 divides 6*x^2 by INT_2:2;
+    g divides y by INT_2:def 2;
+    then
+A7: g^2 divides y^2 by NAT_3:1;
+    then g^2 divides 6*y^2 by INT_2:2;
+    then g^2 divides z^2 by A1,A5,NAT_D:8;
+    then
+A8: z1 = z / g by RING_3:6,PYTHTRIP:6;
+A9: x1 = x / g & y1 = y / g by A3,XCMPLX_1:89;
+    hence x1^2 + 6*y1^2 = x^2/g^2 + 6*(y/g)^2 by XCMPLX_1:76
+    .= x^2/g^2 + 6*(y^2/g^2) by XCMPLX_1:76
+    .= z^2/g^2 by A1
+    .= z1^2 by A8,XCMPLX_1:76;
+    g^2 divides t^2 by A2,A6,A7,NAT_D:8;
+    then
+A10: t1 = t / g by RING_3:6,PYTHTRIP:6;
+    thus 6*x1^2 + y1^2 = 6*(x/g)^2 + y^2/g^2 by A9,XCMPLX_1:76
+    .= 6*(x^2/g^2) + y^2/g^2 by XCMPLX_1:76
+    .= t^2/g^2 by A2
+    .= t1^2 by A10,XCMPLX_1:76;
+    thus x1,y1 are_coprime by A4;
+  end;
+
+Lm23:
+  for x,y,z,t being Nat st x,y are_coprime
+  holds x^2 + 6*y^2 <> z^2 or 6*x^2 + y^2 <> t^2
+  proof
+    let x,y,z,t be Nat;
+    assume
+A1: x,y are_coprime;
+    assume
+A2: x^2 + 6*y^2 = z^2 & 6*x^2 + y^2 = t^2;
+    then 7*(x^2+y^2) = z^2+t^2;
+    then 7 divides z^2+t^2;
+    then
+A3: 7 divides z & 7 divides t by NUMBER02:52;
+    then 7 divides z+t by NAT_D:8;
+    then
+A4: 7*7 divides (z+t)*(z+t) by NAT_3:1;
+A5: 7*7 divides z*t by A3,NAT_3:1;
+    z*t divides 2*(z*t);
+    then 7*7 divides 2*(z*t) by A5,INT_2:9;
+    then 7*7 divides 7*(x^2+y^2)+2*z*t-2*(z*t) by A2,A4,INT_5:1;
+    then 7 divides x^2+y^2 by INT_4:7;
+    then 7 divides x & 7 divides y by NUMBER02:52;
+    hence contradiction by A1,PYTHTRIP:def 1;
+  end;
+
+Lm24:
+  for x,y,z,t being positive Nat holds x^2 + 6*y^2 <> z^2 or 6*x^2 + y^2 <> t^2
+  proof
+    let x,y,z,t be positive Nat;
+    assume x^2 + 6*y^2 = z^2 & 6*x^2 + y^2 = t^2;
+    then ex x1,y1,z1,t1 being Nat st x1^2 + 6*y1^2 = z1^2 &
+    6*x1^2 + y1^2 = t1^2 & x1,y1 are_coprime by Lm22;
+    hence thesis by Lm23;
+  end;
+
+:: Problem 192
+theorem
+  for x,y,z,t being non zero Integer holds
+  x^2 + 6*y^2 <> z^2 or 6*x^2 + y^2 <> t^2
+  proof
+    let x,y,z,t be non zero Integer;
+    |.x.|^2 = x^2 & |.y.|^2 = y^2 & |.z.|^2 = z^2 & |.t.|^2 = t^2
+    by COMPLEX1:75;
+    hence thesis by Lm24;
+  end;
+
+:: Problem 192 a
+theorem
+  3^2 + 7*1^2 = 4^2 & 7*3^2 + 1^2 = 8^2;
+

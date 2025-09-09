@@ -1,0 +1,449 @@
+:: Integral of Continuous Functions of Two Variables
+::  by Noboru Endou and Yasunari Shidama
+:: 
+:: Received December 18, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MEASUR12, NUMBERS, XXREAL_0, SUBSET_1, CARD_1, ARYTM_3, ARYTM_1,
+      RELAT_1, REAL_1, FUNCT_1, XBOOLE_0, TARSKI, ZFMISC_1, PROB_1, SUPINF_2,
+      VALUED_0, PARTFUN1, MEASURE1, MESFUNC5, MESFUNC1, MEASUR10, MEASUR11,
+      COMPLEX1, MESFUN12, RFUNCT_3, ORDINAL2, INTEGRA1, INTEGRA5, MEASURE6,
+      NAT_1, FUNCT_2, CARD_3, ORDINAL1, SUPINF_1, SEQ_2, MEASURE3, MEASURE5,
+      XXREAL_1, SEQ_1, MEASURE8, XREAL_0, FUNCT_7, XXREAL_2, MEMBERED, SEQ_4,
+      STRUCT_0, PRE_TOPC, NORMSP_1, NFCONT_2, SQUARE_1, FCONT_1, REALSET1,
+      DUALSP02, RCOMP_1, CFCONT_1, RAT_1, METRIC_1, FCONT_2;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, FUNCT_1, ORDINAL1, SETFAM_1,
+      RELSET_1, PARTFUN1, MCART_1, FUNCT_2, BINOP_1, DOMAIN_1, CARD_3, NUMBERS,
+      MEMBERED, XXREAL_3, XCMPLX_0, XXREAL_0, SQUARE_1, XREAL_0, VALUED_0,
+      RAT_1, NAT_1, VALUED_1, XXREAL_1, XXREAL_2, EXTREAL1, COMPLEX1, MESFUNC1,
+      FCONT_1, FCONT_2, SUPINF_1, SUPINF_2, PROB_1, RCOMP_1, FINSUB_1,
+      MEASURE1, MEASURE3, MEASURE5, MEASUR12, MESFUNC2, MESFUNC5, MESFUNC6,
+      INTEGRA5, MEASURE8, MEASUR10, MEASUR11, MESFUN12, SEQ_1, SEQ_2, SEQ_4,
+      STRUCT_0, ALGSTR_0, PRE_TOPC, NORMSP_0, NORMSP_1, NFCONT_1, LOPBAN_5,
+      PRVECT_3, NFCONT_2, DUALSP02;
+ constructors EXTREAL1, SUPINF_1, MESFUNC2, MEASUR11, MESFUN12, MESFUNC6,
+      DOMAIN_1, FCONT_1, FCONT_2, MEASUR12, INTEGRA1, COMSEQ_2, PROB_3, EUCLID,
+      NEWTON, MEASURE3, INTEGRA5, SEQ_2, SEQ_4, BINOP_2, SQUARE_1, NFCONT_1,
+      PRVECT_3, NFCONT_2, DUALSP02, LOPBAN_5, NDIFF_8, LPSPACE1, VFUNCT_1;
+ registrations ORDINAL1, XBOOLE_0, RELAT_1, SUBSET_1, XREAL_0, NAT_1, NUMBERS,
+      VALUED_0, RELSET_1, MEASURE1, XXREAL_3, MEMBERED, XXREAL_2, SQUARE_1,
+      XXREAL_1, INTEGRA1, FINSUB_1, FCONT_1, TOPGEN_4, STRUCT_0, NORMSP_0,
+      NORMSP_1, PRVECT_3, RAT_1, MEASURE3, COMPLEX1, MEASURE5, FOMODEL0;
+ requirements BOOLE, SUBSET, NUMERALS, REAL, ARITHM;
+
+
+begin :: Preliminaries
+
+theorem :: MESFUN16:1
+for X being non empty set, S being SigmaField of X, M being sigma_Measure of S,
+ f being PartFunc of X,ExtREAL st dom f = {} holds Integral(M,f) = 0;
+
+theorem :: MESFUN16:2
+for X being non empty set, S be SigmaField of X, M being sigma_Measure of S,
+ f being PartFunc of X,REAL st dom f = {} holds Integral(M,f) = 0;
+
+theorem :: MESFUN16:3
+for X be non empty set, S be SigmaField of X, M be sigma_Measure of S st
+ M is sigma_finite holds COM M is sigma_finite;
+
+theorem :: MESFUN16:4
+B-Meas is sigma_finite;
+
+theorem :: MESFUN16:5
+L-Meas is sigma_finite;
+
+theorem :: MESFUN16:6
+Prod_Measure(L-Meas,L-Meas) is sigma_finite;
+
+theorem :: MESFUN16:7
+for I be closed_interval Subset of REAL, E be Subset of RNS_Real
+ st I = E holds E is compact;
+
+definition
+  let S1, S2 be RealNormSpace, D1 be Subset of S1, D2 be Subset of S2;
+  redefine func [:D1,D2:] -> Subset of [:S1,S2:];
+end;
+
+theorem :: MESFUN16:8
+for P,Q be RealNormSpace, E be Subset of P, F be Subset of Q
+  st E is compact & F is compact holds
+   [:E,F:] is Subset of [:P,Q:] & [:E,F:] is compact;
+
+theorem :: MESFUN16:9
+for I,J be closed_interval Subset of REAL, E be Subset of [:RNS_Real,RNS_Real:]
+ st E = [:I,J:] holds E is compact;
+
+theorem :: MESFUN16:10
+for E be set, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL st f = g & E c= dom f holds
+  f is_uniformly_continuous_on E iff
+   for e be Real st 0 < e ex r be Real st 0 < r
+    & for x1,x2,y1,y2 be Real st [x1,y1] in E & [x2,y2] in E &
+         |.x2-x1.| < r & |.y2-y1.| < r
+          holds |. g.([x2,y2])-g.([x1,y1]) .| < e;
+
+theorem :: MESFUN16:11
+for I,J be Interval holds [:I,J:] is Subset of [:RNS_Real,RNS_Real:]
+ & [:I,J:] in sigma measurable_rectangles(L-Field,L-Field);
+
+theorem :: MESFUN16:12
+for z being Point of RNS_Real, x,r be Real st x = z holds
+ Ball(z,r) = ].x-r,x+r.[;
+
+theorem :: MESFUN16:13
+for z being Point of [:RNS_Real,RNS_Real:], r be Real st 0 < r holds
+  ex s be Real, x,y be Real st 0 < s & s < r & z = [x,y]
+      & [: ].x-s,x+s.[, ].y-s,y+s.[ :] c= Ball(z,r);
+
+theorem :: MESFUN16:14
+for A be Subset of [:RNS_Real,RNS_Real:] st
+ (for a,b be Real st [a,b] in A holds
+   ex Rx be real-membered set st Rx is non empty bounded_above &
+      Rx = {r where r is Real : 0 < r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A })
+holds
+  ex F be Function of A,REAL st
+   for a,b be Real st [a,b] in A holds
+    ex Rx be real-membered set st Rx is non empty bounded_above
+      & Rx = {r where r is Real :0 < r & [: ].a-r,a+r.[,].b-r,b+r.[ :] c= A }
+      & F.([a,b]) = (upper_bound Rx) / 2;
+
+theorem :: MESFUN16:15
+for A be Subset of [:RNS_Real,RNS_Real:] st A is open holds
+ A in sigma measurable_rectangles(L-Field,L-Field);
+
+theorem :: MESFUN16:16
+for H be Subset of RNS_Real, I be open_interval Subset of REAL
+ st H = I holds H is open;
+
+theorem :: MESFUN16:17
+for r be Real, X be set, g be PartFunc of X,REAL holds
+ less_dom(g,r) = g"(].-infty,r.[);
+
+begin :: Continuity of two-variable functions
+
+theorem :: MESFUN16:18
+for I,J be closed_interval Subset of REAL,
+  f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL st f is_continuous_on [:I,J:] & f = g
+holds
+  for e be Real st 0 < e ex r be Real st 0 < r
+    & for x1,x2,y1,y2 be Real st [x1,y1] in [:I,J:] & [x2,y2] in [:I,J:] &
+       |.x2-x1.| < r & |.y2-y1.| < r holds |. g.([x2,y2])-g.([x1,y1]) .| < e;
+
+theorem :: MESFUN16:19
+for f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+g be PartFunc of [:REAL,REAL:],REAL st f = g holds ||.f.|| = |.g.|;
+
+theorem :: MESFUN16:20
+for X be non empty set, g be PartFunc of X,REAL, A be Subset of X holds
+ |. g|A .| = (|.g.|)|A;
+
+theorem :: MESFUN16:21
+for S be RealNormSpace, x0 be Point of S, f,g be PartFunc of S,RNS_Real st
+ f is_continuous_in x0 & g = ||.f.|| holds g is_continuous_in x0;
+
+theorem :: MESFUN16:22
+for X be set, S be RealNormSpace, f,g be PartFunc of S,RNS_Real st
+ f is_continuous_on X & g = ||.f.|| holds g is_continuous_on X;
+
+theorem :: MESFUN16:23
+for I,J be closed_interval Subset of REAL,
+  f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL st f is_continuous_on [:I,J:] & f = g
+holds
+  for e be Real st 0 < e ex r be Real st 0 < r
+   & for x1,x2,y1,y2 be Real st [x1,y1] in [:I,J:] & [x2,y2] in [:I,J:] &
+      |.x2-x1.| < r & |.y2-y1.| < r holds
+        |. (|.g.|).([x2,y2])-(|.g.|).([x1,y1]) .| < e;
+
+theorem :: MESFUN16:24
+for r be Real, S be RealNormSpace, E be Subset of S,
+ f be PartFunc of S,RNS_Real st f is_continuous_on E & dom f = E holds
+  ex H be Subset of S st H /\ E = f"(].-infty,r.[) & H is open;
+
+begin :: Properties of Projective Functions
+
+theorem :: MESFUN16:25
+for X,Y,Z be non empty set, A be Subset of X, B be Subset of Y,
+ x be Element of X, f be PartFunc of [:X,Y:],Z st dom f = [:A,B:] holds
+  ( x in A implies dom ProjPMap1(f,x) = B ) &
+  ( not x in A implies dom ProjPMap1(f,x) = {} );
+
+theorem :: MESFUN16:26
+for X,Y,Z be non empty set, A be Subset of X, B be Subset of Y,
+ y be Element of Y, f be PartFunc of [:X,Y:],Z st dom f = [:A,B:] holds
+  ( y in B implies dom ProjPMap2(f,y) = A ) &
+  ( not y in B implies dom ProjPMap2(f,y) = {} );
+
+theorem :: MESFUN16:27
+for X,Y be non empty set, A be Subset of X, B be Subset of Y,
+ x be Element of X, f be PartFunc of [:X,Y:],REAL st dom f = [:A,B:] holds
+  ( x in A implies
+      dom ProjPMap1(R_EAL f,x) = B & dom ProjPMap1(|.R_EAL f.|,x) = B ) &
+  ( not x in A implies
+      dom ProjPMap1(R_EAL f,x) = {} & dom ProjPMap1(|.R_EAL f.|,x) = {} );
+
+theorem :: MESFUN16:28
+for X,Y be non empty set, A be Subset of X, B be Subset of Y,
+ y be Element of Y, f be PartFunc of [:X,Y:],REAL st dom f = [:A,B:] holds
+  ( y in B implies
+      dom ProjPMap2(R_EAL f,y) = A & dom ProjPMap2(|.R_EAL f.|,y) = A ) &
+  ( not y in B implies
+      dom ProjPMap2(R_EAL f,y) = {} & dom ProjPMap2(|.R_EAL f.|,y) = {} );
+
+theorem :: MESFUN16:29
+for X,Y be non empty set, Z be set, f be PartFunc of [:X,Y:],Z,
+ x be Element of X, y be Element of Y holds
+ rng(ProjPMap1(f,x)) c= rng f & rng(ProjPMap2(f,y)) c= rng f;
+
+theorem :: MESFUN16:30
+for X,Y be non empty set, f be PartFunc of [:X,Y:],REAL,
+x be Element of X, y be Element of Y holds
+   ProjPMap1(R_EAL f,x) is PartFunc of Y,REAL
+ & ProjPMap1(|.R_EAL f.|,x) is PartFunc of Y,REAL
+ & ProjPMap2(R_EAL f,y) is PartFunc of X,REAL
+ & ProjPMap2(|.R_EAL f.|,y) is PartFunc of X,REAL;
+
+theorem :: MESFUN16:31
+for X,Y be non empty set, f be PartFunc of [:X,Y:],REAL,
+x be Element of X, y be Element of Y holds
+   ProjPMap1(R_EAL f,x) = R_EAL(ProjPMap1(f,x))
+ & ProjPMap1(|.R_EAL f.|,x) = |. R_EAL(ProjPMap1(f,x)) .|
+ & ProjPMap2(R_EAL f,y) = R_EAL(ProjPMap2(f,y))
+ & ProjPMap2(|.R_EAL f.|,y) = |. R_EAL(ProjPMap2(f,y)) .|;
+
+theorem :: MESFUN16:32
+for X,Y be non empty set, f be PartFunc of [:X,Y:],REAL,
+ x be Element of X, y be Element of Y holds
+   ProjPMap1(|.f.|,x) = |. ProjPMap1(f,x) .|
+ & ProjPMap2(|.f.|,y) = |. ProjPMap2(f,y) .|;
+
+theorem :: MESFUN16:33
+for f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, t be Element of REAL
+st f is_continuous_on dom f & f = g holds
+  ProjPMap1(g,t) is continuous & ProjPMap2(g,t) is continuous;
+
+theorem :: MESFUN16:34
+for f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, t be Element of REAL
+st f is_continuous_on dom f & f = g holds
+  ProjPMap1(|.g.|,t) is continuous & ProjPMap2(|.g.|,t) is continuous;
+
+theorem :: MESFUN16:35
+for f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, t be Element of REAL
+st f is_uniformly_continuous_on dom f & f = g holds
+  ProjPMap1(g,t) is uniformly_continuous
+& ProjPMap2(g,t) is uniformly_continuous;
+
+theorem :: MESFUN16:36
+for x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL
+ st f is_continuous_on dom f & f = g & Pg1 = ProjPMap1(R_EAL g,x) holds
+  Pg1 is continuous;
+
+theorem :: MESFUN16:37
+for y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL
+ st f is_continuous_on dom f & f = g & Pg2 = ProjPMap2(R_EAL g,y) holds
+  Pg2 is continuous;
+
+theorem :: MESFUN16:38
+for x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL
+  st f is_continuous_on dom f & f = g & Pg1 = ProjPMap1(|.R_EAL g.|,x)
+  holds Pg1 is continuous;
+
+theorem :: MESFUN16:39
+for y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, p2 be PartFunc of REAL,REAL
+  st f is_continuous_on dom f & f = g & p2 = ProjPMap2(|.R_EAL g.|,y)
+  holds p2 is continuous;
+
+begin :: Integral of continuous two variables functions
+
+theorem :: MESFUN16:40
+for I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+  x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL
+ st x in I & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g &
+    Pg1 = ProjPMap1(R_EAL g,x) holds Pg1|J is bounded & Pg1 is_integrable_on J;
+
+theorem :: MESFUN16:41
+for I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+    x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+    g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL
+ st x in I & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g &
+    Pg1 = ProjPMap1(R_EAL g,x) holds Pg1 is_integrable_on L-Meas
+  & integral(Pg1,J) = Integral(L-Meas,Pg1)
+  & integral(Pg1,J) = Integral(L-Meas,(ProjPMap1(R_EAL g,x)))
+  & integral(Pg1,J) = (Integral2(L-Meas,R_EAL g)).x;
+
+theorem :: MESFUN16:42
+for I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+  y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL
+ st y in J & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g &
+    Pg2 = ProjPMap2(R_EAL g,y) holds Pg2|I is bounded & Pg2 is_integrable_on I;
+
+theorem :: MESFUN16:43
+for I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+  y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL
+ st y in J & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g &
+    Pg2 = ProjPMap2(R_EAL g,y) holds Pg2 is_integrable_on L-Meas
+  & integral(Pg2,I) = Integral(L-Meas,Pg2)
+  & integral(Pg2,I) = Integral(L-Meas,(ProjPMap2(R_EAL g,y)))
+  & integral(Pg2,I) = (Integral1(L-Meas,R_EAL g)).y;
+
+theorem :: MESFUN16:44
+for I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+  x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL
+ st x in I & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g
+  & Pg1 = ProjPMap1(|.R_EAL g.|,x) holds
+    Pg1|J is bounded & Pg1 is_integrable_on J;
+
+theorem :: MESFUN16:45
+for I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+  x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL,
+  E be Element of L-Field
+ st x in I & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g
+  & Pg1 = ProjPMap1(|.R_EAL g.|,x) & E = J holds Pg1 is E-measurable;
+
+theorem :: MESFUN16:46
+for I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+  x be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg1 be PartFunc of REAL,REAL
+ st x in I & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g &
+    Pg1 = ProjPMap1(|.R_EAL g.|,x) holds Pg1 is_integrable_on L-Meas
+  & integral(Pg1,J) = Integral(L-Meas,Pg1)
+  & integral(Pg1,J) = Integral(L-Meas,(ProjPMap1(|.R_EAL g.|,x)))
+  & integral(Pg1,J) = (Integral2(L-Meas,|.R_EAL g.|)).x;
+
+theorem :: MESFUN16:47
+for I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+  y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL
+ st y in J & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g
+  & Pg2 = ProjPMap2(|.R_EAL g.|,y) holds
+    Pg2|I is bounded & Pg2 is_integrable_on I;
+
+theorem :: MESFUN16:48
+for I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+  y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL,
+  E be Element of L-Field
+ st y in J & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g
+  & Pg2 = ProjPMap2(|.R_EAL g.|,y) & E = I holds Pg2 is E-measurable;
+
+theorem :: MESFUN16:49
+for I be non empty closed_interval Subset of REAL, J be Subset of REAL,
+  y be Element of REAL, f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+  g be PartFunc of [:REAL,REAL:],REAL, Pg2 be PartFunc of REAL,REAL
+ st y in J & dom f = [:I,J:] & f is_continuous_on [:I,J:] & f = g &
+    Pg2 = ProjPMap2(|.R_EAL g.|,y) holds Pg2 is_integrable_on L-Meas
+  & integral(Pg2,I) = Integral(L-Meas,Pg2)
+  & integral(Pg2,I) = Integral(L-Meas,(ProjPMap2(|.R_EAL g.|,y)))
+  & integral(Pg2,I) = (Integral1(L-Meas,|.R_EAL g.|)).y;
+
+theorem :: MESFUN16:50
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL,
+ E be Element of sigma measurable_rectangles(L-Field,L-Field)
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g & E = [:I,J:] holds
+   g is E-measurable;
+
+theorem :: MESFUN16:51
+for I be Subset of REAL, J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g holds
+   Integral2(L-Meas,|.R_EAL g.|)|I is PartFunc of REAL,REAL
+ & Integral2(L-Meas,R_EAL g)|I is PartFunc of REAL,REAL;
+
+theorem :: MESFUN16:52
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, G2 be PartFunc of REAL,REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g
+ & G2 = Integral2(L-Meas,|.R_EAL g.|)|I holds G2 is continuous;
+
+theorem :: MESFUN16:53
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, G2 be PartFunc of REAL,REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g
+ & G2 = Integral2(L-Meas,R_EAL g)|I holds G2 is continuous;
+
+theorem :: MESFUN16:54
+for I,J be non empty closed_interval Subset of REAL,
+ g being PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ f be PartFunc of [:REAL,REAL:],REAL
+ st [:I,J:] = dom g & g is_continuous_on [:I,J:] & g = f holds
+   Integral1(L-Meas,|.R_EAL f.|)|J is PartFunc of REAL,REAL
+ & Integral1(L-Meas,R_EAL f)|J is PartFunc of REAL,REAL;
+
+theorem :: MESFUN16:55
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, G1 be PartFunc of REAL,REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g
+ & G1 = Integral1(L-Meas,|.R_EAL g.|)|J holds G1 is continuous;
+
+theorem :: MESFUN16:56
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL, G1 be PartFunc of REAL,REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g
+ & G1 = Integral1(L-Meas,R_EAL g)|J holds G1 is continuous;
+
+theorem :: MESFUN16:57
+for I,J be non empty closed_interval Subset of REAL,
+ f be PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g be PartFunc of [:REAL,REAL:],REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g holds
+   g is_integrable_on Prod_Measure(L-Meas,L-Meas)
+ & (for x being Element of REAL
+       holds Integral2(L-Meas,|.R_EAL g.|).x < +infty)
+ & (for y being Element of REAL
+       holds Integral1(L-Meas,|.R_EAL g.|).y < +infty)
+ & (for U being Element of L-Field
+       holds Integral2(L-Meas,R_EAL g) is U-measurable)
+ & (for V being Element of L-Field
+       holds Integral1(L-Meas,R_EAL g) is V-measurable)
+ & Integral2(L-Meas,R_EAL g) is_integrable_on L-Meas
+ & Integral1(L-Meas,R_EAL g) is_integrable_on L-Meas
+ & Integral(Prod_Measure(L-Meas,L-Meas),g)
+      = Integral(L-Meas,Integral2(L-Meas,R_EAL g))
+ & Integral(Prod_Measure(L-Meas,L-Meas),g)
+      = Integral(L-Meas,Integral1(L-Meas,R_EAL g));
+
+theorem :: MESFUN16:58
+for I,J be non empty closed_interval Subset of REAL,
+ f being PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g being PartFunc of [:REAL,REAL:],REAL, G2 be PartFunc of REAL,REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g
+  & G2 = Integral2(L-Meas,R_EAL g)|I holds
+   Integral(Prod_Measure(L-Meas,L-Meas),R_EAL g) = integral(G2,I);
+
+theorem :: MESFUN16:59
+for I,J be non empty closed_interval Subset of REAL,
+ f being PartFunc of [:RNS_Real,RNS_Real:],RNS_Real,
+ g being PartFunc of [:REAL,REAL:],REAL, G1 be PartFunc of REAL,REAL
+ st [:I,J:] = dom f & f is_continuous_on [:I,J:] & f = g
+  & G1 = Integral1(L-Meas,R_EAL g)|J holds
+   Integral(Prod_Measure(L-Meas,L-Meas),R_EAL g) = integral(G1,J);

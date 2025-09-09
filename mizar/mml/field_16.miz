@@ -1,0 +1,3867 @@
+:: Finite Fields
+::  by Christoph Schwarzweller
+:: 
+:: Received December 27, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ARYTM_3, VECTSP_1, ALGSTR_0, TARSKI, STRUCT_0, SUBSET_1, RING_2,
+      SUPINF_2, MESFUNC1, C0SP1, POLYNOM1, RLVECT_5, TOPGEN_1, FUNCSDOM,
+      EC_PF_1, HURWITZ, CARD_1, WELLORD1, FUNCT_1, RELAT_1, NUMBERS, POLYNOM5,
+      FOMODEL1, FIELD_14, ZFMISC_1, REALSET1, QUOFIELD, CAT_1, POLYNOM3,
+      FINSEQ_1, UPROOTS, ARYTM_1, FIELD_4, ALGNUM_1, XBOOLE_0, XXREAL_0,
+      GLIB_000, FIELD_1, RING_3, XCMPLX_0, POLYNOM2, ALGSEQ_1, FUNCT_2, MOD_4,
+      FIELD_6, RING_5, NAT_1, INT_2, VECTSP_2, FIELD_8, RATFUNC1, GROUP_1,
+      CARD_3, NEWTON, FINSET_1, RLVECT_1, FUNCT_4, BINOP_1, LATTICES, FUNCOP_1,
+      UNIROOTS, BCIALG_2, VECTSP13, PEPIN, TOPZARI1, VECTSP10, MSSUBFAM,
+      GROUPP_1, FIELD_15, INT_7, FSM_1, GAUSSINT, FUNCT_7, RANKNULL, ORDINAL1,
+      FIELD_13, FIELD_16, RLSUB_1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, BINOP_1, RELAT_1, RELSET_1,
+      FINSET_1, REALSET1, FUNCT_1, ORDINAL1, FUNCT_2, FUNCOP_1, NUMBERS,
+      CARD_1, PARTFUN1, FUNCT_4, XCMPLX_0, XXREAL_0, NAT_1, NEWTON, UNIROOTS,
+      VFUNCT_1, INT_2, INT_7, NAT_D, FINSEQ_1, ALGSEQ_1, STRUCT_0, BINOM,
+      POLYNOM3, POLYNOM4, POLYNOM5, ALGSTR_0, QUOFIELD, GCD_1, GROUP_1,
+      GROUP_6, MOD_4, UPROOTS, RLVECT_1, VECTSP_1, VECTSP_2, VECTSP_4,
+      VECTSP_9, FUNCT_7, VECTSP10, VECTSP13, MATRLIN, HURWITZ, RANKNULL,
+      TOPZARI1, C0SP1, EC_PF_1, GAUSSINT, RATFUNC1, ALGNUM_1, RING_2, RING_3,
+      RING_4, RING_5, FIELD_1, FIELD_4, FIELD_6, AIMLOOP, FIELD_8, FIELD_12,
+      FIELD_13, FIELD_14, FIELD_15;
+ constructors FUNCT_4, VFUNCT_1, NAT_D, ALGSEQ_1, RINGDER1, REALSET1, GR_CY_1,
+      NAT_6, RINGCAT1, ALGNUM_1, POLYNOM4, VECTSP_9, BINOM, INT_7, TOPZARI1,
+      UNIROOTS, VECTSP13, RING_5, FIELD_8, FIELD_9, FIELD_12, FIELD_13,
+      FIELD_14, FIELD_15, AIMLOOP, FUNCT_7;
+ registrations XBOOLE_0, ORDINAL1, RELSET_1, FUNCOP_1, XCMPLX_0, XXREAL_0,
+      NAT_1, XREAL_0, INT_1, MEMBERED, SUBSET_1, STRUCT_0, VECTSP_1, ALGSTR_1,
+      EC_PF_1, FINSET_1, INT_3, GAUSSINT, NAT_6, VECTSP13, FUNCT_2, ALGSTR_0,
+      GROUP_1, RLVECT_1, FUNCT_1, VFUNCT_1, CARD_1, REALSET1, UNIROOTS, MOD_4,
+      RATFUNC1, FINSEQ_1, TOPZARI1, NEWTON, RELAT_1, RINGCAT1, RING_2, RING_3,
+      RING_4, RING_5, POLYNOM3, POLYNOM4, FIELD_1, FIELD_4, FIELD_6, FIELD_7,
+      FIELD_8, FIELD_9, FIELD_12, FIELD_14, FIELD_15, HILBERT4, VECTSP_4,
+      VECTSP_9, ZMODUL06;
+ requirements NUMERALS, SUBSET, BOOLE, REAL, ARITHM;
+ definitions GROUP_1, RLVECT_1;
+ equalities BINOP_1, REALSET1, XCMPLX_0, STRUCT_0, ALGSTR_0, POLYNOM3, BINOM,
+      AIMLOOP;
+ expansions STRUCT_0, GROUP_1, ALGSTR_0, VECTSP_1, GCD_1, TARSKI, GROUP_6,
+      POLYNOM5, REALSET1, FUNCT_1, FUNCT_2, FIELD_7, FIELD_8, QUOFIELD,
+      ALGSEQ_1;
+ theorems GROUP_1, VECTSP_1, VECTSP_2, RLVECT_1, C0SP1, FIELD_10, FUNCOP_1,
+      FUNCT_2, TARSKI, FUNCT_1, EC_PF_1, RING_3, RATFUNC1, NEWTON, RINGDER1,
+      POLYNOM5, UPROOTS, RING_4, RING_5, HURWITZ, XREAL_1, INT_1, ORDINAL1,
+      NAT_1, XBOOLE_0, FIELD_4, POLYNOM3, POLYNOM4, ZFMISC_1, XXREAL_0, NAT_2,
+      BINOM, NAT_6, XREAL_0, REALALG2, FIELD_6, ALGSEQ_1, CARD_2, FIELD_7,
+      FIELD_8, FINSEQ_1, FIELD_14, FIELD_12, RING_2, GROUP_6, FIELD_1, RELAT_1,
+      XBOOLE_1, FUNCT_4, UNIROOTS, VECTSP10, GR_CY_1, TOPZARI1, NAT_3,
+      REALSET1, GR_CY_3, FINSEQ_4, BHSP_1, SUBSET_1, RANKNULL, ALGNUM_1,
+      VECTSP13, NAT_D, INT_7, CARD_1, INT_2, FIELD_5, FIELD_15,
+      NEWTON02, VECTSP_4;
+ schemes NAT_1, INT_1, FUNCT_1, FUNCT_2, RECDEF_1;
+
+begin :: Iteration of functions
+
+T2:
+for f,g,h being Function holds (f * g) * h = f * (g * h)
+  by RELAT_1:36;
+
+registration
+let L1,L2 be non empty 1-sorted;
+cluster Funcs(L1,L2)-valued for sequence;
+existence
+proof
+deffunc G(object) = the Element of Funcs(L1,L2);
+consider f being Function such that
+A: dom f = NAT & for x being object st x in NAT holds f.x = G(x)
+   from FUNCT_1:sch 3;
+reconsider f as sequence by A,FIELD_12:def 2;
+take f;
+now let x be object;
+  assume x in rng f;
+  then consider o being object such that
+  B: o in dom f & f.o = x by FUNCT_1:def 3;
+  x is Element of Funcs(L1,L2) by A,B;
+  hence x in Funcs(L1,L2);
+  end;
+then rng f c= Funcs(L1,L2);
+hence thesis by RELAT_1:def 19;
+end;
+end;
+
+definition
+let L1,L2 be non empty 1-sorted;
+let F be Funcs(L1,L2)-valued sequence;
+let n be Nat;
+redefine func F.n -> Function of L1,L2;
+coherence
+proof
+reconsider n1 = n as Element of NAT by ORDINAL1:def 12;
+dom F = NAT by FIELD_12:def 2;
+then A: F.n1 in rng F by FUNCT_1:3;
+rng F c= Funcs(L1,L2) by RELAT_1:def 19;
+then consider f being Function such that
+B: f = F.n & dom f = the carrier of L1 & rng f c= the carrier of L2
+   by A,FUNCT_2:def 2;
+thus F.n is Function of L1,L2 by B,FUNCT_2:2;
+end;
+end;
+
+registration let F be Field;
+  cluster trivial for VectSp of F;
+  existence
+  proof
+    set V = the VectSp of F;
+    the carrier of (0).V = {0.V} by VECTSP_4:def 3
+          .= {0.((0).V)} by VECTSP_4:def 2;
+    hence thesis;
+  end;
+end;
+
+scheme RecExF {D() -> non empty 1-sorted,
+        F() -> Function of D(),D(),
+        P[object,Function of D(),D(),Function of D(),D()]}:
+ex f being Funcs(D(),D())-valued sequence
+  st f.0 = F() & for n being Nat holds P[n,f.n,f.(n+1)]
+provided
+A1:for n being Nat, g1 being Function of D(),D()
+   ex g2 being Function of D(),D() st P[n,g1,g2];
+defpred Q[set,set,set] means
+ $2 is Function of D(),D() implies
+ ex g1,g2 being Function of D(),D()
+ st g1 = $2 & g2 = $3 & P[$1,g1,g2];
+A2: for n being Nat for x being set ex y being set st Q[n,x,y]
+    proof
+    let n being Nat, x be set;
+    thus ex y being set st Q[n,x,y]
+      proof
+      per cases;
+      suppose B0: not x is Function of D(),D();
+        take y = 0;
+        thus Q[n,x,y] by B0;
+        end;
+      suppose x is Function of D(),D();
+        then reconsider g1 = x as Function of D(),D();
+        consider g2 being Function of D(),D() such that
+        B1: P[n,g1,g2] by A1;
+        take y = g2;
+        thus Q[n,x,y] by B1;
+        end;
+      end;
+    end;
+    consider f being Function such that
+A3: dom f = NAT & f.0 = F() &
+    for n being Nat holds Q[n,f.n,f.(n+1)] from RECDEF_1:sch 1(A2);
+    reconsider f as sequence by A3,FIELD_12:def 2;
+A4: for i being Nat holds f.i is Function of D(),D()
+    proof
+    let i be Nat;
+    defpred R[Nat] means f.($1) is Function of D(),D();
+    IA: R[0] by A3;
+    IS: now let k be Nat;
+        assume IV: R[k];
+        Q[k,f.k,f.(k+1)] by A3;
+        hence R[k+1] by IV;
+        end;
+    for k being Nat holds R[k] from NAT_1:sch 2(IA,IS);
+    hence thesis;
+    end;
+now let x be object;
+  assume x in rng f; then
+  consider i being object such that
+  C1: i in dom f & f.i = x by FUNCT_1:def 3;
+  reconsider i as Element of NAT by C1;
+  reconsider g = x as Function of D(),D() by C1,A4;
+  dom g = the carrier of D() & rng g c= the carrier of D()
+     by FUNCT_2:def 1,RELAT_1:def 19;
+  hence x in Funcs(D(),D()) by FUNCT_2:def 2;
+  end;
+then rng f c= Funcs(D(),D());
+then reconsider f as Funcs(D(),D())-valued sequence by RELAT_1:def 19;
+take f;
+thus f.0 = F() by A3;
+thus for n being Nat holds P[n,f.n,f.(n+1)]
+  proof
+  let n be Nat;
+  Q[n,f.n,f.(n+1)] by A3;
+  hence thesis;
+  end;
+end;
+
+definition ::: FUNCT_7:def 11 should be reused
+let L be non empty 1-sorted;
+let f be Function of L,L;
+let n be Nat;
+func f`^n -> Function of L,L means :dd:
+  ex F being Funcs(L,L)-valued sequence st
+  it = F.n & F.0 = id L & for i being Nat holds F.(i+1) = (F.i) * f;
+existence
+proof
+defpred P[Nat,Function of L,L,Function of L,L] means $3 = $2 * f;
+A: for n being Nat, g1 being Function of L,L
+   ex g2 being Function of L,L st P[n,g1,g2];
+consider F being Funcs(L,L)-valued sequence such that
+B: F.0 = id L & for n being Nat holds P[n,F.n,F.(n+1)] from RecExF(A);
+take F.n,F;
+thus thesis by B;
+end;
+uniqueness
+proof
+let f1,f2 be Function of L,L;
+given F1 being Funcs(L,L)-valued sequence such that
+A: f1 = F1.n & F1.0 = id L & for i being Nat holds F1.(i+1) = (F1.i) * f;
+given F2 being Funcs(L,L)-valued sequence such that
+B: f2 = F2.n & F2.0 = id L & for i being Nat holds F2.(i+1) = (F2.i) * f;
+defpred P[Nat] means F1.($1) = F2.($1);
+IA: P[0] by A,B;
+IS: now let k be Nat;
+    assume P[k]; then
+    F1.(k+1) = (F2.k) * f by A .= F2.(k+1) by B;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence f1 = f2 by A,B;
+end;
+end;
+
+registration
+let L be non empty 1-sorted;
+let f be Function of L,L;
+reduce f`^1 to f;
+reducibility
+proof
+consider F being Funcs(L,L)-valued sequence such that
+A: f`^1 = F.1 & F.0 = id L &
+   for i being Nat holds F.(i+1) = (F.i) * f by dd;
+F.(0+1) = (id L) * f by A .= f;
+hence thesis by A;
+end;
+end;
+
+theorem T1:
+for L being non empty 1-sorted
+for f being Function of L,L holds f`^0 = id L & f`^1 = f & f`^2 = f * f
+proof
+let R be non empty 1-sorted, f be Function of R,R;
+consider F being Funcs(R,R)-valued sequence such that
+A: f`^0 = F.0 & F.0 = id R &
+   for i being Nat holds F.(i+1) = (F.i) * f by dd;
+thus f`^0 = id R by A;
+thus f`^1 = f;
+consider F being Funcs(R,R)-valued sequence such that
+A: f`^2 = F.2 & F.0 = id R &
+   for i being Nat holds F.(i+1) = (F.i) * f by dd;
+F.(0+1) = (id R) * f by A .= f; then
+F.(1+1) = f * f by A;
+hence thesis by A;
+end;
+
+theorem T3:
+for L being non empty 1-sorted
+for f being Function of L,L
+for n being Nat holds f`^(n+1) = (f`^n) * f = f * (f`^n)
+proof
+let R be non empty 1-sorted, f be Function of R,R; let n be Nat;
+defpred P[Nat] means f`^(($1)+1) = f`^($1) * f;
+IS: now let k be Nat;
+    assume AS: for j being Nat st j < k holds P[j];
+    consider F being Funcs(R,R)-valued sequence such that
+    A: f`^(k+1) = F.(k+1) & F.0 = id R &
+       for i being Nat holds F.(i+1) = (F.i) * f by dd;
+    reconsider k1 = k as Element of NAT by ORDINAL1:def 12;
+    B: for m being Element of NAT st m <= k holds F.m = f`^m
+       proof
+       let m be Element of NAT;
+       assume C: m <= k;
+       defpred Q[Nat] means F.($1) = f`^$1;
+       IA: Q[0] by A,T1;
+       IS: now let j be Element of NAT;
+           assume E: 0 <= j & j < k1;
+           assume IV: Q[j];
+           F.(j+1) = f`^j * f by A,IV .= f`^(j+1) by E,AS;
+           hence Q[j+1];
+           end;
+       for j being Element of NAT st 0 <= j & j <= k1
+                       holds Q[j] from INT_1:sch 7(IA,IS);
+       hence thesis by C;
+       end;
+    f`^(k+1) = F.k * f by A .= f`^k1 * f by B;
+    hence P[k];
+    end;
+I: for k being Nat holds P[k] from NAT_1:sch 4(IS);
+hence f`^(n+1) = (f`^n) * f;
+defpred P[Nat] means (f`^$1) * f = f * (f`^$1);
+    (f`^0) * f = (id R) * f by T1 .= f * (id R)
+              .= f * (f`^0) by T1; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    (f`^(k+1)) * f
+         = (f * (f`^k)) * f by I,IV
+        .= f * ((f`^k) * f) by T2
+        .= f * (f`^(k+1)) by I;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence (f`^n) * f = f * (f`^n);
+end;
+
+registration
+let L be non empty 1-sorted;
+let n be Nat;
+reduce (id L)`^n to id L;
+reducibility
+proof
+defpred P[Nat] means (id L)`^($1) = id L;
+IA: P[0] by T1;
+IS: now let k be Nat;
+    assume IV: P[k];
+    (id L)`^(k+1) = ((id L)`^k) * (id L) by T3
+       .= id L by IV;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+end;
+
+theorem lemf:
+for L being non empty 1-sorted
+for f being Function of L,L
+for n,m being Nat holds f`^(n+m) = (f`^n) * (f`^m)
+proof
+let L be non empty 1-sorted, f be Function of L,L, n,m be Nat;
+defpred P[Nat] means f`^(n+($1)) = (f`^n) * (f`^($1));
+f`^(n+0) = (f`^n) * (id L) .= (f`^n) * (f`^0) by T1; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    f`^(n+(k+1)) = f`^((n+k)+1)
+                .= ((f`^n) * (f`^k)) * f by IV,T3
+                .= (f`^n) * ((f`^k) * f) by T2
+                .= (f`^n) * (f`^(k+1)) by T3;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+theorem
+for L being non empty 1-sorted
+for f being Function of L,L
+for n,m being Nat holds f`^(n*m) = (f`^n)`^m
+proof
+let L be non empty 1-sorted, f be Function of L,L, n,m be Nat;
+defpred P[Nat] means f`^(n*($1)) = (f`^n)`^($1);
+f`^(n*0) = id L by T1 .= (f`^n)`^0 by T1; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    f`^(n*(k+1)) = f`^(n*k+n)
+                .= ((f`^n)`^k) * (f`^n) by IV,lemf
+                .= (f`^n)`^(k+1) by T3;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+theorem TT2:
+for L being non empty 1-sorted
+for f being bijective Function of L,L
+for n,m being Nat holds f`^(n+1) = f`^(m+1) iff f`^n = f`^m
+proof
+let L be non empty 1-sorted, f be bijective Function of L,L;
+let n,m be Nat;
+H: f is onto;
+A: now assume f`^(n+1) = f`^(m+1); then
+   ((f`^n) * f) * f" = f`^(m+1) * f" by T3
+      .= ((f`^m) * f) * f" by T3
+      .= (f`^m) * (f * f") by T2
+      .= (f`^m) * (id L) by H,FUNCT_1:39
+      .= f`^m;
+   hence f`^m = (f`^n) * (f * f") by T2
+      .= (f`^n) * (id L) by H,FUNCT_1:39
+      .= f`^n;
+   end;
+now assume f`^n = f`^m;
+  hence f`^(n+1) = ((f`^m) * f) by T3 .= f`^(m+1) by T3;
+  end;
+hence thesis by A;
+end;
+
+theorem TT3:
+for L being non empty 1-sorted
+for f being bijective Function of L,L
+for n,m,k being Nat st f`^n = f`^m & k = n-m holds f`^k = f`^0
+proof
+let L be non empty 1-sorted, f be bijective Function of L,L;
+let n,m,k be Nat;
+assume AS: f`^n = f`^m & k = n-m;
+defpred P[Nat] means for n,k being Nat holds
+  f`^n = f`^($1) & k = n-($1) implies f`^k = f`^0;
+IA: P[0];
+IS: now let m be Nat;
+    assume IV: P[m];
+    now let n,k be Nat;
+      assume AS: f`^n = f`^(m+1) & k = n-(m+1); then
+      n - (m + 1) + m >= 0 + m by XREAL_1:6; then
+      reconsider n1 = n - 1 as Element of NAT by INT_1:3;
+      reconsider k1 = n1 - m as Nat by AS;
+      n = n1 + 1;
+      then f`^n1 = f`^m by AS,TT2;
+      hence f`^0 = f`^k1 by IV .= f`^k by AS;
+      end;
+    hence P[m+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis by AS;
+end;
+
+registration
+let F be Field;
+cluster isomorphism for Function of F,F;
+existence
+proof
+take id F;
+thus thesis;
+end;
+end;
+
+registration
+let R be Ring;
+let f,g be isomorphism Function of R,R;
+cluster f * g -> isomorphism for Function of R,R;
+coherence
+proof
+set h = f * g;
+now let a,b being Element of R;
+   thus h.(a + b)
+      = f.(g.(a+b)) by FUNCT_2:15
+     .= f.(g.a + g.b) by VECTSP_1:def 20
+     .= f.(g.a) + f.(g.b) by VECTSP_1:def 20
+     .= h.a + f.(g.b) by FUNCT_2:15
+     .= h.a + h.b by FUNCT_2:15;
+   end; then
+A: h is additive;
+now let a,b being Element of R;
+   thus h.(a * b)
+      = f.(g.(a*b)) by FUNCT_2:15
+     .= f.(g.a * g.b) by GROUP_6:def 6
+     .= f.(g.a) * f.(g.b) by GROUP_6:def 6
+     .= h.a * f.(g.b) by  FUNCT_2:15
+     .= h.a * h.b by FUNCT_2:15;
+   end; then
+h is multiplicative;
+hence thesis by A;
+end;
+end;
+
+registration
+let R be Ring;
+let f be isomorphism Function of R,R;
+let n be Nat;
+cluster f`^n -> isomorphism for Function of R,R;
+coherence
+proof
+defpred P[Nat] means f`^($1) is isomorphism;
+f`^0 = id R by T1; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    f`^(k+1) = f`^k * f by T3;
+    hence P[k+1] by IV;
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+end;
+
+registration
+let R be Ring;
+let f be isomorphism Function of R,R;
+cluster f" -> isomorphism for Function of R,R;
+coherence
+proof
+H: dom f = the carrier of R &
+   rng f = the carrier of R by FUNCT_2:def 1,FUNCT_2:def 3;
+now let a,b being Element of R;
+   f.((f").a + (f").b)
+       = f.((f").a) + f.((f").b) by VECTSP_1:def 20
+      .= a + f.((f").b) by H,FUNCT_1:35
+      .= a + b by H,FUNCT_1:35;
+   hence (f").(a+b) = (f").a + (f").b by H,FUNCT_1:34;
+   end; then
+A: f" is additive;
+now let a,b being Element of R;
+   f.((f").a * (f").b)
+       = f.((f").a) * f.((f").b) by GROUP_6:def 6
+      .= a * f.((f").b) by H,FUNCT_1:35
+      .= a * b by H,FUNCT_1:35;
+   hence (f").(a*b) = (f").a * (f").b by H,FUNCT_1:34;
+   end; then
+B: f" is multiplicative;
+   f.(1_R) = 1_R by GROUP_1:def 13; then
+f" is unity-preserving by H,FUNCT_1:34;
+hence thesis by A,B;
+end;
+end;
+
+begin :: Induced subfields
+
+definition
+let F be Field;
+let S be Subset of F;
+attr S is inducing_subfield means :IS:
+   0.F in S & 1.F in S &
+   (for a,b being Element of F st a in S & b in S
+    holds a + b in S & a * b in S & -a in S) &
+   (for a being non zero Element of F st a in S holds a" in S);
+end;
+
+registration
+let F be Field;
+cluster inducing_subfield for Subset of F;
+existence
+proof
+take S = [#](the carrier of F);
+S = the carrier of F by SUBSET_1:def 3;
+hence thesis;
+end;
+end;
+
+registration
+let F be Field;
+cluster -> non empty for inducing_subfield Subset of F;
+coherence by IS;
+end;
+
+definition
+let F be Field;
+let S be inducing_subfield Subset of F;
+func InducedSubfield S -> strict non empty doubleLoopStr means :dis:
+  the carrier of it = S &
+  the addF of it = (the addF of F)||S &
+  the multF of it = (the multF of F)||S &
+  0.it = 0.F & 1.it = 1.F;
+existence
+  proof
+  set C = S;
+  set f = the addF of F;
+  C is Preserv of f
+  proof
+    now let x be set;
+    assume x in [:C,C:];
+    then consider x1,x2 being object such that
+A1: x1 in C and
+A2: x2 in C and
+A3: x = [x1,x2] by ZFMISC_1:def 2;
+    consider a1 being Element of F such that
+A4: a1 = x1 by A1;
+    consider a2 being Element of F such that
+A5: a2 = x2 by A2;
+    a1 + a2 = f.(a1,a2);
+    hence f.x in C by A1,A2,A4,A5,A3,IS;
+    end;
+  hence thesis by REALSET1:def 1;
+  end; then
+  reconsider a = (the addF of F)||C as BinOp of C by REALSET1:2;
+  set f = the multF of F;
+now let x be set;
+    assume x in [:C,C:];
+    then consider x1,x2 being object such that
+A1: x1 in C and
+A2: x2 in C and
+A3: x = [x1,x2] by ZFMISC_1:def 2;
+    consider a1 being Element of F such that
+A4: a1 = x1 by A1;
+    consider a2 being Element of F such that
+A5: a2 = x2 by A2;
+    a1 * a2 = f.(a1,a2);
+    hence f.x in C by A1,A2,A4,A5,A3,IS;
+    end;
+  then C is f-binopclosed; then
+  reconsider m = (the multF of F)||C as BinOp of C by REALSET1:2;
+  reconsider o = 1.F, z = 0.F as Element of C by IS;
+  take doubleLoopStr (# C,a,m,o,z #);
+  thus thesis;
+  end;
+uniqueness;
+end;
+
+registration
+let F be Field;
+let S be inducing_subfield Subset of F;
+cluster InducedSubfield S -> non degenerated;
+coherence
+proof
+set E = InducedSubfield S;
+0.E = 0.F & 1.E = 1.F by dis;
+hence thesis;
+end;
+end;
+
+Lm11a:
+for F be Field, S be inducing_subfield Subset of F
+for a,b being Element of F
+for x,y being Element of InducedSubfield S
+st a = x & b = y holds a+b = x+y & a*b = x*y
+proof
+let F be Field, S be inducing_subfield Subset of F;
+let a,b being Element of F;
+let x,y be Element of InducedSubfield S such that
+A1: a = x & b = y;
+set E = InducedSubfield S;
+    the carrier of E = S by dis; then
+A2: [x,y] in [:S,S:] by ZFMISC_1:def 2;
+    hence a+b = (the addF of F)||(S).(x,y) by A1,FUNCT_1:49
+       .= x+y by dis;
+    thus a*b = (the multF of F)||(S).(x,y) by A1,A2,FUNCT_1:49
+       .= x*y by dis;
+end;
+
+registration
+let F be Field;
+let S be inducing_subfield Subset of F;
+cluster InducedSubfield S -> Abelian add-associative right_zeroed
+                             right_complementable;
+coherence
+proof
+set E = InducedSubfield S;
+A1: 0.F = 0.E by dis;
+A2: the carrier of E = S & S c= the carrier of F by dis;
+  hereby
+    let x,y be Element of E;
+    reconsider a = x, b = y as Element of F by A2;
+    thus x+y = a+b by Lm11a .= y+x by Lm11a;
+  end;
+  hereby
+    let x,y,z be Element of E;
+    reconsider a = x, b = y, c = z as Element of F by A2;
+A3: y+z = b+c by Lm11a;
+    x+y = a+b by Lm11a;
+    hence x+y+z = a+b+c by Lm11a
+       .= a+(b+c) by RLVECT_1:def 3
+       .= x+(y+z) by A3,Lm11a;
+  end;
+  hereby
+    let x be Element of E;
+    reconsider a = x as Element of F by A2;
+    thus x+0.E = a+0.F by A1,Lm11a .= x;
+  end;
+  now let x be Element of E;
+  reconsider a = x as Element of F by A2;
+  reconsider y = -a as Element of E by A2,IS;
+  x+y = a+-a by Lm11a .= 0.F by RLVECT_1:5 .= 0.E by dis;
+  hence x is right_complementable;
+  end;
+hence thesis;
+end;
+end;
+
+registration
+let F be Field;
+let S be inducing_subfield Subset of F;
+cluster InducedSubfield S -> commutative associative well-unital distributive
+                             almost_left_invertible;
+coherence
+proof
+set E = InducedSubfield S;
+A1: 1.F = 1.E & 0.F = 0.E by dis;
+A2: the carrier of E = S & S c= the carrier of F by dis;
+now let x,y be Element of E;
+    reconsider a = x, b = y as Element of F by A2;
+    thus x*y = a*b by Lm11a .= y*x by Lm11a;
+    end;
+hence E is commutative;
+now let x,y,z be Element of E;
+    reconsider a = x, b = y, c = z as Element of F by A2;
+A3: y*z = b*c by Lm11a;
+    x*y = a*b by Lm11a;
+    hence x*y*z = a*b*c by Lm11a
+       .= a*(b*c) by GROUP_1:def 3
+       .= x*(y*z) by A3,Lm11a;
+    end;
+hence E is associative;
+now let x be Element of E;
+    reconsider a = x as Element of F by A2;
+    thus x * 1.E = a * 1.F by A1,Lm11a .= x;
+    thus 1.E * x = 1.F * a by A1,Lm11a .= x;
+  end;
+hence E is well-unital;
+now let x,y,z be Element of E;
+    reconsider a = x, b = y, c = z as Element of F by A2;
+A4: a*b = x*y & a*c = x*z by Lm11a;
+A6: b*a = y*x & c*a = z*x by Lm11a;
+A5: y+z = b+c by Lm11a;
+    hence x*(y+z) = a*(b+c) by Lm11a
+    .= a*b+a*c by VECTSP_1:def 7
+    .= x*y+x*z by A4,Lm11a;
+    thus (y+z)*x = (b+c)*a by A5,Lm11a
+    .= b*a+c*a by VECTSP_1:def 7
+    .= y*x+z*x by A6,Lm11a;
+  end;
+hence E is distributive;
+now let x be Element of E such that
+A5: x <> 0.E;
+  reconsider a = x as Element of F by A2;
+  a is non zero by dis,A5;
+  then reconsider y = a" as Element of E by A2,IS;
+  take y;
+  thus y*x = a"*a by Lm11a .= 1.E by A1,A5,VECTSP_1:def 10;
+  end;
+hence thesis;
+end;
+end;
+
+definition
+let F be Field;
+let S be inducing_subfield Subset of F;
+redefine func InducedSubfield S -> strict Subfield of F;
+coherence
+proof
+set E = InducedSubfield S;
+A: the carrier of E = S by dis; then
+the carrier of E c= the carrier of F &
+  the addF of E = (the addF of F)||S &
+  the multF of E = (the multF of F)||S &
+  0.E = 0.F & 1.E = 1.F by dis;
+hence thesis by A,EC_PF_1:def 1;
+end;
+end;
+
+registration
+let E be Field;
+let F be Subfield of E;
+cluster the carrier of F -> inducing_subfield for Subset of E;
+coherence
+proof
+reconsider S = the carrier of F as Subset of E by EC_PF_1:def 1;
+H: F is Subring of E by FIELD_5:12;
+B: 0.E = 0.F & 1.E = 1.F by EC_PF_1:def 1;
+C: now let a,b be Element of E;
+   assume a in S & b in S; then
+   reconsider x = a, y = b as Element of F;
+   a + b = x + y by H,FIELD_6:15;
+   hence a + b in S;
+   a * b = x * y by H,FIELD_6:16;
+   hence a * b in S;
+   -a = -x by H,FIELD_6:17;
+   hence -a in S;
+   end;
+   now let a be non zero Element of E;
+   assume a in S; then
+   reconsider x = a as Element of F;
+   a" = x" by FIELD_6:18;
+   hence a" in S;
+   end;
+hence thesis by B,C;
+end;
+end;
+
+registration
+let F be Field;
+cluster the carrier of F -> inducing_subfield for Subset of F;
+coherence;
+end;
+
+
+begin  :: Some more Preliminaries
+
+registration
+let R1 be Ring;
+let R2 be R1-isomorphic Ring;
+let R3 be R2-isomorphic Ring;
+let f be Isomorphism of R1,R2, g be Isomorphism of R2,R3;
+cluster g * f -> isomorphism for Function of R1,R3;
+coherence
+proof
+g * f is onto by FUNCT_2:27;
+hence thesis;
+end;
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+let f be additive Function of E,E;
+cluster f|(the carrier of F) -> additive for Function of F,F;
+coherence
+proof
+let g be Function of F,F;
+assume A: g = f|(the carrier of F);
+now let a1,a2 be Element of F;
+  A0: F is Subfield of E by FIELD_4:7; then
+  the carrier of F c= the carrier of E by EC_PF_1:def 1; then
+  reconsider b1 = a1, b2 = a2 as Element of E;
+  H: F is Subring of E by A0,FIELD_5:12; then
+  A1: a1 + a2 = b1 + b2 by FIELD_6:15;
+  A2: f.b1 = g.a1 & f.b2 = g.a2 by A,FUNCT_1:49;
+  thus g.(a1+a2) = f.(b1+b2) by A1,A,FUNCT_1:49
+           .= f.b1 + f.b2 by VECTSP_1:def 20
+           .= g.a1 + g.a2 by H,A2,FIELD_6:15;
+  end;
+hence thesis;
+end;
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+let f be multiplicative Function of E,E;
+cluster f|(the carrier of F) -> multiplicative for Function of F,F;
+coherence
+proof
+let g be Function of F,F;
+assume A: g = f|(the carrier of F);
+now let a1,a2 be Element of F;
+  A0: F is Subfield of E by FIELD_4:7; then
+  the carrier of F c= the carrier of E by EC_PF_1:def 1; then
+  reconsider b1 = a1, b2 = a2 as Element of E;
+  H: F is Subring of E by A0,FIELD_5:12; then
+  A1: a1 * a2 = b1 * b2 by FIELD_6:16;
+  A2: f.b1 = g.a1 & f.b2 = g.a2 by A,FUNCT_1:49;
+  thus g.(a1*a2) = f.(b1*b2) by A1,A,FUNCT_1:49
+           .= f.b1 * f.b2 by GROUP_6:def 6
+           .= g.a1 * g.a2 by H,A2,FIELD_6:16;
+  end;
+hence thesis;
+end;
+end;
+
+registration
+let F be Field;
+let E be FieldExtension of F;
+let f be unity-preserving Function of E,E;
+cluster f|(the carrier of F) -> unity-preserving for Function of F,F;
+coherence
+proof
+let g be Function of F,F;
+assume A: g = f|(the carrier of F);
+F is Subfield of E by FIELD_4:7; then
+H: 1.E = 1.F by EC_PF_1:def 1; then
+g.(1_F) = f.(1_E) by A,FUNCT_1:49 .= 1_F by H,GROUP_1:def 13;
+hence thesis;
+end;
+end;
+
+definition
+let n,m be Nat;
+attr m is n-power means :defpower:
+  ex l being non zero Nat st m = n |^ l;
+end;
+
+registration
+let n be Nat, l be non zero Nat;
+cluster n|^l -> n-power;
+coherence;
+end;
+
+registration
+let n be Nat;
+cluster n-power for Nat;
+existence
+proof
+take n|^1;
+thus thesis;
+end;
+end;
+
+definition
+let n be Nat;
+mode Power of n is n-power Nat;
+end;
+
+registration
+let n be non zero Nat;
+cluster -> non zero for Power of n;
+coherence
+proof
+let m be Power of n;
+consider l being non zero Nat such that A: m = n |^ l by defpower;
+0 + 1 < l + 1 by XREAL_1:6; then
+1 <= l by NAT_1:13; then
+n|^1 <= n|^l by NAT_6:1;
+hence thesis by A;
+end;
+end;
+
+registration
+let n be non trivial Nat;
+cluster -> non trivial for Power of n;
+coherence
+proof
+let m be Power of n;
+consider l being non zero Nat such that A: m = n |^ l by defpower;
+B: 2 <= n by NAT_2:29;
+0 + 1 < l + 1 by XREAL_1:6; then
+1 <= l by NAT_1:13; then
+n|^1 <= n|^l by NAT_6:1; then
+m <> 0 & m <> 1 by A,B,XXREAL_0:2;
+hence thesis by NAT_2:def 1;
+end;
+end;
+
+thX3a:
+for a,b,n being Nat st a >= b holds a|^n >= b|^n by NEWTON02:41;
+
+TT7:
+for a being non zero Nat
+for n,m being Nat st n >= m holds a|^n >= a|^m by NAT_6:1;
+
+theorem lemp:
+for p1,p2 being Prime
+for n1,n2 being Nat st (n1 <> 0 or n2 <> 0) &
+p1|^n1 = p2|^n2 holds p1 = p2 & n1 = n2
+proof
+let p1,p2 be Prime, n1,n2 be Nat;
+assume that
+AA: n1 <> 0 or n2 <> 0 and
+AS: p1|^n1 = p2|^n2;
+per cases by AA;
+suppose that
+S1: n1 is zero and
+S2: n2 is non zero;
+A1: p1|^n1 = 1 by S1,NEWTON:4;
+  p2 divides p2|^n2 by S2,NAT_3:3;
+  then p2 = 1 by AS,A1,INT_2:13;
+  hence thesis by INT_2:def 4;
+end;
+suppose n1 is non zero;
+then reconsider m = n1 - 1 as Nat;
+n1 = m + 1; then
+p1|^n1 = p1|^m * p1 by NEWTON:6;
+hence p1 = p2 by AS,NAT_D:def 3,NAT_3:6;
+then n1 <= n2 & n2 <= n1 by AS,NAT_6:2;
+hence thesis by XXREAL_0:1;
+end;
+end;
+
+theorem F16:
+for F being Field
+for a being non zero Element of F
+for n being Nat holds (a")|^n = (a|^n)"
+proof
+let F be Field, a be non zero Element of F, n be Nat;
+defpred P[Nat] means (a")|^($1) = (a|^($1))";
+(a")|^0 = (1_F)" by BINOM:8 .= (a|^0)" by BINOM:8; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    A: a <> 0.F & a|^k <> 0.F;
+    (a")|^(k+1) = ((a")|^k) * ((a")|^1) by BINOM:10
+               .= ((a")|^k) * (a") by BINOM:8
+               .= (a * a|^k)" by IV,A,VECTSP_2:11
+               .= (a|^k * a|^1)" by BINOM:8
+               .= (a|^(k+1))" by BINOM:10;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+theorem lemID:
+for R being Ring
+for S being R-homomorphic Ring
+for f being multiplicative unity-preserving Function of R,S
+for a being Element of R
+for n being Nat holds f.(a|^n) = (f.a)|^n
+proof
+let R be Ring, S be R-homomorphic Ring;
+let f be multiplicative unity-preserving Function of R,S;
+let a be Element of R, n be Nat;
+defpred P[Nat] means f.(a|^($1)) = (f.a)|^($1);
+f.(a|^0) = f.(1_R) by BINOM:8
+        .= 1_S by GROUP_1:def 13 .= (f.a)|^0 by BINOM:8; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    f.(a|^(k+1))
+         = f.((a|^k) * a|^1) by BINOM:10
+        .= f.(a|^k) * f.(a|^1) by GROUP_6:def 6
+        .= (f.a)|^k * f.a by IV,BINOM:8
+        .= (f.a)|^k * (f.a)|^1 by BINOM:8
+        .= (f.a)|^(k+1) by BINOM:10;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+registration
+let R be Ring;
+let p be Polynomial of R;
+reduce --p to p;
+reducibility
+proof
+reconsider a = p as Element of the carrier of Polynom-Ring R
+   by POLYNOM3:def 10;
+-a = -p by FIELD_8:1;
+hence --p = --a by FIELD_8:1 .= p;
+end;
+end;
+
+theorem lemX:
+for R being Ring
+for p1,p2 being Polynomial of R holds p1 *' (-p2) = -(p1 *' p2)
+proof
+let R be Ring, p1,p2 being Polynomial of R;
+reconsider a = p1, b = p2 as Element of the carrier of Polynom-Ring R
+   by POLYNOM3:def 10;
+A: a * b = p1 *' p2 by POLYNOM3:def 10;
+-p2 = -b by FIELD_8:1;
+hence p1 *' (-p2) = a * (-b) by POLYNOM3:def 10
+                 .= -(a * b) by VECTSP_1:8
+                 .= -(p1 *' p2) by A,FIELD_8:1;
+end;
+
+theorem ID2:
+for R being domRing
+for S being domRingExtension of R
+for p being non zero Element of the carrier of Polynom-Ring R
+holds card Roots(S,p) <= deg p
+proof
+let R be domRing, S be domRingExtension of R;
+let p being non zero Element of the carrier of Polynom-Ring R;
+the carrier of Polynom-Ring R c= the carrier of Polynom-Ring S
+   by FIELD_4:10; then
+reconsider q = p as Element of the carrier of Polynom-Ring S;
+p <> 0_.(R); then
+q <> 0_.(S) by FIELD_4:12; then
+reconsider q as non zero Element of the carrier of Polynom-Ring S
+   by UPROOTS:def 5;
+Roots(S,p) = Roots(q) & deg p = deg q by FIELD_4:20,FIELD_7:13;
+hence thesis by RING_5:22;
+end;
+
+theorem ThA:
+for F being Field
+for E being FieldExtension of F
+for a being Element of E
+for n being Nat holds a|^n in the carrier of FAdj(F,{a})
+proof
+let F be Field, E be FieldExtension of F, a be Element of E, n be Nat;
+H: {a} is Subset of FAdj(F,{a}) by FIELD_6:35;
+defpred P[Nat] means a|^($1) in the carrier of FAdj(F,{a});
+    a|^0 = 1_E by BINOM:8 .= 1.FAdj(F,{a}) by FIELD_6:def 6; then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    I: FAdj(F,{a}) is Subring of E by FIELD_5:12;
+    a in {a} by TARSKI:def 1; then
+    reconsider b1 = a, b2 = a |^ k as Element of FAdj(F,{a}) by IV,H;
+    a |^ (k+1) = a |^k * a |^ 1 by BINOM:10
+              .= a |^k * a by BINOM:8
+              .= b2 * b1 by I,FIELD_6:16;
+    hence P[k+1];
+    end;
+for n being Nat holds P[n] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+theorem ID2a:
+for F being Field
+for E being FieldExtension of F
+for a being F-algebraic Element of E
+for f being F-fixing Automorphism of FAdj(F,{a})
+holds f.a in Roots(FAdj(F,{a}),MinPoly(a,F))
+proof
+let F be Field, E be FieldExtension of F, a be F-algebraic Element of E;
+let f be F-fixing Automorphism of FAdj(F,{a});
+set p = MinPoly(a,F);
+a in {a} & {a} is Subset of FAdj(F,{a}) by TARSKI:def 1,FIELD_6:35; then
+reconsider a1 = a as Element of FAdj(F,{a});
+H1: E is FAdj(F,{a})-extending &
+    p is Element of the carrier of Polynom-Ring F by FIELD_4:7;
+H2: Roots(FAdj(F,{a}),p) =
+    {b where b is Element of FAdj(F,{a}) : b is_a_root_of p,FAdj(F,{a})}
+       by FIELD_4:def 4;
+0.FAdj(F,{a}) = 0.E by FIELD_6:def 6
+    .= Ext_eval(p,a) by FIELD_6:52 .= Ext_eval(p,a1) by H1,FIELD_6:11; then
+a1 is_a_root_of p,FAdj(F,{a}) by FIELD_4:def 2; then
+a1 in Roots(FAdj(F,{a}),p) by H2;
+hence thesis by FIELD_8:38;
+end;
+
+theorem FAutEQ1:
+for F being Field
+for E1,E2 being FieldExtension of F st E1 == E2
+for f being Automorphism of E1 holds f is Automorphism of E2
+proof
+let F be Field, E1,E2 being FieldExtension of F;
+assume AS: E1 == E2;
+let f be Automorphism of E1;
+reconsider g = f as Function of E2,E2 by AS;
+   now let a1,a2 be Element of E2;
+   reconsider b1 = a1, b2 = a2 as Element of E1 by AS;
+   thus g.(a1+a2) = f.(b1+b2) by AS
+                 .= f.b1 + f.b2 by VECTSP_1:def 20
+                 .= g.a1 + g.a2 by AS;
+   end; then
+B: g is additive;
+   now let a1,a2 be Element of E2;
+   reconsider b1 = a1, b2 = a2 as Element of E1 by AS;
+   thus g.(a1*a2) = f.(b1*b2) by AS
+                 .= f.b1 * f.b2 by GROUP_6:def 6
+                 .= g.a1 * g.a2 by AS;
+   end; then
+C: g is multiplicative;
+   g.(1_E2) = f.(1_E1) by AS .= 1_E2 by AS,GROUP_1:def 13; then
+g is unity-preserving;
+hence thesis by AS,B,C;
+end;
+
+theorem FAutEQ:
+for F being Field
+for E1,E2 being FieldExtension of F st E1 == E2
+holds the set of all f where f is Automorphism of E1
+    = the set of all f where f is Automorphism of E2
+proof
+let F be Field, E1,E2 being FieldExtension of F;
+assume AS: E1 == E2;
+A: now let o be object;
+   assume o in the set of all f where f is Automorphism of E1; then
+   consider g being Automorphism of E1 such that B: o = g;
+   g is Automorphism of E2 by AS,FAutEQ1;
+   hence o in the set of all f where f is Automorphism of E2 by B;
+   end;
+now let o be object;
+   assume o in the set of all f where f is Automorphism of E2; then
+   consider g being Automorphism of E2 such that B: o = g;
+   g is Automorphism of E1 by AS,FAutEQ1;
+   hence o in the set of all f where f is Automorphism of E1 by B;
+   end;
+hence thesis by A,TARSKI:2;
+end;
+
+theorem ID:
+for F being Field
+for E being FieldExtension of F
+for a being F-algebraic Element of E
+for f,g being F-fixing Automorphism of FAdj(F,{a}) st f.a = g.a holds f = g
+proof
+let F be Field, E be FieldExtension of F, a be F-algebraic Element of E;
+let f,g be F-fixing Automorphism of FAdj(F,{a});
+assume AS: f.a = g.a;
+A: E is (Polynom-Ring F)-homomorphic FieldExtension of F; then
+B: the carrier of FAdj(F,{a})
+    = the carrier of RAdj(F,{a}) by FIELD_6:56
+   .= the set of all Ext_eval(p,a) where p is Polynomial of F by A,FIELD_6:45;
+defpred P[Nat] means
+  for p being Polynomial of F
+  st deg p = $1 holds f.Ext_eval(p,a) = g.Ext_eval(p,a);
+IA: now let p be non zero Polynomial of F;
+    F is Subfield of FAdj(F,{a}) by FIELD_4:7; then
+    the carrier of F c= the carrier of FAdj(F,{a}) by EC_PF_1:def 1; then
+    reconsider b = LC p as Element of FAdj(F,{a});
+    a in {a} & {a} is Subset of FAdj(F,{a}) by TARSKI:def 1,FIELD_6:35; then
+    reconsider a1 = a as Element of FAdj(F,{a});
+    A: Ext_eval(LM p,a1) = b * (a1|^(deg p)) by FIELD_6:29;
+    E is FAdj(F,{a})-extending &
+    LM p is Element of the carrier of Polynom-Ring F
+       by FIELD_4:7,POLYNOM3:def 10; then
+    B: Ext_eval(LM p,a) = Ext_eval(LM p,a1) by FIELD_6:11;
+    id FAdj(F,{a}) is additive multiplicative unity-preserving; then
+    C: FAdj(F,{a}) is FAdj(F,{a})-homomorphic by RING_2:def 4;
+    thus f.Ext_eval(LM p,a)
+        = f.b * f.(a1|^(deg p)) by A,B,GROUP_6:def 6
+       .= b * f.(a1|^(deg p)) by FIELD_8:def 2
+       .= b * (f.a1)|^(deg p) by C,lemID
+       .= b * g.(a1|^(deg p)) by AS,C,lemID
+       .= g.b * g.(a1|^(deg p)) by FIELD_8:def 2
+       .= g.Ext_eval(LM p,a) by A,B,GROUP_6:def 6;
+    end;
+IS: now let k be Nat;
+    assume IV: for n being Nat st n < k holds P[n];
+    now let p be Polynomial of F;
+      assume A0: deg p = k; then
+      H1: p <> 0_.(F) by HURWITZ:20; then
+      consider q being Polynomial of F such that
+      A1: len q < len p & p = q + LM(p) &
+          for n being Element of NAT st n < len p-1 holds q.n = p.n
+          by POLYNOM4:16,POLYNOM4:5;
+      H2: p is non zero by H1,UPROOTS:def 5;
+      per cases;
+      suppose q = 0_.(F);
+        hence f.Ext_eval(p,a) = g.Ext_eval(p,a) by A1,H2,IA;
+        end;
+      suppose q <> 0_.(F);
+        then reconsider degq = deg q as Nat by FIELD_1:1;
+        deg p = len p - 1 by HURWITZ:def 2; then
+        H: len q < k + 1 by A0,A1;
+        deg q = len q - 1 by HURWITZ:def 2; then
+        len q = deg q + 1; then
+        degq < k by XREAL_1:6,H; then
+        A3: f.Ext_eval(q,a) = g.Ext_eval(q,a) by IV;
+        A4: f.Ext_eval(LM p,a) = g.Ext_eval(LM p,a) by H2,IA;
+        A5: F is Subring of E by FIELD_4:def 1;
+        Ext_eval(q,a) in
+            the set of all Ext_eval(p,a) where p is Polynomial of F &
+        Ext_eval(LM p,a) in
+            the set of all Ext_eval(p,a) where p is Polynomial of F; then
+        reconsider u = Ext_eval(q,a), v = Ext_eval(LM p,a)
+                           as Element of the carrier of FAdj(F,{a}) by B;
+        A7: Ext_eval(q + LM p,a) = Ext_eval(q,a) + Ext_eval(LM p,a)
+            by A5,ALGNUM_1:15;
+        A8: FAdj(F,{a}) is Subring of E by FIELD_5:12;
+        thus f.Ext_eval(p,a)
+           = f.(u + v) by A1,A7,A8,FIELD_6:15
+          .= f.u + f.v by VECTSP_1:def 20
+          .= g.(u + v) by A3,A4,VECTSP_1:def 20
+          .= g.Ext_eval(p,a) by A1,A7,A8,FIELD_6:15;
+        end;
+      end;
+    hence P[k];
+    end;
+I: for k being Nat holds P[k] from NAT_1:sch 4(IS);
+now let o be object;
+  assume o in the carrier of FAdj(F,{a}); then
+  consider p being Polynomial of F such that
+  C: o = Ext_eval(p,a) by B;
+  per cases;
+  suppose p = 0_.(F); then
+    Ext_eval(p,a) = 0.E by ALGNUM_1:13
+                 .= 0.(FAdj(F,{a})) by FIELD_6:def 6;
+    hence f.o = g.o by C;
+    end;
+  suppose p <> 0_.(F); then
+    deg p is natural by FIELD_1:1; then
+    deg p in NAT by ORDINAL1:def 12;
+    hence f.o = g.o by C,I;
+    end;
+  end;
+hence thesis;
+end;
+
+FAUTh: for F being Field
+for E being FieldExtension of F
+for a being F-algebraic Element of E
+for n being Nat
+st n = card(the set of all f where f is F-fixing Automorphism of FAdj(F,{a}))
+holds n <= card(Roots(FAdj(F,{a}),MinPoly(a,F)))
+proof
+let F be Field, E be FieldExtension of F;
+let a be F-algebraic Element of E, n be Nat;
+assume AS: n =
+  card(the set of all f where f is F-fixing Automorphism of FAdj(F,{a})); then
+reconsider M = the set of all f where f is F-fixing Automorphism of FAdj(F,{a})
+  as finite set;
+set K = FAdj(F,{a}), d = card(Roots(FAdj(F,{a}),MinPoly(a,F)));
+set f = id FAdj(F,{a});
+now let b be Element of F;
+  F is Subfield of FAdj(F,{a}) by FIELD_4:7; then
+  the carrier of F c= the carrier of FAdj(F,{a}) by EC_PF_1:def 1; then
+  reconsider c = b as Element of FAdj(F,{a});
+  thus (id FAdj(F,{a})).b = c .= b;
+  end; then
+reconsider f as F-fixing Automorphism of FAdj(F,{a}) by FIELD_8:def 2;
+set M1 = M \ { f };
+a in {a} & {a} is Subset of FAdj(F,{a}) by TARSKI:def 1,FIELD_6:35; then
+reconsider a1 = a as Element of FAdj(F,{a});
+per cases;
+suppose A: M1 = {};
+  f in M; then
+  B: {f} c= M by TARSKI:def 1;
+  C: M c= {f} by A,XBOOLE_0:def 5;
+  D: E is FAdj(F,{a})-extending by FIELD_4:7;
+  0.FAdj(F,{a}) = 0.E by FIELD_6:def 6
+    .= Ext_eval(MinPoly(a,F),a) by FIELD_6:52
+    .= Ext_eval(MinPoly(a,F),a1) by D,FIELD_6:11; then
+  a1 is_a_root_of MinPoly(a,F),FAdj(F,{a}) by FIELD_4:def 2; then
+  a1 in {b where b is Element of FAdj(F,{a}) :
+                      b is_a_root_of MinPoly(a,F),FAdj(F,{a})}; then
+  a1 in Roots(FAdj(F,{a}),MinPoly(a,F)) by FIELD_4:def 4; then
+  card(Roots(FAdj(F,{a}),MinPoly(a,F))) >= 0 + 1 by INT_1:7;
+  hence thesis by C,AS,B,XBOOLE_0:def 10,CARD_2:42;
+  end;
+suppose M1 <> {}; then
+reconsider M1 as non empty finite set;
+now assume AS1: n > d;
+  f in M; then
+  {f} c= M & card {f} = 1 by TARSKI:def 1,CARD_2:42; then
+  card M1 = n - 1 by AS,CARD_2:44; then
+  B: card M1 >= (d - 1) + 1 by AS1,XREAL_1:9,INT_1:7;
+  D: f.a1 in Roots(FAdj(F,{a}),MinPoly(a,F)) by ID2a;
+  set M2 = { x where x is Element of FAdj(F,{a}) :
+                   ex g being F-fixing Automorphism of FAdj(F,{a})
+                   st g in M1 & g.a = x };
+  F: M2 c= Roots(FAdj(F,{a}),MinPoly(a,F))
+     proof
+     now let o be object;
+       assume o in M2; then
+       consider x being Element of FAdj(F,{a}) such that
+       F1: x = o & ex g being F-fixing Automorphism of FAdj(F,{a})
+                   st g in M1 & g.a = x;
+       thus o in Roots(FAdj(F,{a}),MinPoly(a,F)) by F1,ID2a;
+       end;
+     hence thesis;
+     end; then
+  reconsider M2 as finite set;
+  M2 <> {}
+     proof
+     set x = the Element of M1;
+     M1 c= M; then
+     x in M; then
+     consider g being F-fixing Automorphism of FAdj(F,{a}) such that
+     G4: x = g;
+     g.a1 in { x where x is Element of FAdj(F,{a}) :
+                   ex g being F-fixing Automorphism of FAdj(F,{a})
+                   st g in M1 & g.a = x } by G4;
+     hence thesis;
+     end; then
+  reconsider M2 as non empty finite set;
+  now assume not Roots(FAdj(F,{a}),MinPoly(a,F)) c= M2; then
+    M2 c< Roots(FAdj(F,{a}),MinPoly(a,F)) by F,XBOOLE_0:def 8; then
+    K2: card M2 < card M1 by B,XXREAL_0:2,CARD_2:48;
+    ex h being Function of M1,M2 st
+    for g being F-fixing Automorphism of FAdj(F,{a}) st g in M1 holds h.g = g.a
+      proof
+      defpred P[object,object] means
+        ex g being F-fixing Automorphism of FAdj(F,{a})
+        st $1 = g & g in M1 & $2 = g.a;
+      A: now let x be Element of M1;
+         M1 c= M; then
+         x in M; then
+         consider g1 being F-fixing Automorphism of FAdj(F,{a}) such that
+         A1: x = g1;
+         thus ex y being Element of M2 st P[x,y]
+           proof
+           g1.a1 in { x where x is Element of FAdj(F,{a}) :
+                   ex g being F-fixing Automorphism of FAdj(F,{a})
+                   st g in M1 & g.a = x } by A1; then
+           reconsider y = g1.a1 as Element of M2;
+           take y;
+           thus thesis by A1;
+           end;
+         end;
+      consider h being Function of M1,M2 such that
+      B: for x being Element of M1 holds P[x,h.x] from FUNCT_2:sch 3(A);
+      now let g be F-fixing Automorphism of FAdj(F,{a});
+        assume g in M1;
+        then P[g,h.g] by B;
+        hence h.g = g.a;
+        end;
+      hence thesis;
+      end; then
+    consider h being Function of M1,M2 such that
+    G1: for g being F-fixing Automorphism of FAdj(F,{a})
+        st g in M1 holds h.g = g.a;
+    K3: dom h = M1 & rng h c= M2 by FUNCT_2:def 1,RELAT_1:def 19;
+    reconsider M3 = rng h as finite set;
+    card M3 <= card M2 by RELAT_1:def 19,NAT_1:43; then
+    not h is one-to-one by K3,K2,CARD_1:70; then
+    consider x1,x2 being object such that
+    G2: x1 in M1 & x2 in M1 & h.x1 = h.x2 & x1 <> x2 by FUNCT_2:19;
+    x1 in M by G2; then
+    consider g1 being F-fixing Automorphism of FAdj(F,{a}) such that
+    G4: x1 = g1;
+    x2 in M by G2; then
+    consider g2 being F-fixing Automorphism of FAdj(F,{a}) such that
+    G5: x2 = g2;
+    g1.a = h.g1 by G1,G2,G4 .= g2.a by G1,G2,G4,G5;
+    hence contradiction by ID,G2,G4,G5;
+    end; then
+  M2 = Roots(FAdj(F,{a}),MinPoly(a,F)) by F,XBOOLE_0:def 10; then
+  consider x being Element of FAdj(F,{a}) such that
+  E: x = f.a1 & ex g being F-fixing Automorphism of FAdj(F,{a})
+                st g in M1 & g.a = x by D;
+  consider g being F-fixing Automorphism of FAdj(F,{a}) such that
+  A: g in M1 & g.a = f.a1 by E;
+  f in M1 & f in {f} by A,ID,TARSKI:def 1;
+  hence contradiction by XBOOLE_0:def 5;
+  end;
+hence thesis;
+end;
+end;
+
+theorem FAUTfin:
+for F being Field
+for E being FieldExtension of F
+for a being F-algebraic Element of E holds
+the set of all f where f is F-fixing Automorphism of FAdj(F,{a}) is finite
+proof
+let F be Field, E be FieldExtension of F, a be F-algebraic Element of E;
+set M = the set of all f where f is F-fixing Automorphism of FAdj(F,{a});
+set R = Roots(FAdj(F,{a}),MinPoly(a,F));
+a in {a} & {a} is Subset of FAdj(F,{a}) by TARSKI:def 1,FIELD_6:35; then
+reconsider a1 = a as Element of FAdj(F,{a});
+   D: E is FAdj(F,{a})-extending by FIELD_4:7;
+   0.FAdj(F,{a}) = 0.E by FIELD_6:def 6
+    .= Ext_eval(MinPoly(a,F),a) by FIELD_6:52
+    .= Ext_eval(MinPoly(a,F),a1) by D,FIELD_6:11; then
+   a1 is_a_root_of MinPoly(a,F),FAdj(F,{a}) by FIELD_4:def 2; then
+ a1 in {b where b is Element of FAdj(F,{a}) :
+                      b is_a_root_of MinPoly(a,F),FAdj(F,{a})}; then
+I:  Roots(FAdj(F,{a}),MinPoly(a,F)) <> {} by FIELD_4:def 4;
+defpred P[object,object] means
+  ex g being F-fixing Automorphism of FAdj(F,{a}) st $1 = g & $2 = g.a;
+B: now let x be object;
+   assume x in M; then
+   consider g being F-fixing Automorphism of FAdj(F,{a}) such that
+   B1: x = g;
+   g.a in R by ID2a;
+   hence ex y being object st y in R & P[x,y] by B1;
+   end;
+consider h being Function of M,R such that
+A: for o being object st o in M holds P[o,h.o] from FUNCT_2:sch 1(B);
+   now let x1,x2 be object;
+   assume A0: x1 in M & x2 in M & h.x1 = h.x2; then
+   consider g1 being F-fixing Automorphism of FAdj(F,{a}) such that
+   A1: x1 = g1 & h.x1 = g1.a by A;
+   consider g2 being F-fixing Automorphism of FAdj(F,{a}) such that
+   A2: x2 = g2 & h.x2 = g2.a by A,A0;
+   thus x1 = x2 by A0,A1,A2,ID;
+   end; then
+B: h is one-to-one by I,FUNCT_2:19;
+rng h c= R by RELAT_1:def 19; then
+dom h is finite by B,CARD_1:59;
+hence thesis by I,FUNCT_2:def 1;
+end;
+
+theorem
+for F being Field
+for E being FieldExtension of F
+for a being F-algebraic Element of E
+holds card(the set of all f where f is F-fixing Automorphism of FAdj(F,{a}))
+      c= card Roots(FAdj(F,{a}),MinPoly(a,F))
+proof
+let F be Field, E be FieldExtension of F, a be F-algebraic Element of E;
+set M = the set of all f where f is F-fixing Automorphism of FAdj(F,{a});
+set R = Roots(FAdj(F,{a}),MinPoly(a,F));
+a in {a} & {a} is Subset of FAdj(F,{a}) by TARSKI:def 1,FIELD_6:35; then
+reconsider a1 = a as Element of FAdj(F,{a});
+   D: E is FAdj(F,{a})-extending by FIELD_4:7;
+   0.FAdj(F,{a}) = 0.E by FIELD_6:def 6
+    .= Ext_eval(MinPoly(a,F),a) by FIELD_6:52
+    .= Ext_eval(MinPoly(a,F),a1) by D,FIELD_6:11; then
+   a1 is_a_root_of MinPoly(a,F),FAdj(F,{a}) by FIELD_4:def 2; then
+   a1 in {b where b is Element of FAdj(F,{a}) :
+                      b is_a_root_of MinPoly(a,F),FAdj(F,{a})}; then
+H: Roots(FAdj(F,{a}),MinPoly(a,F)) <> {} by FIELD_4:def 4;
+defpred P[object,object] means
+  ex g being F-fixing Automorphism of FAdj(F,{a}) st $1 = g & $2 = g.a;
+B: now let x be object;
+   assume x in M; then
+   consider g being F-fixing Automorphism of FAdj(F,{a}) such that
+   B1: x = g;
+   g.a in R by ID2a;
+   hence ex y being object st y in R & P[x,y] by B1;
+   end;
+consider h being Function of M,R such that
+A: for o being object st o in M holds P[o,h.o] from FUNCT_2:sch 1(B);
+   now let x1,x2 be object;
+   assume A0: x1 in M & x2 in M & h.x1 = h.x2; then
+   consider g1 being F-fixing Automorphism of FAdj(F,{a}) such that
+   A1: x1 = g1 & h.x1 = g1.a by A;
+   consider g2 being F-fixing Automorphism of FAdj(F,{a}) such that
+   A2: x2 = g2 & h.x2 = g2.a by A,A0;
+   thus x1 = x2 by A0,A1,A2,ID;
+   end; then
+B: h is one-to-one by H,FUNCT_2:19;
+C: rng h c= R by RELAT_1:def 19;
+dom h = M by H,FUNCT_2:def 1;
+hence thesis by B,C,CARD_1:10;
+end;
+
+theorem lemMA:
+for F being Field
+for E being FieldExtension of F
+for p being non constant Element of the carrier of Polynom-Ring F
+holds card Roots(E,p) = deg p iff (p splits_in E & p is separable)
+proof
+let F be Field, E be FieldExtension of F;
+let p be non constant Element of the carrier of Polynom-Ring F;
+the carrier of Polynom-Ring F c= the carrier of Polynom-Ring E
+     by FIELD_4:10; then
+reconsider q = p as Element of the carrier of Polynom-Ring E;
+reconsider q as Polynomial of E;
+H: deg p > 0 & deg q = deg p by RING_4:def 4,FIELD_4:20; then
+reconsider q as non constant Polynomial of E by RATFUNC1:def 2;
+A: now assume B: card Roots(E,p) = deg p;
+   Roots q = Roots(E,p) by FIELD_7:13; then
+   consider x being non zero Element of E, v being Ppoly of E such that
+   C: q = x * v by H,B,FIELD_15:69,FIELD_4:def 5;
+   thus p splits_in E & p is separable by B,C,FIELD_4:def 5,FIELD_15:85;
+   end;
+now assume AS: p splits_in E & p is separable;
+  consider x being non zero Element of E, v being Ppoly of E such that
+  A: p = x * v by AS,FIELD_4:def 5;
+  now let a be Element of E;
+    per cases;
+    suppose C: not a is_a_root_of p,E;
+      now assume a is_a_root_of q;
+        then 0.E = Ext_eval(p,a) by FIELD_4:26;
+        hence contradiction by C,FIELD_4:def 2;
+        end;
+      hence multiplicity(q,a) <= 1 by UPROOTS:52;
+      end;
+    suppose a is_a_root_of p,E; then
+      multiplicity(p,a) = 1 by AS,FIELD_15:75;
+      hence multiplicity(q,a) <= 1 by FIELD_14:def 6;
+      end;
+    end;
+  hence deg p = card Roots q by H,A,FIELD_4:def 5,FIELD_15:69
+             .= card Roots(E,p) by FIELD_7:13;
+  end;
+hence thesis by A;
+end;
+
+registration
+let F be finite Field;
+cluster -> finite for Subfield of F;
+coherence
+proof
+let E be Subfield of F;
+the carrier of E c= the carrier of F by EC_PF_1:def 1;
+hence thesis;
+end;
+end;
+
+registration
+let F be Field;
+let K be FieldExtension of (PrimeField F);
+cluster K-extending for FieldExtension of (PrimeField F);
+existence
+proof
+take K;
+thus thesis by FIELD_4:6;
+end;
+end;
+
+notation
+let F be finite Field;
+synonym order F for card F;
+end;
+
+registration
+let F be finite Field;
+cluster order F -> natural;
+coherence;
+end;
+
+registration
+let F be finite Field;
+cluster order F -> non trivial;
+coherence
+proof
+consider n being non zero Nat such that
+A: order F = (Char F)|^n by FIELD_15:92;
+thus thesis by A;
+end;
+end;
+
+registration
+let F be finite Field;
+cluster -> finite for F-finite FieldExtension of F;
+coherence
+proof
+let E be F-finite FieldExtension of F;
+set V = VecSp(E,F), d = dim V;
+reconsider V as finite-dimensional VectSp of F by FIELD_4:def 8;
+consider T being linear-transformation of V,(F^*d) such that
+H: T is bijective by VECTSP13:30,VECTSP13:def 10;
+dom T = the carrier of V & rng T = the carrier of (F^*d)
+   by H,FUNCT_2:def 1,FUNCT_2:def 3; then
+A: card(the carrier of V) = card(the carrier of (F^*d)) by H,CARD_1:70;
+the carrier of V = the carrier of E by FIELD_4:def 6;
+hence thesis by A;
+end;
+end;
+
+registration
+let F be finite Field;
+cluster -> F-simple for F-finite FieldExtension of F;
+coherence
+proof
+let E be F-finite FieldExtension of F;
+set G = MultGroup E;
+consider g being Element of G such that
+A: for b being Element of G ex n being Nat st b = g |^ n by GR_CY_1:18;
+B: the carrier of E = (the carrier of G) \/ {0.E} by UNIROOTS:15; then
+reconsider a = g as Element of E by XBOOLE_0:def 3;
+set Fa = FAdj(F,{a});
+C: the carrier of Fa c= the carrier of E by EC_PF_1:def 1;
+the carrier of E c= the carrier of Fa
+  proof
+  now let o be object;
+    assume o in the carrier of E; then
+    reconsider b = o as Element of E;
+    per cases;
+    suppose b = 0.E;
+      then b = 0.FAdj(F,{a}) by FIELD_6:def 6;
+      hence o in the carrier of FAdj(F,{a});
+      end;
+    suppose b <> 0.E; then
+      not b in {0.E} by TARSKI:def 1; then
+      reconsider h = b as Element of G by B,XBOOLE_0:def 3;
+      consider n being Nat such that E: h = g |^ n by A;
+      a |^ n = g |^ n by FIELD_15:10;
+      hence o in the carrier of FAdj(F,{a}) by E,ThA;
+      end;
+    end;
+  hence thesis;
+  end; then
+D: the carrier of E = the carrier of FAdj(F,{a}) by C,XBOOLE_0:def 10;
+the carrier of Fa c= the carrier of E
+  & the addF of Fa = (the addF of E) || the carrier of Fa
+  & the multF of Fa = (the multF of E) || the carrier of Fa
+  & 1.Fa = 1.E & 0.Fa = 0.E by EC_PF_1:def 1;
+hence thesis by D,FIELD_7:def 1,FIELD_14:def 7;
+end;
+end;
+
+
+begin :: Reduced Rings and Frobenious Morphism
+
+definition
+let R be Ring;
+attr R is reduced means :NIL1:
+  for a being nilpotent Element of R holds a = 0.R;
+end;
+
+registration
+let R be non degenerated commutative Ring;
+cluster nilpotent -> non unital for Element of R;
+coherence
+proof
+let a be Element of R;
+assume a is nilpotent; then
+consider k being non zero Nat such that A: a|^k = 0.R by TOPZARI1:def 2;
+now assume a is unital; then
+  a divides 1.R; then
+  consider b being Element of R such that B: a * b = 1.R;
+  1.R = (a * b)|^k by B
+     .= 0.R * (b|^k) by A,BINOM:9;
+  hence contradiction;
+  end;
+hence thesis;
+end;
+end;
+
+theorem
+for R being non degenerated commutative Ring
+holds R is reduced iff nilrad R = { 0.R }
+proof
+let R be non degenerated commutative Ring;
+H: nilrad R = the set of all a where a is nilpotent Element of R
+   by TOPZARI1:def 13;
+A: now assume B: R is reduced;
+   C: now let o be object;
+      assume o in nilrad R; then
+      consider a being nilpotent Element of R such that D: o = a by H;
+      a is zero by B;
+      hence o in {0.R} by D,TARSKI:def 1;
+      end;
+   now let o be object;
+      assume o in {0.R};
+      then o = 0.R by TARSKI:def 1;
+      hence o in nilrad R by H;
+      end;
+   hence nilrad R = { 0.R } by C,TARSKI:2;
+   end;
+now assume B: nilrad R = { 0.R };
+  now let a be Element of R;
+    assume a <> 0.R;
+    then not a in nilrad R by B,TARSKI:def 1;
+    hence a is non nilpotent by H;
+    end;
+  hence R is reduced;
+  end;
+hence thesis by A;
+end;
+
+registration
+cluster -> reduced for domRing;
+coherence
+proof
+let R be domRing;
+now assume not R is reduced; then
+  consider a being nilpotent Element of R such that
+  A: a <> 0.R;
+  defpred P[Nat] means a|^($1) = 0.R & $1 <> 0;
+  ex k being non zero Nat st a|^k = 0.R by TOPZARI1:def 2; then
+  B: ex k being Nat st P[k];
+  consider k being Nat such that
+  C: P[k] & for n being Nat st P[n] holds k <= n from NAT_1:sch 5(B);
+  reconsider k1 = k - 1 as Nat by C;
+  E: k1 + 0 < k1 + 1 by XREAL_1:39;
+  k = 1 + k1; then
+  F: 0.R = (a|^1) * (a|^k1) by C,BINOM:10 .= a * a|^k1 by BINOM:8;
+  per cases;
+  suppose k1 = 0;
+    then a|^k1 = 1_R by BINOM:8;
+    hence contradiction by A,F;
+    end;
+  suppose k1 <> 0;
+    then a|^k1 <> 0.R by C,E;
+    hence contradiction by A,F,VECTSP_2:def 1;
+    end;
+  end;
+hence thesis;
+end;
+end;
+
+registration
+let R be domRing;
+cluster -> non nilpotent for non zero Element of R;
+coherence
+proof
+let a be non zero Element of R;
+a <> 0.R;
+hence thesis by NIL1;
+end;
+end;
+
+definition
+let R be Ring;
+func FrobeniusMorphism R -> Function of R,R means :defFr:
+  for a being Element of R holds it.a = a|^(Char R);
+existence
+proof
+set n = Char R;
+defpred P[object,object] means
+  ex a being Element of R st $1 = a & $2 = a|^n;
+A: now let x be object;
+   assume x in the carrier of R;
+   then reconsider a = x as Element of R;
+   thus ex y being object st y in the carrier of R & P[x,y]
+     proof
+     take a|^n;
+     thus thesis;
+     end;
+   end;
+consider f being Function of the carrier of R,the carrier of R such that
+B: for x being object st x in the carrier of R holds P[x,f.x]
+   from FUNCT_2:sch 1(A);
+take f;
+now let a being Element of R;
+  P[a,f.a] by B; then
+  consider b being Element of R such that C: a = b & f.b = b|^n;
+  thus f.a = a|^n by C;
+  end;
+hence thesis;
+end;
+uniqueness
+proof
+set n = Char R;
+let g1,g2 be Function of R,R such that
+A1: for a being Element of R holds g1.a = a|^n and
+A2: for a being Element of R holds g2.a = a|^n;
+now let x be object;
+  assume x in the carrier of R;
+  then reconsider a = x as Element of R;
+  thus g1.x = a|^n by A1 .= g2.x by A2;
+  end;
+hence thesis;
+end;
+end;
+
+notation
+let R be Ring;
+synonym Frob R for FrobeniusMorphism R;
+end;
+
+registration
+let p be Prime;
+let R be p-characteristic commutative Ring;
+cluster Frob R -> additive multiplicative unity-preserving;
+coherence
+proof
+set f = Frob R;
+H: p = Char R by RING_3:def 6;
+ now let x,y be Element of R;
+    thus f.(x+y) = (x+y)|^p by H,defFr
+                .= x|^p + y|^p by FIELD_15:40
+                .= x|^p + f.y by H,defFr
+                .= f.x + f.y by H,defFr;
+  end;
+hence Frob R is additive;
+ now let x,y be Element of R;
+    thus f.(x*y) = (x*y)|^p by H,defFr
+                .= x|^p * y|^p by BINOM:9
+                .= x|^p * f.y by H,defFr
+                .= f.x * f.y by H,defFr;
+  end;
+hence Frob R is multiplicative;
+thus f.(1_R) = (1_R)|^ p by H,defFr .= 1_R;
+end;
+end;
+
+theorem FrK:
+for n being Nat
+for R being n-characteristic Ring
+holds ker(Frob R) = { a where a is Element of R : a|^n = 0.R }
+proof
+let p be Nat, R be p-characteristic Ring;
+set f = Frob R;
+H: ker f = {v where v is Element of R : f.v = 0.R} by VECTSP10:def 9;
+I: Char R = p by RING_3:def 6;
+A: now let o be object;
+   assume o in ker(Frob R);
+   then consider a being Element of R such that
+   B: o = a & f.a = 0.R by H;
+   f.a = a|^p by I,defFr;
+   hence o in { a where a is Element of R : a|^p = 0.R } by B;
+   end;
+now let o be object;
+  assume o in { a where a is Element of R : a|^p = 0.R };
+  then consider a being Element of R such that
+  B: o = a & a|^p = 0.R;
+  f.a = 0.R by I,B,defFr;
+  hence o in ker f by B,H;
+  end;
+hence thesis by A,TARSKI:2;
+end;
+
+theorem
+for R being non degenerated commutative Ring holds ker(Frob R) c= nilrad R
+proof
+let R be non degenerated commutative Ring;
+H1: nilrad R = the set of all a where a is nilpotent Element of R
+    by TOPZARI1:def 13;
+set n = Char R;
+R is n-characteristic by RING_3:def 6; then
+H2: ker(Frob R) = { a where a is Element of R : a|^n = 0.R } by FrK;
+now let o be object;
+  assume o in ker(Frob R); then
+  consider a being Element of R such that
+  A: o = a & a|^n = 0.R by H2;
+  now assume n = 0;
+    then a|^n = 1_R by BINOM:8;
+    hence contradiction by A;
+    end;
+  then a is nilpotent by A,TOPZARI1:def 2;
+  hence o in nilrad R by A,H1;
+  end;
+hence thesis;
+end;
+
+theorem
+for R being 0-characteristic Ring holds Frob R = (the carrier of R) --> 1.R
+proof
+let R be 0-characteristic Ring;
+I: Char R = 0 by RING_3:def 6;
+now let o be object;
+  assume A: o in the carrier of R;
+  then reconsider a = o as Element of R;
+  thus (Frob R).o = a|^0 by I,defFr
+                 .= 1_R by BINOM:8
+                 .= ((the carrier of R) --> 1.R).o by A,FUNCOP_1:7;
+  end;
+hence thesis;
+end;
+
+T4:
+for R being Ring
+for a being Element of R, n being Nat
+holds ((Frob R)`^n).a = a|^((Char R)|^n)
+proof
+let R be Ring, a be Element of R, n be Nat;
+set p = Char R, f = Frob R;
+defpred P[Nat] means ((Frob R)`^$1).a = a|^(p|^$1);
+(f`^0).a = (id R).a by T1 .= a|^1 by BINOM:8 .= a|^(p|^0) by NEWTON:4;
+then
+IA: P[0];
+IS: now let k be Nat;
+    assume IV: P[k];
+    (f`^(k+1)).a = ((f`^k) * f).a by T3
+                .= (f * (f`^k)).a by T3
+                .= f.(a|^(p|^k)) by IV,FUNCT_2:15
+                .= (a|^(p|^k))|^p by defFr
+                .= a|^((p|^k) * p) by BINOM:11
+                .= a|^(p|^(k+1)) by NEWTON:6;
+    hence P[k+1];
+    end;
+for k being Nat holds P[k] from NAT_1:sch 2(IA,IS);
+hence thesis;
+end;
+
+theorem fresh3a:
+for p being Prime holds card(Z/p) = p
+proof
+let p be Prime;
+set F = Z/p; set M = MultGroup F;
+   M = Z/Z*(p) by GR_CY_3:36; then
+A: card M = p - 1 by INT_7:23;
+   card M = card F - 1 by UNIROOTS:18;
+hence thesis by A;
+end;
+
+theorem fresh3:
+for p being Prime, a being Element of Z/p holds a|^p = a
+proof
+let p be Prime, a be Element of Z/p;
+set F = Z/p; set M = MultGroup F;
+H: the carrier of F = (the carrier of M) \/ {0.F} by UNIROOTS:15;
+Char F = p by RING_3:def 6; then
+consider n being non zero Nat such that A: card F = p|^n by FIELD_15:92;
+I: now assume J: n <> 1;
+   n >= 0 + 1 by INT_1:7;
+   then n > 1 by J,XXREAL_0:1;
+   then p|^n > p|^1 by NAT_6:2;
+   hence contradiction by A,fresh3a;
+   end;
+per cases;
+suppose a <> 0.F;
+  then not a in {0.F} by TARSKI:def 1;
+  then reconsider b = a as Element of M by H,XBOOLE_0:def 3;
+  card M = p - 1 by I,A,UNIROOTS:18; then
+  b|^(p - 1) = 1_M by GR_CY_1:9; then
+  (1_M) * b
+       = b|^(p - 1) * b|^1 by GROUP_1:26
+      .= b|^(p - 1 + 1) by GROUP_1:33
+      .= a|^p by FIELD_15:10;
+  hence a|^p = a by GROUP_1:def 4;
+  end;
+suppose a = 0.F;
+  hence a|^p = a;
+  end;
+end;
+
+theorem
+for p being Prime holds Frob(Z/p) = id(Z/p)
+proof
+let p be prime Nat;
+I: Char(Z/p) = p by RING_3:77;
+now let o be object;
+  assume o in the carrier of Z/p;
+  then reconsider a = o as Element of Z/p;
+  thus (Frob Z/p).o = a|^p by I,defFr .= (id Z/p).o by fresh3;
+  end;
+hence thesis;
+end;
+
+theorem T5:
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n holds Char F = p
+proof
+let p be Prime, n be non zero Nat, F be Field;
+assume AS: card F = p|^n; then
+B: F is finite; then
+consider n1 being non zero Nat such that
+A: card F = (Char F)|^n1 by FIELD_15:92;
+thus thesis by A,B,AS,lemp;
+end;
+
+theorem thX0:
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n
+for a being Element of F holds a|^(p|^n) = a
+proof
+let p be Prime, n be non zero Nat, F be Field;
+assume A: card F = p|^n;
+let a be Element of F;
+reconsider F as finite Field by A;
+set M = MultGroup F;
+reconsider n1 = n - 1 as Element of NAT by INT_1:3;
+H: the carrier of F = (the carrier of M) \/ {0.F} by UNIROOTS:15;
+per cases;
+suppose a <> 0.F;
+  then not a in {0.F} by TARSKI:def 1;
+  then reconsider b = a as Element of M by H,XBOOLE_0:def 3;
+  card M = p|^n - 1 by A,UNIROOTS:18; then
+  b * (b|^(p|^n - 1)) = b * 1_M by GR_CY_1:9 .= a by GROUP_1:def 4;
+  hence a = b|^(1 + (p|^n - 1)) by GROUP_1:34
+         .= a|^(p|^n) by FIELD_15:10;
+  end;
+suppose a = 0.F;
+  hence a|^(p|^n) = a;
+  end;
+end;
+
+registration
+let p be Prime;
+let R be p-characteristic reduced commutative Ring;
+cluster Frob R -> one-to-one;
+coherence
+proof
+set f = Frob R;
+H: Char R = p by RING_3:def 6;
+now let x1,x2 be object;
+  assume
+A: x1 in the carrier of R & x2 in the carrier of R & f.x1 = f.x2; then
+  reconsider a = x1, b = x2 as Element of R;
+  0.R = f.a - f.b by A,RLVECT_1:15
+     .= (a|^p) - f.b by H,defFr
+     .= (a|^p) - (b|^p) by H,defFr
+     .= (a|^p) + (-b)|^p by FIELD_15:42
+     .= (a + -b)|^p by FIELD_15:40;
+  then a - b is nilpotent by TOPZARI1:def 2;
+  then a - b = 0.R by NIL1;
+  hence x1 = x2 by RLVECT_1:21;
+  end;
+hence thesis by FUNCT_2:19;
+end;
+end;
+
+registration
+let F be finite Field;
+cluster Frob F -> onto;
+coherence
+proof
+set p = Char F;
+reconsider F as p-characteristic Field by RING_3:def 6;
+reconsider A = the carrier of F as finite set;
+reconsider B = the carrier of F as finite set;
+reconsider f = Frob F as Function of A,B;
+card A = card B & f is one-to-one;
+hence thesis by FINSEQ_4:63;
+end;
+end;
+
+theorem
+for p being Prime
+for F being p-characteristic Field
+holds F is perfect iff Frob F is Automorphism of F
+proof
+let p be Prime, F be p-characteristic Field;
+H: Char F = p by RING_3:def 6;
+A: now assume F is perfect; then
+   B: F == F|^p by FIELD_15:91;
+   C: rng(Frob F) c= the carrier of F by RELAT_1:def 19;
+   now let o be object;
+     assume o in the carrier of F; then
+     reconsider b = o as Element of F;
+     b in the carrier of F|^p &
+     the carrier of F|^p = the set of all a|^p where a is Element of F
+        by B,FIELD_15:def 1; then
+     consider a being Element of F such that
+     C: a|^p = b;
+     D: dom(Frob F) = the carrier of F by FUNCT_2:def 1;
+     (Frob F).a = b by H,C,defFr;
+     hence o in rng(Frob F) by D,FUNCT_1:def 3;
+     end;
+   then Frob F is onto by C,TARSKI:2;
+   hence Frob F is Automorphism of F;
+   end;
+now assume A: Frob F is Automorphism of F;
+   B: the carrier of F|^p c= the carrier of F by EC_PF_1:def 1;
+   now let o be object;
+     assume o in the carrier of F; then
+     reconsider b = o as Element of F;
+     rng(Frob F) = the carrier of F by A,FUNCT_2:def 3; then
+     consider a being object such that
+     C: a in dom(Frob F) & (Frob F).a = b by FUNCT_1:def 3;
+     reconsider a as Element of F by C;
+     D: b = a|^p by H,C,defFr;
+     the carrier of F|^p = the set of all a|^p where a is Element of F
+        by FIELD_15:def 1;
+     hence o in the carrier of F|^p by D;
+     end;
+   then E: the carrier of F c= the carrier of F|^p;
+   then the carrier of F = the carrier of F|^p by B,XBOOLE_0:def 10;
+   then the addF of F|^p = (the addF of F)||(the carrier of F) &
+        the multF of F|^p = (the multF of F)||(the carrier of F) &
+        1.(F|^p) = 1.F & 0.(F|^p) = 0.F by FIELD_15:def 1;
+   then F == F|^p by E,EC_PF_1:def 1;
+   hence F is perfect by FIELD_15:91;
+   end;
+hence thesis by A;
+end;
+
+
+begin :: The Polynomials X^n - X
+
+Lm10: for L be unital non empty doubleLoopStr, n be non trivial Nat holds
+(0_.(L) +* ((1,n) --> (-1.L,1.L))).1 = -1.L &
+(0_.(L) +* ((1,n) --> (-1.L,1.L))).n = 1.L
+proof
+let L be unital non empty doubleLoopStr, n be non trivial Nat;
+set t = 0_.(L) +* ((1,n) --> (-1.L,1.L)), f = (1,n) --> (-1.L,1.L);
+A5: for u being object holds u in {1,n} implies u in NAT
+    by ORDINAL1:def 12;
+A3: dom f = {1,n} by FUNCT_4:62; then
+A4: dom(0_.(L)) \/ dom(f) = NAT by A5,TARSKI:def 3,XBOOLE_1:12;
+A6: n <> 1 by NAT_2:28;
+1 in dom f &
+1 in dom(0_.(L)) \/ dom(f) by A4,A3,TARSKI:def 2;
+hence t.1 = f.1 by FUNCT_4:def 1 .= -1.L by A6,FUNCT_4:63;
+n in dom f &
+n in dom(0_.(L)) \/ dom(f) by A4,A3,TARSKI:def 2,ORDINAL1:def 12;
+hence t.n = f.n by FUNCT_4:def 1 .= 1.L by FUNCT_4:63;
+end;
+
+Lm11: for L being unital non empty doubleLoopStr,
+i,n being Nat st i <> 1 & i <> n holds
+(0_.(L) +* ((1,n) --> (-1.L,1.L))).i = 0.L
+proof
+let L be unital non empty doubleLoopStr; let i,n be Nat;
+assume that
+A1: i <> 1 and
+A2: i <> n;
+set t = 0_.(L) +* ((1,n) --> (-1.L,1.L)), f = (1,n) --> (-1.L,1.L);
+A4: for u being object holds u in {1,n} implies u in NAT
+    by ORDINAL1:def 12;
+dom f = {1,n} by FUNCT_4:62; then
+A5: dom(0_.(L)) \/ dom(f) = NAT by A4,TARSKI:def 3,XBOOLE_1:12;
+A6: i in NAT by ORDINAL1:def 12;
+not i in dom f by A1,A2,TARSKI:def 2;
+hence t.i = (0_.(L)).i by A5,A6,FUNCT_4:def 1
+         .= 0.L by ORDINAL1:def 12,FUNCOP_1:7;
+end;
+
+definition
+let R be unital non empty doubleLoopStr;
+let n be non trivial Nat;
+func X^(n,R) -> sequence of R equals
+  0_.(R) +* ((1,n) --> (-1.R,1.R));
+coherence
+proof
+reconsider n as Element of NAT by ORDINAL1:def 12;
+set f = (1,n) --> (-1.R,1.R);
+set q = 0_.(R) +* f;
+A2: dom f = {1,n} by FUNCT_4:62;
+A5: now let xx be object;
+      assume xx in NAT;
+      then reconsider x = xx as Element of NAT;
+      per cases;
+      suppose x = 1;
+        then q.x = -1.R by Lm10;
+        hence q.xx in the carrier of R;
+      end;
+      suppose x = n;
+        then q.x = 1.R by Lm10;
+        hence q.xx in the carrier of R;
+      end;
+      suppose x <> 1 & x <> n;
+        then q.x = 0.R by Lm11;
+        hence q.xx in the carrier of R;
+      end;
+    end;
+for u being object holds u in {1,n} implies u in NAT by ORDINAL1:def 12;
+then dom(0_.(R)) \/ dom(f) = NAT by A2,TARSKI:def 3,XBOOLE_1:12;
+then dom q = NAT by FUNCT_4:def 1;
+hence thesis by A5,FUNCT_2:3;
+end;
+end;
+
+registration
+let R be unital non empty doubleLoopStr;
+let n be non trivial Nat;
+cluster X^(n,R) -> finite-Support;
+coherence;
+end;
+
+Lm12: for R be unital non degenerated doubleLoopStr
+for n be non trivial Nat holds deg X^(n,R) = n
+proof
+let R be unital non degenerated doubleLoopStr, n be non trivial Nat;
+set q = X^(n,R);
+A1: n >= 2 by NAT_2:29;
+A9: now let i be Nat;
+    assume i >= n+1;
+    then i > n by NAT_1:13;
+    then i <> n & i <> 1 by A1,XXREAL_0:2;
+    hence q.i = 0.R by Lm11;
+    end;
+now let m be Nat;
+    assume X: m is_at_least_length_of q;
+    now assume Y: n+1 > m;
+      q.n = 1.R by Lm10;
+      hence contradiction by X,Y,NAT_1:13;
+      end;
+    hence n+1 <= m;
+    end;
+then len q = n+1 by A9,ALGSEQ_1:def 3,ALGSEQ_1:def 2;
+then deg q = (n+1) - 1 by HURWITZ:def 2;
+hence thesis;
+end;
+
+Lm13: for R be unital non degenerated doubleLoopStr,
+   n be non trivial Nat holds LC X^(n,R) = 1.R
+proof
+let R be unital non degenerated doubleLoopStr, n be non trivial Nat;
+set q = X^(n,R);
+A: n = deg q by Lm12 .= len q - 1 by HURWITZ:def 2;
+then n + 1 = len q;
+then len q -' 1 = n by A,XREAL_1:233,NAT_1:11;
+then q.(len q -' 1) = 1.R by Lm10;
+hence thesis by RATFUNC1:def 6;
+end;
+
+registration
+let R be non degenerated Ring;
+let n be non trivial Nat;
+cluster X^(n,R) -> non constant monic;
+coherence
+proof
+deg X^(n,R) = n by Lm12;
+hence X^(n,R) is non constant by RATFUNC1:def 2;
+LC X^(n,R) = 1.R by Lm13;
+hence thesis by RATFUNC1:def 7;
+end;
+end;
+
+definition
+let R be non degenerated Ring;
+let n be non trivial Nat;
+redefine func X^(n,R) -> non constant Element of the carrier of Polynom-Ring R;
+coherence
+proof
+reconsider p = X^(n,R) as Element of the carrier of Polynom-Ring R
+  by POLYNOM3:def 10;
+deg X^(n,R) > 0 by RATFUNC1:def 2;
+then p is non constant by RING_4:def 4;
+hence thesis;
+end;
+end;
+
+theorem
+for R being unital non degenerated doubleLoopStr
+for a being Element of R
+for n being non trivial Nat
+holds X^(n,R).1 = -1.R & X^(n,R).n = 1.R &
+      for m being Nat st m <> 1 & m <> n holds X^(n,R).m = 0.R
+by Lm10,Lm11;
+
+theorem
+for R being unital non degenerated doubleLoopStr
+for n being non trivial Nat holds deg X^(n,R) = n by Lm12;
+
+theorem
+for R being unital non degenerated doubleLoopStr
+for n being non trivial Nat holds LC X^(n,R) = 1.R by Lm13;
+
+theorem teval:
+for R being non degenerated Ring
+for n being non trivial Nat
+for a being Element of R holds eval(X^(n,R),a) = a|^n - a
+proof
+let R be non degenerated Ring, n be non trivial Nat,
+    x be Element of R;
+set q = X^(n,R);
+consider F be FinSequence of R such that
+A3: eval(q,x) = Sum F and
+A4: len F = len q and
+A5: for j be Element of NAT st j in dom F holds
+      F.j = q.(j-'1) * (power R).(x,j-'1) by POLYNOM4:def 2;
+A: n = deg q by Lm12 .= len q - 1 by HURWITZ:def 2; then
+B: len q = n + 1;
+C: dom F = Seg(n+1) by A,A4,FINSEQ_1:def 3;
+D: 1 <= n + 1 by NAT_1:11;
+E: n+1-'1 = n+1-1 by NAT_1:11,XREAL_1:233;
+B1: F.(n+1) = q.n * (power R).(x,n+1-'1) by E,A5,D,C,FINSEQ_1:1
+           .= 1.R * (power R).(x,(n+1)-'1) by Lm10
+           .= x |^ n by E;
+B2: now let j be Element of NAT;
+    assume H0: 1 <= j & j <= n & j <> 2;
+    reconsider j1 = j -' 1 as Element of NAT;
+    reconsider n1  = n - 1 as Element of NAT by INT_1:3;
+    n <= n + 1 by NAT_1:11; then
+    H1: j <= n + 1 by H0,XXREAL_0:2;
+    H4: j1 = j - 1 by H0,XREAL_1:233;
+    per cases;
+    suppose j = 1;
+      then j1 = 0 by NAT_2:8;
+      hence F.j = q.0 * (power R).(x,j-'1) by A5,H1,C,H0,FINSEQ_1:1
+               .= 0.R * (power R).(x,j-'1) by Lm11
+               .= 0.R;
+      end;
+    suppose j <> 1;
+      j1 + 1 <= n1 + 1 by H4,H0;
+      then H3: j1 <> n & j1 <> 1 by H4,H0,NAT_1:13;
+      thus F.j = q.(j1) * (power R).(x,j-'1) by A5,H1,C,H0,FINSEQ_1:1
+              .= 0.R * (power R).(x,j-'1) by H3,Lm11
+              .= 0.R;
+      end;
+    end;
+B4: len F > 2 by NAT_2:29,NAT_1:13,A4,B; then
+    2 in Seg(len F) by FINSEQ_1:1; then
+    2 in dom F by FINSEQ_1:def 3; then
+B3: F.2 = q.(2-'1) * (power R).(x,2-'1) by A5
+            .= q.(2-1) * (power R).(x,2-'1) by XREAL_0:def 2
+            .= q.1 * (power R).(x,2-1) by XREAL_0:def 2
+            .= (-1.R) * (power R).(x,1) by Lm10
+            .= -(1.R * (power R).(x,1+0)) by VECTSP_1:9
+            .= -((power R).(x,0)  * x) by GROUP_1:def 7
+            .= -(1_R * x) by GROUP_1:def 7
+            .= -x;
+consider fp being sequence of the carrier of R such that
+A6: Sum F = fp.(len F) and
+A7: fp.0 = 0.R and
+A8: for j being Nat, v being Element of R
+    st j < len F & v = F.(j + 1)
+    holds fp.(j + 1) = fp.j + v by RLVECT_1:def 12;
+defpred P[Element of NAT] means
+  ($1 = 0 & fp.($1) = 0.R) or ($1 = 1 & fp.($1) = 0.R) or
+  (1 < $1 & $1 < len F & fp.($1) = -x) or ($1 = len F & fp.($1) = x|^n - x);
+IA: P[0] by A7;
+IS: now let j be Element of NAT;
+    assume C1: 0 <= j & j < len F;
+    assume C2: P[j];
+    j <= 1 implies j = 0 or ... or j = 1; then
+    per cases;
+    suppose D1: j = 0 & j < len F - 1;
+      then j + 1 = 1 & j + 1 <= n by INT_1:7;
+      then F.(j + 1) = 0.R by B2;
+      then fp.(j+1) = fp.0 + 0.R by D1,A8,C1 .= 0.R by A7;
+      hence P[j+1] by D1;
+      end;
+    suppose j = 0 & j >= len F - 1;
+      hence P[j+1] by A,A4;
+      end;
+    suppose D1: j = 1 & j < len F - 1;
+      then fp.(j+1) = fp.j + -x by B3,A8,C1 .= -x by D1,C2;
+      hence P[j+1] by D1,B4;
+      end;
+    suppose D1: j = 1 & j >= len F - 1;
+      len F - 1 > 2 - 1 by B4,XREAL_1:8;
+      hence P[j+1] by D1;
+      end;
+    suppose D1: 1 < j & j < len F - 1;
+      then D3: j + 1 <= n by A,A4,INT_1:7;
+      1 <= j + 1 & j + 1 <= n & j + 1 <> 2 by D1,A,A4,NAT_1:13;
+      then F.(j+1) = 0.R by B2;
+      then fp.(j+1) = (-x) + 0.R by C2,D1,C1,A8;
+      hence P[j+1] by D1,D3,B,A4,XXREAL_0:2,NAT_1:16;
+      end;
+    suppose D1: 1 < j & j >= len F - 1;
+      j + 1 <= len F by INT_1:7,C1;
+      then D2: (j + 1) - 1 <= len F - 1 by XREAL_1:9;
+      then  j = n by A4,A,D1,XXREAL_0:1;
+      then fp.(j+1) = fp.j + x |^ n by B1,A8,C1;
+      hence P[j+1] by A4,A,B1,C2,D2,D1,XXREAL_0:1;
+      end;
+    end;
+I: for j being Element of NAT st 0 <= j & j <= len F holds P[j]
+   from INT_1:sch 7(IA,IS);
+len F > 1 + 1 & 1 + 1 > 1 + 0 by B4;
+hence eval(q,x) = x|^n - x by A6,A3,I;
+end;
+
+theorem thXX:
+for R being unital non degenerated Ring
+for n being non trivial Nat
+for a being Element of R holds a is_a_root_of X^(n,R) iff a|^n = a
+proof
+let R be unital non degenerated Ring,
+    n be non trivial Nat, a be Element of R;
+A: now assume a is_a_root_of X^(n,R);
+   then 0.R = a|^n - a by teval;
+   hence a|^n = a by RLVECT_1:21;
+   end;
+now assume a|^n = a;
+  then 0.R = a|^n - a by RLVECT_1:15 .= eval(X^(n,R),a) by teval;
+  hence a is_a_root_of X^(n,R);
+  end;
+hence thesis by A;
+end;
+
+theorem thX1:
+for p being Prime
+for n being non zero Nat
+for F being p-characteristic Field st card F = p|^n
+for a being Element of F holds eval(X^(p|^n,F),a) = 0.F
+proof
+let p be Prime, n be non zero Nat, F be p-characteristic Field;
+assume A: card F = p|^n;
+let a be Element of F;
+a|^(p|^n) = a by A,thX0;
+then a is_a_root_of X^(p|^n,F) by thXX;
+hence thesis;
+end;
+
+theorem tevale:
+for R being non degenerated Ring
+for S being RingExtension of R
+for n being non trivial Nat
+for a being Element of S holds Ext_eval(X^(n,R),a) = a|^n - a
+proof
+let R be non degenerated Ring, S be RingExtension of R,
+    n be non trivial Nat, x be Element of S;
+J: R is Subring of S by FIELD_4:def 1; then
+H: 1.R = 1.S & 0.R = 0.S by C0SP1:def 3; then
+I: -1.R = -1.S by J,FIELD_6:17;
+set q = X^(n,R);
+consider F be FinSequence of S such that
+A3: Ext_eval(q,x) = Sum F and
+A4: len F = len q and
+A5: for j be Element of NAT st j in dom F holds
+      F.j = In(q.(j-'1),S) * (power S).(x,j-'1) by ALGNUM_1:def 1;
+A: n = deg q by Lm12 .= len q - 1 by HURWITZ:def 2; then
+B: len q = n + 1;
+C: dom F = Seg(n+1) by A,A4,FINSEQ_1:def 3;
+D: 1 <= n + 1 by NAT_1:11;
+E: n+1-'1 = n+1-1 by NAT_1:11,XREAL_1:233;
+B1: F.(n+1)
+  = In(q.n,S) * (power S).(x,n+1-'1) by E,A5,D,C,FINSEQ_1:1
+ .= In(1.R,S) * (power S).(x,(n+1)-'1) by Lm10
+ .= x |^ n by H,E;
+B2: now let j be Element of NAT;
+    assume H0: 1 <= j & j <= n & j <> 2;
+    reconsider j1 = j -' 1 as Element of NAT;
+    reconsider n1  = n - 1 as Element of NAT by INT_1:3;
+    n <= n + 1 by NAT_1:11; then
+    H1: j <= n + 1 by H0,XXREAL_0:2;
+    H4: j1 = j - 1 by H0,XREAL_1:233;
+    per cases;
+    suppose j = 1;
+      then j1 = 0 by NAT_2:8;
+      hence F.j
+          = In(q.0,S) * (power S).(x,j-'1) by A5,H1,C,H0,FINSEQ_1:1
+         .= In(0.R,S) * (power S).(x,j-'1) by Lm11
+         .= 0.S by H;
+      end;
+    suppose j <> 1;
+      j1 + 1 <= n1 + 1 by H4,H0;
+      then H3: j1 <> n & j1 <> 1 by H4,H0,NAT_1:13;
+      thus F.j
+         = In(q.(j1),S) * (power S).(x,j-'1) by A5,H1,C,H0,FINSEQ_1:1
+        .= In(0.R,S) * (power S).(x,j-'1) by H3,Lm11
+        .= 0.S by H;
+      end;
+    end;
+B4: len F > 2 by NAT_2:29,NAT_1:13,A4,B; then
+    2 in Seg(len F) by FINSEQ_1:1; then
+    2 in dom F by FINSEQ_1:def 3; then
+B3: F.2 = In(q.(2-'1),S) * (power S).(x,2-'1) by A5
+       .= In(q.(2-1),S) * (power S).(x,2-'1) by XREAL_0:def 2
+       .= In(q.1,S) * (power S).(x,2-1) by XREAL_0:def 2
+       .= In(-1.R,S) * (power S).(x,2-1) by Lm10
+       .= -(1.S * (power S).(x,1+0)) by I,VECTSP_1:9
+       .= -((power S).(x,0)  * x) by GROUP_1:def 7
+       .= -(1_S * x) by GROUP_1:def 7
+       .= -x;
+consider fp being sequence of the carrier of S such that
+A6: Sum F = fp.(len F) and
+A7: fp.0 = 0.S and
+A8: for j being Nat, v being Element of S
+    st j < len F & v = F.(j + 1)
+    holds fp.(j + 1) = fp.j + v by RLVECT_1:def 12;
+defpred P[Element of NAT] means
+  ($1 = 0 & fp.($1) = 0.S) or ($1 = 1 & fp.($1) = 0.S) or
+  (1 < $1 & $1 < len F & fp.($1) = -x) or ($1 = len F & fp.($1) = x|^n - x);
+IA: P[0] by A7;
+IS: now let j be Element of NAT;
+    assume C1: 0 <= j & j < len F;
+    assume C2: P[j];
+    j <= 1 implies j = 0 or ... or j = 1; then
+    per cases;
+    suppose D1: j = 0 & j < len F - 1;
+      then j + 1 = 1 & j + 1 <= n by INT_1:7;
+      then F.(j + 1) = 0.S by B2;
+      then fp.(j+1) = fp.0 + 0.S by D1,A8,C1 .= 0.S by A7;
+      hence P[j+1] by D1;
+      end;
+    suppose j = 0 & j >= len F - 1;
+      hence P[j+1] by A,A4;
+      end;
+    suppose D1: j = 1 & j < len F - 1;
+      then fp.(j+1) = fp.j + -x by B3,A8,C1 .= -x by D1,C2;
+      hence P[j+1] by D1,B4;
+      end;
+    suppose D1: j = 1 & j >= len F - 1;
+      len F - 1 > 2 - 1 by B4,XREAL_1:8;
+      hence P[j+1] by D1;
+      end;
+    suppose D1: 1 < j & j < len F - 1;
+      then D3: j + 1 <= n by A,A4,INT_1:7;
+      1 <= j + 1 & j + 1 <= n & j + 1 <> 2 by D1,A,A4,NAT_1:13;
+      then F.(j+1) = 0.S by B2;
+      then fp.(j+1) = (-x) + 0.S by C2,D1,C1,A8;
+      hence P[j+1] by D1,D3,B,A4,XXREAL_0:2,NAT_1:16;
+      end;
+    suppose D1: 1 < j & j >= len F - 1;
+      j + 1 <= len F by INT_1:7,C1;
+      then D2: (j + 1) - 1 <= len F - 1 by XREAL_1:9;
+      then  j = n by A4,A,D1,XXREAL_0:1;
+      then fp.(j+1) = fp.j + x |^ n by B1,A8,C1;
+      hence P[j+1] by A4,A,B1,C2,D2,D1,XXREAL_0:1;
+      end;
+    end;
+I: for j being Element of NAT st 0 <= j & j <= len F holds P[j]
+   from INT_1:sch 7(IA,IS);
+len F > 1 + 1 & 1 + 1 > 1 + 0 by B4;
+hence Ext_eval(q,x) = x|^n - x by A6,A3,I;
+end;
+
+theorem thXXe:
+for R being unital non degenerated Ring
+for S being RingExtension of R
+for n being non trivial Nat
+for a being Element of S holds a is_a_root_of X^(n,R),S iff a|^n = a
+proof
+let R be unital non degenerated Ring, S be RingExtension of R,
+    n be non trivial Nat, a be Element of S;
+A: now assume a is_a_root_of X^(n,R),S;
+   then 0.S = Ext_eval(X^(n,R),a) by FIELD_4:def 2
+           .= a|^n - a by tevale;
+   hence a|^n = a by RLVECT_1:21;
+   end;
+now assume a|^n = a;
+  then 0.S = a|^n - a by RLVECT_1:15
+          .= Ext_eval(X^(n,R),a) by tevale;
+  hence a is_a_root_of X^(n,R),S by FIELD_4:def 2;
+  end;
+hence thesis by A;
+end;
+
+thX1e:
+for p being Prime
+for n being non zero Nat
+for F being p-characteristic Field
+for E being FieldExtension of F st card E = p|^n
+for a being Element of E holds Ext_eval(X^(p|^n,F),a) = 0.E
+proof
+let p be Prime, n be non zero Nat, F be p-characteristic Field;
+let E be FieldExtension of F;
+assume A: card E = p|^n;
+let a be Element of E;
+a|^(p|^n) = a by A,thX0;
+hence thesis by thXXe,FIELD_4:def 2;
+end;
+
+theorem
+for p being Prime
+for R being p-characteristic commutative Ring
+for n being non zero Nat
+holds { m * 1.R where m is Nat : m < p } c= Roots X^(p|^n,R)
+proof
+let p be Prime, R be p-characteristic commutative Ring;
+let n be non zero Nat;
+defpred P[Nat] means ($1) * 1.R in Roots X^(p|^n,R);
+    0 * 1.R = (0.R)|^(p|^n) by BINOM:12
+           .= (0 * 1.R)|^(p|^n) by BINOM:12; then
+    (0 * 1.R) is_a_root_of X^(p|^n,R) by thXX; then
+IA: P[0] by POLYNOM5:def 10;
+reconsider p1 = p - 1 as Element of NAT by INT_1:3;
+IS: now let k be Element of NAT;
+    assume 0 <= k & k < p1;
+    assume P[k]; then
+    (k * 1.R) is_a_root_of X^(p|^n,R) by POLYNOM5:def 10; then
+    IV: (k * 1.R)|^(p|^n) = k * 1.R by thXX;
+    ((k+1) * 1.R)|^(p|^n)
+        = (k * 1.R + 1 * 1.R)|^(p|^n) by BINOM:15
+       .= (k * 1.R + 1.R)|^(p|^n) by BINOM:13
+       .= (k * 1.R)|^(p|^n) + (1.R)|^(p|^n) by FIELD_15:41
+       .= (k * 1.R) + (1 * 1.R) by IV,BINOM:13
+       .= (k+1) * 1.R by BINOM:15; then
+    ((k+1) * 1.R) is_a_root_of X^(p|^n,R) by thXX;
+    hence P[k+1] by POLYNOM5:def 10;
+    end;
+I: for k being Element of NAT st 0 <= k & k <= p1 holds P[k]
+   from INT_1:sch 7(IA,IS);
+now let o be object;
+  assume o in { i * 1.R where i is Nat : i < p }; then
+  consider i being Nat such that
+  A: o = i * 1.R & i < p;
+  reconsider i as Element of NAT by ORDINAL1:def 12;
+  i + 1 <= p by A,INT_1:7;
+  then i + 1 - 1 <= p - 1 by XREAL_1:9;
+  hence o in Roots X^(p|^n,R) by I,A;
+  end;
+hence thesis;
+end;
+
+theorem thX1ee:
+for p being Prime
+for n being non zero Nat
+for F being p-characteristic Field st card F = p|^n
+holds Roots X^(p|^n,F) = the carrier of F
+proof
+let p be Prime, n be non zero Nat, F be p-characteristic Field;
+assume AS: card F = p|^n;
+A: now let o be object;
+   assume o in the carrier of F;
+   then reconsider a = o as Element of F;
+   a is_a_root_of X^(p|^n,F) by AS,thX1;
+   hence o in Roots X^(p|^n,F) by POLYNOM5:def 10;
+   end;
+for o being object st o in Roots X^(p|^n,F) holds o in the carrier of F;
+hence thesis by A,TARSKI:2;
+end;
+
+theorem thX3:
+for p being Prime
+for n being non zero Nat
+for F being p-characteristic Field holds (Deriv F).X^(p|^n,F) = -1_.(F)
+proof
+let p be Prime, n be non zero Nat, F be p-characteristic Field;
+set q = X^(p|^n,F), Dq = (Deriv F).q;
+now let m be Nat;
+  per cases;
+  suppose A: m = 0;
+    hence Dq.m = (0+1) * q.(0+1) by RINGDER1:def 8
+              .= 1 * (-1.F) by Lm10
+              .= -(1.F) by BINOM:13
+              .= -((1_.(F)).m) by A,POLYNOM3:30
+               .= (-1_.(F)).m by BHSP_1:44;
+    end;
+  suppose A: m = 1;
+    per cases;
+    suppose B: p = 2 & n = 1; then
+      C: Char F = 2 by RING_3:def 6;
+      thus Dq.m = (1+1) * q.(1+1) by A,RINGDER1:def 8
+               .= 2 * 1.F by B,Lm10
+               .= 2 '*' 1.F by RING_3:def 2
+               .= -0.F by C,REALALG2:24
+               .= -((1_.(F)).m) by A,POLYNOM3:30
+               .= (-1_.(F)).m by BHSP_1:44;
+      end;
+    suppose B: p <> 2 or n <> 1;
+      C: 2 <> p|^n
+         proof
+         p > 1 by INT_2:def 4; then
+         E: p >= 1 + 1 by INT_1:7;
+         F: n >= 0 + 1 by INT_1:7;
+         per cases by B;
+         suppose p <> 2;
+           then p > 2 by E,XXREAL_0:1;
+           then p >= 2 + 1 by INT_1:7;
+           then H: p|^n >= 3|^n by thX3a;
+           3|^n >= 3|^1 by F,NAT_6:1;
+           hence thesis by H,XXREAL_0:2;
+           end;
+         suppose n <> 1;
+           then H: n is non trivial by NAT_2:def 1;
+           I: p|^n >= 2|^n by E,thX3a;
+           2|^n >= 2|^2 by H,NAT_2:29,NAT_6:1;
+           then p|^n >= 2|^(1+1) by I,XXREAL_0:2;
+           then p|^n >= 2|^1 * 2 by NEWTON:6;
+           hence thesis;
+           end;
+         end;
+      thus Dq.m = (1+1) * q.(1+1) by A,RINGDER1:def 8
+               .= 2 * 0.F by C,Lm11
+               .= -0.F
+               .= -((1_.(F)).m) by A,POLYNOM3:30
+               .= (-1_.(F)).m by BHSP_1:44;
+      end;
+    end;
+  suppose A: m <> 0 & m <> 1 & m = p|^n - 1;
+    reconsider n1 = n - 1 as Nat;
+    B: p|^(n1+1) = p|^n1 * p by NEWTON:6;
+    thus Dq.m = p|^n * q.(p|^n-1+1) by A,RINGDER1:def 8
+             .= -0.F by B,FIELD_15:37
+             .= -((1_.(F)).m) by A,POLYNOM3:30
+             .= (-1_.(F)).m by BHSP_1:44;
+    end;
+  suppose A: m <> 0 & m <> 1 & m <> p|^n - 1; then
+    B: m + 1 <> 1 & m + 1 <> p|^n;
+    thus Dq.m = (m+1) * q.(m+1) by RINGDER1:def 8
+             .= (m+1) * 0.F by B,Lm11
+             .= -0.F
+             .= -((1_.(F)).m) by A,POLYNOM3:30
+             .= (-1_.(F)).m by BHSP_1:44;
+    end;
+  end;
+hence thesis;
+end;
+
+theorem Xm:
+for n being non trivial Nat
+for R being Ring
+for S being RingExtension of R holds X^(n,R) = X^(n,S)
+proof
+let n be non trivial Nat, F be Ring, E be RingExtension of F;
+set q = X^(n,F), r = X^(n,E);
+H1: F is Subring of E by FIELD_4:def 1; then
+H2: 1.E = 1.F by C0SP1:def 3;
+now let o be object;
+   assume o in NAT;
+   then reconsider m = o as Nat;
+   per cases;
+   suppose A: m = 1; then
+     q.m = -1.F by Lm10 .= -1.E by H1,H2,FIELD_6:17 .= r.m by A,Lm10;
+     hence q.o = r.o;
+     end;
+   suppose A: m = n; then
+     q.m = 1.F by Lm10 .= 1.E by H1,C0SP1:def 3 .= r.m by A,Lm10;
+     hence q.o = r.o;
+     end;
+   suppose A: m <> 1 & m <> n; then
+     q.m = 0.F by Lm11 .= 0.E by H1,C0SP1:def 3 .= r.m by A,Lm11;
+     hence q.o = r.o;
+     end;
+   end;
+hence thesis;
+end;
+
+registration
+let p be Prime;
+let n be non zero Nat;
+let F be p-characteristic Field;
+cluster X^(p|^n,F) -> separable
+                   for non constant Element of the carrier of Polynom-Ring F;
+coherence
+proof
+set q = X^(p|^n,F);
+set E = the SplittingField of X^(p|^n,F);
+A: X^(p|^n,F) splits_in E by FIELD_8:def 1;
+now assume q is inseparable; then
+  ex a being Element of E st multiplicity(q,a) > 1 by A,FIELD_15:78; then
+  B: q gcd (Deriv F).q <> 1_.(F) by A,FIELD_15:72;
+  (-1_.(F)) gcd q = 1_.(F)
+    proof
+    (1_.(F)) *' (-(1_.(F))) = -(1_.(F)); then
+    C: 1_.(F) divides -(1_.(F)) by RING_4:1;
+    (1_.(F)) *' q = q; then
+    D: 1_.(F) divides q by RING_4:1;
+    now let r be Polynomial of F;
+      assume r divides -(1_.(F)) & r divides q; then
+      consider u being Polynomial of F such that
+      E: r *' u = -(1_.(F)) by RING_4:1;
+      r *' (-u) = -(r *' u) by lemX .= 1_.(F) by E;
+      hence r divides 1_.(F) by RING_4:1;
+      end;
+    hence thesis by C,D,RING_4:53;
+    end;
+  hence contradiction by B,thX3;
+  end;
+hence thesis;
+end;
+end;
+
+registration
+let F be finite Field;
+cluster X^(order F,F) -> separable
+                   for non constant Element of the carrier of Polynom-Ring F;
+coherence
+proof
+reconsider p = Char F as Prime;
+consider n being non zero Nat such that A: order F = p|^n by FIELD_15:92;
+F is p-characteristic by RING_3:def 6;
+hence thesis by A;
+end;
+end;
+
+
+begin :: On Prime Fields of Finite Fields
+
+Ffix1:
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n holds card(PrimeField F) = p
+proof
+let p be Prime, n be non zero Nat, K be Field;
+assume AS: card K = p|^n;
+Char K = p by AS,T5; then
+reconsider F = K as p-characteristic finite Field by AS,RING_3:def 6;
+(PrimeField F),Z/p are_isomorphic by RING_3:108; then
+consider i being Function of (PrimeField F),Z/p such that
+B: i is isomorphism;
+C: dom i = the carrier of PrimeField F by FUNCT_2:def 1;
+rng i = the carrier of Z/p by B,FUNCT_2:def 3;
+hence card(PrimeField K) = card(Z/p) by C,B,CARD_1:70
+         .= p by fresh3a;
+end;
+
+finex2:
+for F being finite Field
+ex p being Prime, n being non zero Nat st Char F = p & order F = p|^n
+proof
+let F be finite Field;
+consider n being non zero Nat such that
+A: card F = (Char F)|^n by FIELD_15:92;
+thus thesis by A;
+end;
+
+theorem FFF:
+for F being finite Field holds card(PrimeField F) = Char F
+proof
+let F be finite Field;
+consider p being Prime, n being non zero Nat such that
+A: Char F = p & order F = p|^n by finex2;
+thus thesis by A,Ffix1;
+end;
+
+FF: for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n
+holds Roots X^(p,F) = the carrier of PrimeField F
+proof
+let p be Prime, n be non zero Nat, F be Field;
+assume AS: card F = p|^n;
+Z: Char F = p by AS,T5; then
+reconsider F as p-characteristic finite Field by AS,RING_3:def 6;
+set K = PrimeField F, M = MultGroup K, q = X^(p,F);
+H: the carrier of K = (the carrier of M) \/ {0.K} by UNIROOTS:15;
+Char K = p by RING_3:def 6; then
+consider m being non zero Nat such that J: card K = p|^m by FIELD_15:92;
+Z1: K is Subring of F &
+    p is Element of NAT by ORDINAL1:def 12,FIELD_5:12;
+I: now assume K: m <> 1;
+   m >= 0 + 1 by INT_1:7;
+   then m > 1 by K,XXREAL_0:1;
+   then p|^m > p|^1 by NAT_6:2;
+   hence contradiction by AS,J,Ffix1;
+   end;
+Z2: now let a be Element of F;
+   assume a in K;
+   then reconsider a1 = a as Element of K;
+   per cases;
+   suppose a1 <> 0.K;
+     then not a1 in {0.K} by TARSKI:def 1;
+     then reconsider b = a1 as Element of M by H,XBOOLE_0:def 3;
+     card M = p - 1 by I,J,UNIROOTS:18; then
+     b|^(p - 1) = 1_M by GR_CY_1:9; then
+     (1_M) * b
+        = b|^(p - 1) * b|^1 by GROUP_1:26
+       .= b|^(p - 1 + 1) by GROUP_1:33
+       .= a1|^p by FIELD_15:10;
+     hence a = a1|^p by GROUP_1:def 4 .= a|^p by Z1,FIELD_6:19;
+     end;
+   suppose a1 = 0.K;
+     hence a = a1|^p .= a|^p by Z1,FIELD_6:19;
+     end;
+   end;
+ now let o be object;
+    assume C: o in the carrier of K;
+    the carrier of K c= the carrier of F by EC_PF_1:def 1;
+    then reconsider a = o as Element of F by C;
+    a in K by C; then
+    a|^p = a by Z2;
+    then a is_a_root_of q by thXX;
+    hence o in Roots q by POLYNOM5:def 10;
+    end; then
+Z3: the carrier of K c= Roots q; then
+Z4: card(the carrier of K) <= card(Roots q) by NAT_1:43;
+U: card K = p by Z,FFF;
+deg q = p by Lm12; then
+card(Roots q) <= card(BRoots q) & card(BRoots q) <= p by RING_5:42,65;
+then card(Roots q) <= card(the carrier of K) by U,XXREAL_0:2;
+hence thesis by Z3,Z4,XXREAL_0:1,FIELD_10:4;
+end;
+
+theorem
+for F being finite Field
+holds Roots X^(Char F,F) = the carrier of PrimeField F
+proof
+let F be finite Field;
+consider p being Prime, n being non zero Nat such that
+A: Char F = p & order F = p|^n by finex2;
+thus thesis by A,FF;
+end;
+
+Ffix2:
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n
+for a being Element of F holds (Frob F).a = a iff a in PrimeField F
+proof
+let p be Prime, n be non zero Nat, F be Field;
+assume AS: card F = p|^n;
+let a be Element of F;
+set K = PrimeField F, q = X^(p,F);
+Z: Char F = p by AS,T5;
+A: now assume a in K;
+   then a in Roots q by AS,FF;
+   then a is_a_root_of q by POLYNOM5:def 10;
+   then a|^p = a by thXX;
+   hence (Frob F).a = a by Z,defFr;
+   end;
+now assume (Frob F).a = a;
+   then a|^p = a by Z,defFr;
+   then a is_a_root_of q by thXX;
+   then a in Roots q by POLYNOM5:def 10;
+   hence a in K by AS,FF;
+   end;
+hence thesis by A;
+end;
+
+theorem FA2:
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n holds card(PrimeField F) = p
+proof
+let p be Prime, n be non zero Nat, F be Field;
+assume AS: card F = p|^n;
+set P = PrimeField F;
+Char F = p by AS,T5; then
+P,Z/p are_isomorphic by RING_3:114; then
+consider f being Function of P,Z/p such that E: f is one-to-one onto;
+card dom f = card(Z/p) by E,CARD_1:70 .= p by fresh3a;
+hence thesis by FUNCT_2:def 1;
+end;
+
+theorem
+for F being finite Field
+for a being Element of F holds (Frob F).a = a iff a in PrimeField F
+proof
+let F be finite Field, a be Element of F;
+consider p being Prime, n being non zero Nat such that
+A: Char F = p & order F = p|^n by finex2;
+thus thesis by A,Ffix2;
+end;
+
+theorem fresh3P:
+for p being Prime
+for n being non zero Nat
+for F be Field st card F = p|^n
+for a being Element of F holds a in PrimeField F iff a|^p = a
+proof
+let p be Prime, n be non zero Nat, F be Field;
+assume AS: card F = p|^n; then
+H: Char F = p by T5;
+let a be Element of F;
+A: now assume a in PrimeField F;
+   hence a = (Frob F).a by AS,Ffix2 .= a|^p by H,defFr;
+   end;
+now assume a|^p = a;
+  then a = (Frob F).a by H,defFr;
+  hence a in PrimeField F by AS,Ffix2;
+  end;
+hence thesis by A;
+end;
+
+theorem FA4a:
+for F being finite Field
+for f being Automorphism of F
+for a being Element of F
+holds f.a in PrimeField F iff a in PrimeField F
+proof
+let F be finite Field, f be Automorphism of F, a be Element of F;
+consider n being non zero Nat such that
+AS: card F = (Char F)|^n by FIELD_15:92;
+set p = Char F, P = PrimeField F;
+reconsider F as p-characteristic Field by RING_3:def 6;
+id F is isomorphism; then
+H: F is F-homomorphic Ring by RING_2:def 4;
+A: now assume f.a in P; then
+   f.a = (f.a)|^p by AS,fresh3P .= f.(a|^p) by H,lemID; then
+   a = a|^p by FUNCT_2:19;
+   hence a in PrimeField F by AS,fresh3P;
+   end;
+now assume a in P;
+  then a = a|^p by AS,fresh3P;
+  then f.a = (f.a)|^p by H,lemID;
+  hence f.a in P by AS,fresh3P;
+  end;
+hence thesis by A;
+end;
+
+theorem PrimAUT:
+for F being prime Field
+for f being Automorphism of F holds f = id F
+proof
+let F be prime Field, f be Automorphism of F;
+A: F = PrimeField F by RING_3:96;
+per cases by RING_3:86;
+suppose Char F = 0; then
+  F, F_Rat are_isomorphic by A,RING_3:113; then
+  consider h being Function of F, F_Rat such that
+  B: h is isomorphism;
+  reconsider FRat = F_Rat as F-isomorphic Field by B,RING_3:def 4;
+  reconsider h as Isomorphism of F,FRat by B;
+  reconsider g2 = h" as Isomorphism of FRat,F by RING_3:73;
+  g2 is isomorphism; then
+  reconsider F as FRat-isomorphic Field by RING_3:def 4;
+  D: rng h = the carrier of FRat by FUNCT_2:def 3;
+  reconsider g1 = f * g2 as Function of FRat,F;
+  reconsider g = h * (f * g2) as Function of FRat,FRat;
+  E: g1 is isomorphism;
+  h" * g = (h" * h) * (f * h") by T2
+        .= (id F) * (f * h") by D,FUNCT_2:29
+        .= f * h"; then
+  (h" * g) * h = f * (h" * h) by T2
+              .= f * (id F) by D,FUNCT_2:29
+              .= f; then
+  f = (h" * id(FRat)) * h by E,RING_3:100
+   .= id F by D,FUNCT_2:29;
+  hence thesis;
+  end;
+suppose Char F is prime; then
+  reconsider p = Char F as Prime;
+  F, Z/p are_isomorphic by A,RING_3:114; then
+  consider h being Function of F,Z/p such that
+  B: h is isomorphism;
+  reconsider Zp = Z/p as F-isomorphic Field by B,RING_3:def 4;
+  reconsider h as Isomorphism of F,Zp by B;
+  reconsider g2 = h" as Isomorphism of Zp,F by RING_3:73;
+  g2 is isomorphism; then
+  reconsider F as Zp-isomorphic Field by RING_3:def 4;
+  D: rng h = the carrier of Zp by FUNCT_2:def 3;
+  reconsider g1 = f * g2 as Function of Zp,F;
+  reconsider g = h * (f * g2) as Function of Zp,Zp;
+  E: g1 is isomorphism;
+  h" * g = (h" * h) * (f * h") by T2
+        .= (id F) * (f * h") by D,FUNCT_2:29
+        .= f * h"; then
+  (h" * g) * h = f * (h" * h) by T2
+              .= f * (id F) by D,FUNCT_2:29
+              .= f; then
+  f = (h" * id(Z/p)) * h by E,RING_3:107
+   .= id F by D,FUNCT_2:29;
+  hence thesis;
+  end;
+end;
+
+theorem FA4:
+for F being finite Field
+for f being Automorphism of F
+for a being Element of PrimeField F holds f.a = a
+proof
+let F be finite Field, f be Automorphism of F, a be Element of PrimeField F;
+set P = PrimeField F;
+M: the carrier of P c= the carrier of F by EC_PF_1:def 1; then
+reconsider g = f|(the carrier of P) as
+                Function of the carrier of P,the carrier of F by FUNCT_2:32;
+H: now let o be object;
+   assume H1: o in the carrier of P; then
+   reconsider a = o as Element of F by M;
+   a in P by H1; then
+   f.a in P by FA4a;
+   hence g.o in the carrier of P by H1,FUNCT_1:49;
+   end;
+   dom g = the carrier of P by FUNCT_2:def 1; then
+reconsider g as Function of the carrier of P,the carrier of P
+   by H,FUNCT_2:3;
+A: F is P-extending by FIELD_4:7;
+B: g is one-to-one by FUNCT_1:52;
+   card(the carrier of P) = card(the carrier of P); then
+   g is onto by B,FINSEQ_4:63; then
+F: g = id P by A,PrimAUT;
+now let a be Element of P;
+  thus f.a = g.a by FUNCT_1:49 .= a by F;
+  end;
+hence thesis;
+end;
+
+theorem FA3:
+for p being Prime
+for n being non zero Nat
+for F being Field
+for E being FieldExtension of F
+st card E = p|^n & F == PrimeField E holds deg(E,F) = n
+proof
+let p be Prime, n be non zero Nat, F be Field;
+let E be FieldExtension of F;
+assume AS: card E = p|^n & F == PrimeField E; then
+A: E is finite & F is Subfield of E by FIELD_4:7; then
+reconsider F1 = F as finite Field;
+reconsider E1 = E as FieldExtension of F1;
+reconsider P = PrimeField E as finite Field by A;
+set V = VecSp(E1,F1);
+[#]V = the carrier of E1 by FIELD_4:def 6; then
+[#]V is finite by AS; then
+C: V is finite-dimensional by RANKNULL:4;
+consider T being linear-transformation of V,F1^*(dim V) such that
+E: T is bijective by C,VECTSP13:30,VECTSP13:def 10;
+F: dom T = the carrier of V by FUNCT_2:def 1;
+G: rng T = the carrier of F1^*(dim V) by E,FUNCT_2:def 3;
+card dom T = card rng T by E,CARD_1:70; then
+A: card(the carrier of V)
+     = card(P) |^ (dim V) by AS,F,G,VECTSP13:31
+    .= p |^ (dim V) by AS,FA2;
+card(the carrier of V) = p|^n by AS,FIELD_4:def 6; then
+dim V = n by A,lemp;
+hence thesis by C,FIELD_4:def 7;
+end;
+
+theorem FA1:
+for F being finite Field holds
+F is (PrimeField F)-finite FieldExtension of (PrimeField F)
+proof
+let F be finite Field;
+set P = PrimeField F;
+reconsider E = F as FieldExtension of P by FIELD_4:7;
+the carrier of E = the carrier of VecSp(E,P) by FIELD_4:def 6;
+then [#]VecSp(E,P) is finite;
+then VecSp(E,P) is finite-dimensional by RANKNULL:4;
+hence thesis by FIELD_4:def 8;
+end;
+
+theorem
+for F being finite Field holds
+F is (PrimeField F)-simple FieldExtension of (PrimeField F) by FA1;
+
+
+begin :: Existence and uniqueness of finite Fields
+
+registration
+let p be Prime;
+let n be non zero Nat;
+let F be p-characteristic Field;
+cluster Roots X^(p|^n,F) -> inducing_subfield;
+coherence
+proof
+set S = Roots X^(p|^n,F), q = X^(p|^n,F);
+   (0.F)|^(p|^n) = 0.F & (1.F)|^(p|^n) = 1.F; then
+B: 0.F is_a_root_of q & 1.F is_a_root_of q by thXX;
+C: now let a,b be Element of F;
+   assume a in S & b in S; then
+   D: a is_a_root_of q & b is_a_root_of q by POLYNOM5:def 10;
+   (a + b)|^(p|^n)
+      = a|^(p|^n) + b|^(p|^n) by FIELD_15:41
+     .= a + b|^(p|^n) by D,thXX
+     .= a + b by D,thXX; then
+   (a + b) is_a_root_of q by thXX;
+   hence a + b in S by POLYNOM5:def 10;
+   (a * b)|^(p|^n)
+      = a|^(p|^n) * b|^(p|^n) by BINOM:9
+     .= a * b|^(p|^n) by D,thXX
+     .= a * b by D,thXX; then
+   (a * b) is_a_root_of q by thXX;
+   hence a * b in S by POLYNOM5:def 10;
+   0.F = (0.F)|^(p|^n)
+      .= (a + -a)|^(p|^n) by RLVECT_1:5
+      .= a|^(p|^n) + (-a)|^(p|^n) by FIELD_15:41
+      .= a + (-a)|^(p|^n) by D,thXX; then
+   (-a) is_a_root_of q by thXX,RLVECT_1:6;
+   hence -a in S by POLYNOM5:def 10;
+   end;
+   now let a be non zero Element of F;
+   assume a in S; then
+   D: a is_a_root_of q by POLYNOM5:def 10;
+   (a")|^(p|^n) = (a|^(p|^n))" by F16 .= a" by D,thXX; then
+   a" is_a_root_of q by thXX;
+   hence a" in S by POLYNOM5:def 10;
+   end;
+hence thesis by B,C,POLYNOM5:def 10;
+end;
+end;
+
+registration
+let p be Prime;
+let n be non zero Nat;
+let F be p-characteristic Field;
+let E be SplittingField of X^(p|^n,PrimeField F);
+cluster Roots(E,X^(p|^n,PrimeField F)) -> inducing_subfield;
+coherence
+proof
+set S = Roots(E,X^(p|^n,PrimeField F)),
+    q = X^(p|^n,PrimeField F);
+H: S = {a where a is Element of E : a is_a_root_of q,E} by FIELD_4:def 4;
+   (0.E)|^(p|^n) = 0.E & (1.E)|^(p|^n) = 1.E; then
+B: 0.E is_a_root_of q,E & 1.E is_a_root_of q,E by thXXe;
+C: now let a,b be Element of E;
+   assume D0: a in S & b in S; then
+   consider a1 being Element of E such that
+   D1: a1 = a & a1 is_a_root_of q,E by H;
+   consider b1 being Element of E such that
+   D2: b1 = b & b1 is_a_root_of q,E by H,D0;
+   (a + b)|^(p|^n)
+      = a|^(p|^n) + b|^(p|^n) by FIELD_15:41
+     .= a + b|^(p|^n) by D1,thXXe
+     .= a + b by D2,thXXe; then
+   (a + b) is_a_root_of q,E by thXXe;
+   hence a + b in S by H;
+   (a * b)|^(p|^n)
+      = a|^(p|^n) * b|^(p|^n) by BINOM:9
+     .= a * b|^(p|^n) by D1,thXXe
+     .= a * b by D2,thXXe; then
+   (a * b) is_a_root_of q,E by thXXe;
+   hence a * b in S by H;
+   0.E = (0.E)|^(p|^n)
+      .= (a + -a)|^(p|^n) by RLVECT_1:5
+      .= a|^(p|^n) + (-a)|^(p|^n) by FIELD_15:41
+      .= a + (-a)|^(p|^n) by D1,thXXe; then
+   (-a) is_a_root_of q,E by thXXe,RLVECT_1:6;
+   hence -a in S by H;
+   end;
+   now let a be non zero Element of E;
+   assume a in S; then
+   consider a1 being Element of E such that
+   D: a1 = a & a1 is_a_root_of q,E by H;
+   (a")|^(p|^n) = (a|^(p|^n))" by F16 .= a" by D,thXXe; then
+   a" is_a_root_of q,E by thXXe;
+   hence a" in S by H;
+   end;
+hence thesis by B,H,C;
+end;
+end;
+
+theorem lemex:
+for p being Prime
+for n being non zero Nat
+for F being p-characteristic Field
+for E being SplittingField of X^(p|^n,PrimeField F)
+holds card Roots(E,X^(p|^n,PrimeField F)) = p|^n
+proof
+let p be Prime, n be non zero Nat, F be p-characteristic Field;
+let E be SplittingField of X^(p|^n,PrimeField F);
+X^(p|^n,PrimeField F) splits_in E by FIELD_8:def 1;
+then card Roots(E,X^(p|^n,PrimeField F)) = deg X^(p|^n,PrimeField F) by lemMA;
+hence thesis by Lm12;
+end;
+
+theorem
+for p being Prime
+for n being non zero Nat
+for F being p-characteristic Field
+for E being SplittingField of X^(p|^n,PrimeField F)
+holds E == InducedSubfield Roots(E,X^(p|^n,PrimeField F))
+proof
+let p being Prime, n be non zero Nat, F be p-characteristic Field;
+let E be SplittingField of X^(p|^n,PrimeField F);
+set K = InducedSubfield Roots(E,X^(p|^n,PrimeField F));
+A: PrimeField E = PrimeField K by RING_3:94;
+PrimeField F is Subfield of E by FIELD_4:7;
+then PrimeField E = PrimeField(PrimeField F) by RING_3:94
+                 .= PrimeField F by RING_3:95;
+then reconsider K as FieldExtension of (PrimeField F) by A,FIELD_4:7;
+reconsider E1 = E as K-extending FieldExtension of (PrimeField F)
+   by FIELD_4:7;
+A: X^(p|^n,PrimeField F) splits_in E1 by FIELD_8:def 1;
+the carrier of K = Roots(E,X^(p|^n,PrimeField F)) by dis;
+then X^(p|^n,PrimeField F) splits_in K by A,FIELD_8:27;
+hence thesis by FIELD_8:def 1;
+end;
+
+theorem split:
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n
+holds F is SplittingField of X^(p|^n,PrimeField F)
+proof
+let p be Prime, n be non zero Nat, F be Field;
+assume AS: card F = p|^n;
+Char F = p by T5,AS; then
+F is p-characteristic & F is finite by AS,RING_3:def 6; then
+reconsider U = PrimeField F as p-characteristic finite Field;
+reconsider F as FieldExtension of U by FIELD_4:7;
+reconsider q = X^(p|^n,PrimeField F) as
+        non constant Element of the carrier of Polynom-Ring U;
+B: Roots(F,q) = the carrier of F
+   proof
+   H: Roots(F,q) = {a where a is Element of F : a is_a_root_of q,F}
+      by FIELD_4:def 4;
+   now let o be object;
+     assume o in the carrier of F; then
+     reconsider a = o as Element of F;
+     Ext_eval(X^(p|^n,U),a) = 0.F by AS,thX1e;
+     then a is_a_root_of q,F by FIELD_4:def 2;
+     hence o in Roots(F,q) by H;
+     end;
+   then the carrier of F c= Roots(F,q);
+   hence thesis by XBOOLE_0:def 10;
+   end; then
+D: card Roots(F,q) = deg q by AS,Lm12; then
+C: q splits_in F by lemMA;
+   now let E be FieldExtension of U;
+   assume D: q splits_in E & E is Subfield of F; then
+   F is E-extending FieldExtension of U by FIELD_4:7; then
+   E: Roots(F,q) c= Roots(E,q) by C,D,FIELD_8:28;
+   Roots(E,q) c= the carrier of E; then
+   F: the carrier of F c= the carrier of E by B,E;
+   the carrier of E c= the carrier of F by D,EC_PF_1:def 1; then
+   G: the carrier of F = the carrier of E by F,XBOOLE_0:def 10;
+      the addF of E = (the addF of F) || the carrier of E &
+      the multF of E = (the multF of F) || the carrier of E &
+      1.E = 1.F & 0.E = 0.F by D,EC_PF_1:def 1;
+   hence E == F by G;
+   end;
+hence thesis by lemMA,D,FIELD_8:def 1;
+end;
+
+theorem
+for p being Prime
+for n being non zero Nat
+for F being finite Field st card F = p|^n
+holds X^(p|^n,F) is Ppoly of F,[#](the carrier of F)
+proof
+let p be Prime, n be non zero Nat, F be finite Field;
+assume AS: card F = p|^n;
+consider n1 being non zero Nat such that
+A: card F = (Char F)|^n1 by FIELD_15:92;
+Char F = p by A,AS,lemp; then
+H: F is p-characteristic by RING_3:def 6;
+set q = X^(p|^n,F);
+F is SplittingField of X^(p|^n,PrimeField F) by AS,split; then
+X^(p|^n,PrimeField F) splits_in F by FIELD_8:def 1; then
+consider x being non zero Element of F, v being Ppoly of F such that
+I: X^(p|^n,PrimeField F) = x * v by FIELD_4:def 5;
+F is FieldExtension of (PrimeField F) by FIELD_4:7; then
+E: q = X^(p|^n,PrimeField F) by Xm; then
+consider a being non zero Element of F, q1 being Ppoly of F such that
+A: q = a * q1 by I;
+B: a = a * 1.F
+    .= a * (LC q1) by RING_5:50
+    .= LC q by A,RING_5:5
+    .= 1.F by Lm13;
+C: now let a be Element of F;
+   assume D1: a is_a_root_of q;
+   reconsider F1 = F as FieldExtension of F by FIELD_4:6;
+   reconsider a1 = a as Element of F1;
+   0.F = Ext_eval(q,a1) by D1,FIELD_4:26; then
+   D2: a1 is_a_root_of q,F1 by FIELD_4:def 2;
+   thus multiplicity(q,a) = multiplicity(q,a1) by FIELD_14:def 6
+                        .= 1 by D2,H,E,I,FIELD_4:def 5,FIELD_15:75;
+   end;
+Roots q1 = the carrier of F by AS,H,A,B,thX1ee
+        .= [#](the carrier of F) by SUBSET_1:def 3;
+hence thesis by A,B,C,FIELD_14:30;
+end;
+
+theorem
+for p being Prime
+for n being non zero Nat
+ex F being finite Field st Char F = p & order F = p|^n
+proof
+let p be Prime, n be non zero Nat;
+set E = the SplittingField of X^(p|^n,PrimeField(Z/p));
+set F = InducedSubfield Roots(E,X^(p|^n,PrimeField(Z/p)));
+A: the carrier of F = Roots(E,X^(p|^n,PrimeField(Z/p))) by dis;
+reconsider F as finite Field;
+take F;
+thus Char F = p by RING_3:def 6;
+thus thesis by A,lemex;
+end;
+
+theorem
+for F being finite Field
+ex p being Prime, n being non zero Nat st Char F = p & order F = p|^n
+by finex2;
+
+theorem finun:
+for F1,F2 being finite Field st order F1 = order F2 holds F1,F2 are_isomorphic
+proof
+let F1,F2 be finite Field;
+assume AS: order F1 = order F2;
+consider p1 being Prime, n1 being non zero Nat such that
+A: Char F1 = p1 & order F1 = p1|^n1 by finex2;
+consider p2 being Prime, n2 being non zero Nat such that
+B: Char F2 = p2 & order F2 = p2|^n2 by finex2;
+set PF1 = PrimeField F1, PF2 = PrimeField F2;
+p1 = p2 & n1 = n2 by AS,A,B,lemp; then
+PF1,Z/p1 are_isomorphic & Z/p1,PF2 are_isomorphic by A,B,RING_3:114; then
+PF1,PF2 are_isomorphic by RING_3:44; then
+consider i being Function of PF1,PF2 such that
+I: i is RingIsomorphism;
+reconsider PF2 as PF1-homomorphic PF1-isomorphic Field
+  by I,RING_2:def 4,RING_3:def 4;
+reconsider i as Isomorphism of PF1,PF2 by I;
+reconsider E1 = F1 as SplittingField of X^(p1|^n1,PF1) by A,split;
+set E2 = the SplittingField of (PolyHom i).X^(p1|^n1,PF1);
+consider f being Function of E1,E2 such that
+D: f is i-extending isomorphism by FIELD_8:57;
+E: E1,E2 are_isomorphic by D;
+F: (PolyHom i).X^(p1|^n1,PF1) = X^(p2|^n2,PF2)
+   proof
+   reconsider q = (PolyHom i).X^(p1|^n1,PF1) as Polynomial of PF2;
+   set r1 = X^(p1|^n1,PF1), r2 = X^(p2|^n2,PF2);
+   now let k be Nat;
+     per cases;
+     suppose H: k = 1;
+       hence q.k = i.(r1.1) by FIELD_1:def 2
+                .= i.(-1.PF1) by Lm10
+                .= -(i.(1_PF1)) by RING_2:7
+                .= -(1_PF2) by GROUP_1:def 13
+                .= r2.k by H,Lm10;
+       end;
+     suppose H: k = p1|^n1;
+       thus q.k = i.(r1.k) by FIELD_1:def 2
+               .= i.(1_PF1) by H,Lm10
+               .= 1_PF2 by GROUP_1:def 13
+               .= r2.k by H,AS,A,B,Lm10;
+       end;
+     suppose H: k <> 1 & k <> p1|^n1;
+       thus q.k = i.(r1.k) by FIELD_1:def 2
+               .= i.(0.PF1) by H,Lm11
+               .= 0.PF2 by RING_2:6
+                .= r2.k by H,AS,A,B,Lm11;
+       end;
+     end;
+   hence thesis;
+   end;
+reconsider E3 = F2 as SplittingField of X^(p2|^n2,PF2) by B,split;
+E2,E3 are_isomorphic_over PF2 by F,FIELD_8:58; then
+consider g being Function of E2,E3 such that
+G: g is isomorphism by FIELD_8:def 5;
+E2,E3 are_isomorphic by G;
+hence thesis by E,RING_3:44;
+end;
+
+theorem ThNS:
+for F being finite Field
+holds F is (PrimeField F)-normal (PrimeField F)-separable
+                                      FieldExtension of (PrimeField F)
+proof
+let F be finite Field;
+consider p being Prime, n being non zero Nat such that
+A: Char F = p & order F = p|^n by finex2;
+reconsider E = F as SplittingField of X^(p|^n,PrimeField F) by A,split;
+E is (PrimeField F)-normal FieldExtension of (PrimeField F);
+hence thesis;
+end;
+
+
+begin :: Automorphisms of finite Fields
+
+registration
+let F be finite Field;
+let n be Nat;
+cluster (Frob F)`^n -> isomorphism;
+coherence
+proof
+F is (Char F)-characteristic by RING_3:def 6;
+hence thesis;
+end;
+end;
+
+registration
+let F be finite Field;
+cluster Frob F -> isomorphism;
+coherence
+proof
+Frob F = (Frob F)`^1;
+hence thesis;
+end;
+end;
+
+theorem
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n holds (Frob F)`^n = id F
+proof
+let p be Prime, n be non zero Nat, F be Field;
+set g = (Frob F)`^n;
+assume AS: card F = p|^n; then
+I: Char F = p by T5;
+now let a be Element of F;
+  thus g.a = a|^(p|^n) by I,T4 .= (id F).a by AS,thX0;
+  end;
+hence thesis;
+end;
+
+theorem lemAuthelp:
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n
+for k being Nat st 0 < k & k <= n-1 holds (Frob F)`^k <> id F
+proof
+let p be Prime, n be non zero Nat, F be Field;
+assume AS1: card F = p|^n;
+let k be Nat;
+assume AS2: 0 < k & k <= n-1; then
+reconsider k as non zero Nat;
+H: k + 0 < (n - 1) + 1 by AS2,XREAL_1:8;
+I: Char F = p by AS1,T5; then
+reconsider F as p-characteristic finite Field by AS1,RING_3:def 6;
+set g = (Frob F)`^k;
+now assume AS3: g = id F;
+  now let o be object;
+    assume o in the carrier of F; then
+    reconsider a = o as Element of F;
+    a|^(p|^k) = g.a by I,T4 .= a by AS3;
+    then a is_a_root_of X^(p|^k,F) by thXX;
+    hence o in Roots X^(p|^k,F) by POLYNOM5:def 10;
+    end; then
+  the carrier of F c= Roots X^(p|^k,F); then
+  A: card(the carrier of F) <= card Roots X^(p|^k,F) by NAT_1:43;
+  deg X^(p|^k,F) = p|^k by Lm12; then
+  card Roots X^(p|^k,F) <= p|^k by RING_5:22; then
+  C: p|^n <= p|^k by A,AS1,XXREAL_0:2;
+  p|^k <= p|^n by H,TT7; then
+  p|^k = p|^n by C,XXREAL_0:1;
+  hence contradiction by H,lemp;
+  end;
+hence thesis;
+end;
+
+theorem FAuthelp:
+for p being Prime
+for n being non zero Nat
+for F being Field st card F = p|^n
+for m,k being Nat st 0 <= m & m <= n-1 & 0 <= k & k <= n-1 & m <> k
+holds (Frob F)`^m <> (Frob F)`^k
+proof
+let p be Prime, n be non zero Nat, F be Field;
+assume AS1: card F = p|^n;
+let m,k being Nat;
+assume AS2: 0 <= m & m <= n-1 & 0 <= k & k <= n-1 & m <> k;
+Char F = p by AS1,T5; then
+reconsider F as p-characteristic finite Field by AS1,RING_3:def 6;
+now
+  assume K: (Frob F)`^m = (Frob F)`^k;
+  per cases by AS2,XXREAL_0:1;
+  suppose A: k > m; then
+    k - m > k - k by XREAL_1:15; then
+    reconsider mk = k - m as Element of NAT by INT_1:3;
+    reconsider mk as non zero Nat by A;
+    B: Frob F`^mk = (Frob F)`^0 by K,TT3 .= id F by T1;
+    mk + m = k; then
+    mk <= k by NAT_1:11; then
+    0 < mk & mk <= n - 1 by AS2,XXREAL_0:2;
+    hence contradiction by lemAuthelp,B,AS1;
+    end;
+  suppose A: m > k; then
+    m - k > m - m by XREAL_1:15; then
+    reconsider mk = m - k as Element of NAT by INT_1:3;
+    reconsider mk as non zero Nat by A;
+    B: Frob F`^mk = (Frob F)`^0 by K,TT3 .= id F by T1;
+    mk + k = m; then
+    mk <= m by NAT_1:11; then
+    0 < mk & mk <= n - 1 by AS2,XXREAL_0:2;
+    hence contradiction by lemAuthelp,B,AS1;
+    end;
+  end;
+hence thesis;
+end;
+
+theorem Frobcard:
+for p being Prime
+for n being non zero Nat
+for F be Field st card F = p|^n
+holds card{(Frob F)`^m where m is Nat : 0 <= m & m <= n-1} = n
+proof
+let p be Prime, n be non zero Nat, F be Field;
+assume AS: card F = p|^n;
+defpred P[object,object] means
+  ex x being Element of Seg n,
+     y being Element of NAT st $1 = x & y = x-1 & $2 = (Frob F)`^y;
+B1: for x,y1,y2 being object st x in Seg n & P[x,y1] & P[x,y2] holds y1 = y2;
+B2: now let x be object;
+    assume x in Seg n;
+    then reconsider m = x as Element of Seg n;
+    1 <= m by FINSEQ_1:1; then
+    reconsider z = m - 1 as Element of NAT by INT_1:3;
+    thus ex y being object st P[x,y]
+      proof
+      take (Frob F)`^z;
+      thus thesis;
+      end;
+    end;
+consider f being Function such that
+C: dom f = Seg n &
+   for x being object st x in Seg n holds P[x,f.x] from FUNCT_1:sch 2(B1,B2);
+A1: now let o be object;
+    assume o in {(Frob F)`^m where m is Nat : 0 <= m & m <= n-1};
+    then consider i being Nat such that
+    A2: o = (Frob F)`^i & 0 <= i & i <= n-1;
+    0 + 1 <= i + 1 & i + 1 <= (n-1)+1 by A2,XREAL_1:6; then
+    reconsider x = i + 1 as Element of Seg n by FINSEQ_1:1;
+    P[x,f.x] by C;
+    hence o in rng f by C,A2,FUNCT_1:def 3;
+    end;
+now let o be object;
+    assume o in rng f;
+    then consider u being object such that
+    A2: u in dom f & o = f.u by FUNCT_1:def 3;
+    reconsider j = u as Element of NAT by A2,C;
+    P[u,f.u] by C,A2; then
+    consider x being Element of (Seg n), y being Element of NAT such that
+    A3: u = x & y = x-1 & f.x = (Frob F)`^y;
+    1 <= x & x <= n by FINSEQ_1:1; then
+    0 <= y & y <= n-1 by A3,XREAL_1:9;
+    hence o in {(Frob F)`^m where m is Nat : 0 <= m & m <= n-1} by A2,A3;
+    end; then
+A: rng f = {(Frob F)`^m where m is Nat : 0 <= m & m <= n-1} by A1,TARSKI:2;
+now assume not f is one-to-one;
+  then consider x1,x2 being object such that
+  A1: x1 in dom f & x2 in dom f & f.x1 = f.x2 & x1 <> x2;
+  reconsider j1 = x1, j2 = x2 as Element of NAT by A1,C;
+  consider n1 being Element of Seg n,
+           y1 being Element of NAT such that
+  A2: x1 = n1 & y1 = n1-1 & f.x1 = (Frob F)`^y1 by A1,C;
+  consider n2 being Element of Seg n,
+           y2 being Element of NAT such that
+  A3: x2 = n2 & y2 = n2-1 & f.x2 = (Frob F)`^y2 by A1,C;
+  1 <= j1 & j1 <= n & 1 <= j2 & j2 <= n by A1,C,FINSEQ_1:1; then
+  0 <= y1 & y1 <= n-1 & 0 <= y2 & y2 <= n-1 by A2,A3,XREAL_1:9; then
+  y1 = y2 by A3,A2,A1,AS,FAuthelp;
+  hence contradiction by A1,A2,A3;
+  end;
+then card {(Frob F)`^m where m is Nat : 0 <= m & m <= n-1}
+   = card Seg n by A,C,CARD_1:70 .= n by FINSEQ_1:57;
+hence thesis;
+end;
+
+theorem FAut:
+for p being Prime
+for n being non zero Nat
+for F be Field st card F = p|^n
+holds the set of all f where f is Automorphism of F =
+      { (Frob F)`^m where m is Nat : 0 <= m & m <= n-1 }
+proof
+let p be Prime, n being non zero Nat, F be Field;
+assume AS1: card F = p|^n; then
+AS2: F is finite;
+set P = PrimeField F;
+reconsider E = F as P-finite FieldExtension of P by AS2,FA1;
+consider a being Element of E such that
+A: E == FAdj(P,{a}) by AS2,FIELD_14:def 7;
+set M = the set of all f where f is P-fixing Automorphism of FAdj(P,{a});
+reconsider M as finite set by FAUTfin;
+C: card {(Frob F)`^m where m is Nat : 0 <= m & m <= n-1} = n by AS1,Frobcard;
+then reconsider K = {(Frob F)`^m where m is Nat : 0 <= m & m <= n-1}
+     as finite set;
+set m = card M;
+   C1: deg(FAdj(P,{a}),P) = deg(E,P) by A,FIELD_7:5 .= n by AS1,FA3;
+   C2: m <= card(Roots(FAdj(P,{a}),MinPoly(a,P))) by FAUTh;
+   C3: card(Roots(FAdj(P,{a}),MinPoly(a,P))) <= deg MinPoly(a,P) by ID2;
+       deg MinPoly(a,P) = n by C1,FIELD_6:67; then
+D: m <= n by C2,C3,XXREAL_0:2;
+E: M = the set of all f where f is Automorphism of FAdj(P,{a})
+   proof
+   E1: now let o be object;
+       assume o in the set of all f where f is Automorphism of FAdj(P,{a});
+       then consider f being Automorphism of FAdj(P,{a}) such that
+       E2: o = f;
+       PrimeField FAdj(P,{a}) = PrimeField F by RING_3:94; then
+       f is P-fixing  by AS2,FA4;
+       hence o in M by E2;
+       end;
+   now let o be object;
+       assume o in M;
+       then consider f being P-fixing Automorphism of FAdj(P,{a}) such that
+       E3: o = f;
+       thus o in the set of all f where f is Automorphism of FAdj(P,{a}) by E3;
+       end;
+   hence thesis by E1,TARSKI:2;
+   end;
+B: K c= M
+   proof
+   now let o be object;
+    assume o in K; then
+    consider m being Nat such that B1: o = (Frob F)`^m & 0 <= m & m <= n-1;
+    reconsider f = (Frob F)`^m as Automorphism of FAdj(P,{a}) by AS2,A,FAutEQ1;
+    f is P-fixing by AS2,FA4;
+    hence o in M by B1;
+    end;
+   hence thesis;
+   end;
+then n <= m by C,NAT_1:43;
+then K = M by B,C,D,XXREAL_0:1,FIELD_10:4;
+hence thesis by E,A,FAutEQ;
+end;
+
+
+begin :: Galois Fields -- as extensions of Z/p
+
+definition
+let p be Prime;
+let q be Power of p;
+mode GaloisField of q -> finite Field means :defGal:
+   order it = q & Z/p is Subfield of it;
+existence
+proof
+consider n being non zero Nat such that H: p|^n = q by defpower;
+set E = the SplittingField of X^(p|^n,PrimeField(Z/p));
+set F = InducedSubfield Roots(E,X^(p|^n,PrimeField(Z/p)));
+A: the carrier of F = Roots(E,X^(p|^n,PrimeField(Z/p))) by dis;
+reconsider F as finite Field;
+take F;
+thus order F = q by H,A,lemex;
+PrimeField(Z/p) is Subfield of E by FIELD_4:7; then
+PrimeField PrimeField(Z/p) = PrimeField E by RING_3:94
+                          .= PrimeField F by RING_3:94; then
+PrimeField F = PrimeField(Z/p) by RING_3:95 .= Z/p by RING_3:110;
+hence Z/p is Subfield of F;
+end;
+end;
+
+definition
+let p be Prime;
+mode GaloisField of p is GaloisField of p|^1;
+end;
+
+registration
+let p be Prime;
+let q be Power of p;
+cluster strict for GaloisField of q;
+existence
+proof
+consider n being non zero Nat such that H: p|^n = q by defpower;
+set E = the SplittingField of X^(p|^n,PrimeField(Z/p));
+set F = InducedSubfield Roots(E,X^(p|^n,PrimeField(Z/p)));
+A: the carrier of F = Roots(E,X^(p|^n,PrimeField(Z/p))) by dis;
+reconsider F as finite Field;
+B: order F = q by H,A,lemex;
+PrimeField(Z/p) is Subfield of E by FIELD_4:7; then
+PrimeField PrimeField(Z/p) = PrimeField E by RING_3:94
+                          .= PrimeField F by RING_3:94; then
+PrimeField F = PrimeField(Z/p) by RING_3:95 .= Z/p by RING_3:110;
+then reconsider F as GaloisField of q by B,defGal;
+take F;
+thus thesis;
+end;
+end;
+
+registration
+let p be Prime;
+let q be Power of p;
+cluster -> p-characteristic (Z/p)-extending for GaloisField of q;
+coherence
+proof
+let G be GaloisField of q;
+Z/p is Subfield of G by defGal;
+then Z/p is Subring of G by FIELD_5:12;
+then Char G = Char(Z/p) by RING_3:89 .= p by RING_3:77;
+hence G is p-characteristic by RING_3:def 6;
+Z/p is Subfield of G by defGal;
+hence thesis by FIELD_4:7;
+end;
+end;
+
+theorem
+for p being Prime holds Z/p is GaloisField of p
+proof
+let p be Prime;
+order(Z/p) = p & Z/p is Subfield of Z/p by fresh3a,FIELD_4:1;
+hence thesis by defGal;
+end;
+
+theorem GP:
+for p being Prime
+for F being GaloisField of p holds F == Z/p
+proof
+let p be Prime, F be GaloisField of p;
+A: order F = p|^1 & Z/p is Subfield of F by defGal; then
+H: card F = card Z/p by fresh3a;
+reconsider X = the carrier of F,
+           Y = the carrier of Z/p as finite set;
+B: Y c= X by A,EC_PF_1:def 1; then
+card(X \ Y) = card X - card Y by CARD_2:44 .= 0 by H; then
+X \ Y = {}; then
+the carrier of F c= the carrier of Z/p by XBOOLE_0:def 5; then
+E: the carrier of F = the carrier of Z/p by B,XBOOLE_0:def 10;
+   the addF of Z/p = (the addF of F) || the carrier of Z/p &
+   the multF of Z/p = (the multF of F) || the carrier of Z/p &
+   1.F = 1.Z/p & 0.F = 0.Z/p by A,EC_PF_1:def 1;
+hence thesis by E;
+end;
+
+theorem
+for p being Prime
+for F being strict GaloisField of p holds F = Z/p by GP,FIELD_7:2;
+
+theorem
+for F being Field holds F is finite iff
+ex p being Prime, n being non zero Nat,
+   G being GaloisField of p|^n st F,G are_isomorphic
+proof
+let F be Field;
+A: now assume F is finite; then
+   reconsider F1 = F as finite Field;
+   consider p being Prime, n being non zero Nat such that
+   A: Char F1 = p & order F1 = p|^n by finex2;
+   set G = the GaloisField of p|^n;
+   order G = p|^n by defGal;
+   hence ex p being Prime, n being non zero Nat,
+            G being GaloisField of p|^n st F,G are_isomorphic
+     by A,finun;
+  end;
+now given p being Prime, n being non zero Nat,
+          G being GaloisField of p|^n such that
+  A: F,G are_isomorphic;
+  consider h being Function of F,G such that
+  B: h is isomorphism by A;
+  dom h = the carrier of F & rng h = the carrier of G
+     by B,FUNCT_2:def 3,FUNCT_2:def 1; then
+  card the carrier of F = card the carrier of G by B,CARD_1:70;
+  hence F is finite;
+  end;
+hence thesis by A;
+end;
+
+theorem PF:
+for p being Prime
+for n being non zero Nat
+for F being GaloisField of p|^n holds PrimeField F = Z/p
+proof
+let p be Prime, n be non zero Nat, F being GaloisField of p|^n;
+A: Z/p is strict Subfield of F by defGal;
+   for E being strict Subfield of Z/p holds E = Z/p by RING_3:109;
+hence thesis by A,RING_3:92;
+end;
+
+theorem Gsplit:
+for p being Prime
+for n being non zero Nat
+for F being GaloisField of p|^n holds F is SplittingField of X^(p|^n,Z/p)
+proof
+let p be Prime, n be non zero Nat, F being GaloisField of p|^n;
+order F = p|^n & PrimeField F = Z/p by PF,defGal;
+hence thesis by split;
+end;
+
+theorem
+for p being Prime
+for n being non zero Nat
+for F1,F2 being GaloisField of p|^n holds F1,F2 are_isomorphic_over Z/p
+proof
+let p be Prime, n be non zero Nat, F1, F2 be GaloisField of p|^n;
+A: F1 is SplittingField of X^(p|^n,Z/p) by Gsplit;
+   F2 is SplittingField of X^(p|^n,Z/p) by Gsplit;
+hence thesis by A,FIELD_8:58;
+end;
+
+theorem
+for p being Prime
+for n being non zero Nat
+for F being GaloisField of p|^n holds deg(F,Z/p) = n
+proof
+let p be Prime, n be non zero Nat, F be GaloisField of p|^n;
+set V = VecSp(F,Z/p);
+[#]V = the carrier of F by FIELD_4:def 6; then
+C: V is finite-dimensional by RANKNULL:4;
+consider T being linear-transformation of V,(Z/p)^*(dim V) such that
+E: T is bijective by C,VECTSP13:30,VECTSP13:def 10;
+F: dom T = the carrier of V by FUNCT_2:def 1;
+G: rng T = the carrier of (Z/p)^*(dim V) by E,FUNCT_2:def 3;
+card dom T = card rng T by E,CARD_1:70; then
+A: card(the carrier of V)
+     = card(Z/p) |^ (dim V) by F,G,VECTSP13:31
+    .= p |^ (dim V) by fresh3a;
+card the carrier of V = order F by FIELD_4:def 6 .= p|^n by defGal;
+then dim V = n by A,lemp;
+hence thesis by C,FIELD_4:def 7;
+end;
+
+registration
+let p be Prime;
+let n be non zero Nat;
+cluster -> (Z/p)-finite (Z/p)-simple for GaloisField of p|^n;
+coherence
+proof
+let F be GaloisField of p|^n;
+set V = VecSp(F,Z/p);
+[#]V = the carrier of F by FIELD_4:def 6; then
+V is finite-dimensional by RANKNULL:4;
+hence F is (Z/p)-finite by FIELD_4:def 8;
+hence thesis;
+end;
+end;
+
+registration
+let p be Prime;
+let n be non zero Nat;
+let F be GaloisField of p|^n;
+let m be Nat;
+cluster (Frob F)`^m -> (Z/p)-fixing;
+coherence
+proof
+order F = p|^n & PrimeField F = Z/p by PF,defGal;
+hence thesis by FA4;
+end;
+end;
+
+registration
+let p be Prime;
+let n be non zero Nat;
+let F be GaloisField of p|^n;
+cluster -> (Z/p)-fixing for Automorphism of F;
+coherence
+proof
+let h be Automorphism of F;
+order F = p|^n by defGal; then
+the set of all f where f is Automorphism of F =
+{(Frob F)`^m where m is Nat : 0 <= m & m <= n-1} by FAut; then
+h in {(Frob F)`^m where m is Nat : 0 <= m & m <= n-1}; then
+consider m being Nat such that
+A: h = (Frob F)`^m & 0 <= m & m <= n-1;
+thus thesis by A;
+end;
+end;
+
+registration
+let p be Prime;
+let n be non zero Nat;
+cluster -> (Z/p)-normal (Z/p)-separable for GaloisField of p|^n;
+coherence
+proof
+let F be GaloisField of p|^n;
+PrimeField F = Z/p by PF;
+hence thesis by ThNS;
+end;
+end;
+

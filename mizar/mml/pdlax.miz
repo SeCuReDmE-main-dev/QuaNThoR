@@ -1,0 +1,4240 @@
+:: Classical Isoperimetric Theorem
+::  by Kazuhisa Nakasho and Yasunari Shidama
+:: 
+:: Received December 14, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, PARTFUN1, SUBSET_1, FUNCT_1, RELAT_1,
+      XXREAL_2, COMPLEX1, ARYTM_1, XXREAL_0, SEQ_4, ARYTM_3, REAL_1, FDIFF_1,
+      RCOMP_1, TARSKI, VALUED_1, CARD_1, INTEGRA5, INTEGRA1, XXREAL_1,
+      SQUARE_1, ORDINAL2, FUNCOP_1, FCONT_1, REALSET1, SIN_COS, SEQ_1, SEQ_2,
+      NAT_1, INTEGRA7, FUNCT_7, FUNCT_2, LIMFUNC3, JGRAPH_2;
+ notations TARSKI, XBOOLE_0, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0, XREAL_0,
+      XXREAL_0, XXREAL_2, COMPLEX1, FUNCT_1, RELAT_1, FUNCOP_1, RELSET_1,
+      FUNCT_2, RCOMP_1, VALUED_1, SEQ_1, PARTFUN1, RFUNCT_1, SEQ_2, SEQ_4,
+      SQUARE_1, FCONT_1, FDIFF_1, LIMFUNC3, RVSUM_1, SIN_COS, INTEGRA5,
+      INTEGRA7;
+ constructors REAL_1, FDIFF_1, PARTFUN2, RFUNCT_1, INTEGRA2, COMSEQ_2, FCONT_1,
+      INTEGRA5, SIN_COS, SQUARE_1, RVSUM_1, SEQ_4, RELSET_1, SEQ_2, COMPLEX1,
+      LIMFUNC3, INTEGRA7;
+ registrations XREAL_0, RELSET_1, INTEGRA1, RCOMP_1, VALUED_0, MEMBERED,
+      XXREAL_0, XBOOLE_0, NUMBERS, VALUED_1, FUNCT_2, XXREAL_2, SEQ_2,
+      SQUARE_1, RELAT_1, NAT_1, FCONT_1, SIN_COS, ORDINAL1, BORSUK_5, XCMPLX_0;
+ requirements NUMERALS, BOOLE, SUBSET, REAL, ARITHM;
+ definitions TARSKI, FDIFF_1;
+ equalities XCMPLX_0, INTEGRA5, VALUED_1, SQUARE_1, SIN_COS, RCOMP_1;
+ expansions FCONT_1, TARSKI, FDIFF_1, INTEGRA7, FUNCT_2;
+ theorems TARSKI, RFUNCT_1, FUNCT_1, SEQ_1, SEQ_2, FDIFF_1, ABSVALUE, XCMPLX_1,
+      RCOMP_1, XBOOLE_0, FCONT_1, FDIFF_2, RELAT_1, XREAL_0, XXREAL_0, FUNCT_2,
+      XBOOLE_1, SEQ_4, XREAL_1, COMPLEX1, INTEGRA5, SIN_COS, INTEGRA6,
+      VALUED_1, FUNCOP_1, ORDINAL1, SQUARE_1, RELSET_1, LIMFUNC3, L_HOSPIT,
+      INTEGRA7, ORDEQ_01, LEIBNIZ1, ROLLE, XXREAL_1, COMPTRIG;
+ schemes FUNCT_2, PARTFUN1;
+
+begin :: Foundations of Continuity and Integration
+
+ reserve a,b,r for Real;
+ reserve A for non empty set;
+ reserve X,x for set;
+ reserve f,g,F,G for PartFunc of REAL,REAL;
+ reserve n for Element of NAT;
+
+LmPI: 0 < PI by LEIBNIZ1:17;
+
+Lm1:
+  for a,b be Real holds ].a,b.[ c= [.a,b.] by XXREAL_1:25;
+
+LmX:
+  for a being Real holds
+  ex f being constant Function of NAT,REAL st
+    for x being Nat holds f.x = a
+proof
+  let a be Real;
+  a in REAL by XREAL_0:def 1; then
+  reconsider Sa = NAT --> a as Function of NAT, REAL by FUNCOP_1:45;
+  A12: for n be Nat holds Sa.n = a by ORDINAL1:def 12, FUNCOP_1:7;
+  for x, y be object st x in dom Sa & y in dom Sa
+       holds Sa.x = Sa.y
+  proof
+    let x, y be object;
+    assume x in dom Sa & y in dom Sa;
+    then reconsider x0=x, y0=y as Element of NAT;
+    thus Sa.x = Sa.x0
+             .= a by A12
+             .= Sa.y0 by A12
+             .= Sa.y;
+  end; then
+  Sa is constant by FUNCT_1:def 10;
+  hence thesis by A12;
+end;
+
+theorem Th1:
+  for a,b,C be Real,
+      u be PartFunc of REAL,REAL
+  st a < b
+   & ['a,b'] c= dom u & u is continuous
+   & (for t be Real st t in ].a,b.[ holds u.t = C)
+  holds
+    for t be Real st t in ['a,b'] holds u.t = C
+proof
+  let a,b,C be Real,
+      u be PartFunc of REAL,REAL;
+  assume that
+  A1: a < b & ['a,b'] c= dom u & u is continuous and
+  A2: for t be Real st t in ].a,b.[ holds u.t = C;
+  A3: ['a,b'] = [.a,b.] by A1,INTEGRA5:def 3; then
+  A4: ].a,b.[ c= ['a,b'] by XXREAL_1:25;
+
+  set z = a + (b-a)/2;
+  A5: 0 < b-a by A1,XREAL_1:50; then
+  (b-a)/2 < b-a by XREAL_1:216; then
+  A7: z < b-a + a by XREAL_1:8;
+
+  deffunc FF2(Nat) = In(((b-a)/2)/($1+1),REAL);
+  consider Sn be Function of NAT,REAL such that
+  A8: for x be Element of NAT holds Sn.x = FF2(x) from FUNCT_2:sch 4;
+
+  A9: for n be Nat holds Sn.n = ((b-a)/2)/(n+1)
+  proof
+    let n be Nat;
+    n in NAT by ORDINAL1:def 12;
+    hence Sn.n
+        = In(((b-a)/2)/(n+1),REAL) by A8
+       .= ((b-a)/2)/(n+1);
+  end; then
+  A10: Sn is convergent & lim Sn = 0 by SEQ_4:31;
+
+  consider Sa be constant Function of NAT,REAL such that
+  A12: for x be Nat holds Sa.x = a by LmX;
+
+  Sa.0 = a by A12; then
+  A15: Sa is convergent & lim Sa = a by SEQ_4:25;
+  set S0 = Sa+Sn;
+  A17: lim S0 = a + 0 by A10,A15,SEQ_2:6
+             .= a;
+  a in [.a,b.] by A1; then
+  A18: u is_continuous_in a by A1,A3;
+  A19: rng S0 c= ].a,b.[
+  proof
+    let y be object;
+    assume y in rng S0; then
+    consider n be object such that
+    A20: n in dom S0 & y = S0.n by FUNCT_1:def 3;
+
+    reconsider n as Nat by A20;
+    A21: y = Sa.n + Sn.n by A20,SEQ_1:7
+          .= a + Sn.n by A12
+          .= a + ((b-a)/2)/(n+1) by A9;
+    A22: a + 0 < a + ((b-a)/2)/(n+1) by A5,XREAL_1:8;
+    1 + 0 <= n+1 by XREAL_1:7; then
+    ((b-a)/2)/(n+1) <= ((b-a)/2)/1 by A5,XREAL_1:118; then
+    a + ((b-a)/2)/(n+1) <= a + ((b-a)/2) by XREAL_1:7; then
+    a + ((b-a)/2)/(n+1) < b by A7,XXREAL_0:2;
+    hence y in ].a,b.[ by A21,A22;
+  end; then
+  A23: rng S0 c= dom u by A1,A4; then
+  A24: u/*S0 is convergent & u.a = lim(u/*S0) by A10,A17,A18;
+
+  A25: for n be Nat holds (u/*S0).n = C
+  proof
+    let n be Nat;
+    A26: n in NAT by ORDINAL1:def 12; then
+    A27: (u/*S0).n = u.(S0.n) by A23,FUNCT_2:108;
+    S0.n in rng S0 by A26,FUNCT_2:112;
+    hence thesis by A2,A19,A27;
+  end;
+
+  for x, y be object st x in dom(u/*S0) & y in dom(u/*S0)
+  holds (u/*S0).x = (u/*S0).y
+  proof
+    let x, y be object;
+    assume x in dom(u/*S0) & y in dom(u/*S0);
+    then reconsider x0=x,y0=y as Element of NAT;
+    thus (u/*S0).x = (u/*S0).x0
+                  .= C by A25
+                  .= (u/*S0).y0 by A25
+                  .= (u/*S0).y;
+  end; then
+  A28: u/*S0 is constant by FUNCT_1:def 10;
+  A29: (u/*S0).0 = C by A25;
+
+  consider Sb be constant Function of NAT,REAL such that
+  A30: for x be Nat holds Sb.x = b by LmX;
+  A33: Sb.0 = b by A30;
+
+  set S1 = Sb - Sn;
+
+  S1 is convergent & lim S1 = lim Sb - lim Sn by A10,SEQ_2:12; then
+  A35: lim S1 = b by A10,A33,SEQ_4:25;
+
+  b in [.a,b.] by A1; then
+  A36: u is_continuous_in b by A1,A3;
+
+  A37: rng S1 c= ].a,b.[
+  proof
+    let y be object;
+    assume y in rng S1; then
+    consider n be object such that
+    A38: n in dom S1 & y = S1.n by FUNCT_1:def 3;
+    reconsider n as Nat by A38;
+    A39: y = Sb.n + (-Sn).n by A38,SEQ_1:7
+          .= Sb.n - Sn.n by SEQ_1:10
+          .= b - Sn.n by A30
+          .= b - ((b-a)/2)/(n+1) by A9;
+    A40: b - ((b-a)/2)/(n+1) < b - 0 by A5,XREAL_1:15;
+    1 + 0 <= n+1 by XREAL_1:7; then
+    ((b-a)/2)/(n+1) <= ((b-a)/2)/1 by A5,XREAL_1:118; then
+    A41: b - ((b-a)/2) <= b - ((b-a)/2)/(n+1) by XREAL_1:13;
+    a + 0 < a + (b-a)/2 by A5,XREAL_1:8; then
+    a < b - ((b-a)/2)/(n+1) by A41,XXREAL_0:2;
+    hence y in ].a,b.[ by A39,A40;
+  end; then
+  A42: rng S1 c= dom u by A1,A4; then
+  A43: u/*S1 is convergent & u.b = lim (u/*S1) by A10,A35,A36;
+
+  A44: for n be Nat holds (u/*S1).n = C
+  proof
+    let n be Nat;
+    A45: n in NAT by ORDINAL1:def 12; then
+    A46:(u/*S1).n = u.(S1.n) by A42,FUNCT_2:108;
+    S1.n in ].a,b.[ by A37,A45,FUNCT_2:112;
+    hence thesis by A2,A46;
+  end;
+
+  for x,y be object st x in dom(u/*S1) & y in dom(u/*S1)
+  holds (u/*S1).x = (u/*S1).y
+  proof
+    let x,y be object;
+    assume x in dom(u/*S1) & y in dom(u/*S1);
+    then reconsider x0=x,y0=y as Element of NAT;
+    thus (u/*S1).x = (u/*S1).x0
+                  .= C by A44
+                  .= (u/*S1).y0 by A44
+                  .= (u/*S1).y;
+  end; then
+  A47: u/*S1 is constant by FUNCT_1:def 10;
+
+  A48: (u/*S1).0 = C by A44;
+
+  thus for t be Real st t in ['a,b'] holds u.t = C
+  proof
+    let t be Real;
+    assume t in ['a,b']; then
+    ex r be Real st t = r & a <= r <= b by A3; then
+
+    per cases by XXREAL_0:1;
+    suppose
+      t = a;
+      hence u.t = C by A24,A28,A29,SEQ_4:25;
+    end;
+    suppose
+      a < t < b;
+      then t in ].a,b.[;
+      hence u.t = C by A2;
+    end;
+    suppose t = b;
+      hence u.t = C by A43,A47,A48,SEQ_4:25;
+    end;
+  end;
+end;
+
+theorem Th2:
+  for a,b,c,d be Real,
+      f be PartFunc of REAL,REAL
+  st a <= b & c <= d
+   & [.a,b.] c= dom f
+   & c in [.a,b.] & d in [.a,b.]
+   & f | ['a,b'] is continuous
+   & for t be Real st t in [.c,d.] holds 0 <= f.t
+  holds 0 <= integral(f,c,d)
+proof
+  let a,b,c,d be Real,
+      f be PartFunc of REAL,REAL;
+  assume
+  A1: a <= b & c <= d
+    & [.a,b.] c= dom f
+    & c in [.a,b.] & d in [.a,b.]
+    & f | ['a,b'] is continuous
+    & for t be Real st t in [.c,d.] holds 0 <= f.t; then
+
+  A2: ['a,b'] = [.a,b.] by INTEGRA5:def 3; then
+
+  f | ['a,b'] is bounded & f is_integrable_on ['a,b']
+    by A1,INTEGRA5:10,11; then
+  A3: ['c,d'] c= dom (abs f)
+    & abs f is_integrable_on ['c,d']
+    & (abs f) | ['c,d'] is bounded
+    & |.integral(f,c,d).| <= integral(abs f,c,d)
+    & |.integral(f,d,c).| <= integral(abs f,c,d)
+    by A1,A2,INTEGRA6:22;
+
+  A5: dom((abs f) || ['c,d']) = ['c,d'] by A3,RELAT_1:62;
+  A4: dom abs f = dom f by VALUED_1:def 11; then
+  A6: dom(f || ['c,d']) = ['c,d'] by A3,RELAT_1:62;
+
+  A7: for x be object st x in dom(f || ['c,d'])
+      holds (f || ['c,d']).x = ((abs f) || ['c,d']).x
+  proof
+    let x be object;
+    assume
+    A8: x in dom (f || ['c,d']); then
+    A9: (f || ['c,d']).x = f.x by FUNCT_1:47;
+    x in dom f by A8,RELAT_1:57; then
+    A10: x in dom(abs f) by VALUED_1:def 11;
+    x in [.c,d.] by A1,A6,A8,INTEGRA5:def 3; then
+    |.f.x.| = f.x by A1,COMPLEX1:43; then
+    f.x = (abs f).x by A10,VALUED_1:def 11;
+    hence thesis by A5,A8,A9,FUNCT_1:47;
+  end;
+
+  integral(abs f,c,d)
+    = integral(abs f,['c,d']) by A1,INTEGRA5:def 4
+  .= integral(f,['c,d']) by A3,A4,A5,A7,FUNCT_1:2,RELAT_1:62
+  .= integral(f,c,d) by A1,INTEGRA5:def 4;
+  hence 0 <= integral(f,c,d) by A3,COMPLEX1:46;
+end;
+
+theorem Th3:
+  for a,b,c,d be Real,
+      f,g be PartFunc of REAL,REAL
+  st a <= b & c <= d
+   & [.a,b.] c= dom f & [.a,b.] c= dom g & c in [.a,b.] & d in [.a,b.]
+   & f | ['a,b'] is continuous & g | ['a,b'] is continuous
+   & for t be Real st t in [.c,d.] holds f.t <= g.t
+  holds integral(f,c,d) <= integral(g,c,d)
+proof
+  let a,b,c,d be Real,
+      f,g be PartFunc of REAL,REAL;
+  assume
+  A1: a <= b & c <= d
+    & [.a,b.] c= dom f & [.a,b.] c= dom g & c in [.a,b.] & d in [.a,b.]
+    & f | ['a,b'] is continuous & g | ['a,b'] is continuous
+    & for t be Real st t in [.c,d.] holds f.t <= g.t; then
+  A2: ['a,b'] = [.a,b.] by INTEGRA5:def 3; then
+  A3: f | ['a,b'] is bounded
+    & f is_integrable_on ['a,b'] by A1,INTEGRA5:10,11;
+  A4: g | ['a,b'] is bounded
+    & g is_integrable_on ['a,b'] by A1,A2,INTEGRA5:10,11; then
+
+  A5: integral(g-f,c,d) = integral(g,c,d) - integral(f,c,d)
+    by A1,A2,A3,INTEGRA6:24;
+
+  A6: a <= c <= b & a <= d <= b by A1,XXREAL_1:1; then
+  A7: ['c,d'] c= dom f by A1,A2,A3,INTEGRA6:18;
+  A8: ['c,d'] c= dom g by A1,A2,A4,A6,INTEGRA6:18;
+  A9: dom(g-f) = dom f /\ dom g by VALUED_1:12;
+  A11: (g-f) | ['a,b'] = g | ['a,b'] - f | ['a,b'] by RFUNCT_1:47;
+
+  for t be Real st t in [.c,d.] holds 0 <= (g-f).t
+  proof
+    let t be Real;
+    assume
+    A12: t in [.c,d.];
+    then t in ['c,d'] by A1,INTEGRA5:def 3;
+    then
+    A13: t in dom(g-f) by A7,A8,A9,XBOOLE_0:def 4;
+    f.t - f.t <= g.t - f.t by A1,A12,XREAL_1:9;
+    hence thesis by A13,VALUED_1:13;
+  end; then
+  0 <= integral(g,c,d) - integral(f,c,d) by A1,A5,A9,A11,Th2,XBOOLE_1:19; then
+  0 + integral(f,c,d)
+   <= integral(g,c,d) - integral(f,c,d) + integral(f,c,d) by XREAL_1:7;
+  hence thesis;
+end;
+
+theorem Th4:
+  for a,b,c,d,e be Real,
+      f be PartFunc of REAL,REAL
+  st a <= b & c <= d & c in [.a,b.] & d in [.a,b.]
+   & [.a,b.] c= dom f & f | ['a,b'] is continuous
+   & for t be Real st t in [.c,d.] holds e <= f.t
+  holds e*(d-c) <= integral(f,c,d)
+proof
+  let a,b,c,d,e be Real,
+      f be PartFunc of REAL,REAL;
+  assume
+  A1: a <= b & c <= d & c in [.a,b.] & d in [.a,b.]
+    & [.a,b.] c= dom f & f | ['a,b'] is continuous
+    & for t be Real st t in [.c,d.] holds e <= f.t; then
+
+  A2: ['a,b'] = [.a,b.] by INTEGRA5:def 3;
+  set g = REAL--> e;
+  A3: dom(g) = REAL & rng(g) = {e} by FUNCOP_1:8,FUNCT_2:def 1; then
+  reconsider g as PartFunc of REAL,REAL by RELSET_1:4;
+  g is continuous by A3,FCONT_1:39; then
+  A5: g | ['a,b'] is continuous;
+
+  for t be Real st t in [.c,d.] holds g.t <= f.t
+  proof
+    let t be Real;
+    assume
+    A6: t in [.c,d.];
+    then e <= f.t by A1;
+    hence g.t <= f.t by A6,FUNCOP_1:7;
+  end; then
+  A7: integral(g,c,d) <= integral(f,c,d) by A1,A3,A5,Th3;
+
+  for x be Real st x in ['a,b'] holds g.x = e by FUNCOP_1:7;
+  hence e*(d-c) <= integral(f,c,d) by A1,A2,A3,A7,INTEGRA6:27;
+end;
+
+theorem Th5:
+  for a,b,c,d,e be Real,
+      f be PartFunc of REAL,REAL
+  st 0 < e
+   & a <= b & c < d & c in [.a,b.] & d in [.a,b.]
+   & [.a,b.] c= dom f & f | ['a,b'] is continuous
+   & ( for t be Real st t in [.a,b.] holds 0 <= f.t )
+   & ( for t be Real st t in [.c,d.] holds e <= f.t )
+  holds 0 < e*(d-c) <= integral(f,a,b)
+proof
+  let a,b,c,d,e be Real,
+      f be PartFunc of REAL,REAL;
+
+  assume
+  A1: 0 < e
+    & a <= b & c < d & c in [.a,b.] & d in [.a,b.]
+    & [.a,b.] c= dom f & f | ['a,b'] is continuous
+    & ( for t be Real st t in [.a,b.] holds 0 <= f.t )
+    & ( for t be Real st t in [.c,d.] holds e <= f.t ); then
+
+  A2: ['a,b'] = [.a,b.] by INTEGRA5:def 3; then
+  A3: f | ['a,b'] is bounded & f is_integrable_on ['a,b']
+    by A1,INTEGRA5:10,11; then
+  A4: integral(f,a,d) = integral(f,a,c) + integral(f,c,d)
+    by A1,A2,INTEGRA6:20;
+  a in [.a,b.] & b in [.a,b.] by A1; then
+  A5: integral (f,a,b) = integral (f,a,c) + integral (f,c,d)
+          + integral (f,d,b) by A1,A2,A3,A4,INTEGRA6:20;
+
+  A6: a <= c <= b by A1,XXREAL_1:1; then
+  A7: ['a,c'] = [.a,c.] by INTEGRA5:def 3;
+  A8: [.a,c.] c= [.a,b.] by A6,XXREAL_1:34; then
+  A10: ['a,c'] c= [.a,b.] by A6,INTEGRA5:def 3;
+  A12: a in ['a,c'] & c in ['a,c'] by A6,A7;
+
+  for t be Real st t in [.a,c.] holds 0 <= f.t by A1,A8; then
+  A14: 0 <= integral (f,a,c) by A1,A6,A10,A12,Th2;
+
+  A15: a <= d <= b by A1,XXREAL_1:1; then
+  A16: ['d,b'] = [.d,b.] by INTEGRA5:def 3;
+  A17: [.d,b.] c= [.a,b.] by A15,XXREAL_1:34; then
+  A19: ['d,b'] c= [.a,b.] by A15,INTEGRA5:def 3;
+  A21: b in ['d,b'] & d in ['d,b'] by A15,A16;
+
+  for t be Real st t in [.d,b.] holds 0 <= f.t by A1,A17; then
+  A23: 0 <= integral(f,d,b) by A1,A15,A19,A21,Th2;
+
+  0 < d-c by A1,XREAL_1:50;
+  hence 0 < e*(d-c) by A1;
+  e*(d-c) <= integral(f,c,d) by A1,Th4;
+  then 0 + e*(d-c) <= integral (f,a,c) + integral (f,d,b)
+         + integral (f,c,d) by A14,A23,XREAL_1:7;
+  hence thesis by A5;
+end;
+
+theorem Th6:
+  for a,b be Real,
+      f be PartFunc of REAL,REAL
+  st a <= b
+   & [.a,b.] c= dom f & f | ['a,b'] is continuous
+   & ( for t be Real st t in [.a,b.] holds 0 <= f.t )
+   & ex t0 be Real st t0 in ].a,b.[ & 0 < f.t0
+  holds
+    ex d,c,e be Real
+    st 0 < e & c < d & c in [.a,b.] & d in [.a,b.]
+     & 0 < e*(d-c) <= integral(f,a,b)
+proof
+  let a,b be Real,
+      f be PartFunc of REAL,REAL;
+
+  assume
+  A1: a <= b
+    & [.a,b.] c= dom f & f | ['a,b'] is continuous
+    & ( for t be Real st t in [.a,b.] holds 0 <= f.t )
+    & ex t0 be Real st t0 in ].a,b.[ & 0 < f.t0;
+
+  then consider t0 be Real such that
+  A2: t0 in ].a,b.[ & 0 < f.t0;
+  A3: ].a,b.[ c= [.a,b.] by Lm1;
+  set e = f.t0 / 2;
+  A4: ['a,b'] = [.a,b.] by A1,INTEGRA5:def 3; then
+  consider s0 be Real such that
+  A6: 0 < s0
+    & for t be Real st t in ['a,b'] & |.t-t0.| < s0 holds |.f.t-f.t0.| < e
+    by A1,A2,A3,FCONT_1:14;
+
+  set s = s0/2;
+  A7: 0 < s < s0 by A6,XREAL_1:216;
+
+  reconsider s2 = min(t0-a,b-t0) as Real;
+
+  A10: s2 <= t0-a & s2 <= b-t0 by XXREAL_0:17;
+  A8: a < t0 < b by A2,XXREAL_1:4; then
+  0 < t0 - a & 0 < b - t0 by XREAL_1:50; then
+  A11: 0 < s2 by XXREAL_0:15;
+  reconsider s3 = min(s,s2) as Real;
+  A12: s3 <= s & s3 <= s2 by XXREAL_0:17;
+  A13: 0 < s3 by A6,A11,XXREAL_0:15;
+  set c = t0 - s3;
+  set d = t0 + s3;
+  set e0 = (f.t0)/2;
+  take d,c,e0;
+  thus 0 < e0 by A2;
+  A15: t0 - s3 < t0 - 0 by XREAL_1:15,A13;
+  thus
+  A16: c < d by A13,XREAL_1:8;
+
+  A18: t0 - s2 <= t0 - s3 by A12,XREAL_1:13;
+  s2 + a <= t0 - a + a by A10,XREAL_1:7; then
+  s2 + a - s2 <= t0 -s2 by XREAL_1:13; then
+  A19: a <= c <= b by A8,A15,A18,XXREAL_0:2;
+  hence
+  A20: c in [.a,b.];
+
+  A21: a + 0 < t0 + s3 by A8,A13,XREAL_1:8;
+  A22: t0 + s3 <= t0 + s2 by A12,XREAL_1:7;
+  s2 + t0 <= b - t0 + t0 by A10,XREAL_1:7; then
+  A23: a <= d <= b by A21,A22,XXREAL_0:2;
+  hence
+  A24: d in [.a,b.];
+  A25: [.c,d.] c= [.a,b.] by A19,A23,XXREAL_1:34;
+
+  for t be Real st t in [.c,d.] holds e0 <= f.t
+  proof
+    let t be Real;
+    assume
+    A27: t in [.c,d.];
+    then c <= t <= d by XXREAL_1:1;
+    then t0 - s3 - t0 <= t - t0 <= t0 + s3 - t0 by XREAL_1:13;
+    then |.t-t0.| <= s3 by ABSVALUE:5;
+    then |.t-t0.| <= s by A12,XXREAL_0:2;
+    then |.t-t0.| < s0 by A7,XXREAL_0:2;
+    then |.f.t - f.t0.| < e by A4,A6,A25,A27;
+    then -e <= f.t - f.t0 <= e by ABSVALUE:5;
+    then -e + f.t0 <= f.t - f.t0 + f.t0 by XREAL_1:7;
+    hence (f.t0)/2 <= f.t;
+  end;
+
+  hence 0 < e0*(d-c) <= integral(f,a,b) by A1,A2,A16,A20,A24,Th5;
+end;
+
+Lm2:
+  for f be Real_Sequence,
+      K be Real,
+      N be Nat
+  st f is convergent
+   & for n be Nat st N <= n holds K <= f.n
+  holds K <= lim f
+proof
+  let f be Real_Sequence,
+      K be Real,
+      N be Nat;
+  assume that
+  A1: f is convergent and
+  A2: for n be Nat st N <= n holds K <= f.n;
+  set e = (K - lim f) / 2;
+  assume K > lim f; then
+  B2: 0 < K - lim f by XREAL_1:50; then
+  A3: 0 < e < K - lim f by XREAL_1:216;
+
+  consider N1 be Nat such that
+  A4: for m be Nat st N1 <= m holds |.f.m - lim f.| < e
+      by A1,B2,SEQ_2:def 7;
+
+  reconsider N2 = max(N,N1) as Nat by XXREAL_0:16;
+  |.f.N2 - lim f.| < e by A4,XXREAL_0:25;
+  then -e <= f.N2 - lim f <= e by ABSVALUE:5;
+  then
+  A6: f.N2 - lim f + lim f <= e + lim f by XREAL_1:7;
+  e + lim f < K - lim f + lim f by A3,XREAL_1:8;
+  then f.N2 < K by A6,XXREAL_0:2;
+  hence contradiction by A2,XXREAL_0:25;
+end;
+
+theorem Th7:
+  for f be PartFunc of REAL,REAL,
+      a,b be Real
+  st a < b & ['a,b'] c= dom f
+   & f | ['a,b'] is continuous
+  holds
+  ex I be Real_Sequence
+  st ( for n be Nat holds I.n = integral(f,a+1/(n+1),b-1/(n+1)) )
+   & I is convergent
+   & lim I = integral(f,a,b)
+proof
+  let f be PartFunc of REAL,REAL,
+      a,b be Real;
+  assume that
+  A1: a < b & ['a,b'] c= dom f and
+  A2: f | ['a,b'] is continuous;
+  A3: f | ['a,b'] is bounded & f is_integrable_on ['a,b']
+     by A1,A2,INTEGRA5:10,11;
+
+  deffunc FF(Nat) = In(integral(f,a+1/($1+1),b-1/($1+1)),REAL);
+  consider I be Function of NAT,REAL such that
+  A4: for x be Element of NAT holds I.x = FF(x)
+  from FUNCT_2:sch 4;
+
+  take I;
+  thus
+  A5: for n be Nat holds I.n = integral(f,a+1/(n+1),b-1/(n+1))
+  proof
+    let n be Nat;
+    n in NAT by ORDINAL1:def 12;
+    hence I.n = In(integral(f,a+1/(n+1),b-1/(n+1)),REAL) by A4
+             .= integral(f,a+1/(n+1),b-1/(n+1));
+  end;
+
+  A6: ['a,b'] = [.a,b.] by A1,INTEGRA5:def 3;
+  set X = ['a,b'];
+  dom abs f = dom f by VALUED_1:def 11; then
+  A8: dom ((abs f)|X) = X by A1,RELAT_1:62;
+  A9: ((abs f)|X) | dom((abs f)|X) is continuous by A1,A2,FCONT_1:21;
+  then
+  consider t1, t2 be Real such that
+  A10: t1 in dom((abs f)|X) & t2 in dom((abs f)|X)
+    & ((abs f)|X).t1 = upper_bound(rng((abs f)|X))
+    & ((abs f)|X).t2 = lower_bound(rng((abs f)|X))
+  by A8,FCONT_1:30;
+
+  set K = ((abs f)|X).t1;
+  A11: rng((abs f)|X) is real-bounded by A8,A9,FCONT_1:28,RCOMP_1:10;
+  A12: for t be Real st t in X holds |.f.t.| <= K
+  proof
+    let t be Real;
+    assume
+    A13: t in X; then
+    ((abs f)|X).t in rng((abs f)|X) by A8,FUNCT_1:3; then
+    ((abs f)|X).t <= K by A10,A11,SEQ_4:def 1;
+    then (abs f).t <= K by A13,FUNCT_1:49;
+    hence |.f.t.| <= K by VALUED_1:18;
+  end;
+
+  set L = integral(f,a,b);
+  A15: for p be Real st 0 < p
+       ex n be Nat st for m be Nat st n <= m holds |.I.m - L.| < p
+  proof
+    let p be Real;
+    assume
+    B15: 0 < p; then
+    A16: 0 < p/2 < p by XREAL_1:216;
+    set e = p/2;
+
+    consider N1 be Nat such that
+    A17: 2/(b-a) < N1 by SEQ_4:3;
+
+    N1 + 0 < N1+1 by XREAL_1:8; then
+    A18: 2/(b-a) < N1+1 by A17,XXREAL_0:2;
+
+    consider N2 be Nat such that
+    A19: 2 * (K+1)/e < N2 by SEQ_4:3;
+    N2 + 0 < N2 + 1 by XREAL_1:8; then
+    A20: 2 *(K+1)/e < N2+1 by A19,XXREAL_0:2;
+
+    reconsider n = max(N1,N2) as Nat by XXREAL_0:16;
+    take n;
+    let m be Nat;
+    assume
+    A21: n <= m;
+    N1 <= n by XXREAL_0:25; then
+    N1 <= m by A21,XXREAL_0:2; then
+    N1 + 1 <= m + 1 by XREAL_1:7; then
+    A22: 2/(b-a) <= m + 1 by A18,XXREAL_0:2;
+    A23: 0 < b-a by A1,XREAL_1:50; then
+    2/(b-a)*(b-a) <= (m+1)*(b-a) by A22,XREAL_1:64; then
+    2 <= (m+1)*(b-a) by A23,XCMPLX_1:87; then
+    A24: 2/2 <= (m+1)*(b-a)/2 by XREAL_1:72;
+
+    ((m+1)*(b-a)/2)/(m+1)
+     = (m+1)/(m+1) * ((b-a)/2)
+    .= 1 * ((b-a)/2) by XCMPLX_1:60; then
+    A25: 1/(m+1) <= (b-a)/2 by A24,XREAL_1:72;
+
+    N2 <= n by XXREAL_0:25; then
+    N2 <= m by A21,XXREAL_0:2; then
+    N2+1 <= m+1 by XREAL_1:7; then
+    2 * (K+1)/e <= m+1 by A20,XXREAL_0:2; then
+    (2 * (K+1)/e)/2 <= (m+1)/2 by XREAL_1:72; then
+    ((K+1)/e) * e <= (m+1)/2 * e by B15,XREAL_1:64; then
+    A26: (K+1) <= e * (m+1)/2 by B15,XCMPLX_1:87;
+
+    (e*(m+1)/2)/(m+1)
+     = (m+1)/(m+1)*(e/2)
+    .= 1*(e/2) by XCMPLX_1:60; then
+    A27: (K+1)/(m+1) <= e/2 by A26,XREAL_1:72;
+
+    1/(m+1) + 1/(m+1) <= (b-a)/2 + (b-a)/2 by A25,XREAL_1:7; then
+    1/(m+1) + 1/(m+1) + a <= b-a + a by XREAL_1:7; then
+    A28: a + 1/(m+1) + 1/(m+1) - 1/(m+1) <= b - 1/(m+1) by XREAL_1:13;
+    A29: a + 0 <= a + 1/(m+1) by XREAL_1:7;
+    A30: b - 1/(m+1) <= b - 0 by XREAL_1:13; then
+
+    a + 1/(m+1) <= b by A28,XXREAL_0:2; then
+    A31: a + 1/(m+1) in ['a,b'] by A6,A29; then
+    A32: f is_integrable_on ['a, a + 1/(m+1)']
+       & f is_integrable_on ['a, a + 1/(m+1)']
+       & integral(f,a,b) = integral(f,a,a + 1/(m+1))
+        +integral(f,a + 1/(m+1),b) by A1,A3,INTEGRA6:17;
+    A33: a + 1/(m+1) <= b by A28,A30,XXREAL_0:2;
+    A34: ['a + 1/(m+1), b'] = [.a + 1/(m+1), b.]
+      by A28,A30,INTEGRA5:def 3,XXREAL_0:2;
+
+    B34: now
+      let t be object;
+      assume
+      A35: t in [.a + 1/(m+1), b.]; then
+      reconsider x = t as Real;
+      A36: a + 1/(m+1) <= x <= b by A35,XXREAL_1:1; then
+      a <= x by A29,XXREAL_0:2;
+      hence t in [.a,b.] by A36;
+    end; then
+    A37: [.a + 1/(m+1), b.] c= [.a,b.];
+
+    (f | ['a,b']) | ['a + 1/(m+1), b'] is continuous by A2;
+    then
+    A38: f | ['a + 1/(m+1), b'] is continuous by A6,A34,A37,RELAT_1:74;
+    A39: ['a + 1/(m+1), b'] c= dom f by A1,A6,A34,B34; then
+    A40: f | ['a + 1/(m+1), b'] is bounded &
+         f is_integrable_on ['a + 1/(m+1), b'] by A38,INTEGRA5:10,11;
+
+    b - 1/(m+1) in ['a + 1/(m+1), b'] by A28,A30,A34; then
+    A41: integral(f,a,b)
+    = integral(f,a,a + 1/(m+1)) + (integral(f,a + 1/(m+1),b - 1/(m+1))
+    + integral(f,b - 1/(m+1),b)) by A32,A33,A39,A40,INTEGRA6:17;
+
+    A42: integral(f,a + 1/(m+1),b - 1/(m+1)) = I.m by A5;
+    |.I.m - L.|
+     = |.L - I.m.| by COMPLEX1:60
+    .= |.integral(f,a,a + 1/(m+1)) + integral(f,b - 1/(m+1),b).| by A41,A42;
+    then
+    A43: |.I.m-L.|
+    <= |.integral(f,a,a+1/(m+1)).|
+     + |.integral(f,b-1/(m+1),b).| by COMPLEX1:56;
+
+    A44: a in ['a,b'] by A1,A6;
+    for x be Real st x in ['a, a + 1/(m+1)'] holds |.f.x.| <= K
+    proof
+      let x be Real;
+      assume x in ['a, a + 1/(m+1)'];
+      then x in [.a, a + 1/(m+1).] by A29,INTEGRA5:def 3;
+      then
+      A45: a <= x <= a + 1/(m+1) by XXREAL_1:1;
+      a + 1/(m+1) <= b by A28,A30,XXREAL_0:2; then
+      a <= x <= b by A45,XXREAL_0:2; then
+      x in ['a,b'] by A6;
+      hence |.f.x.| <= K by A12;
+    end; then
+    A46: |.integral(f,a,a + 1/(m+1)).| <= K * (a + 1/(m+1) - a)
+      by A1,A3,A29,A31,A44,INTEGRA6:23;
+
+    a <= b - 1/(m+1) by A28,A29,XXREAL_0:2; then
+    A47: b - 1/(m+1) in ['a,b'] by A6,A30;
+    A48: b in ['a,b'] by A1,A6;
+    for x be Real st x in ['b - 1/(m+1),b'] holds |.f.x.| <= K
+    proof
+      let x be Real;
+      assume x in ['b - 1/(m+1),b'];
+      then x in [.b - 1/(m+1),b.] by A30,INTEGRA5:def 3;
+      then
+      A49: b - 1/(m+1) <= x <= b by XXREAL_1:1;
+      a <= b - 1/(m+1) by A28,A29,XXREAL_0:2;
+      then a <= x <= b by A49,XXREAL_0:2;
+      then x in ['a,b'] by A6;
+      hence |.f.x.| <= K by A12;
+    end; then
+    A50: |.integral(f,b - 1/(m+1),b).| <= K * (b - (b - 1/(m+1)))
+      by A1,A3,A30,A47,A48,INTEGRA6:23;
+    K + 0 <= K + 1 by XREAL_1:7;
+    then K * (1/(m+1)) <= (K+1) * (1/(m+1)) by XREAL_1:64;
+    then
+    A51: K * (1/(m+1)) <= e/2 by A27,XXREAL_0:2; then
+    A52: |.integral(f,a,a + 1/(m+1)).| <= e/2 by A46,XXREAL_0:2;
+    |.integral(f,b - 1/(m+1),b).| <= e/2 by A50,A51,XXREAL_0:2;
+    then |.integral(f,a,a + 1/(m+1)).|
+       + |.integral(f,b - 1/(m+1),b).| <= e/2 + e/2 by A52,XREAL_1:7;
+    then |.I.m-L.| <= e by A43,XXREAL_0:2;
+    hence |.I.m-L.| < p by A16,XXREAL_0:2;
+  end;
+  hence I is convergent by SEQ_2:def 6;
+  hence lim I = integral(f,a,b) by A15,SEQ_2:def 7;
+end;
+
+Lm3:
+  for n be Nat holds
+     0 < 1/(n+1) < PI - 1/(n+1)
+   & PI - 1/(n+1) < PI
+   & [.1/(n+1), PI - 1/(n+1).] c= ].0,PI.[
+   & ['1/(n+1), PI - 1/(n+1)'] = [.1/(n+1), PI - 1/(n+1).]
+proof
+  let n be Nat;
+  thus 0 < 1/(n+1);
+  0+1 <= n+1 by XREAL_1:7;
+  then 1/(n+1) <= (n+1)/(n+1) by XREAL_1:72;
+  then
+  A1: 1/(n+1) <= 1 by XCMPLX_1:60;
+  A2: 313 / 100 - 1/(n+1) < PI - 1/(n+1) by LEIBNIZ1:17,XREAL_1:14;
+  A3: 313 / 100 - 1 <= 313 / 100 - 1/(n+1) by A1,XREAL_1:13;
+  1/(n+1) < 313 / 100 - 1 by XXREAL_0:2,A1; then
+  A4: 1/(n+1) < 313 / 100 - 1/(n+1) by A3,XXREAL_0:2;
+  hence 1/(n+1) < PI - 1/(n+1) by A2,XXREAL_0:2;
+  PI - 1/(n+1) < PI - 0 by XREAL_1:15;
+  hence PI - 1/(n+1) < PI;
+  hence [.1/(n+1), PI - 1/(n+1).] c= ].0,PI.[ by XXREAL_1:47;
+  thus ['1/(n+1), PI - 1/(n+1)'] = [.1/(n+1), PI - 1/(n+1).]
+    by A2,A4,INTEGRA5:def 3,XXREAL_0:2;
+end;
+
+begin :: Differentiation Rules and Properties
+
+theorem Th8:
+  for Z be open Subset of REAL holds
+    sin is_differentiable_on Z & sin`|Z = cos|Z
+  & cos is_differentiable_on Z & cos`|Z = -sin|Z
+proof
+  let Z be open Subset of REAL;
+  A1: sin is_differentiable_on Z by FDIFF_1:26,SIN_COS:68; then
+  A3: dom(sin`|Z) = Z by FDIFF_1:def 7;
+  A2: cos is_differentiable_on Z by FDIFF_1:26,SIN_COS:67; then
+  A4: dom(cos`|Z) = Z by FDIFF_1:def 7;
+  dom cos = REAL by FUNCT_2:def 1; then
+  A5: dom(cos|Z) = Z by RELAT_1:62;
+  dom sin = REAL by FUNCT_2:def 1; then
+  dom(sin|Z) = Z by RELAT_1:62; then
+  A6: dom(-(sin|Z)) = Z by VALUED_1:8;
+  A7: now
+    let t be object;
+    assume
+    A8: t in dom(sin`|Z); then
+    reconsider x = t as Real;
+    thus (sin`|Z).t = diff(sin,x) by A1,A3,A8,FDIFF_1:def 7
+    .= cos.x by SIN_COS:68
+    .= (cos|Z).t by A3,A8,FUNCT_1:49;
+  end;
+
+  now
+    let t be object;
+    assume
+    A9: t in dom(cos`|Z);
+    then reconsider x=t as Real;
+    thus (cos`|Z).t = diff(cos,x) by A2,A4,A9,FDIFF_1:def 7
+      .= -sin.x by SIN_COS:67
+      .= -(sin|Z).t by A4,A9,FUNCT_1:49
+      .= (-(sin|Z)).t by VALUED_1:8;
+  end;
+  hence thesis by A3,A4,A5,A6,A7,FDIFF_1:26,FUNCT_1:2,SIN_COS:67,68;
+end;
+
+theorem Th9:
+  for f be PartFunc of REAL,REAL
+  holds f + f = 2(#)f
+proof
+  let f be PartFunc of REAL,REAL;
+
+  A1: dom(f+f) = dom f /\ dom f by VALUED_1:def 1
+              .= dom f;
+  A2: dom(2(#)f) = dom f by VALUED_1:def 5;
+  now
+    let t be object;
+    assume t in dom(f+f);
+    hence (f+f).t = f.t + f.t by VALUED_1:def 1
+                 .= 2 * f.t
+                 .= (2(#)f).t by VALUED_1:6;
+  end;
+  hence thesis by A1,A2,FUNCT_1:2;
+end;
+
+Th12: ::: repeated
+  for Z be open Subset of REAL,
+      r be Real,
+      f be PartFunc of REAL,REAL
+  st Z c= dom(r(#)f)
+   & f is_differentiable_on Z
+  holds r(#)f is_differentiable_on Z
+      & (r(#)f)`|Z = r(#)(f`|Z) by FDIFF_2:19;
+
+Th13: ::: repeated
+  for Z be open Subset of REAL,
+      f1,f2 be PartFunc of REAL,REAL
+  st Z c= dom(f1(#)f2)
+   & f1 is_differentiable_on Z
+   & f2 is_differentiable_on Z
+  holds f1(#)f2 is_differentiable_on Z
+      & (f1(#)f2)`|Z = (f1`|Z)(#)f2 + f1(#)(f2`|Z) by FDIFF_2:20;
+
+theorem Th14:
+  for f be PartFunc of REAL,REAL,
+      Z be Subset of REAL,
+      x be Real
+  st Z is open & x in Z & Z c= dom f
+  holds
+    f|Z is_differentiable_in x
+      iff
+    f is_differentiable_in x
+proof
+  let f be PartFunc of REAL,REAL,
+      Z be Subset of REAL,
+      x0 be Real;
+  assume
+  A1: Z is open & x0 in Z & Z c= dom f;
+
+  hereby
+    assume
+    A2: f|Z is_differentiable_in x0;
+
+    thus f is_differentiable_in x0
+    proof
+      consider N be Neighbourhood of x0 such that
+      A3: N c= dom(f|Z) and
+      A4: ex L be LinearFunc, R be RestFunc
+          st for x be Real st x in N
+             holds (f|Z).x - (f|Z).x0 = L.(x - x0) + R.(x - x0) by A2;
+
+      consider L be LinearFunc, R be RestFunc such that
+      A5: for x be Real st x in N
+          holds (f|Z).x - (f|Z).x0 = L.(x - x0) + R.(x - x0) by A4;
+      take N;
+      dom(f|Z) c= dom f by RELAT_1:60;
+      hence N c= dom f by A3;
+      take L;
+      take R;
+      let x be Real;
+
+      assume
+      A6: x in N;
+      then (f|Z).x - (f|Z).x0 = L.(x - x0) + R.(x - x0) by A5;
+      then f.x - (f|Z).x0 = L.(x - x0) + R.(x - x0) by A3,A6,FUNCT_1:47;
+      hence f.x - f.x0 = L.(x - x0) + R.(x - x0) by A1,FUNCT_1:49;
+    end;
+  end;
+
+  assume
+  A7: f is_differentiable_in x0;
+
+  consider N1 be Neighbourhood of x0 such that
+  A8: N1 c= Z by A1,RCOMP_1:18;
+
+  consider N be Neighbourhood of x0 such that
+  A9: N c= dom f and
+  A10: ex L be LinearFunc, R be RestFunc
+       st for x be Real st x in N
+          holds f.x - f.x0 = L.(x - x0) + R.(x - x0) by A7;
+
+  consider N2 be Neighbourhood of x0 such that
+  A11: N2 c= N1 and
+  A12: N2 c= N by RCOMP_1:17;
+  A13: N2 c= Z by A8,A11;
+
+  take N2;
+  N2 c= dom f by A9,A12; then
+  N2 c= dom f /\ Z by A13,XBOOLE_1:19;
+  hence N2 c= dom(f|Z) by RELAT_1:61;
+
+  consider L be LinearFunc, R be RestFunc such that
+  A15: for x be Real st x in N
+       holds f.x - f.x0 = L.(x - x0) + R.(x - x0) by A10;
+
+  take L;
+  take R;
+  let x be Real;
+  assume
+  A16: x in N2; then
+  f.x - f.x0 = L.(x - x0) + R.(x - x0) by A12,A15;
+  then (f|Z).x - f.x0 = L.(x - x0) + R.(x - x0) by A8,A11,A16,FUNCT_1:49;
+  hence (f|Z).x - (f|Z).x0 = L.(x - x0) + R.(x - x0) by A1,FUNCT_1:49;
+end;
+
+theorem
+  for f be PartFunc of REAL,REAL,
+      Z be Subset of REAL,
+      x be Real
+   st Z is open & x in Z & Z c= dom f
+    & f is_differentiable_in x
+  holds diff(f,x) = diff(f|Z,x)
+proof
+  let f be PartFunc of REAL,REAL,
+      Z be Subset of REAL,
+      x0 be Real;
+  assume
+  A1: Z is open & x0 in Z & Z c= dom f;
+  assume
+  A2: f is_differentiable_in x0;
+  then
+  A3: f|Z is_differentiable_in x0 by A1,Th14;
+
+  consider N1 be Neighbourhood of x0 such that
+  A4: N1 c= Z by A1,RCOMP_1:18;
+
+  consider N be Neighbourhood of x0 such that
+  A5: N c= dom f and
+  A6: ex L be LinearFunc,
+         R be RestFunc
+      st diff(f,x0) = L.1
+       & for x be Real st x in N
+         holds f.x - f.x0 = L.(x - x0) + R.(x - x0)
+      by A2,FDIFF_1:def 5;
+
+  consider N2 be Neighbourhood of x0 such that
+  A7: N2 c= N1 and
+  A8: N2 c= N by RCOMP_1:17;
+  A9: N2 c= Z by A4,A7;
+  N2 c= dom f by A5,A8;
+  then
+  A10: N2 c= dom f /\ Z by A9,XBOOLE_1:19;
+  A11: N2 c= dom(f|Z) by A1,A9,RELAT_1:62;
+  A12: x0 in N2 by RCOMP_1:16;
+  consider L be LinearFunc,
+           R be RestFunc such that
+  A13: diff(f,x0)= L.1
+     & for x be Real st x in N
+       holds f.x - f.x0 = L.(x - x0) + R.(x - x0) by A6;
+  now
+    let x be Real;
+    assume
+    A14: x in N2;
+    then f.x - f.x0
+       = L.(x - x0) + R.(x - x0) by A8,A13;
+    then (f|Z).x - f.x0
+       = L.(x - x0) + R.(x - x0) by A10,A14,FUNCT_1:48;
+    hence (f|Z).x - (f|Z).x0
+        = L.(x - x0) + R.(x - x0) by A10,A12,FUNCT_1:48;
+  end;
+  hence diff(f|Z,x0) = diff(f,x0) by A3,A11,A13,FDIFF_1:def 5;
+end;
+
+Th16: ::: change INTEGRA7:5 into iff
+  for f be PartFunc of REAL,REAL,
+      Z be Subset of REAL
+  holds
+    f|Z is_differentiable_on Z
+      iff
+    f is_differentiable_on Z by INTEGRA7:5;
+
+Th17: ::: generalize FDIFF_2:16 for any subsets :: DONE
+  for f be PartFunc of REAL,REAL,
+      Z be Subset of REAL
+  st f is_differentiable_on Z holds
+     (f|Z)`| Z = f`| Z by FDIFF_2:16;
+
+theorem Th18:
+  for f be PartFunc of REAL,REAL,
+      X,Z be Subset of REAL
+   st Z is open & Z c= X
+    & f is_differentiable_on X
+  holds
+    f`| Z = (f`| X) | Z
+proof
+  let f be PartFunc of REAL,REAL,
+      X,Z be Subset of REAL;
+  assume
+  A1: Z is open & Z c= X
+    & f is_differentiable_on X;
+  A2: f is_differentiable_on Z by A1,FDIFF_1:26; then
+  A3: dom(f`| Z) = Z by FDIFF_1:def 7;
+  A4: dom(f`| X) = X by A1,FDIFF_1:def 7;
+  for x be object st x in dom((f`| X) | Z)
+  holds ((f`| X) | Z).x = (f`| Z).x
+  proof
+    let x0 be object;
+    assume
+    A5: x0 in dom((f`| X) | Z); then
+    A6: x0 in Z;
+    reconsider x = x0 as Real by A5;
+    thus ((f`| X) | Z).x0
+     = (f`| X).x by A5,FUNCT_1:49
+    .= diff(f,x) by A1,A6,FDIFF_1:def 7
+    .= (f`| Z).x0 by A2,A5,FDIFF_1:def 7;
+  end;
+  hence thesis by A1,A3,A4,FUNCT_1:2,RELAT_1:62;
+end;
+
+theorem Th19:
+  for a,b be Real,
+      u be PartFunc of REAL,REAL
+  st a < b
+   & u is_differentiable_on ].a,b.[
+   & dom u = ['a,b'] & u is continuous
+   & ( for t be Real st t in ].a,b.[ holds (u`| ].a,b.[).t = 0 )
+  holds
+    ex C be Real
+    st for t be Real st t in ['a,b'] holds u.t = C
+proof
+  let a,b be Real,
+      u be PartFunc of REAL,REAL;
+  assume
+  A1: a < b
+    & u is_differentiable_on ].a,b.[
+    & dom u = ['a,b'] & u is continuous
+    & ( for t be Real st t in ].a,b.[ holds (u`| ].a,b.[ ).t = 0 );
+
+  for x be Real st x in ].a,b.[ holds diff(u,x) = 0
+  proof
+    let t be Real;
+    assume
+    A2: t in ].a,b.[;
+    hence diff(u,t) = (u`| ].a,b.[).t by A1,FDIFF_1:def 7
+                   .= 0 by A1,A2;
+  end; then
+  A3: u | ].a,b.[ is constant by A1,ROLLE:7;
+  A4: dom(u | ].a,b.[) = ].a,b.[ by A1,RELAT_1:62;
+
+  set z = a + (b-a)/2;
+
+  A5: 0 < b-a by A1,XREAL_1:50; then
+  A6: 0 + a < z by XREAL_1:8;
+  (b-a)/2 < b-a by A5,XREAL_1:216; then
+  z < b-a + a by XREAL_1:8; then
+  A7: z in ].a,b.[ by A6;
+  take C = (u | ].a,b.[).z;
+
+  now
+    let t be Real;
+    assume
+    A8: t in ].a,b.[;
+    hence u.t = (u | ].a,b.[).t by FUNCT_1:49
+            .= C by A3,A4,A7,A8,FUNCT_1:def 10;
+  end;
+  hence for t be Real st t in ['a,b']
+        holds u.t = C by A1,Th1;
+end;
+
+begin :: Properties of Parametric Curves and Area Calculations
+
+Lm5:
+  for a,b holds a*b <= 1/2 * (a^2 + b^2)
+proof
+  let a,b;
+  0 <= (a-b)^2 by XREAL_1:63;
+  then 0 + 2*a*b <= a^2 + b^2 - 2*a*b + 2*a*b by XREAL_1:7;
+  then (2*a*b)/2 <= (a^2 + b^2)/2 by XREAL_1:72;
+  hence thesis;
+end;
+
+Lm7:
+  for x,y be PartFunc of REAL,REAL,
+      t be Real
+  holds (x(#)y).t <= 1/2 * ((x(#)x).t + (y(#)y).t)
+proof
+  let x,y be PartFunc of REAL,REAL,
+      t be Real;
+  A1: (x(#)y).t = x.t * y.t by VALUED_1:5;
+
+  (x(#)x).t + (y(#)y).t
+   = x.t * x.t + (y(#)y).t by VALUED_1:5
+  .= (x.t)^2 + (y.t)^2 by VALUED_1:5;
+  hence thesis by A1,Lm5;
+end;
+
+Lm10:
+  for x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL,
+      a,b be Real
+  st x is continuous
+   & y is differentiable
+   & y`|Z is continuous
+   & a <= b
+   & ['a,b'] c= Z
+   & Z c= dom x
+   & Z c= dom y
+  holds
+    integral(x(#)(y`|Z),a,b)
+    <= 1/2 * integral(x(#)x + (y`|Z)(#)(y`|Z),a,b)
+proof
+  let x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL,
+      a,b be Real;
+  assume that
+  A1: x is continuous and
+  A2: y is differentiable and
+  A3: y`|Z is continuous and
+  A4: a <= b & ['a,b'] c= Z & Z c= dom x & Z c= dom y;
+  A5: (x(#)(y`|Z)) | ['a,b'] is continuous by A1,A3;
+  y is_differentiable_on Z by A2,A4,FDIFF_1:28; then
+  A6: dom(y`|Z) = Z by FDIFF_1:def 7; then
+  A7: dom(x(#)(y`|Z))
+    = dom x /\ Z by VALUED_1:def 4
+   .= Z by A4,XBOOLE_1:28;
+
+  A9: ((1/2)(#)(x(#)x + (y`|Z)(#)(y`|Z))) | ['a,b'] is continuous by A1,A3;
+  A10: (x(#)x + (y`|Z)(#)(y`|Z)) | ['a,b'] is continuous by A1,A3;
+
+  A11: dom(x(#)x + (y`|Z)(#)(y`|Z))
+   = dom(x(#)x) /\ dom((y`|Z)(#)(y`|Z)) by VALUED_1:def 1
+  .= dom x /\ dom x /\ dom((y`|Z)(#)(y`|Z)) by VALUED_1:def 4
+  .= dom x /\ (Z /\ Z) by A6,VALUED_1:def 4
+  .= Z by A4,XBOOLE_1:28;
+  then
+  A12: dom((1/2)(#)(x(#)x + (y`|Z)(#)(y`|Z)))
+     = Z by VALUED_1:def 5;
+
+  set f = x(#)(y`|Z);
+  set g0 = x(#)x + (y`|Z)(#)(y`|Z);
+  set g = (1/2)(#)g0;
+  A13: f | ['a,b'] is bounded & f is_integrable_on ['a,b']
+    by A4,A5,A7,INTEGRA5:10,11;
+
+  A14: g | ['a,b'] is bounded
+     & g is_integrable_on ['a,b'] by A4,A9,A12,INTEGRA5:10,11;
+  A15: g0 | ['a,b'] is bounded
+     & g0 is_integrable_on ['a,b'] by A4,A10,A11,INTEGRA5:10,11;
+
+  for t be Real st t in ['a,b'] holds f.t <= g.t
+  proof
+    let t be Real;
+    assume
+    A16: t in ['a,b'];
+    g.t = 1/2 * (x(#)x + (y`|Z)(#)(y`|Z)).t by VALUED_1:6
+       .= 1/2 * ((x(#)x).t + ((y`|Z)(#)(y`|Z)).t)
+          by A4,A11,A16,VALUED_1:def 1;
+    hence thesis by Lm7;
+  end;
+  then
+  integral(f,a,b) <= integral(g,a,b) by A4,A7,A12,A13,A14,ORDEQ_01:48;
+  hence thesis by A4,A11,A15,INTEGRA6:10;
+end;
+
+Lm11:
+  for x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL,
+      a,b be Real
+  st x is differentiable
+   & y is differentiable
+   & x`|Z is continuous
+   & Z c= dom x
+   & Z c= dom y
+   & a <= b
+   & ['a,b'] c= Z
+   & for t be Real st t in Z
+     holds ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1
+  holds
+     integral(y(#)(x`|Z),a,b)
+       <= 1/2 * integral(y(#)y + (x`|Z)(#)(x`|Z),a,b)
+     & y(#)y + (x`|Z)(#)(x`|Z)
+       = y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z)
+     & integral(y(#)y + (x`|Z)(#)(x`|Z),a,b)
+       = integral(y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z),a,b)
+proof
+  let x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL,
+      a,b be Real;
+  assume that
+  A1: x is differentiable & y is differentiable and
+  A2: x`|Z is continuous and
+  A3: Z c= dom x & Z c= dom y and
+  A4: a <= b & ['a,b'] c= Z and
+  A5: for t be Real st t in Z
+      holds ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1;
+
+  A6: y | dom y is continuous by A1,FDIFF_1:25;
+
+  set I = AffineMap(0,1);
+  A7: dom I = REAL by FUNCT_2:def 1;
+  x is_differentiable_on Z by A1,A3,FDIFF_1:28; then
+  dom(x`|Z) = Z by FDIFF_1:def 7; then
+  A11: dom((x`|Z)(#)(x`|Z))
+   = Z /\ Z by VALUED_1:def 4
+  .= Z;
+
+  y is_differentiable_on Z by A1,A3,FDIFF_1:28; then
+  dom(y`|Z) = Z by FDIFF_1:def 7; then
+  dom((y`|Z)(#)(y`|Z))
+   = Z /\ Z by VALUED_1:def 4
+  .= Z; then
+  A12: dom(I - (y`|Z)(#)(y`|Z))
+   = REAL /\ Z by A7,VALUED_1:12
+  .= Z by XBOOLE_1:28;
+
+  for t be object st t in dom ((x`|Z)(#)(x`|Z))
+  holds ((x`|Z)(#)(x`|Z)).t = (I - (y`|Z)(#)(y`|Z)).t
+  proof
+    let t be object;
+    assume
+    A13: t in dom ((x`|Z)(#)(x`|Z)); then
+    reconsider s = t as Real;
+B1: I.s = 0 * s + 1 by FCONT_1:def 4;
+    ((x`|Z).s)^2 + ((y`|Z).s)^2 = 1 by A5,A11,A13; then
+    ((x`|Z).s)^2
+      = 1 - ((y`|Z).s)^2
+     .= I.s - ((y`|Z).s)^2 by B1;
+    hence ((x`|Z)(#)(x`|Z)).t
+       = I.s - ((y`|Z).s)^2 by VALUED_1:5
+      .= I.s - ((y`|Z)(#)(y`|Z)).s by VALUED_1:5
+      .= (I - (y`|Z)(#)(y`|Z)).t by A11,A12,A13,VALUED_1:13;
+  end; then
+  (x`|Z)(#)(x`|Z) = I - (y`|Z)(#)(y`|Z) by A11,A12,FUNCT_1:2;
+  hence thesis by A1,A2,A3,A4,A6,Lm10,RFUNCT_1:23;
+end;
+
+Lm13:
+  for t be Real st t in ].-PI, 0.[ holds sin.t < 0
+proof
+  let t be Real;
+  assume t in ].-PI, 0.[;
+  then -PI < t < 0 by XXREAL_1:4;
+  then -0 < -t < -(-PI) by XREAL_1:24;
+  then -t in ].0, PI.[;
+  then 0 < sin.(-t) by COMPTRIG:7;
+  then 0 < -sin.t by SIN_COS:30;
+  hence sin.t < 0;
+end;
+
+Lm17:
+  for y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL
+  st ['0,PI'] c= Z & Z c= dom y
+   & y is differentiable
+   & y`| Z is continuous
+   & y.0 = 0 & y.PI = 0
+  holds
+    ex u be PartFunc of REAL,REAL
+    st dom u = ['0,PI']
+     & u is_differentiable_on ].0,PI.[
+     & u`| ].0,PI.[ is continuous
+     & u is continuous
+     & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+     & for t be Real st t in ].0,PI.[
+       holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t
+proof
+  let y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL;
+  assume
+  A1: ['0,PI'] c= Z & Z c= dom y
+    & y is differentiable
+    & y`| Z is continuous
+    & y.0 = 0 & y.PI = 0;
+
+  A3: ['0,PI'] = [.0,PI.] by INTEGRA5:def 3,LmPI; then
+  A4: ].0,PI.[ c= ['0,PI'] by Lm1; then
+  A5: ].0,PI.[ c= Z by A1;
+  A6: ].0,PI.[ c= dom y by A1,A4;
+
+  A7: y is_differentiable_on Z by A1,FDIFF_1:26; then
+  A10: y is_differentiable_on ].0,PI.[ by A5,FDIFF_1:26;
+  A9: ['0,PI'] c= dom y by A1;
+
+  A11: for t be Real st t in ].0,PI.[ holds
+         y/sin is_differentiable_in t
+       & diff(y/sin,t) = (diff(y,t) * sin.t - diff(sin,t) * y.t) / (sin.t)^2
+  proof
+    let t be Real;
+    assume
+    A12: t in ].0,PI.[; then
+    A13: 0 < sin.t by COMPTRIG:7;
+    A14: sin is_differentiable_in t
+       & diff(sin,t) = cos.t by SIN_COS:64;
+    A15: y is_differentiable_on dom y by A1;
+    t in dom y by A1,A4,A12; then
+    y is_differentiable_in t by A15;
+    hence y/sin is_differentiable_in t
+        & diff(y/sin,t) = (diff(y,t) * sin.t - diff(sin,t) * y.t) / (sin.t)^2
+        by A13,A14,FDIFF_2:14;
+  end;
+
+  B15: now
+    let t be object;
+    assume
+    A16: t in ].0,PI.[;
+    then reconsider s = t as Real;
+    A17: dom sin = REAL by FUNCT_2:def 1;
+    A18: s in REAL by XREAL_0:def 1;
+    A19: sin.s <> 0 by A16,COMPTRIG:7;
+    not s in sin"{0}
+    proof
+      assume s in sin"{0};
+      then s in dom sin & sin.s in {0} by FUNCT_1:def 7;
+      hence contradiction by A19,TARSKI:def 1;
+    end;
+    then s in dom sin \ sin"{0} by A17,A18,XBOOLE_0:def 5;
+    then t in dom y /\ (dom sin \ sin"{0}) by A6,A16,XBOOLE_0:def 4;
+    hence t in dom(y/sin) by RFUNCT_1:def 1;
+  end; then
+  A21: ].0,PI.[ c= dom(y/sin);
+  A22: for t be Real st t in ].0,PI.[ holds y/sin is_continuous_in t
+    by A11,FDIFF_1:24;
+
+  defpred C[object] means $1 in ].0,PI.[;
+  deffunc F(object) = (y/sin).$1;
+  deffunc G(object) = diff(y,In($1,REAL)) * cos.In($1,REAL);
+
+  consider u being Function such that
+  A23: dom u = ['0,PI']
+     & for x being set st x in ['0,PI'] holds
+         ( C[x] implies u.x = F(x) )
+       & ( not C[x] implies u.x = G(x) ) from PARTFUN1:sch 5;
+
+  A24:
+  for t be Real holds
+    ( t in ].0,PI.[ implies u.t = (y/sin).t )
+  & ( t = 0 implies u.t = diff(y,t) )
+  & ( t = PI implies u.t = -diff(y,t) )
+  proof
+    let t be Real;
+A0: ].0,PI.[ c= [.0,PI.] by Lm1;
+    thus t in ].0,PI.[ implies u.t = (y/sin).t by A0,A3,A23;
+    thus t = 0 implies u.t = diff(y,t)
+    proof
+      assume
+      A26: t = 0; then
+      A25: t in ['0,PI'] by A3,LmPI;
+      not t in ].0,PI.[ by A26,XXREAL_1:4;
+      hence u.t = diff(y,t) * cos.In(t,REAL) by A23,A25
+               .= diff(y,t) by A26,SIN_COS:30;
+    end;
+
+    thus t = PI implies u.t = -diff(y,t)
+    proof
+      assume
+      A27: t = PI; then
+      A25: t in ['0,PI'] by A3,LmPI;
+      not t in ].0,PI.[ by A27,XXREAL_1:4;
+      hence u.t = diff(y,t) * cos.In(t,REAL) by A23,A25
+               .= -diff(y,t) by A27,SIN_COS:76;
+    end;
+  end;
+
+  rng u c= REAL
+  proof
+    let z be object;
+    assume z in rng u;
+    then consider t be object such that
+    A28: t in dom u & z = u.t by FUNCT_1:def 3;
+    reconsider t as Real by A23,A28;
+
+    ex r be Real st r = t & 0 <= r <= PI by A3,A23,A28;
+    then 0 = t or 0 < t < PI or t = PI by XXREAL_0:1;
+
+    then per cases;
+    suppose
+      0 = t or t = PI;
+      then u.t = diff(y,t) or u.t = -diff(y,t) by A24;
+      hence z in REAL by A28,XREAL_0:def 1;
+    end;
+    suppose
+      t in ].0,PI.[;
+      then u.t = (y/sin).t by A23,A28;
+      hence z in REAL by A28,XREAL_0:def 1;
+    end;
+  end;
+  then reconsider u as PartFunc of REAL,REAL by A23,RELSET_1:4;
+
+  A31: dom(u | ].0,PI.[) = ].0,PI.[ by A4,A23,RELAT_1:62;
+  A32: dom((y/sin) | ].0,PI.[) = ].0,PI.[ by A21,RELAT_1:62;
+
+  B32: for t be object st t in dom(u | ].0,PI.[)
+       holds (u | ].0,PI.[).t = ((y/sin) | ].0,PI.[).t
+  proof
+    let t be object;
+    assume
+    A33: t in dom(u | ].0,PI.[);
+    hence (u | ].0,PI.[).t
+       = u.t by A31,FUNCT_1:49
+      .= (y/sin).t by A4,A23,A31,A33
+      .= ((y/sin) | ].0,PI.[).t by A31,A33,FUNCT_1:49;
+  end; then
+  A35: u | ].0,PI.[ = (y/sin) | ].0,PI.[ by A31,A32,FUNCT_1:2;
+
+  for t be Real st t in dom u holds u is_continuous_in t
+  proof
+    let t be Real;
+    assume
+    A36: t in dom u;
+    then 0 <= t <= PI by A3,A23,XXREAL_1:1;
+
+    then per cases by XXREAL_0:1;
+    suppose
+      A38: 0 < t < PI; then
+      A39: t in ].0,PI.[;
+      now
+        let r be Real;
+        assume 0 < r;
+        then consider s1 be Real such that
+        A41: 0 < s1
+           & for t1 be Real st t1 in dom(y/sin) & |.t1 - t.| < s1
+             holds |.(y/sin).t1 - (y/sin).t.| < r by A22,A39,FCONT_1:3;
+
+        set s20 = (PI - t)/2;
+        set s21 = t/2;
+        A44: 0 < s21 < t by A38,XREAL_1:216;
+        reconsider s2 = min(s20,s21) as Real;
+
+        A45: s2 <= s20 & s2 <= s21 by XXREAL_0:17; then
+        A47: t - s21 <= t - s2 by XREAL_1:13;
+        A48: t + s2 <= t + s20 by A45,XREAL_1:7;
+        A42: 0 < PI - t by A38,XREAL_1:50; then
+        0 < s20 < PI - t by XREAL_1:216; then
+        s20 + t < PI - t + t by XREAL_1:8;
+        then
+        A49: t + s2 < PI by A48,XXREAL_0:2;
+
+        B49: now
+          let z be object;
+          assume
+          A50: z in ].t - s2, t + s2.[; then
+          reconsider s = z as Real;
+          A51: t - s2 < s < t + s2 by A50,XXREAL_1:4; then
+          s < PI by A49,XXREAL_0:2;
+          hence z in ].0,PI.[ by A44,A47,A51;
+        end; then
+        A53: 0 < s2 & ].t - s2, t + s2.[ c= ].0, PI.[
+          by A38,A42,XXREAL_0:15;
+        reconsider s = min(s1,s2) as Real;
+        A54: s <= s1 & s <= s2 by XXREAL_0:17;
+        take s;
+        thus 0 < s by A41,A53,XXREAL_0:15;
+        thus for t1 be Real st t1 in dom u & |.t1 - t.| < s
+             holds |.u.t1 - u.t.| < r
+        proof
+          let t1 be Real;
+          assume
+          A55: t1 in dom u & |.t1 - t.| < s; then
+          A56: |.t1 - t.| < s1 by A54,XXREAL_0:2;
+          |.t1 - t.| < s2 by A54,A55,XXREAL_0:2; then
+          A57: t1 in ].0,PI.[ by B49,RCOMP_1:1; then
+          A58: |.(y/sin).t1 - (y/sin).t.| < r by B15,A41,A56;
+          u.t = (y/sin).t by A23,A36,A39;
+          hence |.u.t1 - u.t.| < r by A24,A57,A58;
+        end;
+      end;
+      hence u is_continuous_in t by FCONT_1:3;
+    end;
+
+    suppose
+      A60: t = PI;
+      consider d be Real such that
+      A61: 0 < d & ].t-d, t+d.[ c= Z by A1,A23,A36,RCOMP_1:19;
+      A62: 0 < PI/2 < PI by LmPI,XREAL_1:216;
+      reconsider d0 = min(d,PI/2) as Real;
+      A63: d0 <= d & d0 <= PI/2 by XXREAL_0:17;
+      A64: 0 < d0 by A61,LmPI,XXREAL_0:15;
+
+      reconsider N = ].PI-d0, PI+d0.[ as Neighbourhood of t
+        by A60,A64,RCOMP_1:def 6;
+
+      A65: now
+        let s be object;
+        assume
+        B65: s in N; then
+        A66: ex r be Real st s = r & PI-d0 < r < PI+d0;
+        reconsider r = s as Real by B65;
+
+        PI-d <= PI-d0 by A63,XREAL_1:13; then
+        A68: PI-d < r by A66,XXREAL_0:2;
+        PI+d0 <= PI+d by A63,XREAL_1:7;
+        then r < PI+d by A66,XXREAL_0:2;
+        hence s in ].PI-d, PI+d.[ by A68;
+
+        PI - PI/2 <= PI-d0 by A63,XREAL_1:13; then
+        A69: PI - PI/2 < r by A66,XXREAL_0:2;
+        PI + d0 <= PI + PI/2 by A63,XREAL_1:7;
+        then r < PI + PI/2 by A66,XXREAL_0:2;
+        hence s in ].PI/2, PI + PI/2.[ by A69;
+      end; then
+      N c= ].PI-d, PI+d.[; then
+      A73: N c= dom y by A1,A60,A61;
+      A72: N c= Z by A60,A61,A65;
+      A74: y is_differentiable_on N
+         & sin is_differentiable_on N by A1,A73,Th8,FDIFF_1:26;
+
+      now
+        let s be object;
+        assume
+        A75: s in N \ {t}; then
+        reconsider r = s as Real;
+        A76: r in N & not r in {t} by A75,XBOOLE_0:def 5; then
+        A77: r <> t by TARSKI:def 1;
+        A78: PI + PI/2 < PI + PI by A62,XREAL_1:8;
+        r in ].PI/2, PI + PI/2.[ by A65,A76;
+        then PI/2 < r < PI + PI/2 by XXREAL_1:4;
+        then 0 < r < PI or PI < r < PI + PI
+          by A60,A77,A78,LmPI,XXREAL_0:1,2;
+        then r in ].0,PI.[ or r in ].PI, 2*PI.[; then
+        A79: sin.r <> 0 by COMPTRIG:7,COMPTRIG:9;
+        A80: dom sin = REAL by FUNCT_2:def 1;
+        A81: r in REAL by XREAL_0:def 1;
+        not r in sin"{0}
+        proof
+          assume r in sin"{0};
+          then r in dom sin & sin.r in {0} by FUNCT_1:def 7;
+          hence contradiction by A79,TARSKI:def 1;
+        end;
+        then
+        A82: r in dom sin \ sin"{0} by A80,A81,XBOOLE_0:def 5;
+        s in dom(y) /\ (dom sin \ sin"{0}) by A73,A76,A82,XBOOLE_0:def 4;
+        hence s in dom(y/sin) by RFUNCT_1:def 1;
+      end; then
+      A83: N \ {t} c= dom(y/sin);
+      A84: sin is_differentiable_on N & sin`|N = cos|N by Th8;
+      y is_differentiable_on N by A1,A73,FDIFF_1:26; then
+      A85: dom(y`|N) = N by FDIFF_1:def 7;
+
+      now
+        let s be object;
+        assume
+        A86: s in N;
+        then reconsider r = s as Real;
+
+        A88: dom(sin`|N)
+           = dom(cos|N) by Th8
+          .= REAL /\ N by RELAT_1:61,SIN_COS:24
+          .= N by XBOOLE_1:28;
+
+        not r in (sin`|N)"{0}
+        proof
+          assume r in (sin`|N)"{0};
+          then (cos|N).r in {0} by A84,FUNCT_1:def 7;
+          then cos.r in {0} by A86,FUNCT_1:49;
+          hence contradiction by A65,A86,COMPTRIG:13;
+        end; then
+        r in dom(sin`|N) \ (sin`|N)"{0} by A86,A88,XBOOLE_0:def 5;
+        then s in dom(y`|N) /\ (dom (sin`|N) \ (sin`|N)"{0})
+          by A85,A86,XBOOLE_0:def 4;
+        hence s in dom((y`|N)/(sin`|N)) by RFUNCT_1:def 1;
+      end; then
+      A91: N c= dom((y`|N)/(sin`|N));
+      A96: cos|N is continuous;
+      dom(cos|N) = REAL /\ N by RELAT_1:61,SIN_COS:24
+      .= N by XBOOLE_1:28; then
+      A97: sin`|N is_continuous_in t by A84,A96,RCOMP_1:16;
+      (y`|Z)|N is continuous by A1;
+      then y`|N is continuous by A1,A72,Th18,FDIFF_1:28;
+      then
+      A100: y`|N is_continuous_in t by A85,RCOMP_1:16;
+
+      (sin`|N).t = (cos|N).t by Th8
+      .= -1 by A60,FUNCT_1:49,RCOMP_1:16,SIN_COS:76;
+      then
+      A101: (y`|N) / (sin`|N) is_continuous_in t
+        by A85,A97,A100,FCONT_1:11,RCOMP_1:16;
+      A102: y/sin is_convergent_in t
+          & lim(y/sin,t) = diff(y,t) / diff(sin,t)
+          by A1,A60,A74,A83,A91,A101,L_HOSPIT:10,SIN_COS:76;
+      now
+        let r be Real;
+        assume
+        A104: 0 < r;
+        then consider e1 be Real such that
+        A105: 0 < e1
+            & for t1 be Real st 0 < |.t - t1.| < e1 & t1 in dom(y/sin)
+              holds |.(y/sin).t1 - diff(y,t) / diff(sin,t).| < r
+              by A102,LIMFUNC3:28;
+
+        reconsider e = min(e1,PI/2) as Real;
+        A106: e <= e1 & e <= PI/2 by XXREAL_0:17;
+
+        take e;
+        thus 0 < e by A105,LmPI,XXREAL_0:15;
+
+        thus for t1 be Real st t1 in dom u & |.t1 - t.| < e
+             holds |.u.t1 - u.t.| < r
+        proof
+          let t1 be Real;
+          assume
+          A107: t1 in dom u & |.t1 - t.|<e;
+          u.t = -diff(y,t) by A24,A60; then
+          A109: diff(y,t) / diff(sin,t)
+           = (-u.t) / (-1) by A60,SIN_COS:68,76
+          .= u.t;
+
+          A111: 0 <= t1 <= PI by A3,A23,A107,XXREAL_1:1;
+
+          per cases;
+          suppose
+            t = t1;
+            hence |.u.t1 - u.t.| < r by A104,COMPLEX1:44;
+          end;
+          suppose
+            A112: t <> t1; then
+            A113: t - t1 <> 0;
+            A114: t1 < PI by A60,A111,A112,XXREAL_0:1;
+            |.t - t1.| < e by A107,COMPLEX1:60; then
+            t - t1 < e by A60,A111,COMPLEX1:43,XREAL_1:48; then
+            t - t1 + t1 < e + t1 by XREAL_1:8; then
+            A116: t - e < e + t1 - e by XREAL_1:14;
+            t - PI/2 <= t - e by A106,XREAL_1:13; then
+            A117: t1 in ].0,PI.[ by A60,A62,A114,A116;
+            |.t - t1.| < e by A107,COMPLEX1:60; then
+            |.t - t1.| < e1 by A106,XXREAL_0:2; then
+            |.(y/sin).t1 - diff(y,t) / diff(sin,t).| < r
+              by A21,A105,A113,A117,COMPLEX1:47;
+            hence |.u.t1 - u.t.| < r by A23,A107,A109,A117;
+          end;
+        end;
+      end;
+      hence u is_continuous_in t by FCONT_1:3;
+    end;
+
+    suppose
+      A120: t = 0;
+      consider d be Real such that
+      A121: 0 < d & ].t-d, t+d.[ c= Z by A1,A23,A36,RCOMP_1:19;
+      A122: 0 < PI/2 < PI by LmPI,XREAL_1:216;
+      reconsider d0 = min(d,PI/2) as Real;
+      A123: -PI < -PI/2 by LmPI,XREAL_1:24,216;
+      A124: d0 <= d & d0 <= PI/2 by XXREAL_0:17;
+      A125: 0 < d0 by A121,LmPI,XXREAL_0:15;
+      reconsider N = ].0-d0, 0+d0.[ as Neighbourhood of t
+        by A120,A125,RCOMP_1:def 6;
+
+      A126: now
+        let s be object;
+        assume
+        B126: s in N; then
+        reconsider r = s as Real;
+        A127: 0 - d0 < r < 0 + d0 by B126,XXREAL_1:4;
+        0 - d <= 0 - d0 by A124,XREAL_1:13; then
+        A129: 0 - d < r by A127,XXREAL_0:2;
+        r < 0 + d by A124,A127,XXREAL_0:2;
+        hence s in ].-d, d.[ by A129;
+        0 - PI/2 <= 0 - d0 by A124,XREAL_1:13; then
+        A130: 0 - PI/2 < r by A127,XXREAL_0:2;
+        r < PI/2 by A124,A127,XXREAL_0:2;
+        hence s in ].-PI/2, PI/2.[ by A130;
+      end; then
+      A131: N c= ].0-d, 0+d.[;
+      A133: N c= Z by A120,A121,A126;
+      N c= dom y by A1,A120,A121,A131; then
+      A134: y is_differentiable_on N
+          & sin is_differentiable_on N by A1,Th8,FDIFF_1:26;
+
+      now
+        let s be object;
+        assume
+        A135: s in N \ {t};
+        then reconsider r = s as Real;
+        A136: r in N & not r in {t} by A135,XBOOLE_0:def 5; then
+        A137: r <> t by TARSKI:def 1;
+
+        r in ].-PI/2, PI/2.[ by A126,A136; then
+        -PI/2 < r < PI/2 by XXREAL_1:4;
+        then -PI < r < 0 or 0 < r < PI by A120,A122,A123,A137,XXREAL_0:2;
+        then r in ].-PI, 0.[ or r in ].0, PI.[;
+        then
+        A138: sin.r <> 0 by COMPTRIG:7,Lm13;
+        A139: dom sin = REAL by FUNCT_2:def 1;
+        A140: r in REAL by XREAL_0:def 1;
+
+        not r in sin"{0}
+        proof
+          assume r in sin"{0};
+          then r in dom sin & sin.r in {0} by FUNCT_1:def 7;
+          hence contradiction by A138,TARSKI:def 1;
+        end; then
+        A141: r in dom sin \ sin"{0} by A139,A140,XBOOLE_0:def 5;
+        r in dom y by A1,A133,A136;
+        then s in (dom y) /\ (dom sin \ sin"{0}) by A141,XBOOLE_0:def 4;
+        hence s in dom(y/sin) by RFUNCT_1:def 1;
+      end; then
+      A142: N \ {t} c= dom(y/sin);
+      A143: sin is_differentiable_on N & sin`|N = cos|N by Th8;
+      A144: dom(y`|N) = N by A134,FDIFF_1:def 7;
+
+      now
+        let s be object;
+        assume
+        A145: s in N;
+        then reconsider r = s as Real;
+
+        A146: cos.r <> 0 by A126,A145,COMPTRIG:11;
+        A147: dom(sin`|N) = dom(cos|N) by Th8
+        .= REAL /\ N by RELAT_1:61,SIN_COS:24
+        .= N by XBOOLE_1:28;
+
+        not r in (sin`|N)"{0}
+        proof
+          assume r in (sin`|N)"{0};
+          then r in dom(sin`|N) & (sin`|N).r in {0} by FUNCT_1:def 7;
+          then cos.r in {0} by A143,A145,FUNCT_1:49;
+          hence contradiction by A146,TARSKI:def 1;
+        end; then
+        r in dom(sin`|N) \ (sin`|N)"{0} by A145,A147,XBOOLE_0:def 5;
+          then
+        s in dom(y`|N) /\ (dom (sin`|N) \ (sin`|N)"{0})
+          by A144,A145,XBOOLE_0:def 4;
+        hence s in dom((y`|N) / (sin`|N)) by RFUNCT_1:def 1;
+      end; then
+      A150: N c= dom((y`|N) / (sin`|N));
+      A155: cos|N is continuous;
+      dom(cos|N) = N by RELAT_1:62,SIN_COS:24;
+      then
+      A156: sin`|N is_continuous_in t by A143,A155,RCOMP_1:16;
+      y`|N = (y`|Z)|N by A1,A133,Th18,FDIFF_1:26;
+      then y`|N is continuous by A1;
+      then
+      A157: y`|N is_continuous_in t by A144,RCOMP_1:16;
+
+      (sin`|N).t = (cos|N).t by Th8
+      .= 1 by A120,FUNCT_1:49,RCOMP_1:16,SIN_COS:30;
+      then
+      A158: (y`|N) / (sin`|N) is_continuous_in t
+        by A144,A156,A157,FCONT_1:11,RCOMP_1:16;
+      A159: y/sin is_convergent_in t
+          & lim(y/sin,t) = diff(y,t) / diff(sin,t)
+          by A1,A120,A134,A142,A150,A158,L_HOSPIT:10,SIN_COS:30;
+
+      now
+        let r be Real;
+        assume
+        A161: 0 < r;
+        then consider e1 be Real such that
+        A162: 0 < e1
+            & for t1 be Real
+              st 0 < |.t - t1.| < e1
+               & t1 in dom(y/sin)
+              holds |.(y/sin).t1 - diff(y,t) / diff(sin,t).| < r
+              by A159,LIMFUNC3:28;
+
+        reconsider e = min(e1,PI/2) as Real;
+        A163: e <= e1 & e <= PI/2 by XXREAL_0:17;
+        take e;
+        thus 0 < e by A162,LmPI,XXREAL_0:15;
+        thus for t1 be Real st t1 in dom u & |.t1 - t.| < e
+             holds |.u.t1 - u.t.| < r
+        proof
+          let t1 be Real;
+          assume
+          A164: t1 in dom u & |.t1 - t.| < e;
+          A165: diff(y,t) / diff(sin,t) = diff(y,t) / 1 by A120,SIN_COS:30,68
+          .= u.t by A24,A120;
+          A167: 0 <= t1 <= PI by A3,A23,A164,XXREAL_1:1;
+
+          per cases;
+          suppose
+            t = t1;
+            hence |.u.t1 - u.t.| < r by A161,COMPLEX1:44;
+          end;
+          suppose
+            A168: t <> t1; then
+            A169: t - t1 <> 0;
+            t1 - t < e by A120,A164,A167,COMPLEX1:43; then
+            t1 < PI/2 by A120,A163,XXREAL_0:2; then
+            t1 < PI by A122,XXREAL_0:2; then
+            A171: t1 in ].0,PI.[ by A120,A167,A168;
+            |.t - t1.| < e by A164,COMPLEX1:60; then
+            |.t - t1.| < e1 by A163,XXREAL_0:2; then
+            |.(y/sin).t1 - diff(y,t) / diff(sin,t).| < r
+              by A21,A162,A169,A171,COMPLEX1:47;
+            hence |.u.t1 - u.t.| < r by A23,A164,A165,A171;
+          end;
+        end;
+      end;
+      hence u is_continuous_in t by FCONT_1:3;
+    end;
+  end;
+  then
+  A174: u is continuous;
+
+  for t be Real st t in ].0,PI.[ holds u is_differentiable_in t
+  proof
+    let t be Real;
+    assume
+    A175: t in ].0,PI.[;
+    then y/sin is_differentiable_in t by A11;
+    then u | ].0,PI.[ is_differentiable_in t by A21,A35,A175,Th14;
+    hence u is_differentiable_in t by A4,A23,A175,Th14;
+  end;
+  then
+  A176: u is_differentiable_on ].0,PI.[ by A3,A23,Lm1,FDIFF_1:9;
+
+  B176: for t be Real st t in ].0,PI.[
+        holds y/sin is_differentiable_in t by A11;
+  then
+  A177: y/sin is_differentiable_on ].0,PI.[ by A21,FDIFF_1:9;
+
+  set DYS = ((y`|Z)(#)sin - cos(#)y) / (sin(#)sin);
+  A178: dom((y/sin)`| ].0,PI.[) = ].0,PI.[ by A177,FDIFF_1:def 7;
+
+  A179: dom((y`|Z)(#)sin)
+   = dom(y`|Z) /\ dom sin by VALUED_1:def 4
+  .= Z /\ dom sin by A7,FDIFF_1:def 7
+  .= Z /\ REAL by FUNCT_2:def 1
+  .= Z by XBOOLE_1:28;
+
+  dom(cos(#)y) = dom cos /\ dom y by VALUED_1:def 4
+  .= REAL /\ dom y by FUNCT_2:def 1
+  .= dom y by XBOOLE_1:28;
+  then
+  B179: dom((y`|Z)(#)sin - cos(#)y)
+   = Z /\ dom y by A179,VALUED_1:12
+  .= Z by A1,XBOOLE_1:28;
+  then
+  A180: ].0,PI.[ c= dom((y`|Z)(#)sin - cos(#)y) by A1,A4;
+
+  now
+    let t be object;
+    assume
+    A181: t in ].0,PI.[;
+    then reconsider s = t as Real;
+    A182: dom(sin(#)sin) = REAL by FUNCT_2:def 1;
+    A183: s in REAL by XREAL_0:def 1;
+    A184: sin.s <>0 by A181,COMPTRIG:7;
+
+    not s in (sin(#)sin)"{0}
+    proof
+      assume s in (sin(#)sin)"{0};
+      then s in dom(sin(#)sin) & (sin(#)sin).s in {0}
+        by FUNCT_1:def 7;
+      then sin.s * sin.s in {0} by VALUED_1:5;
+      hence contradiction by A184,TARSKI:def 1;
+    end;
+    hence t in dom(sin(#)sin) \ (sin(#)sin)"{0}
+      by A182,A183,XBOOLE_0:def 5;
+  end;
+  then
+  A185: ].0,PI.[ c= dom(sin(#)sin) \ (sin(#)sin)"{0}; then
+  ].0,PI.[ /\ ].0,PI.[ c=
+  dom((y`|Z)(#)sin - cos(#)y) /\ (dom(sin(#)sin) \ (sin(#)sin)"{0})
+    by A180,XBOOLE_1:27; then
+  A186: ].0,PI.[ c= dom DYS by RFUNCT_1:def 1; then
+  A187: dom(DYS | ].0,PI.[) = ].0,PI.[ by RELAT_1:62;
+
+  for t be object
+  st t in dom((y/sin)`| ].0,PI.[)
+  holds ((y/sin)`| ].0,PI.[).t = (DYS | ].0,PI.[).t
+  proof
+    let t be object;
+    assume
+    B187: t in dom((y/sin)`| ].0,PI.[); then
+    A188: t in ].0,PI.[ by A177,FDIFF_1:def 7;
+    reconsider s = t as Real by B187;
+
+    A189: s in Z by A1,A4,A188;
+    thus ((y/sin)`| ].0,PI.[).t
+     = diff(y/sin,s) by A177,A188,FDIFF_1:def 7
+    .= (diff(y,s) * sin.s - diff(sin,s) * y.s) / (sin.s)^2 by A11,A188
+    .= ((y`|Z).s * sin.s - diff(sin,s) * y.s) / (sin.s)^2
+      by A7,A189,FDIFF_1:def 7
+    .= ((y`|Z).s * sin.s - cos.s * y.s) / (sin.s)^2 by SIN_COS:64
+    .= (((y`|Z)(#)sin).s - cos.s * y.s) * ((sin.s)^2)" by VALUED_1:5
+    .= (((y`|Z)(#)sin).s -(cos(#)y).s) * ((sin.s)^2)" by VALUED_1:5
+    .= ((y`|Z)(#)sin - cos(#)y).s * ((sin.s)^2)"
+        by A1,A4,B179,A188,VALUED_1:13
+    .= ((y`|Z)(#)sin - cos(#)y).s * ((sin(#)sin).s)" by VALUED_1:5
+    .= DYS.s by A186,A188,RFUNCT_1:def 1
+    .= (DYS | ].0,PI.[).t by A188,FUNCT_1:49;
+  end;
+  then
+  A192: (y/sin)`| ].0,PI.[ = DYS | ].0,PI.[ by A178,A187,FUNCT_1:2;
+
+  y | dom y is continuous by A1,FDIFF_1:25; then
+  A194: (y`|Z)(#)sin - cos(#)y is continuous by A1;
+  A195: dom(sin(#)sin) = REAL by FUNCT_2:def 1;
+
+  for t be Real st t in dom(DYS | ].0,PI.[)
+  holds (DYS | ].0,PI.[) is_continuous_in t
+  proof
+    let t be Real;
+    assume
+    A196: t in dom(DYS | ].0,PI.[); then
+    A197: not t in (sin(#)sin)"{0} by A185,A187,XBOOLE_0:def 5;
+
+    A198: (sin(#)sin).t <> 0
+    proof
+      assume (sin(#)sin).t = 0; then
+      (sin(#)sin).t in {0} by TARSKI:def 1;
+      hence contradiction by A195,A196,A197,FUNCT_1:def 7;
+    end;
+
+    A201: (y`|Z)(#)sin - cos(#)y is_continuous_in t
+    by A1,A4,B179,A187,A194,A196;
+    sin(#)sin is_continuous_in t by A195,A196,FCONT_1:def 2; then
+    DYS is_continuous_in t by A1,A4,B179,A187,A196,A198,A201,FCONT_1:11;
+    hence DYS | ].0,PI.[ is_continuous_in t by A187,A196,FCONT_1:1;
+  end; then
+  A202: (y/sin)`| ].0,PI.[ is continuous by A192;
+
+  B202: u`| ].0,PI.[
+   = (u | ].0,PI.[)`| ].0,PI.[ by A176,Th17
+  .= ((y/sin) | ].0,PI.[)`| ].0,PI.[ by A31,A32,B32,FUNCT_1:2
+  .= (y/sin)`| ].0,PI.[ by A21,Th17,B176,FDIFF_1:9;
+
+  A204: sin is_differentiable_on ].0,PI.[
+      & sin`| ].0,PI.[ = cos | ].0,PI.[
+      & cos is_differentiable_on ].0,PI.[
+      & cos`| ].0,PI.[ = - sin | ].0,PI.[ by Th8;
+
+  A205: dom(y | ['0,PI']) = dom y /\ ['0,PI'] by RELAT_1:61
+     .= ['0,PI'] by A9,XBOOLE_1:28;
+  A207: dom(u(#)sin) = dom u /\ dom sin by VALUED_1:def 4
+     .= ['0,PI'] /\ REAL by A23,FUNCT_2:def 1
+     .= ['0,PI'] by XBOOLE_1:28;
+
+  B207: for t be object st t in dom(y | ['0,PI'])
+        holds (y | ['0,PI']).t = (u(#)sin).t
+  proof
+    let t be object;
+    assume
+    A208: t in dom(y | ['0,PI']); then
+    reconsider s = t as Real;
+    ex r be Real st r = s & 0 <= r <= PI by A3,A205,A208;
+
+    then per cases by XXREAL_0:1;
+    suppose
+      0 = s;
+      hence (y | ['0,PI']).t
+       = u.s * sin.s by A1,A205,A208,FUNCT_1:49,SIN_COS:30
+      .= (u(#)sin).t by VALUED_1:5;
+    end;
+    suppose
+      0 < s < PI; then
+      A211: s in ].0,PI.[; then
+      A212: sin s <> 0 by COMPTRIG:7;
+      (u(#)sin).t = u.s * sin.s by VALUED_1:5
+      .= (u | ].0,PI.[).s * sin.s by A211,FUNCT_1:49
+      .= ((y/sin) | ].0,PI.[).s * sin.s by A31,A32,B32,FUNCT_1:2
+      .= (y/sin).s * sin.s by A211,FUNCT_1:49
+      .= (y.s * (sin.s)") * sin.s by B15,A211,RFUNCT_1:def 1
+      .= y.s * sin.s * (sin.s)"
+      .= y.t by A212,XCMPLX_1:203;
+      hence (y | ['0,PI']).t = (u(#)sin).t by A205,A208,FUNCT_1:49;
+    end;
+    suppose
+      s = PI;
+      hence (y | ['0,PI']).t
+       = u.s * sin.s by A1,A205,A208,FUNCT_1:49,SIN_COS:76
+      .= (u(#)sin).t by VALUED_1:5;
+    end;
+  end; then
+  A216: y | ['0,PI'] = (u(#)sin) | ['0,PI'] by A205,A207,FUNCT_1:2;
+
+  A217: y | ].0,PI.[ = (y | ['0,PI']) | ].0,PI.[ by A3,Lm1,RELAT_1:74
+  .= (u(#)sin) | ].0,PI.[ by A205,A207,B207,FUNCT_1:2;
+
+  B217: y | ].0,PI.[ is_differentiable_on ].0,PI.[ by A10,Th16; then
+  A218: u(#)sin is_differentiable_on ].0,PI.[ by A217,Th16;
+  for t be Real st t in ].0,PI.[
+  holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t
+  proof
+    let t be Real;
+    assume
+    A220: t in ].0,PI.[; then
+    A222: ((u(#)sin)`| ].0,PI.[).t
+     = sin.t * diff(u,t) + u.t * diff(sin,t) by A176,A204,A218,FDIFF_1:21
+    .= diff(u,t) * sin.t + u.t * cos.t by SIN_COS:64;
+
+    diff(y,t) = (y `| ].0,PI.[).t by A10,A220,FDIFF_1:def 7
+    .= (((u(#)sin) | ].0,PI.[) `| ].0,PI.[).t by A5,A7,A217,Th17,FDIFF_1:26
+    .= ((u(#)sin)`| ].0,PI.[).t by A217,B217,Th16,Th17;
+    hence thesis by A222;
+  end;
+  hence thesis by A23,A174,A176,A202,B202,A216;
+end;
+
+Lm18:
+  for y,u be PartFunc of REAL,REAL,
+      Z be open Subset of REAL st
+   y is differentiable
+   & ['0,PI'] c= Z & Z c= dom y
+   & u is_differentiable_on ].0,PI.[
+   & u`| ].0,PI.[ is continuous
+   & dom u = ['0,PI'] & u is continuous
+   & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+   & for t be Real st t in ].0,PI.[
+     holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t
+  holds
+    for t be Real st t in ].0,PI.[ holds
+      (y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z)).t
+      = (u.t)^2 * ((sin.t)^2 - (cos.t)^2)
+      - 2 * u.t * diff(u,t) * sin.t * cos.t
+      - diff(u,t)^2 * (sin.t)^2 + 1
+proof
+  let y,u be PartFunc of REAL,REAL,
+      Z be open Subset of REAL;
+
+  assume
+  A2: y is differentiable
+    & ['0,PI'] c= Z & Z c= dom y
+    & u is_differentiable_on ].0,PI.[
+    & u`| ].0,PI.[ is continuous
+    & dom u = ['0,PI'] & u is continuous
+    & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+    & for t be Real st t in ].0,PI.[
+      holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t;
+
+  ['0,PI'] = [.0,PI.] by INTEGRA5:def 3,LmPI; then
+  A3: ].0,PI.[ c= ['0,PI'] by Lm1;
+
+  set I = AffineMap(0,1);
+  A1: dom I = REAL by FUNCT_2:def 1;
+  A5: y is_differentiable_on Z by A2,FDIFF_1:26;
+  set f = y(#)y + I - (y`|Z)(#)(y`|Z);
+  set g = (u(#)u)(#)(sin(#)sin - cos(#)cos)
+        - 2(#)u(#)(u`| ].0,PI.[)(#)sin(#)cos
+        - (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin + I;
+  set Z0 = ].0,PI.[;
+
+  dom(y(#)y) = dom y /\ dom y by VALUED_1:def 4
+  .= dom y; then
+  A7: dom(y(#)y + I) = dom y /\ REAL by A1,VALUED_1:def 1
+  .= dom y by XBOOLE_1:28;
+  dom((y`|Z)(#)(y`|Z)) = dom(y`|Z) /\ dom(y`|Z) by VALUED_1:def 4
+  .= Z by A5,FDIFF_1:def 7; then
+  A8: dom f = Z /\ dom y by VALUED_1:12,A7
+  .= Z by A2,XBOOLE_1:28;
+  let t be Real;
+  assume
+  A9: t in ].0,PI.[; then
+  A10: t in Z by A2;
+  AA: I.t = 0 * t + 1 by FCONT_1:def 4;
+  A12: y.t = (y | ['0,PI']).t by A3,A9,FUNCT_1:49
+  .= (u(#)sin).t by A2,A9,FUNCT_1:49
+  .= u.t * sin.t by VALUED_1:5;
+  A13: t in dom(y(#)y + I) by A2,A7,A9;
+  thus f.t = (y(#)y + AffineMap(0,1)).t -
+     ((y`|Z)(#)(y`|Z)).t by A2,A8,A9,VALUED_1:13
+  .= ((y(#)y).t + I.t) - ((y`|Z)(#)(y`|Z)).t by A13,VALUED_1:def 1
+  .= (y.t * y.t + I.t) - ((y`|Z)(#)(y`|Z)).t by VALUED_1:5
+  .= (y.t * y.t + I.t) - (y`|Z).t * (y`|Z).t by VALUED_1:5
+  .= (y.t * y.t + I.t) - (diff(y,t) * (y`|Z).t) by A5,A10,FDIFF_1:def 7
+  .= ((u.t)^2 * (sin.t)^2 + 1) - diff(y,t) * diff(y,t)
+    by A5,A10,A12,FDIFF_1:def 7,AA
+  .= ((u.t)^2 * (sin.t)^2 + 1)
+   - (diff(u,t) * sin.t + u.t * cos.t) * diff(y,t) by A2,A9
+  .= ((u.t)^2 * (sin.t)^2 + 1)
+   - (diff(u,t) * sin.t + u.t * cos.t)
+   * (diff(u,t) * sin.t + u.t * cos.t) by A2,A9
+  .= (u.t)^2 * ((sin.t)^2 - (cos.t)^2)
+   - 2 * u.t * diff(u,t) * sin.t * cos.t
+   - diff(u,t)^2 * (sin.t)^2 + 1;
+end;
+
+Lm19:
+  for y,u be PartFunc of REAL,REAL,
+      Z be open Subset of REAL st
+   y is differentiable
+   & ['0,PI'] c= Z & Z c= dom y
+   & u is_differentiable_on ].0,PI.[
+   & u`| ].0,PI.[ is continuous
+   & dom u = ['0,PI'] & u is continuous
+   & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+   & for t be Real st t in ].0,PI.[
+     holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t
+  holds
+    for t be Real st t in ].0,PI.[
+    holds (y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z)).t
+        = 1 - diff(u,t)^2 * (sin.t)^2 - diff((u(#)u(#)sin)(#)cos,t)
+proof
+  let y,u be PartFunc of REAL,REAL,
+      Z be open Subset of REAL;
+
+  assume
+  A2: y is differentiable
+    & ['0,PI'] c= Z & Z c= dom y
+    & u is_differentiable_on ].0,PI.[
+    & u`| ].0,PI.[ is continuous
+    & dom u = ['0,PI'] & u is continuous
+    & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+    & for t be Real st t in ].0,PI.[
+      holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t;
+
+  set I = AffineMap(0,1);
+  set f = y(#)y + I - (y`|Z)(#)(y`|Z);
+
+  let t be Real;
+  assume
+  A3: t in ].0,PI.[; then
+  u is_differentiable_in t by A2,FDIFF_1:9; then
+  A5: u(#)u is_differentiable_in t
+    & diff(u(#)u,t) = u.t * diff(u,t) + u.t * diff(u,t)
+    by FDIFF_1:16;
+
+  A6: sin is_differentiable_in t & diff(sin,t) = cos.t
+  by SIN_COS:64;
+
+  then
+  A7: u(#)u(#)sin is_differentiable_in t
+    & diff(u(#)u(#)sin,t)
+      = sin.t * diff(u(#)u,t) + (u(#)u).t * diff(sin,t) by A5,FDIFF_1:16;
+
+  diff(u(#)u(#)sin,t)
+   = sin.t * (u.t * diff(u,t) + u.t * diff(u,t))
+   + (u(#)u).t * diff(sin,t) by A5,A6,FDIFF_1:16
+  .= sin.t * 2 * u.t * diff(u,t) + (u(#)u).t * cos.t by SIN_COS:64;
+  then
+  2 * u.t * diff(u,t) * sin.t * cos.t
+   = diff(u(#)u(#)sin,t) * cos.t - (u(#)u).t * (cos.t)^2
+  .= diff(u(#)u(#)sin,t) * cos.t - (u.t)^2 * (cos.t)^2 by VALUED_1:5;
+  then
+  A8: (y(#)y + I - (y`|Z)(#)(y`|Z)).t
+    = (u.t)^2 * ((sin.t)^2 - (cos.t)^2)
+    - (diff(u(#)u(#)sin,t) * cos.t - (u.t)^2 * (cos.t)^2)
+    - diff(u,t)^2 * (sin.t)^2 + 1 by A2,A3,Lm18
+   .= (u.t)^2 * (sin.t)^2 - diff(u(#)u(#)sin,t) * cos.t
+    - diff(u,t)^2 * (sin.t)^2 + 1;
+
+  cos is_differentiable_in t & diff(cos,t) = -sin.t by SIN_COS:63; then
+  diff((u(#)u(#)sin)(#)cos,t)
+  = cos.t * diff(u(#)u(#)sin,t) + (u(#)u(#)sin).t * (-sin.t)
+  by A7,FDIFF_1:16;
+  then
+  - diff(u(#)u(#)sin,t) * cos.t
+   = - (u(#)u(#)sin).t * sin.t - diff((u(#)u(#)sin)(#)cos,t)
+  .= - ((u(#)u).t * sin.t) * sin.t
+     - diff((u(#)u(#)sin)(#)cos,t) by VALUED_1:5
+  .= - (u.t * u.t * sin.t) * sin.t
+     - diff((u(#)u(#)sin)(#)cos,t) by VALUED_1:5
+  .= - (u.t)^2 * (sin.t)^2
+     - diff((u(#)u(#)sin)(#)cos,t);
+  hence
+  (y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z)).t
+  = 1 - diff(u,t)^2 * (sin.t)^2 - diff((u(#)u(#)sin)(#)cos,t) by A8;
+end;
+
+Lm20:
+  for y,u be PartFunc of REAL,REAL,
+        Z0 be open Subset of REAL
+  st y is differentiable
+   & ['0,PI'] c= Z0 & Z0 c= dom y
+   & y`| Z0 is continuous
+   & u is_differentiable_on ].0,PI.[
+   & u`| ].0,PI.[ is continuous
+   & dom u = ['0,PI'] & u is continuous
+   & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+   & for t be Real st t in ].0,PI.[
+     holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t
+  holds
+    for n be Nat
+    holds
+      integral(y(#)y + AffineMap(0,1) - (y`|Z0)(#)(y`|Z0), 0 + 1/(n+1),
+           PI - 1/(n+1))
+      = integral(AffineMap(0,1) - (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                 0 + 1/(n+1), PI - 1/(n+1))
+      - ((u(#)u(#)sin)(#)cos).(PI - 1/(n+1))
+      + ((u(#)u(#)sin)(#)cos).(1/(n+1))
+proof
+  let y,u be PartFunc of REAL,REAL,
+      Z0 be open Subset of REAL;
+  assume
+  A1: y is differentiable
+    & ['0,PI'] c= Z0 & Z0 c= dom y
+    & y`|Z0 is continuous
+    & u is_differentiable_on ].0,PI.[
+    & u`| ].0,PI.[ is continuous
+    & dom u = ['0,PI'] & u is continuous
+    & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+    & for t be Real st t in ].0,PI.[
+      holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t;
+  set I = AffineMap(0,1);
+  let n be Nat;
+  A3: 1/(n+1) < PI - 1/(n+1) by Lm3;
+  A4: [.1/(n+1), PI - 1/(n+1).] c= ].0,PI.[ by Lm3;
+  A5: ['1/(n+1), PI - 1/(n+1)'] = [.1/(n+1), PI - 1/(n+1).] by Lm3;
+
+  set X = ].0,PI.[;
+  set Z = ['1/(n+1), PI - 1/(n+1)'];
+  set F = (u(#)u(#)sin)(#)cos;
+  A6: ['0,PI'] = [.0,PI.] by INTEGRA5:def 3,LmPI;
+  A7: ].0,PI.[ c= Z0 by A1;
+  y is_differentiable_on Z0 by A1,FDIFF_1:26; then
+  A8: dom(y`| Z0) = Z0 by FDIFF_1:def 7;
+  A9: dom(u(#)u) = ['0,PI'] /\ ['0,PI'] by A1,VALUED_1:def 4
+                .= ['0,PI']; then
+  A10: u(#)u is_differentiable_on X & (u(#)u)`| X = (u`|X)(#)u + u(#)(u`|X)
+    by A1,Th13;
+
+  A12: dom sin = REAL by FUNCT_2:def 1; then
+  A13: dom(u(#)u(#)sin) = ['0,PI'] /\ REAL by A9,VALUED_1:def 4
+       .= ['0,PI'] by XBOOLE_1:28; then
+  A14: X c= dom(u(#)u(#)sin) by A6,Lm1;
+
+  sin is_differentiable_on X by FDIFF_1:26,SIN_COS:68; then
+  A15: u(#)u(#)sin is_differentiable_on X
+     & (u(#)u(#)sin)`| X = ((u(#)u)`|X)(#)sin + u(#)u(#)(sin`|X)
+     by A10,A14,Th13; then
+  A16: (u(#)u(#)sin)`| X
+   = (2(#)(u(#)(u`|X)))(#)sin + u(#)u(#)(sin`|X) by A10,Th9
+  .= 2(#)u(#)(u`|X)(#)sin + u(#)u(#)(sin`|X) by RFUNCT_1:12;
+
+  dom cos = REAL by FUNCT_2:def 1; then
+  dom(u(#)u(#)sin(#)cos)
+   = ['0,PI'] /\ REAL by A13,VALUED_1:def 4
+  .= ['0,PI'] by XBOOLE_1:28; then
+  A17: X c= dom(u(#)u(#)sin(#)cos) by A6,Lm1;
+
+  B17: cos is_differentiable_on X by FDIFF_1:26,SIN_COS:67; then
+  A18: F is_differentiable_on X
+    & F`|X = ((u(#)u(#)sin)`|X)(#)cos + (u(#)u(#)sin)(#)(cos`|X)
+    by A15,A17,Th13;
+  A19: F`|X = (2(#)u(#)(u`|X)(#)sin + u(#)u(#)(sin`|X))(#)cos
+            + (u(#)u(#)sin)(#)(cos`|X) by A15,A16,A17,B17,Th13;
+  A20: cos is_differentiable_on X
+     & cos`|X = -(sin|X) by Th8;
+  sin is_differentiable_on X
+     & sin`|X = cos|X by Th8; then
+
+  A27: (F`| X) | Z is continuous by A1,A19,A20;
+  A28: dom(F`| X) = X by A18,FDIFF_1:def 7;
+  A29: Z c= dom(F`| X) by A4,A5,A18,FDIFF_1:def 7; then
+
+  A30: F`|X is_integrable_on Z & (F`|X)|Z is bounded
+    by A27,INTEGRA5:10,11; then
+  A31: F.(PI - 1/(n+1)) = integral(F`|X, 1/(n+1), PI - 1/(n+1))
+                   + F.(1/(n+1)) by A3,A5,A18,Lm3,INTEGRA7:10;
+  set G = (y(#)y + I - (y`|Z0)(#)(y`|Z0)) | X;
+  set H = I - (u`|X)(#)(u`|X)(#)sin(#)sin;
+  B1: dom I = REAL by FUNCT_2:def 1;
+  dom(y(#)y) = dom y /\ dom y by VALUED_1:def 4
+  .= dom y; then
+  A32: dom(y(#)y + I) = dom y /\ REAL by B1,VALUED_1:def 1
+  .= dom y by XBOOLE_1:28;
+
+  dom((y`|Z0)(#)(y`|Z0)) = Z0 /\ Z0 by A8,VALUED_1:def 4
+  .= Z0; then
+  B32: dom(y(#)y + I - (y`|Z0)(#)(y`|Z0)) = dom y /\ Z0 by A32,VALUED_1:12
+  .= Z0 by A1,XBOOLE_1:28; then
+  A33: dom G = X by A7,RELAT_1:62;
+  dom(u`|X) = X by A1,FDIFF_1:def 7; then
+  dom((u`|X)(#)(u`|X)) = X /\ X by VALUED_1:def 4
+  .= X; then
+  dom((u`|X)(#)(u`|X)(#)sin) = X /\ REAL by A12,VALUED_1:def 4
+  .= X by XBOOLE_1:28; then
+  A34: dom((u`|X)(#)(u`|X)(#)sin(#)sin)
+   = X /\ REAL by A12,VALUED_1:def 4
+  .= X by XBOOLE_1:28;
+
+  A35: dom H = dom I /\ dom((u`|X)(#)(u`|X)(#)sin(#)sin) by VALUED_1:12
+  .= X by B1,A34,XBOOLE_1:28;
+  H|Z is continuous by A1; then
+  A37: H|Z is bounded & H is_integrable_on Z by A5,A35,Lm3,INTEGRA5:10,11;
+
+  A38: dom(H - F`|X) = X /\ X by A28,A35,VALUED_1:12
+  .= X;
+  now
+    let t be object;
+    assume
+    A39: t in dom G; then
+    reconsider x = t as Real;
+    AA: I.x = 0 * x + 1 by FCONT_1:def 4;
+    A41: (u`|X).x = diff(u,x) by A1,A39,A33,FDIFF_1:def 7;
+    A42: H.x
+     = I.x - ((u`|X)(#)(u`|X)(#)sin(#)sin).x by A33,A35,A39,VALUED_1:13
+    .= I.x - ((u`|X)(#)(u`|X)(#)sin).x * sin.x by VALUED_1:5
+    .= I.x - (((u`|X)(#)(u`|X)).x * sin.x) * sin.x by VALUED_1:5
+    .= I.x - ((diff(u,x) * diff(u,x)) * sin.x) * sin.x by A41,VALUED_1:5
+    .= I.x - diff(u,x)^2 * (sin.x)^2;
+    thus G.t = (y(#)y + I - (y`|Z0)(#)(y`|Z0)).x by A33,A39,FUNCT_1:49
+    .= I.x - diff(u,x)^2 * (sin.x)^2 - diff((u(#)u(#)sin)(#)cos,x)
+     by AA,A1,A33,A39,Lm19
+    .= I.x - diff(u,x)^2 * (sin.x)^2 - (F`|X).x by A18,A39,A33,FDIFF_1:def 7
+    .= (H - (F`|X)).t by A33,A38,A39,A42,VALUED_1:13;
+  end; then
+  A43: integral(G, 1/(n+1), PI - 1/(n+1))
+   = integral(H - F`|X, 1/(n+1), PI - 1/(n+1))
+      by A7,B32,A38,RELAT_1:62,FUNCT_1:2
+  .= integral(H, 1/(n+1), PI - 1/(n+1))
+   - integral(F`|X, 1/(n+1), PI - 1/(n+1))
+     by A3,A4,A5,A29,A30,A35,A37,INTEGRA6:12
+  .= integral(H ,1/(n+1),PI - 1/(n+1))
+   - ((u(#)u(#)sin)(#)cos).(PI - 1/(n+1))
+   + ((u(#)u(#)sin)(#)cos).(1/(n+1)) by A31;
+
+  integral(G, 1/(n+1), PI - 1/(n+1))
+   = integral(G,Z) by INTEGRA5:def 4,A3
+  .= integral (y(#)y + I - (y`|Z0)(#)(y`|Z0), Z) by A5,Lm3,RELAT_1:74
+  .= integral (y(#)y + I - (y`|Z0)(#)(y`|Z0), 1/(n+1), PI - 1/(n+1))
+    by A3,INTEGRA5:def 4;
+  hence thesis by A43;
+end;
+
+Lm21:
+  for y,u be PartFunc of REAL,REAL,
+      Z0 be open Subset of REAL
+  st y is differentiable
+   & ['0,PI'] c= Z0
+   & Z0 c= dom y
+   & y`| Z0 is continuous
+   & u is_differentiable_on ].0,PI.[
+   & u`| ].0,PI.[ is continuous
+   & dom u = ['0,PI'] & u is continuous
+   & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+   & for t be Real st t in ].0,PI.[
+     holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t
+  holds
+    ex F be Real_Sequence
+    st (for n be Nat
+        holds F.n = integral(AffineMap(0,1) -
+           (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                             1/(n+1), PI - 1/(n+1)))
+     & F is convergent
+     & integral(y(#)y + AffineMap(0,1) - (y`|Z0)(#)(y`|Z0), 0, PI) = lim F
+proof
+  let y,u be PartFunc of REAL,REAL,
+      Z0 be open Subset of REAL;
+  assume
+  A1: y is differentiable
+    & ['0,PI'] c= Z0
+    & Z0 c= dom y
+    & y`|Z0 is continuous
+    & u is_differentiable_on ].0,PI.[
+    & u`| ].0,PI.[ is continuous
+    & dom u = ['0,PI'] & u is continuous
+    & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+    & for t be Real st t in ].0,PI.[
+      holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t;
+  set I = AffineMap(0,1);
+  A4: ['0,PI'] = [.0,PI.] by INTEGRA5:def 3,LmPI;
+  y is_differentiable_on Z0 by A1,FDIFF_1:26; then
+  A5: dom (y`| Z0) = Z0 by FDIFF_1:def 7;
+  set G = y(#)y + I - (y`|Z0)(#)(y`|Z0);
+  B1: dom I = REAL by FUNCT_2:def 1;
+  dom(y(#)y) = dom y /\ dom y by VALUED_1:def 4
+            .= dom y; then
+  A6: dom(y(#)y + I) = dom y /\ REAL by B1,VALUED_1:def 1
+                    .= dom y by XBOOLE_1:28;
+  dom((y`|Z0)(#)(y`|Z0)) = Z0 /\ Z0 by A5,VALUED_1:def 4
+                        .= Z0; then
+  B6: dom G = dom y /\ Z0 by A6,VALUED_1:12
+           .= Z0 by A1,XBOOLE_1:28;
+  y | dom(y) is continuous by A1,FDIFF_1:25; then
+  G | ['0,PI'] is continuous by A1; then
+  consider S1 be Real_Sequence such that
+  A9: ( for n be Nat holds S1.n = integral(G, 0 + 1/(n+1), PI - 1/(n+1)) )
+    & S1 is convergent
+    & lim S1 = integral(G,0,PI) by A1,B6,Th7,LmPI;
+
+  deffunc FF(Nat) = In(integral(I -(u`| ].0,PI.[)(#)(u`| ].0,PI.[)
+              (#)sin(#)sin, 1/($1+1), PI - 1/($1+1)),REAL);
+  consider S2 be Function of NAT,REAL such that
+  A10: for x being Element of NAT holds S2.x = FF(x) from FUNCT_2:sch 4;
+
+  A11: for n be Nat holds
+       S2.n = integral(I -(u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                       1/(n+1), PI - 1/(n+1))
+  proof
+    let n be Nat;
+    n in NAT by ORDINAL1:def 12;
+    hence S2.n
+        = In(integral(I - (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                      1/(n+1), PI - 1/(n+1)),REAL) by A10
+       .= integral(I -(u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                   1/(n+1), PI - 1/(n+1));
+  end;
+
+  deffunc FF2(Nat) = In(1/($1+1),REAL);
+  consider S32 be Function of NAT,REAL such that
+  A12: for x being Element of NAT holds S32.x = FF2(x) from FUNCT_2:sch 4;
+
+  A13: for n be Nat holds S32.n = 1/(n+1)
+  proof
+    let n be Nat;
+    n in NAT by ORDINAL1:def 12;
+    hence S32.n = In(1/(n+1),REAL) by A12
+               .= 1/(n+1);
+  end; then
+  A14: S32 is convergent & lim S32 = 0 by SEQ_4:31;
+
+  consider S310 be constant Function of NAT,REAL such that
+  A16: for x being Nat holds S310.x = PI by LmX;
+
+  S310.0 = PI by A16; then
+  A19: S310 is convergent & lim S310 = PI by SEQ_4:25;
+  set S31 = S310 - S32;
+  A20: (u(#)u(#)sin)(#)cos is continuous by A1;
+  A21: S31 is convergent
+     & lim S31 = lim(S310) - lim(S32) by A14,SEQ_2:12;
+
+  A23: for n be Nat holds S31.n = PI - 1/(n+1)
+  proof
+    let n be Nat;
+    thus S31.n = S310.n + (-S32).n by SEQ_1:7
+              .= S310.n + -S32.n by SEQ_1:10
+              .= PI - S32.n by A16
+              .= PI - 1/(n+1) by A13;
+  end;
+
+  A24: dom sin = REAL & dom cos = REAL by FUNCT_2:def 1;
+  set UUSC = (u(#)u(#)sin)(#)cos;
+  A25: dom UUSC = dom(u(#)u(#)sin) /\ REAL by A24,VALUED_1:def 4
+  .= dom(u(#)u) /\ REAL /\ REAL by A24,VALUED_1:def 4
+  .= [.0,PI.] /\ [.0,PI.] /\ REAL /\ REAL by A1,A4,VALUED_1:def 4
+  .= [.0,PI.] /\ (REAL /\ REAL) by XBOOLE_1:16
+  .= [.0,PI.] by XBOOLE_1:28; then
+  PI in dom UUSC by LmPI; then
+  A26: UUSC is_continuous_in PI by A20;
+
+  A30: rng S31 c= dom UUSC
+  proof
+    let y be object;
+    assume y in rng S31; then
+    consider n be object such that
+    A27: n in dom S31 & y=S31.n by FUNCT_1:def 3;
+    reconsider n as Nat by A27;
+    A28: y = PI - 1/(n+1) by A23,A27;
+    A29: 0 < PI - 1/(n+1) by Lm3;
+    PI - 1/(n+1) < PI by Lm3;
+    hence y in dom UUSC by A25,A28,A29;
+  end; then
+  A31: UUSC/*S31 is convergent & UUSC.PI = lim(UUSC/*S31) by A14,A19,A21,A26;
+  A32: lim(UUSC/*S31) = (u(#)u(#)sin).PI * cos.PI by A31,VALUED_1:5
+  .= ((u(#)u).PI * sin.PI) * cos.PI by VALUED_1:5
+  .= 0 by SIN_COS:77;
+  0 in dom UUSC by A25,LEIBNIZ1:17; then
+  A33: UUSC is_continuous_in 0 by A20;
+
+  A36: rng S32 c= dom UUSC
+  proof
+    let y be object;
+    assume y in rng S32; then
+    consider n be object such that
+    A34: n in dom S32 & y = S32.n by FUNCT_1:def 3;
+    reconsider n as Nat by A34;
+    A35: y = 1/(n+1) by A13,A34;
+    1/(n+1) < PI - 1/(n+1) & PI - 1/(n+1) < PI by Lm3; then
+    1/(n+1) < PI by XXREAL_0:2;
+    hence y in dom UUSC by A25,A35;
+  end; then
+  A37: UUSC/*S32 is convergent & UUSC.0 = lim(UUSC/*S32) by A14,A33;
+
+  A38: lim(UUSC/*S32) = (u(#)u(#)sin).0 * cos.0 by A37,VALUED_1:5
+  .= ((u(#)u).0 * sin.0) * cos.0 by VALUED_1:5
+  .= 0 by SIN_COS:30;
+
+  set S3 = UUSC/*S31 - UUSC/*S32;
+  A40: lim S3 = 0 - 0 by A31,A32,A37,A38,SEQ_2:12
+             .= 0;
+
+  now
+    let n be Nat;
+    A41: n is Element of NAT by ORDINAL1:def 12;
+
+    A42: S3.n = (UUSC/*S31).n + (-(UUSC/*S32)).n by SEQ_1:7
+    .= (UUSC/*S31).n + (-(UUSC/*S32).n) by SEQ_1:10
+    .= UUSC.(S31.n) - (UUSC/*S32).n by A30,A41,FUNCT_2:108
+    .= UUSC.(S31.n) - UUSC.(S32.n) by A36,A41,FUNCT_2:108
+    .= UUSC.(PI - 1/(n+1)) - UUSC.(S32.n) by A23
+    .= UUSC.(PI - 1/(n+1)) - UUSC.(1/(n+1)) by A13;
+
+    S1.n = integral(G, 0 + 1/(n+1), PI - 1/(n+1)) by A9
+    .= integral(I - (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                0 + 1/(n+1), PI - 1/(n+1))
+      - ((u(#)u(#)sin)(#)cos).(PI - 1/(n+1))
+      + ((u(#)u(#)sin)(#)cos).(1/(n+1)) by A1,Lm20
+    .= S2.n
+      - ((u(#)u(#)sin)(#)cos).(PI - 1/(n+1))
+      + ((u(#)u(#)sin)(#)cos).(1/(n+1)) by A11
+    .= S2.n - S3.n by A42;
+    hence S2.n = S1.n + S3.n;
+  end; then
+  A43: S2 = S1 + S3 by SEQ_1:7;
+  take S2;
+  lim S2 = lim S1 - 0 by A9,A31,A37,A40,A43,SEQ_2:6
+        .= integral(G,0,PI) by A9;
+  hence thesis by A9,A11,A31,A37,A43;
+end;
+
+theorem Th20:
+  for x,y be PartFunc of REAL,REAL,
+      Z   be open Subset of REAL
+   st x is differentiable
+    & y is differentiable
+    & ['0,PI'] c= Z & Z c= dom x & Z c= dom y
+    & y`| Z is continuous
+    & x`| Z is continuous
+    & ( for t be Real st t in Z holds
+        ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1 )
+    & y.0 = 0 & y.PI = 0
+  holds
+    ex u be PartFunc of REAL,REAL,
+       F be Real_Sequence
+    st u is_differentiable_on ].0,PI.[
+     & u`| ].0,PI.[ is continuous
+     & dom u = ['0,PI']
+     & u is continuous
+     & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+     & ( for t be Real st t in ].0,PI.[
+         holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t )
+     & ( for n be Nat
+         holds F.n = integral(AffineMap(0,1) -
+              (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                             1/(n+1), PI - 1/(n+1)) )
+     & F is convergent
+     & integral(y(#)(x`|Z),0,PI)
+       <= 1/2 * integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+     & y(#)y + (x`|Z)(#)(x`|Z)
+       = y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z)
+     & integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+       = integral(y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z),0,PI)
+     & integral(y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z),0,PI) = lim F
+proof
+  let x,y be PartFunc of REAL,REAL,
+      Z   be open Subset of REAL;
+  assume
+  A1: x is differentiable
+    & y is differentiable
+    & ['0,PI'] c= Z & Z c= dom x & Z c= dom y
+    & y`|Z is continuous
+    & x`|Z is continuous
+    & ( for t be Real st t in Z holds
+        ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1 )
+    & y.0 = 0 & y.PI = 0;
+
+    set I = AffineMap(0,1);
+  A3: integral(y(#)(x`|Z),0,PI)
+      <= 1/2 * integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+    & y(#)y + (x`|Z)(#)(x`|Z) = y(#)y + I - (y`|Z)(#)(y`|Z)
+    & integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+      = integral(y(#)y + I - (y`|Z)(#)(y`|Z),0,PI) by A1,Lm11,LEIBNIZ1:17;
+  consider u be PartFunc of REAL,REAL such that
+  A4: dom u = ['0,PI']
+    & u is_differentiable_on ].0,PI.[
+    & u`| ].0,PI.[ is continuous
+    & u is continuous
+    & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+    & for t be Real st t in ].0,PI.[
+      holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t
+      by A1,Lm17;
+
+  consider F be Real_Sequence such that
+  A5: ( for n be Nat
+        holds F.n = integral(I -(u`| ].0,PI.[)(#)(u`| ].0,PI.[)
+                           (#)sin(#)sin, 1/(n+1), PI - 1/(n+1)) )
+    & F is convergent
+    & integral(y(#)y + I - (y`|Z)(#)(y`|Z),0,PI)
+      = lim F by A1,A4,Lm21;
+  take u,F;
+  thus thesis by A3,A4,A5;
+end;
+
+begin :: Formalization of the Isoperimetric Theorem
+
+Lm23:
+  for x,y be PartFunc of REAL,REAL,
+        Z be open Subset of REAL
+  st x is differentiable
+   & y is differentiable
+   & ['0,PI'] c= Z & Z c= dom x & Z c= dom y
+   & y`|Z is continuous
+   & x`|Z is continuous
+   & (for t be Real st t in Z holds
+      ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1)
+   & y.0 = 0 & y.PI = 0
+  holds
+    ex u be PartFunc of REAL,REAL,
+       G be Real_Sequence
+    st u is_differentiable_on ].0,PI.[
+     & u`| ].0,PI.[ is continuous
+     & dom u = ['0,PI'] & u is continuous
+     & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+     & (for t be Real st t in ].0,PI.[
+        holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t)
+     & (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin is continuous
+     & dom((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin) = ].0,PI.[
+     & (for n be Nat
+        holds G.n = integral((u`| ].0,PI.[)(#)(u`| ].0,PI.[)
+                             (#)sin(#)sin, 1/(n+1), PI - 1/(n+1)))
+     & G is convergent
+     & (for n be Nat holds ['1/(n+1), PI - 1/(n+1)']
+        c= dom((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+     & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+       | ['1/(n+1), PI - 1/(n+1)'] is continuous
+     & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+       | ['1/(n+1), PI - 1/(n+1)'] is bounded
+     & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+        is_integrable_on ['1/(n+1), PI - 1/(n+1)'])
+     & (for n be Nat holds
+        0 <= G.n & 1/2 * PI - G.n <= 1/2 * PI)
+     & integral(y(#)(x`|Z),0,PI)
+       <= 1/2 * integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+     & y(#)y + (x`|Z)(#)(x`|Z) = y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z)
+     & integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+       = integral(y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z),0,PI)
+     & 1/2 * integral(y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z),0,PI)
+       = 1/2 * PI - 1/2 * lim G
+     & 0 <= lim G & 1/2 * PI - 1/2 * lim G <= 1/2 * PI
+proof
+  let x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL;
+  assume x is differentiable
+       & y is differentiable
+       & ['0,PI'] c= Z & Z c= dom x & Z c= dom y
+       & y`|Z is continuous
+       & x`|Z is continuous
+       & (for t be Real st t in Z holds
+          ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1)
+       & y.0 = 0 & y.PI = 0;
+  then
+  consider u be PartFunc of REAL,REAL,
+           F be Real_Sequence such that
+  A1: u is_differentiable_on ].0,PI.[
+    & u`| ].0,PI.[ is continuous
+    & dom u = ['0,PI'] & u is continuous
+    & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+    & (for t be Real st t in ].0,PI.[
+       holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t)
+    & (for n be Nat
+       holds F.n = integral(AffineMap(0,1) -
+           (u`| ].0,PI.[)(#)(u`| ].0,PI.[)
+                           (#)sin(#)sin, 1/(n+1), PI - 1/(n+1)))
+    & F is convergent
+    & integral(y(#)(x`|Z),0,PI)
+      <= 1/2 * integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+    & y(#)y + (x`|Z)(#)(x`|Z)
+      = y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z)
+    & integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+      = integral(y(#)y + AffineMap(0,1) - (y`|Z)(#)(y`|Z),0,PI)
+    & integral(y(#)y + AffineMap(0,1) -
+      (y`|Z)(#)(y`|Z),0,PI) = lim F by Th20;
+
+  set I = AffineMap(0,1);
+  AA: dom I = REAL by FUNCT_2:def 1;
+  I | ['0,PI'] is continuous;
+  then consider NI be Real_Sequence such that
+  A4: (for n be Nat holds NI.n = integral(I, 0 + 1/(n+1), PI - 1/(n+1)))
+    & NI is convergent
+    & lim NI = integral(I,0,PI) by AA,Th7,LEIBNIZ1:17;
+  for t be Real st t in ['0,PI'] holds I.t = 1
+  proof
+    let t be Real;
+    I.t = 0 * t + 1 by FCONT_1:def 4
+       .= 1;
+    hence thesis;
+  end; then
+  A5: lim NI = 1 * (PI-0) by AA,A4,INTEGRA6:26,LmPI
+            .= PI;
+  deffunc FG(Nat) = In(integral((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                                1/($1+1), PI - 1/($1+1)),REAL);
+  consider G be Function of NAT,REAL such that
+  A6: for x being Element of NAT holds G.x = FG(x) from FUNCT_2:sch 4;
+
+  take u,G;
+  thus u is_differentiable_on ].0,PI.[
+     & u`| ].0,PI.[ is continuous
+     & dom u = ['0,PI'] & u is continuous
+     & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+     & (for t be Real st t in ].0,PI.[
+        holds diff(y,t) = diff(u,t)* sin.t + u.t * cos.t) by A1;
+
+  set GN = (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin;
+  thus GN is continuous by A1;
+  dom(u`| ].0,PI.[) = ].0,PI.[ by A1,FDIFF_1:def 7; then
+  A8: dom((u`| ].0,PI.[)(#)(u`| ].0,PI.[))
+    = ].0,PI.[ /\ ].0,PI.[ by VALUED_1:def 4
+   .= ].0,PI.[;
+  A9: dom sin = REAL by FUNCT_2:def 1;
+  then dom((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin)
+   = ].0,PI.[ /\ REAL by A8,VALUED_1:def 4
+  .= ].0,PI.[ by XBOOLE_1:28;
+  hence
+  A10: dom GN = ].0,PI.[ /\ REAL by A9,VALUED_1:def 4
+             .= ].0,PI.[ by XBOOLE_1:28;
+  thus
+  A11: for n be Nat holds
+       G.n = integral((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                      1/(n+1), PI - 1/(n+1))
+  proof
+    let n be Nat;
+    n in NAT by ORDINAL1:def 12;
+    hence G.n
+      = In(integral((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                    1/(n+1), PI - 1/(n+1)),REAL) by A6
+     .= integral((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                  1/(n+1), PI - 1/(n+1));
+  end;
+
+  A12: for n be Nat holds
+    ['1/(n+1), PI - 1/(n+1)']
+    c= dom((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+  & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+    | ['1/(n+1), PI - 1/(n+1)'] is continuous
+  & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+    | ['1/(n+1), PI - 1/(n+1)'] is bounded
+  & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+    is_integrable_on ['1/(n+1), PI - 1/(n+1)']
+  & G.n = NI.n +(-F).n
+  proof
+    let n be Nat;
+    A13: NI.n = integral(I,0+1/(n+1),PI-1/(n+1)) by A4
+             .= integral(I,1/(n+1),PI-1/(n+1));
+    A14: 0 < 1/(n+1) & 1/(n+1) < PI - 1/(n+1)
+       & [.1/(n+1), PI - 1/(n+1).] c= ].0,PI.[
+       & ['1/(n+1), PI - 1/(n+1)'] = [.1/(n+1), PI - 1/(n+1).] by Lm3;
+    set Z = ['1/(n+1), PI - 1/(n+1)'];
+    thus Z c= dom GN by A10,A14;
+    thus GN|Z is continuous by A1;
+    hence
+    A16: GN|Z is bounded & GN is_integrable_on Z by A10,A14,INTEGRA5:10,11;
+    for t be Real st t in Z holds I.t = 1
+    proof
+      let t be Real;
+      I.t = 0 * t + 1 by FCONT_1:def 4
+         .= 1;
+      hence thesis;
+    end; then
+    A18: I|Z is bounded
+       & I is_integrable_on Z
+       & integral(I,1/(n+1), PI - 1/(n+1)) = 1 * (PI - 1/(n+1)- 1/(n+1))
+      by AA,A14,INTEGRA6:26;
+
+    F.n = integral(I - (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                   1/(n+1), PI - 1/(n+1)) by A1
+       .= NI.n - integral((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin,
+                          1/(n+1), PI - 1/(n+1))
+                          by AA,A10,A13,A14,A16,A18,INTEGRA6:12
+       .= NI.n - G.n by A11;
+    hence G.n = NI.n - F.n
+            .= NI.n +(-F).n by SEQ_1:10;
+  end;
+  then
+  A19: G = NI - F by SEQ_1:7;
+  thus G is convergent by A1,A4,A19;
+  A21: lim G = lim NI - lim F by A1,A4,A19,SEQ_2:12;
+
+  thus for n be Nat holds
+       ['1/(n+1), PI - 1/(n+1)']
+       c= dom((u`| ].0,PI.[) (#)(u`| ].0,PI.[ )(#)sin(#)sin)
+     & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+      | ['1/(n+1), PI - 1/(n+1)'] is continuous
+     & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+      | ['1/(n+1), PI - 1/(n+1)'] is bounded
+     & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+      is_integrable_on ['1/(n+1), PI - 1/(n+1)'] by A12;
+
+  set ZZ = REAL --> 0;
+  A23: dom ZZ = REAL by FUNCOP_1:13;
+  rng ZZ c= REAL;
+  then reconsider ZZ as PartFunc of REAL,REAL by A23,RELSET_1:4;
+  thus
+  A25: for n be Nat holds 0 <= G.n & 1/2 * PI - G.n <= 1/2 * PI
+  proof
+    let n be Nat;
+    set GnF = (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin;
+    set Z = ['1/(n+1), PI - 1/(n+1)'];
+    A26: Z c= dom (GnF)
+       & GnF | Z is continuous
+       & GnF | Z is bounded
+       & GnF is_integrable_on Z by A12;
+    A27: 0 < 1/(n+1) & 1/(n+1) < PI - 1/(n+1)
+       & [.1/(n+1), PI - 1/(n+1).] c= ].0,PI.[
+       & ['1/(n+1), PI - 1/(n+1)'] = [.1/(n+1), PI - 1/(n+1).] by Lm3;
+
+    A28: for t be Real st t in Z holds ZZ.t = 0 by FUNCOP_1:7;
+    A30: ZZ is_integrable_on Z
+       & ZZ| Z is bounded
+       & integral(ZZ, 1/(n+1), PI - 1/(n+1))
+         = 0 * (PI - 1/(n+1) - 1/(n+1)) by A23,A27,A28,INTEGRA6:26;
+
+    for x be Real st x in Z holds ZZ.x <= GnF.x
+    proof
+      let x be Real;
+      assume x in Z; then
+      A31: ZZ.x = 0 by FUNCOP_1:7;
+      A32: GnF.x
+       = ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin).x * sin.x by VALUED_1:5
+      .= (((u`| ].0,PI.[)(#)(u`| ].0,PI.[ )).x * sin.x) * sin.x by VALUED_1:5
+      .= ((u`| ].0,PI.[).x)^2 * sin.x * sin.x by VALUED_1:5
+      .= ((u`| ].0,PI.[).x)^2 * (sin.x)^2;
+      0 <= ((u`| ].0,PI.[).x)^2 & 0 <= (sin.x)^2 by XREAL_1:63;
+      hence thesis by A31,A32;
+    end;
+    then integral(ZZ, 1/(n+1), PI - 1/(n+1))
+      <= integral(GnF, 1/(n+1), PI - 1/(n+1)) by A23,A26,A27,A30,ORDEQ_01:48;
+    hence 0 <= G.n by A11,A30;
+    then 1/2 * PI - G.n <= 1/2 * PI - 0 by XREAL_1:13;
+    hence thesis;
+  end;
+  thus integral(y(#)(x`|Z),0,PI)
+       <= 1/2 * integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+     & y(#)y + (x`|Z)(#)(x`|Z) = y(#)y + I - (y`|Z)(#)(y`|Z)
+     & integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+       = integral (y(#)y + I -(y`|Z)(#)(y`|Z),0,PI) by A1;
+
+  thus 1/2 * integral(y(#)y + I - (y`|Z)(#)(y`|Z),0,PI)
+     = 1/2 * PI - 1/2 * lim G by A1,A5,A21;
+::: S310 the same as ZZ?
+  consider S310 be constant Function of NAT,REAL such that
+  A36: for x being Nat holds S310.x = 0 by LmX;
+
+  S310.0 = 0 by A36; then
+  A39: S310 is convergent & lim S310 = 0 by SEQ_4:25;
+
+  for n be Nat holds S310.n <= G.n
+  proof
+    let n be Nat;
+    S310.n = 0 by A36;
+    hence thesis by A25;
+  end;
+  hence 0 <= lim G by A1,A4,A19,A39,SEQ_2:18;
+  then 1/2 * PI - 1/2 * lim G <= 1/2 * PI - 0 by XREAL_1:13;
+  hence 1/2 * PI - 1/2 * lim G <= 1/2 * PI;
+end;
+
+Lm24:
+  for x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL,
+      G be Real_Sequence
+  st integral (y(#)(x`|Z),0,PI) <= 1/2 * PI - 1/2 * lim G
+   & 0 <= lim G & 1/2 * PI - 1/2 * lim G <= 1/2 * PI
+  holds
+  (integral(y(#)(x`|Z),0,PI) = 1/2 * PI implies lim G = 0)
+proof
+  let x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL,
+      G be Real_Sequence;
+  assume
+  A1: integral(y(#)(x`|Z),0,PI) <= 1/2 * PI - 1/2 * lim G
+    & 0 <= lim G & 1/2 * PI - 1/2 * lim G <= 1/2 * PI;
+
+  assume integral(y(#)(x`|Z),0,PI) = 1/2 * PI;
+  then 1/2 * PI = 1/2 * PI - 1/2 * lim G by A1,XXREAL_0:1;
+  hence thesis;
+end;
+
+Lm25:
+  for g be PartFunc of REAL,REAL,
+      G be Real_Sequence
+  st g is continuous & dom g = ].0,PI.[
+   & (for n be Nat holds
+        G.n = integral(g, 1/(n+1), PI - 1/(n+1))
+      & (for n be Nat holds ['1/(n+1), PI - 1/(n+1)'] c= dom g
+      & g | ['1/(n+1), PI - 1/(n+1)'] is continuous
+      & g | ['1/(n+1), PI - 1/(n+1)'] is bounded
+      & g is_integrable_on ['1/(n+1), PI - 1/(n+1)']))
+   & (for t be Real st t in ].0,PI.[ holds 0 <= g.t)
+  holds
+    for n,m be Nat st n <= m holds G.n <= G.m
+proof
+  let g be PartFunc of REAL,REAL,
+      G be Real_Sequence;
+  assume
+  A1: g is continuous & dom g = ].0,PI.[
+    & (for n be Nat
+       holds G.n = integral(g, 1/(n+1), PI - 1/(n+1))
+    & (for n be Nat holds ['1/(n+1), PI - 1/(n+1)'] c= dom g
+    & g | ['1/(n+1), PI - 1/(n+1)'] is continuous
+    & g | ['1/(n+1), PI - 1/(n+1)'] is bounded
+    & g is_integrable_on ['1/(n+1), PI - 1/(n+1)']))
+    & (for t be Real st t in ].0,PI.[ holds 0 <= g.t);
+
+  let n,m be Nat;
+  assume n <= m; then
+  n+1 <= m+1 by XREAL_1:7; then
+  A2: 1/(m+1) <= 1/(n+1) by XREAL_1:118; then
+  A3: PI - 1/(n+1) <= PI - 1/(m+1) by XREAL_1:13;
+  A4: 1/(n+1) < PI - 1/(n+1) by Lm3;
+  A5: 1/(m+1) < PI - 1/(n+1) by A2,Lm3,XXREAL_0:2;
+  A6: 1/(m+1) < PI - 1/(m+1) by Lm3;
+
+  A7: ['1/(m+1), PI - 1/(m+1)'] c= dom g
+    & g | ['1/(m+1), PI - 1/(m+1)'] is continuous
+    & g | ['1/(m+1), PI - 1/(m+1)'] is bounded
+    & g is_integrable_on ['1/(m+1), PI - 1/(m+1)'] by A1;
+  A8: ['1/(m+1), PI - 1/(m+1)'] = [.1/(m+1), PI - 1/(m+1).]
+    by Lm3; then
+  PI - 1/(n+1) in ['1/(m+1), PI - 1/(m+1)'] by A3,A5; then
+
+  A10: g is_integrable_on ['1/(m+1), PI - 1/(n+1)']
+     & g is_integrable_on ['PI - 1/(n+1), PI - 1/(m+1)']
+     & integral(g, 1/(m+1), PI - 1/(m+1))
+       = integral(g, 1/(m+1), PI - 1/(n+1))
+       + integral(g, PI - 1/(n+1), PI - 1/(m+1))
+    by A6,A7,INTEGRA6:17;
+
+  A12: ['1/(m+1), PI - 1/(n+1)'] c= dom g
+  proof
+    let t be object;
+    assume
+    A11: t in ['1/(m+1), PI - 1/(n+1)']; then
+    reconsider s=t as Real;
+    s in [.1/(m+1), PI- 1/(n+1).] by A11,A5,INTEGRA5:def 3; then
+    1/(m+1) <= s <= PI - 1/(n+1) by XXREAL_1:1; then
+    1/(m+1) <= s <= PI - 1/(m+1) by A3,XXREAL_0:2; then
+    s in ['1/(m+1), PI - 1/(m+1)'] by A8;
+    hence t in dom g by A7;
+  end;
+  g | ['1/(m+1), PI - 1/(n+1)'] is continuous by A1; then
+  A13: g | ['1/(m+1), PI - 1/(n+1)'] is bounded
+     & g is_integrable_on ['1/(m+1), PI - 1/(n+1)']
+    by A12,INTEGRA5:10,11;
+
+  ['1/(m+1), PI - 1/(n+1)'] = [.1/(m+1), PI - 1/(n+1).]
+    by A5,INTEGRA5:def 3; then
+  1/(n+1) in ['1/(m+1), PI - 1/(n+1)'] by A2,A4; then
+  A14: integral(g, 1/(m+1), PI - 1/(m+1))
+    = (integral(g, 1/(m+1), 1/(n+1))
+     + integral(g, 1/(n+1), PI - 1/(n+1)))
+     + integral(g, PI - 1/(n+1), PI - 1/(m+1)) by A5,A10,A12,A13,INTEGRA6:17;
+
+  A15: 1/(m+1) in [.1/(m+1), PI - 1/(m+1).] by A6;
+  A16: 1/(n+1) <= PI - 1/(m+1) by A3,Lm3,XXREAL_0:2; then
+  A17: 1/(n+1) in [.1/(m+1), PI - 1/(m+1).] by A2;
+
+  for t be Real st t in [.1/(m+1), 1/(n+1).] holds 0 <= g.t
+  proof
+    let t be Real;
+    assume t in [.1/(m+1), 1/(n+1).]; then
+    1/(m+1) <= t <= 1/(n+1) by XXREAL_1:1; then
+    1/(m+1) <= t <= PI - 1/(m+1) by A16,XXREAL_0:2; then
+    A18: t in [.1/(m+1), PI - 1/(m+1).];
+    [.1/(m+1), PI - 1/(m+1).] c= ].0,PI.[ by Lm3;
+    hence 0 <= g.t by A1,A18;
+  end; then
+  A19: 0 <= integral(g, 1/(m+1), 1/(n+1)) by A2,A6,A7,A8,A15,A17,Th2;
+  A20: PI - 1/(n+1) in [.1/(m+1), PI - 1/(m+1).] by A3,A5;
+  A21: PI - 1/(m+1) in [.1/(m+1), PI - 1/(m+1).] by A6;
+
+  for t be Real st t in [.PI - 1/(n+1), PI - 1/(m+1).] holds 0 <= g.t
+  proof ::: see the above
+    let t be Real;
+    assume t in [.PI - 1/(n+1), PI - 1/(m+1).]; then
+    PI - 1/(n+1) <= t <= PI - 1/(m+1) by XXREAL_1:1; then
+    1/(m+1) <= t <= PI - 1/(m+1) by A5,XXREAL_0:2; then
+    A22: t in [.1/(m+1), PI - 1/(m+1).];
+    [.1/(m+1), PI - 1/(m+1).] c= ].0,PI.[ by Lm3;
+    hence 0 <= g.t by A1,A22;
+  end; then
+  0 <= integral(g, PI - 1/(n+1), PI - 1/(m+1))
+    by A3,A6,A7,A8,A20,A21,Th2; then
+  A23: 0 + integral(g, 1/(n+1), PI - 1/(n+1))
+    <= integral(g, 1/(m+1), 1/(n+1))
+     + integral(g, PI - 1/(n+1), PI - 1/(m+1))
+     + integral(g, 1/(n+1), PI - 1/(n+1)) by A19,XREAL_1:7;
+    G.n = integral(g, 1/(n+1), PI - 1/(n+1))
+  & G.m = integral(g, 1/(m+1), PI - 1/(m+1)) by A1;
+  hence thesis by A14,A23;
+end;
+
+Lm26:
+  for x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL,
+      u be PartFunc of REAL,REAL,
+      G be Real_Sequence
+  st x is differentiable
+   & y is differentiable
+   & ['0,PI'] c= Z & Z c= dom x & Z c= dom y
+   & y`| Z is continuous
+   & x`| Z is continuous
+   & (for t be Real st t in Z holds
+      ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1)
+   & y.0 = 0 & y.PI = 0
+   & u is_differentiable_on ].0,PI.[
+   & u`| ].0,PI.[ is continuous
+   & dom u = ['0,PI'] & u is continuous
+   & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+   & (for t be Real st t in ].0,PI.[
+      holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t)
+   & (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin is continuous
+   & dom((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin) = ].0,PI.[
+   & (for n be Nat
+      holds G.n = integral((u`| ].0,PI.[)(#)(u`| ].0,PI.[)
+                           (#)sin(#)sin, 1/(n+1), PI - 1/(n+1)))
+   & G is convergent
+   & (for n be Nat holds ['1/(n+1), PI - 1/(n+1)']
+             c= dom((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+   & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+      | ['1/(n+1), PI - 1/(n+1)'] is continuous
+   & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+      | ['1/(n+1), PI - 1/(n+1)'] is bounded
+   & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+      is_integrable_on ['1/(n+1), PI - 1/(n+1)'])
+   & (for n be Nat holds 0 <= G.n & 1/2 * PI - G.n <= 1/2 * PI)
+  holds
+    lim G = 0 implies
+    (for t be Real st t in ].0,PI.[ holds (u`| ].0,PI.[).t = 0)
+proof
+  let x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL,
+      u be PartFunc of REAL,REAL,
+      G be Real_Sequence;
+  assume
+  A1: x is differentiable
+    & y is differentiable
+    & ['0,PI'] c= Z & Z c= dom x & Z c= dom y
+    & y`| Z is continuous
+    & x`| Z is continuous
+    & (for t be Real st t in Z holds
+       ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1)
+    & y.0 = 0 & y.PI = 0
+    & u is_differentiable_on ].0,PI.[
+    & u`| ].0,PI.[ is continuous
+    & dom u = ['0,PI'] & u is continuous
+    & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+    & (for t be Real st t in ].0,PI.[
+       holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t)
+    & (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin is continuous
+    & dom((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin) = ].0,PI.[
+    & (for n be Nat
+       holds G.n = integral((u`| ].0,PI.[)(#)(u`| ].0,PI.[)
+                            (#)sin(#)sin,1/(n+1),PI-1/(n+1)))
+    & G is convergent
+    & (for n be Nat holds ['1/(n+1), PI - 1/(n+1)']
+              c= dom((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+    & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+       | ['1/(n+1), PI - 1/(n+1)'] is continuous
+    & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+       | ['1/(n+1), PI - 1/(n+1)'] is bounded
+    & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+       is_integrable_on ['1/(n+1), PI - 1/(n+1)'])
+    & (for n be Nat holds 0 <= G.n & 1/2 * PI - G.n <= 1/2 * PI);
+
+  assume
+  A2: lim G = 0;
+  assume
+  A3: not (for t be Real st t in ].0,PI.[ holds (u`| ].0,PI.[).t = 0);
+  set g = (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin;
+  A4: for t be Real holds
+      g.t = ((u`| ].0,PI.[).t * sin.t)^2
+  proof
+    let t be Real;
+    thus g.t
+      = ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin).t * sin.t by VALUED_1:5
+     .= ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)).t * sin.t * sin.t by VALUED_1:5
+     .= (u`| ].0,PI.[).t * (u`| ].0,PI.[).t * sin.t * sin.t by VALUED_1:5
+     .= ((u`| ].0,PI.[).t * sin.t)^2;
+  end;
+
+  A5: for t be Real st t in ].0,PI.[ holds 0 <= g.t
+  proof
+    let t be Real;
+    g.t = ((u`| ].0,PI.[).t * sin.t)^2 by A4;
+    hence thesis by XREAL_1:63;
+  end;
+
+  consider t0 be Real such that
+  A6: t0 in ].0,PI.[ & (u`| ].0,PI.[).t0 <> 0 by A3;
+  set t1 = t0/2;
+  A7: 0 < t0 < PI by A6,XXREAL_1:4; then
+  A8: 0 < t1 < t0 by XREAL_1:216;
+  A9: 0 < PI - t0 by A7,XREAL_1:50;
+  set h = (PI - t0)/2;
+
+  reconsider h1 = min(t1,h) as Real;
+  A11: h1 <= t1 & h1 <= h by XXREAL_0:17;
+  A12: 0 < h1 by A7,A9,XXREAL_0:15;
+
+  consider n be Nat such that
+  A13: 1/h1 < n by SEQ_4:3;
+
+  0 + n < n+1 by XREAL_1:8; then
+  1/h1 < n+1 by A13,XXREAL_0:2; then
+  1/h1 * h1 <= (n+1)*h1 by A12,XREAL_1:64; then
+  1 <= (n+1)*h1 by A12,XCMPLX_1:87; then
+  1/(n+1) <= (h1*(n+1))/(n+1) by XREAL_1:72; then
+  A15: 1/(n+1) <= h1 by XCMPLX_1:89; then
+  1/(n+1) <= t1 by A11,XXREAL_0:2; then
+  A16: 1/(n+1) < t0 by A8,XXREAL_0:2;
+  A17: h + t0 - h < PI - h by A9,XREAL_1:8;
+  A18: PI - h <= PI - h1 by A11,XREAL_1:13;
+  PI - h1 <= PI - 1/(n+1) by A15,XREAL_1:13; then
+  PI - h <= PI - 1/(n+1) by A18,XXREAL_0:2; then
+  t0 < PI- 1/(n+1) by A17,XXREAL_0:2; then
+  A19: t0 in ].1/(n+1), PI - 1/(n+1).[ by A16;
+
+  A20: 0 < 1/(n+1) < PI - 1/(n+1)
+     & PI - 1/(n+1) < PI
+     & [.1/(n+1), PI - 1/(n+1).] c= ].0,PI.[
+     & ['1/(n+1), PI - 1/(n+1)'] = [.1/(n+1), PI - 1/(n+1).] by Lm3;
+
+  A21: ].1/(n+1), PI - 1/(n+1).[ c= [.1/(n+1), PI - 1/(n+1).] by Lm1;
+  A22: ['1/(n+1), PI - 1/(n+1)'] c= dom g
+     & g | ['1/(n+1), PI - 1/(n+1)'] is continuous
+     & g | ['1/(n+1), PI - 1/(n+1)'] is bounded
+     & g is_integrable_on ['1/(n+1), PI - 1/(n+1)'] by A1;
+  sin.t0 <> 0 by A19,A20,A21,COMPTRIG:7;
+  then ((u`| ].0,PI.[).t0 * sin.t0)^2 <> 0 by A6;
+  then
+  0 <> g.t0 by A4; then
+  A25: 0 < g.t0 by A5,A19,A20,A21;
+  for t be Real st t in [.1/(n+1), PI - 1/(n+1).]
+  holds 0 <= g.t by A5,A20;
+  then consider d,c,e be Real such that
+  A26: 0 < e & c < d & c in [.1/(n+1), PI - 1/(n+1).]
+     & d in [.1/(n+1), PI - 1/(n+1).]
+     & 0 < e*(d-c) <= integral(g, 1/(n+1), PI - 1/(n+1))
+    by A19,A20,A22,A25,Th6;
+
+  A27: e*(d-c) <= G.n by A1,A26;
+
+  for m be Nat st n <= m holds e*(d-c) <= G.m
+  proof
+    let m be Nat;
+    assume n <= m;
+    then G.n <= G.m by A1,A5,Lm25;
+    hence thesis by A27,XXREAL_0:2;
+  end;
+  hence contradiction by A1,A2,A26,Lm2;
+end;
+
+Lm27:
+  for x,y be PartFunc of REAL,REAL,
+        Z be open Subset of REAL
+   st x is differentiable
+    & y is differentiable
+    & ['0, PI'] c= Z & Z c= dom x & Z c= dom y
+    & y`| Z is continuous
+    & x`| Z is continuous
+    & (for t be Real st t in Z holds
+       ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1)
+    & y.0 = 0 & y.PI = 0
+  holds
+      integral(y(#)(x`|Z),0,PI) <= 1/2 * PI
+    & (integral(y(#)(x`|Z),0,PI) = 1/2 * PI
+       implies
+       ((for t be Real st t in [.0,PI.]
+         holds y.t = sin.t & x.t = - cos.t + cos.0 + x.0)
+            or
+        (for t be Real st t in [.0,PI.]
+         holds y.t = - sin.t & x.t = cos.t - cos.0 + x.0)))
+proof
+  let x,y be PartFunc of REAL,REAL,
+        Z be open Subset of REAL;
+  set I = AffineMap(0,1);
+  assume
+  A1: x is differentiable
+    & y is differentiable
+    & ['0,PI'] c= Z & Z c= dom x & Z c= dom y
+    & y`| Z is continuous
+    & x`| Z is continuous
+    & (for t be Real st t in Z holds
+       ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1)
+    & y.0 = 0 & y.PI = 0;
+  then consider u be PartFunc of REAL,REAL,
+                G be Real_Sequence such that
+  A2: u is_differentiable_on ].0,PI.[
+    & u`| ].0,PI.[ is continuous
+    & dom u = ['0,PI'] & u is continuous
+    & y | ['0,PI'] = (u(#)sin) | ['0,PI']
+    & (for t be Real st t in ].0,PI.[
+       holds diff(y,t) = diff(u,t) * sin.t + u.t * cos.t)
+    & (u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin is continuous
+    & dom((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin) = ].0,PI.[
+    & (for n be Nat
+       holds G.n = integral((u`| ].0,PI.[)(#)(u`| ].0,PI.[)
+                            (#)sin(#)sin, 1/(n+1), PI - 1/(n+1)))
+    & G is convergent
+    & ( for n be Nat holds ['1/(n+1), PI - 1/(n+1)']
+          c= dom((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+    & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+      | ['1/(n+1), PI - 1/(n+1)'] is continuous
+    & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+      | ['1/(n+1), PI - 1/(n+1)'] is bounded
+    & ((u`| ].0,PI.[)(#)(u`| ].0,PI.[)(#)sin(#)sin)
+      is_integrable_on ['1/(n+1), PI - 1/(n+1)'])
+    & (for n be Nat holds 0 <= G.n & 1/2 * PI - G.n <= 1/2 * PI)
+    & integral(y(#)(x`|Z),0,PI)
+      <= 1/2 * integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+    & y(#)y + (x`|Z)(#)(x`|Z) = y(#)y + I - (y`|Z)(#)(y`|Z)
+    & integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+      = integral(y(#)y + I -(y`|Z)(#)(y`|Z),0,PI)
+    & 1/2 * integral(y(#)y + I -(y`|Z)(#)(y`|Z),0,PI)
+      = 1/2 * PI - 1/2 * lim G
+    & 0 <= lim G & 1/2 * PI - 1/2 * lim G <= 1/2 * PI by Lm23;
+
+  A4: ['0,PI'] = [.0,PI.] by LEIBNIZ1:17,INTEGRA5:def 3;
+
+  B5: ].0,PI.[ c= [.0,PI.] by Lm1; then
+  A5: ].0,PI.[ c= Z by A1,A4;
+  A6: y is_differentiable_on Z by A1,FDIFF_1:26; then
+  A7: y is_differentiable_on ].0,PI.[ by A5,FDIFF_1:26;
+  A8: x is_differentiable_on Z by A1,FDIFF_1:26; then
+  A9: dom(x`| Z) = Z by FDIFF_1:def 7;
+  A10: y | dom(y) is continuous by A1,FDIFF_1:25;
+
+  thus integral(y(#)(x`|Z),0,PI) <= 1/2 * PI by A2,XXREAL_0:2;
+  assume
+  A11: integral(y(#)(x`|Z),0,PI) = 1/2 * PI; then
+  for t be Real st t in ].0,PI.[
+  holds (u`| ].0,PI.[).t = 0 by A1,A2,Lm24,Lm26;
+
+  then consider C be Real such that
+  A12: for t be Real st t in ['0,PI'] holds u.t = C by A2,Th19,LEIBNIZ1:17;
+
+  A13: now
+    let t be Real;
+    assume
+    A14: t in ['0,PI'];
+    hence y.t = (y | ['0,PI']).t by FUNCT_1:49
+            .= (u(#)sin).t by A2,A14,FUNCT_1:49
+            .= u.t * sin.t by VALUED_1:5
+            .= C * sin.t by A12,A14;
+  end;
+
+  A16: integral(y(#)(x`|Z),0,PI)
+     = 1/2 * integral(y(#)y + (x`|Z)(#)(x`|Z),0,PI)
+    by A2,A11,XXREAL_0:1;
+
+  A18: dom(y(#)(x`|Z)) = dom y /\ dom(x`|Z) by VALUED_1:def 4
+  .= dom y /\ Z by A8,FDIFF_1:def 7
+  .= Z by A1,XBOOLE_1:28;
+  (y(#)(x`|Z)) | [' 0,PI '] is continuous by A1,A10; then
+  A20: (y(#)(x`|Z)) | [' 0,PI '] is bounded
+  & y(#)(x`|Z) is_integrable_on ['0,PI'] by A1,A18,INTEGRA5:10,11;
+
+  set YYXX = y(#)y + (x`|Z)(#)(x`|Z);
+
+  A23: dom(YYXX)
+   = dom(y(#)y) /\ dom((x`|Z)(#)(x`|Z)) by VALUED_1:def 1
+  .= (dom y /\ dom y) /\ dom((x`|Z)(#)(x`|Z)) by VALUED_1:def 4
+  .= dom y /\ (Z /\ Z ) by A9,VALUED_1:def 4
+  .= Z by A1,XBOOLE_1:28;
+  YYXX | ['0,PI'] is continuous by A1,A10; then
+  A25: YYXX | ['0,PI'] is bounded
+     & YYXX is_integrable_on ['0,PI'] by A1,A23,INTEGRA5:10,11;
+  A27: ['0,PI'] c= dom((1/2)(#)YYXX) by A1,A23,VALUED_1:def 5;
+
+  ((1/2)(#)YYXX) | ['0,PI'] is continuous by A1,A10; then
+  A28: ((1/2)(#) YYXX) | ['0,PI'] is bounded
+     & ((1/2)(#) YYXX) is_integrable_on ['0,PI'] by A27,INTEGRA5:10,11;
+
+  set J = (1/2)(#)YYXX - y(#)(x`|Z);
+  A30: [.0,PI.] = ['0,PI'] by INTEGRA5:def 3,LEIBNIZ1:17;
+
+  A31: dom J = dom ((1/2)(#)YYXX) /\ dom(y(#)(x`|Z)) by VALUED_1:12
+  .= Z /\ Z by A18,A23,VALUED_1:def 5
+  .= Z;
+  A32: J | ['0,PI'] is continuous by A1,A10;
+  integral((1/2)(#)YYXX,0,PI) = 1/2 * integral(YYXX,0,PI)
+    by A1,A23,A25,INTEGRA6:10,LEIBNIZ1:17; then
+  A33: integral((1/2)(#)YYXX,0,PI) - integral(y(#)(x`|Z),0,PI) = 0 by A16;
+  A34: for t be Real st t in [.0,PI.] holds 0 <= J.t
+  proof
+    let t be Real;
+    assume
+    A35: t in [.0,PI.]; then
+    J.t = ((1/2)(#)YYXX).t - (y(#)(x`|Z)).t by A1,A30,A31,VALUED_1:13
+       .= 1/2 * YYXX.t - (y(#)(x`|Z)).t by VALUED_1:6
+       .= 1/2 * ((y(#)y).t + ((x`|Z)(#)(x`|Z)).t)
+        - (y(#)(x`|Z)).t by A1,A23,A30,A35,VALUED_1:def 1;
+    hence thesis by Lm7,XREAL_1:48;
+  end;
+
+  A40: for t be Real st t in ].0,PI.[ holds J.t = 0
+  proof
+    assume not for t be Real st t in ].0,PI.[ holds J.t = 0;
+    then consider t0 be Real such that
+    A37: t0 in ].0,PI.[ & 0 <> J.t0;
+    ].0,PI.[ c= [.0,PI.] by Lm1; then
+    A38: 0 < J.t0 by A34,A37;
+    [.0,PI.] = ['0,PI'] by INTEGRA5:def 3,LEIBNIZ1:17;
+    then consider d,c,e be Real such that
+    A39: 0 < e & c < d & c in [.0,PI.] & d in [.0,PI.]
+       & 0 < e*(d-c) <= integral(J,0,PI)
+      by A1,A31,A32,A34,A37,A38,Th6,LEIBNIZ1:17;
+    thus contradiction by A1,A18,A20,A27,A28,A33,A39,INTEGRA6:12,LEIBNIZ1:17;
+  end;
+
+  A41: for t be Real st t in [.0,PI.]
+       holds diff(x,t) = y.t & y.t = C * sin.t
+  proof
+    let t be Real;
+    assume
+    A42: t in [.0,PI.]; then
+
+    0 = J.t by A1,A10,A30,A31,A40,Th1,LEIBNIZ1:17
+     .= ((1/2)(#)YYXX).t - (y(#)(x`|Z)).t by A1,A30,A31,A42,VALUED_1:13
+     .= 1/2 * YYXX.t - (y(#)(x`|Z)).t by VALUED_1:6
+     .= 1/2 * ((y(#)y).t + ((x`|Z)(#)(x`|Z)).t)
+        - (y(#)(x`|Z)).t by A1,A23,A30,A42,VALUED_1:def 1;
+    then
+    0 * 2
+     = (1/2 * ((y(#)y).t + ((x`|Z)(#)(x`|Z)).t)) * 2 - 2 * (y(#)(x`|Z)).t
+    .= (y.t * y.t + ((x`|Z)(#)(x`|Z)).t) - 2 * (y(#)(x`|Z)).t by VALUED_1:5
+    .= (y.t * y.t + (x`|Z).t * (x`|Z).t) - 2 * (y(#)(x`|Z)).t by VALUED_1:5
+    .= (y.t * y.t + (x`|Z).t * (x`|Z).t) - 2 * (y.t * (x`|Z).t) by VALUED_1:5
+    .= (y.t - (x`|Z).t)^2
+    .= (y.t - diff(x,t))^2 by A1,A8,A30,A42,FDIFF_1:def 7;
+
+    then 0 = y.t - diff(x,t);
+    hence diff(x,t) = y.t;
+    thus y.t = C * sin.t by A13,A30,A42;
+  end;
+
+  [.0,PI.] c= dom y by A1,A4; then
+  A47: dom(y| [.0,PI.]) = [.0,PI.] by RELAT_1:62;
+  dom (C(#)sin) = REAL by FUNCT_2:def 1; then
+  A48: dom((C(#)sin) | [.0,PI.]) = [.0,PI.]
+    by RELAT_1:62;
+
+  A50: now
+    let s be object;
+    assume
+    A49: s in dom(y | [.0,PI.]);
+    then reconsider t=s as Real;
+    thus (y | [.0,PI.]).s = y.t by A47,A49,FUNCT_1:49
+      .= C * sin.t by A41,A47,A49
+      .= (C(#)sin).s by VALUED_1:6
+      .= ((C(#)sin)| [.0,PI.]).s by A47,A49,FUNCT_1:49;
+  end;
+  A52: y | ].0,PI.[ = (y | [.0,PI.]) | ].0,PI.[ by Lm1,RELAT_1:74
+    .= ((C(#)sin) | [.0,PI.]) | ].0,PI.[ by A47,A48,A50,FUNCT_1:2
+    .= (C(#)sin) | ].0,PI.[ by Lm1,RELAT_1:74;
+  A54: ].0,PI.[ c= [.0,PI.] by Lm1;
+  0 < PI/2 < PI by LEIBNIZ1:17,XREAL_1:216; then
+  A55: PI/2 in ].0,PI.[;
+  A58: ((y | ].0,PI.[) `| ].0,PI.[).(PI/2)
+     = (y `| ].0,PI.[).(PI/2) by A5,A6,FDIFF_1:26,Th17
+    .= diff(y,(PI/2)) by A7,A55,FDIFF_1:def 7
+    .= (y`|Z).(PI/2) by A5,A6,A55,FDIFF_1:def 7;
+  A59: dom (C(#)sin) = REAL by FUNCT_2:def 1;
+  A60: sin is_differentiable_on ].0,PI.[ by FDIFF_1:26,SIN_COS:68;
+  A62: (((C(#)sin) | ].0,PI.[) `| ].0,PI.[).(PI/2)
+   = ((C(#)sin) `| ].0,PI.[).(PI/2) by Th17,A59,A60,FDIFF_1:20
+  .= C * diff(sin,PI/2) by A55,A59,A60,FDIFF_1:20
+  .= C * cos.(PI/2) by SIN_COS:64;
+  A64: diff(x,PI/2) = y.(PI/2) & y.(PI/2) = C * sin.(PI/2) by A41,A54,A55;
+
+  (x`|Z).(PI/2) = C * sin.(PI/2) by A5,A8,A55,A64,FDIFF_1:def 7; then
+  1 = (C * sin.(PI/2))^2 + (C * cos.(PI/2))^2 by A1,A4,B5,A52,A55,A58,A62
+   .= C^2 * ((sin.(PI/2))^2 + (cos.(PI/2))^2)
+   .= C^2 * 1 by SIN_COS:28
+   .= C^2; then
+  A65: 1^2 = C^2;
+  A66: [.0,PI.] c= Z by A1,LEIBNIZ1:17,INTEGRA5:def 3; then
+  [.0,PI.] c= dom (x`| Z) by A8,FDIFF_1:def 7; then
+  A67: dom((x`| Z) | [.0,PI.]) = [.0,PI.] by RELAT_1:62;
+
+  A68: now
+    let s be object;
+    assume
+    A69: s in dom((x`|Z) | [.0,PI.]);
+    then reconsider t=s as Real;
+    thus ((x`|Z) | [.0,PI.]).s
+       = (x`|Z).s by A67,A69,FUNCT_1:49
+      .= diff(x,t) by A8,A66,A67,A69,FDIFF_1:def 7
+      .= y.t by A41,A67,A69
+      .= (y | [.0,PI.]).s by A67,A69,FUNCT_1:49;
+  end;
+  A71: x is_differentiable_on Z by A1,FDIFF_1:26;
+
+  x`| Z = (x`|Z) | Z by A9; then
+  A72: x is_integral_of x`| Z, Z by A71,INTEGRA7:def 1;
+  A73: now
+    let t be Real;
+    assume
+    A74: t in [.0,PI.];
+    hence diff(x,t) = y.t & y.t = C * sin.t by A41;
+    A75: 0 <= t <= PI by A74,XXREAL_1:1;
+    A77: [.0,t.] c= Z
+    proof
+      let s be object;
+      assume
+      B75: s in [.0,t.];
+      reconsider g=s as Real by B75;
+      0 <= g <= t by B75,XXREAL_1:1; then
+      0 <= g <= PI by A75,XXREAL_0:2; then
+      g in [.0,PI.];
+      hence s in Z by A1,A4;
+    end;
+    A78: (x`|Z) | Z is continuous by A1;
+    A79: dom sin = REAL by FUNCT_2:def 1;
+    sin | ['0,t'] is continuous; then
+    A80: sin | ['0,t'] is bounded
+       & sin is_integrable_on ['0,t'] by A79,INTEGRA5:10,11;
+    A82: ['0,t'] c= [.0,PI.]
+    proof
+      let z be object;
+      assume
+      A81: z in ['0,t'];
+      then reconsider s=z as Real;
+      s in [.0,t.] by A75,A81,INTEGRA5:def 3;
+      then 0 <= s <= t by XXREAL_1:1;
+      then 0 <= s <= PI by A75,XXREAL_0:2;
+      hence z in [.0,PI.];
+    end;
+    A83: y || ['0,t'] = (y | [.0,PI.]) | ['0,t'] by A82,RELAT_1:74
+    .= ((C(#)sin) | [.0,PI.]) | ['0,t'] by A47,A48,A50,FUNCT_1:2
+    .= (C(#)sin) || ['0,t'] by A82,RELAT_1:74;
+    A84: y || ['0,t'] = (y | [.0,PI.]) | ['0,t'] by A82,RELAT_1:74
+    .= ((x`| Z) | [.0,PI.]) | ['0,t'] by A47,A67,A68,FUNCT_1:2
+    .= (x`| Z ) || ['0,t'] by A82,RELAT_1:74;
+    thus x.t = integral((x`| Z),0,t) + x.0 by A9,A72,A75,A77,A78,INTEGRA7:20
+    .= integral((x`| Z), ['0,t']) + x.0 by A75,INTEGRA5:def 4
+    .= integral((C(#)sin),['0,t']) + x.0 by A83,A84
+    .= integral((C(#)sin),0,t) + x.0 by A75,INTEGRA5:def 4
+    .= C * integral(sin,0,t) + x.0 by A75,A79,A80,INTEGRA6:10
+    .= C * (cos.0 - cos.t) + x.0 by INTEGRA7:26
+    .= - C * cos.t + C * cos.0 + x.0;
+  end;
+
+  thus
+  (for t be Real st t in [.0,PI.]
+   holds y.t = sin.t & x.t = - cos.t + cos.0 + x.0)
+    or
+  (for t be Real st t in [.0,PI.]
+   holds y.t = - sin.t & x.t = cos.t - cos.0 + x.0)
+  proof
+    per cases by A65,SQUARE_1:40;
+    suppose
+      A85: C=1;
+      for t be Real st t in [.0,PI.]
+      holds y.t = sin.t & x.t = - cos.t + cos.0 + x.0
+      proof
+        let t be Real;
+        assume
+        A86: t in [.0,PI.]; then
+        A87: diff(x,t) = y.t & y.t = C * sin.t by A73;
+        x.t = - C * cos.t + C * cos.0 + x.0 by A73,A86;
+        hence y.t = sin.t & x.t = - cos.t + cos.0 + x.0 by A85,A87;
+      end;
+      hence
+      (for t be Real st t in [.0,PI.]
+       holds y.t = sin.t & x.t = - cos.t + cos.0 + x.0)
+        or
+      (for t be Real st t in [.0,PI.]
+       holds y.t = - sin.t & x.t = cos.t - cos.0 + x.0);
+    end;
+    suppose
+      A89: C = -1;
+      for t be Real st t in [.0,PI.]
+      holds y.t = -sin.t & x.t = cos.t - cos.0 + x.0
+      proof
+        let t be Real;
+        assume
+        A90: t in [.0,PI.]; then
+        A91: diff(x,t) = y.t & y.t = C * sin.t by A73;
+        x.t = - C * cos.t + C * cos.0 + x.0 by A73,A90;
+        hence y.t = - sin.t & x.t = cos.t - cos.0 + x.0 by A89,A91;
+      end;
+      hence
+      (for t be Real st t in [.0,PI.]
+       holds y.t = sin.t & x.t = - cos.t + cos.0 + x.0)
+          or
+      (for t be Real st t in [.0,PI.]
+       holds y.t = - sin.t & x.t = cos.t - cos.0 + x.0);
+    end;
+  end;
+end;
+
+Lm28:
+  for x,y be PartFunc of REAL,REAL,
+      a,b be Real
+   st a < b
+    & [.a,b.] c= dom x & [.a,b.] c= dom y
+    & x is continuous
+    & y is continuous
+    & for t be Real st t in ].a,b.[ holds x.t = y.t
+  holds x | [.a,b.] = y | [.a,b.]
+proof
+  let x,y be PartFunc of REAL,REAL,
+      a,b be Real;
+  assume that
+  A1: a < b
+    & [.a,b.] c= dom x & [.a,b.] c= dom y
+    & x is continuous
+    & y is continuous
+  and
+  A2: for t be Real st t in ].a,b.[ holds x.t = y.t;
+
+  A3: ['a,b'] = [.a,b.] by A1,INTEGRA5:def 3; then
+  A4: ].a,b.[ c= ['a,b'] by Lm1;
+  set z = a + (b-a)/2;
+
+  A5: 0 < b-a by A1,XREAL_1:50; then
+  (b-a)/2 < b-a by XREAL_1:216; then
+  A7: z < b-a + a by XREAL_1:8;
+
+  deffunc FF2(Nat) = In(((b-a)/2)/($1+1),REAL);
+  consider Sn be Function of NAT,REAL such that
+  A8: for x being Element of NAT holds Sn.x = FF2(x) from FUNCT_2:sch 4;
+
+  A9: for n be Nat holds Sn.n = ((b-a)/2)/(n+1)
+  proof
+    let n be Nat;
+    n in NAT by ORDINAL1:def 12;
+    hence Sn.n
+      = In(((b-a)/2)/(n+1),REAL) by A8
+     .= ((b-a)/2)/(n+1);
+  end; then
+  A10: Sn is convergent & lim Sn = 0 by SEQ_4:31;
+
+  consider Sa be constant Function of NAT,REAL such that
+  A12: for x being Nat holds Sa.x = a by LmX;
+
+  A15: Sa.0 = a by A12;
+  set S0 = Sa + Sn;
+  S0 is convergent & lim S0 = lim Sa+lim Sn by A10,SEQ_2:6; then
+  A16: lim S0 = a by A10,A15,SEQ_4:25;
+  a in [.a,b.] by A1; then
+  A17: x is_continuous_in a & y is_continuous_in a by A1;
+
+  A18: rng S0 c= ].a,b.[
+  proof
+    let y be object;
+    assume y in rng S0; then
+    consider n be object such that
+    A19: n in dom S0 & y = S0.n by FUNCT_1:def 3;
+    reconsider n as Nat by A19;
+
+    A20: y = Sa.n + Sn.n by A19,SEQ_1:7
+          .= a + Sn.n by A12
+          .= a + ((b-a)/2)/(n+1) by A9;
+    A21: a + 0 < a + ((b-a)/2)/(n+1) by A5,XREAL_1:8;
+    1 + 0 <= n+1 by XREAL_1:7; then
+    ((b-a)/2)/(n+1) <= ((b-a)/2)/1 by A5,XREAL_1:118; then
+    a + ((b-a)/2)/(n+1) <= a + ((b-a)/2) by XREAL_1:7; then
+    a + ((b-a)/2)/(n+1) < b by A7,XXREAL_0:2;
+    hence y in ].a,b.[ by A20,A21;
+  end; then
+  A23: rng S0 c= dom x & rng S0 c= dom y by A1,A3,A4; then
+  A24: x/*S0 is convergent & x.a = lim(x/*S0)
+     & y/*S0 is convergent & y.a = lim(y/*S0) by A10,A16,A17;
+
+  for n be Nat holds (x/*S0).n = (y/*S0).n
+  proof
+    let n be Nat;
+    A25: n in NAT by ORDINAL1:def 12; then
+    A26: (x/*S0).n = x.(S0.n) & (y/*S0).n = y.(S0.n)
+      by A23,FUNCT_2:108;
+    S0.n in ].a,b.[ by A18,A25,FUNCT_2:112;
+    hence thesis by A2,A26;
+  end; then
+  A27: x/*S0 = y/*S0;
+
+  consider Sb be constant Function of NAT,REAL such that
+  A29: for x being Nat holds Sb.x = b by LmX;
+
+  Sb.0 = b by A29; then
+  A31: Sb is convergent & lim Sb = b by SEQ_4:25;
+  set S1 = Sb - Sn;
+  A32: lim S1 = b - 0 by A10,A31,SEQ_2:12
+             .= b;
+
+  b in [.a,b.] by A1; then
+  A33: x is_continuous_in b & y is_continuous_in b by A1;
+
+  A34: rng S1 c= ].a,b.[
+  proof
+    let y be object;
+    assume y in rng S1; then
+    consider n be object such that
+    A35: n in dom S1 & y = S1.n by FUNCT_1:def 3;
+    reconsider n as Nat by A35;
+
+    A36: y = Sb.n + (-Sn).n by A35,SEQ_1:7
+          .= Sb.n + -Sn.n by SEQ_1:10
+          .= b - Sn.n by A29
+          .= b - ((b-a)/2)/(n+1) by A9;
+    A37: b - ((b-a)/2)/(n+1) < b - 0 by A5,XREAL_1:15;
+    1 + 0 <= n+1 by XREAL_1:7; then
+    ((b-a)/2)/(n+1) <= ((b-a)/2)/1 by A5,XREAL_1:118; then
+    A38: b - ((b-a)/2) <= b - ((b-a)/2)/(n+1) by XREAL_1:13;
+    a + 0 < a + (b-a)/2 by A5,XREAL_1:8; then
+    a < b - ((b-a)/2)/(n+1) by A38,XXREAL_0:2;
+    hence y in ].a,b.[ by A36,A37;
+  end; then
+  A40: rng S1 c= dom x & rng S1 c= dom y by A1,A3,A4; then
+  A41: x/*S1 is convergent & x.b = lim(x/*S1)
+    & y/*S1 is convergent & y.b = lim(y/*S1) by A10,A32,A33;
+
+  for n be Nat holds (x/*S1).n = (y/*S1).n
+  proof
+    let n be Nat;
+    A42: n in NAT by ORDINAL1:def 12; then
+    A43: (x/*S1).n = x.(S1.n) & (y/*S1).n = y.(S1.n)
+      by A40,FUNCT_2:108;
+    S1.n in ].a,b.[ by A34,A42,FUNCT_2:112;
+    hence thesis by A2,A43;
+  end; then
+  A44: x/*S1 = y/*S1;
+  A45: dom(x | [.a,b.]) = [.a,b.] by A1,RELAT_1:62;
+  A46: dom(y | [.a,b.]) = [.a,b.] by A1,RELAT_1:62;
+
+  for t be object st t in dom(x | [.a,b.])
+  holds (x | [.a,b.]).t = (y | [.a,b.] ).t
+  proof
+    let s be object;
+    assume
+    A47: s in dom(x | [.a,b.]); then
+    reconsider t=s as Real;
+    t in [.a,b.] by A1,A47,RELAT_1:62; then
+    ex r be Real st t=r & a <= r <= b;
+    then per cases by XXREAL_0:1;
+    suppose
+      A50: t = a;
+      thus (x | [.a,b.]).s
+       = x.t by A45,A47,FUNCT_1:49
+      .= (y | [.a,b.]).s by A24,A27,A45,A47,A50,FUNCT_1:49;
+    end;
+    suppose
+      a < t < b; then
+      A51: t in ].a,b.[;
+      thus (x | [.a,b.]).s
+       = x.t by A45,A47,FUNCT_1:49
+      .= y.t by A2,A51
+      .= (y | [.a,b.]).s by A45,A47,FUNCT_1:49;
+    end;
+    suppose
+      A52: t = b;
+      thus (x | [.a,b.]).s
+       = x.t by A45,A47,FUNCT_1:49
+      .= (y|[.a,b.]).s by A41,A44,A45,A47,A52,FUNCT_1:49;
+    end;
+  end;
+  hence thesis by A1,RELAT_1:62,A46,FUNCT_1:2;
+end;
+
+Lm29:
+  for x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL
+   st x is differentiable
+    & y is differentiable
+    & ['0,PI'] c= Z & Z c= dom x & Z c= dom y
+    & y`|Z is continuous
+    & x`|Z is continuous
+    & (for t be Real st t in Z holds
+       ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1)
+    & y.0 = 0 & y.PI = 0
+    & ((for t be Real st t in [.0,PI.]
+        holds y.t = sin.t & x.t = -cos.t + cos.0 + x.0)
+          or
+       (for t be Real st t in [.0,PI.]
+        holds y.t = -sin.t & x.t = cos.t - cos.0 + x.0))
+  holds
+   integral(y(#)(x`|Z),0,PI) = 1/2 * PI
+proof
+  let x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL;
+  assume that
+  A1: x is differentiable
+    & y is differentiable
+    & ['0,PI'] c= Z & Z c= dom x & Z c= dom y
+    & y`|Z is continuous
+    & x`|Z is continuous
+    & (for t be Real st t in Z holds
+       ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1)
+    & y.0 = 0 & y.PI = 0
+    and
+  A2: ((for t be Real st t in [.0,PI.]
+        holds y.t = sin.t & x.t = -cos.t + cos.0 + x.0)
+          or
+        (for t be Real st t in [.0,PI.]
+        holds y.t = -sin.t & x.t = cos.t - cos.0 + x.0));
+
+  set X = ].0,PI.[;
+  A4: ['0,PI'] = [.0,PI.] by INTEGRA5:def 3,LEIBNIZ1:17; then
+  A5: ].0,PI.[ c= ['0,PI'] by Lm1;
+  A6: ].0,PI.[ c= Z by A1,A5;
+  A7: x is_differentiable_on Z by A1,FDIFF_1:26; then
+  A8: dom(x`|Z) = Z by FDIFF_1:def 7;
+
+  y is_differentiable_on dom y by A1; then
+  A9: y is continuous by FDIFF_1:25;
+
+  A10: dom(y(#)(x`|Z)) = dom y /\ Z by A8,VALUED_1:def 4
+                      .= Z by A1,XBOOLE_1:28;
+  A11: REAL c= REAL;
+  now
+    let r be Element of REAL;
+    assume r in REAL;
+    ].r-1,r+1.[ is Neighbourhood of r by RCOMP_1:def 6;
+    hence ex N being Neighbourhood of r st N c= REAL;
+  end;
+  then
+  A13: REAL is open Subset of REAL by A11,RCOMP_1:20;
+  A14: cos is_differentiable_on REAL
+     & cos`|REAL = -(sin|REAL) by A13,Th8;
+  A15: sin is_differentiable_on REAL
+     & sin`|REAL = cos|REAL by A13,Th8;
+  A16: dom sin = REAL by FUNCT_2:def 1;
+  A17: dom cos = REAL by FUNCT_2:def 1;
+  A18: dom(sin(#)sin) = REAL by FUNCT_2:def 1;
+  A19: for t be Real st t in ].0,PI.[
+       holds (y(#)(x`|Z)).t = (sin(#)sin).t
+  proof
+    let s be Real;
+    assume
+    A20: s in ].0,PI.[;
+
+    per cases by A2;
+    suppose
+      A21: for t be Real st t in [.0,PI.]
+           holds y.t = sin.t & x.t = -cos.t + cos.0 + x.0;
+      A22: y.s = sin.s by A4,A5,A20,A21;
+      A23: cos is_differentiable_in s
+         & diff(cos,s) = -sin.s by SIN_COS:63; then
+      A24: (-1)(#)cos is_differentiable_in s
+         & diff((-1)(#)cos,s) = (-1) * diff(cos,s) by FDIFF_1:15;
+
+      consider N being Neighbourhood of s such that
+      A26: N c= dom ((-1)(#)cos)
+        & ex L be LinearFunc, R be RestFunc
+          st diff((-1)(#)cos,s) = L.1
+           & for p be Real st p in N
+             holds ((-1)(#)cos).p - ((-1)(#)cos).s = L.(p-s) + R.(p-s)
+        by A24,FDIFF_1:def 5;
+
+      consider L be LinearFunc, R be RestFunc such that
+      A27: diff((-1)(#)cos,s) = L.1
+         & for p be Real st p in N
+           holds ((-1)(#)cos).p - ((-1)(#)cos).s = L.(p-s) + R.(p-s) by A26;
+
+      consider N2 be Neighbourhood of s such that
+      A28: N2 c= ].0,PI.[ by A20,RCOMP_1:18;
+
+      consider Ns being Neighbourhood of s such that
+      A29: Ns c= N & Ns c= N2 by RCOMP_1:17;
+
+      A30: ].0,PI.[ c= [.0,PI.] by Lm1;
+      Ns c= ].0,PI.[ by A28,A29; then
+      A31: Ns c= dom x by A1,A6;
+      A32: for p be Real st p in Ns holds x.p - x.s = L.(p-s) + R.(p-s)
+      proof
+        let p be Real;
+        assume
+        A33: p in Ns; then
+        p in [.0,PI.] by A28,A29,A30;
+        hence x.p - x.s
+         = (-cos.p + cos.0 + x.0) - x.s by A21
+        .= (-cos.p + cos.0 + x.0) - (-cos.s + cos.0 + x.0) by A20,A21,A30
+        .= -cos.p + cos.s
+        .= (-cos).p - (-cos.s) by VALUED_1:8
+        .= (-cos).p - (-cos).s by VALUED_1:8
+        .= L.(p-s) + R.(p-s) by A27,A29,A33;
+      end; then
+      x is_differentiable_in s by A31; then
+      A39: diff(x,s) = sin.s by A23,A24,A27,A31,A32,FDIFF_1:def 5;
+      thus (y(#)(x`|Z)).s
+       = y.s * (x`|Z).s by VALUED_1:5
+      .= y.s * diff(x,s) by A6,A7,A20,FDIFF_1:def 7
+      .= (sin(#)sin).s by A22,A39,VALUED_1:5;
+    end;
+    suppose
+      A40: for t be Real st t in [.0,PI.]
+           holds y.t = -sin.t & x.t = cos.t - cos.0 + x.0; then
+      A41: y.s = -sin.s by A4,A5,A20;
+      A42: cos is_differentiable_in s & diff(cos,s) = -sin.s by SIN_COS:63;
+
+      consider N being Neighbourhood of s such that
+      A43: N c= dom cos
+         & ex L be LinearFunc, R be RestFunc
+           st diff(cos,s) = L.1
+            & for p be Real st p in N
+              holds cos.p - cos.s = L.(p-s) + R.(p-s) by A42,FDIFF_1:def 5;
+
+      consider L be LinearFunc, R be RestFunc such that
+      A44: diff(cos,s) = L.1
+         & for p be Real st p in N
+           holds cos.p - cos.s = L.(p-s) + R.(p-s) by A43;
+
+      consider N2 be Neighbourhood of s such that
+      A45: N2 c= ].0,PI.[ by A20,RCOMP_1:18;
+
+      consider Ns being Neighbourhood of s such that
+      A46: Ns c= N & Ns c= N2 by RCOMP_1:17;
+      A47: ].0,PI.[ c= [.0,PI.] by Lm1;
+      Ns c= ].0,PI.[ by A45,A46; then
+      A48: Ns c= dom x by A1,A6;
+
+      A49: for p be Real st p in Ns
+           holds x.p - x.s = L.(p-s) + R.(p-s)
+      proof
+        let p be Real;
+        assume
+        A50: p in Ns; then
+        p in [.0,PI.] by A45,A46,A47;
+        hence x.p - x.s
+         = (cos.p - cos.0 + x.0) - x.s by A40
+        .= (cos.p - cos.0 + x.0) - (cos.s - cos.0 + x.0) by A20,A40,A47
+        .= cos.p - cos.s
+        .= L.(p-s) + R.(p-s) by A44,A46,A50;
+      end; then
+      x is_differentiable_in s by A48; then
+      A56: diff(x,s) = -sin.s by A42,A44,A48,A49,FDIFF_1:def 5;
+      thus
+      (y(#)(x`|Z)).s
+       = y.s * (x`|Z).s by VALUED_1:5
+      .= y.s * diff(x,s) by A6,A7,A20,FDIFF_1:def 7
+      .= sin.s * sin.s by A41,A56
+      .= (sin(#)sin).s by VALUED_1:5;
+    end;
+  end;
+
+  (sin(#)sin) | ['0,PI'] is continuous; then
+  A60: sin(#)sin is_integrable_on ['0,PI']
+    & (sin(#)sin) | ['0,PI'] is bounded by A18,INTEGRA5:10,11;
+  dom((-1)(#)cos) = REAL by FUNCT_2:def 1; then
+  A61: (-1)(#)cos is_differentiable_on REAL
+     & ((-1)(#)cos)`|REAL = (-1)(#)(cos`|REAL) by A13,A14,Th12; then
+  A62: ((-1)(#)cos)`|REAL
+     = ((-1)*(-1))(#)(sin|REAL) by A14,RFUNCT_1:17
+    .= sin by RFUNCT_1:21;
+
+  set F = sin(#)((-1)(#)cos);
+  B62: dom F = dom sin /\ dom((-1)(#)cos) by VALUED_1:def 4
+            .= dom sin /\ dom cos by VALUED_1:def 5
+            .= REAL by A16,A17; then
+  A63: F is_differentiable_on REAL
+     & F`|REAL = (sin`|REAL)(#)((-1)(#)cos)
+                + sin(#)(((-1)(#)cos)`|REAL) by A13,A15,A61,Th13;
+
+  set I = REAL --> 1;
+  A65: dom I = REAL by FUNCOP_1:13;
+  A66: rng I = {1} by FUNCOP_1:8;
+  rng I c= REAL; then
+  reconsider I as PartFunc of REAL,REAL by A65,RELSET_1:4;
+
+  A67: I is continuous by A66,FCONT_1:39; then
+  I | ['0,PI'] is continuous; then
+  A71: I is_integrable_on ['0,PI'] & I | ['0,PI'] is bounded
+       by A65,INTEGRA5:10,11;
+  A72: dom ((-1)(#)cos(#)cos)
+   = dom((-1)(#)cos) /\ dom cos by VALUED_1:def 4
+  .= dom cos /\ dom cos by VALUED_1:def 5
+  .= REAL by FUNCT_2:def 1;
+
+  A73: dom(sin(#)sin - I)
+   = dom(sin(#)sin) /\ dom I by VALUED_1:12
+  .= dom sin /\ dom sin /\ dom I by VALUED_1:def 4
+  .= REAL by A16,FUNCOP_1:13;
+
+  now
+    let t be object;
+    assume
+    A74: t in dom((-1)(#)cos(#)cos); then
+    reconsider s = t as Real;
+    A75: cos.s * cos.s + sin.s * sin.s = 1 by SIN_COS:28;
+    thus ((-1)(#)cos(#)cos).t
+     = ((-1)(#)cos).t * cos.t by VALUED_1:5
+    .= ((-1) * cos.t) * cos.t by VALUED_1:6
+    .= - cos.s * cos.s
+    .= sin.s * sin.s - 1 by A75
+    .= sin.s * sin.s - I.s by FUNCOP_1:7,XREAL_0:def 1
+    .= (sin(#)sin).s - I.s by VALUED_1:5
+    .= ((sin(#)sin) - I).t by A73,A74,VALUED_1:13;
+  end; then
+  A76: F`|REAL = sin(#)sin - I + sin(#)sin by A15,A62,A63,A72,A73,FUNCT_1:2;
+
+  A77: (F`|REAL) | ['0,PI'] is continuous by A15,A62,A63;
+  dom(F`|REAL) = REAL by A63,FDIFF_1:def 7; then
+  F`|REAL is_integrable_on ['0,PI']
+  & (F`|REAL) | ['0,PI'] is bounded by A77,INTEGRA5:10,11; then
+  A78: F.PI = integral(F`|REAL,0,PI) + F.0
+    by A13,A15,A61,B62,Th13,INTEGRA7:10,LmPI;
+  (sin(#)sin - I) | ['0,PI'] is continuous by A67; then
+  A81: (sin(#)sin - I) is_integrable_on ['0,PI']
+     & (sin(#)sin - I) | ['0,PI'] is bounded by A73,INTEGRA5:10,11;
+  A82: integral(sin(#)sin - I + sin(#)sin,0,PI)
+     = integral(sin(#)sin - I,0,PI) + integral(sin(#)sin,0,PI)
+       by A18,A60,A73,A81,INTEGRA6:12,LmPI;
+
+  A83: integral(sin(#)sin - I + sin(#)sin,0,PI)
+     = integral(sin(#)sin,0,PI) - integral(I,0,PI) + integral(sin(#)sin,0,PI)
+       by A18,A60,A65,A71,A82,INTEGRA6:12,LmPI
+    .= 2 * integral(sin(#)sin,0,PI) - integral(I,0,PI);
+
+  A84: F.PI = sin.PI * ((-1)(#)cos).PI by VALUED_1:5
+           .= 0 by SIN_COS:76;
+  A85: F.0 = sin.0 * ((-1)(#)cos).0 by VALUED_1:5
+          .= 0 by SIN_COS:30;
+  A86: for t be Real st t in ['0,PI'] holds I.t = 1 by FUNCOP_1:7;
+  0 in [.0,PI.] & PI in [.0,PI.] by LmPI; then
+  0 in ['0,PI'] & PI in ['0,PI'] by INTEGRA5:def 3,LmPI; then
+  A88: integral(I,0,PI) = 1*(PI-0) by A65,A86,INTEGRA6:27,LmPI;
+
+  integral(sin(#)sin,0,PI)
+   = integral((sin(#)sin), ['0,PI']) by INTEGRA5:def 4,LmPI
+  .= integral(y(#)(x`|Z),['0,PI']) by A1,A4,A9,A10,A18,A19,Lm28,LmPI
+  .= integral(y(#)(x`|Z),0,PI) by INTEGRA5:def 4,LmPI;
+  hence thesis by A76,A78,A83,A84,A85,A88;
+end;
+
+theorem
+  for x,y be PartFunc of REAL,REAL,
+      Z be open Subset of REAL
+   st x is differentiable
+    & y is differentiable
+    & ['0,PI'] c= Z & Z c= dom x & Z c= dom y
+    & x`|Z is continuous
+    & y`|Z is continuous
+    & (for t be Real st t in Z
+       holds ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1)
+    & y.0 = 0 & y.PI = 0
+  holds
+    integral(y(#)(x`|Z),0,PI) <= 1/2 * PI
+  & (integral(y(#)(x`|Z),0,PI) = 1/2 * PI
+        iff
+     ((for t be Real st t in [.0,PI.]
+       holds y.t = sin.t & x.t = -cos.t + cos.0 + x.0)
+          or
+      (for t be Real st t in [.0,PI.]
+       holds y.t = -sin.t & x.t = cos.t - cos.0 + x.0))) by Lm27,Lm29;
+
+theorem Th22:
+  for x,y be PartFunc of REAL,REAL
+   st x is differentiable
+    & y is differentiable
+    & ['0,PI'] c= dom x & ['0,PI'] c= dom y
+    & x`|dom(x) is continuous
+    & y`|dom(y) is continuous
+    & (for t be Real st t in dom x /\ dom y
+       holds diff(x,t)^2 + diff(y,t)^2 = 1)
+    & y.0 = 0 & y.PI = 0
+   holds
+      integral(y(#)(x`|(dom x)),0,PI) <= 1/2 * PI
+    & (integral(y(#)(x`|(dom x)),0,PI) = 1/2 * PI
+          iff
+       ((for t be Real st t in [.0,PI.]
+         holds y.t = sin.t & x.t = -cos.t + cos.0 + x.0)
+               or
+        (for t be Real st t in [.0,PI.]
+         holds y.t = -sin.t & x.t = cos.t - cos.0 + x.0)))
+proof
+  let x,y be PartFunc of REAL,REAL;
+  assume
+  A1: x is differentiable
+    & y is differentiable
+    & ['0,PI'] c= dom x & ['0,PI'] c= dom y
+    & x`|dom(x) is continuous
+    & y`|dom(y) is continuous
+    & (for t be Real st t in dom x /\ dom y
+       holds diff(x,t)^2 + diff(y,t)^2 = 1)
+    & y.0 = 0 & y.PI = 0;
+  reconsider Z1 = dom x, Z2 = dom y as open Subset of REAL by A1,FDIFF_1:10;
+  reconsider Z = Z1 /\ Z2 as open Subset of REAL;
+  A3: ['0,PI'] c= Z & Z c= dom x & Z c= dom y by A1,XBOOLE_1:17,19;
+  A4: x is_differentiable_on Z
+    & y is_differentiable_on Z by A1,FDIFF_1:28,XBOOLE_1:17;
+
+  A6: x`|Z  = (x`|dom(x)) | Z
+    & y`|Z  = (y`|dom(y)) | Z by A1,Th18,XBOOLE_1:17;
+
+  A7: for t be Real st t in Z
+      holds ((x`|Z).t)^2 + ((y`|Z).t)^2 = 1
+  proof
+    let t be Real;
+    assume
+    A8: t in Z; then
+    (x`|Z).t = diff(x,t) & (y`|Z).t = diff(y,t) by A4,FDIFF_1:def 7;
+    hence thesis by A1,A8;
+  end;
+  x`|Z = (x`|dom(x)) | Z by A1,Th18,XBOOLE_1:17; then
+  A11: y(#)(x`|Z) = (y(#)(x`|dom(x))) | Z by RFUNCT_1:45;
+
+  integral(y(#)(x`|Z),0,PI)
+   = integral(y(#)(x`|Z), ['0,PI']) by INTEGRA5:def 4,LmPI
+  .= integral((y(#)(x`|dom(x))), ['0,PI']) by A1,A11,RELAT_1:74,XBOOLE_1:19
+  .= integral(y(#)(x`|dom(x)),0,PI) by INTEGRA5:def 4,LmPI;
+  hence thesis by A1,A3,A6,A7,Lm27,Lm29;
+end;
+
+theorem
+  for x,y be PartFunc of REAL,REAL,
+      L be Real
+   st 0 < L
+    & x is differentiable
+    & y is differentiable
+    & [.0,PI.] c= dom x & [.0,PI.] c= dom y
+    & x`|dom(x) is continuous
+    & y`|dom(y) is continuous
+    & (for t be Real st t in dom x /\ dom y
+       holds diff(x,t)^2 + diff(y,t)^2 = L/PI)
+    & y.0 = 0 & y.PI = 0
+  holds
+    integral(y(#)(x`|dom(x)),0,PI) <= 1/2 * L
+  & (integral(y(#)(x`|dom(x)),0,PI) = 1/2 * L
+        iff
+     ((for t be Real st t in [.0,PI.]
+       holds y.t = sin.t / sqrt(PI/L)
+           & x.t = - cos.t / sqrt(PI/L) + cos.0 / sqrt(PI/L) + x.0)
+               or
+      (for t be Real st t in [.0,PI.]
+       holds y.t = - sin.t / sqrt(PI/L)
+           & x.t = cos.t / sqrt(PI/L) - cos.0 /sqrt(PI/L) + x.0)))
+proof
+  let x,y be PartFunc of REAL,REAL,
+      L be Real;
+  assume that
+  A1: 0 < L and
+  A2: x is differentiable
+    & y is differentiable
+    & [.0,PI.] c= dom x & [.0,PI.] c= dom y
+    & x`|dom(x) is continuous
+    & y`|dom(y) is continuous
+    & (for t be Real st t in dom x /\ dom y
+       holds diff(x,t)^2 + diff(y,t)^2 = L/PI)
+    & y.0 = 0 & y.PI = 0;
+
+  set k = sqrt(PI/L);
+  set x1 = k(#)x;
+  set y1 = k(#)y;
+
+  A5: k^2 = PI/L by A1,LmPI,SQUARE_1:def 2;
+  A6: ['0,PI'] = [.0,PI.] by INTEGRA5:def 3,LmPI;
+  A7: dom x1 = dom x & dom y1 = dom y by VALUED_1:def 5;
+  reconsider Z1 = dom x, Z2 = dom y as open Subset of REAL by A2,FDIFF_1:10;
+
+  A8: x1 is_differentiable_on Z1 & x1`|Z1 = k(#)(x`|Z1)
+    & y1 is_differentiable_on Z2 & y1`|Z2 = k(#)(y`|Z2) by A2,A7,Th12;
+  A10: for t be Real st t in dom x1 /\ dom y1
+       holds diff(x1,t)^2 + diff(y1,t)^2 = 1
+  proof
+    let t be Real;
+    assume
+    A11: t in dom x1 /\ dom y1; then
+    A12: diff(x,t)^2 + diff(y,t)^2 = L/PI by A2,A7;
+    A13: t in dom x1 by A11,XBOOLE_0:def 4; then
+    A14: diff(x1,t) = (x1`|Z1).t by A7,A8,FDIFF_1:def 7
+                   .= k * (x`|Z1).t by A8,VALUED_1:6
+                   .= k * diff(x,t) by A2,A7,A13,FDIFF_1:def 7;
+    A15: t in dom y1 by A11,XBOOLE_0:def 4; then
+    diff(y1,t) = (y1`|Z2).t by A7,A8,FDIFF_1:def 7
+              .= k * (y`|Z2).t by A8,VALUED_1:6
+              .= k * diff(y,t) by A2,A7,A15,FDIFF_1:def 7;
+    hence diff(x1,t)^2 + diff(y1,t)^2
+     = k^2 * (diff(x,t)^2 + diff(y,t)^2) by A14
+    .= (PI*L) / (PI*L) by A5,A12,XCMPLX_1:76
+    .= 1 by A1,LmPI,XCMPLX_1:60;
+  end;
+
+  A18: y1.0 = k * y.0 by VALUED_1:6
+           .= 0 by A2;
+  A19: y1.PI = k * y.PI by VALUED_1:6
+            .= 0 by A2;
+
+  B19: x1 is differentiable
+     & y1 is differentiable by A8,VALUED_1:def 5; then
+  A20: integral(y1(#)(x1`|dom(x1)),0,PI) <= 1/2 * PI
+     & (integral(y1(#)(x1`|dom(x1)),0,PI) = 1/2 * PI
+          iff
+        ((for t be Real st t in [.0,PI.]
+          holds y1.t = sin.t & x1.t= -cos.t + cos.0 + x1.0)
+               or
+         (for t be Real st t in [.0,PI.]
+          holds y1.t = -sin.t & x1.t = cos.t - cos.0 + x1.0)))
+    by A2,A6,A7,A8,A10,A18,A19,Th22;
+
+  set g = y(#)(x`|Z1);
+  A21: y1(#)(x1`|Z1)
+    = k(#)((k(#)y)(#)(x`|Z1)) by A8,RFUNCT_1:13
+   .= k(#)(k(#)(y(#)(x`|Z1))) by RFUNCT_1:12
+   .= (PI/L)(#)g by A5,RFUNCT_1:17;
+
+  A22: dom g = dom y /\ dom(x`|Z1) by VALUED_1:def 4
+            .= dom x /\ dom y by A2,FDIFF_1:def 7;
+  y is_differentiable_on dom y by A2; then
+  y is continuous by FDIFF_1:25; then
+  g | ['0,PI'] is continuous by A2; then
+  B22: g is_integrable_on ['0,PI']
+     & g | ['0,PI'] is bounded by A2,A6,A22,INTEGRA5:10,11,XBOOLE_1:19; then
+  A23: integral(y1(#)(x1`|dom(x1)),0,PI)
+     = PI/L * integral(y(#)(x`|dom(x)),0,PI)
+    by A2,A6,A7,A21,A22,INTEGRA6:10,LmPI,XBOOLE_1:19; then
+  PI/L * integral(y(#)(x`|dom(x)),0,PI) * L <= 1/2 * PI * L
+    by A1,A20,XREAL_1:64; then
+  PI/L * L * integral(y(#)(x`|dom(x)),0,PI) <= 1/2 * PI * L; then
+  PI * integral(y(#)(x`|dom(x)),0,PI) <= 1/2 * PI * L by A1,XCMPLX_1:87; then
+  PI * integral(y(#)(x`|dom(x)),0,PI)/PI <= 1/2 * PI * L/PI
+    by LmPI,XREAL_1:72; then
+  integral(y(#)(x`|dom(x)),0,PI) <= 1/2 * (PI * L/PI)
+    by LmPI,XCMPLX_1:89;
+  hence integral(y(#)(x`|dom(x)),0,PI) <= 1/2 * L by LmPI,XCMPLX_1:89;
+
+  A24: integral(y1(#)(x1`|dom(x1)),0,PI) = 1/2 * PI
+        iff
+       integral(y(#)(x`|dom(x)),0,PI) = 1/2 * L
+  proof
+    hereby
+      assume integral(y1(#)(x1`|(dom x1)),0,PI) = 1/2 * PI;
+      then PI/L * integral(y(#)(x`|(dom x)),0,PI) * L = 1/2 * PI * L
+        by A2,A6,A7,A21,A22,B22,INTEGRA6:10,LmPI,XBOOLE_1:19;
+      then PI/L * L * integral(y(#)(x`|(dom x)),0,PI) = 1/2 * PI * L;
+      then PI * integral(y(#)(x`|(dom x)),0,PI)/PI = 1/2 * PI * L/PI
+        by A1,XCMPLX_1:87;
+      hence integral(y(#)(x`|(dom x)),0,PI)
+       = 1/2 * (PI * (L/PI)) by LmPI,XCMPLX_1:89
+      .= 1/2 * L by LmPI,XCMPLX_1:87;
+    end;
+
+    assume integral(y(#)(x`|dom(x)),0,PI) = 1/2 * L;
+    hence integral(y1(#)(x1`|dom(x1)),0,PI)
+     = 1/2 * (PI/L * L) by A23
+    .= 1/2 * PI by A1,XCMPLX_1:87;
+  end;
+
+  A25: k <> 0 by A1,LmPI,SQUARE_1:25;
+  A26: (for t be Real st t in [.0,PI.]
+        holds y1.t = sin.t & x1.t = -cos.t + cos.0 + x1.0)
+          iff
+       (for t be Real st t in [.0,PI.]
+        holds y.t = sin.t / k & x.t= - cos.t / k + cos.0 / k + x.0)
+  proof
+    hereby
+      assume
+      A27: for t be Real st t in [.0,PI.]
+           holds y1.t = sin.t & x1.t = -cos.t + cos.0 + x1.0;
+      let t be Real;
+      assume t in [.0,PI.];
+      then y1.t = sin.t & x1.t = -cos.t + cos.0 + x1.0 by A27;
+      then k * y.t = sin.t & k * x.t = -cos.t + cos.0 + x1.0 by VALUED_1:6;
+      then k * y.t = sin.t & k * x.t = -cos.t + cos.0 + k * x.0 by VALUED_1:6;
+      then
+      A28: k * y.t / k = sin.t / k
+         & k * x.t / k = (-cos.t + (cos.0 + k * x.0))/k;
+      (cos.0 + k * x.0)/k = cos.0 / k + (k * x.0)/k
+                         .= cos.0 / k + x.0
+        by A25,XCMPLX_1:89;
+      hence y.t = sin.t / k & x.t = -cos.t / k + cos.0 / k + x.0
+        by A25,A28,XCMPLX_1:89;
+    end;
+    assume
+    A29: for t be Real st t in [.0,PI.]
+         holds y.t = sin.t / k & x.t= -cos.t / k + cos.0 / k + x.0;
+    let t be Real;
+    assume t in [.0,PI.];
+    then y.t = sin.t / k & x.t= -cos.t / k + cos.0 / k + x.0 by A29;
+    then
+    A30: y1.t = sin.t / k * k
+       & x1.t = (-cos.t / k + cos.0 / k + x.0) * k by VALUED_1:6;
+    then x1.t
+      = -cos.t / k * k + cos.0 / k * k + x.0 * k
+     .= -cos.t + cos.0 / k * k + x.0 * k by A25,XCMPLX_1:87
+     .= -cos.t + cos.0 + x.0 * k by A25,XCMPLX_1:87
+     .= -cos.t + cos.0 + x1.0 by VALUED_1:6;
+    hence y1.t = sin.t & x1.t = -cos.t + cos.0 + x1.0 by A25,A30,XCMPLX_1:87;
+  end;
+
+  (for t be Real st t in [.0,PI.]
+   holds y1.t = -sin.t & x1.t = cos.t - cos.0 + x1.0)
+      iff
+   for t be Real st t in [.0,PI.]
+   holds y.t = -sin.t / k & x.t = cos.t / k - cos.0 / k + x.0
+  proof
+    hereby
+      assume
+      A31: for t be Real st t in [.0,PI.]
+           holds y1.t = -sin.t & x1.t = cos.t - cos.0 + x1.0;
+      let t be Real;
+      assume t in [.0,PI.];
+      then y1.t = -sin.t & x1.t = cos.t - cos.0 + x1.0 by A31;
+      then k * y.t = -sin.t & k * x.t = cos.t - cos.0 + x1.0 by VALUED_1:6;
+      then k * y.t = -sin.t & k * x.t = cos.t - cos.0 + k * x.0
+        by VALUED_1:6;
+      then
+      A32: k * y.t / k = (-sin.t)/k
+         & k * x.t / k = (cos.t + (-cos.0 + k * x.0))/k;
+      (-cos.0 + k * x.0)/k = -cos.0 / k + k * x.0 / k
+                          .= -cos.0 / k + x.0 by A25,XCMPLX_1:89;
+      hence y.t = -sin.t / k & x.t = cos.t / k - cos.0 / k + x.0
+        by A25,A32,XCMPLX_1:89;
+    end;
+    assume
+    A33: for t be Real st t in [.0,PI.]
+         holds y.t = -sin.t / k & x.t = cos.t / k - cos.0 / k + x.0;
+    let t be Real;
+    assume t in [.0,PI.];
+    then y.t = -sin.t / k & x.t = cos.t / k - cos.0 / k + x.0 by A33;
+    then
+    B33: y.t * k = (-sin.t / k) * k
+       & x.t * k = (cos.t / k + -cos.0 / k + x.0) * k;
+    then
+    A34: y1.t = -(sin.t / k) * k
+       & x1.t = (cos.t / k + -cos.0 / k + x.0) * k by VALUED_1:6;
+    x1.t = cos.t / k * k - cos.0 / k * k + x.0 * k
+          by B33,VALUED_1:6
+        .= cos.t - cos.0 / k * k + x.0 * k by A25,XCMPLX_1:87
+        .= cos.t - cos.0 + x.0 * k by A25,XCMPLX_1:87
+        .= cos.t - cos.0 + x1.0 by VALUED_1:6;
+  hence y1.t = -sin.t
+      & x1.t =  cos.t - cos.0 + x1.0 by A25,A34,XCMPLX_1:87;
+  end;
+  hence thesis by A2,A6,A7,A8,A10,A18,A19,B19,A24,A26,Th22;
+end;
+

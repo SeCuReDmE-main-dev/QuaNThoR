@@ -1,0 +1,3031 @@
+:: {U}-Small and {U}-Locally Small Categories
+::  by Roland Coghetto
+:: 
+:: Received November 8, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies PARTFUN1, ARYTM_0, MCART_1, MCART_2, CAT_6, FUNCT_5, GRCAT_1,
+      COMPLFLD, FINSEQ_1, ENS_1, RELAT_2, SUBSET_1, CARD_1, FUNCOP_1, ORDINAL1,
+      CARD_3, FUNCT_2, FINSET_1, ORDINAL2, CLASSES2, CLASSES3, CLASSES4,
+      NUMBERS, ARYTM_3, XXREAL_0, CLASSES5, FIB_NUM2, CAT_2, CAT_1, FUNCT_1,
+      ZFMISC_1, RELAT_1, STRUCT_0, ALGSTR_0, GRAPH_1, NATTRA_1, XBOOLE_0,
+      WELLORD1, TARSKI, MONOID_0, GROUP_1, NAT_1, FINSEQ_2, PBOOLE, SUPINF_2,
+      VECTSP_1, BINOP_1, MATRIX_1, XCMPLX_0, EQREL_1;
+ notations XCMPLX_0, PARTFUN1, FUNCT_4, OPPCAT_1, FUNCT_5, GRCAT_1, COMPLFLD,
+      XTUPLE_0, ENS_1, GROUP_6, SUBSET_1, ORDINAL1, NUMBERS, FUNCOP_1, CARD_1,
+      FINSET_1, CARD_3, CLASSES3, XXREAL_0, FIB_NUM2, TARSKI, XBOOLE_0,
+      EQREL_1,
+      ZFMISC_1, RELAT_1, FUNCT_1, FUNCT_2, BINOP_1, STRUCT_0, GRAPH_1, CAT_1,
+      CAT_2, NATTRA_1, ALGSTR_0, GROUP_1, ISOCAT_1, CLASSES2, CLASSES4,
+      FINSEQ_2, VECTSP_1, MATRIX_1, FINSEQ_1, WELLORD2;
+ constructors CIRCUIT2, FUNCT_5, GRCAT_1, RING_3, ENS_1, ISOCAT_1, CLASSES1,
+      CLASSES3, CLASSES4, FIB_NUM2, MATRIX_1, BINOP_2, WELLORD2;
+ registrations XCMPLX_0, NAT_1, OPPCAT_1, CLASSES2, ALGSTR_1, ALGSTR_0,
+      GRCAT_1, COMPLFLD, FINSET_1, RING_3, RING_4, XBOOLE_0, FUNCT_1, RELAT_1,
+      ENS_1, ZFMISC_1, SUBSET_1, ORDINAL1, CARD_1, CLASSES3, CARD_3, CLASSES4,
+      RELSET_1, FUNCT_2, STRUCT_0, CAT_1, VECTSP_1, XXREAL_0, NECKLA_2,
+      EQREL_1, FUNCOP_1, FINSEQ_1, FOMODEL0;
+ requirements REAL, NUMERALS, ARITHM, SUBSET, BOOLE;
+ definitions TARSKI, XBOOLE_0;
+ equalities TARSKI, ENS_1, FUNCOP_1, BINOP_1, GRAPH_1;
+ expansions TARSKI, XBOOLE_0, CLASSES4;
+ theorems ORDINAL1, WELLORD2, OPPCAT_1, GRCAT_1, ENS_1, TARSKI, FUNCT_1,
+      FUNCT_2, PARTFUN1, FUNCOP_1, ZFMISC_1, CAT_1, CARD_1, CLASSES3, CLASSES2,
+      NAT_1, CLASSES4, FINSET_1, PYTHTRIP, FIB_NUM2, TARSKI_0, NATTRA_1, CAT_2,
+      ISOCAT_1, COMMACAT, XTUPLE_0, RELAT_1, MATRIX_1, VECTSP_1, CARD_3,
+      CLASSES1, CARD_4, SYSREL, XBOOLE_0, XBOOLE_1, FUNCT_5, FINSEQ_2, EQREL_1,
+      FINSEQ_1, FINSEQ_4, COMPLFLD, ALGSTR_0, STRUCT_0, KNASTER, FUNCT_4,
+      TOPGEN_2;
+ schemes FUNCT_2, CLASSES1;
+
+begin :: Preliminaries
+
+theorem Th1:
+  for X being non empty set holds
+  {[A,B] where A,B is Element of X : (B = {} implies A = {})} =
+  [:X,X:] \ [: X \ { {} } , { {} } :]
+  proof
+    let X be non empty set;
+    hereby
+      let o be object;
+      assume o in {[A,B] where A,B is Element of X : (B = {} implies A = {})};
+      then consider A,B be Element of X such that
+A1:   o = [A,B] and
+A2:   B = {} implies A = {};
+A3:   o in [:X,X:] by A1,ZFMISC_1:def 2;
+      now
+        assume o in [: X \ { {} } , { {} } :];
+        then ex a,b be object st a in X \ {{}} & b in { {} } & o = [a,b]
+          by ZFMISC_1:def 2;
+        hence contradiction by A1,A2,XTUPLE_0:1;
+      end;
+      hence o in [:X,X:] \ [: X \ { {} } , { {} } :] by A3,XBOOLE_0:def 5;
+    end;
+    let o be object;
+    assume
+A4: o in [:X,X:] \ [:X \ {{}} , {{}} :];
+    then o in [:X,X:] & not o in [: X \ { {} } , { {} } :] by XBOOLE_0:def 5;
+    then consider u,v be object such that
+A5: u in X and
+A6: v in X and
+A7: o = [u,v] by ZFMISC_1:def 2;
+    reconsider u,v as Element of X by A5,A6;
+    not [u,v] in [: X \ {{}} , {{}} :] by A7,A4,XBOOLE_0:def 5;
+    then not (u in X \ {{}} & v in {{}}) by ZFMISC_1:def 2;
+    then (not (u in X & not u in {{}})) or (not v in {{}}) by XBOOLE_0:def 5;
+    then (not u in X) or (u = {}) or (not v ={}) by TARSKI:def 1;
+    hence o in {[A,B] where A,B is Element of X : (B = {} implies A = {})}
+      by A5,A6,A7;
+  end;
+
+theorem Th2:
+  for X being non empty set st {{}} is Element of X holds not {{}} in Funcs X
+  proof
+    let X be non empty set;
+    assume
+A1: {{}} is Element of X;
+    assume
+A2: {{}} in Funcs X;
+    set FAB = { (Funcs (A,B)) where A, B is Element of X : not contradiction };
+    reconsider x = {{}} as Element of X by A1;
+    consider y be set such that
+A3: x in y in the set of all Funcs(A,B) where A,B is Element of X
+      by A2,TARSKI:def 4;
+    consider A,B be Element of X such that
+A4: y = Funcs(A,B) by A3;
+    consider f be Function such that
+A5: x = f and
+A6: dom f = A and
+A7: rng f c= B by A3,A4,FUNCT_2:def 2;
+    reconsider f as Function of A,B by A6,A7,FUNCT_2:2;
+A8: {{}} = f by A5;
+    {} in {{}} by TARSKI:def 1;
+    then consider u,v be object such that
+    u in A and v in B and
+A9: {} = [u,v] by A8,ZFMISC_1:def 2;
+    thus thesis by A9;
+  end;
+
+theorem Th3:
+  EvenNAT is denumerable
+  proof
+    now
+      let m be Nat;
+      reconsider n = 2 * m as Nat;
+      now
+        1 * m <= 2 * m by NAT_1:4;
+        hence n >= m;
+        thus n in EvenNAT by FIB_NUM2:def 3;
+      end;
+      hence ex n be Nat st n >= m & n in EvenNAT;
+    end;
+    then EvenNAT is infinite by PYTHTRIP:9;
+    hence thesis;
+  end;
+
+theorem Th4:
+  OddNAT is denumerable
+  proof
+    now
+      let m be Nat;
+      reconsider n = 2 * m + 1 as Element of NAT by ORDINAL1:def 12;
+      now
+        1 * m <= 2 * m by NAT_1:4;
+        hence n >= m by NAT_1:12;
+        m is Element of NAT by ORDINAL1:def 12;
+        hence n in OddNAT by FIB_NUM2:def 4;
+      end;
+      hence ex n be Nat st n >= m & n in OddNAT;
+    end;
+    then OddNAT is infinite by PYTHTRIP:9;
+    hence thesis;
+  end;
+
+theorem Th5:
+  for X,Y being non empty set, y being Element of Y holds
+  [:X,{y}:] c= union Funcs(X,Y)
+  proof
+    let X,Y be non empty set;
+    let y be Element of Y;
+    let o be object;
+    assume o in [:X,{y}:];
+    then o in X --> y in Funcs(X,Y) by FUNCT_2:8;
+    hence o in union Funcs(X,Y) by TARSKI:def 4;
+  end;
+
+theorem Th6:
+  for X being non empty set for n be non zero Nat st
+  n-tuples_on X is finite holds X is finite
+  proof
+    let X be non empty set;
+    let n be non zero Nat;
+    assume
+A1: n-tuples_on X is finite;
+    assume
+A2: not X is finite;
+    then card X = card (n-tuples_on X) by CARD_4:23;
+    hence thesis by A1,A2;
+  end;
+
+theorem Th7:
+  for X being non empty set holds union SmallestPartition X = X
+  proof
+    let X be non empty set;
+A0: SmallestPartition X =
+      the set of all {x} where x is Element of X by EQREL_1:37;
+    hereby
+      let o be object;
+      assume o in union SmallestPartition X;
+      then ex y be set st o in y in SmallestPartition X by TARSKI:def 4;
+      hence o in X;
+    end;
+    let o be object;
+    assume o in X;
+    then o in {o} in SmallestPartition X by A0,TARSKI:def 1;
+    hence thesis by TARSKI:def 4;
+  end;
+
+theorem
+  for X being non empty set holds X,SmallestPartition X are_equipotent
+  proof
+    let X be non empty set;
+    card X = card SmallestPartition X by TOPGEN_2:12; 
+    hence thesis by CARD_1:5;
+  end;
+
+theorem
+  for C being strict Category holds (C opp) opp = C
+  proof
+    let C be strict Category;
+    C opp is Category;
+    then reconsider Copp = CatStr (# the carrier of C, the carrier' of C,
+                                      the Target of C, the Source of C,
+                                      ~the Comp of C #) as
+      strict Category by OPPCAT_1:def 1;
+    C opp = Copp by OPPCAT_1:def 1;
+    then
+A1: (C opp) opp = CatStr (#the carrier of Copp, the carrier' of Copp,
+                             the Target of Copp, the Source of Copp,
+                             ~ the Comp of Copp#)
+      by OPPCAT_1:def 1;
+    proj1 the Comp of C c= proj1 [: [:the carrier' of C,the carrier' of C:] ,
+    the carrier' of C :] by XTUPLE_0:8;
+    hence thesis by A1,FUNCT_4:52;
+  end;
+
+definition
+  let x1,x2,x3,x4,x5 be object;
+  func [x1,x2,x3,x4,x5] -> object equals [[x1,x2,x3,x4],x5];
+  coherence;
+end;
+
+definition
+  let x be object;
+  attr x is quintuple means
+:Def3:
+  ex x1,x2,x3,x4,x5 being object st x = [x1,x2,x3,x4,x5];
+end;
+
+registration
+  let x1,x2,x3,x4,x5 be object;
+  cluster [x1,x2,x3,x4,x5] -> quintuple;
+  coherence;
+end;
+
+theorem Th10:
+  for x1,x2,x3,x4,x5,y1,y2,y3,y4,y5 being object st
+  [x1,x2,x3,x4,x5] = [y1,y2,y3,y4,y5] holds x1 = y1 & x2 = y2 &
+  x3 = y3 & x4 = y4 & x5 = y5
+  proof
+    let x1,x2,x3,x4,x5,y1,y2,y3,y4,y5 be object;
+    assume [x1,x2,x3,x4,x5] = [y1,y2,y3,y4,y5];
+    then [x1,x2,x3,x4] = [y1,y2,y3,y4]& x5 = y5 by XTUPLE_0:1;
+    hence thesis by XTUPLE_0:5;
+  end;
+
+registration
+  cluster quintuple for object;
+  existence
+  proof
+    set X = the object;
+    take [X,X,X,X,X],X,X,X,X,X;
+    thus thesis;
+  end;
+end;
+
+registration
+  cluster quintuple for set;
+  existence
+  proof
+    take [{},{},{},{},{}];
+    thus thesis;
+  end;
+end;
+
+definition
+  let x be object;
+  assume x is quintuple;
+  then consider y1,y2,y3,y4,y5 be object such that
+A1: x = [y1,y2,y3,y4,y5];
+  func x`1 -> object means
+:Def4:
+  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds it = y1;
+  existence
+  proof
+    take y1;
+    thus thesis by A1,Th10;
+  end;
+  uniqueness
+  proof
+    let z1,z2 be object;
+    assume that
+A2:  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds z1 = y1 and
+A3:  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds z2 = y1;
+    thus z1 = y1 by A2,A1
+           .= z2 by A1,A3;
+  end;
+end;
+
+definition
+  let x be object;
+  assume x is quintuple;
+  then consider y1,y2,y3,y4,y5 be object such that
+A1: x = [y1,y2,y3,y4,y5];
+  func x`2 -> object means
+:Def5:
+  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds it = y2;
+  existence
+  proof
+    take y2;
+    thus thesis by A1,Th10;
+  end;
+  uniqueness
+  proof
+    let z1,z2 be object;
+    assume that
+A2:  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds z1 = y2 and
+A3:  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds z2 = y2;
+    thus z1 = y2 by A2,A1
+           .= z2 by A1,A3;
+  end;
+end;
+
+definition
+  let x be object;
+  assume x is quintuple;
+  then consider y1,y2,y3,y4,y5 be object such that
+A1: x = [y1,y2,y3,y4,y5];
+  func x`3 -> object means
+:Def6:
+  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds it = y3;
+  existence
+  proof
+    take y3;
+    thus thesis by A1,Th10;
+  end;
+  uniqueness
+  proof
+    let z1,z2 be object;
+    assume that
+A2:  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds z1 = y3 and
+A3:  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds z2 = y3;
+    thus z1 = y3 by A2,A1
+           .= z2 by A1,A3;
+  end;
+end;
+
+definition
+  let x be object;
+  assume x is quintuple;
+  then consider y1,y2,y3,y4,y5 be object such that
+A1: x = [y1,y2,y3,y4,y5];
+  func x`4 -> object means
+:Def7:
+  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds it = y4;
+  existence
+  proof
+    take y4;
+    thus thesis by A1,Th10;
+  end;
+  uniqueness
+  proof
+    let z1,z2 be object;
+    assume that
+A2:  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds z1 = y4 and
+A3:  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds z2 = y4;
+    thus z1 = y4 by A2,A1
+           .= z2 by A1,A3;
+  end;
+end;
+
+definition
+  let x be object;
+  assume x is quintuple;
+  then consider y1,y2,y3,y4,y5 be object such that
+A1: x = [y1,y2,y3,y4,y5];
+  func x`5 -> object means
+:Def8:
+  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds it = y5;
+  existence
+  proof
+    take y5;
+    thus thesis by A1,Th10;
+  end;
+  uniqueness
+  proof
+    let z1,z2 be object;
+    assume that
+A2:  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds z1 = y5 and
+A3:  for y1,y2,y3,y4,y5 be object st x = [y1,y2,y3,y4,y5] holds z2 = y5;
+    thus z1 = y5 by A2,A1
+           .= z2 by A1,A3;
+  end;
+end;
+
+registration
+  let x1,x2,x3,x4,x5 be object;
+  reduce [x1,x2,x3,x4,x5]`1 to x1;
+  reducibility by Def4;
+  reduce [x1,x2,x3,x4,x5]`2 to x2;
+  reducibility by Def5;
+  reduce [x1,x2,x3,x4,x5]`3 to x3;
+  reducibility by Def6;
+  reduce [x1,x2,x3,x4,x5]`4 to x4;
+  reducibility by Def7;
+  reduce [x1,x2,x3,x4,x5]`5 to x5;
+  reducibility by Def8;
+end;
+
+registration
+  let x be quintuple object;
+  reduce [x`1,x`2,x`3,x`4,x`5] to x;
+  reducibility
+  proof
+    ex x1,x2,x3,x4,x5 be object st x = [x1,x2,x3,x4,x5] by Def3;
+    hence [x`1,x`2,x`3,x`4,x`5] = x;
+  end;
+end;
+
+begin :: Some elementary properties
+
+reserve U for Universe;
+reserve x for Element of U;
+
+theorem Th11:
+  for x1,x2,x3 being object st x = [x1,x2,x3] holds
+  x1 is Element of U & x2 is Element of U & x3 is Element of U
+  proof
+    let x1,x2,x3 be object;
+    assume x = [x1,x2,x3];
+    then x = [[x1,x2],x3] by XTUPLE_0:def 4;
+    then x3 is Element of U & [x1,x2] is Element of U by CLASSES4:22;
+    hence thesis by CLASSES4:22;
+  end;
+
+theorem Th12:
+  for x1,x2,x3,x4 being object st x = [x1,x2,x3,x4] holds
+  x1 is Element of U & x2 is Element of U & x3 is Element of U &
+  x4 is Element of U
+  proof
+    let x1,x2,x3,x4 be object;
+    assume x = [x1,x2,x3,x4];
+    then x = [[x1,x2,x3],x4] by XTUPLE_0:def 8;
+    then x4 is Element of U & [x1,x2,x3] is Element of U by CLASSES4:22;
+    hence thesis by Th11;
+  end;
+
+theorem Th13:
+  for x1,x2,x3,x4,x5 being Element of U holds [x1,x2,x3,x4,x5] is Element of U
+  proof
+    let x1,x2,x3,x4,x5 be Element of U;
+    [x1,x2,x3,x4] is Element of U & [x1,x2,x3,x4,x5] = [[x1,x2,x3,x4],x5]
+      by GRCAT_1:1;
+    hence thesis by CLASSES2:58;
+  end;
+
+theorem Th14:
+  for x1,x2,x3,x4,x5 being object st x = [x1,x2,x3,x4,x5] holds
+  x1 is Element of U & x2 is Element of U & x3 is Element of U &
+  x4 is Element of U & x5 is Element of U
+  proof
+    let x1,x2,x3,x4,x5 be object;
+    assume x = [x1,x2,x3,x4,x5];
+    then x5 is Element of U & [x1,x2,x3,x4] is Element of U by CLASSES4:22;
+    hence thesis by Th12;
+  end;
+
+definition
+  let U be Universe;
+  let u1,u2,u3 be Element of U;
+  redefine func [u1,u2,u3] -> Element of U;
+  coherence by GRCAT_1:1;
+  let u4 be Element of U;
+  redefine func [u1,u2,u3,u4] -> Element of U;
+  coherence by GRCAT_1:1;
+  let u5 be Element of U;
+  redefine func [u1,u2,u3,u4,u5] -> Element of U;
+  coherence by Th13;
+end;
+
+theorem Th15:
+  for x being Subset of FinSETS st x is finite holds x is Element of FinSETS
+  proof
+    let x be Subset of FinSETS;
+    assume x is finite;
+    then card x in omega by CARD_3:84;
+    then card x in card FinSETS by CARD_3:def 15,CLASSES4:19;
+    hence thesis by CLASSES1:1;
+  end;
+
+theorem
+  for X being finite set st X c= FinSETS holds X in FinSETS
+  proof
+    let X be finite set;
+    consider p be Function such that
+A1: rng p = X and
+A2: dom p in omega by FINSET_1:def 1;
+    defpred P[object,object] means $2 = {p.$1};
+A3: for x be object st x in dom p holds ex y be object st P[x,y];
+    consider g be Function such that
+A4: dom g = dom p and
+A5: for x be object st x in dom p holds P[x,g.x] from CLASSES1:sch 1(A3);
+    assume
+A6: X c= FinSETS;
+A7: rng g c= FinSETS
+    proof
+      let x be object;
+      assume x in rng g;
+      then consider y be object such that
+A8:   y in dom g and
+A9:   x = g.y by FUNCT_1:def 3;
+A10:  x = {p.y} by A4,A9,A8,A5;
+      p.y in rng p by A8,A4,FUNCT_1:def 3;
+      hence thesis by A6,A1,A10,CLASSES2:57;
+    end;
+    union rng g = X
+    proof
+      thus union rng g c= X
+      proof
+        let x be object;
+        reconsider x9=x as set by TARSKI:1;
+        assume x in union rng g;
+        then consider y be set such that
+A11:    x9 in y and
+A12:    y in rng g by TARSKI:def 4;
+        consider z be object such that
+A13:    z in dom g and
+A14:    y = g.z by A12,FUNCT_1:def 3;
+        y = {p.z} by A13,A14,A4,A5;
+        then x9 = p.z by A11,TARSKI:def 1;
+        hence x in X by A1,A13,A4,FUNCT_1:def 3;
+      end;
+      let x be object;
+      assume x in X;
+      then consider y be object such that
+A15:  y in dom p and
+A16:  x = p.y by A1,FUNCT_1:def 3;
+      g.y = {x} by A15,A16,A5; then
+      x in {x} in rng g by TARSKI:def 1,A15,A4,FUNCT_1:def 3;
+      hence x in union rng g by TARSKI:def 4;
+    end;
+    hence thesis by A7,A2,A4,CLASSES4:5,43;
+  end;
+
+theorem Th17:
+  union {NAT} c= FinSETS & not union {NAT} in FinSETS &
+  not {NAT} c= FinSETS & not {NAT} in FinSETS
+  proof
+    thus union {NAT} c= FinSETS by CLASSES4:17;
+    thus not union {NAT} in FinSETS;
+    thus not {NAT} c= FinSETS
+    proof
+      assume
+A1:   {NAT} c= FinSETS;
+      NAT in {NAT} by TARSKI:def 1;
+      hence contradiction by A1;
+    end;
+    assume
+A2: {NAT} in FinSETS;
+    NAT in {NAT} by TARSKI:def 1;
+    then NAT in union FinSETS by A2,TARSKI:def 4;
+    then NAT in FinSETS by CLASSES4:81;
+    hence contradiction;
+  end;
+
+theorem Th18:
+  for x being object holds x in U iff {x} in U
+  proof
+    let x be object;
+    thus x in U implies {x} in U by CLASSES2:57;
+    assume {x} in U;
+    then x in {x} in U by TARSKI:def 1;
+    hence x in U by CLASSES4:def 1;
+  end;
+
+theorem Th19:
+  for X being set for n being non zero Nat st
+  Funcs(Seg n,{X}) is Element of U holds X is Element of U
+  proof
+    let X be set;
+    let n be non zero Nat;
+    assume
+A1: Funcs(Seg n,{X}) is Element of U;
+    set R = Seg n --> X;
+    reconsider f = Seg n --> X as Function of Seg n, {X};
+    f in Funcs(Seg n, {X}) by FUNCT_2:8;
+    then f is Element of U by A1,CLASSES4:def 1;
+    then {X} is Element of U by CLASSES4:40;
+    hence thesis by Th18;
+  end;
+
+theorem
+  for X being set for n being non zero Nat st
+  n-tuples_on {X} is Element of U holds X is Element of U
+  proof
+    let X be set;
+    let n be non zero Nat;
+    assume n-tuples_on {X} is Element of U;
+    then Funcs(Seg n ,{X}) is Element of U by FINSEQ_2:93;
+    hence thesis by Th19;
+  end;
+
+theorem Th21:
+  for X being set st union X in U holds X in U
+  proof
+    let X be set;
+    assume union X in U; then
+A1: bool union X in U by CLASSES2:59;
+    X c= bool union X by ZFMISC_1:82;
+    hence thesis by A1,CLASSES4:13;
+  end;
+
+begin :: Set and Class
+
+definition
+  let X be non empty set;
+  let x be object;
+  attr x is X-set means x in X;
+end;
+
+definition
+  let X be non empty set;
+  mode Set of X -> set means
+:Def10:
+  it is X-set;
+  existence
+  proof
+    take the Element of X;
+    thus thesis;
+  end;
+end;
+
+theorem
+  for U1,U2 being Universe st U1 in U2 holds
+  for x being object st x is U1-set holds x is U2-set by CLASSES4:def 1;
+
+theorem
+  for U1,U2 being Universe st U1 in U2 holds
+  for x being Set of U1 holds x is Set of U2
+  proof
+    let U1,U2 be Universe;
+    assume
+A1: U1 in U2;
+    let x be Set of U1;
+    x is U1-set by Def10;
+    then x is U2-set by A1,CLASSES4:def 1;
+    hence thesis by Def10;
+  end;
+
+theorem
+  for x being Set of FinSETS holds x is finite
+  proof
+    let x be Set of FinSETS;
+    x is FinSETS-set by Def10;
+    then card x in card FinSETS by CLASSES4:30;
+    then card x in omega by CLASSES4:19,CARD_3:def 15;
+    hence thesis;
+  end;
+
+theorem
+  for x being Subset of FinSETS st x is finite holds x is Set of FinSETS
+  proof
+    let x be Subset of FinSETS;
+    assume x is finite;
+    then x is Element of FinSETS by Th15;
+    then x is FinSETS-set;
+    hence thesis by Def10;
+  end;
+
+theorem
+  for x being object holds x is Set of FinSETS iff x is FinSet
+  proof
+    let x be object;
+    hereby
+      assume x is Set of FinSETS;
+      then x is FinSETS-set by Def10;
+      hence x is FinSet;
+    end;
+    assume x is FinSet;
+    then x is FinSETS-set;
+    hence thesis by Def10;
+  end;
+
+definition
+  let U be Universe;
+  let x be object;
+  attr x is U-Class means x in bool U & not x in U;
+end;
+
+theorem
+  for x being set st x is U-Class holds x is non empty
+    by CLASSES4:13;
+
+definition
+  let U be Universe;
+  mode class of U -> non empty set means
+ :Def12:
+  it is U-Class;
+  existence
+  proof
+    take U;
+    U c= U;
+    then U in bool U & not U in U;
+    hence thesis;
+  end;
+end;
+
+theorem Th28:
+  for X being finite Subset of U holds X in U
+  proof
+    let X be finite Subset of U;
+    per cases;
+    suppose X is empty;
+      hence thesis by CLASSES2:56;
+    end;
+    suppose X is non empty;
+      then reconsider X as non empty set;
+      reconsider Y = SmallestPartition X as non empty set;
+      consider p be FinSequence such that
+A1:   rng p = Y and
+      p is one-to-one by FINSEQ_4:58;
+A2:   dom p = Seg len p by FINSEQ_1:def 3;
+A0:   Y = the set of all {x} where x is Element of X
+        by EQREL_1:37;
+      now
+        let o be object;
+        assume o in Y;
+        then consider x be Element of X such that
+A3:     o = {x} by A0;
+        x in X & X c= U;
+        hence o in U by A3,Th18;
+      end;
+      then rng p c= U by A1;
+      then union rng p in U by A2,CLASSES4:5,57;
+      hence thesis by A1,Th7;
+    end;
+  end;
+
+theorem
+  for C being class of U holds C is non finite
+  proof
+    let C be class of U;
+    assume
+A1: C is finite;
+    C is U-Class by Def12;
+    hence thesis by A1,Th28;
+  end;
+
+theorem
+  for X being Set of U holds U \ X is class of U
+  proof
+    let X be Set of U;
+A1: X is U-set by Def10;
+    now
+      assume U \ X = {};
+      then U c= X by XBOOLE_1:37;
+      then X in X by A1;
+      hence contradiction;
+    end;
+    then reconsider UX = U \ X as non empty set;
+    X is U-set by Def10;
+    then U \ X c= U & not U \ X in U by XBOOLE_1:36,CLASSES4:86;
+    then UX is U-Class;
+    hence thesis by Def12;
+  end;
+
+theorem Th31:
+  for X being non finite Subset of FinSETS holds X is class of FinSETS
+  proof
+    let X be non finite Subset of FinSETS;
+    X is FinSETS-Class;
+    hence thesis by Def12;
+  end;
+
+theorem
+  NAT is class of FinSETS by Th31,CLASSES4:43;
+
+theorem
+  EvenNAT is class of FinSETS
+  proof
+    now
+      EvenNAT c= NAT & omega c= FinSETS by CLASSES4:43;
+      hence EvenNAT c= FinSETS;
+      thus EvenNAT is denumerable by Th3;
+    end;
+    hence thesis by Th31;
+  end;
+
+theorem
+  OddNAT is class of FinSETS
+  proof
+    now
+      OddNAT c= NAT & omega c= FinSETS by CLASSES4:43;
+      hence OddNAT c= FinSETS;
+      thus OddNAT is denumerable by Th4;
+    end;
+    hence thesis by Th31;
+  end;
+
+theorem
+  for x being object holds
+  not x is U-Class or not x is U-set;
+
+theorem
+  for U1,U2 being Universe st U1 in U2 holds
+  for x being object st x is U1-Class holds x is U2-set
+  proof
+    let U1,U2 be Universe;
+    assume
+A1: U1 in U2;
+    let x be object;
+    assume
+A2: x is U1-Class;
+    bool U1 in U2 by A1,CLASSES4:def 3;
+    hence thesis by A2,CLASSES4:def 1;
+  end;
+
+theorem
+  union {NAT} is FinSETS-Class & not {NAT} is FinSETS-Class &
+  not {NAT} is FinSETS-set by Th17;
+
+begin
+
+reserve U1,U2 for Universe;
+
+theorem
+  for x being object holds ex U st x is U-set
+  proof
+    let x be object;
+    reconsider x as set by TARSKI:1;
+    take GrothendieckUniverse(x);
+    thus thesis by CLASSES3:def 4;
+  end;
+
+theorem
+  for x being set holds x is GrothendieckUniverse(x)-set by CLASSES3:def 4;
+
+definition
+  let U1,U2 be Universe;
+  func sup(U1,U2) -> Universe equals
+:Def13: U1 if U2 in U1
+  otherwise U2;
+  correctness;
+end;
+
+theorem
+  for U1,U2 being Universe
+  for x being Set of U1 for y being Set of U2 holds
+  ex z being Set of sup(U1,U2) st
+  for a being object holds a in z iff a = x or a = y
+  proof
+    let U1,U2 be Universe;
+    let x be Set of U1;
+    let y be Set of U2;
+    consider z being set such that
+A1: for a being object holds
+    a in z iff a = x or a = y by TARSKI_0:3;
+    per cases by CLASSES2:52;
+    suppose
+A2:   U1 in U2;
+      then
+A3:   sup(U1,U2) = U2 by Def13;
+      z in U2
+      proof
+        assume
+A4:     not z in U2;
+        set X = {x,y};
+        x is U1-set & y is U2-set by Def10;
+        then x in U2 & y in U2 by A2,CLASSES4:def 1;
+        then {x,y} in U2 by CLASSES2:58;
+        hence thesis by A1,A4,TARSKI:def 2;
+      end;
+      then z is U2-set;
+      then reconsider z as Set of sup(U1,U2) by A3,Def10;
+      take z;
+      thus thesis by A1;
+    end;
+    suppose
+A5:   U2 in U1;
+      then
+A6:   sup(U1,U2) = U1 by Def13;
+      z in U1
+      proof
+        assume
+A7:     not z in U1;
+        x is U1-set & y is U2-set by Def10;
+        then x in U1 & y in U1 by A5,CLASSES4:def 1;
+        then {x,y} in U1 by CLASSES2:58;
+        hence thesis by A1,A7,TARSKI:def 2;
+      end;
+      then z is U1-set;
+      then reconsider z as Set of sup(U1,U2) by A6,Def10;
+      take z;
+      thus thesis by A1;
+    end;
+    suppose
+A8:   U1 = U2;
+      then
+A9:   sup(U1,U2) = U1 by Def13;
+      z in U1
+      proof
+        assume
+A10:    not z in U1;
+        x is U1-set & y is U2-set by Def10;
+        then {x,y} in U1 by A8,CLASSES2:58;
+        hence thesis by A1,A10,TARSKI:def 2;
+      end;
+      then z is U1-set;
+      then reconsider z as Set of sup(U1,U2) by A9,Def10;
+      take z;
+      thus thesis by A1;
+    end;
+end;
+
+theorem
+  for X being Set of U holds union X is Set of U
+  proof
+    let X be Set of U;
+    X is U-set by Def10;
+    then union X is U-set by CLASSES2:59;
+    hence thesis by Def10;
+  end;
+
+theorem
+  for X being set st union X is Set of U holds X is Set of U
+  proof
+    let X be set;
+    assume union X is Set of U;
+    then union X is U-set by Def10;
+    then X is U-set by Th21;
+    hence thesis by Def10;
+  end;
+
+theorem Th45:
+  for X being set st union X is empty holds X is U-set
+  proof
+    let X be set;
+    assume union X is empty;
+    then per cases by ZFMISC_1:33,1,82;
+    suppose X = {};
+      hence thesis by CLASSES2:56;
+    end;
+    suppose X = {{}};
+      hence thesis by CLASSES2:56,57;
+    end;
+  end;
+
+theorem
+  for X being class of U holds union X is class of U
+  proof
+    let X be class of U;
+A1: union X is non empty
+    proof
+      assume union X is empty;
+      then
+A2:   X is U-set by Th45;
+      X is U-Class by Def12;
+      hence thesis by A2;
+    end;
+A3: X is U-Class by Def12;
+    then union X c= union U by ZFMISC_1:77;
+    then union X c= U & not union X in U by A3,Th21,CLASSES4:81;
+    then union X is U-Class;
+    hence thesis by A1,Def12;
+  end;
+
+theorem
+  ex X being set st union X is class of FinSETS & not X is class of FinSETS &
+    not X is Set of FinSETS & X is Set of SETS
+  proof
+    take {NAT};
+    union {NAT} is FinSETS-Class & not {NAT} is FinSETS-Class &
+      not {NAT} is FinSETS-set & {NAT} is SETS-set
+      by CLASSES4:72,CLASSES2:57,Th17;
+    hence thesis by Def10,Def12;
+  end;
+
+theorem
+  for X being Set of U
+  for Y being set st Y in X holds Y is Set of U
+  proof
+    let X be Set of U;
+    let Y be set;
+    assume
+A1: Y in X;
+    X is U-set by Def10;
+    then Y in union U & U = union U by A1,CLASSES4:81,TARSKI:def 4;
+    then Y is U-set;
+    hence Y is Set of U by Def10;
+  end;
+
+theorem
+  for X being class of U,Y being set st Y in X holds Y is Set of U
+  proof
+    let X be class of U;
+    let Y be set;
+    assume
+A1: Y in X;
+    X is U-Class by Def12;
+    then Y is U-set by A1;
+    hence Y is Set of U by Def10;
+  end;
+
+begin :: U-petit
+
+definition
+  let U be Universe;
+  let x be set;
+  attr x is U-petit means
+    ex u being Element of U st u,x are_equipotent;
+end;
+
+theorem
+  for X being Element of U holds X is U-petit;
+
+theorem
+ for x being set holds
+  x is U-petit iff card x in card U
+  proof
+    let x be set;
+    hereby
+      assume x is U-petit;
+      then consider u be Element of U such that
+A1:   u,x are_equipotent;
+      card u = card x by A1,CARD_1:5;
+      hence card x in card U by CLASSES4:30;
+    end;
+    assume card x in card U;
+    then reconsider u = card x as Element of U by CLASSES2:13;
+    card u = card x;
+    hence x is U-petit by CARD_1:5;
+  end;
+
+theorem
+  for x being set holds {x} is U-petit
+  proof
+    let x be set;
+    reconsider u = {} as Element of U by CLASSES2:56;
+    card {x} = 1 & card {u} = 1 by CARD_1:30;
+    hence thesis by CARD_1:5;
+  end;
+
+definition
+  let U be Universe;
+  let G be Group;
+  attr G is U-element means
+  the carrier of G is Element of U;
+end;
+
+theorem
+  for G being Group st G is U-element holds
+    the multF of G is Element of U
+  proof
+    let G be Group;
+    assume G is U-element;
+    then reconsider CG = the carrier of G as Element of U;
+    [:[:CG,CG:],CG:] is Element of U;
+    hence thesis by CLASSES4:13;
+  end;
+
+definition
+  let U be Universe;
+  let G be Group;
+  attr G is U-petit means
+  ex g being Group st g is U-element & G,g are_isomorphic;
+end;
+
+definition
+  let U be Universe;
+  let C be Category;
+  attr C is U-element means
+:Def17:
+    (the carrier of C) is Element of U &
+    (the carrier' of C) is Element of U;
+end;
+
+theorem Th54:
+  for C being Category st C is U-element holds
+  the Source of C is Element of U & the Target of C is Element of U &
+  the Comp of C is Element of U
+  proof
+    let C be Category;
+    assume
+A1: C is U-element;
+    then reconsider cC = the carrier of C as Element of U;
+    reconsider c9C = the carrier' of C as Element of U by A1;
+    the Source of C c= [:c9C,cC:] & the Target of C c= [:c9C,cC:] &
+      the Comp of C c= [:[:c9C,c9C:],c9C:];
+    hence thesis by CLASSES4:13;
+  end;
+
+theorem Th55:
+  for o,m being Element of U holds 1Cat(o,m) is U-element
+  proof
+    let o,m be Element of U;
+    1Cat(o ,m)  = CatStr(# { o },{ m },  m :-> o , m :-> o,(m,m):->m #)
+      by CAT_1:def 11;
+    hence thesis;
+  end;
+
+registration
+  let U be Universe;
+  cluster U-element for Category;
+  existence
+  proof
+    reconsider o = {}, m = {} as Element of U by CLASSES2:56;
+    take 1Cat(o,m);
+    thus thesis by Th55;
+  end;
+end;
+
+definition
+  let U be Universe;
+  let C be Category;
+  attr C is U-petit means
+    ex c being strict Category st c is U-element & C ~= c;
+end;
+
+theorem Th56:
+  for A being Category
+  for a being Object of A holds [[id a,id a],id a] in the Comp of A
+  proof
+    let A be Category;
+    let a be Object of A;
+A1: dom id a = a;
+A2: cod id a = a;
+    then
+A3: [id a,id a] in dom the Comp of A by A1,CAT_1:15;
+    (id a)(*)(id a) = id a by A1,CAT_1:22;
+    then (the Comp of A).(id a,id a) = id a by A1,A2,CAT_1:16;
+    hence thesis by A3,FUNCT_1:def 2;
+end;
+
+theorem
+  for o,m being object holds the Comp of 1Cat(o,m) = {[[m,m],m]}
+  proof
+    let o,m be object;
+    set A = 1Cat(o,m);
+A1: A = CatStr(# {o},{m},(m :-> o),(m :-> o),((m,m) :-> m) #)
+      by CAT_1:def 11;
+    then reconsider f = m as Morphism of A by TARSKI:def 1;
+    set a = the Object of A;
+    thus the Comp of A c= {[[m,m],m]}
+    proof
+      set o9 = the Object of A;
+      let x be object;
+A2:   dom id o9 = o9;
+A3:   cod id o9 = o9;
+      assume
+A4:   x in the Comp of A;
+      then consider x1,x2 be object such that
+A5:   x = [x1,x2] by RELAT_1:def 1;
+A6:   x1 in dom the Comp of A by A4,A5,XTUPLE_0:def 12;
+      dom the Comp of A c= [:the carrier' of A, the carrier' of A:]
+        by RELAT_1:def 18;
+      then consider x11,x12 be object such that
+A7:   x11 in the carrier' of A and
+A8:   x12 in the carrier' of A and
+A9:   x1 = [x11,x12] by A6,ZFMISC_1:def 2;
+A10:  x12 = id o9 by A8,ZFMISC_1:def 10;
+A11:  x2 is set by TARSKI:1;
+      x11 = id o9 by A7,ZFMISC_1:def 10;
+      then x2 = (the Comp of A).(id o9,id o9)
+        by A4,A5,A6,A9,A10,FUNCT_1:def 2,A11;
+      then x2 = id o9(*)(id o9 qua Morphism of A) by A2,A3,CAT_1:16;
+      then
+A12:  x2 = m by A1,TARSKI:def 1;
+A13:  x12 = m by A1,A8,TARSKI:def 1;
+      x11 = m by A1,A7,TARSKI:def 1;
+      hence thesis by A5,A9,A13,A12,TARSKI:def 1;
+    end;
+    let x be object;
+    assume x in {[[m,m],m]};
+    then
+A14: x = [[m,m],m] by TARSKI:def 1;
+    f = id a by A1,TARSKI:def 1;
+    hence thesis by A14,Th56;
+  end;
+
+theorem
+  for o,m being object for c being Object of 1Cat(o,m) holds c = o
+  proof
+    let o,m be object;
+    let c be Object of 1Cat(o,m);
+    set C = 1Cat(o,m);
+    C = CatStr(# { o },{ m },  m :-> o , m :-> o,(m,m):->m #) by CAT_1:def 11;
+    hence thesis by TARSKI:def 1;
+  end;
+
+theorem Th59:
+  for o,m being object for c being Element of 1Cat(o,m) holds
+  c is Object of 1Cat(o,m) & c = o & id c = m
+  proof
+    let o,m be object;
+    let c be Element of 1Cat(o,m);
+    reconsider o9=o,m9=m as set by TARSKI:1;
+    set C = 1Cat(o,m);
+A1: C = CatStr(# { o },{ m },  m :-> o , m :-> o,(m,m):->m #)
+      by CAT_1:def 11;
+    hence c is Object of 1Cat(o,m) & c = o by TARSKI:def 1;
+    o9 is Object of 1Cat(o9,m9) by A1,TARSKI:def 1;
+    then
+A2: Hom(c,c)={m} by COMMACAT:4;
+    id c in Hom(c,c) by CAT_1:27;
+    hence id c = m by A2,TARSKI:def 1;
+  end;
+
+theorem Th60:
+  for o1,o2,m1,m2 being object holds 1Cat(o1,m1) ~= 1Cat(o2,m2)
+  proof
+    let o1,o2,m1,m2 be object;
+    set C = 1Cat(o1,m1),
+        C9= 1Cat(o2,m2);
+A1: C = CatStr(# { o1 },{ m1 },  m1 :-> o1 , m1 :-> o1,(m1,m1):->m1 #)
+      by CAT_1:def 11;
+A2: C9 = CatStr(# { o2 },{ m2 },  m2 :-> o2 , m2 :-> o2,(m2,m2):->m2 #)
+      by CAT_1:def 11;
+    reconsider o19 =o1 as Element of C by A1,TARSKI:def 1;
+    reconsider o29=o2 as Element of C9 by A2,TARSKI:def 1;
+    reconsider m19=m1 as Element of the carrier' of C by A1,TARSKI:def 1;
+    reconsider m29=m2 as Element of the carrier' of C9 by A2,TARSKI:def 1;
+    set F = m1 :-> m2;
+    reconsider F as Function of the carrier' of C,the carrier' of C9 by A1,A2;
+    now
+      hereby
+        let c be Element of C;
+A3:     F.(id c) = F.m1 by Th59 .= m2 by FUNCOP_1:72;
+        reconsider c9 = o2 as Element of C9 by TARSKI:def 1,A2;
+        id c9 = m2 by Th59;
+        hence ex d being Element of C9 st F.(id c) = id d by A3;
+      end;
+      hereby
+        let f be Element of the carrier' of C;
+        thus F.(id dom f) = F.m1 by Th59
+                         .= m2 by FUNCOP_1:72
+                         .= id dom (F.f) by Th59;
+        thus F.(id(cod f)) = F.m1 by Th59
+                          .= m2 by FUNCOP_1:72
+                          .= id (cod (F.f)) by Th59;
+      end;
+      thus for f,g be Element of the carrier' of C st
+        [g,f] in dom the Comp of C holds F.(g(*)f) = (F.g)(*)(F.f)
+        by A1,A2,TARSKI:def 1;
+    end;
+    then reconsider F as Functor of C,C9 by CAT_1:def 21;
+    now
+      thus F is one-to-one;
+      thus rng F = the carrier' of C9 by A2;
+A4:   for c be Element of C ex c9 be Element of C9 st F.(id c) = id c9
+      proof
+        let c be Element of C;
+A5:     F.(id c) = F.m1 by Th59
+                .= m2 by FUNCOP_1:72;
+        reconsider c9 = o2 as Element of C9 by A2,TARSKI:def 1;
+        id c9 = m2 by Th59;
+        hence thesis by A5;
+      end;
+      reconsider o19 = o1 as Element of C by A1,TARSKI:def 1;
+      reconsider o29 = o2 as Element of C9 by A2,TARSKI:def 1;
+A6:   F.(id o19) = F.m1 by Th59
+                .= m2 by FUNCOP_1:72
+                .= id o29 by Th59;
+      dom Obj F = {o1} by A1,PARTFUN1:def 2;
+      then rng Obj F = {(Obj F).o19} by FUNCT_1:4
+                    .= {o29} by A6,A4,CAT_1:def 22;
+      hence rng Obj F = the carrier of C9 by A2;
+    end;
+    hence thesis by CAT_1:def 25,ISOCAT_1:def 4;
+  end;
+
+theorem Th61:
+  for o,m being object holds 1Cat(o,m) is U-petit
+  proof
+    let o,m be object;
+    reconsider o2 = {},m2 = {} as Element of U by CLASSES2:56;
+    1Cat(o2,m2) is U-element by Th55;
+    hence thesis by Th60;
+  end;
+
+registration
+  let U be Universe;
+  cluster U-petit for Category;
+  existence
+  proof
+    take 1Cat(U,U);
+    thus thesis by Th61;
+  end;
+end;
+
+theorem
+  ex C being U-petit Category st
+  not the carrier of C is Element of U & the carrier' of C is Element of U
+  proof
+    reconsider m = {} as Element of U by CLASSES2:56;
+    consider o be set such that
+A1: not o in U by CLASSES4:83;
+    set C = 1Cat(o, m);
+    now
+      thus C is U-petit by Th61;
+      C = CatStr(# { o },{ m},  m:-> o,m:->o,(m,m):->m #) by CAT_1:def 11;
+      hence not the carrier of C is Element of U &
+        the carrier' of C is Element of U by A1,Th18;
+    end;
+    hence thesis;
+  end;
+
+theorem
+  ex C being U-petit Category st
+  not the carrier of C is Element of U & not the carrier' of C is Element of U
+  proof
+    consider o be set such that
+A1: not o in U by CLASSES4:83;
+    set C = 1Cat(o, o);
+    now
+      thus C is U-petit by Th61;
+      C = CatStr(# { o },{ o},  o:-> o,o:->o,(o,o):->o #) by CAT_1:def 11;
+      hence not the carrier of C is Element of U &
+        not the carrier' of C is Element of U by A1,Th18;
+    end;
+    hence thesis;
+  end;
+
+theorem Th64:
+  ex C being U-petit Category st
+  the carrier of C is Element of U & not the carrier' of C is Element of U
+  proof
+    reconsider o = {} as Element of U by CLASSES2:56;
+    consider m be set such that
+A1: not m in U by CLASSES4:83;
+    set C = 1Cat(o, m);
+    now
+      thus C is U-petit by Th61;
+      C = CatStr(# { o },{ m},  m:-> o,m:->o,(m,m):->m #) by CAT_1:def 11;
+      hence not the carrier' of C is Element of U &
+      the carrier of C is Element of U by A1,Th18;
+    end;
+    hence thesis;
+  end;
+
+theorem
+  ex C being U-petit Category st C is non U-element
+  proof
+    assume
+A1: not ex C being U-petit Category st C is non U-element;
+    consider C be U-petit Category such that
+    the carrier of C is Element of U and
+A2: not the carrier' of C is Element of U by Th64;
+    not C is U-element by A2;
+    hence thesis by A1;
+  end;
+
+theorem
+  for C being strict Category st C is U-element holds C is U-petit;
+
+definition
+  let U be Universe;
+  let C be Category;
+  attr C is U-Category means
+  for x,y being Object of C holds Hom(x,y) is U-petit;
+end;
+
+registration
+  let U be Universe;
+  cluster U-Category for Category;
+  existence
+  proof
+    set C = the U-element Category;
+    take C;
+    now
+      let x,y be Object of C;
+      Hom(x,y) c= the carrier' of C &
+        the carrier' of C is Element of U by Def17;
+      then Hom(x,y) is Element of U by CLASSES4:13;
+      hence Hom(x,y) is U-petit;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem
+  for C,D being Category for F being Functor of C,D holds
+  F c= [:(the carrier' of C), (the carrier' of D):];
+
+theorem Th68:
+  for C,D being Category holds
+  Funct(C,D) c= bool [:(the carrier' of C),(the carrier' of D):]
+  proof
+    let C,D be Category;
+    now
+      let x be object;
+      assume x in Funct(C,D);
+      then reconsider x9 = x as Function of (the carrier' of C),
+        (the carrier' of D) by CAT_2:def 2;
+      x9 c= [:(the carrier' of C), (the carrier' of D):];
+      hence x in bool [:(the carrier' of C), (the carrier' of D):];
+    end;
+    hence thesis;
+  end;
+
+theorem Th69:
+  for C,D being Category holds
+  NatTrans(C,D) c= [: [:bool [:(the carrier' of C), (the carrier' of D):],
+                        bool [:(the carrier' of C), (the carrier' of D):]:],
+                      bool [:(the carrier of C), (the carrier' of D):] :]
+  proof
+    let C,D be Category;
+    set CD = [:(the carrier' of C), (the carrier' of D):],
+        CDp = [:(the carrier of C), (the carrier' of D):];
+    now
+      let x be set;
+      assume x in NatTrans(C,D);
+      then consider F1, F2 be Functor of C,D such that
+A1: ex t be natural_transformation of F1,F2 st
+      ( x = [[F1,F2],t] & F1 is_naturally_transformable_to F2)
+        by NATTRA_1:def 16;
+      consider t be natural_transformation of F1,F2 such that
+A2:   x = [[F1,F2],t] & F1 is_naturally_transformable_to F2 by A1;
+      [F1,F2] in [:bool CD, bool CD:] by ZFMISC_1:def 2;
+      hence x in [: [:bool CD,bool CD:],bool CDp :] by A2,ZFMISC_1:def 2;
+    end;
+    hence thesis;
+  end;
+
+theorem
+  for X,Y,Z being set st X in U & Y in U & Z in U holds
+  bool [: [:bool [:X, Y:],bool [:X,Y:]:],bool [:Z,Y:] :] in U
+  proof
+    let X,Y,Z be set;
+    assume that
+A1: X in U and
+A2: Y in U and
+A3: Z in U;
+    reconsider X,Y,Z as Element of U by A1,A2,A3;
+    bool [: [:bool [:X, Y:],bool [:X,Y:]:],bool [:Z,Y:] :] in U;
+    hence thesis;
+end;
+
+theorem
+  for X,Y being non empty set st
+  Funcs(X,Y) is Element of U holds X is Element of U
+  proof
+    let X,Y be non empty set;
+    assume
+A1: Funcs(X,Y) is Element of U;
+    set y = the Element of Y;
+A2: [:X,{y}:] c= union Funcs(X,Y) by Th5;
+    union Funcs(X,Y) in U by A1,CLASSES2:59;
+    then [:X,{y}:] is Element of U by A2,CLASSES4:13;
+    hence thesis by CLASSES4:40;
+  end;
+
+::$N PROP 1.1.1 a) SGA4
+theorem Th72:
+  for C,D being Category st C is U-element & D is U-element holds
+  Functors(C,D) is U-element
+  proof
+    let C,D be Category;
+    assume that
+A1: C is U-element and
+A2: D is U-element;
+    set E = Functors(C,D);
+    reconsider cC  = the carrier  of C,
+               c9C = the carrier' of C,
+               cD  = the carrier  of D,
+               c9D = the carrier' of D as Element of U by A1,A2;
+    now
+      the carrier of E = Funct(C,D) by NATTRA_1:def 17;
+      then
+A3:   the carrier of E c= bool [:c9C,c9D:] by Th68;
+      hence the carrier of E is Element of U by CLASSES4:13;
+      reconsider cE = the carrier of E as Element of U by A3,CLASSES4:13;
+      (the carrier' of E) = NatTrans(C,D) by NATTRA_1:def 17;
+      then
+A4:   (the carrier' of E)
+        c= [: [:bool [:c9C,c9D:],bool [:c9C,c9D:]:],bool [:cC,c9D:] :]
+        by Th69;
+      hence (the carrier' of E) is Element of U by CLASSES4:13;
+      reconsider c9E = the carrier' of E as Element of U by A4,CLASSES4:13;
+A5:   (the Source of E) in Funcs(c9E,cE) by FUNCT_2:8;
+A6:   Funcs(c9E, cE) is Element of U & U is axiom_GU1 & U is axiom_GU3;
+      hence the Source of E is Element of U by A5;
+      (the Target of E) in Funcs(c9E,cE) by FUNCT_2:8;
+      hence (the Target of E) is Element of U by A6;
+      (the Comp of E) c= [:[:c9E,c9E:],c9E:];
+      hence (the Comp of E) is Element of U by CLASSES4:13;
+    end;
+    hence thesis;
+  end;
+
+theorem
+  for c being set st c in card U holds card (bool c) in U
+  proof
+    let c be set;
+    assume c in card U;
+    then reconsider c as Element of U by CLASSES2:13;
+    card bool c in U by CLASSES4:29;
+    hence thesis;
+  end;
+
+theorem
+  for c1,c2 being Cardinal st c1 in card U & c2 in card U holds
+  card bool [:c1,c2:] in U
+  proof
+    let c1,c2 be Cardinal;
+    assume that
+A1: c1 in card U and
+A2: c2 in card U;
+    reconsider c1,c2 as Element of U by A1,A2,CLASSES2:13;
+    reconsider c = bool [:c1,c2:] as Element of U;
+    card c in U by CLASSES4:29;
+    hence thesis;
+  end;
+
+begin :: GroupCat
+
+definition
+  let x be object;
+  func op0(x) -> Element of {x} equals x;
+  coherence by TARSKI:def 1;
+  func op1(x) -> UnOp of {x} equals x .--> x;
+  coherence;
+  func op2(x) -> BinOp of {x} equals (x,x) :-> x;
+  coherence;
+end;
+
+theorem
+  op0(0) = op0 & op1(0) = op1 & op2(0) = op2 by FUNCT_5:def 5,def 6;
+
+definition
+  let x be object;
+  func Trivial-addLoopStr(x) -> non empty addLoopStr equals
+  addLoopStr(# {x},op2(x),op0(x) #);
+  coherence;
+end;
+
+theorem
+  Trivial-addLoopStr = Trivial-addLoopStr(0) by FUNCT_5:def 6,ALGSTR_0:def 9;
+
+theorem
+  for x being object holds Trivial-addLoopStr(x) is strict AddGroup;
+
+theorem Th78:
+  op0(x) is Element of U & op1(x) is Element of U &
+  op2(x) is Element of U
+  proof
+    thus op0(x) is Element of U;
+    [: {x},{x} :] is Element of U;
+    hence op1(x) is Element of U;
+    [: [: {x},{x} :] , {x} :] is Element of U;
+    hence op2(x) is Element of U by CLASSES4:13;
+  end;
+
+theorem Th79:
+  comp Trivial-addLoopStr(x) is Element of U
+  proof
+    set Tx = Trivial-addLoopStr(x);
+    {x} is Element of U;
+    then reconsider y = the carrier of Tx as Element of U;
+    [:y,y:] is Element of U;
+    hence thesis by CLASSES4:13;
+  end;
+
+theorem Th80:
+  ex y being Element of U st GO y, Trivial-addLoopStr(x)
+  proof
+    set Tx = Trivial-addLoopStr(x);
+    reconsider x1 = {x} as Element of U;
+    reconsider x2 = op2(x) as Element of U by Th78;
+    reconsider x3 = comp Tx as Element of U by Th79;
+    reconsider x4 = op0(x) as Element of U;
+    reconsider y = [x1,x2,x3,x4] as Element of U;
+    now
+      take y;
+      thus y = [x1,x2,x3,x4];
+      x4 = 0.Tx by TARSKI:def 1;
+      hence ex G being strict AddGroup st Trivial-addLoopStr(x) = G &
+      x1 = the carrier of G & x2 = the addF of G & x3 = comp G & x4 = 0.G;
+    end;
+    hence thesis by GRCAT_1:def 23;
+  end;
+
+theorem
+  (union the set of all the carrier of Trivial-addLoopStr(x) where
+  x is Element of U) = U
+  proof
+    set T = the set of all the carrier of Trivial-addLoopStr(x) where
+    x is Element of U;
+    now
+      hereby
+        let o be object;
+        assume o in union T;
+        then consider y be set such that
+A1:     o in y and
+A2:     y in T by TARSKI:def 4;
+        consider x be Element of U such that
+A3:     y = the carrier of Trivial-addLoopStr(x) by A2;
+        o = x by A3,A1,TARSKI:def 1;
+        hence o in U;
+      end;
+      hence union T c= U;
+      hereby
+        let o be object;
+        assume o in U;
+        then reconsider x = o as Element of U;
+        {x} is Element of U;
+        then reconsider y = the carrier of Trivial-addLoopStr(x)
+          as Element of U;
+        o in y in T;
+        hence o in union T by TARSKI:def 4;
+      end;
+      hence U c= union T;
+    end;
+    hence thesis;
+  end;
+
+theorem Th82:
+  Trivial-addLoopStr(x) in GroupObjects U
+  proof
+    ex y be Element of U st GO y, Trivial-addLoopStr(x) by Th80;
+    hence thesis by GRCAT_1:def 24;
+  end;
+
+theorem Th83:
+  GroupObjects(U),U are_equipotent
+  proof
+    set GOU = GroupObjects(U);
+    reconsider GOU9 = GOU as non empty set;
+    defpred P[object,object] means $2 in U & GO $2,$1;
+A1: for x be Element of GOU9 ex y be Element of U st P[x,y]
+    proof
+      let x be Element of GOU9;
+      ex  x9 be object st  x9 in U & GO x9,x by GRCAT_1:def 24;
+      hence thesis;
+    end;
+    consider f be Function of GOU9,U such that
+A2: for x be Element of GOU9 holds P[x,f.x] from FUNCT_2:sch 3(A1);
+    now
+      let x1,x2 be object;
+      assume that
+A3:   x1 in dom f and
+A4:   x2 in dom f and
+A5:   f.x1 = f.x2;
+      reconsider x91 = x1,x92 = x2 as Element of GOU by A3,A4,PARTFUN1:def 2;
+      consider y1, y2, y3, y4 be set such that
+A6:   f.x91 = [y1,y2,y3,y4] and
+A7:   ex G1 be strict AddGroup st
+      x91 = G1 & y1 = the carrier of G1 & y2 = the addF of G1 & y3 = comp G1
+        & y4 = 0. G1 by A2,GRCAT_1:def 23;
+      consider z1, z2, z3, z4 be set such that
+A8:   f.x91 = [z1,z2,z3,z4] and
+A9:   ex G2 be strict AddGroup st
+      x92 = G2 & z1 = the carrier of G2 & z2 = the addF of G2 & z3 = comp G2
+        & z4 = 0. G2 by A5,A2,GRCAT_1:def 23;
+      consider G1 be strict AddGroup such that
+A10:  x91 = G1 & y1 = the carrier of G1 & y2 = the addF of G1 &
+        y3 = comp G1 & y4 = 0. G1 by A7;
+      consider G2 be strict AddGroup such that
+A11:  x92 = G2 & z1 = the carrier of G2 & z2 = the addF of G2 &
+        z3 = comp G2 & z4 = 0. G2 by A9;
+      the carrier of G1 = the carrier of G2 &
+        the addF of G1 = the addF of G2 &
+      0.G1 = 0.G2 & the ZeroF of G1 = 0.G1 & the ZeroF of G2 = 0.G2
+        by A10,A11,STRUCT_0:def 6,XTUPLE_0:5,A8,A6;
+      hence x1 = x2 by A10,A11;
+    end;
+    then
+A12: f is one-to-one by FUNCT_1:def 4;
+    reconsider U9 = U as non empty set;
+    deffunc Q(object) = Trivial-addLoopStr($1);
+A13: for x be object st x in U holds Q(x) in GroupObjects U by Th82;
+    consider g be Function of U,GroupObjects U such that
+A14: for x be object st x in U holds g.x = Q(x) from FUNCT_2:sch 2(A13);
+    now
+      let x1,x2 be object;
+      assume that
+A15:  x1 in dom g and
+A16:  x2 in dom g and
+A17:  g.x1 = g.x2;
+      reconsider x91 = x1,x92 = x2 as Element of U by A15,A16,PARTFUN1:def 2;
+      g.x91 = Trivial-addLoopStr(x91) & g.x92 = Trivial-addLoopStr(x92)
+        by A14;
+      hence x1 = x2 by A17;
+    end;
+    then g is one-to-one by FUNCT_1:def 4;
+    hence thesis by A12,KNASTER:12;
+  end;
+
+theorem
+  not GroupObjects(U) is U-petit
+  proof
+    assume GroupObjects(U) is U-petit;
+    then consider x be Element of U such that
+A1: x,GroupObjects(U) are_equipotent;
+    GroupObjects(U),U are_equipotent by Th83;
+    hence thesis by A1,WELLORD2:15,CLASSES4:30;
+  end;
+
+begin
+
+definition
+  let C be Category;
+  func CatToSet C -> set equals
+   [the carrier of C,the carrier' of C, the Source of C,the Target of C,
+    the Comp of C];
+  coherence;
+end;
+
+definition
+  let C be quintuple set;
+  attr C is StrCategory-like means
+:Def25:
+  ex y1,y2,y3,y4,y5 being set st y1 = C`1 & y2 = C`2 & y3 = C`3 & y4 = C`4 &
+  y5 = C`5 & y3 is Function of y2,y1 & y4 is Function of y2,y1 &
+  y5 is PartFunc of [:y2,y2:],y2;
+end;
+
+registration
+  cluster StrCategory-like for quintuple set;
+  existence
+  proof
+    set o = {};
+    reconsider y1 = {o} as set;
+    reconsider y2 = {o} as set;
+    reconsider y3 = o :-> o as Function of y2,y1;
+    reconsider y4 = o :-> o as Function of y2,y1;
+    reconsider y5 = (o,o) :-> o as Function of [:y2,y2:],y2;
+    reconsider x = [y1,y2,y3,y3,y5] as quintuple set;
+    take x;
+    thus thesis;
+  end;
+end;
+
+definition
+  let C be StrCategory-like quintuple set;
+  func SetToCat C -> strict CatStr means
+    ex y1,y2 being set,y3,y4 being Function of y2,y1,
+    y5 being PartFunc of [:y2,y2:],y2 st
+    y1 = C`1 & y2 = C`2 & y3 = C`3 & y4 = C`4 & y5 = C`5 &
+    it = CatStr(# y1,y2,y3,y4,y5 #);
+  existence
+  proof
+    consider y1,y2,y3,y4,y5 being set such that
+A1: y1 = C`1 and
+A2: y2 = C`2 and
+A3: y3 = C`3 and
+A4: y4 = C`4 and
+A5: y5 = C`5 and
+A6: y3 is Function of y2,y1 and
+A7: y4 is Function of y2,y1 and
+A8: y5 is PartFunc of [:y2,y2:],y2 by Def25;
+    reconsider y3 as Function of y2,y1 by A6;
+    reconsider y4 as Function of y2,y1 by A7;
+    reconsider y5 as PartFunc of [:y2,y2:],y2 by A8;
+    take CatStr(# y1,y2,y3,y4,y5 #);
+    thus thesis by A1,A2,A3,A4,A5;
+  end;
+  uniqueness;
+end;
+
+definition
+  let C be StrCategory-like quintuple set;
+  attr C is Category-like means
+:Def27:
+    ex y1,y2 being set,y3,y4 being Function of y2,y1,
+    y5 being PartFunc of [:y2,y2:],y2 st
+    y1 = C`1 & y2 = C`2 & y3 = C`3 & y4 = C`4 & y5 = C`5 &
+    CatStr(# y1,y2,y3,y4,y5 #) is Category;
+end;
+
+registration
+  cluster Category-like for StrCategory-like quintuple set;
+  existence
+  proof
+    set o = {},m = {};
+    set C = 1Cat(o,m);
+A1: C = CatStr(# {o},{m},m:->o,m:->o,(m,m):->m #)
+      by CAT_1:def 11;
+    reconsider y1 = {o} as set;
+    reconsider y2 = {m} as set;
+    reconsider y3 = m:->o as Function of y2,y1;
+    reconsider y4 = m:->o as Function of y2,y1;
+    reconsider y5 = (m,m) :-> m as Function of [:y2,y2:],y2;
+    reconsider CC = [y1,y2,y3,y4,y5] as quintuple set;
+    CC is StrCategory-like;
+    then reconsider CC as StrCategory-like quintuple set;
+    take CC;
+    thus thesis by A1;
+  end;
+end;
+
+registration
+  cluster non empty Category-like for StrCategory-like quintuple set;
+  existence
+  proof
+    set o = {},m = {};
+    set C = 1Cat(o,m);
+A1: C = CatStr(# {o},{m},m:->o,m:->o,(m,m):->m #)
+      by CAT_1:def 11;
+    reconsider y1 = {o} as set;
+    reconsider y2 = {m} as set;
+    reconsider y3 = m:->o as Function of y2,y1;
+    reconsider y4 = m:->o as Function of y2,y1;
+    reconsider y5 = (m,m) :-> m as Function of [:y2,y2:],y2;
+    reconsider CC = [y1,y2,y3,y4,y5] as quintuple set;
+    CC is StrCategory-like;
+    then reconsider CC as StrCategory-like quintuple set;
+    take CC;
+    thus thesis by A1;
+  end;
+end;
+
+definition
+  let C be Category-like StrCategory-like quintuple set;
+  func Obj(C) -> set equals C`1;
+  coherence by TARSKI:1;
+end;
+
+definition
+  let C be Category-like StrCategory-like quintuple set;
+  func Mor(C) -> set equals C`2;
+  coherence by TARSKI:1;
+end;
+
+definition
+  let C be Category-like StrCategory-like quintuple set;
+  attr C is non-empty means Obj(C) is non empty;
+end;
+
+registration
+  cluster non-empty for Category-like StrCategory-like quintuple set;
+  existence
+  proof
+    set o = {},m = {};
+    set C = 1Cat(o,m);
+A1: C = CatStr(# {o},{m},m:->o,m:->o,(m,m):->m #)
+      by CAT_1:def 11;
+    reconsider y1 = {o} as set;
+    reconsider y2 = {m} as set;
+    reconsider y3 = m:->o as Function of y2,y1;
+    reconsider y4 = m:->o as Function of y2,y1;
+    reconsider y5 = (m,m) :-> m as Function of [:y2,y2:],y2;
+    reconsider CC = [y1,y2,y3,y4,y5] as quintuple set;
+    CC is StrCategory-like;
+    then reconsider CC as StrCategory-like quintuple set;
+    CC is Category-like by A1;
+    then reconsider CC as Category-like StrCategory-like quintuple set;
+    take CC;
+    thus thesis;
+  end;
+end;
+
+definition
+  mode CategorySet is non-empty Category-like StrCategory-like quintuple set;
+end;
+
+theorem Th85:
+  for C being CategorySet holds C is non empty
+  proof
+    let C be CategorySet;
+    consider x1,x2,x3,x4,x5 be object such that
+A1: C = [x1,x2,x3,x4,x5] by Def3;
+    assume C is empty;
+    hence thesis by A1;
+  end;
+
+registration
+  cluster -> non empty for CategorySet;
+  correctness by Th85;
+end;
+
+definition
+  let C be CategorySet;
+  func SetToCat C -> strict Category means
+:Def31:
+    ex y1,y2 being set,y3,y4 being Function of y2,y1,
+    y5 being PartFunc of [:y2,y2:],y2 st
+    y1 = C`1 & y2 = C`2 & y3 = C`3 & y4 = C`4 & y5 = C`5 &
+    it = CatStr(# y1,y2,y3,y4,y5 #);
+  existence
+  proof
+    C is Category-like;
+    then consider y1,y2 be set,y3,y4 be Function of y2,y1,
+    y5 be PartFunc of [:y2,y2:],y2 such that
+A1: y1 = C`1 & y2 = C`2 & y3 = C`3 & y4 = C`4 & y5 = C`5 &
+    CatStr(# y1,y2,y3,y4,y5 #) is Category;
+    reconsider C = CatStr(# y1,y2,y3,y4,y5 #) as Category by A1;
+    thus thesis by A1;
+  end;
+  uniqueness;
+end;
+
+definition
+  let C be strict Category;
+  redefine func CatToSet C -> CategorySet;
+  coherence
+  proof
+    set CC = CatToSet C;
+    reconsider CC as quintuple set;
+    reconsider y1 = the carrier of C as non empty set;
+    reconsider y2 = the carrier' of C as set;
+    reconsider y3 = the Source of C as Function of y2,y1;
+    reconsider y4 = the Target of C as Function of y2,y1;
+    reconsider y5 = the Comp of C as PartFunc of [:y2,y2:],y2;
+    CC is StrCategory-like;
+    then reconsider CC as StrCategory-like quintuple set;
+    reconsider CC9 = CatStr(# y1,y2,y3,y4,y5 #) as CatStr;
+A1: ex y1,y2,y3,y4,y5 being set st y1 = CC`1 & y2 = CC`2 & y3 = CC`3 &
+      y4 = CC`4 & y5 = CC`5 & y3 is Function of y2,y1 &
+      y4 is Function of y2,y1 & y5 is PartFunc of [:y2,y2:],y2;
+    reconsider CC as Category-like StrCategory-like quintuple set by Def27,A1;
+    CC is non-empty;
+    hence thesis;
+  end;
+end;
+
+theorem Th86:
+  for C being CategorySet holds CatToSet SetToCat C = C
+  proof
+    let C be CategorySet;
+    ex y1,y2 be set,y3,y4 be Function of y2,y1,
+      y5 be PartFunc of [:y2,y2:],y2 st
+      y1 = C`1 & y2 = C`2 & y3 = C`3 & y4 = C`4 & y5 = C`5 &
+      SetToCat C = CatStr(# y1,y2,y3,y4,y5 #) by Def31;
+    hence thesis;
+  end;
+
+theorem Th87:
+  for C being strict Category holds SetToCat CatToSet C = C
+  proof
+    let C be strict Category;
+    set C2 = CatToSet C;
+    ex  y1,y2 be set,y3,y4 be Function of y2,y1,
+    y5 be PartFunc of [:y2,y2:],y2 st
+    y1 = C2`1 & y2 = C2`2 & y3 = C2`3 & y4 = C2`4 & y5 = C2`5 &
+    SetToCat C2 = CatStr(# y1,y2,y3,y4,y5 #) by Def31;
+    hence thesis;
+  end;
+
+theorem Th88:
+  for C being Category holds (C is U-element iff CatToSet C is U-set)
+  proof
+    let C be Category;
+    now
+      hereby
+        assume C is U-element;
+        then the carrier of C is Element of U &
+        the carrier' of C is Element of U &
+        the Source of C is Element of U &
+        the Target of C is Element of U &
+        the Comp of C is Element of U by Th54;
+        hence CatToSet C is Element of U by Th13;
+        hence CatToSet C is U-set;
+      end;
+    end;
+    hence thesis by Th14;
+  end;
+
+theorem Th89:
+  for C being CategorySet holds (C is U-set iff SetToCat C is U-element)
+  proof
+    let C be CategorySet;
+A1: C = [C`1,C`2,C`3,C`4,C`5];
+    hereby
+      assume C is U-set;
+      then
+A2:   C`1 is Element of U & C`2 is Element of U & C`3 is Element of U &
+        C`4 is Element of U & C`5 is Element of U by A1,Th14;
+      ex y1,y2 be set,y3,y4 be Function of y2,y1,
+      y5 be PartFunc of [:y2,y2:],y2 st
+      y1 = C`1 & y2 = C`2 & y3 = C`3 & y4 = C`4 & y5 = C`5 &
+      CatStr(# y1,y2,y3,y4,y5 #) is Category by Def27;
+      hence SetToCat C is U-element by A2,Def31;
+    end;
+    assume A3: SetToCat C is U-element;
+    set C2 = SetToCat C;
+    consider y1,y2 be set,y3,y4 be Function of y2,y1,
+    y5 be PartFunc of [:y2,y2:],y2 such that
+A4: y1 = C`1 & y2 = C`2 & y3 = C`3 & y4 = C`4 & y5 = C`5 &
+    SetToCat C = CatStr(# y1,y2,y3,y4,y5 #) by Def31;
+    reconsider y1,y2 as Element of U by A4,A3;
+    reconsider y22 = [:y2,y2:] as Element of U;
+    y3 c= [:y2,y1:] & y4 c= [:y2,y1:] & y5 c= [:y22,y2:];
+    then reconsider y3,y4,y5 as Element of U by CLASSES4:13;
+    CatToSet C2 = [y1,y2,y3,y4,y5] by A4;
+    then CatToSet SetToCat C is U-set;
+    hence C is U-set by Th86;
+  end;
+
+definition
+  let C,D be CategorySet;
+  pred C ~= D means SetToCat C ~= SetToCat D;
+end;
+
+theorem Th90:
+  for C,D being strict Category st C ~= D holds CatToSet C ~= CatToSet D
+  proof
+    let C,D be strict Category;
+    assume
+A1: C ~= D;
+    C = SetToCat CatToSet C & D = SetToCat CatToSet D by Th87;
+    hence thesis by A1;
+  end;
+
+definition
+  let U be Universe;
+  let C be CategorySet;
+  attr C is U-petit means ex c being CategorySet st c is U-set & C ~= c;
+end;
+
+theorem
+  for C being strict Category holds C is U-petit iff CatToSet C is U-petit
+  proof
+    let C be strict Category;
+    hereby
+      assume C is U-petit;
+      then consider c be strict Category such that
+A1:   c is U-element and
+A2:   C ~= c;
+      CatToSet c is U-set by A1,Th88;
+      hence CatToSet C is U-petit by Th90,A2;
+    end;
+    assume CatToSet C is U-petit;
+    then consider c be CategorySet such that
+A3: c is U-set and
+A4: CatToSet C ~= c;
+    SetToCat c is U-element & C ~= SetToCat c by A4,Th87,A3,Th89;
+    hence C is U-petit;
+  end;
+
+definition
+  let C,D be CategorySet;
+  func Funct(C,D) -> set equals
+    Funct(SetToCat C,SetToCat D);
+  coherence;
+end;
+
+definition
+  let C,D be CategorySet;
+  func Functors(C,D) -> CategorySet equals
+    CatToSet Functors(SetToCat C,SetToCat D);
+  coherence;
+end;
+
+theorem
+  for C,D being CategorySet holds
+  Obj Functors(C,D) = Funct(SetToCat C,SetToCat D) &
+  Mor Functors(C,D) = NatTrans(SetToCat C,SetToCat D) by NATTRA_1:def 17;
+
+::$N PROP 1.1.1 a) SGA4
+theorem
+  for C,D being CategorySet st C is U-set & D is U-set holds
+  Functors(C,D) is U-set
+  proof
+    let C,D be CategorySet;
+    assume that
+A1: C is U-set and
+A2: D is U-set;
+    SetToCat C is U-element & SetToCat D is U-element by A1,A2,Th89;
+    then Functors(SetToCat C,SetToCat D) is U-element by Th72;
+    hence thesis by Th88;
+  end;
+
+begin :: Small and locally-small categories
+
+notation
+  let U be Universe;
+  let C be Category;
+  synonym C is U-small for C is U-element;
+end;
+
+registration
+  let U be Universe;
+  cluster U-small for Category;
+  existence
+  proof
+    take the U-element Category;
+    thus thesis;
+  end;
+end;
+
+theorem Th94:
+  for o,m being set st not (m is U-set) or not (o is U-set) holds
+  not 1Cat(o,m) is U-small
+  proof
+    let o,m be set;
+    assume not m is U-set or not o is U-set;
+    then per cases;
+    suppose
+A1:   not m is U-set;
+      1Cat( o,m) = CatStr(# {o},{m},m:->o,m:->o,(m,m):->m #) by CAT_1:def 11;
+      hence thesis by A1,Th18;
+    end;
+    suppose
+A2:   not o is U-set;
+      1Cat( o,m) = CatStr(# {o},{m},m:->o,m:->o,(m,m):->m #) by CAT_1:def 11;
+      hence thesis by A2,Th18;
+    end;
+  end;
+
+theorem
+  for o,m being object st 1Cat(o,m) is U-small holds m is U-set &
+  o is U-set
+  proof
+    let o,m be object;
+    reconsider o9=o,m9=m as set by TARSKI:1;
+    assume 1Cat(o,m) is U-small;
+    then 1Cat(o9,m9) is U-small;
+    hence thesis by Th94;
+end;
+
+registration
+  let U be Universe;
+  cluster non U-small for Category;
+  existence
+  proof
+    set C = 1Cat(U,U);
+    C is non U-small
+    proof
+      assume C is U-small;
+      then {U} is Element of U by COMMACAT:3;
+      then U in U by Th18;
+      hence thesis;
+    end;
+    hence thesis;
+  end;
+end;
+
+definition
+  let U be Universe;
+  let C be Category;
+  attr C is U-locally_small means
+:Def36:
+  for x,y being Object of C holds Hom(x,y) is U-set;
+end;
+
+registration
+  let U be Universe;
+  cluster U-locally_small for Category;
+  existence
+  proof
+    set C = the U-element Category;
+    take C;
+    now
+      let x,y be Object of C;
+      Hom(x,y) c= the carrier' of C &
+        the carrier' of C is Element of U by Def17;
+      hence Hom(x,y) is U-set by CLASSES4:13;
+    end;
+    hence thesis;
+  end;
+end;
+
+registration
+  let U be Universe;
+  cluster U-locally_small for non void non empty Category;
+  existence
+  proof
+    set C = the U-element Category;
+    take C;
+    now
+      let x,y be Object of C;
+      Hom(x,y) c= the carrier' of C &
+        the carrier' of C is Element of U by Def17;
+      hence Hom(x,y) is U-set by CLASSES4:13;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem Th96:
+  for C being U-small Category holds C is U-locally_small
+  proof
+    let C be U-small Category;
+    now
+      let x,y be Object of C;
+      Hom(x,y) c= the carrier' of C &
+        the carrier' of C is Element of U by Def17;
+      hence Hom(x,y) is U-set by CLASSES4:13;
+    end;
+    hence thesis;
+  end;
+
+theorem Th97:
+  for o being object holds not 1Cat(o,U) is U-locally_small
+  proof
+    let o9 be object;
+    set C = 1Cat(o9, U);
+    1Cat( o9,U) = CatStr(# {o9},{U},U:->o9,U:->o9,(U,U):->U #)
+      by CAT_1:def 11;
+    then reconsider a = o9 as Object of C by TARSKI:def 1;
+    the carrier' of C c= Hom(a,a) by CAT_1:11;
+    then
+A1: Hom(a,a) = the carrier' of C;
+    C is non U-locally_small
+    proof
+      assume C is U-locally_small;
+      then Hom(a,a) is U-set;
+      then {U} is Element of U by A1,COMMACAT:3;
+      then U in U by Th18;
+      hence thesis;
+    end;
+    hence thesis;
+  end;
+
+registration
+  let U be Universe;
+  cluster non U-locally_small for Category;
+  existence
+  proof
+    take 1Cat( {} , U);
+    thus thesis by Th97;
+  end;
+end;
+
+theorem Th98:
+  for C being U-locally_small Category st the carrier of C is U-set holds
+  union the set of all Hom(a,b) where a,b is Object of C is Element of U
+  proof
+    let C be U-locally_small Category;
+    assume
+A1: the carrier of C is U-set;
+A2: now
+      let a be Object of C;
+      reconsider cC = the carrier of C as non empty set;
+      reconsider c9C = the carrier' of C as non empty set;
+      defpred P[Object of C,Element of U] means Hom(a,$1) = $2;
+A3:   now
+        let x be Element of the carrier of C;
+        Hom(a,x) is U-set by Def36;
+        hence ex y be Element of U st P[x,y];
+      end;
+      ex f be Function of the carrier of C,U st
+      for x be Element of the carrier of C holds P[x,f.x]
+        from FUNCT_2:sch 3(A3);
+      hence ex f being Function of the carrier of C,U st
+        for x be Object of C holds f.x = Hom(a,x);
+    end;
+A4: now
+      let a be Object of C;
+      consider f be Function of the carrier of C,U such that
+A5:   for x be Object of C holds f.x = Hom(a,x) by A2;
+A6:   now
+        now
+          let t be object;assume t in rng f;
+          then consider u be object such that
+A7:       u in the carrier of C and
+A8:       t = f.u by FUNCT_2:11;
+          reconsider u as Object of C by A7;
+          t = Hom(a,u) by A8,A5;
+          hence t in  the set of all Hom(a,b) where b is Object of C;
+        end;
+        hence rng f c= the set of all Hom(a,b) where b is Object of C;
+        now
+          let t be object;
+          assume t in the set of all Hom(a,b) where b is Object of C;
+          then consider b be Object of C such that
+A9:       t = Hom(a,b);
+          t = f.b by A5,A9;
+          hence t in rng f by FUNCT_2:4;
+        end;
+        hence the set of all Hom(a,b) where b is Object of C c= rng f;
+      end;
+      then
+A10:  rng f = the set of all Hom(a,b) where b is Object of C;
+      now
+        let t be object;
+        assume t in the set of all Hom(a,b) where b is Object of C;
+        then consider b be Object of C such that
+A11:    t = Hom(a,b);
+        Hom(a,b) is U-set by Def36;
+        hence t in U by A11;
+      end;
+      then
+A12:  rng f c= U by A6;
+      dom f = the carrier of C by PARTFUN1:def 2;
+      hence union the set of all Hom(a,b) where b is Object of C in U
+        by A1,A10,A12,CLASSES4:5;
+    end;
+    defpred P[Object of C,Element of U] means
+    union the set of all Hom($1,b) where b is Object of C = $2;
+A13: now
+      let x be Element of the carrier of C;
+      reconsider y = union the set of all Hom(x,b) where
+        b is Object of C as Element of U by A4;
+      union the set of all Hom(x,b) where b is Object of C = y;
+      hence ex y be Element of U st P[x,y];
+    end;
+    consider f being Function of the carrier of C,U such that
+A14: for x be Element of the carrier of C holds P[x,f.x]
+      from FUNCT_2:sch 3(A13);
+A15: for x be object st x in dom f holds f.x in U
+    proof
+      let x be object;
+      assume x in dom f;
+      then reconsider x9 = x as Object of C by FUNCT_2:def 1;
+      f.x9 in U;
+      hence thesis;
+    end;
+    now
+      let x be object;
+      assume x in rng f;
+      then consider y be object such that
+A16:  y in the carrier of C and
+A17:  x = f.y by FUNCT_2:11;
+      dom f = the carrier of C by PARTFUN1:def 2;
+      hence x in U by A17,A16,A15;
+    end;
+    then
+A18: rng f c= U;
+A19: dom f in U by A1,PARTFUN1:def 2;
+A20: now
+      let x be object; assume x in rng f;
+      then consider y be object such that
+A21:  y in the carrier of C and
+A22:  x = f.y by FUNCT_2:11;
+      reconsider y as Element of the carrier of C by A21;
+      P[y,f.y] by A14;
+      hence ex y be Element of the carrier of C st
+        union the set of all Hom(y,b) where b is Object of C = x by A22;
+    end;
+    now
+      now
+        let x be object;
+        assume x in union rng f;
+        then consider y be set such that
+A23:    x in y in rng f by TARSKI:def 4;
+        consider z be Element of the carrier of C such that
+A24:    y = union the set of all Hom(z,b) where b is Object of C by A23,A20;
+        reconsider z as Object of C;
+        consider t be set such that
+A25:    x in t in the set of all Hom(z,b) where b is Object of C
+          by A23,A24,TARSKI:def 4;
+        consider b0 be Object of C such that
+A26:    t = Hom(z,b0) by A25;
+        x in Hom(z,b0) in the set of all Hom(a,b) where a,b is Object of C
+          by A25,A26;
+        hence x in union the set of all Hom(a,b) where a,b is Object of C
+          by TARSKI:def 4;
+      end;
+      hence union rng f c= union the set of all Hom(a,b)
+        where a,b is Object of C;
+      now
+        let x be object;
+        assume x in union the set of all Hom(a,b) where a,b is Object of C;
+        then consider y be set such that
+A27:     x in y in the set of all Hom(a,b) where a,b is Object of C
+          by TARSKI:def 4;
+        consider a9,b9 be Object of C such that
+A28:    y = Hom(a9,b9) by A27;
+        reconsider a9 as Element of the carrier of C;
+        y in the set of all Hom(a9,b) where b is Object of C by A28;
+        then
+A29:     x in union the set of all Hom(a9,b) where b is Object of C
+          by A27,TARSKI:def 4;
+A30:    union the set of all Hom(a9,b) where b is Object of C = f.a9 by A14;
+        f.a9 in rng f by FUNCT_2:4;
+        hence x in union rng f by A30,A29,TARSKI:def 4;
+      end;
+      hence union the set of all Hom(a,b)
+        where a,b is Object of C c= union rng f;
+    end;
+    then union rng f = union the set of all Hom(a,b) where a,b is Object of C;
+    hence thesis by A19,A18,CLASSES4:5;
+  end;
+
+::https://ncatlab.org/nlab/show/locally+small+category
+theorem
+  for C being U-locally_small Category st the carrier of C is U-set holds
+  C is U-small
+  proof
+    let C be U-locally_small Category;
+    assume
+A1: the carrier of C is U-set;
+    then union the set of all Hom(a,b) where
+       a,b is Object of C is Element of U &
+       the carrier' of C c= union the set of all Hom(a,b)
+       where a,b is Object of C by CAT_1:92,Th98;
+    hence thesis by A1,CLASSES4:13;
+  end;
+
+theorem
+  for C,D being U-small Category holds Functors(C,D) is U-small &
+  NatTrans(C,D) is U-set
+  proof
+    let C,D be U-small Category;
+    thus Functors(C,D) is U-small by Th72;
+    then the carrier' of Functors(C,D) in U;
+    hence NatTrans(C,D) is U-set by NATTRA_1:def 17;
+  end;
+
+theorem
+  for C being U-small Category holds C opp is U-small Category
+  proof
+    let C be U-small Category;
+A1: C is U-element;
+    C opp = CatStr (# the carrier of C, the carrier' of C,
+                      the Target of C, the Source of C, ~the Comp of C#)
+      by OPPCAT_1:def 1;
+    then C opp is U-element by A1;
+    hence thesis;
+  end;
+
+theorem
+  for C being U-locally_small Category holds C opp is U-locally_small Category
+  proof
+    let C be U-locally_small Category;
+    now
+      let x,y be Object of (C opp);
+      reconsider oy = opp y, ox = opp x as Object of C;
+      Hom(x,y) = Hom(oy,ox) by OPPCAT_1:6;
+      hence Hom(x,y) is U-set by Def36;
+    end;
+    hence thesis by Def36;
+  end;
+
+begin :: Examples
+
+definition
+  let X be set;
+  redefine func id X -> Element of Funcs(X,X);
+  coherence
+  proof
+    dom (id X) = X & rng(id X) = X;
+    then id X is Function of X,X by FUNCT_2:1;
+    hence thesis by FUNCT_2:9;
+  end;
+end;
+
+theorem Th103:
+  Funcs U c< U
+  proof
+    thus Funcs U c= U
+    proof
+      set FAB = {Funcs (A,B) where A, B is Element of U : not contradiction};
+      now
+        let o be object;
+        assume o in the set of all Funcs(A,B) where A,B is Element of U;
+        then consider A,B be Element of U such that
+A1:     o = Funcs(A,B);
+        thus o in U by A1;
+      end;
+      then the set of all Funcs(A,B) where A,B is Element of U c= U;
+      then union the set of all Funcs(A,B) where A,B is Element of U
+        c= union U by ZFMISC_1:77;
+      hence Funcs U c= U by CLASSES4:81;
+    end;
+    {{}} is Element of U by CLASSES2:56,57;
+    hence thesis by Th2;
+  end;
+
+theorem Th104:
+  Funcs U is U-Class
+  proof
+A1: Funcs U c< U by Th103;
+A2:
+    now
+      let x be Element of U;
+      set FAB = {Funcs(A,B) where A, B is Element of U : not contradiction};
+      id {x} in Funcs({x},{x}) in FAB;
+      then id {x} in union FAB by TARSKI:def 4;
+      hence {[x,x]} in Funcs U by SYSREL:13;
+    end;
+A3: the set of all {[x,x]} where x is Element of U c= Funcs U
+    proof
+      let o be object;
+      assume o in the set of all {[x,x]} where x is Element of U;
+      then ex x be Element of U st o = {[x,x]};
+      hence thesis by A2;
+    end;
+A4: union the set of all {[x,x]} where x is Element of U
+      = the set of all [x,x] where x is Element of U
+    proof
+      now
+        let o be object;
+        assume o in union the set of all {[x,x]} where x is Element of U;
+        then consider y be set such that
+A5:     o in y in the set of all {[x,x]} where x is Element of U
+          by TARSKI:def 4;
+        consider x be Element of U such that
+A6:     y = {[x,x]} by A5;
+        o = [x,x] by A6,A5,TARSKI:def 1;
+        hence o in the set of all [x,x] where x is Element of U;
+      end;
+      hence union the set of all {[x,x]} where x is Element of U
+        c= the set of all [x,x] where x is Element of U;
+      now
+        let o be object;
+        assume o in the set of all [x,x] where x is Element of U;
+        then consider x be Element of U such that
+A7:     o = [x,x];
+A8:     o in {[x,x]} by A7,TARSKI:def 1;
+        {[x,x]} in the set of all {[x,x]} where x is Element of U;
+        hence o in union the set of all {[x,x]} where x is Element of U
+          by A8,TARSKI:def 4;
+      end;
+      hence the set of all [x,x] where x is Element of U c=
+        union the set of all {[x,x]} where x is Element of U;
+    end;
+    now
+      assume Funcs U in U;
+      then the set of all {[x,x]} where x is Element of U in U
+        by A3,CLASSES4:13;
+      then reconsider SU = the set of all [x,x] where x is Element of U as
+        Element of U by A4,CLASSES2:59;
+      proj1 SU = U
+      proof
+        hereby
+          let o be object;
+          assume o in proj1 SU;
+          then consider o9 be object such that
+A9:       [o,o9] in SU by XTUPLE_0:def 12;
+          consider x be Element of U such that
+A10:      [o,o9] = [x,x] by A9;
+          o = x by A10,XTUPLE_0:1;
+          hence o in U;
+        end;
+        let o be object;
+        assume o in U;
+        then reconsider x = o as Element of U;
+        [x,x] in SU;
+        hence o in proj1 SU by XTUPLE_0:def 12;
+      end;
+      then U is Element of U by CLASSES4:36;
+      then U in U;
+      hence contradiction;
+    end;
+    hence thesis by A1;
+  end;
+
+theorem
+  not [:U,U:] \ [: U\{{}},{{}} :] is Element of U
+  proof
+    assume
+A1: [:U,U:] \ [: U \ { {} }, { {} } :] is Element of U;
+    reconsider x = {{}} as Element of U by CLASSES2:56,57;
+    now
+      let o be object;
+      assume o in [:U,{x}:];
+      then consider a,b be object such that
+A2:   a in U and
+A3:   b in {x} and
+A4:   o = [a,b] by ZFMISC_1:def 2;
+      now
+        b = x by A3,TARSKI:def 1;
+        hence o in [:U,U:] by A2,A4,ZFMISC_1:def 2;
+        now
+          assume o in [: U \ { {} } , { {} } :];
+          then consider c,d be object such that
+          c in U \ {{}} and
+A5:       d in {{}} and
+A6:       o = [c,d] by ZFMISC_1:def 2;
+          c = a & b = d by A4,A6,XTUPLE_0:1;
+          hence contradiction by A3,A5,TARSKI:def 1;
+        end;
+        hence not o in [: U \ { {} } , { {} } :];
+      end;
+      hence o in [:U,U:] \ [: U \ { {} } , { {} } :] by XBOOLE_0:def 5;
+    end;
+    then [:U, {x}:] c= [:U,U:] \ [: U \ { {} } , { {} } :] in U by A1;
+    then [:U, {x}:] in U by CLASSES4:13;
+    then proj1 [:U, {x}:] is Element of U by CLASSES4:36;
+    then U in U;
+    hence thesis;
+  end;
+
+theorem Th106:
+  proj1 Maps U c= [:U,U:] &
+  ([:U,U:] \ [: U \ { {} } , { {} } :]) c= proj1 Maps U &
+  proj2 Maps U = Funcs U
+  proof
+    thus proj1 Maps U c= [:U,U:]
+    proof
+      let o be object;
+      assume o in proj1 Maps U;
+      then consider o9 be object such that
+A1:   [o,o9] in Maps U by XTUPLE_0:def 12;
+      consider A,B be Element of U, f be Element of Funcs U such that
+A2:   [o,o9] = [[A,B],f] and
+      B = {} implies A = {} and
+      f is Function of A,B by A1;
+      o = [A,B] by A2,XTUPLE_0:1;
+      hence o in [:U,U:] by ZFMISC_1:def 2;
+    end;
+A10: [:U,U:] /\ {[A,B] where A,B is Element of U : (B = {} implies
+      A = {})} c= proj1 Maps U
+    proof
+      let o be object;
+      assume
+A3:   o in [:U,U:] /\
+        {[A,B] where A,B is Element of U : (B = {} implies A = {})};
+      then o in [:U,U:] & o in {[A,B] where A,B is Element of U :
+        (B = {} implies A = {})} by XBOOLE_0:def 4;
+      then consider A,B be object such that
+A4:   A in U and
+A5:   B in U and
+A6:   o = [A,B] by ZFMISC_1:def 2;
+      o in {[A,B] where A,B is Element of U : (B = {} implies A = {})}
+        by A3,XBOOLE_0:def 4;
+      then consider A9,B9 be Element of U such that
+A7:   o = [A9,B9] and
+A8:   B9 = {} implies A9 = {};
+A9:   A = A9 & B = B9 by A6,A7,XTUPLE_0:1;
+      reconsider A,B as Element of U by A4,A5;
+      set f = the Function of A,B;
+      f is Element of Funcs U by ENS_1:1,A8,A9;
+      then [[A,B],f] in Maps U by A8,A9;
+      hence o in proj1 Maps U by A6,XTUPLE_0:def 12;
+    end;
+    [:U,U:] /\ ([:U,U:] \ [: U \ { {} } , { {} } :])
+      = ([:U,U:] /\ [:U,U:]) \ [: U \ { {} } , { {} } :] by XBOOLE_1:49;
+    hence ([:U,U:] \ [: U \ { {} } , { {} } :]) c= proj1 Maps U by A10,Th1;
+    proj2 Maps U = Funcs U
+    proof
+      thus proj2 Maps U c= Funcs U
+      proof
+        let o be object;
+        assume o in proj2 Maps U;
+        then consider o9 be object such that
+A11:    [o9,o] in Maps U by XTUPLE_0:def 13;
+        consider A,B be Element of U, f be Element of Funcs U such that
+A12:    [o9,o] = [[A,B],f] and
+        B = {} implies A = {} and
+        f is Function of A,B by A11;
+        o = f by A12,XTUPLE_0:1;
+        hence o in Funcs U;
+      end;
+      let o be object;
+      assume
+A13:  o in Funcs U;
+      then consider A,B be Element of U such that
+A14:  B = {} implies A = {} and
+A15:  o is Function of A,B by ENS_1:1;
+      reconsider f = o as Function of A,B by A15;
+      [[A,B],f] in Maps U by A14,A13;
+      hence o in proj2 Maps U by XTUPLE_0:def 13;
+    end;
+    hence thesis;
+  end;
+
+theorem Th107:
+  Maps U c= U
+  proof
+    let o be object;
+    assume o in Maps U;
+    then consider A,B be Element of U,f be Element of Funcs U such that
+A1: o = [[A,B],f] and
+    B = {} implies A = {} and
+A2: f is Function of A,B;
+    f in bool [:A,B:] by A2;
+    then f in U by CLASSES4:13;
+    hence o in U by A1,CLASSES2:58;
+  end;
+
+theorem Th108:
+  the carrier' of Ens U is U-Class
+  proof
+A1: now
+      assume Maps U is U-set;
+      then proj2 Maps U is Element of U by CLASSES4:36;
+      then proj2 Maps U in U;
+      then Funcs U is U-set & Funcs U is U-Class by Th104,Th106;
+      hence contradiction;
+    end;
+    Maps U c= U by Th107;
+    hence thesis by A1;
+  end;
+
+theorem Th109:
+  Ens U is non U-small Category & the carrier of (Ens U) is U-Class &
+  the carrier' of (Ens U) is U-Class
+  proof
+A1: not the carrier of (Ens U) in U;
+    then not Ens U is U-element;
+    hence (Ens U) is non U-small Category;
+    the carrier of (Ens U) c= U;
+    hence the carrier of (Ens U) is U-Class by A1;
+    thus thesis by Th108;
+  end;
+
+theorem
+  for U,V being Universe st U in V holds Ens U is V-small Category
+  proof
+    let U,V be Universe;
+    assume
+A1: U in V;
+    the carrier of Ens U is U-Class & the carrier' of Ens U is U-Class
+      by Th109;
+    then Ens U is V-element by A1,CLASSES4:13;
+    hence thesis;
+  end;
+
+definition
+  let AbG be AbGroup;
+  func # AbG -> Function of
+    [:the carrier of AbG, the carrier of AbG:],the carrier of AbG equals
+  the addF of AbG;
+  coherence;
+end;
+
+definition
+  let K be Field;
+  let o be object;
+  let n be Nat;
+  func nMatrixFieldCat(K,o,n) -> non empty non void strict CatStr equals
+  CatStr(# {o},
+           (the carrier of n-G_Matrix_over K),
+           (the carrier of (n-G_Matrix_over K)) --> o,
+           (the carrier of (n-G_Matrix_over K)) --> o,
+           #(n-G_Matrix_over K)
+         #);
+  coherence;
+end;
+
+registration
+  let K be Field;
+  let o be object;
+  let n be Nat;
+  cluster nMatrixFieldCat(K,o,n) -> Category-like;
+  coherence
+  proof
+    set cC = the carrier of n-G_Matrix_over K,
+         C = nMatrixFieldCat(K,o,n);
+    now
+      let f,g be Morphism of C;
+      [g,f] in dom (the Comp of C) iff [g,f] in [:cC,cC:] by PARTFUN1:def 2;
+      hence [g,f] in dom(the Comp of C) iff dom g = cod f by ZFMISC_1:87;
+    end;
+    hence thesis by CAT_1:def 6;
+  end;
+end;
+
+registration
+  let K be Field;
+  let o be object;
+  let n be Nat;
+  cluster nMatrixFieldCat(K,o,n) -> transitive;
+  coherence
+  proof
+    set C = nMatrixFieldCat(K,o,n);
+    for f, g be Morphism of C st dom g = cod f holds dom (g (*) f) = dom f &
+      cod (g (*) f) = cod g;
+    hence thesis by CAT_1:def 7;
+  end;
+end;
+
+registration
+  let K be Field;
+  let o be object;
+  let n be Nat;
+  cluster nMatrixFieldCat(K,o,n) -> associative;
+  coherence
+  proof
+    set C = nMatrixFieldCat(K,o,n);
+    now
+      let f,g,h be Morphism of C;
+      assume that
+      dom h = cod g and
+      dom g = cod f;
+      set cC = the carrier of n-G_Matrix_over K;
+A1:   now
+        let f,g be Morphism of C;
+        [g,f] in dom (the Comp of C) iff [g,f] in [:cC,cC:] by PARTFUN1:def 2;
+        hence [g,f] in dom(the Comp of C) iff dom g = cod f by ZFMISC_1:87;
+      end;
+      reconsider f9 = f,g9 = g,h9 = h as Element of n-Matrices_over K
+        by MATRIX_1:def 7;
+      reconsider f99 = f9,g99=g9,h99 = h9 as Matrix of n,K by MATRIX_1:2;
+      set cC = the carrier of n-G_Matrix_over K;
+A2:   (the Comp of C).(g,f) = g99 + f99 by MATRIX_1:def 7;
+A3:   (the Comp of C).(h,g) = h99 + g99 by MATRIX_1:def 7;
+      reconsider gf9 = g (*) f, hg9 = h (*) g  as
+        Element of n-Matrices_over K by MATRIX_1:def 7;
+      reconsider gf99 = gf9,hg99=hg9 as Matrix of n,K by MATRIX_1:2;
+A4:   dom g = cod f;
+A5:   gf99 = g99 + f99 by A4,A1,CAT_1:def 1,A2;
+      dom h = cod g;
+      then
+A6:   hg99 = h99 + g99 by A1,CAT_1:def 1,A3;
+A7:   (the addF of n-G_Matrix_over K).(h9,gf9)
+          = h99 + (g99 + f99) by A5,MATRIX_1:def 7
+         .= (h99 + g99) + f99 by MATRIX_1:4
+         .= (the addF of n-G_Matrix_over K).(hg9,f9)
+             by A6,MATRIX_1:def 7;
+A8:   dom h = cod (g(*)f) & dom (h(*)g) = cod f;
+      thus h (*) (g (*) f)
+        = (the addF of n-G_Matrix_over K).(h9,gf9) by A8,A1,CAT_1:def 1
+       .= (h (*) g) (*) f by A7,A1,A8,CAT_1:def 1;
+    end;
+    hence thesis by CAT_1:def 8;
+  end;
+end;
+
+registration
+  let K be Field;
+  let o be object;
+  let n be Nat;
+  cluster nMatrixFieldCat(K,o,n) -> reflexive;
+  coherence
+  proof
+    set C = nMatrixFieldCat(K,o,n);
+    now
+      let b be Element of C;
+A1:   b = o by TARSKI:def 1;
+      reconsider M = 0.(K,n) as Element of n-Matrices_over K
+        by MATRIX_1:2;
+      the carrier of n-G_Matrix_over K = n-Matrices_over K
+        by MATRIX_1:def 7;
+      then M in the carrier of n-G_Matrix_over K;
+      then reconsider M = 0.(K,n) as Element of the carrier of
+        n-G_Matrix_over K;
+      reconsider M9 = M as Morphism of nMatrixFieldCat(K,o,n);
+      dom M9 = o & cod M9 = o;
+      hence Hom (b,b) <> {} by A1,CAT_1:1;
+    end;
+    hence thesis by CAT_1:def 9;
+  end;
+end;
+
+registration
+  let K be Field;
+  let o be object;
+  let n be Nat;
+  cluster nMatrixFieldCat(K,o,n) -> with_identities;
+  coherence
+  proof
+    set C = nMatrixFieldCat(K,o,n);
+    reconsider M = 0.(K,n) as Element of n-Matrices_over K by MATRIX_1:2;
+    the carrier of n-G_Matrix_over K = n-Matrices_over K by MATRIX_1:def 7;
+    then M in the carrier of n-G_Matrix_over K;
+    then reconsider M = 0.(K,n) as
+      Element of the carrier of n-G_Matrix_over K;
+    reconsider M9 = M as Morphism of C;
+A1: dom M9 = o & cod M9 = o;
+    set cC = the carrier of n-G_Matrix_over K;
+A2: now
+      let f,g be Morphism of C;
+      [g,f] in dom (the Comp of C) iff [g,f] in [:cC,cC:] by PARTFUN1:def 2;
+      hence [g,f] in dom(the Comp of C) iff dom g = cod f by ZFMISC_1:87;
+    end;
+    now
+      let a be Element of C;
+      a = o by TARSKI:def 1;
+      then M9 in Hom(a,a) by CAT_1:1,A1;
+      then reconsider i = M9 as Morphism of a,a by CAT_1:def 5;
+      now
+        let b be Element of C;
+        hereby
+          assume Hom (a,b) <> {};
+          hereby
+            let g be Morphism of a,b;
+            reconsider g9 = g,i9 = i as Element of n-Matrices_over K
+              by MATRIX_1:def 7;
+            reconsider g99= g9 ,i99=i9 as Matrix of n,K by MATRIX_1:2;
+A3:         (the Comp of C).(g,i) = g99 + i99 by MATRIX_1:def 7;
+            reconsider gi9 = g (*) i as Element of n-Matrices_over K
+              by MATRIX_1:def 7;
+            dom g = cod i;
+            then  g (*) i = g99 + i99 by A2,CAT_1:def 1,A3
+                         .= g99 by MATRIX_1:5;
+            hence g (*) i = g;
+          end;
+        end;
+        hereby
+          assume Hom (b,a) <> {};
+          hereby
+            let f be Morphism of b,a;
+            reconsider f9 = f,i9 = i as Element of n-Matrices_over K
+              by MATRIX_1:def 7;
+            reconsider f99= f9 ,i99=i9 as Matrix of n,K by MATRIX_1:2;
+A4:         (the Comp of C).(i,f) = i99 + f99 by MATRIX_1:def 7;
+            reconsider if9 = i (*) f as Element of n-Matrices_over K
+              by MATRIX_1:def 7;
+            dom i = cod f;
+            then i (*) f = i99 + f99 by A2,CAT_1:def 1,A4
+                        .= f99 + i99 by MATRIX_1:3
+                        .= f99 by MATRIX_1:5;
+            hence i (*) f = f;
+          end;
+        end;
+      end;
+      hence ex i being Morphism of a,a st for b being Element of C holds
+      (Hom (a,b) <> {} implies for g being Morphism of a,b holds
+        g (*) i = g) & ( Hom (b,a) <> {} implies for f being Morphism of b,a
+        holds i (*) f = f);
+    end;
+    hence thesis by CAT_1:def 10;
+  end;
+end;
+
+theorem Th111:
+  for K being Field for o being Element of U
+  for n being non zero Nat st the carrier of K is Element of U holds
+  the carrier of nMatrixFieldCat(K,o,n) is trivial &
+  nMatrixFieldCat(K,o,n) is U-small Category &
+  nMatrixFieldCat(K,o,n) is U-locally_small Category
+  proof
+    let K be Field;
+    let o be Element of U;
+    let n be non zero Nat;
+    assume
+A1: the carrier of K is Element of U;
+    thus the carrier of nMatrixFieldCat(K,o,n) is trivial;
+    now
+A2:   n -tuples_on the carrier of K in U by A1,CLASSES4:58;
+      thus the carrier of nMatrixFieldCat(K,o,n) in U by Th18;
+      the carrier of (n-G_Matrix_over K)
+      = n-Matrices_over K by MATRIX_1:def 7
+      .= n -tuples_on (n -tuples_on the carrier of K) by MATRIX_1:def 1;
+      hence the carrier' of nMatrixFieldCat(K,o,n) in U by A2,CLASSES4:58;
+    end;
+    then nMatrixFieldCat(K,o,n) is U-element;
+    hence nMatrixFieldCat(K,o,n) is U-small Category &
+      nMatrixFieldCat(K,o,n) is U-locally_small Category by Th96;
+  end;
+
+theorem
+  for o being Element of FinSETS
+  for n being non zero Nat holds
+  the carrier of nMatrixFieldCat(F_Real,o,n) is trivial &
+  the carrier of nMatrixFieldCat(F_Real,o,n) is FinSETS-set &
+  not nMatrixFieldCat(F_Real,o,n) is FinSETS-small Category &
+  not nMatrixFieldCat(F_Real,o,n) is FinSETS-locally_small Category &
+  nMatrixFieldCat(F_Real,o,n) is SETS-small Category &
+  nMatrixFieldCat(F_Real,o,n) is SETS-locally_small Category
+  proof
+    let o be Element of FinSETS;
+    let n be non zero Nat;
+    thus the carrier of nMatrixFieldCat(F_Real,o,n) is trivial;
+    thus the carrier of nMatrixFieldCat(F_Real,o,n) is FinSETS-set by Th18;
+    now
+      assume nMatrixFieldCat(F_Real,o,n) is FinSETS-small Category;
+      then
+A1:   nMatrixFieldCat(F_Real,o,n) is FinSETS-element;
+      the carrier of (n-G_Matrix_over F_Real)
+        = n-Matrices_over F_Real by MATRIX_1:def 7
+       .= n -tuples_on (n -tuples_on the carrier of F_Real) by MATRIX_1:def 1;
+      then n -tuples_on the carrier of F_Real is finite by A1,Th6;
+      hence contradiction by Th6;
+    end;
+    hence not nMatrixFieldCat(F_Real,o,n) is FinSETS-small Category;
+    reconsider x = o as Object of nMatrixFieldCat(F_Real,o,n) by TARSKI:def 1;
+A2:   now
+      thus Hom(x,x) c= the carrier' of nMatrixFieldCat(F_Real,o,n);
+      now
+        let oo be object;
+        assume oo in the carrier' of nMatrixFieldCat(F_Real,o,n);
+        then reconsider o9 = oo as Morphism of nMatrixFieldCat(F_Real,o,n);
+        dom o9 = o & cod o9 = o;
+        hence oo in Hom(x,x) by CAT_1:1;
+      end;
+      hence the carrier' of nMatrixFieldCat(F_Real,o,n) c= Hom(x,x);
+    end;
+    not Hom(x,x) is FinSETS-set
+    proof
+      assume
+A3:   Hom(x,x) is FinSETS-set;
+      the carrier of (n-G_Matrix_over F_Real)
+        = n-Matrices_over F_Real by MATRIX_1:def 7
+       .= n -tuples_on (n -tuples_on the carrier of F_Real)
+         by MATRIX_1:def 1;
+      then n -tuples_on the carrier of F_Real is finite by A3,A2,Th6;
+      hence contradiction by Th6;
+    end;
+    hence not nMatrixFieldCat(F_Real,o,n) is FinSETS-locally_small Category
+      by Def36;
+A4: o in FinSETS & FinSETS c= SETS by CLASSES2:69;
+    REAL is Element of SETS by CLASSES4:21,53;
+    hence nMatrixFieldCat(F_Real,o,n) is SETS-small Category &
+    nMatrixFieldCat(F_Real,o,n) is SETS-locally_small Category
+      by A4,Th111,VECTSP_1:def 5;
+  end;
+
+theorem
+  for o being Element of FinSETS
+  for n being non zero Nat holds
+  the carrier of nMatrixFieldCat(F_Complex,o,n) is trivial &
+  the carrier of nMatrixFieldCat(F_Complex,o,n) is FinSETS-set &
+  not nMatrixFieldCat(F_Complex,o,n) is FinSETS-small Category &
+  not nMatrixFieldCat(F_Complex,o,n) is FinSETS-locally_small Category &
+  nMatrixFieldCat(F_Complex,o,n) is SETS-small Category &
+  nMatrixFieldCat(F_Complex,o,n) is SETS-locally_small Category
+  proof
+    let o be Element of FinSETS;
+    let n be non zero Nat;
+    thus the carrier of nMatrixFieldCat(F_Complex,o,n) is trivial;
+    thus the carrier of nMatrixFieldCat(F_Complex,o,n) is FinSETS-set by Th18;
+    now
+      assume nMatrixFieldCat(F_Complex,o,n) is FinSETS-small Category;
+      then
+A1:   nMatrixFieldCat(F_Complex,o,n) is FinSETS-element;
+      the carrier of (n-G_Matrix_over F_Complex)
+        = n-Matrices_over F_Complex by MATRIX_1:def 7
+       .= n -tuples_on (n -tuples_on the carrier of F_Complex)
+         by MATRIX_1:def 1;
+      then n -tuples_on the carrier of F_Complex is finite by A1,Th6;
+      hence contradiction by Th6;
+    end;
+    hence not nMatrixFieldCat(F_Complex,o,n) is FinSETS-small Category;
+    reconsider x = o as Object of nMatrixFieldCat(F_Complex,o,n)
+      by TARSKI:def 1;
+A2: now
+      thus Hom(x,x) c= the carrier' of nMatrixFieldCat(F_Complex,o,n);
+      now
+        let oo be object;
+        assume oo in the carrier' of nMatrixFieldCat(F_Complex,o,n);
+        then reconsider o9 = oo as Morphism of nMatrixFieldCat(F_Complex,o,n);
+        dom o9 = o & cod o9 = o;
+        hence oo in Hom(x,x) by CAT_1:1;
+      end;
+      hence the carrier' of nMatrixFieldCat(F_Complex,o,n) c= Hom(x,x);
+    end;
+    not Hom(x,x) is FinSETS-set
+    proof
+      assume
+A3:   Hom(x,x) is FinSETS-set;
+      the carrier of (n-G_Matrix_over F_Complex)
+        = n-Matrices_over F_Complex by MATRIX_1:def 7
+       .= n -tuples_on (n -tuples_on the carrier of F_Complex)
+         by MATRIX_1:def 1;
+      then n -tuples_on the carrier of F_Complex is finite
+        by A3,A2,Th6;
+      hence contradiction by Th6;
+    end;
+    hence not nMatrixFieldCat(F_Complex,o,n) is FinSETS-locally_small Category
+      by Def36;
+A4: o in FinSETS & FinSETS c= SETS by CLASSES2:69;
+    COMPLEX is Element of SETS & the carrier of F_Complex = COMPLEX
+      by CLASSES4:21,55,COMPLFLD:def 1;
+    hence nMatrixFieldCat(F_Complex,o,n) is SETS-small Category &
+    nMatrixFieldCat(F_Complex,o,n) is SETS-locally_small Category by A4,Th111;
+  end;
+

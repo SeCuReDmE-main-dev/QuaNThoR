@@ -1,0 +1,4209 @@
+:: Elementary Number Theory Problems. {P}art {XI}
+::  by Adam Naumowicz
+:: 
+:: Received December 12, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies TARSKI, XBOOLE_0, RELAT_1, FUNCT_1, FUNCOP_1, CARD_1, CARD_3,
+      ARYTM_3, ARYTM_1, NUMBERS, XXREAL_0, NAT_1, ORDINAL4, FINSEQ_1, VALUED_1,
+      NEWTON, RFINSEQ, PREPOWER, POWER, SERIES_1, AFINSQ_1, JORDAN3, NUMERAL1,
+      NUMBER11;
+ notations TARSKI, XBOOLE_0, ENUMSET1, RELAT_1, FUNCT_1, ORDINAL1, FUNCOP_1,
+      NUMBERS, XCMPLX_0, XXREAL_0, NAT_D, VALUED_1, NEWTON, PREPOWER, SERIES_1,
+      AFINSQ_1, AFINSQ_2, NUMERAL1;
+ constructors RELSET_1, DOMAIN_1, NAT_D, RECDEF_1, PREPOWER, SERIES_1,
+      PARTFUN3, AFINSQ_2, NAT_3, NUMERAL1;
+ registrations XBOOLE_0, RELAT_1, FUNCT_1, ORDINAL1, RELSET_1, FUNCT_2,
+      FUNCOP_1, CARD_1, NUMBERS, XXREAL_0, XREAL_0, NAT_1, INT_1, MEMBERED,
+      VALUED_0, VALUED_1, POWER, WSIERP_1, AFINSQ_1, AFINSQ_2, FOMODEL0,
+      NEWTON02, NEWTON04;
+ requirements BOOLE, SUBSET, NUMERALS, ARITHM, REAL;
+
+
+begin :: Preliminaries
+
+registration
+  let n be Nat;
+  cluster <%n%> -> NAT-valued;
+end;
+
+registration
+  let n1,n2 be Nat;
+  cluster <%n1,n2%> -> NAT-valued;
+end;
+
+registration
+  let n1,n2,n3 be Nat;
+  cluster <%n1,n2,n3%> -> NAT-valued;
+end;
+
+registration
+  let n1,n2,n3,n4 be Nat;
+  cluster <%n1,n2,n3,n4%> -> NAT-valued;
+end;
+
+theorem :: NUMBER11:1
+for b being Nat
+for E being XFinSequence of NAT st E={} holds value(E,b)=0;
+
+theorem :: NUMBER11:2
+for n,b being Nat holds value(<%n%>,b)=n;
+
+theorem :: NUMBER11:3
+for n,b being Nat st n < b & b > 1 holds digits(n,b)=<%n%>;
+
+theorem :: NUMBER11:4
+for b being Nat st b > 1 holds digits(value(<%0%>,b),b)=<%0%>;
+
+theorem :: NUMBER11:5
+for b being Nat st b > 1
+for s being NAT-valued XFinSequence st len s > 0 & s.((len s)-1) <> 0 &
+for i being Nat st i in dom s holds s.i<b holds digits(value(s,b),b) = s;
+
+theorem :: NUMBER11:6
+for n,b being Nat st n < b & b > 1 holds Sum digits(n,b)=n;
+
+theorem :: NUMBER11:7
+for n,b being Nat st b > 1 holds value(n-->(b-'1),b) = b|^n - 1;
+
+theorem :: NUMBER11:8
+for b being Nat st b > 1
+for s being NAT-valued XFinSequence st
+len s > 0 & for i being Nat st i in dom s holds s.i<b
+holds (s.((len s)-1))*(b|^((len s)-'1)) <= value(s,b) < b|^(len s);
+
+theorem :: NUMBER11:9
+for n,b being Nat st b > 1 holds n < b|^(len digits(n,b));
+
+theorem :: NUMBER11:10
+for n,m,b being Nat st n<>0 & b > 1 & m < len digits(n,b) holds n >= b|^m;
+
+theorem :: NUMBER11:11
+  for d1,d2 being XFinSequence of NAT, b being Nat st
+  b>1 & dom d1=dom d2 & for n being Nat st n in dom d1 holds d1.n<=d2.n
+  holds value(d1,b)<=value(d2,b);
+
+theorem :: NUMBER11:12
+for m,n,b being Nat st b>1 holds m<n iff (len digits(m,b) < len digits(n,b)
+or len digits(m,b) = len digits(n,b) & ex i being Nat st
+i < len digits(m,b) & digits(m,b).i < digits(n,b).i &
+for j being Nat st j<len digits(m,b) & digits(m,b).j<>digits(n,b).j holds i>=j)
+;
+
+theorem :: NUMBER11:13
+for n being Nat holds 100 divides n iff digits(n,10).0=0 & digits(n,10).1=0;
+
+theorem :: NUMBER11:14
+  for f being XFinSequence st len f >= 2 holds f|2 = <%f.0,f.1%>;
+
+begin :: Problem 36
+
+definition
+  let n,s be Nat;
+  pred Sierp36 n,s means
+:: NUMBER11:def 1
+  Sum digits(n,10) = s & s divides n &
+  for m being Nat st Sum digits(m,10) = s & s divides m holds n <= m;
+end;
+
+theorem :: NUMBER11:15
+for n being Nat st n < 10 holds Sierp36 n,n;
+
+theorem :: NUMBER11:16
+digits(10,10) = <%0,1%>;
+
+theorem :: NUMBER11:17
+Sum digits(10,10) = 1;
+
+theorem :: NUMBER11:18
+digits(20,10) = <%0,2%>;
+
+theorem :: NUMBER11:19
+Sum digits(20,10) = 2;
+
+theorem :: NUMBER11:20
+digits(30,10) = <%0,3%>;
+
+theorem :: NUMBER11:21
+Sum digits(30,10) = 3;
+
+theorem :: NUMBER11:22
+digits(40,10) = <%0,4%>;
+
+theorem :: NUMBER11:23
+Sum digits(40,10) = 4;
+
+theorem :: NUMBER11:24
+digits(50,10) = <%0,5%>;
+
+theorem :: NUMBER11:25
+Sum digits(50,10) = 5;
+
+theorem :: NUMBER11:26
+digits(60,10) = <%0,6%>;
+
+theorem :: NUMBER11:27
+Sum digits(60,10) = 6;
+
+theorem :: NUMBER11:28
+digits(70,10) = <%0,7%>;
+
+theorem :: NUMBER11:29
+Sum digits(70,10) = 7;
+
+theorem :: NUMBER11:30
+digits(80,10) = <%0,8%>;
+
+theorem :: NUMBER11:31
+Sum digits(80,10) = 8;
+
+theorem :: NUMBER11:32
+digits(90,10) = <%0,9%>;
+
+theorem :: NUMBER11:33
+Sum digits(90,10) = 9;
+
+theorem :: NUMBER11:34
+digits(100,10) = <%0,0,1%>;
+
+theorem :: NUMBER11:35
+Sum digits(100,10) = 1;
+
+theorem :: NUMBER11:36
+digits(110,10) = <%0,1,1%>;
+
+theorem :: NUMBER11:37
+Sum digits(110,10) = 2;
+
+theorem :: NUMBER11:38
+digits(120,10) = <%0,2,1%>;
+
+theorem :: NUMBER11:39
+Sum digits(120,10) = 3;
+
+theorem :: NUMBER11:40
+digits(130,10) = <%0,3,1%>;
+
+theorem :: NUMBER11:41
+Sum digits(130,10) = 4;
+
+theorem :: NUMBER11:42
+digits(140,10) = <%0,4,1%>;
+
+theorem :: NUMBER11:43
+Sum digits(140,10) = 5;
+
+theorem :: NUMBER11:44
+digits(150,10) = <%0,5,1%>;
+
+theorem :: NUMBER11:45
+Sum digits(150,10) = 6;
+
+theorem :: NUMBER11:46
+digits(160,10) = <%0,6,1%>;
+
+theorem :: NUMBER11:47
+Sum digits(160,10) = 7;
+
+theorem :: NUMBER11:48
+digits(170,10) = <%0,7,1%>;
+
+theorem :: NUMBER11:49
+Sum digits(170,10) = 8;
+
+theorem :: NUMBER11:50
+digits(180,10) = <%0,8,1%>;
+
+theorem :: NUMBER11:51
+Sum digits(180,10) = 9;
+
+theorem :: NUMBER11:52
+digits(190,10) = <%0,9,1%>;
+
+theorem :: NUMBER11:53
+Sum digits(190,10) = 10;
+
+theorem :: NUMBER11:54
+Sierp36 190,10;
+
+theorem :: NUMBER11:55
+digits(11,10) = <%1,1%>;
+
+theorem :: NUMBER11:56
+Sum digits(11,10) = 2;
+
+theorem :: NUMBER11:57
+digits(22,10) = <%2,2%>;
+
+theorem :: NUMBER11:58
+Sum digits(22,10) = 4;
+
+theorem :: NUMBER11:59
+digits(33,10) = <%3,3%>;
+
+theorem :: NUMBER11:60
+Sum digits(33,10) = 6;
+
+theorem :: NUMBER11:61
+digits(44,10) = <%4,4%>;
+
+theorem :: NUMBER11:62
+Sum digits(44,10) = 8;
+
+theorem :: NUMBER11:63
+digits(55,10) = <%5,5%>;
+
+theorem :: NUMBER11:64
+Sum digits(55,10) = 10;
+
+theorem :: NUMBER11:65
+digits(66,10) = <%6,6%>;
+
+theorem :: NUMBER11:66
+Sum digits(66,10) = 12;
+
+theorem :: NUMBER11:67
+digits(77,10) = <%7,7%>;
+
+theorem :: NUMBER11:68
+Sum digits(77,10) = 14;
+
+theorem :: NUMBER11:69
+digits(88,10) = <%8,8%>;
+
+theorem :: NUMBER11:70
+Sum digits(88,10) = 16;
+
+theorem :: NUMBER11:71
+digits(99,10) = <%9,9%>;
+
+theorem :: NUMBER11:72
+Sum digits(99,10) = 18;
+
+theorem :: NUMBER11:73
+digits(121,10) = <%1,2,1%>;
+
+theorem :: NUMBER11:74
+Sum digits(121,10) = 4;
+
+theorem :: NUMBER11:75
+digits(132,10) = <%2,3,1%>;
+
+theorem :: NUMBER11:76
+Sum digits(132,10) = 6;
+
+theorem :: NUMBER11:77
+digits(143,10) = <%3,4,1%>;
+
+theorem :: NUMBER11:78
+Sum digits(143,10) = 8;
+
+theorem :: NUMBER11:79
+digits(154,10) = <%4,5,1%>;
+
+theorem :: NUMBER11:80
+Sum digits(154,10) = 10;
+
+theorem :: NUMBER11:81
+digits(165,10) = <%5,6,1%>;
+
+theorem :: NUMBER11:82
+Sum digits(165,10) = 12;
+
+theorem :: NUMBER11:83
+digits(176,10) = <%6,7,1%>;
+
+theorem :: NUMBER11:84
+Sum digits(176,10) = 14;
+
+theorem :: NUMBER11:85
+digits(187,10) = <%7,8,1%>;
+
+theorem :: NUMBER11:86
+Sum digits(187,10) = 16;
+
+theorem :: NUMBER11:87
+digits(198,10) = <%8,9,1%>;
+
+theorem :: NUMBER11:88
+Sum digits(198,10) = 18;
+
+theorem :: NUMBER11:89
+digits(209,10) = <%9,0,2%>;
+
+theorem :: NUMBER11:90
+Sum digits(209,10) = 11;
+
+theorem :: NUMBER11:91
+Sierp36 209,11;
+
+theorem :: NUMBER11:92
+digits(12,10) = <%2,1%>;
+
+theorem :: NUMBER11:93
+Sum digits(12,10) = 3;
+
+theorem :: NUMBER11:94
+digits(24,10) = <%4,2%>;
+
+theorem :: NUMBER11:95
+Sum digits(24,10) = 6;
+
+theorem :: NUMBER11:96
+digits(36,10) = <%6,3%>;
+
+theorem :: NUMBER11:97
+Sum digits(36,10) = 9;
+
+theorem :: NUMBER11:98
+digits(48,10) = <%8,4%>;
+
+theorem :: NUMBER11:99
+Sum digits(48,10) = 12;
+
+theorem :: NUMBER11:100
+Sierp36 48,12;
+
+theorem :: NUMBER11:101
+digits(13,10) = <%3,1%>;
+
+theorem :: NUMBER11:102
+Sum digits(13,10) = 4;
+
+theorem :: NUMBER11:103
+digits(26,10) = <%6,2%>;
+
+theorem :: NUMBER11:104
+Sum digits(26,10) = 8;
+
+theorem :: NUMBER11:105
+digits(39,10) = <%9,3%>;
+
+theorem :: NUMBER11:106
+Sum digits(39,10) = 12;
+
+theorem :: NUMBER11:107
+digits(52,10) = <%2,5%>;
+
+theorem :: NUMBER11:108
+Sum digits(52,10) = 7;
+
+theorem :: NUMBER11:109
+digits(65,10) = <%5,6%>;
+
+theorem :: NUMBER11:110
+Sum digits(65,10) = 11;
+
+theorem :: NUMBER11:111
+digits(78,10) = <%8,7%>;
+
+theorem :: NUMBER11:112
+Sum digits(78,10) = 15;
+
+theorem :: NUMBER11:113
+digits(91,10) = <%1,9%>;
+
+theorem :: NUMBER11:114
+Sum digits(91,10) = 10;
+
+theorem :: NUMBER11:115
+digits(104,10) = <%4,0,1%>;
+
+theorem :: NUMBER11:116
+Sum digits(104,10) = 5;
+
+theorem :: NUMBER11:117
+digits(117,10) = <%7,1,1%>;
+
+theorem :: NUMBER11:118
+Sum digits(117,10) = 9;
+
+theorem :: NUMBER11:119
+digits(156,10) = <%6,5,1%>;
+
+theorem :: NUMBER11:120
+Sum digits(156,10) = 12;
+
+theorem :: NUMBER11:121
+digits(169,10) = <%9,6,1%>;
+
+theorem :: NUMBER11:122
+Sum digits(169,10) = 16;
+
+theorem :: NUMBER11:123
+digits(182,10) = <%2,8,1%>;
+
+theorem :: NUMBER11:124
+Sum digits(182,10) = 11;
+
+theorem :: NUMBER11:125
+digits(195,10) = <%5,9,1%>;
+
+theorem :: NUMBER11:126
+Sum digits(195,10) = 15;
+
+theorem :: NUMBER11:127
+digits(208,10) = <%8,0,2%>;
+
+theorem :: NUMBER11:128
+Sum digits(208,10) = 10;
+
+theorem :: NUMBER11:129
+digits(221,10) = <%1,2,2%>;
+
+theorem :: NUMBER11:130
+Sum digits(221,10) = 5;
+
+theorem :: NUMBER11:131
+digits(234,10) = <%4,3,2%>;
+
+theorem :: NUMBER11:132
+Sum digits(234,10) = 9;
+
+theorem :: NUMBER11:133
+digits(247,10) = <%7,4,2%>;
+
+theorem :: NUMBER11:134
+Sum digits(247,10) = 13;
+
+theorem :: NUMBER11:135
+Sierp36 247,13;
+
+theorem :: NUMBER11:136
+digits(14,10) = <%4,1%>;
+
+theorem :: NUMBER11:137
+Sum digits(14,10) = 5;
+
+theorem :: NUMBER11:138
+digits(28,10) = <%8,2%>;
+
+theorem :: NUMBER11:139
+Sum digits(28,10) = 10;
+
+theorem :: NUMBER11:140
+digits(42,10) = <%2,4%>;
+
+theorem :: NUMBER11:141
+Sum digits(42,10) = 6;
+
+theorem :: NUMBER11:142
+digits(56,10) = <%6,5%>;
+
+theorem :: NUMBER11:143
+Sum digits(56,10) = 11;
+
+theorem :: NUMBER11:144
+digits(84,10) = <%4,8%>;
+
+theorem :: NUMBER11:145
+Sum digits(84,10) = 12;
+
+theorem :: NUMBER11:146
+digits(98,10) = <%8,9%>;
+
+theorem :: NUMBER11:147
+Sum digits(98,10) = 17;
+
+theorem :: NUMBER11:148
+digits(112,10) = <%2,1,1%>;
+
+theorem :: NUMBER11:149
+Sum digits(112,10) = 4;
+
+theorem :: NUMBER11:150
+digits(126,10) = <%6,2,1%>;
+
+theorem :: NUMBER11:151
+Sum digits(126,10) = 9;
+
+theorem :: NUMBER11:152
+digits(168,10) = <%8,6,1%>;
+
+theorem :: NUMBER11:153
+Sum digits(168,10) = 15;
+
+theorem :: NUMBER11:154
+digits(196,10) = <%6,9,1%>;
+
+theorem :: NUMBER11:155
+Sum digits(196,10) = 16;
+
+theorem :: NUMBER11:156
+digits(210,10) = <%0,1,2%>;
+
+theorem :: NUMBER11:157
+Sum digits(210,10) = 3;
+
+theorem :: NUMBER11:158
+digits(224,10) = <%4,2,2%>;
+
+theorem :: NUMBER11:159
+Sum digits(224,10) = 8;
+
+theorem :: NUMBER11:160
+digits(238,10) = <%8,3,2%>;
+
+theorem :: NUMBER11:161
+Sum digits(238,10) = 13;
+
+theorem :: NUMBER11:162
+digits(252,10) = <%2,5,2%>;
+
+theorem :: NUMBER11:163
+Sum digits(252,10) = 9;
+
+theorem :: NUMBER11:164
+digits(266,10) = <%6,6,2%>;
+
+theorem :: NUMBER11:165
+Sum digits(266,10) = 14;
+
+theorem :: NUMBER11:166
+Sierp36 266,14;
+
+theorem :: NUMBER11:167
+digits(15,10) = <%5,1%>;
+
+theorem :: NUMBER11:168
+Sum digits(15,10) = 6;
+
+theorem :: NUMBER11:169
+digits(45,10) = <%5,4%>;
+
+theorem :: NUMBER11:170
+Sum digits(45,10) = 9;
+
+theorem :: NUMBER11:171
+digits(75,10) = <%5,7%>;
+
+theorem :: NUMBER11:172
+Sum digits(75,10) = 12;
+
+theorem :: NUMBER11:173
+digits(105,10) = <%5,0,1%>;
+
+theorem :: NUMBER11:174
+Sum digits(105,10) = 6;
+
+theorem :: NUMBER11:175
+digits(135,10) = <%5,3,1%>;
+
+theorem :: NUMBER11:176
+Sum digits(135,10) = 9;
+
+theorem :: NUMBER11:177
+Sierp36 195,15;
+
+theorem :: NUMBER11:178
+digits(16,10) = <%6,1%>;
+
+theorem :: NUMBER11:179
+Sum digits(16,10) = 7;
+
+theorem :: NUMBER11:180
+digits(32,10) = <%2,3%>;
+
+theorem :: NUMBER11:181
+Sum digits(32,10) = 5;
+
+theorem :: NUMBER11:182
+digits(64,10) = <%4,6%>;
+
+theorem :: NUMBER11:183
+Sum digits(64,10) = 10;
+
+theorem :: NUMBER11:184
+digits(96,10) = <%6,9%>;
+
+theorem :: NUMBER11:185
+Sum digits(96,10) = 15;
+
+theorem :: NUMBER11:186
+digits(128,10) = <%8,2,1%>;
+
+theorem :: NUMBER11:187
+Sum digits(128,10) = 11;
+
+theorem :: NUMBER11:188
+digits(144,10) = <%4,4,1%>;
+
+theorem :: NUMBER11:189
+Sum digits(144,10) = 9;
+
+theorem :: NUMBER11:190
+digits(192,10) = <%2,9,1%>;
+
+theorem :: NUMBER11:191
+Sum digits(192,10) = 12;
+
+theorem :: NUMBER11:192
+digits(240,10) = <%0,4,2%>;
+
+theorem :: NUMBER11:193
+Sum digits(240,10) = 6;
+
+theorem :: NUMBER11:194
+digits(256,10) = <%6,5,2%>;
+
+theorem :: NUMBER11:195
+Sum digits(256,10) = 13;
+
+theorem :: NUMBER11:196
+digits(272,10) = <%2,7,2%>;
+
+theorem :: NUMBER11:197
+Sum digits(272,10) = 11;
+
+theorem :: NUMBER11:198
+digits(288,10) = <%8,8,2%>;
+
+theorem :: NUMBER11:199
+Sum digits(288,10) = 18;
+
+theorem :: NUMBER11:200
+digits(304,10) = <%4,0,3%>;
+
+theorem :: NUMBER11:201
+Sum digits(304,10) = 7;
+
+theorem :: NUMBER11:202
+digits(320,10) = <%0,2,3%>;
+
+theorem :: NUMBER11:203
+Sum digits(320,10) = 5;
+
+theorem :: NUMBER11:204
+digits(336,10) = <%6,3,3%>;
+
+theorem :: NUMBER11:205
+Sum digits(336,10) = 12;
+
+theorem :: NUMBER11:206
+digits(352,10) = <%2,5,3%>;
+
+theorem :: NUMBER11:207
+Sum digits(352,10) = 10;
+
+theorem :: NUMBER11:208
+digits(368,10) = <%8,6,3%>;
+
+theorem :: NUMBER11:209
+Sum digits(368,10) = 17;
+
+theorem :: NUMBER11:210
+digits(384,10) = <%4,8,3%>;
+
+theorem :: NUMBER11:211
+Sum digits(384,10) = 15;
+
+theorem :: NUMBER11:212
+digits(400,10) = <%0,0,4%>;
+
+theorem :: NUMBER11:213
+Sum digits(400,10) = 4;
+
+theorem :: NUMBER11:214
+digits(416,10) = <%6,1,4%>;
+
+theorem :: NUMBER11:215
+Sum digits(416,10) = 11;
+
+theorem :: NUMBER11:216
+digits(432,10) = <%2,3,4%>;
+
+theorem :: NUMBER11:217
+Sum digits(432,10) = 9;
+
+theorem :: NUMBER11:218
+digits(448,10) = <%8,4,4%>;
+
+theorem :: NUMBER11:219
+Sum digits(448,10) = 16;
+
+theorem :: NUMBER11:220
+Sierp36 448,16;
+
+theorem :: NUMBER11:221
+digits(17,10) = <%7,1%>;
+
+theorem :: NUMBER11:222
+Sum digits(17,10) = 8;
+
+theorem :: NUMBER11:223
+digits(34,10) = <%4,3%>;
+
+theorem :: NUMBER11:224
+Sum digits(34,10) = 7;
+
+theorem :: NUMBER11:225
+digits(51,10) = <%1,5%>;
+
+theorem :: NUMBER11:226
+Sum digits(51,10) = 6;
+
+theorem :: NUMBER11:227
+digits(68,10) = <%8,6%>;
+
+theorem :: NUMBER11:228
+Sum digits(68,10) = 14;
+
+theorem :: NUMBER11:229
+digits(85,10) = <%5,8%>;
+
+theorem :: NUMBER11:230
+Sum digits(85,10) = 13;
+
+theorem :: NUMBER11:231
+digits(102,10) = <%2,0,1%>;
+
+theorem :: NUMBER11:232
+Sum digits(102,10) = 3;
+
+theorem :: NUMBER11:233
+digits(119,10) = <%9,1,1%>;
+
+theorem :: NUMBER11:234
+Sum digits(119,10) = 11;
+
+theorem :: NUMBER11:235
+digits(136,10) = <%6,3,1%>;
+
+theorem :: NUMBER11:236
+Sum digits(136,10) = 10;
+
+theorem :: NUMBER11:237
+digits(153,10) = <%3,5,1%>;
+
+theorem :: NUMBER11:238
+Sum digits(153,10) = 9;
+
+theorem :: NUMBER11:239
+digits(204,10) = <%4,0,2%>;
+
+theorem :: NUMBER11:240
+Sum digits(204,10) = 6;
+
+theorem :: NUMBER11:241
+digits(255,10) = <%5,5,2%>;
+
+theorem :: NUMBER11:242
+Sum digits(255,10) = 12;
+
+theorem :: NUMBER11:243
+digits(289,10) = <%9,8,2%>;
+
+theorem :: NUMBER11:244
+Sum digits(289,10) = 19;
+
+theorem :: NUMBER11:245
+digits(306,10) = <%6,0,3%>;
+
+theorem :: NUMBER11:246
+Sum digits(306,10) = 9;
+
+theorem :: NUMBER11:247
+digits(323,10) = <%3,2,3%>;
+
+theorem :: NUMBER11:248
+Sum digits(323,10) = 8;
+
+theorem :: NUMBER11:249
+digits(340,10) = <%0,4,3%>;
+
+theorem :: NUMBER11:250
+Sum digits(340,10) = 7;
+
+theorem :: NUMBER11:251
+digits(357,10) = <%7,5,3%>;
+
+theorem :: NUMBER11:252
+Sum digits(357,10) = 15;
+
+theorem :: NUMBER11:253
+digits(374,10) = <%4,7,3%>;
+
+theorem :: NUMBER11:254
+Sum digits(374,10) = 14;
+
+theorem :: NUMBER11:255
+digits(391,10) = <%1,9,3%>;
+
+theorem :: NUMBER11:256
+Sum digits(391,10) = 13;
+
+theorem :: NUMBER11:257
+digits(408,10) = <%8,0,4%>;
+
+theorem :: NUMBER11:258
+Sum digits(408,10) = 12;
+
+theorem :: NUMBER11:259
+digits(425,10) = <%5,2,4%>;
+
+theorem :: NUMBER11:260
+Sum digits(425,10) = 11;
+
+theorem :: NUMBER11:261
+digits(442,10) = <%2,4,4%>;
+
+theorem :: NUMBER11:262
+Sum digits(442,10) = 10;
+
+theorem :: NUMBER11:263
+digits(459,10) = <%9,5,4%>;
+
+theorem :: NUMBER11:264
+Sum digits(459,10) = 18;
+
+theorem :: NUMBER11:265
+digits(476,10) = <%6,7,4%>;
+
+theorem :: NUMBER11:266
+Sum digits(476,10) = 17;
+
+theorem :: NUMBER11:267
+Sierp36 476,17;
+
+theorem :: NUMBER11:268
+digits(18,10) = <%8,1%>;
+
+theorem :: NUMBER11:269
+Sum digits(18,10) = 9;
+
+theorem :: NUMBER11:270
+digits(54,10) = <%4,5%>;
+
+theorem :: NUMBER11:271
+Sum digits(54,10) = 9;
+
+theorem :: NUMBER11:272
+digits(72,10) = <%2,7%>;
+
+theorem :: NUMBER11:273
+Sum digits(72,10) = 9;
+
+theorem :: NUMBER11:274
+digits(108,10) = <%8,0,1%>;
+
+theorem :: NUMBER11:275
+Sum digits(108,10) = 9;
+
+theorem :: NUMBER11:276
+digits(162,10) = <%2,6,1%>;
+
+theorem :: NUMBER11:277
+Sum digits(162,10) = 9;
+
+theorem :: NUMBER11:278
+Sierp36 198,18;
+
+theorem :: NUMBER11:279
+digits(19,10) = <%9,1%>;
+
+theorem :: NUMBER11:280
+Sum digits(19,10) = 10;
+
+theorem :: NUMBER11:281
+digits(38,10) = <%8,3%>;
+
+theorem :: NUMBER11:282
+Sum digits(38,10) = 11;
+
+theorem :: NUMBER11:283
+digits(57,10) = <%7,5%>;
+
+theorem :: NUMBER11:284
+Sum digits(57,10) = 12;
+
+theorem :: NUMBER11:285
+digits(76,10) = <%6,7%>;
+
+theorem :: NUMBER11:286
+Sum digits(76,10) = 13;
+
+theorem :: NUMBER11:287
+digits(95,10) = <%5,9%>;
+
+theorem :: NUMBER11:288
+Sum digits(95,10) = 14;
+
+theorem :: NUMBER11:289
+digits(114,10) = <%4,1,1%>;
+
+theorem :: NUMBER11:290
+Sum digits(114,10) = 6;
+
+theorem :: NUMBER11:291
+digits(133,10) = <%3,3,1%>;
+
+theorem :: NUMBER11:292
+Sum digits(133,10) = 7;
+
+theorem :: NUMBER11:293
+digits(152,10) = <%2,5,1%>;
+
+theorem :: NUMBER11:294
+Sum digits(152,10) = 8;
+
+theorem :: NUMBER11:295
+digits(171,10) = <%1,7,1%>;
+
+theorem :: NUMBER11:296
+Sum digits(171,10) = 9;
+
+theorem :: NUMBER11:297
+digits(228,10) = <%8,2,2%>;
+
+theorem :: NUMBER11:298
+Sum digits(228,10) = 12;
+
+theorem :: NUMBER11:299
+digits(285,10) = <%5,8,2%>;
+
+theorem :: NUMBER11:300
+Sum digits(285,10) = 15;
+
+theorem :: NUMBER11:301
+digits(342,10) = <%2,4,3%>;
+
+theorem :: NUMBER11:302
+Sum digits(342,10) = 9;
+
+theorem :: NUMBER11:303
+digits(361,10) = <%1,6,3%>;
+
+theorem :: NUMBER11:304
+Sum digits(361,10) = 10;
+
+theorem :: NUMBER11:305
+digits(380,10) = <%0,8,3%>;
+
+theorem :: NUMBER11:306
+Sum digits(380,10) = 11;
+
+theorem :: NUMBER11:307
+digits(399,10) = <%9,9,3%>;
+
+theorem :: NUMBER11:308
+Sum digits(399,10) = 21;
+
+theorem :: NUMBER11:309
+digits(418,10) = <%8,1,4%>;
+
+theorem :: NUMBER11:310
+Sum digits(418,10) = 13;
+
+theorem :: NUMBER11:311
+digits(437,10) = <%7,3,4%>;
+
+theorem :: NUMBER11:312
+Sum digits(437,10) = 14;
+
+theorem :: NUMBER11:313
+digits(456,10) = <%6,5,4%>;
+
+theorem :: NUMBER11:314
+Sum digits(456,10) = 15;
+
+theorem :: NUMBER11:315
+digits(475,10) = <%5,7,4%>;
+
+theorem :: NUMBER11:316
+Sum digits(475,10) = 16;
+
+theorem :: NUMBER11:317
+digits(494,10) = <%4,9,4%>;
+
+theorem :: NUMBER11:318
+Sum digits(494,10) = 17;
+
+theorem :: NUMBER11:319
+digits(513,10) = <%3,1,5%>;
+
+theorem :: NUMBER11:320
+Sum digits(513,10) = 9;
+
+theorem :: NUMBER11:321
+digits(532,10) = <%2,3,5%>;
+
+theorem :: NUMBER11:322
+Sum digits(532,10) = 10;
+
+theorem :: NUMBER11:323
+digits(551,10) = <%1,5,5%>;
+
+theorem :: NUMBER11:324
+Sum digits(551,10) = 11;
+
+theorem :: NUMBER11:325
+digits(570,10) = <%0,7,5%>;
+
+theorem :: NUMBER11:326
+Sum digits(570,10) = 12;
+
+theorem :: NUMBER11:327
+digits(589,10) = <%9,8,5%>;
+
+theorem :: NUMBER11:328
+Sum digits(589,10) = 22;
+
+theorem :: NUMBER11:329
+digits(608,10) = <%8,0,6%>;
+
+theorem :: NUMBER11:330
+Sum digits(608,10) = 14;
+
+theorem :: NUMBER11:331
+digits(627,10) = <%7,2,6%>;
+
+theorem :: NUMBER11:332
+Sum digits(627,10) = 15;
+
+theorem :: NUMBER11:333
+digits(646,10) = <%6,4,6%>;
+
+theorem :: NUMBER11:334
+Sum digits(646,10) = 16;
+
+theorem :: NUMBER11:335
+digits(665,10) = <%5,6,6%>;
+
+theorem :: NUMBER11:336
+Sum digits(665,10) = 17;
+
+theorem :: NUMBER11:337
+digits(684,10) = <%4,8,6%>;
+
+theorem :: NUMBER11:338
+Sum digits(684,10) = 18;
+
+theorem :: NUMBER11:339
+digits(703,10) = <%3,0,7%>;
+
+theorem :: NUMBER11:340
+Sum digits(703,10) = 10;
+
+theorem :: NUMBER11:341
+digits(722,10) = <%2,2,7%>;
+
+theorem :: NUMBER11:342
+Sum digits(722,10) = 11;
+
+theorem :: NUMBER11:343
+digits(741,10) = <%1,4,7%>;
+
+theorem :: NUMBER11:344
+Sum digits(741,10) = 12;
+
+theorem :: NUMBER11:345
+digits(760,10) = <%0,6,7%>;
+
+theorem :: NUMBER11:346
+Sum digits(760,10) = 13;
+
+theorem :: NUMBER11:347
+digits(779,10) = <%9,7,7%>;
+
+theorem :: NUMBER11:348
+Sum digits(779,10) = 23;
+
+theorem :: NUMBER11:349
+digits(798,10) = <%8,9,7%>;
+
+theorem :: NUMBER11:350
+Sum digits(798,10) = 24;
+
+theorem :: NUMBER11:351
+digits(817,10) = <%7,1,8%>;
+
+theorem :: NUMBER11:352
+Sum digits(817,10) = 16;
+
+theorem :: NUMBER11:353
+digits(836,10) = <%6,3,8%>;
+
+theorem :: NUMBER11:354
+Sum digits(836,10) = 17;
+
+theorem :: NUMBER11:355
+digits(855,10) = <%5,5,8%>;
+
+theorem :: NUMBER11:356
+Sum digits(855,10) = 18;
+
+theorem :: NUMBER11:357
+digits(874,10) = <%4,7,8%>;
+
+theorem :: NUMBER11:358
+Sum digits(874,10) = 19;
+
+theorem :: NUMBER11:359
+Sierp36 874,19;
+
+theorem :: NUMBER11:360
+digits(200,10) = <%0,0,2%>;
+
+theorem :: NUMBER11:361
+Sum digits(200,10) = 2;
+
+theorem :: NUMBER11:362
+digits(220,10) = <%0,2,2%>;
+
+theorem :: NUMBER11:363
+Sum digits(220,10) = 4;
+
+theorem :: NUMBER11:364
+digits(260,10) = <%0,6,2%>;
+
+theorem :: NUMBER11:365
+Sum digits(260,10) = 8;
+
+theorem :: NUMBER11:366
+digits(280,10) = <%0,8,2%>;
+
+theorem :: NUMBER11:367
+Sum digits(280,10) = 10;
+
+theorem :: NUMBER11:368
+digits(300,10) = <%0,0,3%>;
+
+theorem :: NUMBER11:369
+Sum digits(300,10) = 3;
+
+theorem :: NUMBER11:370
+digits(360,10) = <%0,6,3%>;
+
+theorem :: NUMBER11:371
+Sum digits(360,10) = 9;
+
+theorem :: NUMBER11:372
+digits(420,10) = <%0,2,4%>;
+
+theorem :: NUMBER11:373
+Sum digits(420,10) = 6;
+
+theorem :: NUMBER11:374
+digits(440,10) = <%0,4,4%>;
+
+theorem :: NUMBER11:375
+Sum digits(440,10) = 8;
+
+theorem :: NUMBER11:376
+digits(460,10) = <%0,6,4%>;
+
+theorem :: NUMBER11:377
+Sum digits(460,10) = 10;
+
+theorem :: NUMBER11:378
+digits(480,10) = <%0,8,4%>;
+
+theorem :: NUMBER11:379
+Sum digits(480,10) = 12;
+
+theorem :: NUMBER11:380
+digits(500,10) = <%0,0,5%>;
+
+theorem :: NUMBER11:381
+Sum digits(500,10) = 5;
+
+theorem :: NUMBER11:382
+digits(520,10) = <%0,2,5%>;
+
+theorem :: NUMBER11:383
+Sum digits(520,10) = 7;
+
+theorem :: NUMBER11:384
+digits(540,10) = <%0,4,5%>;
+
+theorem :: NUMBER11:385
+Sum digits(540,10) = 9;
+
+theorem :: NUMBER11:386
+digits(560,10) = <%0,6,5%>;
+
+theorem :: NUMBER11:387
+Sum digits(560,10) = 11;
+
+theorem :: NUMBER11:388
+digits(580,10) = <%0,8,5%>;
+
+theorem :: NUMBER11:389
+Sum digits(580,10) = 13;
+
+theorem :: NUMBER11:390
+digits(600,10) = <%0,0,6%>;
+
+theorem :: NUMBER11:391
+Sum digits(600,10) = 6;
+
+theorem :: NUMBER11:392
+digits(620,10) = <%0,2,6%>;
+
+theorem :: NUMBER11:393
+Sum digits(620,10) = 8;
+
+theorem :: NUMBER11:394
+digits(640,10) = <%0,4,6%>;
+
+theorem :: NUMBER11:395
+Sum digits(640,10) = 10;
+
+theorem :: NUMBER11:396
+digits(660,10) = <%0,6,6%>;
+
+theorem :: NUMBER11:397
+Sum digits(660,10) = 12;
+
+theorem :: NUMBER11:398
+digits(680,10) = <%0,8,6%>;
+
+theorem :: NUMBER11:399
+Sum digits(680,10) = 14;
+
+theorem :: NUMBER11:400
+digits(700,10) = <%0,0,7%>;
+
+theorem :: NUMBER11:401
+Sum digits(700,10) = 7;
+
+theorem :: NUMBER11:402
+digits(720,10) = <%0,2,7%>;
+
+theorem :: NUMBER11:403
+Sum digits(720,10) = 9;
+
+theorem :: NUMBER11:404
+digits(740,10) = <%0,4,7%>;
+
+theorem :: NUMBER11:405
+Sum digits(740,10) = 11;
+
+theorem :: NUMBER11:406
+digits(780,10) = <%0,8,7%>;
+
+theorem :: NUMBER11:407
+Sum digits(780,10) = 15;
+
+theorem :: NUMBER11:408
+digits(800,10) = <%0,0,8%>;
+
+theorem :: NUMBER11:409
+Sum digits(800,10) = 8;
+
+theorem :: NUMBER11:410
+digits(820,10) = <%0,2,8%>;
+
+theorem :: NUMBER11:411
+Sum digits(820,10) = 10;
+
+theorem :: NUMBER11:412
+digits(840,10) = <%0,4,8%>;
+
+theorem :: NUMBER11:413
+Sum digits(840,10) = 12;
+
+theorem :: NUMBER11:414
+digits(860,10) = <%0,6,8%>;
+
+theorem :: NUMBER11:415
+Sum digits(860,10) = 14;
+
+theorem :: NUMBER11:416
+digits(880,10) = <%0,8,8%>;
+
+theorem :: NUMBER11:417
+Sum digits(880,10) = 16;
+
+theorem :: NUMBER11:418
+digits(900,10) = <%0,0,9%>;
+
+theorem :: NUMBER11:419
+Sum digits(900,10) = 9;
+
+theorem :: NUMBER11:420
+digits(920,10) = <%0,2,9%>;
+
+theorem :: NUMBER11:421
+Sum digits(920,10) = 11;
+
+theorem :: NUMBER11:422
+digits(940,10) = <%0,4,9%>;
+
+theorem :: NUMBER11:423
+Sum digits(940,10) = 13;
+
+theorem :: NUMBER11:424
+digits(960,10) = <%0,6,9%>;
+
+theorem :: NUMBER11:425
+Sum digits(960,10) = 15;
+
+theorem :: NUMBER11:426
+digits(980,10) = <%0,8,9%>;
+
+theorem :: NUMBER11:427
+Sum digits(980,10) = 17;
+
+theorem :: NUMBER11:428
+digits(1000,10) = <%0,0,0,1%>;
+
+theorem :: NUMBER11:429
+Sum digits(1000,10) = 1;
+
+theorem :: NUMBER11:430
+digits(1020,10) = <%0,2,0,1%>;
+
+theorem :: NUMBER11:431
+Sum digits(1020,10) = 3;
+
+theorem :: NUMBER11:432
+digits(1040,10) = <%0,4,0,1%>;
+
+theorem :: NUMBER11:433
+Sum digits(1040,10) = 5;
+
+theorem :: NUMBER11:434
+digits(1060,10) = <%0,6,0,1%>;
+
+theorem :: NUMBER11:435
+Sum digits(1060,10) = 7;
+
+theorem :: NUMBER11:436
+digits(1080,10) = <%0,8,0,1%>;
+
+theorem :: NUMBER11:437
+Sum digits(1080,10) = 9;
+
+theorem :: NUMBER11:438
+digits(1100,10) = <%0,0,1,1%>;
+
+theorem :: NUMBER11:439
+Sum digits(1100,10) = 2;
+
+theorem :: NUMBER11:440
+digits(1120,10) = <%0,2,1,1%>;
+
+theorem :: NUMBER11:441
+Sum digits(1120,10) = 4;
+
+theorem :: NUMBER11:442
+digits(1140,10) = <%0,4,1,1%>;
+
+theorem :: NUMBER11:443
+Sum digits(1140,10) = 6;
+
+theorem :: NUMBER11:444
+digits(1160,10) = <%0,6,1,1%>;
+
+theorem :: NUMBER11:445
+Sum digits(1160,10) = 8;
+
+theorem :: NUMBER11:446
+digits(1180,10) = <%0,8,1,1%>;
+
+theorem :: NUMBER11:447
+Sum digits(1180,10) = 10;
+
+theorem :: NUMBER11:448
+digits(1200,10) = <%0,0,2,1%>;
+
+theorem :: NUMBER11:449
+Sum digits(1200,10) = 3;
+
+theorem :: NUMBER11:450
+digits(1220,10) = <%0,2,2,1%>;
+
+theorem :: NUMBER11:451
+Sum digits(1220,10) = 5;
+
+theorem :: NUMBER11:452
+digits(1240,10) = <%0,4,2,1%>;
+
+theorem :: NUMBER11:453
+Sum digits(1240,10) = 7;
+
+theorem :: NUMBER11:454
+digits(1260,10) = <%0,6,2,1%>;
+
+theorem :: NUMBER11:455
+Sum digits(1260,10) = 9;
+
+theorem :: NUMBER11:456
+digits(1280,10) = <%0,8,2,1%>;
+
+theorem :: NUMBER11:457
+Sum digits(1280,10) = 11;
+
+theorem :: NUMBER11:458
+digits(1300,10) = <%0,0,3,1%>;
+
+theorem :: NUMBER11:459
+Sum digits(1300,10) = 4;
+
+theorem :: NUMBER11:460
+digits(1320,10) = <%0,2,3,1%>;
+
+theorem :: NUMBER11:461
+Sum digits(1320,10) = 6;
+
+theorem :: NUMBER11:462
+digits(1340,10) = <%0,4,3,1%>;
+
+theorem :: NUMBER11:463
+Sum digits(1340,10) = 8;
+
+theorem :: NUMBER11:464
+digits(1360,10) = <%0,6,3,1%>;
+
+theorem :: NUMBER11:465
+Sum digits(1360,10) = 10;
+
+theorem :: NUMBER11:466
+digits(1380,10) = <%0,8,3,1%>;
+
+theorem :: NUMBER11:467
+Sum digits(1380,10) = 12;
+
+theorem :: NUMBER11:468
+digits(1400,10) = <%0,0,4,1%>;
+
+theorem :: NUMBER11:469
+Sum digits(1400,10) = 5;
+
+theorem :: NUMBER11:470
+digits(1420,10) = <%0,2,4,1%>;
+
+theorem :: NUMBER11:471
+Sum digits(1420,10) = 7;
+
+theorem :: NUMBER11:472
+digits(1440,10) = <%0,4,4,1%>;
+
+theorem :: NUMBER11:473
+Sum digits(1440,10) = 9;
+
+theorem :: NUMBER11:474
+digits(1460,10) = <%0,6,4,1%>;
+
+theorem :: NUMBER11:475
+Sum digits(1460,10) = 11;
+
+theorem :: NUMBER11:476
+digits(1480,10) = <%0,8,4,1%>;
+
+theorem :: NUMBER11:477
+Sum digits(1480,10) = 13;
+
+theorem :: NUMBER11:478
+digits(1500,10) = <%0,0,5,1%>;
+
+theorem :: NUMBER11:479
+Sum digits(1500,10) = 6;
+
+theorem :: NUMBER11:480
+digits(1520,10) = <%0,2,5,1%>;
+
+theorem :: NUMBER11:481
+Sum digits(1520,10) = 8;
+
+theorem :: NUMBER11:482
+digits(1540,10) = <%0,4,5,1%>;
+
+theorem :: NUMBER11:483
+Sum digits(1540,10) = 10;
+
+theorem :: NUMBER11:484
+digits(1560,10) = <%0,6,5,1%>;
+
+theorem :: NUMBER11:485
+Sum digits(1560,10) = 12;
+
+theorem :: NUMBER11:486
+digits(1580,10) = <%0,8,5,1%>;
+
+theorem :: NUMBER11:487
+Sum digits(1580,10) = 14;
+
+theorem :: NUMBER11:488
+digits(1600,10) = <%0,0,6,1%>;
+
+theorem :: NUMBER11:489
+Sum digits(1600,10) = 7;
+
+theorem :: NUMBER11:490
+digits(1620,10) = <%0,2,6,1%>;
+
+theorem :: NUMBER11:491
+Sum digits(1620,10) = 9;
+
+theorem :: NUMBER11:492
+digits(1640,10) = <%0,4,6,1%>;
+
+theorem :: NUMBER11:493
+Sum digits(1640,10) = 11;
+
+theorem :: NUMBER11:494
+digits(1660,10) = <%0,6,6,1%>;
+
+theorem :: NUMBER11:495
+Sum digits(1660,10) = 13;
+
+theorem :: NUMBER11:496
+digits(1680,10) = <%0,8,6,1%>;
+
+theorem :: NUMBER11:497
+Sum digits(1680,10) = 15;
+
+theorem :: NUMBER11:498
+digits(1700,10) = <%0,0,7,1%>;
+
+theorem :: NUMBER11:499
+Sum digits(1700,10) = 8;
+
+theorem :: NUMBER11:500
+digits(1720,10) = <%0,2,7,1%>;
+
+theorem :: NUMBER11:501
+Sum digits(1720,10) = 10;
+
+theorem :: NUMBER11:502
+digits(1740,10) = <%0,4,7,1%>;
+
+theorem :: NUMBER11:503
+Sum digits(1740,10) = 12;
+
+theorem :: NUMBER11:504
+digits(1760,10) = <%0,6,7,1%>;
+
+theorem :: NUMBER11:505
+Sum digits(1760,10) = 14;
+
+theorem :: NUMBER11:506
+digits(1780,10) = <%0,8,7,1%>;
+
+theorem :: NUMBER11:507
+Sum digits(1780,10) = 16;
+
+theorem :: NUMBER11:508
+digits(1800,10) = <%0,0,8,1%>;
+
+theorem :: NUMBER11:509
+Sum digits(1800,10) = 9;
+
+theorem :: NUMBER11:510
+digits(1820,10) = <%0,2,8,1%>;
+
+theorem :: NUMBER11:511
+Sum digits(1820,10) = 11;
+
+theorem :: NUMBER11:512
+digits(1840,10) = <%0,4,8,1%>;
+
+theorem :: NUMBER11:513
+Sum digits(1840,10) = 13;
+
+theorem :: NUMBER11:514
+digits(1860,10) = <%0,6,8,1%>;
+
+theorem :: NUMBER11:515
+Sum digits(1860,10) = 15;
+
+theorem :: NUMBER11:516
+digits(1880,10) = <%0,8,8,1%>;
+
+theorem :: NUMBER11:517
+Sum digits(1880,10) = 17;
+
+theorem :: NUMBER11:518
+digits(1900,10) = <%0,0,9,1%>;
+
+theorem :: NUMBER11:519
+Sum digits(1900,10) = 10;
+
+theorem :: NUMBER11:520
+digits(1920,10) = <%0,2,9,1%>;
+
+theorem :: NUMBER11:521
+Sum digits(1920,10) = 12;
+
+theorem :: NUMBER11:522
+digits(1940,10) = <%0,4,9,1%>;
+
+theorem :: NUMBER11:523
+Sum digits(1940,10) = 14;
+
+theorem :: NUMBER11:524
+digits(1960,10) = <%0,6,9,1%>;
+
+theorem :: NUMBER11:525
+Sum digits(1960,10) = 16;
+
+theorem :: NUMBER11:526
+digits(1980,10) = <%0,8,9,1%>;
+
+theorem :: NUMBER11:527
+Sum digits(1980,10) = 18;
+
+theorem :: NUMBER11:528
+digits(2000,10) = <%0,0,0,2%>;
+
+theorem :: NUMBER11:529
+Sum digits(2000,10) = 2;
+
+theorem :: NUMBER11:530
+digits(2020,10) = <%0,2,0,2%>;
+
+theorem :: NUMBER11:531
+Sum digits(2020,10) = 4;
+
+theorem :: NUMBER11:532
+digits(2040,10) = <%0,4,0,2%>;
+
+theorem :: NUMBER11:533
+Sum digits(2040,10) = 6;
+
+theorem :: NUMBER11:534
+digits(2060,10) = <%0,6,0,2%>;
+
+theorem :: NUMBER11:535
+Sum digits(2060,10) = 8;
+
+theorem :: NUMBER11:536
+digits(2080,10) = <%0,8,0,2%>;
+
+theorem :: NUMBER11:537
+Sum digits(2080,10) = 10;
+
+theorem :: NUMBER11:538
+digits(2100,10) = <%0,0,1,2%>;
+
+theorem :: NUMBER11:539
+Sum digits(2100,10) = 3;
+
+theorem :: NUMBER11:540
+digits(2120,10) = <%0,2,1,2%>;
+
+theorem :: NUMBER11:541
+Sum digits(2120,10) = 5;
+
+theorem :: NUMBER11:542
+digits(2140,10) = <%0,4,1,2%>;
+
+theorem :: NUMBER11:543
+Sum digits(2140,10) = 7;
+
+theorem :: NUMBER11:544
+digits(2160,10) = <%0,6,1,2%>;
+
+theorem :: NUMBER11:545
+Sum digits(2160,10) = 9;
+
+theorem :: NUMBER11:546
+digits(2180,10) = <%0,8,1,2%>;
+
+theorem :: NUMBER11:547
+Sum digits(2180,10) = 11;
+
+theorem :: NUMBER11:548
+digits(2200,10) = <%0,0,2,2%>;
+
+theorem :: NUMBER11:549
+Sum digits(2200,10) = 4;
+
+theorem :: NUMBER11:550
+digits(2220,10) = <%0,2,2,2%>;
+
+theorem :: NUMBER11:551
+Sum digits(2220,10) = 6;
+
+theorem :: NUMBER11:552
+digits(2240,10) = <%0,4,2,2%>;
+
+theorem :: NUMBER11:553
+Sum digits(2240,10) = 8;
+
+theorem :: NUMBER11:554
+digits(2260,10) = <%0,6,2,2%>;
+
+theorem :: NUMBER11:555
+Sum digits(2260,10) = 10;
+
+theorem :: NUMBER11:556
+digits(2280,10) = <%0,8,2,2%>;
+
+theorem :: NUMBER11:557
+Sum digits(2280,10) = 12;
+
+theorem :: NUMBER11:558
+digits(2300,10) = <%0,0,3,2%>;
+
+theorem :: NUMBER11:559
+Sum digits(2300,10) = 5;
+
+theorem :: NUMBER11:560
+digits(2320,10) = <%0,2,3,2%>;
+
+theorem :: NUMBER11:561
+Sum digits(2320,10) = 7;
+
+theorem :: NUMBER11:562
+digits(2340,10) = <%0,4,3,2%>;
+
+theorem :: NUMBER11:563
+Sum digits(2340,10) = 9;
+
+theorem :: NUMBER11:564
+digits(2360,10) = <%0,6,3,2%>;
+
+theorem :: NUMBER11:565
+Sum digits(2360,10) = 11;
+
+theorem :: NUMBER11:566
+digits(2380,10) = <%0,8,3,2%>;
+
+theorem :: NUMBER11:567
+Sum digits(2380,10) = 13;
+
+theorem :: NUMBER11:568
+digits(2400,10) = <%0,0,4,2%>;
+
+theorem :: NUMBER11:569
+Sum digits(2400,10) = 6;
+
+theorem :: NUMBER11:570
+digits(2420,10) = <%0,2,4,2%>;
+
+theorem :: NUMBER11:571
+Sum digits(2420,10) = 8;
+
+theorem :: NUMBER11:572
+digits(2440,10) = <%0,4,4,2%>;
+
+theorem :: NUMBER11:573
+Sum digits(2440,10) = 10;
+
+theorem :: NUMBER11:574
+digits(2460,10) = <%0,6,4,2%>;
+
+theorem :: NUMBER11:575
+Sum digits(2460,10) = 12;
+
+theorem :: NUMBER11:576
+digits(2480,10) = <%0,8,4,2%>;
+
+theorem :: NUMBER11:577
+Sum digits(2480,10) = 14;
+
+theorem :: NUMBER11:578
+digits(2500,10) = <%0,0,5,2%>;
+
+theorem :: NUMBER11:579
+Sum digits(2500,10) = 7;
+
+theorem :: NUMBER11:580
+digits(2520,10) = <%0,2,5,2%>;
+
+theorem :: NUMBER11:581
+Sum digits(2520,10) = 9;
+
+theorem :: NUMBER11:582
+digits(2540,10) = <%0,4,5,2%>;
+
+theorem :: NUMBER11:583
+Sum digits(2540,10) = 11;
+
+theorem :: NUMBER11:584
+digits(2560,10) = <%0,6,5,2%>;
+
+theorem :: NUMBER11:585
+Sum digits(2560,10) = 13;
+
+theorem :: NUMBER11:586
+digits(2580,10) = <%0,8,5,2%>;
+
+theorem :: NUMBER11:587
+Sum digits(2580,10) = 15;
+
+theorem :: NUMBER11:588
+digits(2600,10) = <%0,0,6,2%>;
+
+theorem :: NUMBER11:589
+Sum digits(2600,10) = 8;
+
+theorem :: NUMBER11:590
+digits(2620,10) = <%0,2,6,2%>;
+
+theorem :: NUMBER11:591
+Sum digits(2620,10) = 10;
+
+theorem :: NUMBER11:592
+digits(2640,10) = <%0,4,6,2%>;
+
+theorem :: NUMBER11:593
+Sum digits(2640,10) = 12;
+
+theorem :: NUMBER11:594
+digits(2660,10) = <%0,6,6,2%>;
+
+theorem :: NUMBER11:595
+Sum digits(2660,10) = 14;
+
+theorem :: NUMBER11:596
+digits(2680,10) = <%0,8,6,2%>;
+
+theorem :: NUMBER11:597
+Sum digits(2680,10) = 16;
+
+theorem :: NUMBER11:598
+digits(2700,10) = <%0,0,7,2%>;
+
+theorem :: NUMBER11:599
+Sum digits(2700,10) = 9;
+
+theorem :: NUMBER11:600
+digits(2720,10) = <%0,2,7,2%>;
+
+theorem :: NUMBER11:601
+Sum digits(2720,10) = 11;
+
+theorem :: NUMBER11:602
+digits(2740,10) = <%0,4,7,2%>;
+
+theorem :: NUMBER11:603
+Sum digits(2740,10) = 13;
+
+theorem :: NUMBER11:604
+digits(2760,10) = <%0,6,7,2%>;
+
+theorem :: NUMBER11:605
+Sum digits(2760,10) = 15;
+
+theorem :: NUMBER11:606
+digits(2780,10) = <%0,8,7,2%>;
+
+theorem :: NUMBER11:607
+Sum digits(2780,10) = 17;
+
+theorem :: NUMBER11:608
+digits(2800,10) = <%0,0,8,2%>;
+
+theorem :: NUMBER11:609
+Sum digits(2800,10) = 10;
+
+theorem :: NUMBER11:610
+digits(2820,10) = <%0,2,8,2%>;
+
+theorem :: NUMBER11:611
+Sum digits(2820,10) = 12;
+
+theorem :: NUMBER11:612
+digits(2840,10) = <%0,4,8,2%>;
+
+theorem :: NUMBER11:613
+Sum digits(2840,10) = 14;
+
+theorem :: NUMBER11:614
+digits(2860,10) = <%0,6,8,2%>;
+
+theorem :: NUMBER11:615
+Sum digits(2860,10) = 16;
+
+theorem :: NUMBER11:616
+digits(2880,10) = <%0,8,8,2%>;
+
+theorem :: NUMBER11:617
+Sum digits(2880,10) = 18;
+
+theorem :: NUMBER11:618
+digits(2900,10) = <%0,0,9,2%>;
+
+theorem :: NUMBER11:619
+Sum digits(2900,10) = 11;
+
+theorem :: NUMBER11:620
+digits(2920,10) = <%0,2,9,2%>;
+
+theorem :: NUMBER11:621
+Sum digits(2920,10) = 13;
+
+theorem :: NUMBER11:622
+digits(2940,10) = <%0,4,9,2%>;
+
+theorem :: NUMBER11:623
+Sum digits(2940,10) = 15;
+
+theorem :: NUMBER11:624
+digits(2960,10) = <%0,6,9,2%>;
+
+theorem :: NUMBER11:625
+Sum digits(2960,10) = 17;
+
+theorem :: NUMBER11:626
+digits(2980,10) = <%0,8,9,2%>;
+
+theorem :: NUMBER11:627
+Sum digits(2980,10) = 19;
+
+theorem :: NUMBER11:628
+digits(3000,10) = <%0,0,0,3%>;
+
+theorem :: NUMBER11:629
+Sum digits(3000,10) = 3;
+
+theorem :: NUMBER11:630
+digits(3020,10) = <%0,2,0,3%>;
+
+theorem :: NUMBER11:631
+Sum digits(3020,10) = 5;
+
+theorem :: NUMBER11:632
+digits(3040,10) = <%0,4,0,3%>;
+
+theorem :: NUMBER11:633
+Sum digits(3040,10) = 7;
+
+theorem :: NUMBER11:634
+digits(3060,10) = <%0,6,0,3%>;
+
+theorem :: NUMBER11:635
+Sum digits(3060,10) = 9;
+
+theorem :: NUMBER11:636
+digits(3080,10) = <%0,8,0,3%>;
+
+theorem :: NUMBER11:637
+Sum digits(3080,10) = 11;
+
+theorem :: NUMBER11:638
+digits(3100,10) = <%0,0,1,3%>;
+
+theorem :: NUMBER11:639
+Sum digits(3100,10) = 4;
+
+theorem :: NUMBER11:640
+digits(3120,10) = <%0,2,1,3%>;
+
+theorem :: NUMBER11:641
+Sum digits(3120,10) = 6;
+
+theorem :: NUMBER11:642
+digits(3140,10) = <%0,4,1,3%>;
+
+theorem :: NUMBER11:643
+Sum digits(3140,10) = 8;
+
+theorem :: NUMBER11:644
+digits(3160,10) = <%0,6,1,3%>;
+
+theorem :: NUMBER11:645
+Sum digits(3160,10) = 10;
+
+theorem :: NUMBER11:646
+digits(3180,10) = <%0,8,1,3%>;
+
+theorem :: NUMBER11:647
+Sum digits(3180,10) = 12;
+
+theorem :: NUMBER11:648
+digits(3200,10) = <%0,0,2,3%>;
+
+theorem :: NUMBER11:649
+Sum digits(3200,10) = 5;
+
+theorem :: NUMBER11:650
+digits(3220,10) = <%0,2,2,3%>;
+
+theorem :: NUMBER11:651
+Sum digits(3220,10) = 7;
+
+theorem :: NUMBER11:652
+digits(3240,10) = <%0,4,2,3%>;
+
+theorem :: NUMBER11:653
+Sum digits(3240,10) = 9;
+
+theorem :: NUMBER11:654
+digits(3260,10) = <%0,6,2,3%>;
+
+theorem :: NUMBER11:655
+Sum digits(3260,10) = 11;
+
+theorem :: NUMBER11:656
+digits(3280,10) = <%0,8,2,3%>;
+
+theorem :: NUMBER11:657
+Sum digits(3280,10) = 13;
+
+theorem :: NUMBER11:658
+digits(3300,10) = <%0,0,3,3%>;
+
+theorem :: NUMBER11:659
+Sum digits(3300,10) = 6;
+
+theorem :: NUMBER11:660
+digits(3320,10) = <%0,2,3,3%>;
+
+theorem :: NUMBER11:661
+Sum digits(3320,10) = 8;
+
+theorem :: NUMBER11:662
+digits(3340,10) = <%0,4,3,3%>;
+
+theorem :: NUMBER11:663
+Sum digits(3340,10) = 10;
+
+theorem :: NUMBER11:664
+digits(3360,10) = <%0,6,3,3%>;
+
+theorem :: NUMBER11:665
+Sum digits(3360,10) = 12;
+
+theorem :: NUMBER11:666
+digits(3380,10) = <%0,8,3,3%>;
+
+theorem :: NUMBER11:667
+Sum digits(3380,10) = 14;
+
+theorem :: NUMBER11:668
+digits(3400,10) = <%0,0,4,3%>;
+
+theorem :: NUMBER11:669
+Sum digits(3400,10) = 7;
+
+theorem :: NUMBER11:670
+digits(3420,10) = <%0,2,4,3%>;
+
+theorem :: NUMBER11:671
+Sum digits(3420,10) = 9;
+
+theorem :: NUMBER11:672
+digits(3440,10) = <%0,4,4,3%>;
+
+theorem :: NUMBER11:673
+Sum digits(3440,10) = 11;
+
+theorem :: NUMBER11:674
+digits(3460,10) = <%0,6,4,3%>;
+
+theorem :: NUMBER11:675
+Sum digits(3460,10) = 13;
+
+theorem :: NUMBER11:676
+digits(3480,10) = <%0,8,4,3%>;
+
+theorem :: NUMBER11:677
+Sum digits(3480,10) = 15;
+
+theorem :: NUMBER11:678
+digits(3500,10) = <%0,0,5,3%>;
+
+theorem :: NUMBER11:679
+Sum digits(3500,10) = 8;
+
+theorem :: NUMBER11:680
+digits(3520,10) = <%0,2,5,3%>;
+
+theorem :: NUMBER11:681
+Sum digits(3520,10) = 10;
+
+theorem :: NUMBER11:682
+digits(3540,10) = <%0,4,5,3%>;
+
+theorem :: NUMBER11:683
+Sum digits(3540,10) = 12;
+
+theorem :: NUMBER11:684
+digits(3560,10) = <%0,6,5,3%>;
+
+theorem :: NUMBER11:685
+Sum digits(3560,10) = 14;
+
+theorem :: NUMBER11:686
+digits(3580,10) = <%0,8,5,3%>;
+
+theorem :: NUMBER11:687
+Sum digits(3580,10) = 16;
+
+theorem :: NUMBER11:688
+digits(3600,10) = <%0,0,6,3%>;
+
+theorem :: NUMBER11:689
+Sum digits(3600,10) = 9;
+
+theorem :: NUMBER11:690
+digits(3620,10) = <%0,2,6,3%>;
+
+theorem :: NUMBER11:691
+Sum digits(3620,10) = 11;
+
+theorem :: NUMBER11:692
+digits(3640,10) = <%0,4,6,3%>;
+
+theorem :: NUMBER11:693
+Sum digits(3640,10) = 13;
+
+theorem :: NUMBER11:694
+digits(3660,10) = <%0,6,6,3%>;
+
+theorem :: NUMBER11:695
+Sum digits(3660,10) = 15;
+
+theorem :: NUMBER11:696
+digits(3680,10) = <%0,8,6,3%>;
+
+theorem :: NUMBER11:697
+Sum digits(3680,10) = 17;
+
+theorem :: NUMBER11:698
+digits(3700,10) = <%0,0,7,3%>;
+
+theorem :: NUMBER11:699
+Sum digits(3700,10) = 10;
+
+theorem :: NUMBER11:700
+digits(3720,10) = <%0,2,7,3%>;
+
+theorem :: NUMBER11:701
+Sum digits(3720,10) = 12;
+
+theorem :: NUMBER11:702
+digits(3740,10) = <%0,4,7,3%>;
+
+theorem :: NUMBER11:703
+Sum digits(3740,10) = 14;
+
+theorem :: NUMBER11:704
+digits(3760,10) = <%0,6,7,3%>;
+
+theorem :: NUMBER11:705
+Sum digits(3760,10) = 16;
+
+theorem :: NUMBER11:706
+digits(3780,10) = <%0,8,7,3%>;
+
+theorem :: NUMBER11:707
+Sum digits(3780,10) = 18;
+
+theorem :: NUMBER11:708
+digits(3800,10) = <%0,0,8,3%>;
+
+theorem :: NUMBER11:709
+Sum digits(3800,10) = 11;
+
+theorem :: NUMBER11:710
+digits(3820,10) = <%0,2,8,3%>;
+
+theorem :: NUMBER11:711
+Sum digits(3820,10) = 13;
+
+theorem :: NUMBER11:712
+digits(3840,10) = <%0,4,8,3%>;
+
+theorem :: NUMBER11:713
+Sum digits(3840,10) = 15;
+
+theorem :: NUMBER11:714
+digits(3860,10) = <%0,6,8,3%>;
+
+theorem :: NUMBER11:715
+Sum digits(3860,10) = 17;
+
+theorem :: NUMBER11:716
+digits(3880,10) = <%0,8,8,3%>;
+
+theorem :: NUMBER11:717
+Sum digits(3880,10) = 19;
+
+theorem :: NUMBER11:718
+digits(3900,10) = <%0,0,9,3%>;
+
+theorem :: NUMBER11:719
+Sum digits(3900,10) = 12;
+
+theorem :: NUMBER11:720
+digits(3920,10) = <%0,2,9,3%>;
+
+theorem :: NUMBER11:721
+Sum digits(3920,10) = 14;
+
+theorem :: NUMBER11:722
+digits(3940,10) = <%0,4,9,3%>;
+
+theorem :: NUMBER11:723
+Sum digits(3940,10) = 16;
+
+theorem :: NUMBER11:724
+digits(3960,10) = <%0,6,9,3%>;
+
+theorem :: NUMBER11:725
+Sum digits(3960,10) = 18;
+
+theorem :: NUMBER11:726
+digits(3980,10) = <%0,8,9,3%>;
+
+theorem :: NUMBER11:727
+Sum digits(3980,10) = 20;
+
+theorem :: NUMBER11:728
+Sierp36 3980,20;
+
+theorem :: NUMBER11:729
+digits(21,10) = <%1,2%>;
+
+theorem :: NUMBER11:730
+Sum digits(21,10) = 3;
+
+theorem :: NUMBER11:731
+digits(63,10) = <%3,6%>;
+
+theorem :: NUMBER11:732
+Sum digits(63,10) = 9;
+
+theorem :: NUMBER11:733
+digits(147,10) = <%7,4,1%>;
+
+theorem :: NUMBER11:734
+Sum digits(147,10) = 12;
+
+theorem :: NUMBER11:735
+digits(189,10) = <%9,8,1%>;
+
+theorem :: NUMBER11:736
+Sum digits(189,10) = 18;
+
+theorem :: NUMBER11:737
+digits(231,10) = <%1,3,2%>;
+
+theorem :: NUMBER11:738
+Sum digits(231,10) = 6;
+
+theorem :: NUMBER11:739
+digits(273,10) = <%3,7,2%>;
+
+theorem :: NUMBER11:740
+Sum digits(273,10) = 12;
+
+theorem :: NUMBER11:741
+digits(294,10) = <%4,9,2%>;
+
+theorem :: NUMBER11:742
+Sum digits(294,10) = 15;
+
+theorem :: NUMBER11:743
+digits(315,10) = <%5,1,3%>;
+
+theorem :: NUMBER11:744
+Sum digits(315,10) = 9;
+
+theorem :: NUMBER11:745
+digits(378,10) = <%8,7,3%>;
+
+theorem :: NUMBER11:746
+Sum digits(378,10) = 18;
+
+theorem :: NUMBER11:747
+Sierp36 399,21;
+
+theorem :: NUMBER11:748
+digits(242,10) = <%2,4,2%>;
+
+theorem :: NUMBER11:749
+Sum digits(242,10) = 8;
+
+theorem :: NUMBER11:750
+digits(264,10) = <%4,6,2%>;
+
+theorem :: NUMBER11:751
+Sum digits(264,10) = 12;
+
+theorem :: NUMBER11:752
+digits(286,10) = <%6,8,2%>;
+
+theorem :: NUMBER11:753
+Sum digits(286,10) = 16;
+
+theorem :: NUMBER11:754
+digits(308,10) = <%8,0,3%>;
+
+theorem :: NUMBER11:755
+Sum digits(308,10) = 11;
+
+theorem :: NUMBER11:756
+digits(330,10) = <%0,3,3%>;
+
+theorem :: NUMBER11:757
+Sum digits(330,10) = 6;
+
+theorem :: NUMBER11:758
+digits(396,10) = <%6,9,3%>;
+
+theorem :: NUMBER11:759
+Sum digits(396,10) = 18;
+
+theorem :: NUMBER11:760
+digits(462,10) = <%2,6,4%>;
+
+theorem :: NUMBER11:761
+Sum digits(462,10) = 12;
+
+theorem :: NUMBER11:762
+digits(484,10) = <%4,8,4%>;
+
+theorem :: NUMBER11:763
+Sum digits(484,10) = 16;
+
+theorem :: NUMBER11:764
+digits(506,10) = <%6,0,5%>;
+
+theorem :: NUMBER11:765
+Sum digits(506,10) = 11;
+
+theorem :: NUMBER11:766
+digits(528,10) = <%8,2,5%>;
+
+theorem :: NUMBER11:767
+Sum digits(528,10) = 15;
+
+theorem :: NUMBER11:768
+digits(550,10) = <%0,5,5%>;
+
+theorem :: NUMBER11:769
+Sum digits(550,10) = 10;
+
+theorem :: NUMBER11:770
+digits(572,10) = <%2,7,5%>;
+
+theorem :: NUMBER11:771
+Sum digits(572,10) = 14;
+
+theorem :: NUMBER11:772
+digits(594,10) = <%4,9,5%>;
+
+theorem :: NUMBER11:773
+Sum digits(594,10) = 18;
+
+theorem :: NUMBER11:774
+digits(616,10) = <%6,1,6%>;
+
+theorem :: NUMBER11:775
+Sum digits(616,10) = 13;
+
+theorem :: NUMBER11:776
+digits(638,10) = <%8,3,6%>;
+
+theorem :: NUMBER11:777
+Sum digits(638,10) = 17;
+
+theorem :: NUMBER11:778
+digits(682,10) = <%2,8,6%>;
+
+theorem :: NUMBER11:779
+Sum digits(682,10) = 16;
+
+theorem :: NUMBER11:780
+digits(704,10) = <%4,0,7%>;
+
+theorem :: NUMBER11:781
+Sum digits(704,10) = 11;
+
+theorem :: NUMBER11:782
+digits(726,10) = <%6,2,7%>;
+
+theorem :: NUMBER11:783
+Sum digits(726,10) = 15;
+
+theorem :: NUMBER11:784
+digits(748,10) = <%8,4,7%>;
+
+theorem :: NUMBER11:785
+Sum digits(748,10) = 19;
+
+theorem :: NUMBER11:786
+digits(770,10) = <%0,7,7%>;
+
+theorem :: NUMBER11:787
+Sum digits(770,10) = 14;
+
+theorem :: NUMBER11:788
+digits(792,10) = <%2,9,7%>;
+
+theorem :: NUMBER11:789
+Sum digits(792,10) = 18;
+
+theorem :: NUMBER11:790
+digits(814,10) = <%4,1,8%>;
+
+theorem :: NUMBER11:791
+Sum digits(814,10) = 13;
+
+theorem :: NUMBER11:792
+digits(858,10) = <%8,5,8%>;
+
+theorem :: NUMBER11:793
+Sum digits(858,10) = 21;
+
+theorem :: NUMBER11:794
+digits(902,10) = <%2,0,9%>;
+
+theorem :: NUMBER11:795
+Sum digits(902,10) = 11;
+
+theorem :: NUMBER11:796
+digits(924,10) = <%4,2,9%>;
+
+theorem :: NUMBER11:797
+Sum digits(924,10) = 15;
+
+theorem :: NUMBER11:798
+digits(946,10) = <%6,4,9%>;
+
+theorem :: NUMBER11:799
+Sum digits(946,10) = 19;
+
+theorem :: NUMBER11:800
+digits(968,10) = <%8,6,9%>;
+
+theorem :: NUMBER11:801
+Sum digits(968,10) = 23;
+
+theorem :: NUMBER11:802
+digits(990,10) = <%0,9,9%>;
+
+theorem :: NUMBER11:803
+Sum digits(990,10) = 18;
+
+theorem :: NUMBER11:804
+digits(1012,10) = <%2,1,0,1%>;
+
+theorem :: NUMBER11:805
+Sum digits(1012,10) = 4;
+
+theorem :: NUMBER11:806
+digits(1034,10) = <%4,3,0,1%>;
+
+theorem :: NUMBER11:807
+Sum digits(1034,10) = 8;
+
+theorem :: NUMBER11:808
+digits(1056,10) = <%6,5,0,1%>;
+
+theorem :: NUMBER11:809
+Sum digits(1056,10) = 12;
+
+theorem :: NUMBER11:810
+digits(1078,10) = <%8,7,0,1%>;
+
+theorem :: NUMBER11:811
+Sum digits(1078,10) = 16;
+
+theorem :: NUMBER11:812
+digits(1122,10) = <%2,2,1,1%>;
+
+theorem :: NUMBER11:813
+Sum digits(1122,10) = 6;
+
+theorem :: NUMBER11:814
+digits(1144,10) = <%4,4,1,1%>;
+
+theorem :: NUMBER11:815
+Sum digits(1144,10) = 10;
+
+theorem :: NUMBER11:816
+digits(1166,10) = <%6,6,1,1%>;
+
+theorem :: NUMBER11:817
+Sum digits(1166,10) = 14;
+
+theorem :: NUMBER11:818
+digits(1188,10) = <%8,8,1,1%>;
+
+theorem :: NUMBER11:819
+Sum digits(1188,10) = 18;
+
+theorem :: NUMBER11:820
+digits(1210,10) = <%0,1,2,1%>;
+
+theorem :: NUMBER11:821
+Sum digits(1210,10) = 4;
+
+theorem :: NUMBER11:822
+digits(1232,10) = <%2,3,2,1%>;
+
+theorem :: NUMBER11:823
+Sum digits(1232,10) = 8;
+
+theorem :: NUMBER11:824
+digits(1254,10) = <%4,5,2,1%>;
+
+theorem :: NUMBER11:825
+Sum digits(1254,10) = 12;
+
+theorem :: NUMBER11:826
+digits(1276,10) = <%6,7,2,1%>;
+
+theorem :: NUMBER11:827
+Sum digits(1276,10) = 16;
+
+theorem :: NUMBER11:828
+digits(1298,10) = <%8,9,2,1%>;
+
+theorem :: NUMBER11:829
+Sum digits(1298,10) = 20;
+
+theorem :: NUMBER11:830
+digits(1342,10) = <%2,4,3,1%>;
+
+theorem :: NUMBER11:831
+Sum digits(1342,10) = 10;
+
+theorem :: NUMBER11:832
+digits(1364,10) = <%4,6,3,1%>;
+
+theorem :: NUMBER11:833
+Sum digits(1364,10) = 14;
+
+theorem :: NUMBER11:834
+digits(1386,10) = <%6,8,3,1%>;
+
+theorem :: NUMBER11:835
+Sum digits(1386,10) = 18;
+
+theorem :: NUMBER11:836
+digits(1408,10) = <%8,0,4,1%>;
+
+theorem :: NUMBER11:837
+Sum digits(1408,10) = 13;
+
+theorem :: NUMBER11:838
+digits(1430,10) = <%0,3,4,1%>;
+
+theorem :: NUMBER11:839
+Sum digits(1430,10) = 8;
+
+theorem :: NUMBER11:840
+digits(1452,10) = <%2,5,4,1%>;
+
+theorem :: NUMBER11:841
+Sum digits(1452,10) = 12;
+
+theorem :: NUMBER11:842
+digits(1474,10) = <%4,7,4,1%>;
+
+theorem :: NUMBER11:843
+Sum digits(1474,10) = 16;
+
+theorem :: NUMBER11:844
+digits(1496,10) = <%6,9,4,1%>;
+
+theorem :: NUMBER11:845
+Sum digits(1496,10) = 20;
+
+theorem :: NUMBER11:846
+digits(1518,10) = <%8,1,5,1%>;
+
+theorem :: NUMBER11:847
+Sum digits(1518,10) = 15;
+
+theorem :: NUMBER11:848
+digits(1562,10) = <%2,6,5,1%>;
+
+theorem :: NUMBER11:849
+Sum digits(1562,10) = 14;
+
+theorem :: NUMBER11:850
+digits(1584,10) = <%4,8,5,1%>;
+
+theorem :: NUMBER11:851
+Sum digits(1584,10) = 18;
+
+theorem :: NUMBER11:852
+digits(1606,10) = <%6,0,6,1%>;
+
+theorem :: NUMBER11:853
+Sum digits(1606,10) = 13;
+
+theorem :: NUMBER11:854
+digits(1628,10) = <%8,2,6,1%>;
+
+theorem :: NUMBER11:855
+Sum digits(1628,10) = 17;
+
+theorem :: NUMBER11:856
+digits(1650,10) = <%0,5,6,1%>;
+
+theorem :: NUMBER11:857
+Sum digits(1650,10) = 12;
+
+theorem :: NUMBER11:858
+digits(1672,10) = <%2,7,6,1%>;
+
+theorem :: NUMBER11:859
+Sum digits(1672,10) = 16;
+
+theorem :: NUMBER11:860
+digits(1694,10) = <%4,9,6,1%>;
+
+theorem :: NUMBER11:861
+Sum digits(1694,10) = 20;
+
+theorem :: NUMBER11:862
+digits(1716,10) = <%6,1,7,1%>;
+
+theorem :: NUMBER11:863
+Sum digits(1716,10) = 15;
+
+theorem :: NUMBER11:864
+digits(1738,10) = <%8,3,7,1%>;
+
+theorem :: NUMBER11:865
+Sum digits(1738,10) = 19;
+
+theorem :: NUMBER11:866
+digits(1782,10) = <%2,8,7,1%>;
+
+theorem :: NUMBER11:867
+Sum digits(1782,10) = 18;
+
+theorem :: NUMBER11:868
+digits(1804,10) = <%4,0,8,1%>;
+
+theorem :: NUMBER11:869
+Sum digits(1804,10) = 13;
+
+theorem :: NUMBER11:870
+digits(1826,10) = <%6,2,8,1%>;
+
+theorem :: NUMBER11:871
+Sum digits(1826,10) = 17;
+
+theorem :: NUMBER11:872
+digits(1848,10) = <%8,4,8,1%>;
+
+theorem :: NUMBER11:873
+Sum digits(1848,10) = 21;
+
+theorem :: NUMBER11:874
+digits(1870,10) = <%0,7,8,1%>;
+
+theorem :: NUMBER11:875
+Sum digits(1870,10) = 16;
+
+theorem :: NUMBER11:876
+digits(1892,10) = <%2,9,8,1%>;
+
+theorem :: NUMBER11:877
+Sum digits(1892,10) = 20;
+
+theorem :: NUMBER11:878
+digits(1914,10) = <%4,1,9,1%>;
+
+theorem :: NUMBER11:879
+Sum digits(1914,10) = 15;
+
+theorem :: NUMBER11:880
+digits(1936,10) = <%6,3,9,1%>;
+
+theorem :: NUMBER11:881
+Sum digits(1936,10) = 19;
+
+theorem :: NUMBER11:882
+digits(1958,10) = <%8,5,9,1%>;
+
+theorem :: NUMBER11:883
+Sum digits(1958,10) = 23;
+
+theorem :: NUMBER11:884
+digits(2002,10) = <%2,0,0,2%>;
+
+theorem :: NUMBER11:885
+Sum digits(2002,10) = 4;
+
+theorem :: NUMBER11:886
+digits(2024,10) = <%4,2,0,2%>;
+
+theorem :: NUMBER11:887
+Sum digits(2024,10) = 8;
+
+theorem :: NUMBER11:888
+digits(2046,10) = <%6,4,0,2%>;
+
+theorem :: NUMBER11:889
+Sum digits(2046,10) = 12;
+
+theorem :: NUMBER11:890
+digits(2068,10) = <%8,6,0,2%>;
+
+theorem :: NUMBER11:891
+Sum digits(2068,10) = 16;
+
+theorem :: NUMBER11:892
+digits(2090,10) = <%0,9,0,2%>;
+
+theorem :: NUMBER11:893
+Sum digits(2090,10) = 11;
+
+theorem :: NUMBER11:894
+digits(2112,10) = <%2,1,1,2%>;
+
+theorem :: NUMBER11:895
+Sum digits(2112,10) = 6;
+
+theorem :: NUMBER11:896
+digits(2134,10) = <%4,3,1,2%>;
+
+theorem :: NUMBER11:897
+Sum digits(2134,10) = 10;
+
+theorem :: NUMBER11:898
+digits(2156,10) = <%6,5,1,2%>;
+
+theorem :: NUMBER11:899
+Sum digits(2156,10) = 14;
+
+theorem :: NUMBER11:900
+digits(2178,10) = <%8,7,1,2%>;
+
+theorem :: NUMBER11:901
+Sum digits(2178,10) = 18;
+
+theorem :: NUMBER11:902
+digits(2222,10) = <%2,2,2,2%>;
+
+theorem :: NUMBER11:903
+Sum digits(2222,10) = 8;
+
+theorem :: NUMBER11:904
+digits(2244,10) = <%4,4,2,2%>;
+
+theorem :: NUMBER11:905
+Sum digits(2244,10) = 12;
+
+theorem :: NUMBER11:906
+digits(2266,10) = <%6,6,2,2%>;
+
+theorem :: NUMBER11:907
+Sum digits(2266,10) = 16;
+
+theorem :: NUMBER11:908
+digits(2288,10) = <%8,8,2,2%>;
+
+theorem :: NUMBER11:909
+Sum digits(2288,10) = 20;
+
+theorem :: NUMBER11:910
+digits(2310,10) = <%0,1,3,2%>;
+
+theorem :: NUMBER11:911
+Sum digits(2310,10) = 6;
+
+theorem :: NUMBER11:912
+digits(2332,10) = <%2,3,3,2%>;
+
+theorem :: NUMBER11:913
+Sum digits(2332,10) = 10;
+
+theorem :: NUMBER11:914
+digits(2354,10) = <%4,5,3,2%>;
+
+theorem :: NUMBER11:915
+Sum digits(2354,10) = 14;
+
+theorem :: NUMBER11:916
+digits(2376,10) = <%6,7,3,2%>;
+
+theorem :: NUMBER11:917
+Sum digits(2376,10) = 18;
+
+theorem :: NUMBER11:918
+digits(2398,10) = <%8,9,3,2%>;
+
+theorem :: NUMBER11:919
+Sum digits(2398,10) = 22;
+
+theorem :: NUMBER11:920
+Sierp36 2398,22;
+
+theorem :: NUMBER11:921
+digits(23,10) = <%3,2%>;
+
+theorem :: NUMBER11:922
+Sum digits(23,10) = 5;
+
+theorem :: NUMBER11:923
+digits(46,10) = <%6,4%>;
+
+theorem :: NUMBER11:924
+Sum digits(46,10) = 10;
+
+theorem :: NUMBER11:925
+digits(69,10) = <%9,6%>;
+
+theorem :: NUMBER11:926
+Sum digits(69,10) = 15;
+
+theorem :: NUMBER11:927
+digits(92,10) = <%2,9%>;
+
+theorem :: NUMBER11:928
+Sum digits(92,10) = 11;
+
+theorem :: NUMBER11:929
+digits(115,10) = <%5,1,1%>;
+
+theorem :: NUMBER11:930
+Sum digits(115,10) = 7;
+
+theorem :: NUMBER11:931
+digits(138,10) = <%8,3,1%>;
+
+theorem :: NUMBER11:932
+Sum digits(138,10) = 12;
+
+theorem :: NUMBER11:933
+digits(161,10) = <%1,6,1%>;
+
+theorem :: NUMBER11:934
+Sum digits(161,10) = 8;
+
+theorem :: NUMBER11:935
+digits(184,10) = <%4,8,1%>;
+
+theorem :: NUMBER11:936
+Sum digits(184,10) = 13;
+
+theorem :: NUMBER11:937
+digits(207,10) = <%7,0,2%>;
+
+theorem :: NUMBER11:938
+Sum digits(207,10) = 9;
+
+theorem :: NUMBER11:939
+digits(230,10) = <%0,3,2%>;
+
+theorem :: NUMBER11:940
+Sum digits(230,10) = 5;
+
+theorem :: NUMBER11:941
+digits(253,10) = <%3,5,2%>;
+
+theorem :: NUMBER11:942
+Sum digits(253,10) = 10;
+
+theorem :: NUMBER11:943
+digits(276,10) = <%6,7,2%>;
+
+theorem :: NUMBER11:944
+Sum digits(276,10) = 15;
+
+theorem :: NUMBER11:945
+digits(299,10) = <%9,9,2%>;
+
+theorem :: NUMBER11:946
+Sum digits(299,10) = 20;
+
+theorem :: NUMBER11:947
+digits(322,10) = <%2,2,3%>;
+
+theorem :: NUMBER11:948
+Sum digits(322,10) = 7;
+
+theorem :: NUMBER11:949
+digits(345,10) = <%5,4,3%>;
+
+theorem :: NUMBER11:950
+Sum digits(345,10) = 12;
+
+theorem :: NUMBER11:951
+digits(414,10) = <%4,1,4%>;
+
+theorem :: NUMBER11:952
+Sum digits(414,10) = 9;
+
+theorem :: NUMBER11:953
+digits(483,10) = <%3,8,4%>;
+
+theorem :: NUMBER11:954
+Sum digits(483,10) = 15;
+
+theorem :: NUMBER11:955
+digits(529,10) = <%9,2,5%>;
+
+theorem :: NUMBER11:956
+Sum digits(529,10) = 16;
+
+theorem :: NUMBER11:957
+digits(552,10) = <%2,5,5%>;
+
+theorem :: NUMBER11:958
+Sum digits(552,10) = 12;
+
+theorem :: NUMBER11:959
+digits(575,10) = <%5,7,5%>;
+
+theorem :: NUMBER11:960
+Sum digits(575,10) = 17;
+
+theorem :: NUMBER11:961
+digits(598,10) = <%8,9,5%>;
+
+theorem :: NUMBER11:962
+Sum digits(598,10) = 22;
+
+theorem :: NUMBER11:963
+digits(621,10) = <%1,2,6%>;
+
+theorem :: NUMBER11:964
+Sum digits(621,10) = 9;
+
+theorem :: NUMBER11:965
+digits(644,10) = <%4,4,6%>;
+
+theorem :: NUMBER11:966
+Sum digits(644,10) = 14;
+
+theorem :: NUMBER11:967
+digits(667,10) = <%7,6,6%>;
+
+theorem :: NUMBER11:968
+Sum digits(667,10) = 19;
+
+theorem :: NUMBER11:969
+digits(690,10) = <%0,9,6%>;
+
+theorem :: NUMBER11:970
+Sum digits(690,10) = 15;
+
+theorem :: NUMBER11:971
+digits(713,10) = <%3,1,7%>;
+
+theorem :: NUMBER11:972
+Sum digits(713,10) = 11;
+
+theorem :: NUMBER11:973
+digits(736,10) = <%6,3,7%>;
+
+theorem :: NUMBER11:974
+Sum digits(736,10) = 16;
+
+theorem :: NUMBER11:975
+digits(759,10) = <%9,5,7%>;
+
+theorem :: NUMBER11:976
+Sum digits(759,10) = 21;
+
+theorem :: NUMBER11:977
+digits(782,10) = <%2,8,7%>;
+
+theorem :: NUMBER11:978
+Sum digits(782,10) = 17;
+
+theorem :: NUMBER11:979
+digits(805,10) = <%5,0,8%>;
+
+theorem :: NUMBER11:980
+Sum digits(805,10) = 13;
+
+theorem :: NUMBER11:981
+digits(828,10) = <%8,2,8%>;
+
+theorem :: NUMBER11:982
+Sum digits(828,10) = 18;
+
+theorem :: NUMBER11:983
+digits(851,10) = <%1,5,8%>;
+
+theorem :: NUMBER11:984
+Sum digits(851,10) = 14;
+
+theorem :: NUMBER11:985
+digits(897,10) = <%7,9,8%>;
+
+theorem :: NUMBER11:986
+Sum digits(897,10) = 24;
+
+theorem :: NUMBER11:987
+digits(943,10) = <%3,4,9%>;
+
+theorem :: NUMBER11:988
+Sum digits(943,10) = 16;
+
+theorem :: NUMBER11:989
+digits(966,10) = <%6,6,9%>;
+
+theorem :: NUMBER11:990
+Sum digits(966,10) = 21;
+
+theorem :: NUMBER11:991
+digits(989,10) = <%9,8,9%>;
+
+theorem :: NUMBER11:992
+Sum digits(989,10) = 26;
+
+theorem :: NUMBER11:993
+digits(1035,10) = <%5,3,0,1%>;
+
+theorem :: NUMBER11:994
+Sum digits(1035,10) = 9;
+
+theorem :: NUMBER11:995
+digits(1058,10) = <%8,5,0,1%>;
+
+theorem :: NUMBER11:996
+Sum digits(1058,10) = 14;
+
+theorem :: NUMBER11:997
+digits(1081,10) = <%1,8,0,1%>;
+
+theorem :: NUMBER11:998
+Sum digits(1081,10) = 10;
+
+theorem :: NUMBER11:999
+digits(1104,10) = <%4,0,1,1%>;
+
+theorem :: NUMBER11:1000
+Sum digits(1104,10) = 6;
+
+theorem :: NUMBER11:1001
+digits(1127,10) = <%7,2,1,1%>;
+
+theorem :: NUMBER11:1002
+Sum digits(1127,10) = 11;
+
+theorem :: NUMBER11:1003
+digits(1150,10) = <%0,5,1,1%>;
+
+theorem :: NUMBER11:1004
+Sum digits(1150,10) = 7;
+
+theorem :: NUMBER11:1005
+digits(1173,10) = <%3,7,1,1%>;
+
+theorem :: NUMBER11:1006
+Sum digits(1173,10) = 12;
+
+theorem :: NUMBER11:1007
+digits(1196,10) = <%6,9,1,1%>;
+
+theorem :: NUMBER11:1008
+Sum digits(1196,10) = 17;
+
+theorem :: NUMBER11:1009
+digits(1219,10) = <%9,1,2,1%>;
+
+theorem :: NUMBER11:1010
+Sum digits(1219,10) = 13;
+
+theorem :: NUMBER11:1011
+digits(1242,10) = <%2,4,2,1%>;
+
+theorem :: NUMBER11:1012
+Sum digits(1242,10) = 9;
+
+theorem :: NUMBER11:1013
+digits(1265,10) = <%5,6,2,1%>;
+
+theorem :: NUMBER11:1014
+Sum digits(1265,10) = 14;
+
+theorem :: NUMBER11:1015
+digits(1288,10) = <%8,8,2,1%>;
+
+theorem :: NUMBER11:1016
+Sum digits(1288,10) = 19;
+
+theorem :: NUMBER11:1017
+digits(1311,10) = <%1,1,3,1%>;
+
+theorem :: NUMBER11:1018
+Sum digits(1311,10) = 6;
+
+theorem :: NUMBER11:1019
+digits(1334,10) = <%4,3,3,1%>;
+
+theorem :: NUMBER11:1020
+Sum digits(1334,10) = 11;
+
+theorem :: NUMBER11:1021
+digits(1357,10) = <%7,5,3,1%>;
+
+theorem :: NUMBER11:1022
+Sum digits(1357,10) = 16;
+
+theorem :: NUMBER11:1023
+digits(1403,10) = <%3,0,4,1%>;
+
+theorem :: NUMBER11:1024
+Sum digits(1403,10) = 8;
+
+theorem :: NUMBER11:1025
+digits(1426,10) = <%6,2,4,1%>;
+
+theorem :: NUMBER11:1026
+Sum digits(1426,10) = 13;
+
+theorem :: NUMBER11:1027
+digits(1449,10) = <%9,4,4,1%>;
+
+theorem :: NUMBER11:1028
+Sum digits(1449,10) = 18;
+
+theorem :: NUMBER11:1029
+digits(1472,10) = <%2,7,4,1%>;
+
+theorem :: NUMBER11:1030
+Sum digits(1472,10) = 14;
+
+theorem :: NUMBER11:1031
+digits(1495,10) = <%5,9,4,1%>;
+
+theorem :: NUMBER11:1032
+Sum digits(1495,10) = 19;
+
+theorem :: NUMBER11:1033
+digits(1541,10) = <%1,4,5,1%>;
+
+theorem :: NUMBER11:1034
+Sum digits(1541,10) = 11;
+
+theorem :: NUMBER11:1035
+digits(1564,10) = <%4,6,5,1%>;
+
+theorem :: NUMBER11:1036
+Sum digits(1564,10) = 16;
+
+theorem :: NUMBER11:1037
+digits(1587,10) = <%7,8,5,1%>;
+
+theorem :: NUMBER11:1038
+Sum digits(1587,10) = 21;
+
+theorem :: NUMBER11:1039
+digits(1610,10) = <%0,1,6,1%>;
+
+theorem :: NUMBER11:1040
+Sum digits(1610,10) = 8;
+
+theorem :: NUMBER11:1041
+digits(1633,10) = <%3,3,6,1%>;
+
+theorem :: NUMBER11:1042
+Sum digits(1633,10) = 13;
+
+theorem :: NUMBER11:1043
+digits(1656,10) = <%6,5,6,1%>;
+
+theorem :: NUMBER11:1044
+Sum digits(1656,10) = 18;
+
+theorem :: NUMBER11:1045
+digits(1679,10) = <%9,7,6,1%>;
+
+theorem :: NUMBER11:1046
+Sum digits(1679,10) = 23;
+
+theorem :: NUMBER11:1047
+Sierp36 1679,23;
+
+theorem :: NUMBER11:1048
+digits(216,10) = <%6,1,2%>;
+
+theorem :: NUMBER11:1049
+Sum digits(216,10) = 9;
+
+theorem :: NUMBER11:1050
+digits(312,10) = <%2,1,3%>;
+
+theorem :: NUMBER11:1051
+Sum digits(312,10) = 6;
+
+theorem :: NUMBER11:1052
+digits(504,10) = <%4,0,5%>;
+
+theorem :: NUMBER11:1053
+Sum digits(504,10) = 9;
+
+theorem :: NUMBER11:1054
+digits(576,10) = <%6,7,5%>;
+
+theorem :: NUMBER11:1055
+Sum digits(576,10) = 18;
+
+theorem :: NUMBER11:1056
+digits(624,10) = <%4,2,6%>;
+
+theorem :: NUMBER11:1057
+Sum digits(624,10) = 12;
+
+theorem :: NUMBER11:1058
+digits(648,10) = <%8,4,6%>;
+
+theorem :: NUMBER11:1059
+Sum digits(648,10) = 18;
+
+theorem :: NUMBER11:1060
+digits(672,10) = <%2,7,6%>;
+
+theorem :: NUMBER11:1061
+Sum digits(672,10) = 15;
+
+theorem :: NUMBER11:1062
+digits(696,10) = <%6,9,6%>;
+
+theorem :: NUMBER11:1063
+Sum digits(696,10) = 21;
+
+theorem :: NUMBER11:1064
+digits(744,10) = <%4,4,7%>;
+
+theorem :: NUMBER11:1065
+Sum digits(744,10) = 15;
+
+theorem :: NUMBER11:1066
+digits(768,10) = <%8,6,7%>;
+
+theorem :: NUMBER11:1067
+Sum digits(768,10) = 21;
+
+theorem :: NUMBER11:1068
+digits(816,10) = <%6,1,8%>;
+
+theorem :: NUMBER11:1069
+Sum digits(816,10) = 15;
+
+theorem :: NUMBER11:1070
+digits(864,10) = <%4,6,8%>;
+
+theorem :: NUMBER11:1071
+Sum digits(864,10) = 18;
+
+theorem :: NUMBER11:1072
+digits(888,10) = <%8,8,8%>;
+
+theorem :: NUMBER11:1073
+Sum digits(888,10) = 24;
+
+theorem :: NUMBER11:1074
+Sierp36 888,24;
+
+theorem :: NUMBER11:1075
+digits(25,10) = <%5,2%>;
+
+theorem :: NUMBER11:1076
+Sum digits(25,10) = 7;
+
+theorem :: NUMBER11:1077
+digits(125,10) = <%5,2,1%>;
+
+theorem :: NUMBER11:1078
+Sum digits(125,10) = 8;
+
+theorem :: NUMBER11:1079
+digits(175,10) = <%5,7,1%>;
+
+theorem :: NUMBER11:1080
+Sum digits(175,10) = 13;
+
+theorem :: NUMBER11:1081
+digits(225,10) = <%5,2,2%>;
+
+theorem :: NUMBER11:1082
+Sum digits(225,10) = 9;
+
+theorem :: NUMBER11:1083
+digits(250,10) = <%0,5,2%>;
+
+theorem :: NUMBER11:1084
+Sum digits(250,10) = 7;
+
+theorem :: NUMBER11:1085
+digits(275,10) = <%5,7,2%>;
+
+theorem :: NUMBER11:1086
+Sum digits(275,10) = 14;
+
+theorem :: NUMBER11:1087
+digits(325,10) = <%5,2,3%>;
+
+theorem :: NUMBER11:1088
+Sum digits(325,10) = 10;
+
+theorem :: NUMBER11:1089
+digits(350,10) = <%0,5,3%>;
+
+theorem :: NUMBER11:1090
+Sum digits(350,10) = 8;
+
+theorem :: NUMBER11:1091
+digits(375,10) = <%5,7,3%>;
+
+theorem :: NUMBER11:1092
+Sum digits(375,10) = 15;
+
+theorem :: NUMBER11:1093
+digits(450,10) = <%0,5,4%>;
+
+theorem :: NUMBER11:1094
+Sum digits(450,10) = 9;
+
+theorem :: NUMBER11:1095
+digits(525,10) = <%5,2,5%>;
+
+theorem :: NUMBER11:1096
+Sum digits(525,10) = 12;
+
+theorem :: NUMBER11:1097
+digits(625,10) = <%5,2,6%>;
+
+theorem :: NUMBER11:1098
+Sum digits(625,10) = 13;
+
+theorem :: NUMBER11:1099
+digits(650,10) = <%0,5,6%>;
+
+theorem :: NUMBER11:1100
+Sum digits(650,10) = 11;
+
+theorem :: NUMBER11:1101
+digits(675,10) = <%5,7,6%>;
+
+theorem :: NUMBER11:1102
+Sum digits(675,10) = 18;
+
+theorem :: NUMBER11:1103
+digits(725,10) = <%5,2,7%>;
+
+theorem :: NUMBER11:1104
+Sum digits(725,10) = 14;
+
+theorem :: NUMBER11:1105
+digits(750,10) = <%0,5,7%>;
+
+theorem :: NUMBER11:1106
+Sum digits(750,10) = 12;
+
+theorem :: NUMBER11:1107
+digits(775,10) = <%5,7,7%>;
+
+theorem :: NUMBER11:1108
+Sum digits(775,10) = 19;
+
+theorem :: NUMBER11:1109
+digits(825,10) = <%5,2,8%>;
+
+theorem :: NUMBER11:1110
+Sum digits(825,10) = 15;
+
+theorem :: NUMBER11:1111
+digits(850,10) = <%0,5,8%>;
+
+theorem :: NUMBER11:1112
+Sum digits(850,10) = 13;
+
+theorem :: NUMBER11:1113
+digits(875,10) = <%5,7,8%>;
+
+theorem :: NUMBER11:1114
+Sum digits(875,10) = 20;
+
+theorem :: NUMBER11:1115
+digits(925,10) = <%5,2,9%>;
+
+theorem :: NUMBER11:1116
+Sum digits(925,10) = 16;
+
+theorem :: NUMBER11:1117
+digits(950,10) = <%0,5,9%>;
+
+theorem :: NUMBER11:1118
+Sum digits(950,10) = 14;
+
+theorem :: NUMBER11:1119
+digits(975,10) = <%5,7,9%>;
+
+theorem :: NUMBER11:1120
+Sum digits(975,10) = 21;
+
+theorem :: NUMBER11:1121
+digits(1025,10) = <%5,2,0,1%>;
+
+theorem :: NUMBER11:1122
+Sum digits(1025,10) = 8;
+
+theorem :: NUMBER11:1123
+digits(1050,10) = <%0,5,0,1%>;
+
+theorem :: NUMBER11:1124
+Sum digits(1050,10) = 6;
+
+theorem :: NUMBER11:1125
+digits(1075,10) = <%5,7,0,1%>;
+
+theorem :: NUMBER11:1126
+Sum digits(1075,10) = 13;
+
+theorem :: NUMBER11:1127
+digits(1125,10) = <%5,2,1,1%>;
+
+theorem :: NUMBER11:1128
+Sum digits(1125,10) = 9;
+
+theorem :: NUMBER11:1129
+digits(1175,10) = <%5,7,1,1%>;
+
+theorem :: NUMBER11:1130
+Sum digits(1175,10) = 14;
+
+theorem :: NUMBER11:1131
+digits(1225,10) = <%5,2,2,1%>;
+
+theorem :: NUMBER11:1132
+Sum digits(1225,10) = 10;
+
+theorem :: NUMBER11:1133
+digits(1250,10) = <%0,5,2,1%>;
+
+theorem :: NUMBER11:1134
+Sum digits(1250,10) = 8;
+
+theorem :: NUMBER11:1135
+digits(1275,10) = <%5,7,2,1%>;
+
+theorem :: NUMBER11:1136
+Sum digits(1275,10) = 15;
+
+theorem :: NUMBER11:1137
+digits(1325,10) = <%5,2,3,1%>;
+
+theorem :: NUMBER11:1138
+Sum digits(1325,10) = 11;
+
+theorem :: NUMBER11:1139
+digits(1350,10) = <%0,5,3,1%>;
+
+theorem :: NUMBER11:1140
+Sum digits(1350,10) = 9;
+
+theorem :: NUMBER11:1141
+digits(1375,10) = <%5,7,3,1%>;
+
+theorem :: NUMBER11:1142
+Sum digits(1375,10) = 16;
+
+theorem :: NUMBER11:1143
+digits(1425,10) = <%5,2,4,1%>;
+
+theorem :: NUMBER11:1144
+Sum digits(1425,10) = 12;
+
+theorem :: NUMBER11:1145
+digits(1450,10) = <%0,5,4,1%>;
+
+theorem :: NUMBER11:1146
+Sum digits(1450,10) = 10;
+
+theorem :: NUMBER11:1147
+digits(1475,10) = <%5,7,4,1%>;
+
+theorem :: NUMBER11:1148
+Sum digits(1475,10) = 17;
+
+theorem :: NUMBER11:1149
+digits(1525,10) = <%5,2,5,1%>;
+
+theorem :: NUMBER11:1150
+Sum digits(1525,10) = 13;
+
+theorem :: NUMBER11:1151
+digits(1550,10) = <%0,5,5,1%>;
+
+theorem :: NUMBER11:1152
+Sum digits(1550,10) = 11;
+
+theorem :: NUMBER11:1153
+digits(1575,10) = <%5,7,5,1%>;
+
+theorem :: NUMBER11:1154
+Sum digits(1575,10) = 18;
+
+theorem :: NUMBER11:1155
+digits(1625,10) = <%5,2,6,1%>;
+
+theorem :: NUMBER11:1156
+Sum digits(1625,10) = 14;
+
+theorem :: NUMBER11:1157
+digits(1675,10) = <%5,7,6,1%>;
+
+theorem :: NUMBER11:1158
+Sum digits(1675,10) = 19;
+
+theorem :: NUMBER11:1159
+digits(1725,10) = <%5,2,7,1%>;
+
+theorem :: NUMBER11:1160
+Sum digits(1725,10) = 15;
+
+theorem :: NUMBER11:1161
+digits(1750,10) = <%0,5,7,1%>;
+
+theorem :: NUMBER11:1162
+Sum digits(1750,10) = 13;
+
+theorem :: NUMBER11:1163
+digits(1775,10) = <%5,7,7,1%>;
+
+theorem :: NUMBER11:1164
+Sum digits(1775,10) = 20;
+
+theorem :: NUMBER11:1165
+digits(1825,10) = <%5,2,8,1%>;
+
+theorem :: NUMBER11:1166
+Sum digits(1825,10) = 16;
+
+theorem :: NUMBER11:1167
+digits(1850,10) = <%0,5,8,1%>;
+
+theorem :: NUMBER11:1168
+Sum digits(1850,10) = 14;
+
+theorem :: NUMBER11:1169
+digits(1875,10) = <%5,7,8,1%>;
+
+theorem :: NUMBER11:1170
+Sum digits(1875,10) = 21;
+
+theorem :: NUMBER11:1171
+digits(1925,10) = <%5,2,9,1%>;
+
+theorem :: NUMBER11:1172
+Sum digits(1925,10) = 17;
+
+theorem :: NUMBER11:1173
+digits(1950,10) = <%0,5,9,1%>;
+
+theorem :: NUMBER11:1174
+Sum digits(1950,10) = 15;
+
+theorem :: NUMBER11:1175
+digits(1975,10) = <%5,7,9,1%>;
+
+theorem :: NUMBER11:1176
+Sum digits(1975,10) = 22;
+
+theorem :: NUMBER11:1177
+digits(2025,10) = <%5,2,0,2%>;
+
+theorem :: NUMBER11:1178
+Sum digits(2025,10) = 9;
+
+theorem :: NUMBER11:1179
+digits(2050,10) = <%0,5,0,2%>;
+
+theorem :: NUMBER11:1180
+Sum digits(2050,10) = 7;
+
+theorem :: NUMBER11:1181
+digits(2075,10) = <%5,7,0,2%>;
+
+theorem :: NUMBER11:1182
+Sum digits(2075,10) = 14;
+
+theorem :: NUMBER11:1183
+digits(2125,10) = <%5,2,1,2%>;
+
+theorem :: NUMBER11:1184
+Sum digits(2125,10) = 10;
+
+theorem :: NUMBER11:1185
+digits(2150,10) = <%0,5,1,2%>;
+
+theorem :: NUMBER11:1186
+Sum digits(2150,10) = 8;
+
+theorem :: NUMBER11:1187
+digits(2175,10) = <%5,7,1,2%>;
+
+theorem :: NUMBER11:1188
+Sum digits(2175,10) = 15;
+
+theorem :: NUMBER11:1189
+digits(2225,10) = <%5,2,2,2%>;
+
+theorem :: NUMBER11:1190
+Sum digits(2225,10) = 11;
+
+theorem :: NUMBER11:1191
+digits(2250,10) = <%0,5,2,2%>;
+
+theorem :: NUMBER11:1192
+Sum digits(2250,10) = 9;
+
+theorem :: NUMBER11:1193
+digits(2275,10) = <%5,7,2,2%>;
+
+theorem :: NUMBER11:1194
+Sum digits(2275,10) = 16;
+
+theorem :: NUMBER11:1195
+digits(2325,10) = <%5,2,3,2%>;
+
+theorem :: NUMBER11:1196
+Sum digits(2325,10) = 12;
+
+theorem :: NUMBER11:1197
+digits(2350,10) = <%0,5,3,2%>;
+
+theorem :: NUMBER11:1198
+Sum digits(2350,10) = 10;
+
+theorem :: NUMBER11:1199
+digits(2375,10) = <%5,7,3,2%>;
+
+theorem :: NUMBER11:1200
+Sum digits(2375,10) = 17;
+
+theorem :: NUMBER11:1201
+digits(2425,10) = <%5,2,4,2%>;
+
+theorem :: NUMBER11:1202
+Sum digits(2425,10) = 13;
+
+theorem :: NUMBER11:1203
+digits(2450,10) = <%0,5,4,2%>;
+
+theorem :: NUMBER11:1204
+Sum digits(2450,10) = 11;
+
+theorem :: NUMBER11:1205
+digits(2475,10) = <%5,7,4,2%>;
+
+theorem :: NUMBER11:1206
+Sum digits(2475,10) = 18;
+
+theorem :: NUMBER11:1207
+digits(2525,10) = <%5,2,5,2%>;
+
+theorem :: NUMBER11:1208
+Sum digits(2525,10) = 14;
+
+theorem :: NUMBER11:1209
+digits(2550,10) = <%0,5,5,2%>;
+
+theorem :: NUMBER11:1210
+Sum digits(2550,10) = 12;
+
+theorem :: NUMBER11:1211
+digits(2575,10) = <%5,7,5,2%>;
+
+theorem :: NUMBER11:1212
+Sum digits(2575,10) = 19;
+
+theorem :: NUMBER11:1213
+digits(2625,10) = <%5,2,6,2%>;
+
+theorem :: NUMBER11:1214
+Sum digits(2625,10) = 15;
+
+theorem :: NUMBER11:1215
+digits(2650,10) = <%0,5,6,2%>;
+
+theorem :: NUMBER11:1216
+Sum digits(2650,10) = 13;
+
+theorem :: NUMBER11:1217
+digits(2675,10) = <%5,7,6,2%>;
+
+theorem :: NUMBER11:1218
+Sum digits(2675,10) = 20;
+
+theorem :: NUMBER11:1219
+digits(2725,10) = <%5,2,7,2%>;
+
+theorem :: NUMBER11:1220
+Sum digits(2725,10) = 16;
+
+theorem :: NUMBER11:1221
+digits(2750,10) = <%0,5,7,2%>;
+
+theorem :: NUMBER11:1222
+Sum digits(2750,10) = 14;
+
+theorem :: NUMBER11:1223
+digits(2775,10) = <%5,7,7,2%>;
+
+theorem :: NUMBER11:1224
+Sum digits(2775,10) = 21;
+
+theorem :: NUMBER11:1225
+digits(2825,10) = <%5,2,8,2%>;
+
+theorem :: NUMBER11:1226
+Sum digits(2825,10) = 17;
+
+theorem :: NUMBER11:1227
+digits(2850,10) = <%0,5,8,2%>;
+
+theorem :: NUMBER11:1228
+Sum digits(2850,10) = 15;
+
+theorem :: NUMBER11:1229
+digits(2875,10) = <%5,7,8,2%>;
+
+theorem :: NUMBER11:1230
+Sum digits(2875,10) = 22;
+
+theorem :: NUMBER11:1231
+digits(2925,10) = <%5,2,9,2%>;
+
+theorem :: NUMBER11:1232
+Sum digits(2925,10) = 18;
+
+theorem :: NUMBER11:1233
+digits(2950,10) = <%0,5,9,2%>;
+
+theorem :: NUMBER11:1234
+Sum digits(2950,10) = 16;
+
+theorem :: NUMBER11:1235
+digits(2975,10) = <%5,7,9,2%>;
+
+theorem :: NUMBER11:1236
+Sum digits(2975,10) = 23;
+
+theorem :: NUMBER11:1237
+digits(3025,10) = <%5,2,0,3%>;
+
+theorem :: NUMBER11:1238
+Sum digits(3025,10) = 10;
+
+theorem :: NUMBER11:1239
+digits(3050,10) = <%0,5,0,3%>;
+
+theorem :: NUMBER11:1240
+Sum digits(3050,10) = 8;
+
+theorem :: NUMBER11:1241
+digits(3075,10) = <%5,7,0,3%>;
+
+theorem :: NUMBER11:1242
+Sum digits(3075,10) = 15;
+
+theorem :: NUMBER11:1243
+digits(3125,10) = <%5,2,1,3%>;
+
+theorem :: NUMBER11:1244
+Sum digits(3125,10) = 11;
+
+theorem :: NUMBER11:1245
+digits(3150,10) = <%0,5,1,3%>;
+
+theorem :: NUMBER11:1246
+Sum digits(3150,10) = 9;
+
+theorem :: NUMBER11:1247
+digits(3175,10) = <%5,7,1,3%>;
+
+theorem :: NUMBER11:1248
+Sum digits(3175,10) = 16;
+
+theorem :: NUMBER11:1249
+digits(3225,10) = <%5,2,2,3%>;
+
+theorem :: NUMBER11:1250
+Sum digits(3225,10) = 12;
+
+theorem :: NUMBER11:1251
+digits(3250,10) = <%0,5,2,3%>;
+
+theorem :: NUMBER11:1252
+Sum digits(3250,10) = 10;
+
+theorem :: NUMBER11:1253
+digits(3275,10) = <%5,7,2,3%>;
+
+theorem :: NUMBER11:1254
+Sum digits(3275,10) = 17;
+
+theorem :: NUMBER11:1255
+digits(3325,10) = <%5,2,3,3%>;
+
+theorem :: NUMBER11:1256
+Sum digits(3325,10) = 13;
+
+theorem :: NUMBER11:1257
+digits(3350,10) = <%0,5,3,3%>;
+
+theorem :: NUMBER11:1258
+Sum digits(3350,10) = 11;
+
+theorem :: NUMBER11:1259
+digits(3375,10) = <%5,7,3,3%>;
+
+theorem :: NUMBER11:1260
+Sum digits(3375,10) = 18;
+
+theorem :: NUMBER11:1261
+digits(3425,10) = <%5,2,4,3%>;
+
+theorem :: NUMBER11:1262
+Sum digits(3425,10) = 14;
+
+theorem :: NUMBER11:1263
+digits(3450,10) = <%0,5,4,3%>;
+
+theorem :: NUMBER11:1264
+Sum digits(3450,10) = 12;
+
+theorem :: NUMBER11:1265
+digits(3475,10) = <%5,7,4,3%>;
+
+theorem :: NUMBER11:1266
+Sum digits(3475,10) = 19;
+
+theorem :: NUMBER11:1267
+digits(3525,10) = <%5,2,5,3%>;
+
+theorem :: NUMBER11:1268
+Sum digits(3525,10) = 15;
+
+theorem :: NUMBER11:1269
+digits(3550,10) = <%0,5,5,3%>;
+
+theorem :: NUMBER11:1270
+Sum digits(3550,10) = 13;
+
+theorem :: NUMBER11:1271
+digits(3575,10) = <%5,7,5,3%>;
+
+theorem :: NUMBER11:1272
+Sum digits(3575,10) = 20;
+
+theorem :: NUMBER11:1273
+digits(3625,10) = <%5,2,6,3%>;
+
+theorem :: NUMBER11:1274
+Sum digits(3625,10) = 16;
+
+theorem :: NUMBER11:1275
+digits(3650,10) = <%0,5,6,3%>;
+
+theorem :: NUMBER11:1276
+Sum digits(3650,10) = 14;
+
+theorem :: NUMBER11:1277
+digits(3675,10) = <%5,7,6,3%>;
+
+theorem :: NUMBER11:1278
+Sum digits(3675,10) = 21;
+
+theorem :: NUMBER11:1279
+digits(3725,10) = <%5,2,7,3%>;
+
+theorem :: NUMBER11:1280
+Sum digits(3725,10) = 17;
+
+theorem :: NUMBER11:1281
+digits(3750,10) = <%0,5,7,3%>;
+
+theorem :: NUMBER11:1282
+Sum digits(3750,10) = 15;
+
+theorem :: NUMBER11:1283
+digits(3775,10) = <%5,7,7,3%>;
+
+theorem :: NUMBER11:1284
+Sum digits(3775,10) = 22;
+
+theorem :: NUMBER11:1285
+digits(3825,10) = <%5,2,8,3%>;
+
+theorem :: NUMBER11:1286
+Sum digits(3825,10) = 18;
+
+theorem :: NUMBER11:1287
+digits(3850,10) = <%0,5,8,3%>;
+
+theorem :: NUMBER11:1288
+Sum digits(3850,10) = 16;
+
+theorem :: NUMBER11:1289
+digits(3875,10) = <%5,7,8,3%>;
+
+theorem :: NUMBER11:1290
+Sum digits(3875,10) = 23;
+
+theorem :: NUMBER11:1291
+digits(3925,10) = <%5,2,9,3%>;
+
+theorem :: NUMBER11:1292
+Sum digits(3925,10) = 19;
+
+theorem :: NUMBER11:1293
+digits(3950,10) = <%0,5,9,3%>;
+
+theorem :: NUMBER11:1294
+Sum digits(3950,10) = 17;
+
+theorem :: NUMBER11:1295
+digits(3975,10) = <%5,7,9,3%>;
+
+theorem :: NUMBER11:1296
+Sum digits(3975,10) = 24;
+
+theorem :: NUMBER11:1297
+digits(4000,10) = <%0,0,0,4%>;
+
+theorem :: NUMBER11:1298
+Sum digits(4000,10) = 4;
+
+theorem :: NUMBER11:1299
+digits(4025,10) = <%5,2,0,4%>;
+
+theorem :: NUMBER11:1300
+Sum digits(4025,10) = 11;
+
+theorem :: NUMBER11:1301
+digits(4050,10) = <%0,5,0,4%>;
+
+theorem :: NUMBER11:1302
+Sum digits(4050,10) = 9;
+
+theorem :: NUMBER11:1303
+digits(4075,10) = <%5,7,0,4%>;
+
+theorem :: NUMBER11:1304
+Sum digits(4075,10) = 16;
+
+theorem :: NUMBER11:1305
+digits(4100,10) = <%0,0,1,4%>;
+
+theorem :: NUMBER11:1306
+Sum digits(4100,10) = 5;
+
+theorem :: NUMBER11:1307
+digits(4125,10) = <%5,2,1,4%>;
+
+theorem :: NUMBER11:1308
+Sum digits(4125,10) = 12;
+
+theorem :: NUMBER11:1309
+digits(4150,10) = <%0,5,1,4%>;
+
+theorem :: NUMBER11:1310
+Sum digits(4150,10) = 10;
+
+theorem :: NUMBER11:1311
+digits(4175,10) = <%5,7,1,4%>;
+
+theorem :: NUMBER11:1312
+Sum digits(4175,10) = 17;
+
+theorem :: NUMBER11:1313
+digits(4200,10) = <%0,0,2,4%>;
+
+theorem :: NUMBER11:1314
+Sum digits(4200,10) = 6;
+
+theorem :: NUMBER11:1315
+digits(4225,10) = <%5,2,2,4%>;
+
+theorem :: NUMBER11:1316
+Sum digits(4225,10) = 13;
+
+theorem :: NUMBER11:1317
+digits(4250,10) = <%0,5,2,4%>;
+
+theorem :: NUMBER11:1318
+Sum digits(4250,10) = 11;
+
+theorem :: NUMBER11:1319
+digits(4275,10) = <%5,7,2,4%>;
+
+theorem :: NUMBER11:1320
+Sum digits(4275,10) = 18;
+
+theorem :: NUMBER11:1321
+digits(4300,10) = <%0,0,3,4%>;
+
+theorem :: NUMBER11:1322
+Sum digits(4300,10) = 7;
+
+theorem :: NUMBER11:1323
+digits(4325,10) = <%5,2,3,4%>;
+
+theorem :: NUMBER11:1324
+Sum digits(4325,10) = 14;
+
+theorem :: NUMBER11:1325
+digits(4350,10) = <%0,5,3,4%>;
+
+theorem :: NUMBER11:1326
+Sum digits(4350,10) = 12;
+
+theorem :: NUMBER11:1327
+digits(4375,10) = <%5,7,3,4%>;
+
+theorem :: NUMBER11:1328
+Sum digits(4375,10) = 19;
+
+theorem :: NUMBER11:1329
+digits(4400,10) = <%0,0,4,4%>;
+
+theorem :: NUMBER11:1330
+Sum digits(4400,10) = 8;
+
+theorem :: NUMBER11:1331
+digits(4425,10) = <%5,2,4,4%>;
+
+theorem :: NUMBER11:1332
+Sum digits(4425,10) = 15;
+
+theorem :: NUMBER11:1333
+digits(4450,10) = <%0,5,4,4%>;
+
+theorem :: NUMBER11:1334
+Sum digits(4450,10) = 13;
+
+theorem :: NUMBER11:1335
+digits(4475,10) = <%5,7,4,4%>;
+
+theorem :: NUMBER11:1336
+Sum digits(4475,10) = 20;
+
+theorem :: NUMBER11:1337
+digits(4500,10) = <%0,0,5,4%>;
+
+theorem :: NUMBER11:1338
+Sum digits(4500,10) = 9;
+
+theorem :: NUMBER11:1339
+digits(4525,10) = <%5,2,5,4%>;
+
+theorem :: NUMBER11:1340
+Sum digits(4525,10) = 16;
+
+theorem :: NUMBER11:1341
+digits(4550,10) = <%0,5,5,4%>;
+
+theorem :: NUMBER11:1342
+Sum digits(4550,10) = 14;
+
+theorem :: NUMBER11:1343
+digits(4575,10) = <%5,7,5,4%>;
+
+theorem :: NUMBER11:1344
+Sum digits(4575,10) = 21;
+
+theorem :: NUMBER11:1345
+digits(4600,10) = <%0,0,6,4%>;
+
+theorem :: NUMBER11:1346
+Sum digits(4600,10) = 10;
+
+theorem :: NUMBER11:1347
+digits(4625,10) = <%5,2,6,4%>;
+
+theorem :: NUMBER11:1348
+Sum digits(4625,10) = 17;
+
+theorem :: NUMBER11:1349
+digits(4650,10) = <%0,5,6,4%>;
+
+theorem :: NUMBER11:1350
+Sum digits(4650,10) = 15;
+
+theorem :: NUMBER11:1351
+digits(4675,10) = <%5,7,6,4%>;
+
+theorem :: NUMBER11:1352
+Sum digits(4675,10) = 22;
+
+theorem :: NUMBER11:1353
+digits(4700,10) = <%0,0,7,4%>;
+
+theorem :: NUMBER11:1354
+Sum digits(4700,10) = 11;
+
+theorem :: NUMBER11:1355
+digits(4725,10) = <%5,2,7,4%>;
+
+theorem :: NUMBER11:1356
+Sum digits(4725,10) = 18;
+
+theorem :: NUMBER11:1357
+digits(4750,10) = <%0,5,7,4%>;
+
+theorem :: NUMBER11:1358
+Sum digits(4750,10) = 16;
+
+theorem :: NUMBER11:1359
+digits(4775,10) = <%5,7,7,4%>;
+
+theorem :: NUMBER11:1360
+Sum digits(4775,10) = 23;
+
+theorem :: NUMBER11:1361
+digits(4800,10) = <%0,0,8,4%>;
+
+theorem :: NUMBER11:1362
+Sum digits(4800,10) = 12;
+
+theorem :: NUMBER11:1363
+digits(4825,10) = <%5,2,8,4%>;
+
+theorem :: NUMBER11:1364
+Sum digits(4825,10) = 19;
+
+theorem :: NUMBER11:1365
+digits(4850,10) = <%0,5,8,4%>;
+
+theorem :: NUMBER11:1366
+Sum digits(4850,10) = 17;
+
+theorem :: NUMBER11:1367
+digits(4875,10) = <%5,7,8,4%>;
+
+theorem :: NUMBER11:1368
+Sum digits(4875,10) = 24;
+
+theorem :: NUMBER11:1369
+digits(4900,10) = <%0,0,9,4%>;
+
+theorem :: NUMBER11:1370
+Sum digits(4900,10) = 13;
+
+theorem :: NUMBER11:1371
+digits(4925,10) = <%5,2,9,4%>;
+
+theorem :: NUMBER11:1372
+Sum digits(4925,10) = 20;
+
+theorem :: NUMBER11:1373
+digits(4950,10) = <%0,5,9,4%>;
+
+theorem :: NUMBER11:1374
+Sum digits(4950,10) = 18;
+
+theorem :: NUMBER11:1375
+digits(4975,10) = <%5,7,9,4%>;
+
+theorem :: NUMBER11:1376
+Sum digits(4975,10) = 25;
+
+theorem :: NUMBER11:1377
+Sierp36 4975,25;
+
+theorem :: NUMBER11:1378
+Sierp36 value(<%0,0%>^(11-->9)^<%1%>,10),100;

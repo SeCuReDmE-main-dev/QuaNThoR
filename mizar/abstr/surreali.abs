@@ -1,0 +1,406 @@
+:: Inverse Element for Surreal Number
+::  by Karol P\kak
+:: 
+:: Received October 22, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies MCART_1, FACIRC_1, RELAT_1, TARSKI, XBOOLE_0, SUBSET_1, XXREAL_0,
+      ARYTM_3, FUNCT_1, ZFMISC_1, CARD_1, ORDINAL1, PBOOLE, ARYTM_0, CARD_3,
+      ARROW, ZFREFLE1, VECTSP_1, REALALG1, NUMBERS, NAT_1, ARYTM_1, GLIB_000,
+      WAYBEL_3, COHSP_1, INTEGRA1, PETRI_DF, NORMSP_1, SURREAL0, SURREALR,
+      SURREALI, FUNCOP_1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, XTUPLE_0, SUBSET_1, RELAT_1, FUNCT_1,
+      PBOOLE, ORDINAL1, CARD_3, NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, COHSP_1,
+      SURREAL0, SURREALO, SURREALR;
+ constructors RELSET_1, NEWTON, NAT_1, CARD_3, COHSP_1, FUNCOP_1, SURREALO,
+      SURREALR;
+ registrations XBOOLE_0, RELAT_1, XTUPLE_0, ORDINAL1, FUNCT_1, NAT_1, XREAL_0,
+      XXREAL_0, FUNCOP_1, SURREAL0, SURREALR;
+ requirements BOOLE, SUBSET, NUMERALS, ARITHM, REAL;
+
+
+begin :: Construction of the Inverse Element for Surreal Numbers
+
+ reserve A,B,O for Ordinal,
+      n,m for Nat,
+      a,b,o for object,
+      x,y,z for Surreal,
+      X,Y,Z for set,
+      Inv,I1,I2 for Function;
+
+definition
+  let x,y be object;
+  assume  x is surreal & y is surreal;
+  func x *' y -> Surreal means
+:: SURREALI:def 1
+     for x1,y1 be Surreal st x1=x & y1=y holds it = x1*y1;
+end;
+
+definition
+  let lamb,x be object;
+  let X be set;
+  let Inv be Function;
+  func divs(lamb,x,X,Inv) -> set means
+:: SURREALI:def 2
+    o in it iff ex xL be object st xL in X & xL <> 0_No &
+            o = (1_No +'(xL +' -' x) *' lamb) *' (Inv.xL);
+end;
+
+definition
+  let Lamb be set, x be object;
+  let X be set;
+  let Inv be Function;
+  func divset(Lamb,x,X,Inv) -> set means
+:: SURREALI:def 3
+    o in it iff ex lamb be object st
+          lamb in Lamb & o in divs(lamb,x,X,Inv);
+end;
+
+definition
+  let x be object;
+  let Inv be Function;
+  func transitions_of(x,Inv) -> Function means
+:: SURREALI:def 4
+    dom it = NAT & it.0 = 1_No &
+      for k being Nat holds it.k is pair &
+         (it.(k+1))`1 =
+           L_(it.k) \/ divset(L_(it.k),x,R_x,Inv)\/divset(R_(it.k),x,L_x,Inv) &
+         (it.(k+1))`2 =
+           R_(it.k) \/ divset(L_(it.k),x,L_x,Inv)\/divset(R_(it.k),x,R_x,Inv);
+end;
+
+definition
+  let x be object;
+  let Inv be Function;
+  func divL(x,Inv)  -> Function means
+:: SURREALI:def 5
+    dom it = NAT &
+    for k being Nat holds it.k = (transitions_of(x,Inv).k)`1;
+end;
+
+definition
+  let x be object;
+  let Inv be Function;
+  func divR(x,Inv)  -> Function means
+:: SURREALI:def 6
+    dom it = NAT &
+    for k being Nat holds it.k = (transitions_of(x,Inv).k)`2;
+end;
+
+registration
+  let a,b be Surreal, x,y be object;
+  identify a*b with x*'y when a = x, b = y;
+end;
+
+theorem :: SURREALI:1
+  divL(o,Inv).0 = {0_No} & divR(o,Inv).0={};
+
+theorem :: SURREALI:2
+  n <= m implies
+    divL(o,Inv).n c= divL(o,Inv).m &
+    divR(o,Inv).n c= divR(o,Inv).m;
+
+definition
+  let X be set,f be Function;
+  attr f is X -surreal-valued means
+:: SURREALI:def 7
+    o in X implies f.o is Surreal;
+end;
+
+theorem :: SURREALI:3
+  Inv is Y -surreal-valued & X c= Y implies
+    Inv is X -surreal-valued;
+
+theorem :: SURREALI:4
+  divs(y,x,X,Inv) is surreal-membered;
+
+theorem :: SURREALI:5
+  Y is surreal-membered & X is surreal-membered &
+     Inv is X -surreal-valued
+implies
+   divset(Y,x,X,Inv) is surreal-membered;
+
+theorem :: SURREALI:6
+  divL(o,Inv).(n+1) = divL(o,Inv).n \/
+    divset(divL(o,Inv).n,o,R_o,Inv) \/ divset(divR(o,Inv).n,o,L_o,Inv)
+  &
+  divR(o,Inv).(n+1) = divR(o,Inv).n \/
+    divset(divL(o,Inv).n,o,L_o,Inv) \/ divset(divR(o,Inv).n,o,R_o,Inv);
+
+theorem :: SURREALI:7
+   divs(o,x,X,Inv) = divs(o,x,X\{0_No},Inv);
+
+theorem :: SURREALI:8
+  divset(Y,x,X,Inv) = divset(Y,x,X\{0_No},Inv);
+
+theorem :: SURREALI:9
+   Inv is (L_x\/R_x)\{0_No} -surreal-valued implies
+     divL(x,Inv).n is  surreal-membered &
+     divR(x,Inv).n is  surreal-membered;
+
+theorem :: SURREALI:10
+  Inv is (L_x\/R_x)\{0_No} -surreal-valued implies
+    Union divL(x,Inv) is surreal-membered &
+    Union divR(x,Inv) is surreal-membered;
+
+theorem :: SURREALI:11
+  Y c= Z implies divset(Y,x,X,Inv) c= divset(Z,x,X,Inv);
+
+theorem :: SURREALI:12
+  Union divL(x,Inv)
+    = {0_No}\/divset(Union divL(x,Inv),x,R_x,Inv)\/
+      divset(Union divR(x,Inv),x,L_x,Inv);
+
+theorem :: SURREALI:13
+  Union divR(x,Inv)
+      = divset(Union divL(x,Inv),x,L_x,Inv)\/
+        divset(Union divR(x,Inv),x,R_x,Inv);
+
+theorem :: SURREALI:14
+  X\{0_No} c= Z & I1|Z = I2|Z implies
+     divs(a,b,X,I1) = divs(a,b,X,I2);
+
+theorem :: SURREALI:15
+  X\{0_No} c= Z & I1|Z = I2|Z implies
+     divset(Y,o,X,I1) = divset(Y,o,X,I2);
+
+theorem :: SURREALI:16
+  for x be object st (L_x \/ R_x)\{0_No} c= Z & I1|Z = I2|Z holds
+    transitions_of(x,I1) = transitions_of(x,I2);
+
+theorem :: SURREALI:17
+  for x be object st (L_x \/ R_x)\{0_No} c= Z & I1|Z = I2|Z holds
+    divL(x,I1) = divL(x,I2) & divR(x,I1) = divR(x,I2);
+
+begin :: The Concept of Positive Options in Conway's Sense
+
+definition
+  let x be Surreal;
+  attr x is positive means
+:: SURREALI:def 8
+    0_No < x;
+end;
+
+registration
+  cluster 1_No -> positive;
+end;
+
+registration
+  cluster positive for Surreal;
+end;
+
+registration
+  let x,y be positive Surreal;
+  cluster x + y -> positive;
+  cluster x * y -> positive;
+end;
+
+definition
+  let x be object;
+  assume x is positive Surreal;
+  func ||.x.|| -> positive Surreal means
+:: SURREALI:def 9
+       (y in L_it iff y = 0_No or (y in L_x & y is positive)) &
+    (y in R_it iff y in R_x & y is positive);
+end;
+
+theorem :: SURREALI:18
+  x is positive implies x == ||.x.||;
+
+theorem :: SURREALI:19
+  x is positive implies ||.||.x.||.|| = ||.x.||;
+
+theorem :: SURREALI:20
+  x is positive implies
+    (L_||.x.|| \/ R_||.x.||)\{0_No} c= L_x \/R_x;
+
+theorem :: SURREALI:21
+  x is positive & y in (L_||.x.|| \/ R_||.x.||)\{0_No} implies y is positive;
+
+theorem :: SURREALI:22
+  x is positive implies born ||.x.|| c= born x;
+
+definition
+  let A be Ordinal;
+  func Positives A -> Subset of Day A means
+:: SURREALI:def 10
+    x in it iff x in Day A & 0_No < x;
+end;
+
+theorem :: SURREALI:23
+  A c= B implies Positives A c= Positives B;
+
+theorem :: SURREALI:24
+  x is positive implies
+    (L_||.x.|| \/ R_||.x.||)\{0_No} c= Positives born x;
+
+begin :: The Inverse Element for Surreal Numbers
+
+definition
+  let A be Ordinal;
+  func No_inverse_op A -> ManySortedSet of Positives A means
+:: SURREALI:def 11
+    ex S be c=-monotone Function-yielding Sequence st
+      dom S = succ A & it = S.A &
+      for B be Ordinal st B in succ A
+         ex SB be ManySortedSet of Positives B st S.B = SB &
+           for x be object st x in Positives B holds
+             SB.x = [ Union divL(||.x.||,union rng (S|B)),
+                      Union divR(||.x.||,union rng (S|B))];
+end;
+
+theorem :: SURREALI:25
+  for S be c=-monotone Function-yielding Sequence st
+    for B st B in dom S
+      ex SB be ManySortedSet of Positives B st S.B = SB &
+         for o st o in Positives B holds
+           SB.o =
+           [ Union divL(||.o.||,(union rng (S|B))),
+             Union divR(||.o.||,(union rng (S|B)))]
+    holds
+  for A st A in dom S holds No_inverse_op A = S.A;
+
+definition
+  let x be Surreal;
+  func inv x -> object equals
+:: SURREALI:def 12
+     (No_inverse_op born x).x;
+end;
+
+definition
+  let x be Surreal;
+  func No_inverses_on x -> Function means
+:: SURREALI:def 13
+     dom it = (L_x\/R_x)\{0_No} &
+     for y st y in (L_x\/R_x)\{0_No} holds it.y = inv y;
+end;
+
+theorem :: SURREALI:26
+  x is positive & No_inverses_on ||.x.|| c= Inv implies
+        inv x = [ Union divL(||.x.||,Inv),Union divR(||.x.||,Inv)];
+
+theorem :: SURREALI:27
+  for f be Function st dom f = NAT & y in Union f
+    ex n st y in f.n &
+       for m st y in f.m holds n <= m;
+
+theorem :: SURREALI:28
+   for x1,x1R,y1,y1R be Surreal st 0_No < x1 & x1 * x1R == 1_No &
+     0_No < y1 & y1 * y1R == 1_No & x * y1 < y * x1
+   holds x * x1R < y * y1R;
+
+theorem :: SURREALI:29
+  for x,x1,x2,y1,y2 be Surreal holds
+   (1_No +(x2 - x) * y2)*x1 +- (1_No +(x1 - x) * y1) * x2 ==
+       (x1-x2)*(1_No-x*y1) + (y1-y2)*x1*(x-x2) &
+   (1_No +(x2  - x) * y2)*x1 - (1_No +(x1  - x) * y1) * x2 ==
+       (x1-x2)*(1_No-x*y2) + (y2-y1)*x2*(x1-x);
+
+theorem :: SURREALI:30
+  for x1,y1,Ix1 be Surreal st x1*Ix1==1_No holds
+     x1*y +x*y1 - x1*y1 == 1_No +x1*( y - (1_No +(x1-x)*y1)*Ix1);
+
+registration
+  let x be positive Surreal;
+  cluster inv x -> surreal;
+end;
+
+theorem :: SURREALI:31
+  x is positive implies inv x is Surreal;
+
+theorem :: SURREALI:32
+  x is positive & y = inv x implies x * y == 1_No;
+
+definition
+  let x be Surreal;
+  assume  not x == 0_No;
+  func x" -> Surreal means
+:: SURREALI:def 14
+    it = inv x if x is positive otherwise
+         -it = inv -x;
+end;
+
+begin :: Selected Properties of the Inverse Element
+
+theorem :: SURREALI:33
+  not x == 0_No implies x * x" == 1_No;
+
+definition
+  let X,Y be set, x be Surreal;
+  func divset(X,x,Y) -> set means
+:: SURREALI:def 15
+        o in it iff ex x1,y1 be Surreal st
+              0_No < x1 & x1 in X & y1 in Y &
+              o = (1_No + (x1 - x)*y1) * (x1");
+end;
+
+registration
+  let X,Y be set, x be Surreal;
+  cluster divset(X,x,Y) -> surreal-membered;
+end;
+
+theorem :: SURREALI:34
+  for X,nX be set, Y be surreal-membered set
+     st x is positive &
+    ((X = L_x & nX=L_||.x.||) or (X=R_x & nX=R_||.x.||))
+  holds
+     divset(X,||.x.||,Y) = divset(Y,||.x.||,nX,No_inverses_on ||.x.||);
+
+theorem :: SURREALI:35
+  x==y implies divset(X,x,Y) <=_ divset(X,y,Y);
+
+theorem :: SURREALI:36
+  x is positive
+     implies
+    x" = [{0_No}\/divset(R_x,||.x.||,L_(x"))\/divset(L_x,||.x.||,R_(x")),
+                  divset(L_x,||.x.||,L_(x"))\/divset(R_x,||.x.||,R_(x"))];
+
+theorem :: SURREALI:37
+  for X1,X2,Y1,Y2 be surreal-membered set st
+    X2 <=_ X1 & Y2 <=_ Y1 & [X1,Y1] is surreal
+  holds [X2,Y2] is surreal;
+
+theorem :: SURREALI:38
+  x is positive implies
+     [{0_No}\/divset(R_x,x,L_(x"))\/divset(L_x,x,R_(x")),
+      divset(L_x,x,L_(x"))\/divset(R_x,x,R_(x"))] is Surreal;
+
+theorem :: SURREALI:39
+  x is positive & y = [{0_No}\/divset(R_x,x,L_(x"))\/divset(L_x,x,R_(x")),
+                       divset(L_x,x,L_(x"))\/divset(R_x,x,R_(x"))]
+  implies x" == y;
+
+begin :: Fundamental Properties of the Inverse Element
+
+theorem :: SURREALI:40
+  not x == 0_No implies (0_No < x iff 0_No < x");
+
+registration
+  let x be positive Surreal;
+  cluster x" -> positive;
+end;
+
+theorem :: SURREALI:41
+  x*y ==0_No iff x == 0_No or y == 0_No;
+
+theorem :: SURREALI:42
+  not x == 0_No & x * y == 1_No implies y == x";
+
+theorem :: SURREALI:43
+  not 0_No == x & x == y implies x" == y";
+
+theorem :: SURREALI:44
+  not x==0_No implies x" " == x;
+
+theorem :: SURREALI:45
+  not x==0_No & not y == 0_No implies (x*y)" == x" * y";

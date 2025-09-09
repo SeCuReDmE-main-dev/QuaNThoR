@@ -1,0 +1,2417 @@
+:: Elementary Number Theory Problems. {P}art {XII}
+::  by Adam Grabowski
+:: 
+:: Received December 18, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, NAT_1, RELAT_1, FUNCT_1, XXREAL_0, ARYTM_3, XCMPLX_0,
+      CARD_1, INT_1, NEWTON, INT_2, ARYTM_1, SUBSET_1, XBOOLE_0, TARSKI,
+      FINSET_1, COMPLEX1, ABIAN, NAT_6, SQUARE_1, ZFMISC_1, POWER, PREPOWER,
+      REAL_1, VALUED_0, PYTHTRIP, NUMPOLY1, EUCLID_3, FUNCT_7, ORDINAL2,
+      MOEBIUS1, FINSEQ_1, CARD_3, NUMBER02, NUMBER06, NUMBER12, INT_5, PEPIN,
+      ORDINAL4, FUNCOP_1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ENUMSET1, ORDINAL1, CARD_1,
+      NUMBERS, XCMPLX_0, RELAT_1, FUNCT_1, FINSET_1, FUNCOP_1, FUNCT_2,
+      FINSEQ_1, SQUARE_1, VALUED_0, XREAL_0, INT_1, INT_2, NAT_1, NAT_D,
+      XXREAL_0, PREPOWER, POWER, NEWTON, ABIAN, PEPIN, INT_5, WSIERP_1,
+      PYTHTRIP, NAT_6, MOEBIUS1, NUMPOLY1, NUMBER02, NUMBER06;
+ constructors NAT_D, RELSET_1, ABIAN, NAT_6, ENUMSET1, PEPIN, PYTHTRIP,
+      PREPOWER, SERIES_1, NUMPOLY1, MOEBIUS1, INT_5, NEWTON03, NUMBER02,
+      NUMBER06, WSIERP_1, RECDEF_1, INT_6;
+ registrations ORDINAL1, RELSET_1, FINSET_1, NUMBERS, XCMPLX_0, XXREAL_0,
+      XREAL_0, NAT_1, INT_1, MEMBERED, VALUED_0, CARD_1, SQUARE_1, NEWTON,
+      NEWTON02, NEWTON03, FOMODEL0, ABIAN, NAT_6, POWER, RELAT_1, XBOOLE_0,
+      FUNCT_1, NUMPOLY1, NUMBER02, NUMBER06, NEWTON04, FINSEQ_1, NUMBER09;
+ requirements REAL, NUMERALS, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, INT_2, NUMBER02;
+ equalities SQUARE_1, ORDINAL1, FINSEQ_1;
+ expansions INT_1, INT_2, ZFMISC_1;
+ theorems NEWTON, WSIERP_1, INT_1, INT_2, NEWTON02, NAT_D, NEWTON03, PEPIN,
+      NUMBER02, ORDINAL1, XREAL_1, XXREAL_0, NAT_1, INT_4, XCMPLX_1, NAT_3,
+      XBOOLE_0, INT_6, PYTHTRIP, FUNCT_1, INT_5, NAT_6, TARSKI, EULER_1,
+      ENUMSET1, CARD_1, POWER, PREPOWER, SEQM_3, NUMPOLY1, FUNCT_2, ABIAN,
+      FINSEQ_1, RELAT_1, MOEBIUS1, ZFMISC_1, CARD_2, FINSEQ_4, XBOOLE_1, NAT_2,
+      XPRIMES1, COMPLEX1, RVSUM_1, FUNCOP_1, NUMBER03, NUMBER05, NUMBER06,
+      SUBSET_1, POLYEQ_2;
+ schemes NAT_1, FUNCT_2;
+
+begin :: Preliminaries
+
+theorem SetFor10:
+  for x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 being object holds
+    {x1,x2,x3,x4,x5,x6,x7,x8,x9,x10} =
+       {x1,x2,x3,x4,x5} \/ {x6,x7,x8,x9,x10}
+  proof
+    let x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 be object;
+    thus {x1,x2,x3,x4,x5,x6,x7,x8,x9,x10} c=
+       {x1,x2,x3,x4,x5} \/ {x6,x7,x8,x9,x10}
+    proof
+      let x be object;
+      assume x in {x1,x2,x3,x4,x5,x6,x7,x8,x9,x10}; then
+      x = x1 or x = x2 or x = x3 or x = x4 or x = x5 or
+        x = x6 or x = x7 or x = x8 or x = x9 or x = x10
+          by ENUMSET1:def 8; then
+      x in {x1,x2,x3,x4,x5} or
+        x in {x6,x7,x8,x9,x10} by ENUMSET1:def 3;
+      hence thesis by XBOOLE_0:def 3;
+    end;
+    let x be object;
+    assume x in {x1,x2,x3,x4,x5} \/ {x6,x7,x8,x9,x10}; then
+    per cases by XBOOLE_0:def 3;
+    suppose x in {x1,x2,x3,x4,x5}; then
+      x = x1 or x = x2 or x = x3 or x = x4 or x = x5 by ENUMSET1:def 3;
+      hence thesis by ENUMSET1:def 8;
+    end;
+    suppose x in {x6,x7,x8,x9,x10}; then
+      x = x6 or x = x7 or x = x8 or x = x9 or x = x10 by ENUMSET1:def 3;
+      hence thesis by ENUMSET1:def 8;
+    end;
+  end;
+
+registration ::: generalizes registration in NUMBER02
+  let m be composite Integer, n be non zero Nat;
+  cluster m * n -> composite;
+  coherence
+  proof
+A1: 2 <= m by NUMBER02:def 1;
+    1 <= n by NAT_1:14; then
+    2 * 1 <= m * n by A1,XREAL_1:66;
+    hence 2 <= m * n;
+    per cases;
+    suppose n = 1;
+      hence thesis;
+    end;
+    suppose
+A8:   n <> 1;
+A7:   n divides m * n;
+      n <> m * n
+      proof
+        assume n = m * n; then
+        1 * n = m * n; then
+        m = 1 by XCMPLX_1:5;
+        hence thesis by NUMBER02:def 1;
+      end;
+      hence thesis by A7,A8;
+    end;
+  end;
+end;
+
+registration ::: generalizes registration in NUMBER02
+  let m, n be non zero non trivial Nat;
+  cluster m * n -> composite;
+  coherence
+  proof
+A1: 1 + 1 <= m by NAT_2:29; then
+A0: 1 < m by NAT_1:13;
+    1 <= n by NAT_1:14; then
+    2 * 1 <= m * n by A1,XREAL_1:66;
+    hence 2 <= m * n;
+A7: n divides m * n;
+    n <> m * n
+    proof
+      assume n = m * n; then
+      1 * n = m * n;
+      hence thesis by A0,XCMPLX_1:5;
+    end;
+    hence thesis by A7,NAT_2:def 1;
+  end;
+end;
+
+registration let r be Real;
+  cluster r |^ 2 -> non negative;
+  coherence
+  proof
+    2 * 1 is even;
+    hence thesis;
+  end;
+end;
+
+registration let k be Nat;
+             let n be non zero non trivial Nat;
+  cluster k + n -> non trivial non zero;
+  coherence
+  proof
+    k + n <> 1 by NAT_1:12,NAT_2:29;
+    hence thesis by NAT_2:def 1;
+  end;
+end;
+
+registration let k be Nat;
+  cluster k + 1 -> non zero;
+  coherence;
+  cluster k + 2 -> non trivial non zero;
+  coherence
+  proof
+    k + 2 <> 1 by NAT_1:12;
+    hence thesis by NAT_2:def 1;
+  end;
+  cluster k + 3 -> non trivial non zero;
+  coherence
+  proof
+    k + 3 <> 1 by NAT_1:12;
+    hence thesis by NAT_2:def 1;
+  end;
+end;
+
+theorem Mod22:
+  for n being Nat st n mod 11 = 1 & n mod 2 = 1 holds
+    n mod 22 = 1
+  proof
+    let n be Nat;
+    assume
+A2: n mod 11 = 1 & n mod 2 = 1; then
+A3: 11 divides n - 1 & 2 divides n - 1 by PEPIN:8;
+a0: n is odd by A2,NAT_2:22; then
+    2 * 11 divides n - 1
+      by INT_2:30,XPRIMES1:2,11,A3,PEPIN:4; then
+B1: (n - 1) mod 22 = 0 by a0,PEPIN:6; then
+    n - 1 mod 22 < 22 - 1; then
+    (n - 1) + 1 mod 22 = (n - 1) mod 22 + 1 by a0,NAT_D:70;
+    hence thesis by B1;
+  end;
+
+:: Formalization of Sierpinski Theorem on the
+:: Divisors in the Progression of Primes
+
+theorem SierpinskiTh5: :: Sierpinski, Theorem 5, p. 121
+  for m,n,r being Nat st n > 1 &
+    (for i being Nat st i < n holds ArProg (m,r).i is odd prime) holds
+   for p being Prime st p < n holds
+     p divides r
+  proof
+    let m,n,r be Nat;
+    assume
+A0: n > 1;
+    assume
+A1: for i being Nat st i < n holds ArProg (m,r).i is odd prime;
+    let p be Prime;
+    assume
+ZZ: p < n;
+    per cases;
+    suppose r = 0;
+      hence thesis by NAT_D:6;
+    end;
+    suppose
+Z2:   r <> 0;
+Zz:   n <= m
+      proof
+        assume
+F1:     n > m;
+S1:     1 + r <> 1 by Z2;
+        ArProg (m,r).0 = m + 0 * r by NUMBER06:7; then
+        m is odd prime by A1,A0; then
+S2:     1 * (1 + r) < m * (1 + r) by XREAL_1:68;
+        1 + r divides m * (1 + r); then
+WZ:     m + m * r is not prime by S2,S1;
+        ArProg (m,r).m = m + m * r by NUMBER06:7;
+        hence thesis by WZ,A1,F1;
+      end;
+      deffunc F(Nat) = (ArProg (m,r).$1) mod p;
+BD:   p < m by ZZ,Zz,XXREAL_0:2;
+JJ:   for i being Nat st 0 <= i < n holds F(i) <> 0
+      proof
+        let i be Nat;
+        assume
+WW:     0 <= i < n;
+        reconsider aa = ArProg (m,r).i as Nat;
+XY:     ArProg (m,r).i = m + i * r by NUMBER06:7;
+        assume F(i) = 0; then
+        p divides aa by PEPIN:6; then
+W1:     p divides m + r * i by NUMBER06:7;
+        m + r * i is Prime by A1,WW,XY; then
+Ox:     p = m + r * i or p = 1 by INT_2:def 4,W1;
+        p + 0 < m + r * i by BD,XREAL_1:8;
+        hence thesis by Ox,INT_2:def 4;
+      end;
+      reconsider w = p - 1 as Nat;
+      reconsider Sw = Seg w as finite non empty set;
+      deffunc F(Nat) = In ((ArProg(m,r).$1) mod p, Sw);
+      ex f being Function of {0} \/ Seg w, Sw st
+      for x being Element of {0} \/ Seg w holds f.x = F(x)
+        from FUNCT_2:sch 4; then
+      consider f being Function of {0} \/ Seg w, Sw such that
+CC:   for x being Element of {0} \/ Seg w holds f.x = F(x);
+      set B = Seg w;
+      set A = {0} \/ Seg w;
+      not 0 in Seg w by FINSEQ_1:1; then
+P2:   card A = (card Seg w) + 1 by CARD_2:41 .= w + 1;
+      reconsider cB = card B, cA = card A as Nat;
+      cB < cA by P2,NAT_1:13; then
+      card Segm cB in card Segm cA by NAT_1:41; then
+      consider xx1,xx2 being object such that
+C3:   xx1 in A & xx2 in A & xx1 <> xx2 & f.xx1 = f.xx2 by FINSEQ_4:65;
+      reconsider xx1, xx2 as Nat by C3;
+      ex n1,n2 being Nat st n1 in A & n2 in A & n1 < n2 & f.n1 = f.n2
+      proof
+        per cases by XXREAL_0:1,C3;
+        suppose
+W1:       xx1 > xx2;
+          take n1 = xx2, n2 = xx1;
+          thus thesis by C3,W1;
+        end;
+        suppose
+W1:       xx1 < xx2;
+          take n1 = xx1, n2 = xx2;
+          thus thesis by C3,W1;
+        end;
+      end; then
+      consider x2,x1 being Nat such that
+C3:   x2 in A & x1 in A & x2 < x1 & f.x2 = f.x1;
+      ArProg (m,r).x1 = m + x1 * r by NUMBER06:7; then
+H2:   ArProg (m,r).x1 - ArProg (m,r).x2 = (m + x1 * r) - (m + x2 * r)
+        by NUMBER06:7;
+k1:   x1 in {0} or x1 in Seg w by C3,XBOOLE_0:def 3; then
+K1:   x1 = 0 or 1 <= x1 <= p - 1 by FINSEQ_1:1;
+K2:   x1 <= p - 1 by k1,FINSEQ_1:1;
+      x2 in {0} or x2 in Seg w by C3,XBOOLE_0:def 3; then
+WW:   x2 <= p - 1 by FINSEQ_1:1;
+J3:   p - 1 < p - 1 + 1 by NAT_1:13;
+      x1 - x2 <= x1 - 0 by XREAL_1:13; then
+      x1 - x2 <= w by K2,XXREAL_0:2; then
+T1:   x1 - x2 < p by J3,XXREAL_0:2;
+      x1 < p by K1,J3,XXREAL_0:2; then
+      x1 < n by ZZ,XXREAL_0:2; then
+O1:   (ArProg (m,r).x1) mod p <> 0 by JJ;
+      (ArProg (m,r).x1) mod p < w + 1 by NAT_D:1; then
+O2:   (ArProg (m,r).x1) mod p <= w by NAT_1:13;
+Ja:   0 + 1 <= (ArProg (m,r).x1) mod p by O1,NAT_1:13;
+      x2 < p by WW,J3,XXREAL_0:2; then
+      0 <= x2 < n by ZZ,XXREAL_0:2; then
+O1:   (ArProg (m,r).x2) mod p <> 0 by JJ;
+      (ArProg (m,r).x2) mod p < w + 1 by NAT_D:1; then
+O3:   (ArProg (m,r).x2) mod p <= w by NAT_1:13;
+Jb:   0 + 1 <= (ArProg (m,r).x2) mod p by O1,NAT_1:13;
+      f.x1 = In ((ArProg(m,r).x1) mod p, Sw) by C3,CC; then
+C4:   f.x1 = (ArProg (m,r).x1) mod p by Ja,SUBSET_1:def 8,O2,FINSEQ_1:1;
+      f.x2 = In ((ArProg(m,r).x2) mod p, Sw) by C3,CC; then
+      f.x2 = (ArProg (m,r).x2) mod p by Jb,SUBSET_1:def 8,O3,FINSEQ_1:1; then
+SS:   p divides ((x1 - x2) * r) by H2,C3,C4,INT_4:23;
+      x1 - x2 > x2 - x2 by C3,XREAL_1:9; then
+      not p divides (x1 - x2) by T1,NAT_D:7;
+      hence thesis by SS,NAT_6:7;
+    end;
+  end;
+
+begin :: Problem 42
+:: Prove that there exists an increasing infinite sequence of triangular
+:: numbers (i.e. numbers of the form t_n = 1/2 n(n+1), n = 1, 2, ... )
+:: such that every two of them are relatively prime.
+
+theorem CoprimeDivides:  :: see WSIERP_1:16
+  for a,m,n being Nat st a,m are_coprime & n divides a holds
+    n,m are_coprime
+  proof
+    let a,m,n be Nat;
+    assume
+A1: a,m are_coprime & n divides a;
+    assume not n,m are_coprime; then
+    consider k being Nat such that
+A2: k divides n & k divides m & k <> 1 by PYTHTRIP:def 1;
+    k divides a by A1,A2,INT_2:9; then
+    k divides (a gcd m) by A2,INT_2:def 2;
+    hence thesis by A2,A1,WSIERP_1:15;
+  end;
+
+theorem Coprime21:
+  for a being Nat holds
+    a,2 * a + 1 are_coprime
+  proof
+    let a be Nat;
+    assume not a,2 * a + 1 are_coprime; then
+    consider n being Nat such that
+A1: n divides a & n divides 2 * a + 1 & n <> 1 by PYTHTRIP:def 1;
+A2: 1 divides n by NAT_D:6;
+    n divides (2 * a) by A1,NAT_D:9; then
+    n divides 1 by A1,NAT_D:10;
+    hence thesis by A1,A2,NAT_D:5;
+  end;
+
+theorem Coprime61:
+  for a being Nat holds
+    a,6 * a + 1 are_coprime
+  proof
+    let a be Nat;
+    assume not a,6 * a + 1 are_coprime; then
+    consider n being Nat such that
+A1: n divides a & n divides 6 * a + 1 & n <> 1 by PYTHTRIP:def 1;
+A2: 1 divides n by NAT_D:6;
+    n divides (6 * a) by A1,NAT_D:9; then
+    n divides 1 by A1,NAT_D:10;
+    hence thesis by A1,A2,NAT_D:5;
+  end;
+
+theorem Coprime31:
+  for a being Nat holds
+    a,3 * a + 1 are_coprime
+  proof
+    let a be Nat;
+    assume not a,3 * a + 1 are_coprime; then
+    consider n being Nat such that
+A1: n divides a & n divides 3 * a + 1 & n <> 1 by PYTHTRIP:def 1;
+A2: 1 divides n by NAT_D:6;
+    n divides (3 * a) by A1,NAT_D:9; then
+    n divides 1 by A1,NAT_D:10;
+    hence thesis by A1,A2,NAT_D:5;
+  end;
+
+theorem ConcatIsIncreasing:
+  for f being increasing FinSequence of NAT,
+      x being Nat st
+    (for i being Nat st i in dom f holds f.i < x) holds
+   f ^ <*x*> is increasing
+  proof
+    let f be increasing FinSequence of NAT,
+        x be Nat;
+    assume
+A1: for i being Nat st i in dom f holds f.i < x;
+    consider k being Nat such that
+A2: dom f = Seg k by FINSEQ_1:def 2;
+    Seg len f = Seg k by A2,FINSEQ_1:def 3; then
+B2: len f = k by FINSEQ_1:6;
+    set fn = f ^ <*x*>;
+    dom fn = Seg (len f + len <*x*>) by FINSEQ_1:def 7
+          .= Seg (k + 1) by B2,FINSEQ_1:39; then
+C4: dom fn = Seg k \/ {k + 1} by FINSEQ_1:9;
+    for m,n being Nat st m in dom fn & n in dom fn & m < n holds fn.m < fn.n
+    proof
+      let m,n be Nat;
+      assume
+C1:   m in dom fn & n in dom fn & m < n;
+      per cases;
+      suppose
+C2:     m in dom f & n in dom f; then
+        f.m = fn.m & f.n = fn.n by FINSEQ_1:def 7;
+        hence thesis by C2,C1,SEQM_3:def 1;
+      end;
+      suppose
+D1:     m in dom f & not n in dom f; then
+        n in {k + 1} by A2,C1,C4,XBOOLE_0:def 3; then
+c3:     n = k + 1 by TARSKI:def 1;
+        f.m = fn.m by D1,FINSEQ_1:def 7;
+        hence thesis by c3,B2,A1,D1;
+      end;
+      suppose not m in dom f & not n in dom f; then
+        m in {k + 1} & n in {k + 1} by A2,C1,C4,XBOOLE_0:def 3; then
+        m = k + 1 & n = k + 1 by TARSKI:def 1;
+        hence thesis by C1;
+      end;
+      suppose
+D1:     not m in dom f & n in dom f; then
+        m in {k + 1} by A2,C1,C4,XBOOLE_0:def 3; then
+C4:     m = k + 1 by TARSKI:def 1;
+        n <= k by A2,D1,FINSEQ_1:1;
+        hence thesis by C1,C4,NAT_1:13;
+      end;
+    end;
+    hence thesis by SEQM_3:def 1;
+  end;
+
+theorem IncFinNAT:
+  for n being Nat holds
+    (Seg 1) --> n is increasing FinSequence of NAT
+  proof
+    let n be Nat;
+    set f = (Seg 1) --> n;
+B1: {n} c= NAT by ZFMISC_1:31,ORDINAL1:def 12;
+a4: rng f c= {n} by FUNCOP_1:13;
+    dom f = Seg 1 by FUNCOP_1:13; then
+    f is FinSequence by FINSEQ_1:def 2; then
+    reconsider f as FinSequence of NAT
+      by a4,FINSEQ_1:def 4,B1,XBOOLE_1:1;
+    for m,n being Nat st m in dom f & n in dom f & m < n holds f.m < f.n
+    proof
+      let m,n be Nat;
+A0:   dom f = {1} by FUNCOP_1:13,FINSEQ_1:2;
+      assume
+A1:   m in dom f & n in dom f & m < n; then
+      m = 1 & n = 1 by A0,TARSKI:def 1;
+      hence thesis by A1;
+    end;
+    hence thesis by SEQM_3:def 1;
+  end;
+
+theorem :: Problem 42
+  for n being Nat holds
+  ex f being increasing non-empty FinSequence of NAT st
+    dom f = Seg (n + 1) &
+   (for i being Nat st i in dom f holds f.i is triangular) &
+::: maybe better: triangular-valued
+     f is with_all_coprime_terms
+  proof
+     defpred P[Nat] means
+      ex f being increasing non-empty FinSequence of NAT st
+      dom f = Seg ($1+1) &
+      (for i being Nat st i in dom f holds f.i is triangular) &
+        f is with_all_coprime_terms;
+A1: P[0]
+    proof
+      set f = (Seg 1) --> 1;
+      reconsider f as increasing FinSequence of NAT by IncFinNAT;
+G1:   dom f = Seg (0+1) by FUNCOP_1:13;
+g1:   dom f = {1} by FINSEQ_1:2,FUNCOP_1:13;
+GG:   for i being Nat st i in dom f holds f.i is triangular
+        by NUMPOLY1:def 2,NUMPOLY1:11,FUNCOP_1:7,G1;
+      for n being object st n in dom f holds f.n is non empty
+        by FUNCOP_1:7,G1; then
+JH:   f is non-empty by FUNCT_1:def 9;
+      for i,j being Nat st i in dom f & j in dom f & i <> j holds
+        f.i, f.j are_coprime
+      proof
+        let i,j be Nat;
+        assume
+H1:     i in dom f & j in dom f & i <> j; then
+        i = 1 & j = 1 by g1,TARSKI:def 1;
+        hence thesis by H1;
+      end; then
+      f is with_all_coprime_terms by INT_6:def 2;
+      hence thesis by FUNCOP_1:13,GG,JH;
+    end;
+A2: for k being Nat st P[k] holds P[k+1]
+    proof
+      let k be Nat;
+      assume P[k]; then
+      consider f being increasing non-empty FinSequence of NAT such that
+B1:   dom f = Seg (k+1) &
+      (for i being Nat st i in dom f holds f.i is triangular) &
+      f is with_all_coprime_terms;
+      reconsider ff = f as FinSequence of NAT;
+J1:   len ff = k + 1 by B1,FINSEQ_1:def 3;
+      set a = Product ff;
+      reconsider a as Nat;
+G1:   a, a+1 are_coprime;
+G2:   a, 2*a+1 are_coprime by Coprime21;
+      reconsider T = (2 * a + 1) * (2 * a + 1 + 1) / 2 as Element of NAT
+        by ORDINAL1:def 12;
+we:   ex k being Nat st T = Triangle k
+      proof
+        take k = 2 * a + 1;
+        thus thesis by NUMPOLY1:19;
+      end;
+J2:   (2 * a + 1) * (a + 1) = T;
+      not ex i being Nat st i in dom ff & ff.i = 0
+        by FUNCT_1:def 9; then
+::: INT_6:6 replaces RVSUM_1:103???
+WC:   Product ff <> 0 by RVSUM_1:103;
+      k + 1 >= 1 by NAT_1:12; then
+      f.(k + 1) divides a by B1,INT_4:32,FINSEQ_1:1; then
+WV:   f.(k + 1) <= a by WC,NAT_D:7;
+      1 * (a + 1) < T by J2,WC,NAT_1:16,XREAL_1:68; then
+      a < T by NAT_1:16,XXREAL_0:2; then
+ZO:   T > f.(k+1) by WV,XXREAL_0:2;
+cd:   (2 * a + 1) * (a + 1), a are_coprime by WC,G1,G2,EULER_1:14;
+      ::: NOTE: NUMBER08:8 = NUMBER04:64 repeated
+      set fg = ff ^ <*T*>;
+C1:   dom fg = Seg (len ff + len <*T*>) by FINSEQ_1:def 7
+            .= Seg (k + 1 + 1) by J1,FINSEQ_1:39;
+      for i being Nat st i in dom ff holds ff.i < T
+      proof
+        let i be Nat;
+        assume
+ZP:     i in dom ff;
+        1 <= k + 1 by NAT_1:12; then
+ZR:     k + 1 in dom ff by B1;
+        i <= k + 1 by ZP,B1,FINSEQ_1:1; then
+        ff.i <= f.(k+1) by ZP,ZR,SEQM_3:def 3;
+        hence thesis by ZO,XXREAL_0:2;
+      end; then
+      reconsider fg as increasing FinSequence of NAT
+        by ConcatIsIncreasing;
+v1:   Seg (k + 1 + 1) = Seg (k + 1) \/ {k + 1 + 1} by FINSEQ_1:9;
+GD:   fg.1 <> 0
+      proof
+        assume
+F1:     fg.1 = 0;
+f2:     1 <= k+1 by NAT_1:12; then
+        1 in dom ff by B1; then
+        fg.1 = ff.1 by FINSEQ_1:def 7;
+        hence thesis by F1,f2,FUNCT_1:def 9,B1,FINSEQ_1:1;
+      end;
+T1:   for i being Nat st i in dom fg holds fg.i is triangular non empty
+      proof
+        let i be Nat;
+        assume
+WR:     i in dom fg; then
+        i in Seg (k + 1) \/ {k + 1 + 1} by C1,FINSEQ_1:9; then
+        per cases by XBOOLE_0:def 3;
+        suppose U1: i in Seg (k + 1); then
+KK:       fg.i = ff.i by B1,FINSEQ_1:def 7;
+          1 <= k + 1 + 1 by NAT_1:12; then
+SE:       1 in dom fg by C1;
+          1 <= i by U1,FINSEQ_1:1;
+          hence thesis by U1,B1,KK,GD,WR,SE,SEQM_3:def 3;
+        end;
+        suppose i in {k + 1 + 1}; then
+          i = k + 1 + 1 by TARSKI:def 1;
+          hence thesis by we,J1,NUMPOLY1:def 2;
+        end;
+      end;
+      for i being object st i in dom fg holds fg.i is non empty
+        by T1; then
+      reconsider fg as increasing non-empty FinSequence of NAT
+        by FUNCT_1:def 9;
+      for i,j being Nat st i in dom fg & j in dom fg & i <> j holds
+        fg.i, fg.j are_coprime
+      proof
+        let i,j be Nat;
+        assume
+Z1:     i in dom fg & j in dom fg & i <> j;
+        per cases;
+        suppose
+Z2:       i in dom ff & j in dom ff; then
+          ff.i = fg.i & ff.j = fg.j by FINSEQ_1:def 7;
+          hence thesis by B1,Z1,Z2,INT_6:def 2;
+        end;
+        suppose
+Z2:       i in dom ff & not j in dom ff; then
+          i in Seg (k+1) & j in {k+1+1}
+            by B1,v1,Z1,C1,XBOOLE_0:def 3; then
+Y9:       j = len ff + 1 by J1,TARSKI:def 1;
+          ff.i, T are_coprime by cd,CoprimeDivides,Z2,INT_4:32;
+          hence thesis by Y9,Z2,FINSEQ_1:def 7;
+        end;
+        suppose
+Z2:       not i in dom ff & j in dom ff; then
+          j in Seg (k+1) & i in {k+1+1}
+            by B1,v1,Z1,C1,XBOOLE_0:def 3; then
+Y1:       i = len ff + 1 by J1,TARSKI:def 1;
+          ff.j, T are_coprime by cd,CoprimeDivides,Z2,INT_4:32;
+          hence thesis by Y1,Z2,FINSEQ_1:def 7;
+        end;
+        suppose not i in dom ff & not j in dom ff; then
+          i in {k+1+1} & j in {k+1+1}
+            by v1,Z1,B1,C1,XBOOLE_0:def 3; then
+          i = k+1+1 & j = k+1+1 by TARSKI:def 1;
+          hence thesis by Z1;
+        end;
+      end; then
+      dom fg = Seg (k+1+1) &
+      (for i being Nat st i in dom fg holds fg.i is triangular) &
+      fg is with_all_coprime_terms by C1,T1,INT_6:def 2;
+      hence thesis;
+    end;
+A3: for n being Nat holds P[n] from NAT_1:sch 2 (A1,A2);
+    let n be Nat;
+    consider f being increasing non-empty FinSequence of NAT such that
+JJ: dom f = Seg (n + 1) &
+    (for i being Nat st i in dom f holds f.i is triangular) &
+      f is with_all_coprime_terms by A3;
+    take f;
+    thus thesis by JJ;
+  end;
+
+::: NAT_6:7 = INT_5:7
+::: NEWTON02:2 = NEWTON03:5
+::: EULER_1:13 = INT_2:25
+
+begin :: Problem 43
+:: Prove that there exists an increasing infinite sequence of tetrahedral
+:: numbers (i.e. numbers of the form T_n = 1/6 n(n+1)(n+2), n = 1, 2, ...),
+:: such that every two of them are relatively prime.
+
+definition let n be Nat;
+  func Tetrahedron n -> Nat equals
+    n * (n+1) * (n+2) / 6;
+  coherence
+  proof
+A1: 2 divides (n * (n+1) * (n+2))
+    proof
+      per cases;
+      suppose n is odd;
+        thus thesis by ABIAN:def 1;
+      end;
+      suppose n is even;
+        thus thesis by ABIAN:def 1;
+      end;
+    end;
+    3 divides (n * (n+1) * (n+2))
+    proof
+      per cases by NUMBER06:18;
+      suppose 3 divides n; then
+        3 divides n * ((n+1) * (n+2)) by NAT_D:9;
+        hence thesis;
+      end;
+      suppose 3 divides n + 1; then
+        3 divides (n+1) * (n * (n+2)) by NAT_D:9;
+        hence thesis;
+      end;
+      suppose 3 divides n + 2;
+        hence thesis by NAT_D:9;
+      end;
+    end; then
+    2 * 3 divides (n * (n+1) * (n+2))
+      by A1,INT_2:30,INT_2:28,XPRIMES1:3,PEPIN:4;
+    hence thesis;
+  end;
+end;
+
+definition let n be Nat;
+  attr n is tetrahedral means
+    ex k being Nat st n = Tetrahedron k;
+end;
+
+theorem :: Problem 43
+  for n being Nat holds
+  ex f being increasing non-empty FinSequence of NAT st
+    dom f = Seg (n + 1) &
+   (for i being Nat st i in dom f holds f.i is tetrahedral) &
+     f is with_all_coprime_terms
+  proof
+     defpred P[Nat] means
+      ex f being increasing non-empty FinSequence of NAT st
+      dom f = Seg ($1+1) &
+      (for i being Nat st i in dom f holds f.i is tetrahedral) &
+        f is with_all_coprime_terms;
+A1: P[0]
+    proof
+      set f = (Seg 1) --> 1;
+      reconsider f as increasing FinSequence of NAT by IncFinNAT;
+G1:   dom f = Seg (0+1) by FUNCOP_1:13;
+g1:   dom f = {1} by FINSEQ_1:2,FUNCOP_1:13;
+G2:   for i being Nat st i in dom f holds f.i is tetrahedral non empty
+      proof
+        let i be Nat;
+        assume
+g4:     i in dom f;
+        Tetrahedron 1 = 1;
+        hence thesis by g4,FUNCOP_1:7,G1;
+      end; then
+GG:   for i being Nat st i in dom f holds f.i is tetrahedral;
+      for n being object st n in dom f holds f.n is non empty
+        by G2; then
+JH:   f is non-empty by FUNCT_1:def 9;
+      for i,j being Nat st i in dom f & j in dom f & i <> j holds
+        f.i, f.j are_coprime
+      proof
+        let i,j be Nat;
+        assume
+H1:     i in dom f & j in dom f & i <> j; then
+        i = 1 & j = 1 by g1,TARSKI:def 1;
+        hence thesis by H1;
+      end; then
+      f is with_all_coprime_terms by INT_6:def 2;
+      hence thesis by FUNCOP_1:13,GG,JH;
+    end;
+A2: for k being Nat st P[k] holds P[k+1]
+    proof
+      let k be Nat;
+      assume P[k]; then
+      consider f being increasing non-empty FinSequence of NAT such that
+B1:   dom f = Seg (k+1) &
+      (for i being Nat st i in dom f holds f.i is tetrahedral) &
+      f is with_all_coprime_terms;
+      reconsider ff = f as FinSequence of NAT;
+J1:   len ff = k + 1 by FINSEQ_1:def 3,B1;
+      set a = Product ff;
+      reconsider a as Nat;
+G2:   a, 2*a+1 are_coprime by Coprime21;
+      reconsider T = (6 * a + 1) * (3 * a + 1) * (2 * a + 1) as Element of NAT;
+we:   ex k being Nat st T = Tetrahedron k :: by NUMPOLY1:def 4
+      proof
+        take k = 6 * a + 1;
+        thus thesis;
+      end;
+      not ex i being Nat st i in dom ff & ff.i = 0 by FUNCT_1:def 9;
+        then
+::: What is the purpose of INT_6:6?? Isn't it just RVSUM_1:103?
+WC:   Product ff <> 0 by RVSUM_1:103; then
+v1:   1 < 6 * a + 1 by NAT_1:16;
+      k + 1 >= 1 by NAT_1:12; then
+      f.(k + 1) divides a by B1,INT_4:32,FINSEQ_1:1; then
+WV:   f.(k + 1) <= a by WC,NAT_D:7;
+SE:   1 < (6 * a + 1) * (3 * a + 1) by v1,WC,XREAL_1:161,NAT_1:16;
+      1 * a < 2 * a by WC,XREAL_1:68; then
+SR:   a + 1 < 2 * a + 1 by XREAL_1:8;
+      1 * (2 * a + 1) < (6 * a + 1) * (3 * a + 1) * (2 * a + 1)
+        by SE,XREAL_1:68; then
+      1 * (a + 1) < (6 * a + 1) * (3 * a + 1) * (2 * a + 1)
+        by SR,XXREAL_0:2; then
+      a < T by NAT_1:16,XXREAL_0:2; then
+ZW:   ff.(k+1) < T by WV,XXREAL_0:2;
+      ::: NOTE: NUMBER08:8 = repeated NUMBER04:64
+SX:   6 * a + 1, a are_coprime by Coprime61;
+      3 * a + 1, a are_coprime by Coprime31; then
+      (6 * a + 1) * (3 * a + 1), a are_coprime by WC,SX,EULER_1:14; then
+CD:   T,a are_coprime by WC,G2,EULER_1:14;
+      set fg = ff ^ <*T*>;
+C1:   dom fg = Seg (len ff + len <*T*>) by FINSEQ_1:def 7
+            .= Seg (k + 1 + 1) by J1,FINSEQ_1:39;
+      for i being Nat st i in dom ff holds ff.i < T
+      proof
+        let i be Nat;
+        assume
+ZP:     i in dom ff;
+        1 <= k + 1 by NAT_1:12; then
+ZR:     k + 1 in dom ff by B1;
+        i <= k + 1 by ZP,B1,FINSEQ_1:1; then
+        ff.i <= f.(k+1) by ZP,ZR,SEQM_3:def 3;
+        hence thesis by ZW,XXREAL_0:2;
+      end; then
+      reconsider fg as increasing FinSequence of NAT
+        by ConcatIsIncreasing;
+v1:   Seg (k + 1 + 1) = Seg (k + 1) \/ {k + 1 + 1} by FINSEQ_1:9;
+GD:   fg.1 <> 0
+      proof
+        assume
+F1:     fg.1 = 0;
+f3:     1 <= k+1 by NAT_1:12; then
+        1 in Seg (k+1); then
+        fg.1 = ff.1 by FINSEQ_1:def 7,B1;
+        hence thesis by F1,f3,B1,FUNCT_1:def 9,FINSEQ_1:1;
+      end;
+T1:   for i being Nat st i in dom fg holds fg.i is tetrahedral non empty
+      proof
+        let i be Nat;
+        assume
+WR:     i in dom fg; then
+        i in Seg (k + 1) \/ {k + 1 + 1} by C1,FINSEQ_1:9; then
+        per cases by XBOOLE_0:def 3;
+        suppose
+U1:       i in Seg (k + 1); then
+KK:       fg.i = ff.i by B1,FINSEQ_1:def 7;
+          1 <= k + 1 + 1 by NAT_1:12; then
+SE:       1 in dom fg by C1;
+          1 <= i by U1,FINSEQ_1:1;
+          hence thesis by U1,B1,KK,GD,WR,SE,SEQM_3:def 3;
+        end;
+        suppose i in {k + 1 + 1}; then
+          i = k + 1 + 1 by TARSKI:def 1;
+          hence thesis by we,J1;
+        end;
+      end;
+      for i being object st i in dom fg holds fg.i is non empty
+        by T1; then
+      reconsider fg as increasing non-empty FinSequence of NAT
+        by FUNCT_1:def 9;
+      for i,j being Nat st i in dom fg & j in dom fg & i <> j holds
+        fg.i, fg.j are_coprime
+      proof
+        let i,j be Nat;
+        assume
+Z1:     i in dom fg & j in dom fg & i <> j;
+        per cases;
+        suppose
+Z2:       i in dom ff & j in dom ff; then
+          ff.i = fg.i & ff.j = fg.j by FINSEQ_1:def 7;
+          hence thesis by B1,Z1,Z2,INT_6:def 2;
+        end;
+        suppose
+Z2:       i in dom ff & not j in dom ff; then
+          i in Seg (k+1) & j in {k+1+1}
+            by B1,v1,Z1,C1,XBOOLE_0:def 3; then
+Y1:       j = len ff + 1 by J1,TARSKI:def 1;
+          ff.i, T are_coprime by CD,CoprimeDivides,Z2,INT_4:32;
+          hence thesis by Y1,Z2,FINSEQ_1:def 7;
+        end;
+        suppose
+Z2:       not i in dom ff & j in dom ff; then
+          j in Seg (k+1) & i in {k+1+1}
+            by B1,v1,Z1,C1,XBOOLE_0:def 3; then
+Y7:       i = len ff + 1 by J1,TARSKI:def 1;
+          ff.j, T are_coprime by CD,CoprimeDivides,Z2,INT_4:32;
+          hence thesis by Y7,Z2,FINSEQ_1:def 7;
+        end;
+        suppose not i in dom ff & not j in dom ff; then
+          i in {k+1+1} & j in {k+1+1}
+            by v1,Z1,B1,C1,XBOOLE_0:def 3; then
+          i = k+1+1 & j = k+1+1 by TARSKI:def 1;
+          hence thesis by Z1;
+        end;
+      end; then
+      dom fg = Seg (k+1+1) &
+      (for i being Nat st i in dom fg holds fg.i is tetrahedral) &
+      fg is with_all_coprime_terms by C1,T1,INT_6:def 2;
+      hence thesis;
+    end;
+A3: for n being Nat holds P[n] from NAT_1:sch 2 (A1,A2);
+    let n be Nat;
+    consider f being increasing non-empty FinSequence of NAT such that
+JJ: dom f = Seg (n + 1) &
+    (for i being Nat st i in dom f holds f.i is tetrahedral) &
+      f is with_all_coprime_terms by A3;
+    take f;
+    thus thesis by JJ;
+  end;
+
+begin :: Problem 51
+:: Prove that (n,2^{2^n} + 1) = 1 for n = 1, 2, ...
+
+theorem T51: :: Problem 51
+  for n being non zero Nat holds
+    n gcd (Fermat n) = 1
+  proof
+    let n be non zero Nat;
+Z1: n gcd (Fermat n) >= 1 by NAT_1:14;
+    assume n gcd (Fermat n) <> 1; then
+    n gcd (Fermat n) > 1 by Z1,XXREAL_0:1; then
+    n gcd (Fermat n) >= 1 + 1 by NAT_1:13; then
+    consider p being Element of NAT such that
+J1: p is prime & p divides (n gcd (Fermat n)) by INT_2:31;
+    reconsider p as Prime by J1;
+a1: n gcd (Fermat n) divides n & n gcd (Fermat n) divides Fermat n
+      by NAT_D:def 5; then
+B1: p <= n by NAT_D:7,J1,NAT_D:4;
+    p > 1 by INT_2:def 4; then
+    p >= 1 + 1 by NAT_1:13; then
+    per cases by XXREAL_0:1;
+    suppose p = 2;
+      hence thesis by J1;
+    end;
+    suppose
+      p > 2; then
+      consider k being Element of NAT such that
+A2:   p = k * (2 |^ (n + 1)) + 1 by a1,PEPIN:56,J1,NAT_D:4;
+      k <> 0 by A2,INT_2:def 4; then
+      k * (2 |^ (n + 1)) >= 1 * (2 |^ (n + 1)) by XREAL_1:64,NAT_1:14; then
+G2:   k * (2 |^ (n + 1)) + 1 >= 2 |^ (n + 1) + 1 by XREAL_1:7;
+      2 |^ (n + 1) >= n + 1 by NEWTON:86; then
+      2 |^ (n + 1) > n by NAT_1:13; then
+      2 |^ (n + 1) + 1 > n by NAT_1:13;
+      hence thesis by B1,A2,G2,XXREAL_0:2;
+    end;
+  end;
+
+theorem
+  for n being non zero Nat holds n, Fermat n are_coprime by T51;
+
+begin :: Problem 51a
+:: Prove that there exist infinitely many positive integers n such that
+:: (n, 2^n-1) > 1, and find the least of them.
+
+theorem
+  for n,k,m being Nat holds
+    n divides k * m implies
+      ex a,b being Nat st a divides k & b divides m & n = a * b
+  proof
+    let n,k,m be Nat;
+    assume
+A1: n divides k*m;
+    take a = k gcd n;
+A2: a divides k & a divides n by INT_2:def 2;
+    per cases;
+    suppose
+A3:   a = 0;
+      take m;
+      thus thesis by A3;
+    end;
+    suppose
+A3:   a <> 0;
+      consider b being Nat such that
+A4:   n = a * b by A2,NAT_D:def 3;
+      take b;
+      A7: n divides m * n;
+      a * m = |.m.| * a .= (m*k) gcd (m*n) by INT_6:16;
+      then n divides a * m by A1,A7,INT_2:def 2;
+      hence thesis by A3,A4,INT_4:7,INT_2:def 2;
+    end;
+  end;
+
+theorem :: Problem 51a
+  for A being set st
+    A = { n where n is non zero Nat : n gcd (2 |^ n - 1) > 1 } holds
+     A is infinite &
+     :: min A = 6;
+    for k being Nat st k in A holds k >= 6
+  proof
+    let A be set;
+    assume
+A0: A = { n where n is non zero Nat : n gcd (2 |^ n - 1) > 1 };
+Co: for k being non zero Nat holds
+      (6 * k) gcd (2 |^ (6 * k) - 1) >= 3
+    proof
+      let k be non zero Nat;
+ra:   3 divides 3 * (2 * k);
+rr:   2 divides 2 * (3 * k);
+SS:   2 |^ 2 = 2 * 2 by NEWTON:81
+            .= 4;
+      3 = 2 |^ 2 - 1 by SS; then
+      3 divides (2 |^ (6 * k) - 1) by rr,NUMBER05:19; then
+      3 divides (6 * k) gcd (2 |^ (6 * k) - 1) by ra,NAT_D:def 5;
+      hence thesis by NAT_D:7;
+    end;
+HU: for k being non zero Nat holds 6 * k in A
+    proof
+      let k be non zero Nat;
+      (6 * k) gcd (2 |^ (6 * k) - 1) >= 3 by Co; then
+      (6 * k) gcd (2 |^ (6 * k) - 1) > 1 by XXREAL_0:2;
+      hence thesis by A0;
+    end;
+    for m being Nat ex n be Nat st n >= m & n in A
+    proof
+      let m be Nat;
+      take n = 6 * (m + 1);
+Y1:   1 * m <= 6 * m by XREAL_1:64;
+      m <= m + 1 by NAT_1:13; then
+      6 * m <= 6 * (m + 1) by XREAL_1:64;
+      hence thesis by HU,Y1,XXREAL_0:2;
+    end;
+    hence A is infinite by PYTHTRIP:9;
+    for k being Nat st k in A holds k >= 6
+    proof
+      let k be Nat;
+      assume k in A; then
+      consider kk being non zero Nat such that
+A1:   kk = k & kk gcd (2 |^ kk - 1) > 1 by A0;
+V2:   k <> 2
+      proof
+        assume k = 2; then
+        k gcd (2 |^ k - 1) = 2 gcd (2 * 2 - 1) by NEWTON:81
+              .= 2 gcd (2 + 1)
+              .= 1;
+        hence thesis by A1;
+      end;
+v3:   3, 7 are_coprime by NUMBER06:3,XPRIMES1:3,7;
+V4:   k <> 4
+      proof
+        assume k = 4; then
+        k gcd (2 |^ k - 1) = 4 gcd (3 * 4 + 3) by POWER:62
+              .= (3 + 1) gcd 3 by NEWTON02:5
+              .= 1;
+        hence thesis by A1;
+      end;
+v5:   5, 31 are_coprime by NUMBER06:3,XPRIMES1:5,31;
+      not k <= 5
+      proof
+        assume k <= 5; then
+        k = 0 or ... or k = 5;
+        hence thesis by A1,V2,v3,V4,v5,POWER:61,POWER:63;
+      end; then
+      k >= 5 + 1 by NAT_1:13;
+      hence thesis;
+    end;
+    hence thesis;
+  end;
+
+begin :: Problem 57
+:: Give a necessary and sufficient condition for an arithmetic progression
+:: ak+b (k = 0, 1, 2, ... ) with positive integer a and b to contain
+:: infinitely many squares of integers.
+
+theorem
+  for a,b being positive Nat, k,x,m being Nat st
+    ArProg (b,a).k = x ^2 holds
+      ArProg (b,a).(m ^2 * a + 2 * m * x + k) = (m * a + x) ^2
+  proof
+    let a,b be positive Nat, k,x,m be Nat;
+    assume
+D2: ArProg (b,a).k = x ^2;
+D1: ArProg (b,a).k = a * k + b by NUMBER06:7;
+    set mm = m;
+    (mm * a + x) ^2 = (mm * a) ^2 + 2 * mm * a * x + x ^2
+          .= a * (mm ^2 * a + 2 * mm * x + k) + b by D1,D2;
+    hence thesis by NUMBER06:7;
+  end;
+
+theorem Lemma2To57:
+  for a,b being positive Nat, k,x,m being Nat st
+    ArProg (b,a).k = x^2 holds
+      ArProg (b,a).(m ^2 * a + 2 * m * x + k) is square
+  proof
+    let a,b be positive Nat, k,x,m be Nat;
+    assume
+D2: ArProg (b,a).k = x ^2;
+D1: ArProg (b,a).k = b + a * k by NUMBER06:7;
+    (m * a + x) ^2 = (m * a) ^2 + 2 * m * a * x + x ^2
+          .= a * (m ^2 * a + 2 * m * x + k) + b by D1,D2;
+    hence thesis by NUMBER06:7;
+  end;
+
+theorem LemmaTo57:
+  for m, n being non zero Nat st
+    m is_quadratic_residue_mod n holds
+      ex i being Nat st ArProg (m,n).i is square
+  proof
+    let m, n be non zero Nat;
+    assume m is_quadratic_residue_mod n; then
+    consider xx being Integer such that
+B1: (xx^2 - m) mod n = 0 by INT_5:def 2;
+    reconsider x = |.xx.| as Nat;
+    x ^2 = xx ^2 by COMPLEX1:75; then
+    n divides (x ^2 - m) by B1,INT_1:62; then
+    consider ii being Integer such that
+B3: x ^2 - m = ii * n;
+B4: ii * n + m = x ^2 by B3;
+    per cases;
+    suppose ii >= 0; then
+      ii in NAT by INT_1:3; then
+      reconsider ii as Nat;
+      take i = ii;
+      thus thesis by B4,NUMBER06:7;
+    end;
+    suppose
+DD:    ii < 0; then
+      -ii in NAT by INT_1:3; then
+      reconsider mm = -ii as Nat;
+      set b = m;
+      set a = n;
+      set k = ii;
+So:   (mm * a + x) ^2 = a * (mm ^2 * a) + a * 2 * mm * x + x ^2
+          .= a * (mm ^2 * a + 2 * mm * x + k) + b by B3;
+      mm * a + 2 * x >= 1 + 0 by DD,NAT_1:13; then
+      mm * (mm * a + 2 * x) >= 1 * (-ii) by XREAL_1:64; then
+      mm * (mm * a + 2 * x) + ii >= -ii + ii by XREAL_1:6; then
+      mm * (mm * a + 2 * x) + ii >= 0; then
+      reconsider wa = mm ^2 * a + 2 * mm * x + ii as Nat;
+      take wa;
+      thus thesis by NUMBER06:7,So;
+    end;
+  end;
+
+theorem :: Problem 57
+  for m, n being non zero Nat,
+      A being set st
+    A = { i where i is Nat : ArProg (m,n).i is square } holds
+      A is infinite iff m is_quadratic_residue_mod n
+  proof
+    let m, n be non zero Nat,
+        A be set;
+    assume
+A1: A = { i where i is Nat : ArProg (m,n).i is square };
+    hereby assume A is infinite; then
+      consider i being object such that
+A2:   i in A by XBOOLE_0:7;
+      consider ii being Nat such that
+A3:   ii = i & ArProg (m,n).ii is square by A1,A2;
+      consider x being Nat such that
+A4:   ArProg (m,n).ii = x ^2 by A3,PYTHTRIP:def 3;
+A8:   x ^2 = m + n * ii by A4,NUMBER06:7; then
+      x ^2, m are_congruent_mod n; then
+      (x ^2 - m) mod n = 0 by A8,PEPIN:6;
+      hence m is_quadratic_residue_mod n by INT_5:def 2;
+    end;
+    assume m is_quadratic_residue_mod n; then
+    consider i being Nat such that
+D3: ArProg (m,n).i is square by LemmaTo57;
+    consider x being Nat such that
+D2: ArProg (m,n).i = x ^2 by D3,PYTHTRIP:def 3;
+    for j being Nat ex k being Nat st k >= j & k in A
+    proof
+      let j be Nat;
+Z2:   j ^2 * n + 2 * j * x + i = j ^2 * n + i + 2 * j * x;
+hh:   x <> 0
+      proof
+        assume x = 0; then
+        m + n * i = 0 by D2,NUMBER06:7;
+        hence thesis;
+      end;
+      2 * j * x = j * (2 * x); then
+U3:   2 * j * x >= 1 * j by hh,XREAL_1:64,NAT_1:14;
+      set ww = j ^2 * n + 2 * j * x + i;
+      ArProg (m,n).ww is square by D2,Lemma2To57; then
+      ww in A by A1;
+      hence thesis by U3,Z2,NAT_1:12;
+    end;
+    hence thesis by PYTHTRIP:9;
+  end;
+
+begin :: Problem 59
+:: Prove that there is no infinite arithmetic progression formed of
+:: different positive integers such that each term is a power of
+:: a positive integer with an integer exponent > 1.
+
+theorem SquareNotDiv:
+  for k being Nat st k > 1 holds
+    not (k*k) divides k
+  proof
+    let k be Nat;
+    assume
+A1: k > 1;
+    assume
+A2: (k*k) divides k;
+    k divides (k * k); then
+    k * k = k by A2,NAT_D:5; then
+    k * (k - 1) = 0; then
+    k = 0 or (k - 1) = 0;
+    hence thesis by A1;
+  end;
+
+registration
+  cluster non-empty natural-valued increasing for Arithmetic_Progression;
+  existence
+  proof
+    take f = ArProg (1,1);
+A3: f.0 = 1 by NUMBER06:def 4;
+    for i being object st i in dom f holds f.i is non empty
+    proof
+      let i be object;
+      assume i in dom f; then
+      i in NAT by FUNCT_2:def 1; then
+      reconsider j = i as Nat;
+      per cases;
+      suppose 0 = j;
+        hence thesis by NUMBER06:def 4;
+      end;
+      suppose
+        0 < j;
+        hence thesis by A3,SEQM_3:9;
+      end;
+    end;
+    hence thesis by FUNCT_1:def 9;
+  end;
+end;
+
+theorem KeyPerfectPower:
+  for n being Nat, p being Prime st n is perfect_power & p divides n
+    holds
+      p |^ 2 divides n
+  proof
+    let n be Nat, p be Prime;
+    assume
+A0: n is perfect_power & p divides n; then
+    consider x being Nat, k being Nat such that
+A1: k > 1 & n = x |^ k by NUMBER06:def 10;
+A2: 1 + 1 <= k by A1,NAT_1:13;
+A3: p |^ k divides x |^ k by NEWTON03:15,A1,A0,NAT_3:5;
+    p |^ 2 divides p |^ k by A2,NEWTON:89;
+    hence thesis by A1,A3,NAT_D:4;
+  end;
+
+theorem :: Problem 59
+  not ex f being non-empty natural-valued increasing Arithmetic_Progression st
+    for i,fi being Nat st fi = f.i holds
+      fi is perfect_power
+  proof
+    assume ex f being non-empty natural-valued increasing
+      Arithmetic_Progression st
+    for i,fi being Nat st fi = f.i holds
+      fi is perfect_power; then
+    consider f being non-empty natural-valued increasing
+      Arithmetic_Progression such that
+A1: for i,fi being Nat st fi = f.i holds
+      fi is perfect_power;
+AA: dom f = NAT by FUNCT_2:def 1;
+    reconsider b = f.0 as Nat;
+    f.0 < f.1 by SEQM_3:def 1,AA; then
+    f.1 - f.0 > f.0 - f.0 by XREAL_1:14; then
+    reconsider a = difference f as Nat by NUMBER06:def 5;
+KK: f = ArProg (b,a) by NUMBER06:6;
+    consider p being Prime such that
+P1: p > a + b by NEWTON:72;
+P2: p > b by P1,NAT_1:12;
+    reconsider p2 = p^2 as Nat;
+    a gcd p = 1
+    proof
+      assume a gcd p <> 1; then
+      not a,p are_coprime; then
+      consider d being Nat such that
+Z2:   d divides a & d divides p & d <> 1 by PYTHTRIP:def 1;
+      d = 1 or d = p by Z2,INT_2:def 4; then
+      p <= a by NAT_D:7,Z2;
+      hence thesis by P1,NAT_1:12;
+    end; then
+    a gcd p2 = 1 by WSIERP_1:6; then
+    consider x,y being Nat such that
+Z1: a * x - p2 * y = 1 by WSIERP_1:31;
+oo: p - b > b - b by P2,XREAL_1:14; then
+    reconsider k = (p - b) * x as Nat;
+S1: a * k + b = a * x * (p - b) + b
+             .= (1 + p2 * y) * (p - b) + b by Z1
+             .= p2 * y * (p - b) + p;
+    reconsider akb = a * k + b as Nat;
+FZ: not p2 divides (a * k + b)
+    proof
+      assume
+SZ:   p2 divides (a * k + b);
+SA:   p > 1 by INT_2:def 4;
+      reconsider pb = p - b as Nat by oo;
+      p2 divides p2 * (y * pb);
+      hence thesis by SquareNotDiv,SA,SZ,S1,NAT_D:10;
+    end;
+Z2: akb = f.k by KK,NUMBER06:7;
+FC: p2 = p |^2 by NEWTON:81;
+    akb is not perfect_power
+    proof
+      assume
+N1:   akb is perfect_power;
+      akb = p * (p * y * (p - b) + 1) by S1; then
+      p divides akb;
+      hence thesis by FZ,FC,KeyPerfectPower,N1;
+    end;
+    hence thesis by A1,Z2;
+  end;
+
+begin :: Problem 72
+:: Find an increasing arithmetic progression with ten terms, formed
+:: of primes, with the least possible last term.
+
+theorem
+  for f being Arithmetic_Progression st
+    for i being Nat holds f.i is Prime holds
+      difference f is Integer
+  proof
+    let f be Arithmetic_Progression;
+    assume for i being Nat holds f.i is Prime; then
+A2: f.0 is Prime & f.1 is Prime;
+    difference f = f.1 - f.0 by NUMBER06:def 5;
+    hence thesis by A2;
+  end;
+
+theorem
+  for p, q being Prime st
+    p - q is odd holds p = 2 or q = 2
+  proof
+    let p, q be Prime;
+    assume p - q is odd; then
+    (p is odd & q is even) or (p is even & q is odd);
+    hence thesis by NUMBER06:2;
+  end;
+
+registration let p, q be Prime;
+  cluster p - q -> integer;
+  coherence;
+end;
+
+registration let p, q be 2_greater Prime;
+  cluster p - q -> even;
+  coherence;
+end;
+
+theorem FirstAPPrime:
+  for f being increasing Arithmetic_Progression st
+    for i being Nat holds f.i is Prime holds
+      f.1 > 2
+  proof
+    let f be increasing Arithmetic_Progression;
+    assume
+A1: for i being Nat holds f.i is Prime;
+A2: f.1 > f.0 by SEQM_3:1;
+    f.0 is Prime by A1; then
+B2: f.0 > 1 by INT_2:def 4;
+    reconsider f0 = f.0 as Prime by A1;
+    f0 >= 1 + 1 by B2,NAT_1:13;
+    hence thesis by A2,XXREAL_0:2;
+  end;
+
+theorem
+  for f being increasing Arithmetic_Progression st
+    for i being Nat holds f.i is Prime holds
+      difference f is even Nat
+  proof
+    let f be increasing Arithmetic_Progression;
+    assume
+A1: for i being Nat holds f.i is Prime;
+    f.2 > f.1 by SEQM_3:1; then
+    f.2 > 2 by A1,FirstAPPrime,XXREAL_0:2; then
+    reconsider f2 = f.2, f1 = f.1 as 2_greater Prime
+      by NAT_6:def 1,A1,FirstAPPrime;
+C5: f2 - f1 > 0 by SEQM_3:1,XREAL_1:50;
+    f.(1+1) - f.1 = f.1 - f.0 by NUMBER06:5;
+    hence thesis by C5,NUMBER06:def 5;
+  end;
+
+theorem Th1990:
+  ArProg (199,210).0 = 199 by NUMBER06:def 4;
+
+theorem Th1991:
+  ArProg (199,210).1 = 409
+  proof
+    set f = ArProg (199,210);
+    f.(1+0) = f.0 + 210 by NUMBER06:def 4;
+    hence thesis by Th1990;
+  end;
+
+theorem Th1992:
+  ArProg (199,210).2 = 619
+  proof
+    set f = ArProg (199,210);
+    f.(1+1) = f.1 + 210 by NUMBER06:def 4;
+    hence thesis by Th1991;
+  end;
+
+theorem Th1993:
+  ArProg (199,210).3 = 829
+  proof
+    set f = ArProg (199,210);
+    f.(2+1) = f.2 + 210 by NUMBER06:def 4;
+    hence thesis by Th1992;
+  end;
+
+theorem Th1994:
+  ArProg (199,210).4 = 1039
+  proof
+    set f = ArProg (199,210);
+    f.(3+1) = f.3 + 210 by NUMBER06:def 4;
+    hence thesis by Th1993;
+  end;
+
+theorem Th1995:
+  ArProg (199,210).5 = 1249
+  proof
+    set f = ArProg (199,210);
+    f.(4+1) = f.4 + 210 by NUMBER06:def 4;
+    hence thesis by Th1994;
+  end;
+
+theorem Th1996:
+  ArProg (199,210).6 = 1459
+  proof
+    set f = ArProg (199,210);
+    f.(5+1) = f.5 + 210 by NUMBER06:def 4;
+    hence thesis by Th1995;
+  end;
+
+theorem Th1997:
+  ArProg (199,210).7 = 1669
+  proof
+    set f = ArProg (199,210);
+    f.(6+1) = f.6 + 210 by NUMBER06:def 4;
+    hence thesis by Th1996;
+  end;
+
+theorem Th1998:
+  ArProg (199,210).8 = 1879
+  proof
+    set f = ArProg (199,210);
+    f.(7+1) = f.7 + 210 by NUMBER06:def 4;
+    hence thesis by Th1997;
+  end;
+
+theorem Th1999:
+  ArProg (199,210).9 = 2089
+  proof
+    set f = ArProg (199,210);
+    f.(8+1) = f.8 + 210 by NUMBER06:def 4;
+    hence thesis by Th1998;
+  end;
+
+:: Hence 2089 is the least possible prime
+
+registration let f be natural-valued Arithmetic_Progression;
+  cluster difference f -> integer;
+  coherence
+  proof
+    f.1 - f.0 is Integer;
+    hence thesis by NUMBER06:def 5;
+  end;
+end;
+
+theorem Cantor5Div: :: from Cantor Theorem 5, p. 121
+  for f being increasing natural-valued Arithmetic_Progression
+    st for i being Nat st i < 10 holds f.i is odd Prime holds
+      210 divides difference f
+  proof
+    let f be increasing natural-valued Arithmetic_Progression;
+    assume
+A1: for i being Nat st i < 10 holds f.i is odd Prime;
+    reconsider m = f.0 as Nat;
+    difference f = f.1 - f.0 by NUMBER06:def 5; then
+    reconsider r = difference f as Nat;
+A2: f = ArProg (m,r) by NUMBER06:6;
+    set n = 10;
+a3: for i being Nat st i < n holds
+      ArProg (m,r).i is odd prime by A1,A2; then
+T1: 2 divides r by XPRIMES1:2,SierpinskiTh5;
+    3 divides r by a3,XPRIMES1:3,SierpinskiTh5; then
+T5: 2 * 3 divides r by T1,PEPIN:4,INT_2:30,XPRIMES1:2,3;
+T3: 5 divides r by a3,XPRIMES1:5,SierpinskiTh5;
+    7 divides r by a3,XPRIMES1:7,SierpinskiTh5; then
+T6: 5 * 7 divides r by PEPIN:4,T3,INT_2:30,XPRIMES1:5,7;
+    2,5 are_coprime & 2,7 are_coprime by INT_2:30,XPRIMES1:2,5,7; then
+T8: 2,5*7 are_coprime by EULER_1:14;
+    3,5 are_coprime & 3,7 are_coprime by INT_2:30,XPRIMES1:3,5,7; then
+    3,5*7 are_coprime by EULER_1:14; then
+    35 * 6 divides r by T5,T6,PEPIN:4,T8,EULER_1:14;
+    hence thesis;
+  end;
+
+theorem Cantor5:
+  for f being increasing natural-valued Arithmetic_Progression
+    st for i being Nat st i < 10 holds f.i is odd Prime holds
+      difference f >= 210 by NAT_D:7,Cantor5Div;
+
+theorem Diff210Mod11:
+  for f being increasing natural-valued Arithmetic_Progression
+    st (for i being Nat st i < 10 holds f.i is odd Prime) &
+    difference f = 210 holds
+       for f0 being Nat st f0 = f.0 holds f0 mod 11 = 1
+  proof
+    let f be increasing natural-valued Arithmetic_Progression;
+    assume
+A1: for i being Nat st i < 10 holds f.i is odd Prime;
+    assume
+B1: 210 = difference f;
+    let f0 be Nat;
+AA: f = ArProg (f.0,difference f) by NUMBER06:6;
+    assume
+A2: f0 = f.0; then
+A3: f0 is Prime by A1; then
+    f0 > 1 by INT_2:def 4; then
+R1: f0 >= 1+1 by NAT_1:13;
+J1: f0 mod 11 <> 0
+    proof
+      assume f0 mod 11 = 0; then
+      11 divides f0 by PEPIN:6; then
+      f0 = 1 or f0 = 11 by A3,INT_2:def 4; then
+a3:   f.1 = 11 + 1 * 210 by A3,INT_2:def 4,A2,AA,NUMBER06:7,B1
+         .= 221;
+      13 divides 13 * 17; then
+      221 is not Prime by INT_2:def 4;
+      hence thesis by A1,a3;
+    end;
+JA: f0 mod 11 <> 10
+    proof
+      assume
+K1:   f0 mod 11 = 10;
+      f0 + 210 >= 210 + 2 by R1,XREAL_1:6; then
+K0:   f0 + 210 <> 11;
+K2:   210 mod 11 = (100 + 11 * 10) mod 11
+                .= (1 + 9 * 11) mod 11 by NAT_D:21
+                .= 1 mod 11 by NAT_D:21
+                .= 1 by NAT_D:24;
+      (f0 + 210) mod 11 = ((f0 mod 11) + (210 mod 11)) mod 11 by NAT_D:66
+                       .= 0 by K2,K1,NAT_D:25; then
+      11 divides (f0 + 210) by PEPIN:6; then
+K3:   f0 + 210 is not Prime by K0,INT_2:def 4;
+      difference f = f.1 - f.0 by NUMBER06:def 5;
+      hence thesis by K3,A1,A2,B1;
+    end;
+JC: f0 mod 11 <> 9
+    proof
+      assume
+K1:   f0 mod 11 = 9;
+      f0 + 2*210 >= 2*210 + 2 by R1,XREAL_1:6; then
+K0:   f0 + 2*210 <> 11;
+k2:   2*210 mod 11 = (210 + 100 + 11 * 10) mod 11
+                  .= (210 + 1 + 9 * 11) mod 11 by NAT_D:21
+                  .= (19 * 11 + 2) mod 11 by NAT_D:21
+                  .= 2 mod 11 by NAT_D:21
+                  .= 2 by NAT_D:24;
+      (f0 + 2*210) mod 11 = ((f0 mod 11) + (2*210 mod 11)) mod 11 by NAT_D:66
+                         .= 0 by K1,k2,NAT_D:25; then
+      11 divides (f0 + 2*210) by PEPIN:6; then
+K3:   f0 + 2*210 is not Prime by K0,INT_2:def 4;
+      f.2 = f.0 + 2 * difference f by AA,NUMBER06:7;
+      hence thesis by A1,K3,A2,B1;
+    end;
+JD: f0 mod 11 <> 8
+    proof
+      assume
+K1:   f0 mod 11 = 8;
+      f0 + 3*210 >= 3*210 + 2 by R1,XREAL_1:6; then
+K0:   f0 + 3*210 <> 11;
+k2:   3*210 mod 11 = (210+210 + 100 + 11 * 10) mod 11
+                .= (210 + 210 + 1 + 9 * 11) mod 11 by NAT_D:21
+                .= (212 + 19*11) mod 11 by NAT_D:21
+                .= (100 + 2 + 11*10) mod 11 by NAT_D:21
+                .= (1 + 2 + 9*11) mod 11 by NAT_D:21
+                .= (1 + 2) mod 11 by NAT_D:21
+                .= 3 by NAT_D:24;
+      (f0 + 3*210) mod 11 = ((f0 mod 11) + (3*210 mod 11)) mod 11 by NAT_D:66
+                       .= 0 by K1,k2,NAT_D:25; then
+      11 divides (f0 + 3*210) by PEPIN:6; then
+K3:   f0 + 3*210 is not Prime by K0,INT_2:def 4;
+      f.3 = f.0 + 3 * difference f by AA,NUMBER06:7;
+      hence thesis by K3,A1,A2,B1;
+    end;
+JB: f0 mod 11 <> 7
+    proof
+      assume
+K1:   f0 mod 11 = 7;
+      f0 + 4*210 >= 4*210 + 2 by R1,XREAL_1:6; then
+K0:   f0 + 4*210 <> 11;
+k2:   4*210 mod 11 = (4+76*11) mod 11
+                .= 4 mod 11 by NAT_D:21
+                .= 4 by NAT_D:24;
+      (f0 + 4*210) mod 11 = ((f0 mod 11) + (4*210 mod 11)) mod 11 by NAT_D:66
+                       .= 0 by K1,k2,NAT_D:25; then
+      11 divides (f0 + 4*210) by PEPIN:6; then
+K3:   f0 + 4*210 is not Prime by K0,INT_2:def 4;
+      f.4 = f.0 + 4 * difference f by AA,NUMBER06:7;
+      hence thesis by K3,A1,A2,B1;
+    end;
+JE: f0 mod 11 <> 6
+    proof
+      assume
+K1:   f0 mod 11 = 6;
+      f0 + 5*210 >= 5*210 + 2 by R1,XREAL_1:6; then
+K0:   f0 + 5*210 <> 11;
+k2:   5*210 mod 11 = (5+95*11) mod 11
+                .= 5 mod 11 by NAT_D:21
+                .= 5 by NAT_D:24;
+      (f0 + 5*210) mod 11 = ((f0 mod 11) + (5*210 mod 11)) mod 11 by NAT_D:66
+                       .= 0 by K1,k2,NAT_D:25; then
+      11 divides (f0 + 5*210) by PEPIN:6; then
+K3:   f0 + 5*210 is not Prime by K0,INT_2:def 4;
+      f.5 = f.0 + 5 * 210 by AA,B1,NUMBER06:7;
+      hence thesis by K3,A1,A2;
+    end;
+JF: f0 mod 11 <> 5
+    proof
+      assume
+K1:   f0 mod 11 = 5;
+      f0 + 6*210 >= 6*210 + 2 by R1,XREAL_1:6; then
+K0:   f0 + 6*210 <> 11;
+k2:   6 * 210 mod 11 = (6 + 114 * 11) mod 11
+                .= 6 mod 11 by NAT_D:21
+                .= 6 by NAT_D:24;
+      (f0 + 6*210) mod 11 = ((f0 mod 11) + (6*210 mod 11)) mod 11 by NAT_D:66
+                       .= 0 by K1,k2,NAT_D:25; then
+      11 divides (f0 + 6*210) by PEPIN:6; then
+K3:   f0 + 6 * 210 is not Prime by K0,INT_2:def 4;
+      f.6 = f.0 + 6 * difference f by AA,NUMBER06:7;
+      hence thesis by K3,A1,A2,B1;
+    end;
+JG: f0 mod 11 <> 4
+    proof
+      assume
+K1:   f0 mod 11 = 4;
+      f0 + 7*210 >= 7*210 + 2 by R1,XREAL_1:6; then
+K0:   f0 + 7*210 <> 11;
+k2:   7*210 mod 11 = (7 + 133 * 11) mod 11
+                .= 7 mod 11 by NAT_D:21
+                .= 7 by NAT_D:24;
+      (f0 + 7*210) mod 11 = ((f0 mod 11) + (7*210 mod 11)) mod 11 by NAT_D:66
+                       .= 0 by K1,k2,NAT_D:25; then
+      11 divides (f0 + 7*210) by PEPIN:6; then
+K3:   f0 + 7*210 is not Prime by K0,INT_2:def 4;
+      f.7 = f.0 + 7 * difference f by AA,NUMBER06:7;
+      hence thesis by K3,A1,A2,B1;
+    end;
+JH: f0 mod 11 <> 3
+    proof
+      assume
+K1:   f0 mod 11 = 3;
+      f0 + 8*210 >= 8*210 + 2 by R1,XREAL_1:6; then
+K0:   f0 + 8*210 <> 11;
+k2:   8*210 mod 11 = (8 + 152 * 11) mod 11
+                .= 8 mod 11 by NAT_D:21
+                .= 8 by NAT_D:24;
+      (f0 + 8*210) mod 11 = ((f0 mod 11) + (8*210 mod 11)) mod 11 by NAT_D:66
+                       .= 0 by K1,k2,NAT_D:25; then
+      11 divides (f0 + 8*210) by PEPIN:6; then
+K3:   f0 + 8*210 is not Prime by K0,INT_2:def 4;
+      f.8 = f.0 + 8 * difference f by AA,NUMBER06:7;
+      hence thesis by K3,A1,A2,B1;
+    end;
+JI: f0 mod 11 <> 2
+    proof
+      assume
+K1:   f0 mod 11 = 2;
+      f0 + 9*210 >= 9*210 + 2 by R1,XREAL_1:6; then
+K0:   f0 + 9*210 <> 11;
+k2:   9*210 mod 11 = (9+171*11) mod 11
+                .= 9 mod 11 by NAT_D:21
+                .= 9 by NAT_D:24;
+      (f0 + 9*210) mod 11 = ((f0 mod 11) + (9*210 mod 11)) mod 11 by NAT_D:66
+                       .= 0 by NAT_D:25,K1,k2; then
+      11 divides (f0 + 9*210) by PEPIN:6; then
+K3:   f0 + 9*210 is not Prime by K0,INT_2:def 4;
+      f.9 = f.0 + 9 * difference f by AA,NUMBER06:7;
+      hence thesis by K3,A1,A2,B1;
+    end;
+    f0 mod (10 + 1) = 0 or ... or f0 mod (10 + 1) = 10
+       by NUMBER03:11;
+::: repeated in NUMBER05
+    hence thesis by JD,JE,JF,JG,JH,JI,J1,JA,JB,JC;
+  end;
+
+theorem Theorem72V1:
+  for f being increasing natural-valued Arithmetic_Progression
+    st (for i being Nat st i < 10 holds f.i is odd Prime) &
+      difference f = 210 holds
+        f.0 >= 199
+  proof
+    let f be increasing natural-valued Arithmetic_Progression;
+    assume
+A1: for i being Nat st i < 10 holds f.i is odd Prime; then
+L1: f.0 is odd Prime;
+    assume
+KK: difference f = 210;
+AA: f = ArProg (f.0,difference f) by NUMBER06:6;
+    f.0 is odd by A1; then
+T1: f.0 mod 2 = 1 by NAT_2:22;
+wv: f.0 mod 11 = 1 by A1,KK,Diff210Mod11; then
+WV: f.0 mod 22 = 1 by T1,Mod22;
+h3: f.0 div 22 = 0 implies f.0 = 1
+    proof
+      assume
+H1:   f.0 div 22 = 0;
+      f.0 = 22 * (f.0 div 22) + (f.0 mod 22) by NAT_D:2
+         .= 1 by wv,H1,T1,Mod22;
+      hence thesis;
+    end;
+h2: f.0 div 22 = 1 implies f.0 = 23
+    proof
+      assume
+H1:   f.0 div 22 = 1;
+      f.0 = 22 * (f.0 div 22) + (f.0 mod 22) by NAT_D:2
+         .= 23 by WV,H1;
+      hence thesis;
+    end;
+vw: 5 divides 5 * 9;
+h1: f.0 div 22 = 2 implies f.0 = 45
+    proof
+      assume
+H1:   f.0 div 22 = 2;
+      f.0 = 22 * (f.0 div 22) + (f.0 mod 22) by NAT_D:2
+         .= 45 by WV,H1;
+      hence thesis;
+    end;
+h4: f.0 div 22 = 3 implies f.0 = 67
+    proof
+      assume
+H1:   f.0 div 22 = 3;
+      f.0 = 22 * (f.0 div 22) + (f.0 mod 22) by NAT_D:2
+         .= 67 by WV,H1;
+      hence thesis;
+    end;
+h5: f.0 div 22 = 4 implies f.0 = 89
+    proof
+      assume
+H1:   f.0 div 22 = 4;
+      f.0 = 22 * (f.0 div 22) + (f.0 mod 22) by NAT_D:2
+         .= 89 by WV,H1;
+      hence thesis;
+    end;
+kc: 3 divides 3 * 37;
+h6: f.0 div 22 = 5 implies f.0 = 111
+    proof
+      assume
+H1:   f.0 div 22 = 5;
+      f.0 = 22 * (f.0 div 22) + (f.0 mod 22) by NAT_D:2
+         .= 111 by WV,H1;
+      hence thesis;
+    end;
+kd: 7 divides 7 * 19;
+h7: f.0 div 22 = 6 implies f.0 = 133
+    proof
+      assume
+H1:   f.0 div 22 = 6;
+      f.0 = 22 * (f.0 div 22) + (f.0 mod 22) by NAT_D:2
+         .= 133 by WV,H1;
+      hence thesis;
+    end;
+kb: 5 divides 5 * 31;
+h8: f.0 div 22 = 7 implies f.0 = 155
+    proof
+      assume
+H1:   f.0 div 22 = 7;
+      f.0 = 22 * (f.0 div 22) + (f.0 mod 22) by NAT_D:2
+         .= 155 by WV,H1;
+      hence thesis;
+    end;
+ka: 3 divides 3 * 59;
+h9: f.0 div 22 = 8 implies f.0 = 177
+    proof
+      assume
+H1:   f.0 div 22 = 8;
+      f.0 = 22 * (f.0 div 22) + (f.0 mod 22) by NAT_D:2
+         .= 177 by WV,H1;
+      hence thesis;
+    end;
+hh: f.0 div 22 > 4 implies f.0 >= 199
+    proof
+      assume f.0 div 22 > 4; then
+      f.0 div 22 >= 4 + 1 by NAT_1:13; then
+      (f.0 div 22 = 5 + 0 or ... or f.0 div 22 = 5+3) or f.0 div 22 > 8
+        by NAT_1:62; then
+      f.0 div 22 >= 8+1
+        by NAT_1:13,h7,kd,h6,kc,h8,kb,ka,h9,L1,INT_2:def 4; then
+      22 * (f.0 div 22) >= 22 * 9 by XREAL_1:64; then
+      22 * (f.0 div 22) + 1 >= 198 + 1 by XREAL_1:6;
+      hence thesis by WV,NAT_D:2;
+    end;
+W1: f.0 <> 23
+    proof
+      assume
+L1:   f.0 = 23;
+O2:   f.5 = f.0 + 5 * difference f by AA,NUMBER06:7
+         .= 29 * 37 by L1,KK; then
+O1:   29 divides f.5;
+      f.5 is Prime by A1;
+      hence thesis by O2,O1,INT_2:def 4;
+    end;
+xx: f.0 div 22 <= 4 implies
+      f.0 div 22 = 0 or ... or f.0 div 22 = 4;
+W2: f.0 <> 67
+    proof
+      assume
+L1:   f.0 = 67;
+O2:   f.3 = f.0 + 3 * difference f by AA,NUMBER06:7
+         .= 17 * 41 by L1,KK; then
+O1:   17 divides f.3;
+      f.3 is Prime by A1;
+      hence thesis by O2,O1,INT_2:def 4;
+    end;
+    f.0 <> 89
+    proof
+      assume
+L1:   f.0 = 89;
+O2:   f.1 = f.0 + 1 * difference f by AA,NUMBER06:7
+         .= 13 * 23 by L1,KK; then
+O1:   13 divides f.1;
+      f.1 is Prime by A1;
+      hence thesis by O1,O2,INT_2:def 4;
+    end;
+    hence thesis
+      by W2,xx,h1,h2,h3,h4,h5,hh,W1,vw,L1,INT_2:def 4;
+  end;
+
+theorem :: Problem 72
+  for f being increasing natural-valued Arithmetic_Progression
+    st for i being Nat st i < 10 holds f.i is odd Prime holds
+      f.9 >= 2089
+  proof
+    let f be increasing natural-valued Arithmetic_Progression;
+    assume
+A1: for i being Nat st i < 10 holds f.i is odd Prime; then
+A3: difference f >= 210 by NAT_D:7,Cantor5Div;
+    per cases;
+    suppose
+      difference f <= 210; then
+      difference f = 210 by A3,XXREAL_0:1; then
+A2:   f.0 >= 199 by A1,Theorem72V1;
+a4:   f = ArProg (f.0, difference f) by NUMBER06:6;
+      9 * difference f >= 9 * 210 by A1,Cantor5,XREAL_1:64; then
+      f.0 + 9 * difference f >= 199 + 9 * 210 by A2,XREAL_1:7;
+      hence thesis by a4,NUMBER06:7;
+    end;
+    suppose
+T1:   difference f > 210;
+T2:   difference f = 210 * ((difference f) div 210)
+        by A1,Cantor5Div,NAT_D:3;
+      (difference f) div 210 > 1
+      proof
+        assume (difference f) div 210 <= 1; then
+        (difference f) div 210 < 1 + 1 by NAT_1:13; then
+        (difference f) div 210 = 1 or (difference f) div 210 = 0
+           by NAT_1:23;
+        hence thesis by T1,T2;
+      end; then
+      (difference f) div 210 >= 1 + 1 by NAT_1:13; then
+S0:   difference f >= 2 * 210 by T2,XREAL_1:64;
+      f.0 is Prime by A1; then
+      f.0 > 1 by INT_2:def 4; then
+S1:   f.0 >= 1+1 by NAT_1:13;
+      f = ArProg (f.0, difference f) by NUMBER06:6; then
+A4:   f.9 = 9 * difference f + f.0 by NUMBER06:7;
+      9 * difference f >= 9 * (2 * 210) by S0,XREAL_1:64; then
+      f.0 + 9 * difference f >= 2 + 9 * 420 by S1,XREAL_1:7;
+      hence thesis by A4,XXREAL_0:2;
+    end;
+  end;
+
+theorem RngForArProg:
+  rng (ArProg(199,210) | 10) =
+    {199, 409, 619, 829, 1039, 1249, 1459, 1669, 1879, 2089}
+  proof
+    set f = ArProg(199,210) | 10;
+    set g = ArProg(199,210);
+    10 c= NAT; then
+B4: 10 c= dom g by FUNCT_2:def 1;
+B0: dom f = dom g /\ 10 by RELAT_1:61
+         .= 10 by B4,XBOOLE_1:28;
+    thus rng (ArProg(199,210) | 10) c=
+      {199, 409, 619, 829, 1039, 1249, 1459, 1669, 1879, 2089}
+    proof
+      let x be object;
+      assume x in rng (ArProg(199,210) | 10); then
+      consider y being object such that
+B1:   y in dom f & x = f.y by FUNCT_1:def 3;
+B3:   x = g.y by B0,B1,FUNCT_1:49;
+      y = 0 or y = 1 or y = 2 or y = 3 or y = 4 or y = 5 or
+        y = 6 or y = 7 or y = 8 or y = 9
+          by CARD_1:58,B0,B1,ENUMSET1:def 8;
+      hence thesis by ENUMSET1:def 8,B3,Th1990,Th1991,Th1992,Th1993,
+        Th1994,Th1995,Th1996,Th1997,Th1998,Th1999;
+    end;
+    let x be object;
+    assume x in {199, 409, 619, 829, 1039, 1249, 1459, 1669, 1879, 2089};
+      then
+HJ: x = g.0 or x = g.1 or x = g.2 or x = g.3 or x = g.4 or x = g.5 or
+      x = g.6 or x = g.7 or x = g.8 or x = g.9
+        by Th1990,Th1991,Th1992,Th1993,Th1994,Th1995,Th1996,Th1997,
+          Th1998,Th1999,ENUMSET1:def 8;
+    x in rng (ArProg(199,210) | 10)
+    proof
+J3:   0 in dom f & 1 in dom f & 2 in dom f & 3 in dom f & 4 in dom f &
+      5 in dom f & 6 in dom f & 7 in dom f & 8 in dom f & 9 in dom f
+        by CARD_1:58,ENUMSET1:def 8,B0; then
+      f.0 = g.0 & f.1 = g.1 & f.2 = g.2 & f.3 = g.3 & f.4 = g.4 &
+        f.5 = g.5 & f.6 = g.6 & f.7 = g.7 & f.8 = g.8 & f.9 = g.9
+          by FUNCT_1:47;
+      hence thesis by J3,FUNCT_1:3,HJ;
+    end;
+    hence thesis;
+  end;
+
+theorem
+  card (rng (ArProg(199,210) | 10) /\ SetPrimes) = 10
+  proof
+    set f = ArProg(199,210) | 10;
+    set g = ArProg(199,210);
+    10 c= NAT; then
+B4: 10 c= dom g by FUNCT_2:def 1;
+B0: dom f = dom g /\ 10 by RELAT_1:61
+         .= 10 by B4,XBOOLE_1:28;
+WW: {199, 409, 619, 829, 1039, 1249, 1459, 1669, 1879, 2089} c=
+      rng f /\ SetPrimes
+    proof
+      let x be object;
+      assume
+HH:   x in {199, 409, 619, 829, 1039, 1249, 1459, 1669, 1879, 2089}; then
+      x is Prime by XPRIMES1:199,409,619,829,1039,1249,1459,
+         1669,1879,2089,ENUMSET1:def 8; then
+      x in SetPrimes by NEWTON:def 6;
+      hence thesis by XBOOLE_0:def 4,HH,RngForArProg;
+    end;
+WV: {199, 409, 619, 829, 1039} misses {1249, 1459, 1669, 1879, 2089}
+    proof
+      assume {199, 409, 619, 829, 1039} meets {1249, 1459, 1669, 1879, 2089};
+      then
+      consider x being object such that
+F1:   x in {199, 409, 619, 829, 1039} & x in {1249, 1459, 1669, 1879, 2089}
+        by XBOOLE_0:3;
+      x = 199 or x = 409 or x = 619 or x = 829 or x = 1039
+        by F1,ENUMSET1:def 3;
+      hence thesis by F1,ENUMSET1:def 3;
+    end;
+WZ: 199, 409, 619, 829, 1039 are_mutually_distinct;
+WA: card {199, 409, 619, 829, 1039} = 5 by WZ,CARD_2:63;
+    1249, 1459, 1669, 1879, 2089 are_mutually_distinct; then
+WB: card {1249, 1459, 1669, 1879, 2089} = 5 by CARD_2:63;
+    rng f /\ SetPrimes c=
+      {199, 409, 619, 829, 1039, 1249, 1459, 1669, 1879, 2089}
+    proof
+      let x be object;
+      assume x in rng (ArProg(199,210) | 10) /\ SetPrimes; then
+      x in rng f & x in SetPrimes by XBOOLE_0:def 4; then
+      consider y being object such that
+B1:   y in dom f & x = f.y by FUNCT_1:def 3;
+B3:   x = g.y by B0,B1,FUNCT_1:49;
+      y = 0 or y = 1 or y = 2 or y = 3 or y = 4 or y = 5 or
+        y = 6 or y = 7 or y = 8 or y = 9
+          by CARD_1:58,B0,B1,ENUMSET1:def 8;
+      hence thesis by ENUMSET1:def 8,B3,Th1990,Th1991,Th1992,Th1993,
+         Th1994,Th1995,Th1996,Th1997,Th1998,Th1999;
+    end; then
+    rng f /\ SetPrimes =
+      {199, 409, 619, 829, 1039, 1249, 1459, 1669, 1879, 2089}
+         by WW,XBOOLE_0:def 10
+      .= {199, 409, 619, 829, 1039} \/ {1249, 1459, 1669, 1879, 2089}
+        by SetFor10; then
+    card (rng f /\ SetPrimes) =
+      card {199, 409, 619, 829, 1039} + card {1249, 1459, 1669, 1879, 2089}
+        by CARD_2:40,WV
+     .= 10 by WA,WB;
+    hence thesis;
+  end;
+
+begin :: Problem 135
+:: Find all numbers p such that all six numbers p, p+2, p+6, p+8,
+:: p+12, and p+14 are primes.
+
+theorem :: Problem 135
+  for p being Prime st
+    p+2 is Prime & p+6 is Prime & p+8 is Prime & p+12 is Prime & p+14 is Prime
+      holds
+   p = 5
+  proof
+    let p be Prime;
+    assume
+A1: p+2 is Prime & p+6 is Prime & p+8 is Prime & p+12 is Prime & p+14 is Prime;
+    assume
+FF: p <> 5;
+    consider k being Nat such that
+ZZ: p = 5*k or p = 5*k+1 or p = 5*k+2 or p = 5*k+3 or p = 5*k+4
+      by NUMBER02:25;
+    per cases by ZZ;
+    suppose
+S1:   p = 5 * k;
+S2:   k <> 0 by S1;
+      k <> 1 by FF,S1; then
+      reconsider k as non trivial non zero Nat by S2,NAT_2:def 1;
+      5 * k is composite by XPRIMES1:5;
+      hence thesis by S1;
+    end;
+    suppose
+      p = 5 * k + 1; then
+      p + 14 = 5 * (k + 3);
+      hence thesis by A1,XPRIMES1:5;
+    end;
+    suppose
+      p = 5 * k + 2; then
+      p + 8 = 5 * (k + 2);
+      hence thesis by A1,XPRIMES1:5;
+    end;
+    suppose
+      p = 5 * k + 3; then
+      p + 12 = 5 * (k + 3);
+      hence thesis by A1,XPRIMES1:5;
+    end;
+    suppose
+S1:   p = 5 * k + 4;
+      p + 6 = 5 * (k + 2) by S1;
+      hence thesis by A1,XPRIMES1:5;
+    end;
+  end;
+
+begin :: Problem 136
+:: Prove that there exist infinitely many pairs of different positive
+:: integers m and n such that (1) m and n have the same prime divisors, and
+:: (2) m + 1 and n + 1 have the same prime divisors.
+
+definition
+  let n be Integer;
+  func PrimeDivisors n -> Subset of NAT equals
+    { k where k is Prime : k divides n };
+  coherence
+  proof
+    { k where k is Prime : k divides n } c= NAT
+    proof
+      let x be object;
+      assume x in { k where k is Prime : k divides n };
+      then ex k being Prime st k = x & k divides n;
+      hence thesis by ORDINAL1:def 12;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem
+  for i being Integer holds PrimeDivisors i c= SetPrimes
+  proof
+    let i be Integer;
+    let x be object;
+    assume x in PrimeDivisors i;
+    then ex k being Prime st x = k & k divides i;
+    hence thesis by NEWTON:def 6;
+  end;
+
+theorem
+  for n being non zero Nat holds PrimeDivisors n c= Seg n
+  proof
+    let n be non zero Nat;
+    let x be object;
+    assume x in PrimeDivisors n;
+    then consider k being Prime such that
+A1: x = k and
+A2: k divides n;
+A3: 1 <= k by INT_2:def 4;
+    k <= n by A2,INT_2:27;
+    hence thesis by A1,A3;
+  end;
+
+theorem
+  for n being Nat holds
+    PrimeDivisors n c= NatDivisors n
+  proof
+    let n be Nat;
+    PrimeDivisors n c= NatDivisors n
+    proof
+      let x be object;
+      assume x in PrimeDivisors n; then
+      consider k being Prime such that
+A1:   x = k & k divides n;
+      k in {l where l is Nat : l <> 0 & l divides n} by A1;
+      hence thesis by A1,MOEBIUS1:def 4;
+    end;
+    hence thesis;
+  end;
+
+theorem DivisorsMulti:
+  for a,b being Nat holds
+    PrimeDivisors (a * b) = PrimeDivisors a \/ PrimeDivisors b
+  proof
+    let a,b be Nat;
+    thus PrimeDivisors (a * b) c= PrimeDivisors a \/ PrimeDivisors b
+    proof
+      let x be object;
+      assume x in PrimeDivisors (a * b); then
+      consider k being Prime such that
+A1:   x = k & k divides a * b;
+      k divides a or k divides b by A1,NAT_6:7; then
+      x in PrimeDivisors a or x in PrimeDivisors b by A1;
+      hence thesis by XBOOLE_0:def 3;
+    end;
+    let x be object;
+    assume x in PrimeDivisors a \/ PrimeDivisors b; then
+    per cases by XBOOLE_0:def 3;
+    suppose x in PrimeDivisors a; then
+      consider k being Prime such that
+A1:   x = k & k divides a;
+      k divides a * b by A1,INT_2:2;
+      hence thesis by A1;
+    end;
+    suppose x in PrimeDivisors b; then
+      consider k being Prime such that
+A1:   x = k & k divides b;
+      k divides a * b by A1,INT_2:2;
+      hence thesis by A1;
+    end;
+  end;
+
+LemmaOne:
+  for p being Prime holds
+    PrimeDivisors p = {p}
+  proof
+    let p be Prime;
+    thus PrimeDivisors p c= {p}
+    proof
+      let x be object;
+      assume x in PrimeDivisors p; then
+      consider k being Prime such that
+S1:   k = x & k divides p;
+      k = p or k = 1 by S1,INT_2:def 4;
+      hence thesis by S1,TARSKI:def 1;
+    end;
+    let x be object;
+    assume x in {p}; then
+    x = p by TARSKI:def 1;
+    hence thesis;
+  end;
+
+theorem
+  for n being Nat, a being Nat st n >= 1 holds
+    PrimeDivisors (a |^ n) = PrimeDivisors a
+  proof
+    let n be Nat, a be Nat;
+    assume
+A0: n >= 1;
+    thus PrimeDivisors (a |^ n) c= PrimeDivisors a
+    proof
+      let x be object;
+      assume x in PrimeDivisors (a |^ n); then
+      consider k being Prime such that
+S1:   k = x & k divides a |^ n;
+      k divides a by S1,NAT_3:5;
+      hence thesis by S1;
+    end;
+    let x be object;
+    assume x in PrimeDivisors a; then
+    consider k being Prime such that
+S1: k = x & k divides a;
+    a = a |^ 1; then
+    a divides a |^ n by A0,NEWTON:89; then
+    k divides a |^ n by S1,NAT_D:4;
+    hence thesis by S1;
+  end;
+
+theorem DivK:
+  for k being Nat, p being Prime st k >= 1 holds
+    PrimeDivisors (p |^ k) = {p}
+  proof
+    let k be Nat, p be Prime;
+    assume
+A0: k >= 1;
+    defpred P[Nat] means PrimeDivisors (p |^ ($1+1)) = {p};
+A1: P[0] by LemmaOne;
+A2: for k being Nat st P[k] holds P[k+1]
+    proof
+      let k be Nat;
+      assume
+A3:   P[k];
+      PrimeDivisors (p |^ (k+1+1)) = PrimeDivisors (p |^ (k+1) * p)
+                    by NEWTON:6
+             .= PrimeDivisors (p |^ (k+1)) \/ PrimeDivisors p by DivisorsMulti
+             .= PrimeDivisors (p |^ (k+1)) \/ {p} by LemmaOne
+             .= {p} by A3;
+      hence thesis;
+    end;
+    for n being Nat holds P[n] from NAT_1:sch 2(A1,A2); then
+    P[k-'1];
+    hence thesis by A0,XREAL_1:235;
+  end;
+
+theorem
+  PrimeDivisors 1 = {}
+  proof
+    assume PrimeDivisors 1 <> {}; then
+    consider p being object such that
+A1: p in { k where k is Prime : k divides 1 } by XBOOLE_0:def 1;
+    consider pp being Prime such that
+A2: pp = p & pp divides 1 by A1;
+    pp = 1 or pp = -1 by A2,INT_2:13;
+    hence thesis by INT_2:def 4;
+  end;
+
+theorem P136a:
+  for k being Nat st k >= 1 holds
+    PrimeDivisors ((2 |^ k) * (2 |^ k - 2)) =
+       {2} \/ PrimeDivisors (2 |^ (k-'1) - 1)
+  proof
+    let k be Nat;
+    assume
+A1: k >= 1; then
+    2 |^ k >= 2 by PREPOWER:12; then
+    2 |^ k - 2 >= 2 - 2 by XREAL_1:13; then
+    2 |^ k - 2 >= 0; then
+    PrimeDivisors ((2 |^ k) * (2 |^ k - 2)) =
+        PrimeDivisors (2 |^ k) \/ PrimeDivisors (2 |^ k - 2)
+          by DivisorsMulti
+      .= {2} \/ PrimeDivisors (2 |^ k - 2) by A1,DivK,XPRIMES1:2
+      .= {2} \/ PrimeDivisors (2 |^ (k-'1+1) - 2) by XREAL_1:235,A1
+      .= {2} \/ PrimeDivisors (2 |^ (k-'1) * 2 - 2) by NEWTON:6
+      .= {2} \/ PrimeDivisors (2 * (2 |^ (k-'1) - 1))
+      .= {2} \/ (PrimeDivisors 2 \/ PrimeDivisors (2 |^ (k-'1) - 1))
+         by DivisorsMulti
+      .= {2} \/ ({2} \/ PrimeDivisors (2 |^ (k-'1) - 1))
+         by LemmaOne,XPRIMES1:2
+      .= {2} \/ {2} \/ PrimeDivisors (2 |^ (k-'1) - 1) by XBOOLE_1:4
+      .= {2} \/ PrimeDivisors (2 |^ (k-'1) - 1);
+    hence thesis;
+  end;
+
+theorem P136b:
+  for k being Nat st k >= 1 holds
+    PrimeDivisors (2 |^ k - 2) =
+       {2} \/ PrimeDivisors (2 |^ (k-'1) - 1)
+  proof
+    let k be Nat;
+    assume k >= 1; then
+    PrimeDivisors (2 |^ k - 2) =
+         PrimeDivisors (2 |^ (k-'1+1) - 2) by XREAL_1:235
+      .= PrimeDivisors (2 |^ (k-'1) * 2 - 2) by NEWTON:6
+      .= PrimeDivisors (2 * (2 |^ (k-'1) - 1))
+      .= PrimeDivisors 2 \/ PrimeDivisors (2 |^ (k-'1) - 1)
+         by DivisorsMulti
+      .= {2} \/ PrimeDivisors (2 |^ (k-'1) - 1) by XPRIMES1:2,LemmaOne;
+    hence thesis;
+  end;
+
+theorem P136c: :: 2nd Step
+  for k being Nat holds
+    PrimeDivisors ((2 |^ k) * (2 |^ k - 2) + 1) =
+       PrimeDivisors (2 |^ k - 1)
+  proof
+    let k be Nat;
+    PrimeDivisors ((2 |^ k) * (2 |^ k - 2) + 1) =
+         PrimeDivisors ((2 |^ k - 1) * (2 |^ k - 1))
+      .= PrimeDivisors (2 |^ k - 1) \/ PrimeDivisors (2 |^ k - 1)
+             by DivisorsMulti
+      .= PrimeDivisors (2 |^ k - 1);
+    hence thesis;
+  end;
+
+theorem DivSquare:
+  for a being Nat holds
+    PrimeDivisors (a * a) = PrimeDivisors a
+  proof
+    let a be Nat;
+    PrimeDivisors (a * a) = PrimeDivisors a \/ PrimeDivisors a by DivisorsMulti
+      .= PrimeDivisors a;
+    hence thesis;
+  end;
+
+theorem :: Problem 136
+  for k,m,n being Nat st
+   k >= 1 & m = 2 |^ k - 2 & n = (2 |^ k) * (2 |^ k - 2)
+    holds
+      PrimeDivisors m = PrimeDivisors n &
+      PrimeDivisors (m+1) = PrimeDivisors (n+1)
+  proof
+    let k,m,n be Nat;
+    assume
+A1: k >= 1 & m = 2 |^ k - 2 & n = (2 |^ k) * (2 |^ k - 2);
+A2: PrimeDivisors (n + 1) = PrimeDivisors (2 |^ k - 1) by P136c,A1
+         .= PrimeDivisors (m + 1) by A1;
+    PrimeDivisors m = {2} \/ PrimeDivisors (2 |^ (k-'1) - 1) by A1,P136b
+               .= PrimeDivisors n by P136a,A1;
+    hence thesis by A2;
+  end;
+
+theorem :: Problem 136 Remark
+  PrimeDivisors (75) = PrimeDivisors (1215) &
+    PrimeDivisors (75 + 1) = PrimeDivisors (1215 + 1)
+  proof
+A1: PrimeDivisors (75) = PrimeDivisors (3*25)
+     .= PrimeDivisors (3) \/ PrimeDivisors (5*5) by DivisorsMulti
+     .= PrimeDivisors 3 \/ PrimeDivisors 3 \/ PrimeDivisors 5
+          by DivSquare
+     .= PrimeDivisors 3 \/ (PrimeDivisors 3 \/ PrimeDivisors 5) by XBOOLE_1:4
+     .= PrimeDivisors (5 * 3) \/ PrimeDivisors 3 by DivisorsMulti
+     .= PrimeDivisors (5 * 3) \/ PrimeDivisors (3 * 3) by DivSquare
+     .= PrimeDivisors (5 * 3) \/ PrimeDivisors (9 * 9) by DivSquare
+     .= PrimeDivisors (5 * 3 * (9 * 9)) by DivisorsMulti
+     .= PrimeDivisors (1215);
+    PrimeDivisors (75 + 1) = PrimeDivisors (2 * 2 * 19)
+       .= PrimeDivisors (2 * 2) \/ PrimeDivisors 19 by DivisorsMulti
+       .= PrimeDivisors 2 \/ PrimeDivisors 2 \/ PrimeDivisors 19
+             by DivisorsMulti
+       .= PrimeDivisors (2*2) \/ PrimeDivisors 2 \/ PrimeDivisors 19
+             by DivSquare
+       .= PrimeDivisors 19 \/ PrimeDivisors (2*2*2) by DivisorsMulti
+       .= PrimeDivisors 19 \/ PrimeDivisors (8 * 8) by DivSquare
+       .= PrimeDivisors (19 * (8 * 8)) by DivisorsMulti
+       .= PrimeDivisors (1215 + 1);
+    hence thesis by A1;
+  end;
+
+begin :: Problem 153
+:: Prove that the equation
+:: x / y + y / z + z / x = 1
+:: has no solutions in positive integers x, y, z.
+
+theorem Multiply1:
+  for x,y,z being positive Real holds
+    (x / y) * (y / z) * (z / x) = 1
+  proof
+    let x,y,z be positive Real;
+    (x / y) * (y / z) * (z / x) = (x / z) * (z / x) by XCMPLX_1:98
+       .= x / x by XCMPLX_1:98
+       .= 1 by XCMPLX_1:60;
+    hence thesis;
+  end;
+
+theorem :: Problem 153
+  not ex x,y,z being positive Nat st
+    x / y + y / z + z / x = 1
+  proof
+    given x,y,z being positive Nat such that
+A1: x / y + y / z + z / x = 1;
+DD: (x / y) * (y / z) * (z / x) = 1 by Multiply1;
+    not (x / y < 1 & y / z < 1 & z / x < 1)
+    proof
+      assume
+D1:   x / y < 1 & y / z < 1 & z / x < 1; then
+      (x / y) * (y / z) < 1 by XREAL_1:162;
+      hence thesis by DD,D1,XREAL_1:162;
+    end; then
+    per cases;
+    suppose x / y >= 1; then
+      x / y + y / z > 1 + 0 by XREAL_1:8;
+      hence thesis by A1,XREAL_1:8;
+    end;
+    suppose y / z >= 1; then
+      x / y + y / z > 1 + 0 by XREAL_1:8;
+      hence thesis by A1,XREAL_1:8;
+    end;
+    suppose z / x >= 1; then
+      z / x + y / z > 1 + 0 by XREAL_1:8; then
+      x / y + (y / z + z / x) > 0 + 1 by XREAL_1:8;
+      hence thesis by A1;
+    end;
+  end;
+
+begin :: Problem 154
+:: Prove that the equation
+:: x / y + y / z + z / x = 2
+:: has no solutions in positive integers x, y, z.
+
+theorem PositiveRoot:
+  for a being positive Real,
+      n being positive Nat holds
+    n-root a is positive
+  proof
+    let a be positive Real,
+        n be positive Nat;
+I1: n-root a <> 0
+    proof
+      assume n-root a = 0; then
+      (n-root a) |^ n = 0 |^ n;
+      hence thesis;
+    end;
+    n >= 1 + 0 by NAT_1:13;
+    hence thesis by I1,POWER:7;
+  end;
+
+theorem SERIES3: :: see SERIES_3:16
+  for a,b,c being positive Real st
+    not (a = b & b = c) holds
+      ((a + b + c) / 3) |^ 3 > a * b * c
+  proof
+    let a,b,c be positive Real;
+    assume
+H1: not (a = b & b = c);
+    set u = 3-root a;
+    set v = 3-root b;
+    set w = 3-root c;
+    reconsider u,v,w as positive Real by PositiveRoot;
+A1: a = u |^ 3 & b = v |^ 3 & c = w |^ 3;
+T1: (u - v) |^ 2 = (u - v) ^2 & (v - w) |^ 2 = (v - w) ^2 &
+      (w - u) |^ 2 = (w - u) ^2 by NEWTON:81;
+T3: (u - v) |^ 2 + (v - w) |^ 2 + (w - u) |^ 2 > 0
+    proof
+      assume (u - v) |^ 2 + (v - w) |^ 2 + (w - u) |^ 2 <= 0; then
+      (u - v) = 0 & (v - w) = 0 & (w - u) = 0;
+      hence thesis by A1,H1;
+    end;
+    (u + v + w) / 2 * ((u - v) |^ 2 + (v - w) |^ 2 + (w - u) |^ 2) =
+         (u ^2 * u + v ^2 * u + w ^2 * u - u * (u * v + w * u + v * w)) +
+         (u ^2 * v + v ^2 * v + w ^2 * v - v * (u * v + w * u + v * w)) +
+         (u ^2 * w + v ^2 * w + w ^2 * w - w * (u * v + w * u + v * w)) by T1
+      .= (u ^2 * u + v ^2 * u + w ^2 * u - u * (u * v + w * u + v * w)) +
+         (u ^2 * v + v |^ 3 + w ^2 * v - v * (u * v + w * u + v * w)) +
+         (u ^2 * w + v ^2 * w + w ^2 * w - w * (u * v + w * u + v * w))
+             by POLYEQ_2:4
+      .= (u |^ 3 + v ^2 * u + w ^2 * u - u * (u * v + w * u + v * w)) +
+         (u ^2 * v + v |^ 3 + w ^2 * v - v * (u * v + w * u + v * w)) +
+         (u ^2 * w + v ^2 * w + w ^2 * w - w * (u * v + w * u + v * w))
+             by POLYEQ_2:4
+      .= (u |^ 3 + v ^2 * u + w ^2 * u - u * (u * v + w * u + v * w)) +
+         (u ^2 * v + v |^ 3 + w ^2 * v - v * (u * v + w * u + v * w)) +
+         (u ^2 * w + v ^2 * w + w |^ 3 - w * (u * v + w * u + v * w))
+             by POLYEQ_2:4
+      .= u |^ 3 + v |^ 3 + w |^ 3 - 3 * u * v * w; then
+    u |^ 3 + v |^ 3 + w |^ 3 - 3 * u * v * w + 3 * u * v * w >
+       0 + 3 * u * v * w by T3,XREAL_1:8; then
+    (u |^ 3 + v |^ 3 + w |^ 3) / 3 > (3 * u * v * w) / 3 by XREAL_1:74; then
+    ((u |^ 3 + v |^ 3 + w |^ 3) / 3) |^ 3 > (u * v * w) |^ 3
+       by PREPOWER:10; then
+    ((u |^ 3 + v |^ 3 + w |^ 3) / 3) |^ 3 > (u * v) |^ 3 * (w |^ 3)
+       by NEWTON:7;
+    hence thesis by NEWTON:7;
+  end;
+
+theorem :: Problem 154
+  not ex x,y,z being positive Nat st
+    x / y + y / z + z / x = 2
+  proof
+    given x,y,z being positive Nat such that
+A1: x / y + y / z + z / x = 2;
+    per cases;
+    suppose
+A2:   x / y = y / z & y / z = z / x;
+      (x / y) * (y / z) * (z / x) = 1 by Multiply1; then
+      (x / y) |^ 2 * (z / x) = 1 by A2,NEWTON:81; then
+      (x / y) |^ (2+1) = 1 by A2,NEWTON:6; then
+      x / y = 3-Root 1 by PREPOWER:19; then
+      x / y = 1 by PREPOWER:20;
+      hence thesis by A1,A2;
+    end;
+    suppose
+D1:   x / y <> y / z or y / z <> z / x;
+      set a = x / y, b = y / z, c = z / x;
+      ((a + b + c) / 3) |^ 3 > a * b * c by SERIES3,D1; then
+      ((a + b + c) / 3) |^ 3 > 1 by Multiply1; then
+      3-Root (((a + b + c) / 3) |^ 3) > 3-Root 1 by PREPOWER:28; then
+      3-Root (((a + b + c) / 3) |^ 3) > 1 by PREPOWER:20; then
+      (a + b + c) / 3 > 1 by PREPOWER:19;
+      hence thesis by A1;
+    end;
+  end;
+
+begin :: Problem 155
+:: Find all solutions in positive integers x, y, z of the equation
+:: x / y + y / z + z / x = 3.
+
+theorem :: Problem 155
+  for x,y,z being positive Nat st
+    x / y + y / z + z / x = 3 holds
+      x = y & y = z
+  proof
+    let x,y,z be positive Nat;
+    assume
+A1: x / y + y / z + z / x = 3;
+B2: x / y = y / z & y / z = z / x
+    proof
+      assume
+D1:   x / y <> y / z or y / z <> z / x;
+      set a = x / y, b = y / z, c = z / x;
+      ((a + b + c) / 3) |^ 3 > a * b * c by SERIES3,D1;
+      hence thesis by A1,Multiply1;
+    end; then
+b1: x / y * y = 1 * y by A1;
+    y / z * z = 1 * z by A1,B2;
+    hence thesis by b1,XCMPLX_1:87;
+  end;
+

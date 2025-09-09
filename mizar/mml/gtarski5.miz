@@ -1,0 +1,3429 @@
+:: Tarski Geometry Axioms. {P}art {V } -- Half-planes and Planes
+::  by Roland Coghetto and Adam Grabowski
+::
+:: Received December 18, 2023
+:: Copyright (c) 2023-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies INCSP_1, GTARSKI1, GTARSKI2, GTARSKI3, XXREAL_0, XBOOLE_0,
+      TARSKI, SUBSET_1, STRUCT_0, GTARSKI4, GTARSKI5, RVSUM_1, PROJDES1,
+      PROB_1;
+ notations TARSKI, XBOOLE_0, SUBSET_1, STRUCT_0, GTARSKI1, GTARSKI2, GTARSKI3,
+      GTARSKI4;
+ constructors GTARSKI4;
+ registrations STRUCT_0, GTARSKI1, GTARSKI3;
+ requirements BOOLE, SUBSET;
+ definitions TARSKI;
+ equalities GTARSKI3;
+ expansions XBOOLE_0, TARSKI, GTARSKI1, GTARSKI3, GTARSKI4;
+ theorems XBOOLE_0, XBOOLE_1, GTARSKI1, GTARSKI2, GTARSKI3, GTARSKI4;
+
+begin
+
+theorem Th1:
+  for S being satisfying_CongruenceIdentity
+              satisfying_BetweennessIdentity
+              TarskiGeometryStruct
+  for a,b,c being POINT of S st a,b <= c,c holds a = b
+  proof
+    let S be satisfying_CongruenceIdentity
+             satisfying_BetweennessIdentity
+             TarskiGeometryStruct;
+    let a,b,c be POINT of S;
+    assume a,b <= c,c;
+    then consider y be POINT of S such that
+A1: between c,y,c and
+A2: a,b equiv c,y;
+    c = y by A1,GTARSKI1:def 10;
+    hence thesis by A2,GTARSKI1:def 7;
+  end;
+
+begin
+
+definition
+  let S be non empty TarskiGeometryStruct;
+  let a,b be POINT of S;
+  let A be Subset of S;
+  pred between a,A,b means
+  A is_line & not a in A & not b in A & ex t being POINT of S st t in A &
+  between a,t,b;
+end;
+
+theorem
+  for S being non empty satisfying_BetweennessIdentity TarskiGeometryStruct
+  for a being POINT of S for A being Subset of S holds not between a,A,a
+  by GTARSKI1:def 10;
+
+definition
+  let S be non empty TarskiGeometryStruct;
+  let a,b,p,q be POINT of S;
+  pred between a,p,q,b means
+  p <> q & between a,Line(p,q),b;
+end;
+
+reserve S for non empty satisfying_CongruenceIdentity
+              satisfying_SegmentConstruction
+              satisfying_BetweennessIdentity
+              satisfying_Pasch
+              TarskiGeometryStruct;
+
+reserve a,b for POINT of S;
+reserve A for Subset of S;
+
+::$N 9.2 Satz
+theorem
+  between a,A,b implies between b,A,a by GTARSKI3:14;
+
+reserve S for non empty satisfying_Tarski-model
+              TarskiGeometryStruct;
+
+reserve a,b,c,m,r,s for POINT of S;
+reserve A for Subset of S;
+
+theorem Th4:
+  between a,b,c & A is_line & a in A & c in A implies b in A
+  proof
+    assume that
+A1: between a,b,c and
+A2: A is_line and
+A3: a in A and
+A4: c in A;
+    Collinear a,b,c by A1;
+    then Collinear a,c,b by GTARSKI3:45;
+    then
+A5: b in Line(a,c);
+    a<>c or a=c;
+    hence thesis by A2,A4,A5,GTARSKI3:87,A1,A3,GTARSKI1:def 10;
+  end;
+
+theorem Th5:
+  between a,b,c & a <> b & A is_line & a in A & b in A implies c in A
+  proof
+    assume that
+A1: between a,b,c and
+A2: a <> b and
+A3: A is_line and
+A4: a in A and
+A5: b in A;
+    Collinear a,b,c by A1;
+    then c in Line(a,b);
+    hence thesis by A3,A4,A5,A2,GTARSKI3:87;
+  end;
+
+theorem Th6:
+  between a,A,c & m in A & Middle a,m,c & r in A implies
+  (for b st r out a,b & between r,b,a holds between b,A,c)
+  proof
+    assume that
+A1: between a,A,c and
+A2: m in A and
+A3: Middle a,m,c and
+A4: r in A;
+A5: between c,m,a by A3,GTARSKI3:14;
+    let b;
+    assume that
+A6: r out a,b and
+A7: between r,b,a;
+    consider t be POINT of S such that
+A8: between b,t,c and
+A9: between m,t,r by A7,A5,GTARSKI1:def 11;
+    Collinear r,b,a by A7;
+    then a in Line(r,b);
+    hence between b,A,c by A8,A9,A2,Th4,A1,A4,A6,GTARSKI3:87;
+  end;
+
+::$N 9.3 Lemma
+theorem Th7:
+  between a,A,c & m in A & Middle a,m,c & r in A implies
+  (for b st r out a,b holds between b,A,c)
+  proof
+    assume that
+A1: between a,A,c and
+A2: m in A and
+A3: Middle a,m,c and
+A4: r in A;
+    let b;
+    assume
+A5: r out a,b;
+    then per cases;
+    suppose between r,b,a;
+      hence thesis by A1,A2,A3,A4,A5,Th6;
+    end;
+    suppose
+A6:   between r,a,b;
+      set b9 = reflection(m,b),r9 = reflection(m,r);
+A7:   Middle b,m,b9 & Middle r,m,r9 by GTARSKI3:def 13;
+A8:   between reflection(m,r),reflection(m,a),reflection(m,b)
+        by A6,GTARSKI3:106;
+      then
+A9:   between reflection(m,r),c,reflection(m,b) by A3,GTARSKI3:def 13;
+A10:     A is_line & not b in A by A1,A4,A6,Th4;
+         G1: not b9 in A
+          proof
+            assume
+A11:        b9 in A;
+            b9 <> m
+            proof
+              assume b9 = m;
+              then Middle b,m,m by GTARSKI3:100;
+              hence contradiction by A10,A2,GTARSKI1:def 7;
+            end;
+            hence contradiction by A10,A11,A7,A2,Th5,GTARSKI3:14;
+          end;
+        Middle b9,m,b by GTARSKI3:def 13,GTARSKI3:96;
+        then U1: between b9,A,b by A2,G1,A1,A4,A6,Th4;
+        U2: Middle b9,m,b by GTARSKI3:96,def 13;
+        U3: r9 in A by A4,GTARSKI3:104,A1,A2,A7,Th5;
+        then U4: r9 out b9,c by A9,A1,GTARSKI1:def 10;
+         between r9,c,b9 by A8,A3,GTARSKI3:def 13;
+      then between c,A,b by U1,U2,U3,U4,A2,Th6;
+      hence thesis by GTARSKI3:14;
+    end;
+  end;
+
+definition
+  let S be non empty satisfying_Tarski-model TarskiGeometryStruct;
+  let a,b be POINT of S;
+  let A be Subset of S;
+  pred are_orthogonal A,a,b means
+  are_lorthogonal A,a,a,b;
+end;
+
+definition
+  let S be non empty TarskiGeometryStruct;
+  let K be Subset of S;
+  pred K is_half_line means ex p,a being POINT of S st p <> a &
+    K = halfline(p,a);
+end;
+
+theorem Th8:
+  for a,b,c,d,e being POINT of S st b <> c & c <> d & between b,c,d &
+  (between a,b,c or between b,a,c) & (between c,d,e or between c,e,d) holds
+  between a,c,e
+  proof
+    let a,b,c,d,e be POINT of S;
+    assume that
+A1: b <> c and
+A2: c <> d and
+A3: between b,c,d and
+A4: between a,b,c or between b,a,c and
+A5: between c,d,e or between c,e,d;
+    between a,c,d by A1,A3,A4,GTARSKI3:18,19;
+    hence thesis by A2,A5,GTARSKI3:17,19;
+  end;
+
+reserve S         for non empty satisfying_Lower_Dimension_Axiom
+                                satisfying_Tarski-model
+                                TarskiGeometryStruct,
+        a,b,c,d,m,p,q,r,s,x for POINT of S,
+        A,A9,E              for Subset of S;
+
+theorem Th9:
+  r <> s & s,c <= r,a & between a,A,c & r in A & are_orthogonal A,r,a &
+  s in A & are_orthogonal A,s,c implies ((Middle r,m,s implies
+  (for u be POINT of S holds (r out u,a iff s out reflection(m,u),c))) &
+  (for u,v be POINT of S st r out u,a & s out v,c holds between u,A,v))
+  proof
+    assume that
+A1: r <> s and
+A2: s,c <= r,a and
+A3: between a,A,c and
+A4: r in A and
+A5: are_orthogonal A,r,a and
+A6: s in A and
+A7: are_orthogonal A,s,c;
+    consider t be POINT of S such that
+A8: t in A and
+A9: between a,t,c by A3;
+A10: a <> r & are_orthogonal A,r,Line(r,a) by A5,GTARSKI4:def 4;
+A11: c <> s & are_orthogonal A,s,Line(s,c) by A7,GTARSKI4:def 4;
+    consider b be POINT of S such that
+A12: between r,b,a and
+A13: s,c equiv r,b by A2;
+        G1: Line(s,r) is_line & Line(c,s) is_line by A1,A7,GTARSKI4:def 4;
+        G2: s in Line(c,s) & s in Line(s,r) by GTARSKI3:83;
+      now    let u9,v9 be POINT of S;
+          assume
+      u9 in Line(c,s) &
+      v9 in Line(s,r);
+          then v9 in A & u9 in Line(s,c) by A3,A4,A6,A1,GTARSKI3:87;
+          hence right_angle u9,s,v9 by A11,GTARSKI4:13;
+      end;
+      then R1: are_orthogonal c,s,s,r
+by G1,G2,A7,GTARSKI4:def 2,def 3,def 4,A1;
+        G1: Line(a,r) is_line & Line(r,s) is_line by A1,A5,GTARSKI4:def 4;
+        G2: r in Line(a,r) & r in Line(r,s) by GTARSKI3:83;
+      now
+          let u9,v9 be POINT of S;
+          assume u9 in Line(a,r) & v9 in Line(r,s);
+         then v9 in A & u9 in Line(r,a) by A4,A6,A3,A1,GTARSKI3:87;
+          hence right_angle u9,r,v9 by A10,GTARSKI4:13;
+      end;
+      then are_orthogonal Line(a,r),Line(s,r) by G1,G2,GTARSKI4:def 2;
+      then R2: are_orthogonal a,r,s,r by A5,A1,GTARSKI4:def 4;
+      A = Line(r,s) by A4,A6,A3,A1,GTARSKI3:87;
+      then ex x9 be POINT of S st t = x9 & Collinear r,s,x9 by A8;
+      then Collinear s,r,t & between c,t,a by A9,GTARSKI3:14;
+    then consider m be POINT of S such that
+A18: Middle s,m,r and
+A19: Middle c,m,b by R1,R2,A12,A13,GTARSKI4:40;
+    now
+      hereby
+        let m9 be POINT of S;
+        assume
+A20:    Middle r,m9,s;
+        then
+A21:    Middle s,m9,r by GTARSKI3:96;
+        then
+A22:    m9 = m by A18,GTARSKI3:108;
+        let u be POINT of S;
+        hereby
+          assume
+A23:      r out u,a;
+            G1: s <> reflection(m,u)
+            proof
+              assume s = reflection(m,u);
+              then Middle s,m,u by GTARSKI3:96,def 13;
+              hence contradiction by A18,GTARSKI3:99,A23;
+            end;
+            (between r,u,b or between r,b,u) & s = reflection(m,r) &
+              c = reflection(m,b)
+              by A18,GTARSKI3:18,58,96,def 13,A23,A12,A19;
+            then between s,reflection(m,u),c or between s,c,reflection(m,u)
+              by GTARSKI3:106;
+            hence s out reflection(m9,u),c
+              by A21,A18,G1,A7,GTARSKI4:def 4,GTARSKI3:108;
+        end;
+        assume
+A24:    s out reflection(m9,u),c;
+A25:    s = reflection(m9,reflection(m9,s)) &
+          c = reflection(m9,reflection(m9,c)) by GTARSKI3:101;
+        r = reflection(m,s) & b = reflection(m,c)
+          by A18,A19,GTARSKI3:def 13;
+        then
+A26:    between r,u,b or between r,b,u by A25,A22,A24,GTARSKI3:106;
+        r <> b by A13,A7,GTARSKI4:def 4,GTARSKI1:def 7;
+        hence r out u,a
+          by A26,A12,GTARSKI3:56,18,A24,A20,Th1,A2,GTARSKI3:def 13;
+      end;
+      hereby
+        let u,v be POINT of S;
+        assume that
+A27:    r out u,a and
+A28:    s out v,c;
+        set u9 = reflection(m,u);
+          G1: s <> u9
+          proof
+            assume s = u9;
+            then Middle s,m,u by GTARSKI3:def 13,96;
+            hence contradiction by A27,A18,GTARSKI3:99;
+          end;
+A30:      r = reflection(m,s) & b = reflection(m,c)
+            by A18,A19,GTARSKI3:def 13;
+          between r,u,b or between r,b,u by A27,A12,GTARSKI3:18,58;
+          then between reflection(m,s),
+                       reflection(m,reflection(m,u)),
+                       reflection(m,c) or
+               between reflection(m,s),
+                       reflection(m,c),
+                       reflection(m,reflection(m,u)) by A30,GTARSKI3:101;
+         then G3: between s,u9,c or between s,c,u9 by GTARSKI3:106;
+          Collinear r,s,m by A18;
+          then m in Line(r,s);
+          then A31:m in A by A1,A3,A4,A6,GTARSKI3:87;
+A32:        not u in A
+            proof
+              assume u in A;
+              then
+A33:          Line(r,u) = A by A27,A4,A3,GTARSKI3:87;
+              Collinear r,u,a by A27,GTARSKI3:14;
+              hence contradiction by A33,A3;
+            end;
+            GG2: not u9 in A
+            proof
+              assume
+A34:          u9 in A;
+              Middle u,m,u9 by GTARSKI3:def 13;
+              then Collinear u9,m,u by GTARSKI3:14;
+              then
+A35:          u in Line(u9,m);
+              u9 <> m
+              proof
+                assume u9 = m;
+                then Middle u,m,m by GTARSKI3:def 13;
+                hence contradiction by A32,A31,GTARSKI1:def 7;
+              end;
+              hence contradiction by A35,A32,A34,A31,A3,GTARSKI3:87;
+            end;
+            Middle u9,m,u by GTARSKI3:96,def 13;
+          then U2: between u9,A,u by A31,A32,A3,GG2;
+          U3: Middle u9,m,u by GTARSKI3:96,def 13;
+           s in A & s out u9,v by A6,G1,G3,A28,GTARSKI3:18,56,58;
+        then between v,A,u by U2,U3,A31,Th7;
+        hence between u,A,v by GTARSKI3:14;
+      end;
+    end;
+    hence thesis;
+  end;
+
+::$N 9.4 Lemma
+theorem Th10:
+  between a,A,c & r in A & are_orthogonal A,r,a & s in A &
+  are_orthogonal A,s,c implies ((Middle r,m,s implies
+  (for u being POINT of S holds ((r out u,a iff s out reflection(m,u),c)))) &
+  (for u,v being POINT of S st r out u,a & s out v,c holds between u,A,v))
+  proof
+    assume that
+A1: between a,A,c and
+A2: r in A and
+A3: are_orthogonal A,r,a and
+A4: s in A and
+A5: are_orthogonal A,s,c;
+    consider t be POINT of S such that
+A6: t in A and
+A7: between a,t,c by A1;
+    a <> r & are_orthogonal A,r,Line(r,a) by A3,GTARSKI4:def 4;
+    then
+A8: right_angle t,r,a by A6,GTARSKI3:83;
+ c <> s & are_orthogonal A,s,Line(s,c) by A5,GTARSKI4:def 4;
+    then
+A10: right_angle t,s,c by A6,GTARSKI3:83;
+    per cases;
+    suppose
+A11:  r <> s;
+      per cases by GTARSKI3:64;
+      suppose
+A12:    r,a <= s,c;
+A13:    between c,A,a by A1,GTARSKI3:14;
+        then
+A14:    (Middle s,m,r implies (for u be POINT of S holds
+         ((s out u,c iff r out reflection(m,u),a)))) &
+         (for u,v be POINT of S st s out u,c & r out v,a holds
+         between u,A,v) by A12,A11,A2,A3,A4,A5,Th9;
+        now
+          hereby
+            assume
+A15:        Middle r,m,s;
+            let u be POINT of S;
+            hereby
+              assume r out u,a;
+              then r out reflection(m,reflection(m,u)),a by GTARSKI3:101;
+              hence s out reflection(m,u),c by A15,A14,GTARSKI3:96;
+            end;
+              assume s out reflection(m,u),c;
+              then r out reflection(m,reflection(m,u)),a
+                by A14,A15,GTARSKI3:96;
+              hence r out u,a by GTARSKI3:101;
+          end;
+            let u,v be POINT of S;
+            assume r out u,a & s out v,c;
+           then between v,A,u by A13,A12,A11,A2,A3,A4,A5,Th9;
+            hence between u,A,v by GTARSKI3:14;
+        end;
+        hence thesis;
+      end;
+      suppose s,c <= r,a;
+        hence thesis by A11,A1,A2,A3,A4,A5,Th9;
+      end;
+    end;
+    suppose
+A18:  r = s;
+A19:  right_angle a,r,t & right_angle c,s,t by A8,A10,GTARSKI4:13;
+      then
+A20:  r = t by A7,A18,GTARSKI4:18;
+A21:  between a,r,c by A19,A7,A18,GTARSKI4:18;
+A22:  now
+        assume
+A23:    Middle r,m,s;
+        then
+A24:    r = m & m = s by A18,GTARSKI3:97;
+        let u be POINT of S;
+        hereby
+          assume
+A25:      r out u,a;
+            T1: m <> reflection(m,u)
+            proof
+              assume m = reflection(m,u);
+              then Middle u,m,m by GTARSKI3:def 13;
+              hence contradiction by A25,A24,GTARSKI1:def 7;
+            end;
+            (between m,reflection(m,u),c or between m,c,reflection(m,u))
+            proof
+              per cases by A25;
+              suppose
+A26:            between r,u,a;
+                  between a,u,m & between a,m,c
+                    by A26,A24,A7,GTARSKI3:14,A19,GTARSKI4:18;
+                  then G1: between u,m,c by GTARSKI3:18;
+                  g2: Middle u,m,reflection(m,u) by GTARSKI3:def 13;
+                  u <> m by A23,A18,GTARSKI3:97,A25;
+                hence thesis by G1,g2,GTARSKI3:57;
+              end;
+              suppose
+A27:            between r,a,u;
+                  between m,a,u & between c,m,a & a <> m
+                    by A7,A27,A24,A20,GTARSKI3:14,A3,GTARSKI4:def 4;
+                  then between c,m,u by GTARSKI3:19;
+                  then G1:between u,m,c by GTARSKI3:14;
+                  Middle u,m,reflection(m,u) by GTARSKI3:def 13;
+                  then between u,m,reflection(m,u)& u <> m
+                    by A23,A18,GTARSKI3:97,A25;
+                hence thesis by G1,GTARSKI3:57;
+              end;
+            end;
+          hence s out reflection(m,u),c
+             by T1,A5,GTARSKI4:def 4,A23,A18,GTARSKI3:97;
+        end;
+        assume
+A28:    s out reflection(m,u),c;
+        now
+          thus r <> u & r <> a by A24,A28,GTARSKI3:104,A3,GTARSKI4:def 4;
+          Middle u,m,reflection(m,u) by GTARSKI3:def 13;
+          then between u,r,c by A24,A28,GTARSKI3:17,19; then
+Y1:       between c,r,u by GTARSKI3:14;
+          between c,r,a & c <> r
+            by A5,GTARSKI4:def 4,A18,A7,A20,GTARSKI3:14;
+          hence between r,u,a or between r,a,u by Y1,GTARSKI3:57;
+        end;
+        hence r out u,a;
+      end;
+      for u,v be POINT of S st r out u,a & s out v,c holds between u,A,v
+      proof
+        let u,v be POINT of S;
+        assume that
+A29:    r out u,a and
+A30:    s out v,c;
+        Collinear u,r,a or Collinear a,r,u by A29;
+        then
+A31:    Collinear u,r,a by GTARSKI3:45;
+        Collinear r,v,c or Collinear r,c,v by A18,A30;
+        then
+A32:    Collinear v,r,c by GTARSKI3:45;
+          U1: not u in A & not v in A
+          proof
+            assume u in A or v in A;
+            then per cases;
+            suppose u in A;
+              then Line(u,r) = A by A1,A29,A2,GTARSKI3:87;
+              hence contradiction by A1,A31;
+            end;
+            suppose v in A;
+              then Line(v,r) = A by A2,A18,A1,A30,GTARSKI3:87;
+              hence contradiction by A32,A1;
+            end;
+          end;
+          between a,u,r or between u,a,r by A29,GTARSKI3:14;
+          then between u,r,v by Th8,A29,A30,A18,A21;
+        hence thesis by A1,A2,U1;
+      end;
+      hence thesis by A22;
+    end;
+  end;
+
+theorem
+  for a,b being POINT of S st a <> b holds a out b,b by GTARSKI3:13;
+
+::$N Satz 9.5 (Gupta 1965)
+theorem Th12:
+  between a,A,c & r in A implies (for b holds r out a,b implies between b,A,c)
+  proof
+    assume that
+A1: between a,A,c and
+A2: r in A;
+    let b be POINT of S;
+    assume
+A3: r out a,b;
+    A is_line by A1;
+    then consider p,q be POINT of S such that p <> q and
+A4: A = Line(p,q);
+    not Collinear p,q,a by A1,A4;
+    then consider x be POINT of S such that
+A5: x is_foot p,q,a by GTARSKI4:33;
+A6: x in A by A4,A5;
+A7: not b in A
+    proof
+      assume b in A;
+      then
+A8:   Line(r,b) = A by A3,A1,A2,GTARSKI3:87;
+      Collinear r,a,b or Collinear r,b,a by A3;
+      then Collinear r,b,a by GTARSKI3:45;
+      hence contradiction by A8,A1;
+    end;
+    then not Collinear p,q,b by A4;
+    then consider y be POINT of S such that
+A9: y is_foot p,q,b by GTARSKI4:33;
+A10: y in A by A4,A9;
+    not Collinear p,q,c by A1,A4;
+    then consider z be POINT of S such that
+A11: z is_foot p,q,c by GTARSKI4:33;
+A12: z in {x where x is POINT of S: Collinear p,q,x} by A11;
+A13: z in A by A4,A11;
+    consider m be POINT of S such that
+A14: Middle x,m,z by GTARSKI4:39;
+    Collinear x,m,z by A14;
+    then Collinear x,z,m by GTARSKI3:45;
+    then
+A15: m in Line(x,z);
+a16:    x=z or x<>z;
+    then
+A16:  m in A by A14,GTARSKI3:97,A13,A15,A6,A1,GTARSKI3:87;
+    set d = reflection(m,a);
+A17: not d in A
+    proof
+      assume
+A18:  d in A;
+      Middle a,m,d by GTARSKI3:def 13;
+      then Collinear m,d,a;
+      then
+A19:  a in Line(m,d);
+      m <> d
+      proof
+        assume m = d;
+        then Middle a,m,m by GTARSKI3:def 13;
+        hence contradiction by A1,A16,GTARSKI1:def 7;
+      end;
+      hence contradiction by A18,A16,A1,A19,GTARSKI3:87;
+    end;
+A20: z <> d
+    proof
+      assume
+A21:  z = d;
+      then Middle a,m,z by GTARSKI3:def 13;
+      then Collinear a,m,z;
+      then Collinear z,m,a by GTARSKI3:45;
+      then
+A22:  a in Line(z,m);
+      Middle a,m,m or z <> m by A21,GTARSKI3:def 13;
+      hence contradiction by A16,GTARSKI1:def 7,A22,A1,A12,A4,GTARSKI3:87;
+    end;
+      J2: x in A by A5,A4;
+          yh1:Collinear p,q,x & are_orthogonal p,q,a,x by A5;
+          A is_line & Line(x,a) is_line & A <> Line(x,a) & x in Line(x,a) &
+            x in A by A1,A6,GTARSKI3:83;
+          then A,Line(x,a) Is x;
+      then J3: are_orthogonal A,x,a by yh1,A4,GTARSKI4:26,def 4;
+      J4: z in A by A11,A4;
+        y1:Collinear p,q,z & are_orthogonal p,q,c,z by A11;
+        A is_line & Line(z,c) is_line & A <> Line(z,c) & z in Line(z,c) &
+          z in A by A1,A13,GTARSKI3:83;
+        then A,Line(z,c) Is z; then
+J5:    are_orthogonal A,z,c by y1,A4,GTARSKI4:26,def 4;
+       J6:Middle x,m,z & x out a,a by A5,A4,A1,A14,GTARSKI3:13; then
+A24: z out d,c by A1,J2,J3,J4,J5,Th10;
+      between a,A,d & m in A & Middle a,m,d & r in A & r out a,b
+        by A3,A2,GTARSKI3:def 13,87,97,a16,A15,A24,A1,J2,J3,J4,J5,J6,Th10;
+      then T1: between b,A,d by Th7;
+      T2: y in A by A9,A4;
+          g1:Collinear p,q,y & are_orthogonal p,q,b,y by A9;
+          A is_line & Line(y,b) is_line & A <> Line(y,b) & y in Line(y,b) &
+            y in A by A1,A10,A7,GTARSKI3:83;
+          then A,Line(y,b) Is y;
+      then T3: are_orthogonal A,y,b by g1,A4,GTARSKI4:def 4,26;
+      T4: z in A by A11,A4;
+         Collinear z,c,d or Collinear z,d,c by A24;
+         then Collinear z,c,d by GTARSKI3:45; then
+D1:      d in Line(z,c);
+         z <> c & Collinear p,q,z & are_orthogonal p,q,c,z
+           by A11,A4,A1; then
+D2:      are_orthogonal A,Line(z,d) by D1,A4,A20,GTARSKI3:82;
+         A is_line & Line(z,d) is_line & A <> Line(z,d) & z in Line(z,d) &
+           z in A by A1,A17,A12,A4,GTARSKI3:83;
+         then A,Line(z,d) Is z; then
+T5:      are_orthogonal A,z,d by A20,D2,GTARSKI4:26,def 4;
+         y out b,b & z out c,d by A24, A9,A4,A7,GTARSKI3:13;
+    hence thesis by T1,T2,T3,T4,T5,Th10;
+  end;
+
+::$N Satz 9.6 (Satz von Pash, Exterior form - Gupta 1965)
+theorem
+  between a,c,p & between b,q,c implies ex x st between a,x,b & between p,q,x
+  proof
+    assume that
+A1: between a,c,p and
+A2: between b,q,c;
+    per cases;
+    suppose
+A3:   p = q;
+      take b;
+      thus thesis by A3,GTARSKI3:13,14;
+    end;
+    suppose
+A4:   p <> q;
+      per cases;
+      suppose
+A5:     c = q;
+        take a;
+        thus thesis by A1,A5,GTARSKI3:13,14;
+      end;
+      suppose
+A6:     c <> q;
+A7:     between p,c,a by A1,GTARSKI3:14;
+        per cases;
+        suppose
+A8:       Collinear p,q,c;
+          per cases;
+          suppose
+A9:         between p,q,c;
+            take a;
+            thus thesis by A7,A9,GTARSKI3:15,18;
+          end;
+          suppose not between p,q,c;
+            then
+A10:        q out p,c by A8,GTARSKI3:73;
+            then per cases;
+            suppose between q,p,c;
+              then
+A11:          between c,q,b & between c,p,q by A2,GTARSKI3:14;
+              take b;
+              thus thesis by A11,GTARSKI3:13,18;
+            end;
+            suppose between q,c,p;
+              then
+A12:          between c,q,b & between p,c,q by A2,GTARSKI3:14;
+              take b;
+              thus thesis by A10,A12,GTARSKI3:13,19;
+            end;
+          end;
+        end;
+        suppose
+A13:      not Collinear p,q,c;
+          set A = Line(p,q);
+A14:      Line(p,q) <> Line(c,q)
+          proof
+            assume Line(p,q) = Line(c,q);
+            then c in Line(p,q) by GTARSKI3:83;
+            then ex x be POINT of S st c = x & Collinear p,q,x;
+            hence contradiction by A13;
+          end;
+          per cases;
+          suppose
+A15:        b in A;
+            Collinear b,q,c by A2;
+            then Collinear c,q,b by GTARSKI3:45;
+            then
+A16:        b in Line(c,q);
+A17:        q in A & q in Line(c,q) by GTARSKI3:83;
+            take b;
+            b = q
+            proof
+              assume
+A18:          b <> q;
+                A is_line by A4;
+                then G1: Line(b,q) = A by A15,A17,A18,GTARSKI3:87;
+                Line(c,q) is_line by A6;
+              hence contradiction by G1,A14,A16,A17,A18,GTARSKI3:87;
+            end;
+            hence thesis by GTARSKI3:13;
+          end;
+          suppose
+A19:        not b in A;
+                R1: A is_line by A4;
+                R2: not c in A
+                proof
+                  assume
+A20:              c in A;
+                  q in A & A is_line by A4,GTARSKI3:83;
+                  then
+A21:              Line(c,q) = A by A20,A6,GTARSKI3:87;
+                  Collinear c,q,b by A2,GTARSKI3:14;
+                  hence contradiction by A19,A21;
+                end;
+                between b,q,c & q in A by A2,GTARSKI3:83;
+              then T2: between c,A,b by R1,R2,A19,GTARSKI3:14;
+                O1:p <> c
+                proof
+                  assume p = c;
+                  then Collinear p,c,q by GTARSKI3:46;
+                  hence contradiction by A13,GTARSKI3:45;
+                end;
+                p <> a
+                proof
+                  assume p = a;
+                  then Collinear b,q,p by A2,A1,GTARSKI1:def 10;
+                  then Collinear p,q,b by GTARSKI3:45;
+                  hence contradiction by A19;
+                end;
+              then p out c,a by O1,A1,GTARSKI3:14;
+            then between a,A,b by GTARSKI3:83,T2,Th12;
+            then consider x be POINT of S such that
+A22:        x in A and
+A23:        between a,x,b;
+              P1: p <> x
+              proof
+                assume p = x;
+                then between c,p,b &between c,q,b by A23,A1,A2,GTARSKI3:14,18;
+                then Collinear c,p,q or Collinear c,q,p by GTARSKI3:58;
+                hence contradiction by A13,GTARSKI3:45;
+              end;
+               A is_line & p in A by A4,GTARSKI3:83;
+            then
+A24:        Line(p,x) = A by P1,A22,GTARSKI3:87;
+            take x;
+              between b,x,a & between p,c,a by A1,A23,GTARSKI3:14;
+              then consider t be POINT of S such that
+A25:          between x,t,p and
+A26:          between c,t,b by GTARSKI1:def 11;
+A27:           Collinear p,x,t by A25;
+                Collinear c,t,b by A26;
+                then Collinear c,b,t by GTARSKI3:45;
+                then
+A28:            t in Line(c,b);
+                  R1: c <> b by A6,A2,GTARSKI1:def 10;
+                  Collinear c,b,q by A2;
+                  then q in Line(c,b);
+                then t in Line(c,q) & t in A & q in Line(c,q) & q in A &
+                  Line(c,q) is_line & A is_line
+                  by A4,A27,A28,A24,GTARSKI3:82,83,R1,A6;
+                then t=q by A14,GTARSKI3:89;
+            hence thesis by A23,A25,GTARSKI3:14;
+          end;
+        end;
+      end;
+    end;
+  end;
+
+::$N 9.7 Definition
+definition
+  let S be non empty TarskiGeometryStruct;
+  let A be Subset of S;
+  let a,b be POINT of S;
+  pred A out a,b means
+    ex c being POINT of S st between a,A,c & between b,A,c;
+end;
+
+definition
+  let S be non empty TarskiGeometryStruct;
+  let a,b,p,q be POINT of S;
+  pred p,q out a,b means p <> q & Line(p,q) out a,b;
+end;
+
+::$N 9.8 Satz
+theorem Th14:
+  between a,A,c implies (between b,A,c iff A out a,b)
+  proof
+    assume
+A1: between a,A,c;
+    hence between b,A,c implies A out a,b;
+    assume A out a,b;
+    then consider d be POINT of S such that
+A2: between a,A,d and
+A3: between b,A,d;
+    consider x be POINT of S such that
+A4: x in A and
+A5: between a,x,d by A2;
+    consider y be POINT of S such that
+A6: y in A and
+A7: between b,y,d by A3;
+    per cases;
+    suppose
+A8:   Collinear a,b,d;
+A9:   a <> d by A5,A4,A1,GTARSKI1:def 10;
+      per cases;
+      suppose a = b;
+        hence thesis by A1;
+      end;
+      suppose
+A10:    a <> b;
+        T1: x in Line(a,b)
+          proof
+              d in {x where x is POINT of S:Collinear a,b,x} by A8;
+              then G1: Line(a,b) = Line(a,d) by A9,A10,GTARSKI3:82;
+              Collinear a,x,d by A5;
+              then Collinear a,d,x by GTARSKI3:45;
+            hence thesis by G1;
+          end;
+          T2: y in Line(a,b)
+          proof
+             T2: b <> d by A3,GTARSKI1:def 10;
+             Collinear b,a,d by A8,GTARSKI3:45;
+             then d in Line(b,a);
+             then H1: Line(a,b) = Line(b,d) by A10,T2,GTARSKI3:82;
+             Collinear b,y,d by A7;
+             then Collinear b,d,y by GTARSKI3:45;
+             hence thesis by H1;
+          end;
+          T3: A <> Line(a,b) by A1,GTARSKI3:83;
+          Line(a,b) is_line & A is_line by A1,A10;
+        then x = y by T1,T2,T3,A4,A6,GTARSKI3:89;
+        then between d,x,a & between d,x,b by A7,A5,GTARSKI3:14;
+        then x out a,b by A2,A4,A3,GTARSKI3:57;
+        hence thesis by A1,A4,Th12;
+      end;
+    end;
+    suppose
+A11:  not Collinear a,b,d;
+      consider z be POINT of S such that
+A12:  between x,z,b and
+A13:  between y,z,a by A5,A7,GTARSKI1:def 11;
+A14:  x <> y
+      proof
+        assume x = y;
+        then between d,x,a & between d,x,b by A5,A7,GTARSKI3:14;
+        then Collinear d,a,b or Collinear d,b,a by A2,A4,GTARSKI3:56;
+        hence contradiction by A11,GTARSKI3:45;
+      end;
+      then
+A15:  Line(x,y) = A by A1,A4,A6,GTARSKI3:87;
+       y <> z
+        proof
+          assume y = z;
+          then Collinear x,y,b by A12;
+          hence thesis by A3,A15;
+        end;
+      then
+A16:  y out a,z by A13,A6,A1;
+        T1: x <> z
+        proof
+          assume x = z;
+          then Collinear y,x,a by A13;
+          then a in Line(y,x);
+          hence contradiction by A1,A14,A4,A6,GTARSKI3:87;
+        end;
+A17:  x out z,b by T1,A12,A4,A3;
+      between z,A,c by A16,A1,A6,Th12;
+      hence thesis by A17,A4,Th12;
+    end;
+  end;
+
+::$N 9.9 Satz
+theorem Th15:
+  between a,A,b implies not A out a,b
+  proof
+    assume
+A1: between a,A,b;
+    assume A out a,b;
+    then between b,A,b by A1,Th14;
+    hence contradiction by GTARSKI1:def 10;
+  end;
+
+::$N 9.10 Lemma
+theorem Th16:
+  A is_line & not a in A implies ex c st between a,A,c
+  proof
+    assume that
+A1: A is_line and
+A2: not a in A;
+    consider p,q such that
+A3: p <> q and
+A4: A = Line(p,q) by A1;
+A5: p in A & q in A by A4,GTARSKI3:83;
+    set c = reflection(p,a);
+A6: p <> c
+    proof
+      assume p = c;
+      then Middle a,c,c by GTARSKI3:def 13;
+      hence contradiction by A2,A5,GTARSKI3:104,GTARSKI1:def 7;
+    end;
+    take c;
+A7:   Middle a,p,c by GTARSKI3:def 13;
+      Collinear p,c,a by A7;
+      then a in Line(p,c);
+    hence thesis by A4,A1,A7,GTARSKI3:82,83,A2,A3,A6;
+  end;
+
+::$N 9.11 Satz
+theorem Th17:
+  A is_line & not a in A implies A out a,a
+  proof
+    assume A is_line & not a in A;
+    then ex c be POINT of S st between a,A,c by Th16;
+    hence thesis;
+  end;
+
+::$N 9.12 Satz
+theorem
+  A out a,b implies A out b,a;
+
+::$N 9.13 Satz
+theorem Th19:
+  A out a,b & A out b,c implies A out a,c
+  proof
+    assume that
+A1: A out a,b and
+A2: A out b,c;
+    consider x be POINT of S such that
+A3: between a,A,x and
+A4: between b,A,x by A1;
+    consider y be POINT of S such that
+A5: between b,A,y and
+A6: between c,A,y by A2;
+    between x,A,b & between y,A,b by A4,A5,GTARSKI3:14;
+    then between y,A,c & A out y,x by A6,GTARSKI3:14;
+    then between x,A,c by Th14;
+    then between c,A,x by GTARSKI3:14;
+    hence thesis by A3;
+  end;
+
+::$N 9.14 Definition
+definition
+  let S be non empty TarskiGeometryStruct;
+  let A be Subset of S;
+  let a be POINT of S;
+  func half-plane(A,a) -> Subset of S equals
+    {x where x is POINT of S: A out x,a};
+  correctness
+  proof
+    {x where x is POINT of S: A out x,a} c= the carrier of S
+    proof
+      let x be object;
+      assume x in {x where x is POINT of S: A out x,a};
+      then ex y be POINT of S st x = y & A out y,a;
+      hence thesis;
+    end;
+    hence thesis;
+  end;
+end;
+
+::$N 9.15 Definition
+definition
+  let S be non empty TarskiGeometryStruct;
+  let p,q,a be POINT of S;
+  assume not Collinear p,q,a;
+  func half-plane(p,q,a) -> set equals
+  half-plane(Line(p,q),a);
+  correctness;
+end;
+
+theorem Th20:
+  A is_line & not a in A implies a in half-plane(A,a)
+  proof
+    assume that
+A1: A is_line and
+A2: not a in A;
+    A out a,a by Th17,A1,A2;
+    hence thesis;
+  end;
+
+theorem Th21:
+  A is_line & not a in A & not b in A & b in half-plane(A,a) implies
+  a in half-plane(A,b)
+  proof
+    assume A is_line & not a in A & not b in A & b in half-plane(A,a);
+    then ex x be POINT of S st x = b & A out x,a;
+    then A out a,b;
+    hence thesis;
+  end;
+
+theorem Th22:
+  b in half-plane(A,a) implies half-plane(A,b) c= half-plane(A,a)
+  proof
+    assume b in half-plane(A,a);
+    then consider t be POINT of S such that
+A1: b = t and
+A2: A out t,a;
+    half-plane(A,b) c= half-plane(A,a)
+    proof
+      let x be object;
+      assume x in half-plane(A,b);
+      then consider y be POINT of S such that
+A3:   x = y and
+A4:   A out y,b;
+      A out y,a by A1,A2,A4,Th19;
+      hence thesis by A3;
+    end;
+    hence thesis;
+  end;
+
+theorem Th23:
+  A is_line & not a in A & not b in A &
+  b in half-plane(A,a) implies half-plane(A,b) = half-plane(A,a)
+  proof
+    assume that
+A1: A is_line and
+A2: not a in A and
+A3: not b in A and
+A4: b in half-plane(A,a);
+    a in half-plane(A,b) by A1,A2,A3,A4,Th21;
+    hence thesis by A4,Th22;
+  end;
+
+definition
+  let S be non empty TarskiGeometryStruct;
+  let A be Subset of S;
+  let a,b be POINT of S;
+  pred A,a is_opposite-half-plane b means between a,A,b;
+end;
+
+theorem Th24:
+  A out a,b implies A is_line & not a in A & not b in A
+  proof
+    assume A out a,b;
+    then ex d be POINT of S st between a,A,d & between b,A,d;
+    hence thesis;
+  end;
+
+::$N 9.17 Satz
+theorem
+  A out a,b & between a,c,b implies A out c,a
+  proof
+    assume that
+A1: A out a,b and
+A2: between a,c,b;
+    consider d be POINT of S such that
+A3: between a,A,d and
+A4: between b,A,d by A1;
+    consider x be POINT of S such that
+A5: x in A and
+A6: between a,x,d by A3;
+    consider y be POINT of S such that
+A7: y in A and
+A8: between b,y,d by A4;
+    consider t be POINT of S such that
+A9: between c,t,d and
+A10: between x,t,y by A2,A6,A8,GTARSKI3:40;
+A11: not c in A
+    proof
+      assume c in A;
+      then between a,A,b by A2,A3,A4;
+      hence contradiction by A1,Th15;
+    end;
+      between c,A,d
+      proof
+        per cases;
+        suppose x = y;
+          then t = x by A10,GTARSKI1:def 10;
+          hence between c,A,d by A5,A11,A3,A9;
+        end;
+        suppose A12: x <> y;
+              G1: Line(x,y) = A by A12,A5,A7,A1,Th24,GTARSKI3:87;
+              Collinear x,y,t by A10,GTARSKI3:14;
+            then t in A by G1;
+          hence between c,A,d by A11,A3,A9;
+        end;
+      end;
+      hence thesis by A3;
+  end;
+
+::$N 9.18 Satz
+theorem
+  A is_line & p in A & Collinear a,b,p implies
+  (between a,A,b iff between a,p,b & not a in A & not b in A)
+  proof
+    assume that
+A1: A is_line and
+A2: p in A and
+A3: Collinear a,b,p;
+    hereby
+      assume
+A4:   between a,A,b;
+      then consider t be POINT of S such that
+A5:   t in A and
+A6:   between a,t,b;
+      a <> b by A4,GTARSKI1:def 10;
+      then
+A7:   Line(a,b) is_line;
+      per cases;
+      suppose p = t;
+        hence between a,p,b & not a in A & not b in A by A4,A6;
+      end;
+      suppose
+A8:     p <> t;
+        then
+A9:     Line(p,t) = A by A1,A2,A5,GTARSKI3:87;
+        between a,p,b
+        proof
+          per cases by A3;
+          suppose between a,b,p;
+            then between p,b,a & between b,t,a by A6,GTARSKI3:14;
+            then Collinear p,b,t by GTARSKI3:17;
+            then Collinear p,t,b by GTARSKI3:45;
+            hence thesis by A9,A4;
+          end;
+          suppose between b,p,a;
+            hence thesis by GTARSKI3:14;
+          end;
+          suppose between p,a,b;
+            then Collinear a,b,p & Collinear a,b,t by A6,GTARSKI3:14;
+            then p in {x where x is POINT of S:Collinear a,b,x} &
+            t in {x where x is POINT of S:Collinear a,b,x};
+            then Line(a,b) = Line(p,t) by A7,A8,GTARSKI3:87
+                          .= A by A8,A1,A2,A5,GTARSKI3:87;
+            hence thesis by A4,GTARSKI3:83;
+          end;
+        end;
+        hence between a,p,b & not a in A & not b in A by A4;
+      end;
+    end;
+    assume between a,p,b & not a in A & not b in A;
+    hence thesis by A1,A2;
+  end;
+
+theorem Th27:
+  A is_line & p in A & p out a,b & not a in A implies
+  between b,A,reflection(p,a)
+  proof
+    assume that
+A1: A is_line and
+A2: p in A and
+A3: p out a,b and
+A4: not a in A;
+    set c = reflection(p,a);
+A5: between a,p,c
+    proof
+      Middle a,p,c by GTARSKI3:def 13;
+      hence thesis;
+    end;
+A6: c <> p
+    proof
+      assume c = p;
+      then Middle a,p,p by GTARSKI3:def 13;
+      hence contradiction by A2,A4,GTARSKI1:def 7;
+    end;
+A7: between b,p,c by A5,A3,A6,GTARSKI3:71;
+      N1: not b in A
+      proof
+        assume b in A;
+        then
+A8:     Line (p,b) = A by A3,A1,A2,GTARSKI3:87;
+        Collinear a,p,b by A3,GTARSKI3:73;
+        then Collinear p,b,a;
+        hence thesis by A8,A4;
+      end;
+      not c in A
+      proof
+        assume c in A;
+        then
+A9:     Line(p,c) = A by A2,A1,A6,GTARSKI3:87;
+        Collinear p,c,a by A5;
+        hence contradiction by A9,A4;
+      end;
+    hence thesis by N1,A1,A2,A7;
+  end;
+
+theorem Th28:
+  A is_line & p in A & not a in A implies between a,A,reflection(p,a)
+  proof
+    assume that
+A1: A is_line and
+A2: p in A and
+A3: not a in A;
+    set c = reflection(p,a);
+A4: between a,p,c
+    proof
+      Middle a,p,c by GTARSKI3:def 13;
+      hence thesis;
+    end;
+A5: c <> p
+    proof
+      assume c = p;
+      then Middle a,p,p by GTARSKI3:def 13;
+      hence contradiction by A2,A3,GTARSKI1:def 7;
+    end;
+      not c in A
+      proof
+        assume c in A;
+        then
+A6:     Line(p,c) = A by A2,A1,A5,GTARSKI3:87;
+        Collinear p,c,a by A4;
+        hence contradiction by A6,A3;
+      end;
+    hence thesis by A1,A2,A4,A3;
+  end;
+
+::$N 9.19 Satz
+theorem Th29:
+  A is_line & p in A & Collinear a,b,p implies
+  (A out a,b iff (p out a,b & not a in A))
+  proof
+    assume that
+A1: A is_line and
+A2: p in A and
+A3: Collinear a,b,p;
+    hereby
+      assume
+A4:   A out a,b;
+      consider c be POINT of S such that
+A5:   between a,A,c and
+A6:   between b,A,c by A4;
+A7:   Collinear a,p,b by A3,GTARSKI3:45;
+      not between a,p,b
+      proof
+        assume between a,p,b;
+        then between a,A,b by A2,A5,A6;
+        hence thesis by Th15,A4;
+      end;
+      hence p out a,b by A7,GTARSKI3:73;
+      thus not a in A by A5;
+    end;
+    assume that
+A8: p out a,b and
+A9: not a in A;
+    set c = reflection(p,a);
+    between b,A,c iff A out a,b by A1,A2,A8,A9,Th28,Th27;
+    hence thesis by A1,A2,A8,A9,Th27;
+  end;
+
+::$N 9.20 Definition
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+            satisfying_Tarski-model TarskiGeometryStruct;
+  let A be Subset of S;
+  let r be POINT of S;
+  assume that
+A1: A is_line and
+A2: not r in A;
+  func Plane(A,r) -> Subset of S means
+:Def10:
+  ex r9 being POINT of S st between r,A,r9 &
+  it = half-plane(A,r) \/ A \/ half-plane(A,r9);
+  existence
+  proof
+    consider r9 be POINT of S such that
+A3: between r,A,r9 by A1,A2,Th16;
+    set P = half-plane(A,r) \/ A \/ half-plane(A,r9);
+    P is set;
+    hence thesis by A3;
+  end;
+  uniqueness
+  proof
+    let X,Y be Subset of S such that
+A4: ex r9 being POINT of S st between r,A,r9 &
+      X = half-plane(A,r) \/ A \/ half-plane(A,r9) and
+A5: ex r9 being POINT of S st between r,A,r9 &
+      Y = half-plane(A,r) \/ A \/ half-plane(A,r9);
+    consider r9 be POINT of S such that
+A6: between r,A,r9 and
+A7: X = half-plane(A,r) \/ A \/ half-plane(A,r9) by A4;
+    consider r99 be POINT of S such that
+A8: between r,A,r99 and
+A9: Y = half-plane(A,r) \/ A \/ half-plane(A,r99) by A5;
+      between r9,A,r & between r99,A,r by A8,A6,GTARSKI3:14;
+      then A out r99,r9;
+      then r99 in half-plane(A,r9);
+    hence thesis by A7,A9,A6,A8,Th23;
+  end;
+end;
+
+theorem Th30:
+  A is_line & not r in A implies half-plane(A,r) c= Plane(A,r)
+  proof
+    assume A is_line & not r in A;
+    then consider r9 be POINT of S such that
+    between r,A,r9 and
+A1: Plane(A,r) = half-plane(A,r) \/ A \/ half-plane(A,r9) by Def10;
+    half-plane(A,r) c= half-plane(A,r) \/ A &
+      half-plane(A,r) \/ A c= half-plane(A,r) \/ A \/ half-plane(A,r9)
+      by XBOOLE_1:7;
+    hence thesis by A1;
+  end;
+
+theorem Th31:
+  A is_line & not r in A implies A c= Plane(A,r) & r in Plane(A,r)
+  proof
+    assume that
+A1: A is_line and
+A2: not r in A;
+    ex r9 be POINT of S st between r,A,r9 &
+      Plane(A,r) = half-plane(A,r) \/ A \/ half-plane(A,r9) by A1,A2,Def10;
+    then
+A3: A c= half-plane(A,r) \/ A & half-plane(A,r) \/ A c= Plane(A,r)
+      by XBOOLE_1:7;
+    r in half-plane(A,r) & half-plane(A,r) c= Plane(A,r) by Th20,Th30,A1,A2;
+    hence thesis by A3;
+  end;
+
+theorem Th32:
+  A is_line & not r in A implies
+  Plane(A,r) = {x where x is POINT of S: A out x,r or x in A or between r,A,x}
+  proof
+    assume that
+A1: A is_line and
+A2: not r in A;
+    consider r9 be POINT of S such that
+A3: between r,A,r9 and
+A4: Plane(A,r) = half-plane(A,r) \/ A \/ half-plane(A,r9) by A1,A2,Def10;
+    set P = {x where x is POINT of S : A out x,r or x in A or between r,A,x};
+A5: Plane(A,r) c= P
+    proof
+      let x be object;
+      assume x in Plane(A,r);
+      then x in (half-plane(A,r) \/ A) or x in half-plane(A,r9)
+        by A4,XBOOLE_0:def 3;
+      then per cases by XBOOLE_0:def 3;
+      suppose x in half-plane(A,r);
+        then ex y be POINT of S st x = y & A out y,r;
+        hence thesis;
+      end;
+      suppose x in A;
+        hence thesis;
+      end;
+      suppose
+A6:     x in half-plane(A,r9);
+        then reconsider y = x as POINT of S;
+        consider z be POINT of S such that
+A7:     x = z and
+A8:     A out z,r9 by A6;
+        between r9,A,r & A out r9,y by A7,A8,A3,GTARSKI3:14;
+        then between y,A,r by Th14;
+        then between r,A,y by GTARSKI3:14;
+        hence thesis;
+      end;
+    end;
+    P c= Plane(A,r)
+    proof
+      let x be object;
+      assume x in P;
+      then consider y be POINT of S such that
+      A9: y = x and
+      A10: A out y,r or y in A or between r,A,y;
+      per cases by A10;
+      suppose A out y,r;
+        then y in {x where x is POINT of S: A out x,r};
+        then x in half-plane(A,r) \/ A by A9,XBOOLE_0:def 3;
+        hence thesis by A4,XBOOLE_0:def 3;
+      end;
+      suppose y in A;
+        then x in half-plane(A,r) \/ A by A9,XBOOLE_0:def 3;
+        hence thesis by A4,XBOOLE_0:def 3;
+      end;
+      suppose between r,A,y;
+        then between y,A,r & between r9,A,r by A3,GTARSKI3:14;
+        then A out y,r9;
+        then x in {x where x is POINT of S: A out x,r9} by A9;
+        then x in A \/ half-plane(A,r9) by XBOOLE_0:def 3;
+        then x in half-plane(A,r) \/(A \/ half-plane(A,r9)) by XBOOLE_0:def 3;
+        hence thesis by A4,XBOOLE_1:4;
+      end;
+    end;
+    hence thesis by A5;
+  end;
+
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let p,q,r be POINT of S;
+  assume not Collinear p,q,r;
+  func Plane(p,q,r) -> Subset of S equals
+:Def11:
+    Plane(Line(p,q),r);
+  coherence;
+end;
+
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let E be Subset of S;
+  pred E is_plane means
+  ex p,q,r being POINT of S st not Collinear p,q,r & E = Plane(p,q,r);
+end;
+
+theorem
+  between a,A,b implies b in Plane(A,a)
+  proof
+    assume
+A1: between a,A,b;
+    then b in {x where x is POINT of S: A out x,a or x in A or between a,A,x};
+    hence thesis by A1,Th32;
+  end;
+
+::$N 9.21 Satz
+theorem Th34:
+  A is_line & not r in A & s in Plane(A,r) & not s in A implies
+  Plane(A,r) = Plane(A,s)
+  proof
+    assume that
+A1: A is_line and
+A2: not r in A and
+A3: s in Plane(A,r) and
+A4: not s in A;
+    consider r9 be POINT of S such that
+A5: between r,A,r9 and
+A6: Plane(A,r) = half-plane(A,r) \/ A \/ half-plane(A,r9) by A1,A2,Def10;
+    consider s9 be POINT of S such that
+A7: between s,A,s9 and
+A8: Plane(A,s) = half-plane(A,s) \/ A \/ half-plane(A,s9) by A1,A4,Def10;
+    s in half-plane(A,r) \/ A \/ half-plane(A,r9) &
+       s in half-plane(A,r) \/ (A \/ half-plane(A,r9)) by A3,A6,XBOOLE_1:4;
+    then (s in half-plane(A,r) \/ A or s in half-plane(A,r9)) &
+      (s in half-plane(A,r) or s in A \/ half-plane(A,r9)) by XBOOLE_0:def 3;
+    then per cases by A4,XBOOLE_0:def 3;
+    suppose
+A9:   s in half-plane(A,r);
+        ex x be POINT of S st s = x & A out x, r by A9;
+        then between r,A,s9 by A7,Th14;
+        then  T1: between s9,A,r by GTARSKI3:14;
+        between r9,A,r by A5,GTARSKI3:14;
+        then A out s9,r9 by T1;
+        then s9 in half-plane(A,r9);
+        then half-plane(A,r9) = half-plane(A,s9) by A5,A7,Th23;
+      hence thesis by A9,A1,A2,A4,Th23,A6,A8;
+    end;
+    suppose
+A10:  s in half-plane(A,r9);
+      then
+A11:  half-plane(A,r9) = half-plane(A,s) by A4,A5,Th23;
+      consider y be POINT of S such that
+A12:  s = y and
+A13:  A out y,r9 by A10;
+      half-plane(A,r) = half-plane(A,s9)
+      proof
+        T1: between s9,A,s by A7,GTARSKI3:14;
+        between r9,A,r & A out r9,y by A13,A5,GTARSKI3:14;
+        then between y,A,r by Th14;
+        then between r,A,s by A12,GTARSKI3:14;
+        then A out s9,r by T1;
+        then s9 in half-plane(A,r);
+        hence thesis by A5,A7,Th23;
+      end;
+      hence thesis by A11,A6,A8,XBOOLE_1:4;
+    end;
+  end;
+
+theorem
+  A,A9 Is p & A,A9 Is q implies p = q by GTARSKI3:89;
+
+theorem Th36:
+  A is_line & a in A & p in A implies reflection(p,a) in A
+  proof
+    assume that
+A1: A is_line and
+A2: a in A and
+A3: p in A;
+    per cases;
+    suppose p = a;
+      hence thesis by A2,GTARSKI3:104;
+    end;
+    suppose
+A4:   p <> a;
+      Middle a,p,reflection(p,a) by GTARSKI3:def 13;
+      then Collinear p,a,reflection(p,a) by GTARSKI4:7;
+      then reflection(p,a) in Line(p,a);
+      hence thesis by A4,A1,A2,A3,GTARSKI3:87;
+    end;
+  end;
+
+::$N 9.22 Lemma
+theorem Th37:
+  A,A9 Is p & r in A9 & r <> p implies A9 c= Plane(A,r)
+  proof
+    assume that
+A1: A,A9 Is p and
+A2: r in A9 and
+A3: r <> p;
+A4: A9 = Line(p,r) by A1,A2,A3,GTARSKI3:87;
+A5: not r in A by A1,A2,A3,GTARSKI3:89;
+    then
+A6: Plane(A,r) = {x where x is POINT of S : A out x,r or x in A or
+      between r,A,x} by A1,Th32;
+    now
+      let x be object;
+      assume
+A7:   x in A9;
+      then consider y be POINT of S such that
+A8:  x = y;
+      consider z be POINT of S such that
+A9:  y = z and
+A10:  Collinear p,r,z by A4,A7,A8;
+      per cases;
+      suppose
+A11:    x = p;
+        A c= Plane(A,r) by A1,A5,Th31;
+        hence x in Plane(A,r) by A11,A1;
+      end;
+      suppose
+A12:    x <> p;
+        per cases;
+        suppose between r,p,z;
+          then between r,A,z by A1,A2,A3,A9,A8,A7,A12,GTARSKI3:89;
+          hence x in Plane(A,r) by A8,A9,A6;
+        end;
+        suppose
+A13:      not between r,p,z;
+          Collinear r,p,z by A10,GTARSKI3:14;
+          then
+A14:      p out r,z by A13,GTARSKI3:73;
+A15:      not reflection(p,r) in A
+          proof
+            assume
+A16:        reflection(p,r) in A;
+            A is_line & A9 is_line & reflection(p,r) in A9 by A1,A2,Th36;
+            then Middle r,p,p by A1,A16,GTARSKI3:89,def 13;
+            hence contradiction by A3,GTARSKI1:def 7;
+          end;
+              between z,p,reflection(p,r)
+              proof
+                per cases by A14;
+                suppose between p,r,z;
+                  then
+A17:              between z,r,p by GTARSKI3:14;
+                  Middle r,p,reflection(p,r) by GTARSKI3:def 13;
+                  hence thesis by A3,A17,GTARSKI3:19;
+                end;
+                suppose between p,z,r;
+                  then
+A18:              between r,z,p by GTARSKI3:14;
+                  Middle r,p,reflection(p,r) by GTARSKI3:def 13;
+                  hence thesis by A18,GTARSKI3:18;
+                end;
+            end;
+            then U1: between z,A,reflection(p,r)
+              by A9,A8,A7,A12,GTARSKI3:89,A15,A1;
+              Middle r,p,reflection(p,r) by GTARSKI3:def 13;
+            then between r,A,reflection(p,r)
+             by A1,A2,A3,GTARSKI3:89,A15;
+          then A out z,r by U1;
+          hence x in Plane(A,r) by A9,A8,A6;
+        end;
+      end;
+    end;
+    hence thesis;
+  end;
+
+theorem Th38:
+  A is_line & A9 is_line & A <> A9 implies ex r being POINT of S st
+  not r in A & r in A9
+  proof
+    assume that
+A1: A is_line and
+A2: A9 is_line and
+A3: A <> A9;
+    consider p9,q9 be POINT of S such that
+A4: p9 <> q9 and
+A5: A9 = Line(p9,q9) by A2;
+    not (p9 in A & q9 in A) by A1,A3,A4,A5,GTARSKI3:87;
+    hence thesis by A5,GTARSKI3:83;
+  end;
+
+::$N 9.23 Definition
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let A,A9 be Subset of S;
+  assume that
+A1: A is_line and
+A2: A9 is_line and
+A3: A <> A9 and
+A4: A /\ A9 is non empty;
+  func Plane(A,A9) -> Subset of S means
+:Def13:
+  ex r being POINT of S st not r in A & r in A9 & it = Plane(A,r);
+  existence
+  proof
+    consider r be POINT of S such that
+A5: not r in A and
+A6: r in A9 by A1,A2,A3,Th38;
+    set P = Plane(A,r);
+    take P;
+    thus thesis by A5,A6;
+  end;
+  uniqueness
+  proof
+    let P1,P2 be Subset of S such that
+A7: ex r be POINT of S st not r in A & r in A9 & P1 = Plane(A,r) and
+A8: ex r be POINT of S st not r in A & r in A9 & P2 = Plane(A,r);
+    consider r be POINT of S such that
+A9: not r in A and
+A10: r in A9 and
+A11: P1 = Plane(A,r) by A7;
+    consider s be POINT of S such that
+A12: not s in A and
+A13: s in A9 and
+A14: P2 = Plane(A,s) by A8;
+    consider p be POINT of S such that
+A15: p in A /\ A9 by A4;
+    p in A9 & p in A by A15,XBOOLE_0:def 4;
+    then A9 c= Plane(A,r) by A9,A10,Th37,A1,A2,GTARSKI4:def 7;
+    hence thesis by A13,A1,A9,A12,A11,A14,Th34;
+  end;
+end;
+
+theorem Th39:
+  for S being non empty TarskiGeometryStruct
+  for A,B being Subset of S
+  for x being POINT of S st A,B Is x holds B,A Is x;
+
+theorem Th40:
+  A,A9 Is p implies A c= Plane(A9,A) & A9 c= Plane(A,A9)
+  proof
+    assume
+A1: A,A9 Is p;
+    then
+A2: A is_line & A9 is_line & A <> A9 & A /\ A9 is non empty by XBOOLE_0:def 4;
+    then consider r be POINT of S such that
+A3: not r in A and
+A4: r in A9 and
+A5: Plane(A,A9) = Plane(A,r) by Def13;
+    consider s be POINT of S such that
+A6: not s in A9 and
+A7: s in A and
+A8: Plane(A9,A) = Plane(A9,s) by A2,Def13;
+    s <> p & A9,A Is p by A6,A1;
+    hence A c= Plane(A9,A) by A8,A7,Th37;
+    thus A9 c= Plane(A,A9) by A1,A3,A4,A5,Th37;
+end;
+
+theorem Th41:
+  A,A9 Is p implies ex r being POINT of S st (not r in A & r in A9 &
+  Plane(A,A9) = Plane(A,r) & A9 = Line(r,p) & ex r9 being POINT of S st
+  (between r,p,r9 & p <> r9 & Collinear r,p,r9 & not r9 in A &
+  Plane(A,r) = Plane(A,r9)))
+  proof
+    assume
+A1: A,A9 Is p;
+    then A is_line & A9 is_line & A <> A9 & A /\ A9 is non empty
+      by XBOOLE_0:def 4;
+    then consider r be POINT of S such that
+A2: not r in A and
+A3: r in A9 and
+A4: Plane(A,A9) = Plane(A,r) by Def13;
+A5: Line(r,p) = A9 by A1,A2,A3,GTARSKI3:87;
+    consider r9 be POINT of S such that
+A6: between r,p,r9 and
+A7: p <> r9 by GTARSKI3:36;
+A8:    Collinear r,p,r9 by A6;
+A9: not r9 in A
+    proof
+      assume r9 in A;
+      then A is_line & A9 is_line & A <> A9 & p in A & r9 in A &
+        p in A9 & r9 in A9 by A8,A5,A1;
+      hence contradiction by A7,GTARSKI3:89;
+    end;
+    t3:r9 in A9 & A9 c= Plane(A,r) by A1,A2,A3,A5,A8,Th37;
+    Plane(A,r) = Plane(A,r9) by A9,Th34,A1,A2,t3;
+    hence thesis by A1,A2,A3,A4,A5,A6,A8,A9;
+  end;
+
+theorem Th42:
+  A,A9 Is p implies Plane(A,A9) c= Plane(A9,A)
+  proof
+    assume
+A1: A,A9 Is p;
+    then
+A2: A is_line & A9 is_line & A <> A9 & A /\ A9 is non empty
+      by XBOOLE_0:def 4;
+    consider r be POINT of S such that
+A3: not r in A and
+A4: r in A9 and
+A5: Plane(A,A9) = Plane(A,r) and
+A6: A9 = Line(r,p) and
+A7: ex r9 being POINT of S st (between r,p,r9 & p <> r9 & Collinear r,p,r9 &
+      not r9 in A & Plane(A,r) = Plane(A,r9)) by A1,Th41;
+    consider r9 be POINT of S such that
+A8: between r,p,r9 and
+    p <> r9 and
+    Collinear r,p,r9 and
+A9: not r9 in A and
+A10: Plane(A,r) = Plane(A,r9) by A7;
+A11: Collinear r,p,r9 by A8;
+    then
+A12: r9 in {x where x is POINT of S : Collinear r,p,x};
+    now
+      let x be object;
+      assume
+A13:  x in Plane(A,A9);
+      Plane(A,r9) = {x where x is POINT of S : A out x,r9 or x in A or
+        between r9,A,x} by A9,A1,Th32;
+      then consider s be POINT of S such that
+A14:  x = s and
+A15:  A out s,r9 or s in A or between r9,A,s by A13,A5,A10;
+      consider u be POINT of S such that
+A16:  not u in A9 and u in A and
+A17:  Plane(A9,A) = Plane(A9,u) by A2,Def13;
+      per cases;
+      suppose
+A18:    s in A9;
+        A9 c= Plane(A9,u) by A1,A16,Th31;
+        hence x in Plane(A9,A) by A18,A14,A17;
+      end;
+      suppose
+A19:    not s in A9;
+        per cases by A15;
+        suppose
+A20:      s in A;
+          A c= Plane(A9,A) by A1,Th40;
+          hence x in Plane(A9,A) by A14,A20;
+        end;
+        suppose A out s,r9;
+          then
+A21:      A out r9,s;
+          between r9,A,r by A1,A3,A9,A8,GTARSKI3:14;
+          then between s,A,r by A21,Th14;
+          then consider t be POINT of S such that
+A22:      t in A and
+A23:      between s,t,r;
+A24:      not t in A9
+          proof
+            assume t in A9;
+            then Collinear p,r,s by A23,A1,A22,GTARSKI3:89;
+            then s in Line(p,r);
+            hence contradiction by A1,A3,A4,A19,GTARSKI3:87;
+          end;
+          A c= Plane(A9,A) by A1,Th40;
+          then
+A25:      Plane(A9,t) = Plane(A9,u) by A17,A22,A1,A24,A16,Th34;
+A26:      Plane(A9,t) = {x where x is POINT of S : A9 out x,t or
+            x in A9 or between t,A9,x} by Th32,A1,A24;
+          A9 is_line & Collinear s,t,r & r out s,t
+            by A1,A4,A19,A3,A22,A23,GTARSKI3:14;
+          then A9 out s,t by A19,A4,Th29;
+          hence x in Plane(A9,A) by A26,A17,A25,A14;
+        end;
+        suppose between r9,A,s;
+          then consider t be POINT of S such that
+A27:      t in A and
+A28:      between r9,t,s;
+          r9 in A9 & p in A9 & r9 <> p by A11,A6,A9,A1;
+          then
+A29:      Line(r9,p) = A9 by A1,GTARSKI3:87;
+A30:      not t in A9
+          proof
+            assume t in A9;
+            then Collinear r9,p,s by A27,A28,A1,GTARSKI3:89;
+            hence contradiction by A19,A29;
+          end;
+          A is_line & A9 is_line & A <> A9 & A /\ A9 is non empty
+            by A1,XBOOLE_0:def 4;
+          then consider t9 be POINT of S such that
+A31:      not t9 in A9 and
+          t9 in A and
+A33:      Plane(A9,A) = Plane(A9,t9) by Def13;
+            A c= Plane(A9,A) by A1,Th40;
+          then
+A34:      Plane(A9,t9) = Plane(A9,t) by A33,A27,A1,A31,A30,Th34;
+:::A35:      Plane(A9,t) = Plane(A9,A) by a34,A27,A1,A31,A30,Th34,A33;
+          set B = Line(s,r9);
+            A9 is_line & B is_line & A9 <> B & r9 in A9 & r9 in B
+              by A1,A19,A12,A6,GTARSKI3:83;
+            then T1:A9,B Is r9;
+            Collinear s,r9,t by A28;
+            then t in B;
+          then B c= Plane(A9,t) by A9,A27,Th37,T1;
+          hence x in Plane(A9,A) by A14,A34,A33,GTARSKI3:83;
+        end;
+      end;
+    end;
+    hence thesis;
+  end;
+
+::$N 9.24 Satz
+theorem Th43:
+  A,A9 Is p implies A c= Plane(A,A9) & A9 c= Plane(A,A9) &
+  Plane(A,A9) = Plane(A9,A)
+  proof
+    assume A,A9 Is p;
+    then A c= Plane(A9,A) & A9 c= Plane(A,A9) &
+    Plane(A,A9) = Plane(A9,A) by Th39,Th40,Th42;
+    hence thesis;
+  end;
+
+theorem Th44:
+  a in E & b in E & a <> b & not Collinear p,q,r & E = Plane(p,q,r) &
+  c in Line(p,q) & not c in Line(a,b) & not b in Line(p,q) implies
+  Line(a,b) c= E & ex c st not Collinear a,b,c & E = Plane(a,b,c)
+  proof
+    assume that
+A1: a in E and
+A2: b in E and
+A3: a <> b and
+A4: not Collinear p,q,r and
+A5: E = Plane(p,q,r) and
+A6: c in Line(p,q) and
+A7: not c in Line(a,b) and
+A8: not b in Line(p,q);
+    set  A  = Line(p,q), A9 = Line(a,b), A99 = Line(c,b);
+A9: not r in A
+    proof
+      assume r in A;
+      then ex s be POINT of S st s = r & Collinear p,q,s;
+      hence thesis by A4;
+    end;
+    per cases;
+    suppose c = b;
+      then Collinear a,b,c by GTARSKI4:4;
+      hence thesis by A7;
+    end;
+    suppose
+A10:  c <> b;
+A11:  p <> q by A4,GTARSKI3:46;
+      then
+A12:  A is_line & A9 is_line & A99 is_line by A10,A3;
+A13:  A <> A99 by A8,GTARSKI3:83;
+A14:  A,A99 Is c by A6,A8,A12,GTARSKI3:83;
+A15:  not r in A & not b in A & b in Plane(A,r) by A9,A8,A2,A4,A5,Def11;
+        T1: A is_line & A99 is_line by A11,A10;
+        c in A & c in A99 by A6,GTARSKI3:83;
+        then A /\ A99 is non empty by XBOOLE_0:def 4;
+       then consider r99 be POINT of S such that
+A16:   not r99 in A and r99 in A99 and
+A17:   Plane(A,A99) = Plane(A,r99) by T1,A13,Def13;
+         e2: A99 c= Plane(A,A99) & b in A99 by A14,Th43,GTARSKI3:83;
+A19:   E = Plane(A,r) by A4,A5,Def11
+        .= Plane(A,b) by A12,A15,Th34
+        .= Plane(A,A99) by A8,A16,e2,A17,A12,Th34;
+        W1: A is_line & A99 is_line by A11,A10;
+         c in A & c in A99 by A6,GTARSKI3:83;
+         then A99 /\ A is non empty by XBOOLE_0:def 4;
+       then consider r999 be POINT of S such that
+A20:   not r999 in A99 and r999 in A and
+A21:   Plane(A99,A) = Plane(A99,r999) by W1,A13,Def13;
+A22:    not a in A99
+         proof
+           assume
+A23:       a in A99;
+           b in A99 by GTARSKI3:83;
+           then A99 = Line(a,b) by A3,A23,A12,GTARSKI3:87;
+           hence thesis by A7,GTARSKI3:83;
+         end;
+         T23: a in Plane(A99,r999) by A1,A19,A14,A21,Th43;
+A24:   a in A9 by GTARSKI3:83;
+A25:     A9 <> A99 by GTARSKI3:83,A22;
+         b in A9 & b in A99 by GTARSKI3:83;
+         then W1: A99 /\ A9 is non empty by XBOOLE_0:def 4;
+A26:   A9,A99 Is b by A12,A22,GTARSKI3:83;
+       consider s be POINT of S such that
+A27:   not s in A9 and s in A99 and
+A28:   Plane(A9,A99) = Plane(A9,s) by A25,W1,A12,Def13;
+         J1:A9 is_line by A3;
+         j3:A99 c= Plane(A9,A99) & c in A99 by A26,Th43,GTARSKI3:83;
+A30:   E = Plane(A99,A) by A19,A14,Th43
+        .= Plane(A99,a) by A21,A22,T1,
+      A20,T23,Th34
+        .= Plane(A99,A9) by A22,W1,A24,A12,Def13
+        .= Plane(A9,A99) by A26,Th43
+        .= Plane(Line(a,b),c) by J1,A27,j3,A7,A28,Th34;
+       thus Line(a,b) c= E by A12,A7,A30,Th31;
+A31:   not Collinear a,b,c by A7;
+       take c;
+       thus thesis by A31,A30,Def11;
+     end;
+   end;
+
+theorem Th45:
+  a in E & b in E & a <> b & not Collinear p,q,r & E = Plane(p,q,r) &
+  not b in Line(p,q) & Line(p,q) <> Line(a,b) implies
+  Line(a,b) c= E & ex c st not Collinear a,b,c & E = Plane(a,b,c)
+  proof
+    assume that
+A1: a in E and
+A2: b in E and
+A3: a <> b and
+A4: not Collinear p,q,r and
+A5: E = Plane(p,q,r) and
+A6: not b in Line(p,q) and
+A7: Line(p,q) <> Line(a,b);
+    set A  = Line(p,q),
+        A9 = Line(a,b);
+      ex c be POINT of S st not c in A9 & c in A
+      proof
+        assume not (ex c be POINT of S st not c in A9 & c in A);
+        then A9 is_line & p <> q & p in A & q in A & p in A9 & q in A9
+          by A3,A4,GTARSKI3:46,83;
+        hence thesis by A7,GTARSKI3:87;
+      end;
+    hence thesis by A1,A2,A3,A4,A5,A6,Th44;
+  end;
+
+::$N Satz 9.25
+theorem Th46:
+  E is_plane & a in E & b in E & a <> b implies Line(a,b) c= E &
+  ex c st not Collinear a,b,c & E = Plane(a,b,c)
+  proof
+    assume that
+A1: E is_plane and
+A2: a in E and
+A3: b in E and
+A4: a <> b;
+    consider p,q,r be POINT of S such that
+A5: not Collinear p,q,r and
+A6: E = Plane(p,q,r) by A1;
+A7: p <> q by A5,GTARSKI3:46;
+    set A  = Line(p,q),
+        A9 = Line(a,b);
+    per cases;
+    suppose
+A8:   A = A9;
+      then
+A9:   E = Plane(Line(a,b),r) by A5,A6,Def11;
+A10:  not r in Line(a,b)
+      proof
+        assume r in Line(a,b);
+        then ex s be POINT of S st r = s & Collinear p,q,s by A8;
+        hence thesis by A5;
+      end;
+      Line(a,b) is_line by A4;
+      hence Line(a,b) c= E by A9,A10,Th31;
+      R1:not Collinear a,b,r by A10;
+        then Plane(a,b,r) = Plane(Line(a,b),r) by Def11;
+      hence ex c st not Collinear a,b,c & E = Plane(a,b,c)
+        by R1,A8,A5,A6,Def11;
+    end;
+    suppose
+A11:  A <> A9;
+      not (a in A & b in A)
+      proof
+        assume
+A12:    a in A & b in A;
+        A is_line by A7;
+        hence contradiction by A11,A12,A4,GTARSKI3:87;
+      end;
+      then per cases;
+      suppose
+A13:    not a in A;
+        then consider c such that
+A14:    not Collinear b,a,c and
+A15:    E = Plane(b,a,c) by A11,A2,A3,A4,A5,A6,Th45;
+A16:    not Collinear a,b,c by GTARSKI3:45,A14;
+        E = Plane(Line(a,b),c) by A15,A14,Def11
+         .= Plane(a,b,c) by A16,Def11;
+        hence thesis by A16,A11,A13,A2,A3,A4,A5,A6,Th45;
+      end;
+      suppose not b in A;
+        hence thesis by A11,A2,A3,A4,A5,A6,Th45;
+      end;
+    end;
+  end;
+
+::$N Satz 9.26
+theorem Th47:
+  not Collinear a,b,c & E is_plane & a in E & b in E & c in E implies
+  E = Plane(a,b,c)
+  proof
+    assume that
+A1: not Collinear a,b,c and
+A2: E is_plane and
+A3: a in E and
+A4: b in E and
+A5: c in E;
+    set A = Line(a,b);
+A6: a <> b by A1,GTARSKI3:46;
+    then consider r be POINT of S such that
+A7: not Collinear a,b,r and
+A8: E = Plane(a,b,r) by A2,A3,A4,Th46;
+A9: not c in A
+    proof
+      assume c in A;
+      then ex x be POINT of S st c = x & Collinear a,b,x;
+      hence contradiction by A1;
+    end;
+      H1: A is_line by A6;
+      H2: not r in A
+      proof
+        assume r in A;
+        then ex x be POINT of S st r = x & Collinear a,b,x;
+        hence contradiction by A7;
+      end;
+       c in Plane(A,r) by A5,A7,A8,Def11;
+    then Plane(A,c) = Plane(A,r) by Th34,H1,H2,A9
+                   .= E by A7,A8,Def11;
+    hence thesis by Def11,A1;
+  end;
+
+theorem Th48:
+  A is_line & not a in A implies a in Plane(A,a)
+  proof
+    assume that
+A1: A is_line and
+A2: not a in A;
+    A out a,a & Plane(A,a)
+        = {x where x is POINT of S : A out x,a
+                                      or x in A
+                                      or between a,A,x}
+          by A1,A2,Th32,Th17;
+    hence a in Plane(A,a);
+  end;
+
+::$N 9.27.(1) Satz
+theorem Th49:
+  not Collinear a,b,c implies ex E being Subset of S st Plane(a,b,c) = E &
+  E is_plane & a in E & b in E & c in E
+  proof
+    assume
+A1: not Collinear a,b,c;
+    set E = Plane(a,b,c);
+A2: E = Plane(Line(a,b),c) by A1,Def11;
+    take E;
+    a <> b by A1,GTARSKI3:46;
+    then
+A3: Line(a,b) is_line;
+A4: not c in Line(a,b)
+    proof
+      assume c in Line(a,b);
+      then ex x be POINT of S st c = x & Collinear a,b,x;
+      hence contradiction by A1;
+    end;
+    Line(a,b) c= E by A3,A4,A2,Th31;
+    hence thesis by A1,A2,A3,Th48,GTARSKI3:83;
+  end;
+
+::$N 9.27.(2) Satz
+theorem Th50:
+  A is_line & not c in A implies ex E being Subset of S st (E is_plane &
+  A c= E & c in E) & Plane(A,c) = E
+  proof
+    assume that
+A1: A is_line and
+A2: not c in A;
+    consider a,b be POINT of S such that a <> b and
+A3: A = Line(a,b) by A1;
+    set E = Plane(A,c);
+A4:   not Collinear a,b,c by A2,A3;
+      then E = Plane(a,b,c) by A3,Def11;
+      then U1: E is_plane by A4;
+      U2: A c= E by A1,A2,Th31;
+      c in Plane(A,c) by A1,A2,Th48;
+    hence thesis by U1,U2;
+  end;
+
+::$N 9.27.(3) Satz
+theorem
+  A,A9 Is p implies ex E being Subset of S st E is_plane & A c= E &
+  A9 c= E & Plane(A,A9) = E
+  proof
+    assume
+A1: A,A9 Is p;
+    then p in A /\ A9 by XBOOLE_0:def 4;
+    then consider r be POINT of S such that
+A2: not r in A and r in A9 and
+A3: Plane(A,A9) = Plane(A,r) by A1,Def13;
+    consider E be Subset of S such that
+A4: E is_plane and A c= E and r in E and
+A5: Plane(A,r) = E by A1,A2,Th50;
+    take E;
+    thus thesis by A1,A3,A4,A5,Th43;
+  end;
+
+::$N 9.28 Folgerung
+theorem Th52:
+  not Collinear a,b,c implies for E1,E2 being Subset of S st E1 is_plane &
+  a in E1 & b in E1 & c in E1 & E2 is_plane & a in E2 & b in E2 & c in E2
+  holds E1 = E2
+  proof
+    assume
+A1: not Collinear a,b,c;
+    let E1,E2 being Subset of S such that
+A2: E1 is_plane & a in E1 & b in E1 & c in E1 and
+A3: E2 is_plane & a in E2 & b in E2 & c in E2;
+    thus E1 = Plane(a,b,c) by A1,A2,Th47
+           .= E2 by A1,A3,Th47;
+  end;
+
+::$N 9.29 Folgerung
+theorem Th53:
+  not Collinear a,b,c implies
+  Plane(a,b,c) = Plane(b,c,a) & Plane(a,b,c) = Plane(c,a,b) &
+  Plane(a,b,c) = Plane(b,a,c) & Plane(a,b,c) = Plane(a,c,b) &
+  Plane(a,b,c) = Plane(c,b,a)
+  proof
+    assume
+A1: not Collinear a,b,c;
+    then
+A2: not Collinear b,c,a & not Collinear c,a,b & not Collinear b,a,c &
+    not Collinear a,c,b & not Collinear c,b,a by GTARSKI3:45;
+    consider Eabc be Subset of S such that
+A3: Plane(a,b,c) = Eabc & Eabc is_plane & a in Eabc & b in Eabc & c in Eabc
+      by A1,Th49;
+    consider Ebca be Subset of S such that
+A4: Plane(b,c,a) = Ebca & Ebca is_plane & b in Ebca & c in Ebca & a in Ebca
+      by A2,Th49;
+    consider Ecab be Subset of S such that
+A5: Plane(c,a,b) = Ecab & Ecab is_plane & c in Ecab & a in Ecab & b in Ecab
+      by A2,Th49;
+    consider Ebac be Subset of S such that
+A6: Plane(b,a,c) = Ebac & Ebac is_plane & b in Ebac & a in Ebac & c in Ebac
+      by A2,Th49;
+    consider Eacb be Subset of S such that
+A7: Plane(a,c,b) = Eacb & Eacb is_plane & a in Eacb & c in Eacb & b in Eacb
+      by A2,Th49;
+    consider Ecba be Subset of S such that
+A8: Plane(c,b,a) = Ecba & Ecba is_plane & c in Ecba & b in Ecba & a in Ecba
+      by A2,Th49;
+    thus thesis by A1,A3,A4,A5,A6,A7,A8,Th52;
+  end;
+
+::$N 9.30 Folgerung
+theorem
+  A is_line implies for E1,E2 being Subset of S st E1 is_plane &
+  E2 is_plane & A c= E1 & A c= E2 & E1 <> E2 holds (for x being POINT of S
+  holds (x in E1 & x in E2) iff x in A)
+  proof
+    assume that
+A1: A is_line;
+    let E1,E2 be Subset of S;
+    assume that
+A2: E1 is_plane and
+A3: E2 is_plane and
+A4: A c= E1 and
+A5: A c= E2 and
+A6: E1 <> E2;
+    consider a,b be POINT of S such that a <> b and
+A7: A = Line(a,b) by A1;
+    let x be POINT of S;
+    hereby
+      assume that
+A8:   x in E1 and
+A9:   x in E2;
+      per cases;
+      suppose x <> a & x <> b;
+        per cases;
+        suppose x in A;
+          hence x in A;
+        end;
+        suppose
+A10:      not x in A;
+          not Collinear a,b,x & a in E1 & b in E1 & a in E2 & b in E2
+            by A4,A5,A7,A10,GTARSKI3:83;
+          hence x in A by A2,A3,A6,A8,A9,Th52;
+        end;
+      end;
+      suppose x = a or x = b;
+        hence x in A by A7,GTARSKI3:83;
+      end;
+    end;
+    assume x in A;
+    hence x in E1 & x in E2 by A4,A5;
+  end;
+
+theorem
+  p,q out s,r implies s <> p & s <> q & r <> p & r <> q & p <> q
+  proof
+    assume
+A1: p,q out s,r;
+    then p <> q & Line(p,q) out s,r;
+    then ex x be POINT of S st between s,Line(p,q),x & between r,Line(p,q),x;
+    hence thesis by A1,GTARSKI3:83;
+  end;
+
+theorem
+  not between a,Line(b,c),a by GTARSKI1:def 10;
+
+theorem
+  between a,A,b implies a <> b by GTARSKI1:def 10;
+
+theorem
+  for S being satisfying_CongruenceIdentity
+  satisfying_SegmentConstruction satisfying_BetweennessIdentity
+  satisfying_Pasch satisfying_Lower_Dimension_Axiom
+  TarskiGeometryStruct holds ex p,q being POINT of S st p <> q
+  proof
+    let S be satisfying_CongruenceIdentity
+    satisfying_SegmentConstruction satisfying_BetweennessIdentity
+    satisfying_Pasch satisfying_Lower_Dimension_Axiom
+    TarskiGeometryStruct;
+    assume
+A1: not ex p,q being POINT of S st p <> q;
+    consider a,b,c being POINT of S such that
+A2: not between a,b,c and not between b,c,a and not between c,a,b
+      by GTARSKI2:def 7;
+    a = b & a = c by A1;
+    hence contradiction by A2,GTARSKI3:15;
+  end;
+
+::$N 9.31 Satz
+theorem Th59:
+  p,q out s,r & p,r out s,q implies between q,Line(p,s),r
+  proof
+    assume that
+A1: p,q out s,r and
+A2: p,r out s,q;
+    set A   = Line(p,q),
+        A9  = Line(p,r),
+        A99 = Line(p,s);
+    Line(p,q) out s,r by A1;
+    then
+A3: ex x be POINT of S st between s,Line(p,q),x & between r,Line(p,q),x;
+    Line(p,r) out s,q by A2;
+    then
+A4: ex x be POINT of S st between s,Line(p,r),x & between q,Line(p,r),x;
+    per cases;
+    suppose A = A9;
+      hence thesis by A3,GTARSKI3:83;
+    end;
+    suppose
+A5:   A <> A9;
+A6:   A is_line & A9 is_line & A <> A9 & p in A9 & p in A
+        by A1,A2,A5,GTARSKI3:83;
+      consider r9 be POINT of S such that
+A7:   between r,p,r9 and
+A8:   p <> r9 by GTARSKI3:36;
+      Collinear r,p,r9 by A7;
+      then
+A9:   r9 in {x where x is POINT of S : Collinear r,p,x};
+A10:  not r9 in A
+      proof
+        assume r9 in A;
+        then A is_line & A9 is_line & A <> A9 & p in A & r9 in A & p in A9 &
+          r9 in A9 by A6,A9,GTARSKI3:def 10;
+        hence contradiction by A8,GTARSKI3:89;
+      end;
+        A out r,s & between r,A,r9 by A3,A7,A10,GTARSKI3:83;
+      then between s,A,r9 by Th14;
+      then consider t be POINT of S such that
+A11:  t in A and
+A12:  between r9,t,s by GTARSKI3:14;
+A13:  not r9 in A99
+      proof
+        assume r9 in Line(p,s);
+        then A99 is_line & A9 is_line & r9 in A99 & r9 in A9 & A9 <> A99 &
+          p in A99 & p in A9 by A6,A9,A4,GTARSKI3:def 10,83;
+        hence contradiction by A8,GTARSKI3:89;
+      end;
+A14:  A9 <> A99
+      proof
+        assume
+A15:    A9 = A99;
+        Collinear p,r,r9 by A7,GTARSKI4:7;
+        hence contradiction by A13,A15;
+      end;
+A16:  Collinear t,s,r9 by A12;
+A17:  not t in A9
+      proof
+        assume
+A18:    t in A9;
+A19:    r9 in A9 by A9,GTARSKI3:def 10;
+        per cases;
+        suppose t = r9;
+          hence thesis by A10,A11;
+        end;
+        suppose
+A20:      t <> r9;
+          Collinear t,r9,s by A16,GTARSKI3:45;
+          then s in Line(t,r9);
+          hence contradiction by A4,A20,A18,A19,GTARSKI3:87;
+        end;
+      end;
+        now
+          thus A99 is_line by A3,A6;
+          thus p in A99 by GTARSKI3:83;
+          A is_line & t in A & q in A & p in A by A1,A11,GTARSKI3:83;
+          hence Collinear t,q,p by GTARSKI3:90;
+               W1:A9 is_line by A2;
+               W2: r9 in A9 by A9,GTARSKI3:def 10;
+               W3:Collinear t,s,r9 by A12;
+               W4:r9 out t,s by A11,A10,A12,GTARSKI1:def 10;
+            A9 out t,s & A9 out s,q by A17,W1,W2,W3,W4,A2,Th29;
+            then G1: A9 out t,q by Th19;
+            G2: A9 is_line & p in A9 & A is_line & t in A  & q in A &
+              p in A by A1,A2,A11,GTARSKI3:83;
+            then Collinear t,q,p by GTARSKI3:90;
+          hence p out t,q by G1,G2,Th29;
+          thus not t in A99
+          proof
+            assume t in A99;
+            then ex x be POINT of S st x = t & Collinear p,s,x;
+            then Collinear p,t,s by GTARSKI3:45;
+            then
+A21:        s in Line(p,t);
+            p in A & t in A & p <> t & A is_line by A1,A11,A17,GTARSKI3:83;
+            hence contradiction by A21,A3,GTARSKI3:87;
+          end;
+        end;
+        then G1: A99 out t,q by Th29;
+            H1:A99 is_line by A3,A6;
+            H3: not r in A99
+            proof
+              assume r in A99;
+              then
+A22:          p in A9 & p in A99 & r in A99 & r in A9 by GTARSKI3:83;
+              A9 is_line & A99 is_line & A9 <> A99 by A3,A6,A14;
+              then p = r by A22,GTARSKI3:89;
+              hence contradiction by A3,GTARSKI3:83;
+            end;
+            p in A99 & between r9,p,r by A7,GTARSKI3:14,83;
+          then T1: between r9,Line(p,s),r by H1,A13,H3;
+          s out r9,t by A3,A11,A12,GTARSKI3:14,GTARSKI1:def 10;
+        then between t,Line(p,s),r by T1,GTARSKI3:83,Th12;
+      hence thesis by G1,Th14;
+    end;
+  end;
+
+::$N 9.32.(i) Definition
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+       satisfying_Tarski-model TarskiGeometryStruct;
+  let A be Subset of S;
+  pred A are_coplanar means
+  ex E being Subset of S st E is_plane & A c= E;
+end;
+
+::$N 9.32.(ii) Definition
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+       satisfying_Tarski-model TarskiGeometryStruct;
+  let a,b,c,d be POINT of S;
+  pred a,b,c,d are_coplanar means
+  ex E being Subset of S st E is_plane &
+    a in E & b in E & c in E & d in E;
+end;
+
+theorem
+  a,b,c,d are_coplanar implies a,b,d,c are_coplanar &
+  a,c,b,d are_coplanar & a,c,d,b are_coplanar &
+  a,d,c,b are_coplanar & a,d,b,c are_coplanar &
+  b,a,c,d are_coplanar & b,a,d,c are_coplanar &
+  b,c,a,d are_coplanar & b,c,d,a are_coplanar &
+  b,d,a,c are_coplanar & b,d,c,a are_coplanar &
+  c,a,b,d are_coplanar & c,a,d,b are_coplanar &
+  c,b,a,d are_coplanar & c,b,d,a are_coplanar &
+  d,a,b,c are_coplanar & d,a,c,b are_coplanar &
+  d,b,a,c are_coplanar & d,b,c,a are_coplanar;
+
+theorem Th61:
+  a,a,a,a are_coplanar
+  proof
+    consider b be POINT of S such that
+    between a,a,b and
+A1: a <> b by GTARSKI3:36;
+    consider c be POINT of S such that
+A2: not Collinear a,b,c by A1,GTARSKI3:92;
+    consider E be Subset of S such that
+    Plane(a,b,c) = E and
+A3: E is_plane and
+A4: a in E and b in E and c in E by A2,Th49;
+    take E;
+    thus thesis by A3,A4;
+  end;
+
+theorem Th62:
+  a,a,a,b are_coplanar
+  proof
+    per cases;
+    suppose a = b;
+      hence thesis by Th61;
+    end;
+    suppose a <> b;
+      then consider a9 be POINT of S such that
+A1:   not Collinear a,b,a9 by GTARSKI3:92;
+      ex E be Subset of S st Plane(a,b,a9) = E & E is_plane & a in E &
+        b in E & a9 in E by A1,Th49;
+      hence thesis;
+    end;
+  end;
+
+theorem Th63:
+  a,a,b,c are_coplanar
+  proof
+    per cases;
+    suppose  not Collinear a,b,c;
+      then consider E be Subset of S such that
+      Plane(a,b,c) = E and
+A1:   E is_plane and
+A2:   a in E and
+A3:   b in E and
+A4:   c in E by Th49;
+      take E;
+      thus thesis by A1,A2,A3,A4;
+    end;
+    suppose Collinear a,b,c; then
+A5:   c in Line(a,b);
+      per cases;
+      suppose
+A6:     a <> b;
+        then consider a9 be POINT of S such that
+A7:     not Collinear a,b,a9 by GTARSKI3:92;
+        consider E be Subset of S such that
+        Plane(a,b,a9) = E and
+A8:     E is_plane and
+A9:     a in E and
+A10:     b in E and a9 in E by A7,Th49;
+        Line(a,b) c= E by A6,A8,A9,A10,Th46;
+        hence thesis by A5,A8,A9,A10;
+      end;
+      suppose a = b;
+        hence thesis by Th62;
+      end;
+    end;
+  end;
+
+theorem Th64:
+  Collinear a,b,x & Collinear c,d,x & a <> x & c <> x implies
+  a,b,c,d are_coplanar
+  proof
+    assume that
+A1: Collinear a,b,x and
+A2: Collinear c,d,x and
+A3: a <> x and
+A4: c <> x;
+    per cases;
+    suppose
+A5:   not Collinear a,c,x;
+      then consider E be Subset of S such that
+A6:   E = Plane(a,c,x) and
+A7:   E is_plane and
+A8:   a in E and
+A9:   c in E and x in E by Th49;
+T1: not c in Line(a,x)
+        proof
+          assume c in Line(a,x);
+          then ex y be POINT of S st c = y & Collinear a,x,y;
+          hence contradiction by GTARSKI3:14,A5;
+        end;
+        Line(a,x) is_line by A3;
+      then
+A10:  Line(a,x) c= Plane(Line(a,x),c) by T1,Th31;
+      E = Plane(a,x,c) & not Collinear a,x,c by A6,Th53,A5,GTARSKI3:14;
+      then
+A11: E = Plane(Line(a,x),c) by Def11;
+      E = Plane(c,x,a) & not Collinear c,x,a by A5,A6,Th53;
+      then
+A12:  E = Plane(Line(c,x),a) by Def11;
+       Y1: not a in Line(c,x)
+        proof
+          assume a in Line(c,x);
+          then ex y be POINT of S st a = y & Collinear c,x,y;
+          hence contradiction by A5;
+        end;
+         Line(c,x) is_line by A4;
+      then
+A13:  Line(c,x) c= E by Y1,A12,Th31;
+        Collinear a,x,b by A1,GTARSKI3:14;
+        then T1: b in Line(a,x);
+        Collinear c,x,d by A2,GTARSKI3:14;
+        then d in Line(c,x);
+      hence thesis by T1,A13,A10,A11,A7,A8,A9;
+    end;
+    suppose
+A14:  Collinear a,c,x;
+      set A = Line(a,x);
+        Y1:A is_line by A3;
+        Collinear a,x,c by A14,GTARSKI3:14;
+        then Y3: c in Line(a,x);
+        x in A by GTARSKI3:83;
+      then
+A15:  Line(a,x) = Line(c,x) by Y1,A4,Y3,GTARSKI3:87;
+A16:  Collinear a,x,b by A1,GTARSKI3:14;
+      Collinear c,x,d by A2,GTARSKI3:14;
+      then
+A17:  a in A & b in A & c in A & d in A by A16,A15,GTARSKI3:83;
+      consider p be POINT of S such that
+A18:  not Collinear a,x,p by A3,GTARSKI3:92;
+        T1: not p in A
+        proof
+          assume p in A;
+          then ex y be POINT of S st p = y  & Collinear a,x,y;
+          hence contradiction by A18;
+        end;
+        A is_line by A3;
+      then
+A19:  A c= Plane(A,p) by T1,Th31;
+      set E = Plane(Line(a,x),p);
+A20:  E = Plane(a,x,p) by A18,Def11;
+      now
+        take E;
+        thus E is_plane by A20,A18;
+        thus a in E & b in E & c in E & d in E by A17,A19;
+      end;
+      hence thesis;
+    end;
+  end;
+
+theorem Th65:
+  Collinear b,a,x & Collinear c,d,x & b <> x & c <> x implies
+  a,b,c,d are_coplanar
+  proof
+    assume Collinear b,a,x & Collinear c,d,x & b <> x & c <> x;
+    then b,a,c,d are_coplanar by Th64;
+    hence thesis;
+  end;
+
+theorem Th66:
+  Collinear a,b,x & Collinear c,d,x & b <> x & c <> x implies
+  a,b,c,d are_coplanar
+  proof
+    assume Collinear a,b,x & Collinear c,d,x & b <> x & c <> x;
+    then Collinear b,a,x & Collinear c,d,x & b <> x & c <> x by GTARSKI3:14;
+    hence thesis by Th65;
+  end;
+
+theorem Th67:
+  Collinear a,b,x & Collinear c,d,x &
+  ((b <> x & c <> x) or (b <> x & d <> x) or (a <> x & c <> x) or
+  (a <> x & d <> x)) implies a,b,c,d are_coplanar
+  proof
+    assume that
+A1: Collinear a,b,x & Collinear c,d,x and
+A2: (b <> x & c <> x) or (b <> x & d <> x) or (a <> x & c <> x) or
+      (a <> x & d <> x);
+    per cases by A2;
+    suppose b <> x & c <> x;
+      hence thesis by A1,Th66;
+    end;
+    suppose
+A3:   b <> x & d <> x;
+      Collinear d,c,x by A1,GTARSKI3:14;
+      then a,b,d,c are_coplanar by A1,A3,Th66;
+      hence thesis;
+    end;
+    suppose a <> x & c <> x;
+      hence thesis by A1,Th64;
+    end;
+    suppose
+A4:   a <> x & d <> x;
+      Collinear b,a,x & Collinear d,c,x by A1,GTARSKI3:14;
+      then b,a,d,c are_coplanar by A4,A1,Th65;
+      hence thesis;
+    end;
+  end;
+
+::$N 9.33 Satz
+theorem Th68:
+  a,b,c,d are_coplanar iff ex x st
+  (Collinear a,b,x & Collinear c,d,x) or
+  (Collinear a,c,x & Collinear b,d,x) or
+  (Collinear a,d,x & Collinear b,c,x)
+  proof
+    per cases;
+    suppose
+A1:   a = b;
+      Collinear a,a,c & Collinear c,d,c by GTARSKI4:4;
+      hence thesis by A1,Th63;
+    end;
+    suppose
+A2:   a = c;
+      Collinear a,a,b & Collinear b,d,b & a,a,b,d are_coplanar
+        by Th63,GTARSKI4:4;
+      hence thesis by A2;
+    end;
+    suppose
+A3:   a = d;
+      Collinear a,a,b & Collinear b,c,b & a,a,b,c are_coplanar
+        by Th63,GTARSKI4:4;
+      hence thesis by A3;
+    end;
+    suppose
+A4:   b = c;
+      Collinear b,b,a & Collinear a,d,a & b,b,a,d are_coplanar
+        by Th63,GTARSKI4:4;
+      hence thesis by A4;
+    end;
+    suppose
+A5:   b = d;
+      Collinear b,b,a & Collinear a,c,a & b,b,a,c are_coplanar
+        by Th63,GTARSKI4:4;
+      hence thesis by A5;
+    end;
+    suppose
+A6:   c = d;
+      Collinear c,c,a & Collinear a,b,a & c,c,a,b are_coplanar
+        by Th63,GTARSKI4:4;
+      hence thesis by A6;
+    end;
+    suppose
+A7:   a <> b & a <> c & a <> d & b <> c & b <> d & c <> d;
+      hereby
+        assume a,b,c,d are_coplanar;
+        then consider E be Subset of S such that
+A8:     E is_plane and
+A9:     a in E and
+A10:    b in E and
+A11:    c in E and
+A12:    d in E;
+        per cases;
+        suppose
+A13:       Collinear a,b,c;
+          Collinear c,c,d by GTARSKI3:46;
+          then Collinear c,d,c;
+          hence ex x st (Collinear a,b,x & Collinear c,d,x) or
+            (Collinear a,c,x & Collinear b,d,x) or
+            (Collinear a,d,x & Collinear b,c,x) by A13;
+        end;
+        suppose
+A14:      not Collinear a,b,c;
+          set A  = Line(a,b),
+              A9 = Line(a,c);
+A15:      E = Plane(a,b,c) by A14,Th47,A8,A9,A10,A11;
+          then
+A16:      E= Plane(A,c) by A14,Def11;
+A17:      not Collinear a,c,b by A14,GTARSKI3:14;
+A18:      E = Plane(a,c,b) by A14,A15,Th53
+           .= Plane(A9,b) by A17,Def11;
+          per cases;
+          suppose d in A;
+            then
+A19:        ex y be POINT of S st d = y & Collinear a,b,y;
+            Collinear d,d,c by GTARSKI3:46;
+            then Collinear c,d,d;
+            hence ex x st (Collinear a,b,x & Collinear c,d,x) or
+              (Collinear a,c,x & Collinear b,d,x) or
+              (Collinear a,d,x & Collinear b,c,x) by A19;
+          end;
+          suppose d in A9;
+            then
+A20:        ex y be POINT of S st d = y & Collinear a,c,y;
+            Collinear d,d,b by GTARSKI3:46;
+            then Collinear b,d,d;
+            hence ex x st (Collinear a,b,x & Collinear c,d,x) or
+              (Collinear a,c,x & Collinear b,d,x) or
+              (Collinear a,d,x & Collinear b,c,x) by A20;
+          end;
+          suppose
+A21:        not d in A & not d in A9;
+A22:        a <> b by A14,GTARSKI3:46;
+A23:        a <> c
+            proof
+              assume a = c;
+              then Collinear a,c,b by GTARSKI3:46;
+              hence contradiction by A14,GTARSKI3:14;
+            end;
+            per cases;
+            suppose A out d,c & A9 out d,b;
+              then a,b out d,c & a,c out d,b by A14,GTARSKI3:46,A23;
+              then between b,Line(a,d),c by Th59;
+              then
+              consider t be POINT of S such that
+A24:          t in Line(a,d) and
+A25:          between b,t,c;
+                t1:ex y be POINT of S st t = y & Collinear a,d,y by A24;
+                  Collinear b,c,t by A25,GTARSKI4:7;
+              hence ex x st (Collinear a,b,x & Collinear c,d,x) or
+                (Collinear a,c,x & Collinear b,d,x) or
+                (Collinear a,d,x & Collinear b,c,x) by t1;
+            end;
+            suppose
+A26:          not A9 out d,b;
+                 T1:A9 is_line by A23;
+                not b in A9
+                proof
+                  assume b in A9;
+                  then ex y be POINT of S st b = y & Collinear a,c,y;
+                  hence contradiction by A14,GTARSKI3:14;
+                end;
+              then Plane(A9,b) = {x where x is POINT of S : A9 out x,b or
+                x in A9 or between b,A9,x} by T1,Th32;
+              then consider y be POINT of S such that
+A27:          d = y and
+A28:          A9 out y,b or y in A9 or between b,A9,y by A12,A18;
+              consider t be POINT of S such that
+A29:          t in A9 and
+A30:          between b,t,d by A27,A28,A26,A21;
+                t1:ex x be POINT of S st t = x & Collinear a,c,x by A29;
+                Collinear b,d,t by A30,GTARSKI3:14;
+              hence ex x st (Collinear a,b,x & Collinear c,d,x) or
+                (Collinear a,c,x & Collinear b,d,x) or
+                (Collinear a,d,x & Collinear b,c,x) by t1;
+            end;
+            suppose
+A31:          not A out d,c;
+                T1: A is_line by A22;
+                 not c in A
+                proof
+                  assume c in A;
+                  then ex y be POINT of S st c = y & Collinear a,b,y;
+                  hence contradiction by A14;
+                end;
+              then Plane(A,c) = {x where x is POINT of S : A out x,c or
+                x in A or between c,A,x} by T1,Th32;
+              then consider y be POINT of S such that
+A32:          d = y and
+A33:          A out y,c or y in A or between c,A,y by A12,A16;
+              consider t be POINT of S such that
+A34:          t in A and
+A35:          between c,t,d by A21,A31,A32,A33;
+                t1:ex x be POINT of S st t = x & Collinear a,b,x by A34;
+                Collinear c,d,t by A35,GTARSKI3:14;
+              hence ex x st (Collinear a,b,x & Collinear c,d,x) or
+                (Collinear a,c,x & Collinear b,d,x) or
+                (Collinear a,d,x & Collinear b,c,x) by t1;
+            end;
+          end;
+        end;
+      end;
+      assume ex x st (Collinear a,b,x & Collinear c,d,x) or
+        (Collinear a,c,x & Collinear b,d,x) or
+        (Collinear a,d,x & Collinear b,c,x);
+      then consider x such that
+A36:  (Collinear a,b,x & Collinear c,d,x) or
+        (Collinear a,c,x & Collinear b,d,x) or
+        (Collinear a,d,x & Collinear b,c,x);
+      per cases by A36;
+      suppose
+A37:     Collinear a,b,x & Collinear c,d,x;
+        (a <> x or b <> x) & (c <> x or d <> x) by A7;
+        hence a,b,c,d are_coplanar by A37,Th67;
+      end;
+      suppose
+A38:    Collinear a,c,x & Collinear b,d,x;
+        (a <> x or c <> x) & (b <> x or d <> x) by A7;
+        then a,c,b,d are_coplanar by A38,Th67;
+        hence thesis;
+      end;
+      suppose
+A39:    Collinear a,d,x & Collinear b,c,x;
+        (a <> x or d <> x) & (b <> x or c <> x) by A7;
+        then a,d,b,c are_coplanar by A39,Th67;
+        hence thesis;
+      end;
+    end;
+  end;
+
+theorem Th69:
+  not Collinear a,b,c implies Plane(a,b,c) is_plane & a in Plane(a,b,c) &
+  b in Plane(a,b,c) & c in Plane(a,b,c) & (for u,v being POINT of S st
+  u in Plane(a,b,c) & v in Plane(a,b,c) & u <> v holds
+  Line(u,v) c= Plane(a,b,c))
+  proof
+    assume not Collinear a,b,c;
+    then ex E be Subset of S st Plane(a,b,c) = E & E is_plane & a in E &
+      b in E & c in E by Th49;
+    hence thesis by Th46;
+  end;
+
+::$N 9.34 Satz
+theorem
+  not Collinear a,b,c implies (for E being Subset of S st a in E & b in E &
+  c in E & (for u,v being POINT of S st u in E & v in E & u <> v holds
+  Line(u,v) c= E) holds Plane(a,b,c) c= E)
+  proof
+    assume that
+A1: not Collinear a,b,c;
+    set P = Plane(a,b,c);
+A2: Plane(a,b,c) is_plane & a in Plane(a,b,c) & b in Plane(a,b,c) &
+      c in Plane(a,b,c) & (for u,v being POINT of S st
+      u in Plane(a,b,c) & v in Plane(a,b,c) & u <> v holds
+      Line(u,v) c= Plane(a,b,c)) by A1,Th69;
+    let E be Subset of S;
+    assume that
+A3: a in E and
+A4: b in E and
+A5: c in E and
+A6: (for u,v being POINT of S st u in E & v in E & u <> v holds
+      Line(u,v) c= E);
+A7: a <> b by A1,GTARSKI3:46;
+A8: a <> c
+    proof
+      assume a = c;
+      then Collinear a,c,b by GTARSKI3:46;
+      hence contradiction by A1,GTARSKI3:14;
+    end;
+A9: b <> c
+    proof
+      assume b = c;
+      then Collinear b,c,a by GTARSKI3:46;
+      hence contradiction by A1;
+    end;
+    Plane(a,b,c) c= E
+    proof
+      let x be object;
+      assume
+A10:  x in Plane(a,b,c);
+      then reconsider d = x as POINT of S;
+      a,b,c,d are_coplanar by A10,A2;
+      then consider y be POINT of S such that
+A11:  (Collinear a,b,y & Collinear c,d,y) or
+        (Collinear a,c,y & Collinear b,d,y) or
+        (Collinear a,d,y & Collinear b,c,y) by Th68;
+      per cases by A11;
+      suppose
+A12:    Collinear a,b,y & Collinear c,d,y;
+        then
+A13:    y in Line(a,b);
+A14:    Line(a,b) c= E by A7,A3,A4,A6;
+        Collinear c,y,d by A12,GTARSKI3:14;
+        then
+A15:    d in Line(c,y);
+        Line(c,y) c= E by A12,A1,A14,A13,A5,A6;
+        hence thesis by A15;
+      end;
+      suppose
+A16:    Collinear a,c,y & Collinear b,d,y;
+        then
+A17:    y in Line(a,c);
+A18:    Line(a,c) c= E by A8,A3,A5,A6;
+        Collinear b,y,d by A16,GTARSKI3:14;
+        then
+A19:    d in Line(b,y);
+        b <> y by A16,A1,GTARSKI3:14;
+        then Line(b,y) c= E by A18,A17,A4,A6;
+        hence thesis by A19;
+      end;
+      suppose
+A20:    Collinear a,d,y & Collinear b,c,y;
+        then
+A21:    y in Line(b,c);
+A22:    Line(b,c) c= E by A9,A4,A5,A6;
+        Collinear a,y,d by A20,GTARSKI3:14;
+        then
+A23:    d in Line(a,y);
+        Line(a,y) c= E by A20,A1,A22,A21,A3,A6;
+        hence thesis by A23;
+      end;
+    end;
+    hence thesis;
+  end;
+
+::$N 9.37 Definition n = 2
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let a,b be POINT of S;
+  let A be Subset of S;
+  pred between2 a,A,b means
+    A is_plane & not a in A & not b in A & ex t being POINT of S st t in A &
+    between a,t,b;
+end;
+
+::$N 9.38 Satz (n = 2)
+theorem
+  between2 a,A,b implies between2 b,A,a by GTARSKI3:14;
+
+theorem
+  between a,p,c & p out a,b implies between b,p,c
+  proof
+    assume that
+A1: between a,p,c and
+A2: p out a,b;
+    p=c or p<>c;
+    hence thesis by A1,A2,GTARSKI3:13,71;
+  end;
+
+::$N 9.39 Satz (n = 2)
+theorem Th73:
+  between2 a,A,c & r in A implies
+  (for b st r out a,b holds between2 b,A,c)
+  proof
+    assume that
+A1: between2 a,A,c and
+A2: r in A;
+    consider t be POINT of S such that
+A3: t in A and
+A4: between a,t,c by A1;
+    A is_plane by A1;
+    then consider p9,q9,r9 be POINT of S such that
+A5: not Collinear p9,q9,r9 and
+A6: A = Plane(p9,q9,r9);
+    hereby
+      let b;
+      assume
+A7:   r out a,b;
+A8:   not b in A
+      proof
+        assume b in A; then
+T1:     Line(r,b) c= A by A2,A7,A5,A6,Th69;
+        Collinear a,r,b by A7,GTARSKI3:73;
+        then Collinear r,b,a;
+        then a in Line(r,b);
+        hence thesis by T1,A1;
+      end;
+      thus between2 b,A,c
+      proof
+        per cases;
+        suppose
+A10:      r = t;
+            between b,t,c
+            proof
+              per cases by A7;
+              suppose between r,b,a;
+                then between a,b,t & between a,t,c by A4,A10,GTARSKI3:14;
+                hence thesis by GTARSKI3:18;
+              end;
+              suppose between r,a,b;
+                then between b,a,t & between a,t,c & a <> t
+                  by A10,A4,A1,A3,GTARSKI3:14;
+                hence thesis by GTARSKI3:19;
+              end;
+          end;
+          hence between2 b,A,c by A1,A3,A8;
+        end;
+        suppose
+A11:      r <> t;
+          set L = Line(r,t);
+A12:      Line(r,t) c= A by A2,A11,A3,A5,A6,Th69;
+            L is_line & not a in L & not c in L & ex t being POINT of S st
+              t in L & between a,t,c by A1,A4,A11,A12,GTARSKI3:83;
+            then between a,L,c;
+          then between b,L,c by A7,Th12,GTARSKI3:83;
+          hence between2 b,A,c by A1,A8,A12;
+        end;
+      end;
+    end;
+  end;
+
+::$N 9.40 Definition n = 2
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let a,b be POINT of S;
+  let A be Subset of S;
+  pred A out2 a,b means
+  ex c being POINT of S st between2 a,A,c & between2 b,A,c;
+end;
+
+::$N 9.41 Satz (n = 2)
+theorem Th74:
+  between2 a,A,c implies (between2 b,A,c iff A out2 a,b)
+  proof
+    assume
+A1: between2 a,A,c;
+    hence between2 b,A,c implies A out2 a,b;
+    assume A out2 a,b;
+    then consider d be POINT of S such that
+A2: between2 a,A,d and
+A3: between2 b,A,d;
+    consider x be POINT of S such that
+A4: x in A and
+A5: between a,x,d by A2;
+    consider y be POINT of S such that
+A6: y in A and
+A7: between b,y,d by A3;
+    A is_plane by A2;
+    then consider p,q,r be POINT of S such that
+A8: not Collinear p,q,r and
+A9: A = Plane(p,q,r);
+    per cases;
+    suppose
+A10:  Collinear a,b,d;
+A11:  a <> d by A5,A4,A1,GTARSKI1:def 10;
+      per cases;
+      suppose a = b;
+        hence thesis by A1;
+      end;
+      suppose
+A12:    a <> b;
+        x = y
+        proof
+          assume
+A13:      x <> y;
+            W1: x in Line(a,b)
+            proof
+                d in {x where x is POINT of S:Collinear a,b,x} by A10;
+                then T1:Line(a,b) = Line(a,d) by A11,A12,GTARSKI3:82;
+                Collinear a,x,d by A5;
+                then Collinear a,d,x by GTARSKI3:45;
+              hence thesis by T1;
+            end;
+            y in Line(a,b)
+            proof
+                  T2:b <> d by A3,GTARSKI1:def 10;
+                  Collinear b,a,d by A10,GTARSKI3:45;
+                  then d in Line(b,a);
+                then H1: Line(a,b) = Line(b,d) by A12,T2,GTARSKI3:82;
+                Collinear b,y,d by A7;
+                then Collinear b,d,y by GTARSKI3:45;
+              hence thesis by H1;
+            end;
+          then Line(x,y) = Line(a,b) & Line(x,y) c= Plane(p,q,r)
+            by W1,A4,A6,A13,A12,A8,A9,GTARSKI4:11,Th69;
+          hence thesis by A2,A9,GTARSKI3:83;
+        end;
+        then between d,x,a & between d,x,b by A7,A5,GTARSKI3:14;
+        then x out a,b by A2,A4,A3,GTARSKI3:57;
+        hence thesis by A1,A4,Th73;
+      end;
+    end;
+    suppose
+A14:  not Collinear a,b,d;
+      consider z be POINT of S such that
+A15:  between x,z,b and
+A16:  between y,z,a by A5,A7,GTARSKI1:def 11;
+      x <> y
+      proof
+        assume x = y;
+        then between d,x,a & between d,x,b by A5,A7,GTARSKI3:14;
+        then Collinear d,a,b or Collinear d,b,a by A2,A4,GTARSKI3:56;
+        hence contradiction by A14,GTARSKI3:45;
+      end;
+      then
+A17:  Line(x,y) c= A by A4,A6,A8,A9,Th69;
+        y <> z
+        proof
+          assume y = z;
+          then Collinear x,y,b by A15;
+          then b in {t where t is POINT of S:Collinear x,y,t};
+          hence thesis by A3,A17;
+        end;
+      then
+A18:  y out a,z by A6,A1,A16;
+        G1: x <> z
+        proof
+          assume x = z;
+          then Collinear y,x,a by A16;
+          then a in Line(y,x);
+          hence contradiction by A1,A17;
+        end;
+A19:  x out z,b by A4,A3,G1,A15;
+      between2 z,A,c by A18,A1,A6,Th73;
+      hence thesis by A19,A4,Th73;
+    end;
+  end;
+
+::$N 9.9 Satz (Version n = 2)
+theorem
+  between2 a,A,b implies not A out2 a,b
+  proof
+    assume
+A1: between2 a,A,b;
+    assume A out2 a,b;
+    then between2 b,A,b by A1,Th74;
+    hence contradiction by GTARSKI1:def 10;
+  end;
+
+::$N 9.10 Lemma (Version n = 2)
+theorem Th76:
+  A is_plane & not a in A implies ex c st between2 a,A,c
+  proof
+    assume that
+A1: A is_plane and
+A2: not a in A;
+    consider p,q,r such that
+A3: not Collinear p,q,r and
+A4: A = Plane(p,q,r) by A1;
+A5: not r in Line(p,q)
+    proof
+      assume r in Line(p,q);
+      then ex x be POINT of S st r = x & Collinear p,q,x;
+      hence thesis by A3;
+    end;
+    p <> q by A3,GTARSKI3:46;
+    then
+A6: A = Plane(Line(p,q),r) & Line(p,q) is_line by A3,Def11,A4;
+    then Line(p,q) c= A by A5,Th31;
+    then
+A7: p in A & q in A & r in A by A5,Th31,A6,GTARSKI3:83;
+    set c = reflection(p,a);
+A8: p <> c
+    proof
+      assume p = c;
+      then Middle a,c,c by GTARSKI3:def 13;
+      hence contradiction by A2,A7,GTARSKI3:104,GTARSKI1:def 7;
+    end;
+    take c;
+A9:   Middle a,p,c by GTARSKI3:def 13;
+      Collinear p,c,a by A9;
+      then
+A10:   a in Line(p,c);
+      not c in A
+      proof
+        assume c in A;
+        then Line(p,c) c= A by A7,A3,A8,A4,Th69;
+        hence thesis by A10,A2;
+      end;
+    hence thesis by A9,A1,A2,A7;
+  end;
+
+::$N 9.11 Satz (Version n = 2)
+theorem Th77:
+  A is_plane & not a in A implies A out2 a,a
+  proof
+    assume A is_plane & not a in A;
+    then ex c be POINT of S st between2 a,A,c by Th76;
+    hence thesis;
+  end;
+
+::$N 9.12 Satz (Version n = 2)
+theorem
+  A out2 a,b implies A out2 b,a;
+
+::$N 9.13 Satz (Version n = 2)
+theorem Th79:
+  A out2 a,b & A out2 b,c implies A out2 a,c
+  proof
+    assume that
+A1: A out2 a,b and
+A2: A out2 b,c;
+    consider x be POINT of S such that
+A3: between2 a,A,x and
+A4: between2 b,A,x by A1;
+    consider y be POINT of S such that
+A5: between2 b,A,y and
+A6: between2 c,A,y by A2;
+    between2 x,A,b & between2 y,A,b by A4,A5,GTARSKI3:14;
+    then between2 y,A,c & A out2 y,x by A6,GTARSKI3:14;
+    then between2 x,A,c by Th74;
+    then between2 c,A,x by GTARSKI3:14;
+    hence thesis by A3;
+  end;
+
+::$N 9.43 Definition (n = 2)
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let A be Subset of S;
+  let a be POINT of S;
+  assume that
+  A is_plane and
+  not a in A;
+  func half-space3(A,a) -> Subset of S equals
+:Def18:
+    {x where x is POINT of S: A out2 x,a};
+  correctness
+  proof
+    {x where x is POINT of S: A out2 x,a} c= the carrier of S
+    proof
+      let x be object;
+      assume x in {x where x is POINT of S: A out2 x,a};
+      then ex y be POINT of S st x = y & A out2 y,a;
+      hence thesis;
+    end;
+    hence thesis;
+  end;
+end;
+
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+                        satisfying_Tarski-model
+                        TarskiGeometryStruct;
+  let p,q,a be POINT of S;
+  assume not Collinear p,q,a;
+  func half-space3(p,q,a) -> set equals
+  half-space3(Line(p,q),a);
+  correctness;
+end;
+
+theorem Th80:
+  A is_plane & not a in A implies a in half-space3(A,a)
+  proof
+    assume that
+A1: A is_plane and
+A2: not a in A;
+A3: half-space3(A,a) = {x where x is POINT of S: A out2 x,a} by A1,A2,Def18;
+    A out2 a,a by Th77,A1,A2;
+    hence thesis by A3;
+  end;
+
+theorem Th81:
+  A is_plane & not a in A & not b in A & b in half-space3(A,a) implies
+  a in half-space3(A,b)
+  proof
+    assume
+A1: A is_plane & not a in A & not b in A & b in half-space3(A,a);
+    then b in {x where x is POINT of S:A out2 x,a} by Def18;
+    then ex x be POINT of S st x = b & A out2 x,a;
+    then A out2 a,b;
+    then a in {x where x is POINT of S:A out2 x,b};
+    hence thesis by A1,Def18;
+  end;
+
+theorem Th82:
+  A is_plane & not a in A & not b in A &
+  b in half-space3(A,a) implies half-space3(A,b) c= half-space3(A,a)
+  proof
+    assume that
+A1: A is_plane and
+A2: not a in A and
+A3: not b in A and
+A4: b in half-space3(A,a);
+    b in {x where x is POINT of S: A out2 x,a} by A1,A2,A4,Def18;
+    then consider t be POINT of S such that
+A5: b = t and
+A6: A out2 t,a;
+    half-space3(A,b) c= half-space3(A,a)
+    proof
+      let x be object;
+      assume x in half-space3(A,b);
+      then x in {x where x is POINT of S: A out2 x,b} by A1,A3,Def18;
+      then consider y be POINT of S such that
+A7:   x = y and
+A8:   A out2 y,b;
+      A out2 y,a by A5,A6,A8,Th79;
+      then x in {x where x is POINT of S:A out2 x,a} by A7;
+      hence thesis by A1,A2,Def18;
+    end;
+    hence thesis;
+  end;
+
+theorem Th83:
+  A is_plane & not a in A & not b in A &
+  b in half-space3(A,a) implies half-space3(A,b) = half-space3(A,a)
+  proof
+    assume that
+A1: A is_plane and
+A2: not a in A and
+A3: not b in A and
+A4: b in half-space3(A,a);
+    half-space3(A,a) c= half-space3(A,b)
+    proof
+      a in half-space3(A,b) by A1,A2,A3,A4,Th81;
+      hence thesis by A1,A2,A3,Th82;
+    end;
+    hence thesis by A1,A2,A3,A4,Th82;
+  end;
+
+::$N 9.44 Definition (n = 2)
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+        satisfying_Tarski-model TarskiGeometryStruct;
+  let A be Subset of S;
+  let r be POINT of S;
+  assume that
+A1: A is_plane and
+A2: not r in A;
+  func space3(A,r) -> Subset of S means
+:Def20:
+  ex r9 being POINT of S st between2 r,A,r9 &
+  it = half-space3(A,r) \/ A \/ half-space3(A,r9);
+  existence
+  proof
+    consider r9 be POINT of S such that
+A3: between2 r,A,r9 by A1,A2,Th76;
+    set P = half-space3(A,r) \/ A \/ half-space3(A,r9);
+    P is set;
+    hence thesis by A3;
+  end;
+  uniqueness
+  proof
+    let X,Y be Subset of S such that
+A4: ex r9 being POINT of S st between2 r,A,r9 &
+      X = half-space3(A,r) \/ A \/ half-space3(A,r9) and
+A5: ex r9 being POINT of S st between2 r,A,r9 &
+      Y = half-space3(A,r) \/ A \/ half-space3(A,r9);
+    consider r9 be POINT of S such that
+A6: between2 r,A,r9 and
+A7: X = half-space3(A,r) \/ A \/ half-space3(A,r9) by A4;
+    consider r99 be POINT of S such that
+A8: between2 r,A,r99 and
+A9: Y = half-space3(A,r) \/ A \/ half-space3(A,r99) by A5;
+A10:  half-space3(A,r9) = {x where x is POINT of S: A out2 x,r9} by A6,Def18;
+      between2 r9,A,r & between2 r99,A,r by A8,A6,GTARSKI3:14;
+      then A out2 r99,r9;
+      then  r99 in half-space3(A,r9) by A10;
+    hence thesis by A6,A8,A7,A9,Th83;
+  end;
+end;
+
+theorem Th84:
+  A is_plane & not r in A implies half-space3(A,r) c= space3(A,r)
+  proof
+    assume A is_plane & not r in A;
+    then consider r9 be POINT of S such that
+    between2 r,A,r9 and
+A1: space3(A,r) = half-space3(A,r) \/ A \/ half-space3(A,r9) by Def20;
+    half-space3(A,r) c= half-space3(A,r) \/ A &
+      half-space3(A,r) \/ A c= half-space3(A,r) \/ A \/ half-space3(A,r9)
+      by XBOOLE_1:7;
+    hence thesis by A1;
+  end;
+
+theorem
+  A is_plane & not r in A implies A c= space3(A,r) & r in space3(A,r)
+  proof
+    assume that
+A1: A is_plane and
+A2: not r in A;
+    ex r9 be POINT of S st between2 r,A,r9 &
+      space3(A,r) = half-space3(A,r) \/ A \/ half-space3(A,r9) by A1,A2,Def20;
+    then
+A3: A c= half-space3(A,r) \/ A & half-space3(A,r) \/ A c= space3(A,r)
+      by XBOOLE_1:7;
+    r in half-space3(A,r) & half-space3(A,r) c= space3(A,r)
+      by A1,A2,Th80,Th84;
+    hence thesis by A3;
+  end;
+
+theorem
+  A is_plane & not r in A implies
+  space3(A,r) = {x where x is POINT of S :
+     A out2 x,r or x in A or between2 r,A,x}
+  proof
+    assume that
+A1: A is_plane and
+A2: not r in A;
+    consider r9 be POINT of S such that
+A3: between2 r,A,r9 and
+A4: space3(A,r) = half-space3(A,r) \/ A \/ half-space3(A,r9) by A1,A2,Def20;
+    set P = {x where x is POINT of S: A out2 x,r or x in A or between2 r,A,x};
+A5: space3(A,r) c= P
+    proof
+      let x be object;
+      assume x in space3(A,r);
+      then x in (half-space3(A,r) \/ A) or x in half-space3(A,r9)
+        by A4,XBOOLE_0:def 3;
+      then per cases by XBOOLE_0:def 3;
+      suppose x in half-space3(A,r);
+        then x in {x where x is POINT of S: A out2 x,r} by A1,A2,Def18;
+        then ex y be POINT of S st x = y & A out2 y,r;
+        hence thesis;
+      end;
+      suppose x in A;
+        hence thesis;
+      end;
+      suppose
+A6:     x in half-space3(A,r9);
+        then reconsider y = x as POINT of S;
+        x in {x where x is POINT of S: A out2 x,r9} by A3,A6,Def18;
+        then consider z be POINT of S such that
+A7:     x = z and
+A8:     A out2 z,r9;
+        between2 r9,A,r & A out2 r9,y by A7,A8,A3,GTARSKI3:14;
+        then between2 y,A,r by Th74;
+        then between2 r,A,y by GTARSKI3:14;
+        hence thesis;
+      end;
+    end;
+    P c= space3(A,r)
+    proof
+      let x be object;
+      assume x in P;
+      then consider y be POINT of S such that
+A9:   y = x and
+A10:  A out2 y,r or y in A or between2 r,A,y;
+      per cases by A10;
+      suppose A out2 y,r;
+        then y in {x where x is POINT of S: A out2 x,r};
+        then x in half-space3(A,r) by A9,A1,A2,Def18;
+        then x in half-space3(A,r) \/ A by XBOOLE_0:def 3;
+        hence thesis by A4,XBOOLE_0:def 3;
+      end;
+      suppose y in A;
+        then x in half-space3(A,r) \/ A by A9,XBOOLE_0:def 3;
+        hence thesis by A4,XBOOLE_0:def 3;
+      end;
+      suppose between2 r,A,y;
+        then between2 y,A,r & between2 r9,A,r by A3,GTARSKI3:14;
+        then A out2 y,r9;
+        then x in {x where x is POINT of S: A out2 x,r9} by A9;
+        then x in half-space3(A,r9) by A3,Def18;
+        then x in A \/ half-space3(A,r9) by XBOOLE_0:def 3;
+        then x in half-space3(A,r) \/ (A \/ half-space3(A,r9))
+          by XBOOLE_0:def 3;
+        hence thesis by A4,XBOOLE_1:4;
+      end;
+    end;
+    hence thesis by A5;
+  end;
+
+::$N 9.44 Definition (n = 2)
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+        satisfying_Tarski-model TarskiGeometryStruct;
+  let p0,p1,p2,r be POINT of S;
+  assume not p0,p1,p2,r are_coplanar;
+  func space3(p0,p1,p2,r) -> Subset of S equals
+:Def21:
+  space3(Plane(p0,p1,p2),r);
+  coherence;
+end;
+
+definition
+  let S be non empty satisfying_Lower_Dimension_Axiom
+        satisfying_Tarski-model TarskiGeometryStruct;
+  let E be Subset of S;
+  pred E is_space3 means
+  ex r being POINT of S,
+     A being Subset of S st
+    A is_plane & not r in A & E = space3(A,r);
+end;
+
+theorem Th87:
+  A is_plane & not Collinear a,b,c & a in A & b in A & c in A &
+  not d in A implies not a,b,c,d are_coplanar by Th52;
+
+theorem
+  E is_space3 implies ex a,b,c,d st not a,b,c,d are_coplanar &
+  E = space3(a,b,c,d)
+  proof
+    assume E is_space3;
+    then consider r be POINT of S, A be Subset of S such that
+A1: A is_plane and
+A2: not r in A and
+A3: E = space3(A,r);
+    consider a,b,c be POINT of S such that
+A4: not Collinear a,b,c and
+A5: A = Plane(a,b,c) by A1;
+    take a,b,c,r;
+    a in A & b in A & c in A by A4,A5,Th69;
+    hence thesis by A5,A3,Def21,A1,A2,A4,Th87;
+  end;

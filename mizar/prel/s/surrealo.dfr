@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<Formats>
+<Vocabularies>
+<Vocabulary>
+<ArticleID name="ARROW"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="0"/>
+<SymbolCount kind="O" nr="2"/>
+<SymbolCount kind="R" nr="4"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="0"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="ZFREFLE1"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="0"/>
+<SymbolCount kind="O" nr="1"/>
+<SymbolCount kind="R" nr="2"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="0"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="GLIB_000"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="10"/>
+<SymbolCount kind="O" nr="31"/>
+<SymbolCount kind="R" nr="6"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="14"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="SURREAL0"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="1"/>
+<SymbolCount kind="O" nr="11"/>
+<SymbolCount kind="R" nr="1"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="3"/>
+</Vocabulary>
+<Vocabulary>
+<ArticleID name="SURREALO"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="1"/>
+<SymbolCount kind="O" nr="5"/>
+<SymbolCount kind="R" nr="0"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="4"/>
+</Vocabulary>
+</Vocabularies>
+<Format kind="O" symbolnr="44" argnr="0" leftargnr="0"/>
+<Format kind="R" symbolnr="11" argnr="2" leftargnr="1"/>
+<Format kind="R" symbolnr="1" argnr="2" leftargnr="1"/>
+<Format kind="R" symbolnr="5" argnr="2" leftargnr="1"/>
+<Format kind="O" symbolnr="47" argnr="1" leftargnr="0"/>
+<Format kind="O" symbolnr="48" argnr="1" leftargnr="0"/>
+<Format kind="V" symbolnr="18" argnr="2"/>
+<Format kind="O" symbolnr="46" argnr="1" leftargnr="0"/>
+<Format kind="O" symbolnr="49" argnr="1" leftargnr="0"/>
+<Format kind="O" symbolnr="50" argnr="1" leftargnr="0"/>
+<Format kind="V" symbolnr="19" argnr="1"/>
+<Format kind="M" symbolnr="12" argnr="0"/>
+<Format kind="V" symbolnr="20" argnr="1"/>
+</Formats>

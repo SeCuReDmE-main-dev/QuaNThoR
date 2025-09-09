@@ -1,0 +1,717 @@
+:: About Path and Cycle Graphs
+::  by Sebastian Koch
+::
+:: Received December 9, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, FINSET_1, RELAT_1, FUNCT_1, XBOOLE_0, TARSKI, SUBSET_1,
+      FINSEQ_1, NAT_1, FUNCT_4, FUNCOP_1, ZFMISC_1, CARD_1, ARYTM_3, CARD_2,
+      ORDINAL2, XXREAL_0, PBOOLE, XCMPLX_0, RELAT_2, PARTFUN1, RING_3, FUNCT_2,
+      TREES_1, MOD_4, GLIB_000, GLIB_001, GLIB_002, CHORD, SCMYCIEL, SIMPLEX0,
+      GLIB_006, GLIB_010, GLIB_011, GLIB_012, GLIB_013, GLIB_014, FINSEQ_8,
+      GRAPH_2, RFINSEQ, INT_1, SQUARE_1, GLIB_016, HELLY, MSAFREE2, GLIB_007,
+      ORDINAL1, ORDINAL4, ARYTM_1, REWRITE1, GRAPH_1, RCOMP_1, ABIAN;
+ notations TARSKI, XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, RELSET_1,
+      PARTFUN1, FUNCT_2, DOMAIN_1, SETFAM_1, ABIAN, SQUARE_1, FUNCOP_1,
+      FUNCT_4, FINSET_1, CARD_1, PBOOLE, NUMBERS, XCMPLX_0, XXREAL_0, NAT_1,
+      NAT_D, CARD_2, FINSEQ_1, FINSEQ_4, RFINSEQ, FINSEQ_6, GLIB_000, FINSEQ_8,
+      GLIB_001, GLIB_002, CHORD, GLIB_006, GLIB_007, HELLY, GLIB_008, GLIB_010,
+      GLIB_011, GLIB_012, GLIB_013, GLIB_014, ENUMSET1, GLIB_016;
+ constructors DOMAIN_1, FINSOP_1, RVSUM_1, FINSEQ_5, FIB_NUM2, FINSEQ_8, HELLY,
+      CHORD, NAT_D, RFINSEQ, FINSEQ_6, CARD_2, GLIB_007, GLIB_008, SQUARE_1,
+      GLIB_011, GLIB_012, GLIB_014, GLIB_016;
+ registrations XBOOLE_0, RELAT_1, FUNCT_1, ORDINAL1, FUNCOP_1, FINSET_1, ABIAN,
+      XREAL_0, NAT_1, MEMBERED, FINSEQ_1, GLIB_000, GLIB_001, HELLY, GLIB_002,
+      CHORD, INT_1, CARD_1, FUNCT_2, RELSET_1, SUBSET_1, GLIB_006, GLIB_007,
+      MSAFREE5, GLIB_009, GLIB_010, GLIB_012, GLIB_008, GLIB_013, GLIB_014,
+      GLIBPRE1, SQUARE_1, GLIB_016, GLIB_011;
+ requirements ARITHM, BOOLE, NUMERALS, REAL, SUBSET;
+
+
+begin :: Preliminaries
+
+registration
+  cluster _trivial non-Dmulti loopfull for _Graph;
+  let G be non acyclic _Graph;
+  cluster non acyclic for Subgraph of G;
+end;
+
+:: variant of GLIB_000:81 for possibly infinite graphs
+:: into GLIB_000 ?
+theorem :: GLPACY00:1
+  for G1 being _Graph, G2 being Subgraph of G1
+  for v1 being Vertex of G1, v2 being Vertex of G2 st v1 = v2
+  holds v2.inDegree() c= v1.inDegree() &
+    v2.outDegree() c= v1.outDegree() & v2.degree() c= v1.degree();
+
+::: into GLIB_001 ?
+theorem :: GLPACY00:2
+  for G being _Graph, T being Trail of G holds T.length() = card(T.edges());
+
+::: into GLIB_002
+registration
+  let G be non acyclic _Graph;
+  cluster Cycle-like for Walk of G;
+end;
+
+::: into CHORD
+theorem :: GLPACY00:3
+  for T being non _trivial Tree-like _Graph, v being Vertex of T
+  for F being removeVertex of T,v holds F.numComponents() = v.degree();
+
+::: into GLIBPRE0
+theorem :: GLPACY00:4
+  for T being non _trivial _finite Tree-like _Graph, v being Vertex of T
+  for F being removeVertex of T,v, C being Component of F
+  ex w being Vertex of T st w is endvertex & w in the_Vertices_of C;
+
+::: into GLIBPRE0
+theorem :: GLPACY00:5
+  for G2 being _Graph, v,e,w being object, v2 being Vertex of G2
+  for G1 being addAdjVertex of G2,v,e,w for v1 being Vertex of G1
+  st v1 <> v & v1 <> w & v1 = v2 holds
+    v1.edgesIn() = v2.edgesIn() & v1.inDegree() = v2.inDegree() &
+    v1.edgesOut() = v2.edgesOut() & v1.outDegree() = v2.outDegree() &
+    v1.edgesInOut() = v2.edgesInOut() & v1.degree() = v2.degree();
+
+::: into GLIBPRE0
+theorem :: GLPACY00:6
+  for G2 being _Graph, v being Vertex of G2, e,w being object
+  for G1 being addAdjVertex of G2,v,e,w for v1 being Vertex of G1
+  st not e in the_Edges_of G2 & not w in the_Vertices_of G2 & v1 = v holds
+    v1.edgesIn() = v.edgesIn() & v1.inDegree() = v.inDegree() &
+    v1.edgesOut() = v.edgesOut() \/ {e} & v1.outDegree() = v.outDegree() +` 1 &
+    v1.edgesInOut() = v.edgesInOut() \/ {e} & v1.degree() = v.degree() +` 1;
+
+::: into GLIBPRE0
+theorem :: GLPACY00:7
+  for G2 being _Graph, v, e being object, w being Vertex of G2
+  for G1 being addAdjVertex of G2,v,e,w for w1 being Vertex of G1
+  st not e in the_Edges_of G2 & not v in the_Vertices_of G2 & w1 = w holds
+    w1.edgesIn() = w.edgesIn() \/ {e} & w1.inDegree() = w.inDegree() +` 1 &
+    w1.edgesOut() = w.edgesOut() & w1.outDegree() = w.outDegree() &
+    w1.edgesInOut() = w.edgesInOut() \/ {e} & w1.degree() = w.degree() +` 1;
+
+::: into GLIBPRE0
+theorem :: GLPACY00:8
+  for G being _Graph, C being Component of G
+  holds Endvertices C c= Endvertices G;
+
+::: into GLIB_006
+registration
+  let G be edgeless _Graph;
+  cluster Endvertices G -> empty;
+end;
+
+begin :: Path Graphs
+
+:: this definition includes the ray and the double ray
+definition
+  let G be _Graph;
+  attr G is Path-like means
+:: GLPACY00:def 1
+
+  G is Tree-like & for v being Vertex of G holds v.degree() c= 2;
+end;
+
+registration
+  cluster Path-like -> Tree-like locally-finite with_max_degree for _Graph;
+  cluster _trivial edgeless -> Path-like for _Graph;
+  cluster _trivial Path-like -> edgeless for _Graph;
+  cluster _finite Path-like for _Graph;
+end;
+
+theorem :: GLPACY00:9
+  for G being locally-finite _Graph holds G is Path-like iff
+    G is Tree-like & for v being Vertex of G holds v.degree() <= 2;
+
+definition
+  let F be Graph-yielding Function;
+  attr F is Path-like means
+:: GLPACY00:def 2
+
+  for x being object st x in dom F
+    ex G being _Graph st F.x = G & G is Path-like;
+end;
+
+registration
+  let P be Path-like _Graph;
+  cluster <* P *> -> Path-like;
+  cluster NAT --> P -> Path-like;
+end;
+
+definition
+  let F be non empty Graph-yielding Function;
+  redefine attr F is Path-like means
+:: GLPACY00:def 3
+
+  for x being Element of dom F holds F.x is Path-like;
+end;
+
+definition
+  let S be GraphSeq;
+  redefine attr S is Path-like means
+:: GLPACY00:def 4
+
+  for n being Nat holds S.n is Path-like;
+end;
+
+registration
+  cluster empty -> Path-like for Graph-yielding Function;
+  cluster _trivial edgeless -> Path-like for Graph-yielding Function;
+  cluster Path-like -> Tree-like for Graph-yielding Function;
+  cluster non empty Path-like for GraphSeq;
+end;
+
+registration
+  let F be Path-like non empty Graph-yielding Function, x be Element of dom F;
+  cluster F.x -> Path-like;
+end;
+
+registration
+  let S be Path-like GraphSeq, n be Nat;
+  cluster S.n -> Path-like;
+end;
+
+registration
+  let p be Path-like Graph-yielding FinSequence, n be Nat;
+  cluster p | n -> Path-like;
+  cluster p /^ n -> Path-like;
+  let m be Nat;
+  cluster smid(p,m,n) -> Path-like;
+  cluster (m,n)-cut p -> Path-like;
+end;
+
+registration
+  let p, q be Path-like Graph-yielding FinSequence;
+  cluster p ^ q -> Path-like;
+  cluster p ^' q -> Path-like;
+end;
+
+registration
+  let P1, P2 be Path-like _Graph;
+  cluster <* P1, P2 *> -> Path-like;
+  let P3 be Path-like _Graph;
+  cluster <* P1, P2, P3 *> -> Path-like;
+end;
+
+definition
+  let S be Graph-membered set;
+  attr S is Path-like means
+:: GLPACY00:def 5
+
+  for G being _Graph st G in S holds G is Path-like;
+end;
+
+registration
+  cluster empty -> Path-like for Graph-membered set;
+  cluster Path-like -> Tree-like for Graph-membered set;
+end;
+
+registration
+  let P1 be Path-like _Graph;
+  cluster {P1} -> Path-like;
+  let P2 be Path-like _Graph;
+  cluster {P1, P2} -> Path-like;
+end;
+
+registration
+  let F be Path-like Graph-yielding Function;
+  cluster rng F -> Path-like;
+end;
+
+registration
+  let X be Path-like Graph-membered set;
+  cluster -> Path-like for Subset of X;
+end;
+
+registration
+  let X be Path-like Graph-membered set, Y be set;
+  cluster X /\ Y -> Path-like;
+  cluster X \ Y -> Path-like;
+end;
+
+registration
+  let X, Y be Path-like Graph-membered set;
+  cluster X \/ Y -> Path-like;
+  cluster X \+\ Y -> Path-like;
+end;
+
+registration
+  cluster non empty Path-like for Graph-membered set;
+end;
+
+registration
+  let S be non empty Path-like Graph-membered set;
+  cluster -> Path-like for Element of S;
+end;
+
+:: adding a vertex incident with an endvertex of a path results in a path
+theorem :: GLPACY00:10
+  for P2 being Path-like _Graph, v2 being Vertex of P2, e,w2 being object
+  for P1 being addAdjVertex of P2,v2,e,w2
+  st v2 is endvertex or P2 is _trivial holds P1 is Path-like;
+
+theorem :: GLPACY00:11
+  for P2 being Path-like _Graph, v2,e being object, w2 being Vertex of P2
+  for P1 being addAdjVertex of P2,v2,e,w2
+  st w2 is endvertex or P2 is _trivial holds P1 is Path-like;
+
+registration
+  let n be Nat;
+  cluster (n+1)-vertex n-edge Path-like for _Graph;
+end;
+
+registration
+  let n be non zero Nat;
+  cluster n-vertex (n-'1)-edge Path-like for _Graph;
+  cluster (n+1)-vertex n-edge Path-like non _trivial for _Graph;
+end;
+
+registration
+  let P be Path-like _Graph;
+  cluster connected -> Path-like for Subgraph of P;
+end;
+
+theorem :: GLPACY00:12
+  for G2 being _Graph, v1,e,v2 being object
+  for G1 being addAdjVertex of G2,v1,e,v2
+  st G1 is Path-like holds G2 is Path-like;
+
+:: removing an endvertex from a path results in a path
+theorem :: GLPACY00:13
+  for P1 being Path-like _Graph, v being Vertex of P1
+  for P2 being removeVertex of P1,v
+  st v is endvertex or P1 is _trivial holds P2 is Path-like;
+
+:: mostly copied from GLIB_008
+theorem :: GLPACY00:14
+  for G being _finite Path-like _Graph, H being connected Subgraph of G
+  ex p being non empty _finite Path-like Graph-yielding FinSequence
+  st p.1 == H & p.len p = G & len p = G.order() - H.order() + 1 &
+    for n being Element of dom p st n <= len p - 1
+    ex v1,v2 being Vertex of G, e being object
+    st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+      e in the_Edges_of G \ the_Edges_of p.n &
+      ( (v1 in the_Vertices_of p.n & not v2 in the_Vertices_of p.n &
+          (p.n is non _trivial implies v1 in Endvertices(p.n))) or
+        (not v1 in the_Vertices_of p.n & v2 in the_Vertices_of p.n &
+          (p.n is non _trivial implies v2 in Endvertices(p.n))));
+
+:: finite paths can be finitely constructed by adding
+:: a vertex incident with an endvertex at a time
+theorem :: GLPACY00:15
+  for G being _finite Path-like _Graph
+  ex p being non empty _finite Path-like Graph-yielding FinSequence
+  st p.1 is _trivial edgeless & p.len p = G & len p = G.order() &
+    for n being Element of dom p st n <= len p - 1
+    ex v1,v2 being Vertex of G, e being object
+    st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+      e in the_Edges_of G \ the_Edges_of p.n &
+      ((v1 in the_Vertices_of p.n & (n >= 2 implies v1 in Endvertices(p.n)) &
+          not v2 in the_Vertices_of p.n) or
+        (not v1 in the_Vertices_of p.n & v2 in the_Vertices_of p.n &
+          (n >= 2 implies v2 in Endvertices(p.n))));
+
+theorem :: GLPACY00:16
+  for p being non empty Graph-yielding FinSequence
+  st p.1 is Path-like &
+    for n being Element of dom p st n <= len p - 1
+    ex v1,e,v2 being object st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+      (p.n is _trivial or v1 in Endvertices(p.n) or v2 in Endvertices(p.n))
+  holds p.(len p) is Path-like;
+
+:: version with K_1 skipped
+theorem :: GLPACY00:17
+  for G being non _trivial _finite Path-like _Graph
+  ex p being non empty _finite Path-like Graph-yielding FinSequence
+  st p.1 is 2-vertex Path-like & p.len p = G & len p + 1 = G.order() &
+    for n being Element of dom p st n <= len p - 1
+    ex v1,v2 being Vertex of G, e being object
+    st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+      e in the_Edges_of G \ the_Edges_of p.n &
+      ((v1 in Endvertices(p.n) & not v2 in the_Vertices_of p.n) or
+        (not v1 in the_Vertices_of p.n & v2 in Endvertices(p.n)));
+
+theorem :: GLPACY00:18
+  for p being non empty Graph-yielding FinSequence
+  st p.1 is non _trivial Path-like &
+    for n being Element of dom p st n <= len p - 1
+    ex v1,e,v2 being object st p.(n+1) is addAdjVertex of p.n,v1,e,v2 &
+      (v1 in Endvertices(p.n) or v2 in Endvertices(p.n))
+  holds p.len p is Path-like;
+
+theorem :: GLPACY00:19
+  for G1, G2 being _Graph, F being PGraphMapping of G1, G2
+  st F is isomorphism holds (G1 is Path-like iff G2 is Path-like);
+
+theorem :: GLPACY00:20
+  for G1, G2 being _Graph st G1 == G2
+  holds G1 is Path-like implies G2 is Path-like;
+
+theorem :: GLPACY00:21
+  for G1 being _Graph, E being set, G2 being reverseEdgeDirections of G1, E
+  holds G1 is Path-like iff G2 is Path-like;
+
+registration
+  let P2 be 2-vertex Path-like _Graph;
+  cluster -> endvertex for Vertex of P2;
+end;
+
+theorem :: GLPACY00:22
+  for P being _finite non _trivial Path-like _Graph holds P.minDegree() = 1;
+
+theorem :: GLPACY00:23
+  for P being _finite Path-like _Graph ex P0 being vertex-distinct Path of P
+  st P0.vertices() = the_Vertices_of P & P0.edges() = the_Edges_of P &
+    (Endvertices P = {P0.first(),P0.last()} iff P is non _trivial) &
+    (P0 is trivial iff P is _trivial) & (P0 is closed iff P is _trivial) &
+    P0 is minlength;
+
+theorem :: GLPACY00:24
+  for n being non zero Nat, P1, P2 being n-vertex Path-like _Graph
+  holds P2 is P1-isomorphic;
+
+theorem :: GLPACY00:25
+  for n being Nat, P1, P2 being n-edge Path-like _Graph
+  holds P2 is P1-isomorphic;
+
+theorem :: GLPACY00:26
+  for P being non _trivial Path-like _Graph holds
+    (P.order() = 2 iff P.maxDegree() = 1) &
+    (P.order() <> 2 iff P.maxDegree() = 2);
+
+theorem :: GLPACY00:27
+  for P being non _trivial Path-like _Graph, v being Vertex of P
+  st v is non endvertex holds v.degree() = 2;
+
+theorem :: GLPACY00:28
+  for P being _finite non _trivial Path-like _Graph
+  ex v1, v2 being Vertex of P st v1 <> v2 & Endvertices P = {v1,v2};
+
+theorem :: GLPACY00:29
+  for P being _finite non _trivial Path-like _Graph
+  holds card Endvertices P = 2;
+
+theorem :: GLPACY00:30
+  for G being _finite non _trivial _Graph
+  st G is acyclic & G.minDegree() = 1 & card Endvertices G = 2
+  holds G is Path-like;
+
+registration
+  cluster 2-vertex simple connected -> Path-like for _Graph;
+  cluster 2-vertex Path-like -> complete for _Graph;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+3)-vertex Path-like -> non complete for _Graph;
+end;
+
+begin :: Cycle graphs
+
+:: this definition includes the 1- and 2-cycle
+definition
+  let G be _Graph;
+  attr G is Cycle-like means
+:: GLPACY00:def 6
+  G is connected non acyclic 2-regular;
+end;
+
+registration
+  cluster non _trivial Cycle-like for _Graph;
+  cluster connected non acyclic 2-regular -> Cycle-like for _Graph;
+  cluster Cycle-like -> connected non acyclic 2-regular for _Graph;
+end;
+
+theorem :: GLPACY00:31
+  for G being Cycle-like _Graph, C being Circuit-like Walk of G
+  holds C.vertices() = the_Vertices_of G & C.edges() = the_Edges_of G;
+
+registration
+  cluster Cycle-like -> non edgeless _finite with_max_degree for _Graph;
+end;
+
+theorem :: GLPACY00:32
+  for G being Cycle-like _Graph holds G.order() = G.size();
+
+registration
+  cluster _trivial non-Dmulti loopfull -> Cycle-like for _Graph;
+  cluster _trivial Cycle-like -> non-multi loopfull for _Graph;
+  cluster non _trivial Cycle-like -> loopless for _Graph;
+  cluster _trivial Cycle-like for _Graph;
+end;
+
+definition
+  let F be Graph-yielding Function;
+  attr F is Cycle-like means
+:: GLPACY00:def 7
+
+  for x being object st x in dom F
+    ex G being _Graph st F.x = G & G is Cycle-like;
+end;
+
+registration
+  let C be Cycle-like _Graph;
+  cluster <* C *> -> Cycle-like;
+  cluster NAT --> C -> Cycle-like;
+end;
+
+definition
+  let F be non empty Graph-yielding Function;
+  redefine attr F is Cycle-like means
+:: GLPACY00:def 8
+
+  for x being Element of dom F holds F.x is Cycle-like;
+end;
+
+definition
+  let S be GraphSeq;
+  redefine attr S is Cycle-like means
+:: GLPACY00:def 9
+
+  for n being Nat holds S.n is Cycle-like;
+end;
+
+registration
+  cluster empty -> Cycle-like for Graph-yielding Function;
+  cluster _trivial non-Dmulti loopfull -> Cycle-like
+    for Graph-yielding Function;
+  cluster Cycle-like -> connected for Graph-yielding Function;
+  cluster non empty Cycle-like for GraphSeq;
+end;
+
+registration
+  let F be Cycle-like non empty Graph-yielding Function, x be Element of dom F;
+  cluster F.x -> Cycle-like;
+end;
+
+registration
+  let S be Cycle-like GraphSeq, n be Nat;
+  cluster S.n -> Cycle-like;
+end;
+
+registration
+  let p be Cycle-like Graph-yielding FinSequence, n be Nat;
+  cluster p | n -> Cycle-like;
+  cluster p /^ n -> Cycle-like;
+  let m be Nat;
+  cluster smid(p,m,n) -> Cycle-like;
+  cluster (m,n)-cut p -> Cycle-like;
+end;
+
+registration
+  let p, q be Cycle-like Graph-yielding FinSequence;
+  cluster p ^ q -> Cycle-like;
+  cluster p ^' q -> Cycle-like;
+end;
+
+registration
+  let C1, C2 be Cycle-like _Graph;
+  cluster <* C1, C2 *> -> Cycle-like;
+  let C3 be Cycle-like _Graph;
+  cluster <* C1, C2, C3 *> -> Cycle-like;
+end;
+
+definition
+  let S be Graph-membered set;
+  attr S is Cycle-like means
+:: GLPACY00:def 10
+
+  for G being _Graph st G in S holds G is Cycle-like;
+end;
+
+registration
+  cluster empty -> Cycle-like for Graph-membered set;
+  cluster Cycle-like -> connected for Graph-membered set;
+end;
+
+registration
+  let C1 be Cycle-like _Graph;
+  cluster {C1} -> Cycle-like;
+  let C2 be Cycle-like _Graph;
+  cluster {C1, C2} -> Cycle-like;
+end;
+
+registration
+  let F be Cycle-like Graph-yielding Function;
+  cluster rng F -> Cycle-like;
+end;
+
+registration
+  let X be Cycle-like Graph-membered set;
+  cluster -> Cycle-like for Subset of X;
+end;
+
+registration
+  let X be Cycle-like Graph-membered set, Y be set;
+  cluster X /\ Y -> Cycle-like;
+  cluster X \ Y -> Cycle-like;
+end;
+
+registration
+  let X, Y be Cycle-like Graph-membered set;
+  cluster X \/ Y -> Cycle-like;
+  cluster X \+\ Y -> Cycle-like;
+end;
+
+registration
+  cluster non empty Cycle-like for Graph-membered set;
+end;
+
+registration
+  let S be non empty Cycle-like Graph-membered set;
+  cluster -> Cycle-like for Element of S;
+end;
+
+:: this was essentially proven above with the registrations:
+:: the 1-cycle is the trivial graph with a loop Part I
+theorem :: GLPACY00:33
+  for G2 being _trivial edgeless _Graph, v being Vertex of G2, e being object
+  for G1 being addEdge of G2,v,e,v holds G1 is Cycle-like;
+
+:: connecting endvertices of path graphs creates cycle graphs
+theorem :: GLPACY00:34
+  for P being _finite non _trivial Path-like _Graph
+  for v1,v2 being Element of Endvertices(P), e being object
+  for C being addEdge of P,v1,e,v2
+  st v1 <> v2 & not e in the_Edges_of P
+  holds C is Cycle-like;
+
+:: removing an edge from a cycle results in a path graph
+theorem :: GLPACY00:35
+  for C being Cycle-like _Graph, e being Edge of C
+  for P being removeEdge of C,e holds P is _finite Path-like;
+
+registration
+  let C be Cycle-like _Graph, e be Edge of C;
+  cluster -> _finite Path-like for removeEdge of C,e;
+end;
+
+:: the 1-cycle is the trivial graph with a loop Part II
+:: actually already done with previous cluster
+:: theorem
+  :: for G1 being _trivial Cycle-like _Graph, e being Edge of G1
+  :: for G2 being removeEdge of G1,e holds G2 is _trivial edgeless;
+
+:: the 1-cycle is the trivial graph with a loop Part III
+theorem :: GLPACY00:36
+  for G1 being _trivial Cycle-like _Graph
+  for v being Vertex of G1, e being Edge of G1
+  ex G2 being _trivial edgeless _Graph st G1 is addEdge of G2,v,e,v;
+
+:: all other cycles can be constructed from finite paths
+:: by connecting the endvertices
+theorem :: GLPACY00:37
+  for C being non _trivial Cycle-like _Graph
+  for v1, v2 being Vertex of C, e being Edge of C st e DJoins v1,v2,C
+  ex P being non _trivial _finite Path-like _Graph
+  st not e in the_Edges_of P & C is addEdge of P,v1,e,v2 &
+    Endvertices P = {v1,v2};
+
+theorem :: GLPACY00:38
+  for C being Cycle-like _Graph
+  holds C.order() = 2 iff C is non non-multi;
+
+registration
+  let n be Nat;
+  cluster n-vertex Cycle-like -> n-edge for _Graph;
+  cluster n-edge Cycle-like -> n-vertex for _Graph;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+1)-vertex (n+1)-edge Cycle-like for _Graph;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+2)-vertex Cycle-like -> loopless for _Graph;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+3)-vertex Cycle-like -> simple for _Graph;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+2)-vertex (n+2)-edge loopless Cycle-like for _Graph;
+  cluster (n+3)-vertex (n+3)-edge simple Cycle-like for _Graph;
+end;
+
+registration
+  let n be non zero Nat;
+  cluster n-vertex n-edge Cycle-like for _Graph;
+  cluster (n+1)-vertex Cycle-like -> loopless for _Graph;
+  cluster (n+2)-vertex Cycle-like -> simple for _Graph;
+  cluster (n+1)-vertex (n+1)-edge Cycle-like loopless for _Graph;
+  cluster (n+2)-vertex (n+2)-edge Cycle-like simple for _Graph;
+end;
+
+theorem :: GLPACY00:39
+  for C1 being Cycle-like _Graph, C2 being non acyclic Subgraph of C1
+  holds C1 == C2;
+
+theorem :: GLPACY00:40
+  for G1, G2 being _Graph, F being PGraphMapping of G1, G2
+  st F is isomorphism holds (G1 is Cycle-like iff G2 is Cycle-like);
+
+theorem :: GLPACY00:41
+  for G1, G2 being _Graph st G1 == G2
+  holds G1 is Cycle-like implies G2 is Cycle-like;
+
+theorem :: GLPACY00:42
+  for G1 being _Graph, E being set, G2 being reverseEdgeDirections of G1, E
+  holds G1 is Cycle-like iff G2 is Cycle-like;
+
+theorem :: GLPACY00:43
+  for n being non zero Nat, C1, C2 being n-vertex Cycle-like _Graph
+  holds C2 is C1-isomorphic;
+
+theorem :: GLPACY00:44
+  for n being non zero Nat, C1, C2 being n-edge Cycle-like _Graph
+  holds C2 is C1-isomorphic;
+
+theorem :: GLPACY00:45
+  for P being _finite non _trivial Path-like _Graph, v being object
+  for C being addAdjVertexAll of P,v,Endvertices P
+  st not v in the_Vertices_of P holds C is simple Cycle-like;
+
+theorem :: GLPACY00:46
+  for C being non _trivial Cycle-like _Graph, v being Vertex of C
+  for P being removeVertex of C,v holds P is _finite Path-like;
+
+theorem :: GLPACY00:47
+  for C being simple Cycle-like _Graph, v being Vertex of C
+  ex P being non _trivial Path-like _Graph
+  st not v in the_Vertices_of P & C is addAdjVertexAll of P,v,Endvertices P;
+
+registration
+  cluster 3-vertex simple complete -> Cycle-like for _Graph;
+  cluster 3-vertex Cycle-like -> simple complete chordal for _Graph;
+end;
+
+registration
+  let n be Nat;
+  cluster (n+4)-vertex Cycle-like -> non chordal non complete for _Graph;
+end;
+
+registration
+  let n be non zero Nat;
+  cluster (n+3)-vertex Cycle-like -> non chordal non complete for _Graph;
+end;
+
+registration
+  cluster Cycle-like non complete non chordal for _Graph;
+end;

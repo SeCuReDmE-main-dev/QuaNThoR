@@ -1,0 +1,266 @@
+:: Elementary Number Theory Problems. {P}art {XVI}
+::  by Karol P\kak
+:: 
+:: Received December 14, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies NUMBERS, NAT_1, RELAT_1, FUNCT_1, XXREAL_0, ARYTM_3, XCMPLX_0,
+      CARD_1, INT_1, NEWTON, INT_2, ARYTM_1, SUBSET_1, XBOOLE_0, TARSKI,
+      FINSET_1, ABIAN, ZFMISC_1, POWER, REAL_1, REALSET1, NUMBER06, ORDINAL2,
+      FINSEQ_1, AFINSQ_1, PRE_FF, UPROOTS, NUMBER09, PRE_POLY, NAT_3, FUNCOP_1,
+      CARD_3, ORDINAL4, VALUED_1, RFINSEQ, NUMERAL1, SEQ_1, SEQ_2, FINSEQ_2,
+      PARTFUN3, COMPLEX1, NUMBER10, NUMBER13, EULER_1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, CARD_1, NUMBERS,
+      XCMPLX_0, RELAT_1, FUNCT_1, FINSET_1, VALUED_0, XREAL_0, INT_1, INT_2,
+      NAT_1, XXREAL_0, POWER, NEWTON, ABIAN, SEQ_1, RVSUM_1, AFINSQ_1, PRE_FF,
+      NUMBER06, NAT_D, NUMBER09, WSIERP_1, PRE_POLY, FUNCOP_1, VALUED_1,
+      AFINSQ_2, NAT_3, NUMERAL1, COMPLEX1, RELSET_1, SEQ_2, FINSEQ_1, FINSEQ_2,
+      RECDEF_1, PARTFUN3, RFINSEQ, EULER_1, NUMBER10, NUMBER13;
+ constructors RELSET_1, ABIAN, SERIES_1, PRE_FF, NEWTON03, NUMBER06, NUMBER09,
+      INT_6, NAT_D, WSIERP_1, RECDEF_1, AFINSQ_2, NAT_3, NUMERAL1, SEQ_2,
+      COMSEQ_2, RFINSEQ, NUMBER08, EULER_1, NUMBER10, NUMBER13;
+ registrations ORDINAL1, RELSET_1, FINSET_1, XCMPLX_0, XXREAL_0, XREAL_0,
+      NAT_1, INT_1, MEMBERED, VALUED_0, CARD_1, NEWTON, NEWTON03, ABIAN, NAT_6,
+      POWER, XBOOLE_0, FUNCT_1, FINSEQ_1, RVSUM_1, NUMBER06, NUMBER09,
+      WSIERP_1, AFINSQ_1, AFINSQ_2, NEWTON02, NEWTON04, NUMBER03, NAT_3,
+      FUNCOP_1, RELAT_1, FINSEQ_9, NUMBER10, RVSUM_4, NEWTON05, NUMBER13;
+ requirements REAL, NUMERALS, BOOLE, SUBSET, ARITHM;
+
+
+begin :: Problem 63
+:: Construction of a member in an arithmetic progression
+:: that has a given sequence of digits.
+
+reserve a,b,d,n,k,i,j,x,s for Nat;
+
+theorem :: NUMBER16:1
+  for f,g be XFinSequence of NAT holds
+    value(f^g,b) = value(f,b) + value(g,b) * b|^(len f);
+
+theorem :: NUMBER16:2
+  b > 1 & n >0 & n*(b|^k) <= x < (n+1)*(b|^k)
+    implies digits(n,b) = digits(x,b)/^k;
+
+theorem :: NUMBER16:3
+  b > 0 & d > 1 & s > 0 implies
+    ex m,i being Nat st digits(ArProg (a,b).m,d)/^i = digits(s,d);
+
+theorem :: NUMBER16:4 :: Problem 63
+  b > 0 & s > 0 implies
+    ex m,i being Nat st digits(ArProg (a,b).m,10)/^i = digits(s,10);
+
+begin :: Problem 67
+:: Construct an infinite set of relatively prime numbers
+:: in a given arithmetic progression
+
+theorem :: NUMBER16:5 :: Problem 67
+  for a,b being Nat st a > 0 & a,b are_coprime
+    ex N be infinite Subset of NAT st
+       for n,m be Nat st n in N & m in N & n <> m holds
+          ArProg(b,a).n,ArProg(b,a).m are_coprime;
+
+begin :: Problem 68
+:: Construction of an infinite set of numbers with exactly
+:: the same prime divisors in a given arithmetic progression.
+
+theorem :: NUMBER16:6 :: Problem 68
+  a > 0 & b > 0 implies
+    ex N be infinite Subset of NAT st
+       for n,m be Nat,p be Prime st n in N & m in N  holds
+          p divides ArProg(b,a).n iff p divides ArProg(b,a).m;
+
+begin :: Problem 65
+:: Construct an arithmetic progression with the least difference
+:: without fibonacci numbers.
+
+theorem :: NUMBER16:7
+  Fib 6 = 8 & Fib 7 = 13 & Fib 8 = 21 & Fib 9 = 34 &
+  Fib 10 = 55 & Fib 11 = 89 & Fib 12 = 144 & Fib 13 = 233 &
+  Fib 14 = 377 & Fib 15 = 610 & Fib 16 = 987 & Fib 17 = 1597 &
+  Fib 18 = 2584 & Fib 19 = 4181 & Fib 20 = 6765 & Fib 21 = 10946 &
+  Fib 22 = 17711 & Fib 23 = 28657 & Fib 24 = 46368 & Fib 25 = 75025;
+
+theorem :: NUMBER16:8
+  Fib(n+2) >= n;
+
+theorem :: NUMBER16:9
+  k < n <= 7 implies ex i st Fib(i) mod n = k;
+
+theorem :: NUMBER16:10
+  for j being Nat st 0 < j <= 7 ex i being Nat st
+    i>0 &
+    Fib(0),Fib(i) are_congruent_mod j &
+    Fib(1),Fib(i+1) are_congruent_mod j;
+
+theorem :: NUMBER16:11
+  for n,i,j st
+    Fib(n),Fib(n+i) are_congruent_mod j &
+    Fib(n+1),Fib(n+i+1) are_congruent_mod j
+  for x,y be Nat st x,y are_congruent_mod i holds
+    Fib(x),Fib(y) are_congruent_mod j;
+
+theorem :: NUMBER16:12
+  for i,j,k being Nat st 0 < j & k < i &
+     (for x,y being Nat st x,y are_congruent_mod j holds
+       Fib(x),Fib(y) are_congruent_mod i) &
+      (for x be Nat st x < j holds Fib(x) mod i <> k)
+  holds
+    for m be Nat holds not ArProg (k,i).m is Fibonacci;
+
+theorem :: NUMBER16:13
+  Fib(0),Fib(12) are_congruent_mod 8 &
+  Fib(1),Fib(12+1) are_congruent_mod 8 &
+  for x be Nat st x < 12 holds Fib(x) mod 8 <> 4 & Fib(x) mod 8 <> 6;
+
+theorem :: NUMBER16:14 :: Problem 65
+  (for i,j st 0 < i <= 7
+    ex k st ArProg (j,i).k is Fibonacci) &
+   for k holds not ArProg (4,8).k is Fibonacci;
+
+begin :: Problem 66
+:: Construct an arithmetic progression ak+b (k=0,1,2,...)
+:: without Fibonacci numbers where a,b are coprime.
+
+theorem :: NUMBER16:15 :: Problem 66
+  4,11 are_coprime &
+  for m being Nat holds not ArProg (4,11).m is Fibonacci;
+
+begin :: Problem 96
+:: Find the largest prime number in the sequence 1, 31, 331, 3331, ...
+
+theorem :: NUMBER16:16
+  value(<%1%>^(n-->3),10) = (10|^(n+1)-7)/3;
+
+theorem :: NUMBER16:17
+  ex k be Nat st 17 divides k = (10|^(16*n+9)-7)/3;
+
+theorem :: NUMBER16:18
+  33331 is prime;
+
+theorem :: NUMBER16:19
+  333331 is prime;
+
+theorem :: NUMBER16:20 :: Problem 96
+  (for n be non zero Nat st n < 6 holds value(<%1%>^(n-->3),10) is prime) &
+    value(<%1%>^(8-->3),10) is non prime &
+  {value(<%1%>^(n-->3),10) where n is Nat:
+     value(<%1%>^(n-->3),10) is non prime} is infinite;
+
+begin :: Product of Different Primes Selected Properties
+
+theorem :: NUMBER16:21
+  for n be non zero Nat, p be Prime st support pfexp n = {p} holds
+     n = p |^ (pfexp n).p;
+
+theorem :: NUMBER16:22
+  for n being non zero Nat holds
+    rng pfexp n c= {0,1} & card support (pfexp n) = 1
+  iff n is prime;
+
+theorem :: NUMBER16:23
+  for n be non zero Nat holds 0 in rng pfexp n;
+
+theorem :: NUMBER16:24
+  for n,m be non zero Nat st n,m are_coprime holds
+    rng pfexp (n*m) = rng pfexp n \/ rng pfexp m;
+
+theorem :: NUMBER16:25
+  Product primesFinS (n+1) = Product (primesFinS n) * (primenumber n);
+
+theorem :: NUMBER16:26
+  for k be Nat holds
+     2|^k <= Product primesFinS k;
+
+theorem :: NUMBER16:27
+  2 <= n implies ex k be non zero Nat st
+    Product primesFinS k <= n < Product primesFinS (k+1);
+
+theorem :: NUMBER16:28
+  for p be Prime, k be Nat holds
+     (p |-count Product primesFinS k = 1 iff primeindex p < k) &
+     (p |-count Product primesFinS k = 0 iff primeindex p >= k);
+
+theorem :: NUMBER16:29
+  for p be Prime, k be Nat holds
+    p divides Product primesFinS k iff primeindex p < k;
+
+theorem :: NUMBER16:30
+  for p be Prime, k be Nat st k <= primeindex p
+    holds p,Product primesFinS k are_coprime;
+
+theorem :: NUMBER16:31
+  rng prime_exponents Product primesFinS n c= {0,1} &
+    card support (prime_exponents Product primesFinS n) = n;
+
+theorem :: NUMBER16:32
+  for n,m being Nat st
+    for k being Nat st k < m holds primenumber k divides n
+  holds Product primesFinS m divides n;
+
+theorem :: NUMBER16:33
+  for n,m being Nat holds
+    n < m iff Product primesFinS n < Product primesFinS m;
+
+begin :: Problem 93
+:: Prove that the ratio of the smallest prime number that does not
+:: divide n to n tends to zero as n increases to infinity
+
+theorem :: NUMBER16:34 :: Problem 93
+  for r be Real_Sequence st
+    for n be non zero Nat ex q be Prime st
+       r.n = q/n & not q divides n &
+       for p be Prime st not p divides n holds q <= p
+  holds r is convergent & lim r = 0;
+
+begin :: Problem 95
+:: Prove that for all sufficiently large n, between n and 2n
+:: there exists at least one number which is a product of s
+:: different primes for a given s
+
+theorem :: NUMBER16:35 :: Problem 95
+  for s be non zero Nat
+    for n be Nat st n > Product primesFinS s
+      ex p be Nat st n < p < 2*n &
+        rng prime_exponents p c= {0,1} &
+        card support (prime_exponents p) = s;
+
+begin :: Problem 102
+:: Prove that the Chebyshev theorem is equivalent to the theorem
+:: that for integers n > 1 the expansion of n! into prime factors
+:: contains at least one prime with exponent 1.
+
+theorem :: NUMBER16:36
+  for n being Nat, p being Prime st p <= n & p|^2 divides n! holds 2*p <= n;
+
+theorem :: NUMBER16:37
+  0 < a < b <= n implies a*b divides n!;
+
+theorem :: NUMBER16:38
+  for p be Prime st 2 < n & n div 2 < p <= 2*(n div 2) holds
+    p |-count (n!) = 1;
+
+theorem :: NUMBER16:39 ::Problem 102
+  (for n being Nat st n > 1 ex p being Prime st n < p & p < 2*n)
+iff
+  (for n being Nat st n > 1 ex p being Prime st p |-count (n!) = 1);
+
+begin :: Problem 103
+:: Prove equivalence, there are two primes between n and 2n where 5 < n,
+:: and the expansion of n! into prime factors contains at least two primes
+:: with exponent 1 where n > 11.
+
+theorem :: NUMBER16:40 :: Problem 103
+  (for n being Nat st n > 5 ex p,q being Prime st n < p < q < 2*n)
+implies
+  (for n being Nat st n > 10 ex p,q being Prime st
+     p < q & p |-count (n!) = 1 & q |-count (n!) = 1);

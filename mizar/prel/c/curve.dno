@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<Notations>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="RELAT_1"/>
+<ArticleID name="FUNCT_1"/>
+<ArticleID name="XBOOLE_0"/>
+<ArticleID name="ZFMISC_1"/>
+<ArticleID name="SUBSET_1"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="ORDINAL1"/>
+<ArticleID name="NUMBERS"/>
+<ArticleID name="XREAL_0"/>
+<ArticleID name="CURVE"/>
+</Signature>
+<Vocabularies>
+<Vocabulary>
+<ArticleID name="CURVE"/>
+<SymbolCount kind="G" nr="0"/>
+<SymbolCount kind="K" nr="0"/>
+<SymbolCount kind="L" nr="0"/>
+<SymbolCount kind="M" nr="0"/>
+<SymbolCount kind="O" nr="1"/>
+<SymbolCount kind="R" nr="0"/>
+<SymbolCount kind="U" nr="0"/>
+<SymbolCount kind="V" nr="0"/>
+</Vocabulary>
+</Vocabularies>
+<Pattern kind="K" nr="1" aid="CURVE" constrkind="K" constrnr="50">
+<Format kind="O" symbolnr="1" argnr="4" leftargnr="0"/>
+<ArgTypes>
+<Typ kind="M" nr="1">
+<Cluster>
+<Adjective nr="24"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="1">
+<Cluster>
+<Adjective nr="24"/>
+</Cluster>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster>
+<Adjective nr="6"/>
+</Cluster>
+<Func kind="K" nr="19">
+<Func kind="K" nr="20">
+<Func kind="K" nr="43"/>
+<Func kind="K" nr="43"/>
+</Func>
+</Func>
+</Typ>
+<Typ kind="M" nr="3">
+<Cluster>
+<Adjective nr="6"/>
+</Cluster>
+<Func kind="K" nr="19">
+<Func kind="K" nr="20">
+<Func kind="K" nr="43"/>
+<Func kind="K" nr="43"/>
+</Func>
+</Func>
+</Typ>
+</ArgTypes>
+<Visible>
+<Int x="3"/>
+<Int x="4"/>
+<Int x="1"/>
+<Int x="2"/>
+</Visible>
+</Pattern>
+</Notations>

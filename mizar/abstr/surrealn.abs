@@ -1,0 +1,539 @@
+:: Surreal Dyadic and Real Numbers: A Formal Construction
+::  by Karol P\kak
+:: 
+:: Received April 10, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies RELAT_1, TARSKI, XBOOLE_0, SUBSET_1, XXREAL_0, ARYTM_3, FUNCT_1,
+      CARD_1, ORDINAL1, PBOOLE, MEMBERED, MEMBER_1, ZFREFLE1, VECTSP_1,
+      FUNCT_2, NUMBERS, FINSET_1, NAT_1, ARYTM_1, FUNCOP_1, MATHMORP, GLIB_000,
+      WAYBEL_3, INT_1, URYSOHN1, REAL_1, ABIAN, NEWTON, RAT_1, SURREAL0,
+      SURREALO, SURREALN;
+ notations RAT_1, MEMBERED, TARSKI, XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1,
+      RELSET_1, PBOOLE, ORDINAL1, FUNCT_2, FINSET_1, CARD_1, NUMBERS, XCMPLX_0,
+      XXREAL_0, XREAL_0, INT_1, NAT_D, NEWTON, ORDINAL7, ABIAN, SURREAL0,
+      SURREALO, SURREALR, SURREALI;
+ constructors RELSET_1, NEWTON, ORDERS_5, NAT_D, ABIAN, ORDINAL7, SURREALO,
+      SURREALR, SURREALI;
+ registrations XBOOLE_0, RELAT_1, SUBSET_1, XTUPLE_0, ORDINAL1, FUNCT_1, NAT_1,
+      XREAL_0, CARD_1, FINSET_1, FUNCOP_1, ORDINAL7, FOMODEL0, INT_1, XXREAL_0,
+      NEWTON, NUMBERS, XCMPLX_0, ABIAN, NAT_3, RAT_1, MEMBERED, SURREAL0,
+      SURREALO, SURREALR, SURREALI;
+ requirements BOOLE, SUBSET, NUMERALS, ARITHM, REAL;
+
+
+begin :: Mappings between Integers and Surreal Integers
+
+reserve A,B,O for Ordinal,
+        o for object,
+        x,y,z for Surreal,
+        n,m for Nat;
+
+definition
+  func uInt -> ManySortedSet of INT means
+:: SURREALN:def 1
+    it.0 = 0_No & it.(n+1) = [{it.n},{}] & it.-(n+1) = [{},{it.-n}];
+end;
+
+theorem :: SURREALN:1
+  uInt.n in Day n & uInt.-n in Day n;
+
+registration
+  let i be Integer;
+  cluster uInt.i -> surreal;
+end;
+
+theorem :: SURREALN:2
+  x in Day n implies uInt.-n <= x <= uInt.n;
+
+theorem :: SURREALN:3
+  for i,j be Integer st i < j holds uInt.i < uInt.j;
+
+registration
+  let n be positive Nat;
+  cluster uInt.n -> positive;
+end;
+
+theorem :: SURREALN:4
+  n = born uInt.n & n = born uInt.-n;
+
+theorem :: SURREALN:5
+  born_eq uInt.n = n & born_eq uInt.-n = n;
+
+theorem :: SURREALN:6
+  0_No <= uInt.n;
+
+theorem :: SURREALN:7
+  L_(uInt.-n) = {} = R_(uInt.n);
+
+registration
+  let i be Integer;
+  cluster uInt.i -> uniq-surreal;
+end;
+
+theorem :: SURREALN:8
+  for i,j be Integer st uInt.i = uInt.j holds i=j;
+
+theorem :: SURREALN:9
+  for i,j be Integer holds i < j iff uInt.i < uInt.j;
+
+theorem :: SURREALN:10
+  for i be Integer, x holds
+     [{uInt.(i-1)},{uInt.(i+1)}] is Surreal &
+     (x = [{uInt.(i-1)},{uInt.(i+1)}] implies x == uInt.i);
+
+theorem :: SURREALN:11
+  uInt.1 = 1_No;
+
+theorem :: SURREALN:12
+  for i be Integer holds - uInt.i = uInt.-i;
+
+theorem :: SURREALN:13
+  (uInt.n) + (uInt.m) = uInt.(n+m);
+
+theorem :: SURREALN:14
+  for i,j be Integer holds (uInt.i) + (uInt.j) == uInt.(i+j);
+
+theorem :: SURREALN:15
+  for i,j be Integer holds (uInt.i) * (uInt.j) == uInt.(i*j);
+
+theorem :: SURREALN:16
+  x = [{y},{}] & y < 0_No implies x == 0_No;
+
+theorem :: SURREALN:17
+  x = [{y},{}] & born x is finite & 0_No <= y implies
+    ex n be Nat st x == uInt.(n+1) & uInt.n <= y < uInt.(n+1) & n in born x;
+
+begin :: Dyadic Numbers
+
+definition
+  let r be Rational;
+  attr r is dyadic-like means
+:: SURREALN:def 2
+    ex n be Nat st denominator(r) = 2 |^ n;
+end;
+
+theorem :: SURREALN:18
+  for r be Rational holds
+    r is dyadic-like iff ex i be Integer, n be Nat st r = i / (2|^n);
+
+registration
+  let i be Integer, n be Nat;
+  cluster i / (2|^n) -> dyadic-like;
+end;
+
+registration
+  cluster -> dyadic-like for Integer;
+end;
+
+registration
+  let x be dyadic-like Rational;
+  cluster - x -> dyadic-like;
+  let y be dyadic-like Rational;
+  cluster x+y -> dyadic-like;
+  cluster x+y -> dyadic-like;
+  cluster x * y -> dyadic-like;
+end;
+
+definition
+  func DYADIC -> set means
+:: SURREALN:def 3
+    o in it iff o is dyadic-like Rational;
+end;
+
+registration
+  cluster DYADIC -> rational-membered non empty;
+end;
+
+registration
+  cluster -> dyadic-like for Element of DYADIC;
+end;
+
+definition
+  mode Dyadic is dyadic-like Rational;
+end;
+
+reserve d,d1,d2 for Dyadic;
+
+definition
+  let n be Nat;
+  func DYADIC(n) -> Subset of DYADIC means
+:: SURREALN:def 4
+    d in it iff ex i be Integer st d = i / (2|^n);
+end;
+
+reserve i,j for Integer,
+        n,m,p for Nat;
+
+theorem :: SURREALN:19
+  n <= m implies DYADIC(n) c= DYADIC(m);
+
+theorem :: SURREALN:20
+  d in DYADIC(n+1)\DYADIC(n) iff ex i be Integer st d = (2*i+1) / 2|^(n+1);
+
+theorem :: SURREALN:21
+  INT = DYADIC(0);
+
+theorem :: SURREALN:22
+  rng uInt c= Day NAT;
+
+theorem :: SURREALN:23
+  d is Integer or ex p,i st d = (2*i+1) / 2|^(p+1);
+
+begin :: Mappings between Dyadic Numbers and Surreal Dyadic Numbers
+
+definition
+  func uDyadic -> ManySortedSet of DYADIC means
+:: SURREALN:def 5
+    it.i = uInt.i &
+    it.((2*j+1)/(2|^(p+1))) = [{it.(j/(2|^p))},{it.((j+1)/(2|^p))}];
+end;
+
+registration
+  let d;
+  cluster uDyadic.d -> surreal;
+end;
+
+theorem :: SURREALN:24
+  d1 < d2 iff uDyadic.d1 < uDyadic.d2;
+
+theorem :: SURREALN:25
+  (0_No <= z & z in Day n & not z == uDyadic.n implies
+     ex x,y,p be Nat st
+        z == uDyadic.(x + y / (2|^p)) & y < 2|^p & x+p < n) &
+  for x,y,p be Nat st y < 2|^p & x+p < n holds
+      0_No <= uDyadic.(x + y / (2|^p)) in Day n;
+
+theorem :: SURREALN:26
+  2*m+1 < 2|^p implies born uDyadic.(n + (2*m+1) / (2|^p)) = n+p+1;
+
+theorem :: SURREALN:27
+  uDyadic.-d = - uDyadic.d;
+
+theorem :: SURREALN:28
+  0 <= d & not d is Integer implies
+    ex n,m,p be Nat st d = n + (2*m+1)/(2|^(p+1)) & 2*m+1 < 2|^(p+1);
+
+theorem :: SURREALN:29
+  0 <= d iff 0_No <= uDyadic.d;
+
+theorem :: SURREALN:30
+  uDyadic.d in born_eq_set uDyadic.d;
+
+theorem :: SURREALN:31
+  born x is finite & card (L_x) (+) card (R_x) c= 1 implies
+    ex i be Integer st x == uInt.i;
+
+theorem :: SURREALN:32
+  for x1,x2,y1,y2,p1,p2 be Nat st
+    x1 + y1 / (2|^p1) = x2 + y2 / (2|^p2) & y1 < 2|^p1 & y2 < 2|^p2
+  holds x1=x2;
+
+theorem :: SURREALN:33  :::
+  for x1,x2,y1,y2,p1,p2 be Nat st
+    x1 + y1 / (2|^p1) < x2 + y2 / (2|^p2) & y1 < 2|^p1 & y2 < 2|^p2
+  holds x1 <= x2;
+
+theorem :: SURREALN:34  :::
+  for x1,x2,p1,p2 be Nat st (2*x1+1) / (2|^p1) = x2 / (2|^p2)
+    holds p1 <= p2;
+
+theorem :: SURREALN:35
+  x in Day n implies ex d be Dyadic st x == uDyadic.d & uDyadic.d in Day n;
+
+theorem :: SURREALN:36
+  ex n st uDyadic.d in Day n;
+
+registration
+  let d;
+  cluster uDyadic.d -> uniq-surreal;
+end;
+
+theorem :: SURREALN:37
+  x is uSurreal & born x is finite iff ex d be Dyadic st x = uDyadic.d;
+
+theorem :: SURREALN:38
+  for i be Integer,p be Nat,x be Surreal holds
+     [{uDyadic.(i / (2|^p))},{uDyadic.((i+2) / (2|^p))}] is Surreal &
+      (x = [{uDyadic.(i / (2|^p))},{uDyadic.((i+2) / (2|^p))}]
+       implies x == uDyadic.((i+1) / (2|^p)));
+
+theorem :: SURREALN:39
+  uDyadic.d1 + uDyadic.d2 == uDyadic.(d1+d2);
+
+theorem :: SURREALN:40
+  uDyadic.d1 * uDyadic.d2 == uDyadic.(d1*d2);
+
+begin :: Mappings between Real Numbers and Surreal Real Numbers
+
+reserve r,r1,r2 for Real;
+
+definition
+  func sReal -> ManySortedSet of REAL means
+:: SURREALN:def 6
+      it.r = [the set of all uDyadic.( [/ r*(2|^n)-1 \] / (2|^n) ),
+              the set of all uDyadic.( [\ r*(2|^m)+1 /] / (2|^m) )];
+end;
+
+theorem :: SURREALN:41  :::
+  [/ r*(2|^n)-1\] / (2|^n) < r < [\ r*(2|^n)+1/] / (2|^n);
+
+registration
+  let r;
+  cluster sReal.r -> surreal;
+end;
+
+definition
+   func uReal -> ManySortedSet of REAL means
+:: SURREALN:def 7
+     it.r = Unique_No sReal.r;
+end;
+
+registration
+  let r;
+  cluster uReal.r -> surreal;
+end;
+
+registration
+  let r;
+  cluster uReal.r -> uniq-surreal;
+end;
+
+theorem :: SURREALN:42
+  x in L_(sReal.r) iff ex n st x = uDyadic.([/ r*(2|^n)-1\] / (2|^n));
+
+theorem :: SURREALN:43
+  x in R_(sReal.r) iff ex n st x = uDyadic.([\ r*(2|^n)+1/] / (2|^n));
+
+theorem :: SURREALN:44
+  uDyadic.([/ r*(2|^n)-1\] / (2|^n))
+    < sReal.r <
+      uDyadic.([\ r*(2|^n)+1/] / (2|^n));
+
+theorem :: SURREALN:45  :::
+  for i1,i2 be Integer, n1,n2 be Nat st i1/(2|^n1) < i2/(2|^n2)
+    holds
+       i1/(2|^n1) < (i1*(2|^n2)*2+1)/(2|^(n1+n2+1))
+         <= (i2*(2|^n1)*2-1)/(2|^(n1+n2+1)) < i2/(2|^n2);
+
+theorem :: SURREALN:46
+  sReal.d == uDyadic.d = uReal.d;
+
+theorem :: SURREALN:47
+  uReal.0 = 0_No;
+
+theorem :: SURREALN:48
+  uReal.1 = 1_No;
+
+theorem :: SURREALN:49
+  born (sReal.r) c= omega;
+
+theorem :: SURREALN:50
+  sReal.r1 < sReal.r2 iff r1 < r2;
+
+theorem :: SURREALN:51
+  uReal.r1 < uReal.r2 iff r1 < r2;
+
+registration
+  let r be positive Real;
+  cluster uReal.r -> positive;
+end;
+
+theorem :: SURREALN:52
+  born uReal.r = omega iff not r is Dyadic;
+
+theorem :: SURREALN:53  :::
+  r1 < r2 implies
+    ex n st [\r1*(2|^n)+1/] / (2|^n) < r2;
+
+theorem :: SURREALN:54  :::
+  r1 < r2 implies
+    ex n st r1 < [/r2*(2|^n)-1\] / (2|^n);
+
+theorem :: SURREALN:55
+  uReal.r1 + uReal.r2 == uReal.(r1+r2);
+
+theorem :: SURREALN:56
+  - uReal.r == uReal.-r;
+
+theorem :: SURREALN:57
+  uReal.r1 * uReal.r2 == uReal.(r1*r2);
+
+theorem :: SURREALN:58
+  n>0 implies (uInt.n)" == uReal.(1/n);
+
+begin ::*Real Surreal Numbers
+
+definition
+  let x be Surreal;
+  func real_qua x -> Surreal means
+:: SURREALN:def 8
+    L_ it = the set of all x - (uInt.n)" where n is positive Nat &
+    R_ it = the set of all x + (uInt.n)" where n is positive Nat;
+end;
+
+definition
+  let x be Surreal;
+  attr x is *real means
+:: SURREALN:def 9
+    x == real_qua x & ex n be Nat st uInt.-n < x < uInt.n;
+end;
+
+theorem :: SURREALN:59
+  for n be positive Nat holds
+    x - (uInt.n)" < real_qua x < x+ (uInt.n)";
+
+theorem :: SURREALN:60
+  x == y implies real_qua x == real_qua y;
+
+theorem :: SURREALN:61
+  x==y & x is *real implies y is *real;
+
+registration
+  let r be Real;
+  cluster sReal.r -> *real;
+  cluster uReal.r -> *real;
+end;
+
+registration
+  cluster *real for uSurreal;
+end;
+
+theorem :: SURREALN:62
+  x is *real iff ex r st x == uReal.r;
+
+registration
+  let x be *real Surreal;
+  cluster -x -> *real;
+  let y be *real Surreal;
+  cluster x+y -> *real;
+  cluster x*y -> *real;
+end;
+
+begin :: Surreal Ordinals
+
+definition
+  let x be Surreal;
+  attr x is No_ordinal means
+:: SURREALN:def 10
+    R_x = {};
+end;
+
+registration
+  cluster 0_No -> No_ordinal;
+  let n;
+  cluster uInt.n -> No_ordinal;
+end;
+
+registration
+  cluster No_ordinal for uSurreal;
+end;
+
+definition
+  let A be Ordinal;
+  func No_Ordinal_op A -> set means
+:: SURREALN:def 11
+    ex S be Sequence st it = S.A & dom S = succ A &
+      (for O st succ O in succ A holds S.succ O = [{S.O},{}]) &
+      for O st O in succ A & O is limit_ordinal holds
+         S.O = [rng (S|O),{}];
+end;
+
+theorem :: SURREALN:63
+  for S be Sequence st dom S = succ A &
+    (for O st succ O in succ A holds S.succ O = [{S.O},{}]) &
+    (for O st O in succ A & O is limit_ordinal holds S.O = [rng (S|O),{}])
+  for O st O in succ A holds S.O = No_Ordinal_op O;
+
+theorem :: SURREALN:64
+  No_Ordinal_op 0 = 0_No;
+
+theorem :: SURREALN:65
+  No_Ordinal_op succ A = [{No_Ordinal_op A},{}];
+
+theorem :: SURREALN:66
+  A is limit_ordinal implies
+    ex X be set st No_Ordinal_op A = [X,{}] &
+       (for o holds o in X iff ex B st B in A & o = No_Ordinal_op B);
+
+theorem :: SURREALN:67
+  No_Ordinal_op A in Day A;
+
+registration
+  let A;
+  cluster No_Ordinal_op A -> surreal;
+end;
+
+registration
+  let A;
+  cluster No_Ordinal_op A -> No_ordinal;
+end;
+
+theorem :: SURREALN:68
+  No_Ordinal_op A < No_Ordinal_op B iff A in B;
+
+theorem :: SURREALN:69
+  x in Day A implies x <= No_Ordinal_op A;
+
+theorem :: SURREALN:70
+  born No_Ordinal_op A = A;
+
+theorem :: SURREALN:71
+  x in L_(No_Ordinal_op A) implies ex B st B in A & x = No_Ordinal_op B;
+
+theorem :: SURREALN:72
+  uInt.n = No_Ordinal_op n;
+
+registration
+  let O be No_ordinal Surreal;
+  cluster Unique_No O -> No_ordinal;
+end;
+
+definition
+  let A be Ordinal;
+  func No_uOrdinal_op A -> No_ordinal uSurreal equals
+:: SURREALN:def 12
+    Unique_No No_Ordinal_op A;
+end;
+
+theorem :: SURREALN:73
+   No_uOrdinal_op A == No_Ordinal_op A & born No_uOrdinal_op A = A;
+
+theorem :: SURREALN:74
+  No_uOrdinal_op A in Day A;
+
+theorem :: SURREALN:75
+  No_uOrdinal_op A < No_uOrdinal_op B iff A in B;
+
+theorem :: SURREALN:76
+  x in Day A implies x <= No_uOrdinal_op A;
+
+theorem :: SURREALN:77
+  x is No_ordinal implies ex A st x == No_uOrdinal_op A;
+
+theorem :: SURREALN:78
+  uInt.n = No_uOrdinal_op n;
+
+theorem :: SURREALN:79
+  No_uOrdinal_op succ A = [{No_uOrdinal_op A},{}];
+
+theorem :: SURREALN:80
+  ex x be No_ordinal Surreal st
+      born x = A & No_uOrdinal_op A == x &
+     (for o holds o in L_x iff ex B st B in A & o = No_uOrdinal_op B);
+
+registration
+  let alpha,beta be No_ordinal Surreal;
+  cluster alpha + beta -> No_ordinal;
+  cluster alpha * beta -> No_ordinal;
+end;

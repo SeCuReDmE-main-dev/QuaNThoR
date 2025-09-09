@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<ReductionRegistrations>
+<Signature>
+<ArticleID name="HIDDEN"/>
+<ArticleID name="TARSKI"/>
+<ArticleID name="XBOOLE_0"/>
+<ArticleID name="ZFMISC_1"/>
+<ArticleID name="SUBSET_1"/>
+<ArticleID name="RELAT_1"/>
+<ArticleID name="XTUPLE_0"/>
+<ArticleID name="FUNCT_1"/>
+<ArticleID name="ORDINAL1"/>
+<ArticleID name="PARTFUN1"/>
+<ArticleID name="SURREAL0"/>
+<ArticleID name="SURREALO"/>
+<ArticleID name="SURREALR"/>
+<ArticleID name="SURREALS"/>
+</Signature>
+<Reduction aid="SURREALS" nr="1">
+<Func kind="K" nr="106">
+<Func kind="K" nr="75"/>
+</Func>
+<Func kind="K" nr="75"/>
+</Reduction>
+<Reduction aid="SURREALS" nr="2">
+<Func kind="K" nr="106">
+<Func kind="K" nr="77"/>
+</Func>
+<Func kind="K" nr="77"/>
+</Reduction>
+<Reduction aid="SURREALS" nr="3">
+<Func kind="K" nr="106">
+<Func kind="K" nr="84">
+<Func kind="K" nr="77"/>
+</Func>
+</Func>
+<Func kind="K" nr="84">
+<Func kind="K" nr="77"/>
+</Func>
+</Reduction>
+</ReductionRegistrations>

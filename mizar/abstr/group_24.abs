@@ -1,0 +1,960 @@
+:: Semidirect Products of Groups
+::  by Alexander M. Nelson
+:: 
+:: Received May 27, 2025
+:: Copyright (c) 2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies TARSKI, BINOP_2, BINOP_1, XBOOLE_0, FUNCT_1, RELAT_1, ALGSTR_0,
+      FUNCOP_1, SUBSET_1, FUNCT_2, STRUCT_0, ZFMISC_1, CARD_1, CARD_3,
+      MONOID_0, GROUP_1, GROUP_2, FINSEQ_1, GROUP_6, MSSUBFAM, RLVECT_2,
+      PRE_TOPC, WELLORD1, AUTGROUP, ARYTM_1, ARYTM_3, GRAPH_1, FINSET_1,
+      GROUP_4, EQREL_1, NATTRA_1, NEWTON, REALSET1, ORDINAL1, NUMBERS, NAT_1,
+      XCMPLX_0, XXREAL_0, ABIAN, COUNTERS, MOD_4, EXCHSORT, INT_1, GROUP_5,
+      GR_CY_1, GROUP_24;
+ notations TARSKI, XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ZFMISC_1, REALSET1,
+      ORDINAL1, CARD_1, FINSET_1, CARD_3, FINSEQ_1, RELSET_1, PARTFUN1,
+      FUNCT_2, NUMBERS, XCMPLX_0, XXREAL_0, ABIAN, COUNTERS, INT_1, NAT_D,
+      STRUCT_0, ALGSTR_0, MONOID_0, GROUP_1, GR_CY_1, GROUP_2, GROUP_3,
+      GROUP_4, GROUP_5, GROUP_6, PRALG_1, BINOP_1, AUTGROUP, GROUP_7, GROUP_22;
+ constructors BINOP_2, REALSET1, ABIAN, COUNTERS, GROUP_4, GROUP_5, MONOID_0,
+      PRALG_1, RELSET_1, AUTGROUP, GROUP_7, NAT_D, GROUP_22;
+ registrations XBOOLE_0, RELAT_1, FUNCT_1, FINSEQ_1, STRUCT_0, GROUP_1,
+      GROUP_2, GROUP_3, MONOID_0, XREAL_0, ORDINAL1, INT_1, RELSET_1, FUNCT_2,
+      NAT_1, NUMBERS, XXREAL_0, CARD_1, ABIAN, NEWTON03, COUNTERS, FUNCOP_1,
+      GROUP_6, CARD_2, CARD_3, GROUP_7, GR_CY_1, GR_CY_2, TOPGRP_1, TOPALG_5,
+      MOD_4, FOMODEL0, AUTGROUP;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+
+
+begin :: Preliminaries
+
+theorem :: GROUP_24:1
+  for a,b being Nat st a < b & b <> 0
+  holds (2 * a) div b < 2;
+
+ reserve G, A for Group;
+ reserve phi for Homomorphism of A,AutGroup(G);
+
+theorem :: GROUP_24:2  ::: GROUP_1
+  for M being non empty unital multMagma
+  st (for h being Element of M ex g being Element of M st h * g = 1_M
+  & g * h = 1_M)
+  holds M is Group-like;
+
+theorem :: GROUP_24:3  :: TH1
+  for G being Group
+  for H being Subgroup of G
+  holds the multMagma of H is strict Subgroup of G;
+
+theorem :: GROUP_24:4  :: TH2
+  for G being Group
+  for N being normal Subgroup of G
+  holds the multMagma of N is strict normal Subgroup of G;
+
+theorem :: GROUP_24:5 :: TH3
+  for G being Group
+  for H being Subgroup of G
+  for N being normal Subgroup of G
+  st N is Subgroup of H
+  holds the multMagma of N = the multMagma of (H,N)`*`;
+
+theorem :: GROUP_24:6  :: TH4
+  for G being Group
+  for H1,H2,K being Subgroup of G
+  for K1,K2 being Subgroup of K
+  st the multMagma of H1 = the multMagma of K1
+  & the multMagma of H2 = the multMagma of K2
+  holds H1 /\ H2 = K1 /\ K2;
+
+theorem :: GROUP_24:7  :: TH5
+  for G being Group
+  for H1,H2,K being Subgroup of G
+  for K1,K2 being Subgroup of K
+  st the multMagma of H1 = the multMagma of K1
+  & the multMagma of H2 = the multMagma of K2
+  holds H1 * H2 = K1 * K2;
+
+theorem :: GROUP_24:8
+  for G being Group
+  for A being Subset of G st A = the carrier of G
+  holds gr A = the multMagma of G;
+
+theorem :: GROUP_24:9 :: TH51
+  A, the multMagma of A are_isomorphic;
+
+theorem :: GROUP_24:10
+  for G being Group
+  for N being normal Subgroup of G
+  for g1,g2 being Element of G
+  st g1 * N = g2 * N
+  ex n being Element of G
+  st n in N & g1 = g2 * n;
+
+theorem :: GROUP_24:11
+  for G being Group
+  for H1,H2 being Subgroup of G
+  holds H1 * H2 c= the carrier of H1 "\/" H2
+  & H2 * H1 c= the carrier of H1 "\/" H2;
+
+theorem :: GROUP_24:12
+  for G being Group
+  for H1,H2 being Subgroup of G
+  st H1 * H2 = the carrier of (H1 "\/" H2)
+  holds H1 * H2 = H2 * H1;
+
+theorem :: GROUP_24:13 ::: trivial: TH39
+  for G being Group
+  for H,K being Subgroup of G
+  for HK being Subgroup of K
+  st the multMagma of H = the multMagma of HK
+  holds carr H = carr HK;
+
+theorem :: GROUP_24:14
+  for G being Group
+  for H,K being Subgroup of G st H is Subgroup of K
+  for N being Subgroup of G
+  st N is normal Subgroup of K
+  holds N * H = H * N;
+
+theorem :: GROUP_24:15
+  for G being Group
+  for H being Subgroup of G
+  for N being normal Subgroup of G
+  st N is Subgroup of H
+  holds the multMagma of N = the multMagma of (H,N)`*`;
+
+theorem :: GROUP_24:16
+  for G being Group
+  for H1,N1,H2,N2 being Subgroup of G
+  st the multMagma of H1 = the multMagma of H2
+  & the multMagma of N1 = the multMagma of N2
+  holds H1 * N1 = H2 * N2 & H1 /\ N1 = H2 /\ N2;
+
+theorem :: GROUP_24:17
+  for G being Group
+  for H,K being strict Subgroup of G
+  st H <> K & K is Subgroup of H
+  ex g being Element of G
+  st g in H & not g in K;
+
+begin :: Automorphism Group results
+
+registration
+  let G, A be Group;
+  cluster product Carrier <*A,G*> -> non empty;
+end;
+
+theorem :: GROUP_24:18
+  for G1,G2 being Group
+  for x being Element of product <*G1,G2*>
+  holds x.1 in G1 & x.2 in G2 & dom x = {1,2};
+
+theorem :: GROUP_24:19
+  for G1,G2 being Group
+  for H1 being Subgroup of G1
+  for H2 being Subgroup of G2
+  for h1 being Element of G1 st h1 in H1
+  for h2 being Element of G2 st h2 in H2
+  holds <*h1,h2*> in product <*H1,H2*>;
+
+begin :: Semidirect Products of Groups
+
+ reserve G, A for Group;
+ reserve phi for Homomorphism of A,AutGroup(G);
+
+theorem :: GROUP_24:20
+  for g being Element of G
+  holds (phi . 1_A) . g = g;
+
+theorem :: GROUP_24:21
+  for a1,a2 being Element of A
+  for g being Element of G
+  holds (phi.a1) . ((phi . a2) . g) = (phi . (a1 * a2)) . g;
+
+theorem :: GROUP_24:22
+  for a being Element of A
+  for g being Element of G
+  holds (phi.(a")) . ((phi.a) . g) = g
+  & (phi.a) . ((phi.(a")) . g) = g;
+
+definition
+  let G, A, phi;
+  func semidirect_product (G, A, phi) -> non empty strict multMagma means
+:: GROUP_24:def 1
+
+  the carrier of it = product Carrier <* G, A *> &
+  (for f, g being Element of product Carrier <* G, A *>
+   ex h being Function, a1 being Element of A, g2 being Element of G
+   st h = (the multF of it).(f, g) &
+      a1 = f.2 & g2 = g.1 &
+      h.1 = (the multF of G).(f.1, (phi.a1).g2) &
+      h.2 = (the multF of A).((f.2), (g.2)));
+end;
+
+registration
+  let G, A, phi;
+  cluster semidirect_product (G, A, phi) -> constituted-Functions;
+end;
+
+registration
+  let G, A, phi;
+  cluster -> FinSequence-like for Element of semidirect_product (G, A, phi);
+end;
+
+theorem :: GROUP_24:23
+  the carrier of semidirect_product (G, A, phi) =
+    the carrier of product <*G,A*>;
+
+theorem :: GROUP_24:24
+  for a being Element of A
+  for g being Element of G
+  holds <* g, a *> is Element of semidirect_product (G, A, phi);
+
+theorem :: GROUP_24:25
+  for x being Element of semidirect_product (G, A, phi)
+  holds x.1 in G & x.2 in A & dom x = {1,2};
+
+theorem :: GROUP_24:26
+  for x being Element of semidirect_product (G, A, phi)
+  ex g being Element of G, a being Element of A
+  st x = <* g, a *>;
+
+theorem :: GROUP_24:27
+  for x,y being Element of semidirect_product (G, A, phi)
+  for a1,a2 being Element of A
+  for g1,g2,g3 being Element of G
+  st x = <*g1,a1*> & y = <*g2,a2*> & g3 = (phi . a1).g2
+  holds x * y = <* g1 * g3, a1 * a2 *>;
+
+theorem :: GROUP_24:28
+  for x,y being Element of semidirect_product (G, A, phi)
+  for a being Element of A
+  for g being Element of G
+  st x = <*g,1_A*> & y = <*1_G,a*>
+  holds x * y = <* g, a *>;
+
+registration
+  let G, A, phi;
+  cluster semidirect_product (G, A, phi) -> unital;
+end;
+
+theorem :: GROUP_24:29
+  1_(semidirect_product (G, A, phi)) = <* 1_G, 1_A *>;
+
+theorem :: GROUP_24:30
+  for x,y being Element of semidirect_product (G, A, phi)
+  for a being Element of A
+  for g being Element of G
+  st x = <* g, a *> & y = <* (phi.(a")).(g"), a" *>
+  holds x * y = 1_(semidirect_product (G, A, phi)) &
+    y * x = 1_(semidirect_product (G, A, phi));
+
+registration
+  let G, A be Group;
+  let phi be Homomorphism of A, AutGroup G;
+  cluster semidirect_product (G, A, phi) -> associative Group-like;
+end;
+
+theorem :: GROUP_24:31
+  for a being Element of A
+  for g being Element of G
+  for x being Element of semidirect_product (G, A, phi)
+  st x = <* g, a *>
+  holds x" = <* (phi.(a")).(g"), a" *>;
+
+theorem :: GROUP_24:32
+  for g1,g2 being Element of G
+  for x,y,z being Element of semidirect_product (G, A, phi)
+  st x = <*g1,1_A*> & y = <*g2,1_A*> & z = <*(g1*g2),1_A*>
+  holds x * y = z;
+
+theorem :: GROUP_24:33
+  for g being Element of G
+  for x being Element of semidirect_product (G, A, phi)
+  st x = <*g,1_A*>
+  holds x" = <* g", 1_A *>;
+
+theorem :: GROUP_24:34
+  for x being Element of semidirect_product (G, A, phi)
+  for g being Element of G
+  st x = <*g,1_A*>
+  for i being Integer
+  holds x |^ i = <* (g |^ i), 1_A *>;
+
+theorem :: GROUP_24:35
+  for a1,a2 being Element of A
+  for x,y,z being Element of semidirect_product (G, A, phi)
+  st x = <*1_G,a1*> & y = <*1_G,a2*> & z = <*1_G,(a1*a2)*>
+  holds x * y = z;
+
+theorem :: GROUP_24:36
+  for a being Element of A
+  for x being Element of semidirect_product (G, A, phi)
+  st x = <*1_G,a*>
+  holds x" = <* 1_G, a " *>;
+
+theorem :: GROUP_24:37
+  for i being Integer
+  for x being Element of semidirect_product (G, A, phi)
+  for a being Element of A
+  st x = <* 1_G, a*>
+  holds x |^ i = <* 1_G, (a |^ i) *>;
+
+definition
+  let G, A, phi;
+  func incl1 (G, A, phi) -> Function of G, semidirect_product (G,A,phi) means
+:: GROUP_24:def 2
+
+  for g being Element of G holds it.g = <* g, 1_A *>;
+end;
+
+::$N Aschbacher~\cite{aschbacher2000finite}, Theorem (10.1.2)
+registration
+  let G, A, phi;
+  cluster incl1 (G, A, phi) -> multiplicative one-to-one;
+end;
+
+definition
+  let G, A, phi;
+  func incl2 (G, A, phi) -> Function of A, semidirect_product (G,A,phi) means
+:: GROUP_24:def 3
+
+  for a being Element of A holds it.a = <* 1_G, a *>;
+end;
+
+::$N Aschbacher~\cite{aschbacher2000finite}, Theorem (10.1.2)
+registration
+  let G, A, phi;
+  cluster incl2 (G, A, phi) -> multiplicative one-to-one;
+end;
+
+::$N Aschbacher~\cite{aschbacher2000finite}, Theorem (10.1.3)
+theorem :: GROUP_24:38
+  Image (incl1 (G, A, phi)) is normal Subgroup of
+  semidirect_product (G, A, phi);
+
+registration
+  let A, G, phi;
+  cluster Image (incl1 (G, A, phi)) -> normal;
+end;
+
+theorem :: GROUP_24:39 :: TH31
+  Image (incl2 (G, A, phi)) /\ Image (incl1 (G, A, phi))
+  = (1).(semidirect_product(G,A,phi));
+
+theorem :: GROUP_24:40
+  for x being Element of semidirect_product(G,A,phi)
+  ex g being Element of G,a being Element of A
+  st ((incl1(G,A,phi)).g) * ((incl2(G,A,phi)).a) = x;
+
+theorem :: GROUP_24:41
+  (Image incl1(G,A,phi)) * (Image incl2(G,A,phi))
+  = the carrier of semidirect_product(G,A,phi);
+
+theorem :: GROUP_24:42 :: TH34
+  Image (incl1 (G, A, phi)) "\/" Image (incl2 (G, A, phi))
+  = (semidirect_product(G,A,phi));
+
+::$N Aschbacher~\cite{aschbacher2000finite}, Theorem (10.1.3)
+theorem :: GROUP_24:43 :: TH35
+  G, Image (incl1 (G, A, phi)) are_isomorphic;
+
+:: Note there is a sign error in Aschbacher's book, due to different
+:: notational conventions with function composition being written
+:: backwards (as is the style in finite group theory).
+::
+::$N Aschbacher~\cite{aschbacher2000finite}, Theorem (10.1.4)
+theorem :: GROUP_24:44
+  for a being Element of A
+  for g being Element of G
+  holds ((incl1(G,A,phi)).g) |^ ((incl2(G,A,phi)).a)
+  = <*(phi.(a")).g,1_A *>;
+
+theorem :: GROUP_24:45 :: TH37
+  for a being Element of A
+  for g being Element of G
+  holds ((incl1(G,A,phi)).g) |^ ((incl2(G,A,phi)).(a "))
+  = <* (phi.a).g, 1_A *>;
+
+theorem :: GROUP_24:46
+  semidirect_product (G, A, 1:(A, AutGroup G)) = product <*G, A*>;
+
+begin :: Complementary Subgroups
+
+definition
+  let G,H,N be Group;
+  pred H,N are_complements_in G means
+:: GROUP_24:def 4
+  ex H1 being strict Subgroup of G st
+  ex N1 being strict normal Subgroup of G
+  st H1 = the multMagma of H
+   & N1 = the multMagma of N
+   & H1 * N1 = the carrier of G
+   & H1 /\ N1 = (1).G;
+end;
+
+definition
+  let G be Group;
+  let H,N be Subgroup of G;
+  redefine pred H,N are_complements_in G means
+:: GROUP_24:def 5
+  N is normal & H * N = the carrier of G & H /\ N = (1).G;
+end;
+
+theorem :: GROUP_24:47
+  for G being Group
+  for H,K being Subgroup of G st H is Subgroup of K
+  for N being Subgroup of G st N is normal Subgroup of K
+  holds H,N are_complements_in K
+  iff (N * H = the carrier of K & H /\ N = (1).K);
+
+theorem :: GROUP_24:48 :: TH44
+  for G being Group
+  for H,K being Subgroup of G st H is Subgroup of K
+  for N being Subgroup of G st N is normal Subgroup of K
+  holds H,N are_complements_in K
+  iff (H * N = the carrier of K & H /\ N = (1).K);
+
+theorem :: GROUP_24:49
+  for G being Group
+  for H,K being Subgroup of G st H is Subgroup of K
+  for N being normal Subgroup of G st N is Subgroup of K
+  holds H,((K,N)`*`) are_complements_in K
+  iff (N * H = the carrier of K & H /\ N = (1).K);
+
+theorem :: GROUP_24:50
+  for G being Group
+  for H,K being Subgroup of G st H is Subgroup of K
+  for N being normal Subgroup of G st N is Subgroup of K
+  holds H,N are_complements_in K
+  iff H,((K,N)`*`) are_complements_in K;
+
+theorem :: GROUP_24:51 :: TH47
+  for G being Group
+  for K being Subgroup of G
+  for H being Subgroup of K
+  for N being normal Subgroup of G st N is Subgroup of K
+  holds H,N are_complements_in K
+  iff H,((K,N)`*`) are_complements_in K;
+
+theorem :: GROUP_24:52
+  for G being Group
+  for H being Subgroup of G
+  for N being normal Subgroup of G
+  holds H,N are_complements_in G
+  iff (H "\/" N = the multMagma of G & H /\ N = (1).G);
+
+::$N Universal Property of Quotient Groups
+theorem :: GROUP_24:53   :: TH53
+  for G1,G2 being Group
+  for N being normal Subgroup of G1
+  for f being Homomorphism of G1,G2
+  st N is Subgroup of Ker f
+  ex fBar being Homomorphism of G1./.N,G2
+  st f = fBar * (nat_hom N);
+
+theorem :: GROUP_24:54 :: TH54
+  for G1,G2 being Group
+  for N1 being normal Subgroup of G1
+  for N2 being normal Subgroup of G2
+  for phi being Homomorphism of G1,G2
+  st phi is bijective & phi .: the carrier of N1 = the carrier of N2
+  holds G1./.N1, G2./.N2 are_isomorphic;
+
+theorem :: GROUP_24:55
+  for G being Group
+  for H being Subgroup of G
+  for N being normal Subgroup of G
+  st H,N are_complements_in G
+  ex phi being Homomorphism of H, G./.N
+  st (for h being Element of H
+      for g being Element of G st g = h
+      holds phi.h = g*N) & phi is bijective;
+
+theorem :: GROUP_24:56
+  for G being Group
+  for H being Subgroup of G
+  for N being normal Subgroup of G
+  st H,N are_complements_in G
+  holds G ./. N, H are_isomorphic;
+
+theorem :: GROUP_24:57 :: TH57
+  for G being Group
+  for H1, H2 being Subgroup of G
+  for N being normal Subgroup of G
+  st H1,N are_complements_in G & H2,N are_complements_in G
+  holds H1,H2 are_isomorphic;
+
+::$N Bourbaki~\cite[I \S6.1]{BourbakiAlgI}, Corollary to Proposition 4
+theorem :: GROUP_24:58
+  for G being Group
+  for H,K being Subgroup of G
+  for phi being Function of product <*H,K*>,G
+  st (for h,k being Element of G st h in H & k in K
+      holds phi.(<*h,k*>) = h*k)
+  holds phi is one-to-one iff H /\ K = (1).G;
+
+theorem :: GROUP_24:59
+  for G being Group
+  for H,K being Subgroup of G
+  ex phi being Function of product Carrier <*H,K*>,G
+  st (for h,k being Element of G st h in H & k in K
+      holds phi.(<*h,k*>) = h*k)
+  & (phi is one-to-one iff H /\ K = (1).G);
+
+theorem :: GROUP_24:60
+  for G being Group
+  for H being Subgroup of G
+  for N being strict normal Subgroup of G
+  for phi being Homomorphism of H,AutGroup N
+  ex psi being Function of semidirect_product (N,H,phi),G
+  st (for n,h being Element of G st n in N & h in H
+      holds psi.(<*n,h*>) = n*h)
+  & (psi is one-to-one iff N /\ H = (1).G);
+
+theorem :: GROUP_24:61
+  for G being Group
+  for H being Subgroup of G
+  for N being normal Subgroup of G
+  st H,N are_complements_in G
+  holds H * N = the carrier of G & N * H = the carrier of G;
+
+::$N Aschbacher~\cite{aschbacher2000finite}, Theorem 10.2
+theorem :: GROUP_24:62 :: TH65
+  for G being Group
+  for N being strict normal Subgroup of G
+  for H being Subgroup of G
+  st H,N are_complements_in G
+  for alpha being Homomorphism of H,AutGroup N
+  st (for h,n being Element of G st h in H & n in N
+      for a being Homomorphism of N,N st a = alpha.h
+      holds a.n = n |^ (h"))
+  ex beta being Homomorphism of semidirect_product(N,H,alpha), G
+  st (for gh,gn being Element of G
+      for h being Element of H
+      for n being Element of N st gh = h & gn = n
+      holds beta.(<*n,h*>) = gn*gh)
+   & beta is bijective;
+
+:: Bourbaki, General Topology, Chapter 3, section 2, p.240, Proposition 27
+::$N Universal Property of Semidirect Products (Bourbaki~\cite[III \S2.10]{bourbaki2013general} Proposition 27)
+theorem :: GROUP_24:63 :: TH66
+  for H,G being Group
+  for N being strict Group
+  for f being Homomorphism of N,G
+  for g being Homomorphism of H,G
+  for phi being Homomorphism of H,AutGroup N
+  st (for n being Element of N
+      for h being Element of H
+      holds f.((phi.h).n) = (g.h) * (f.n) * (g.(h")))
+  ex k being Homomorphism of semidirect_product(N,H,phi), G
+  st f = k * (incl1 (N, H, phi)) & g = k * (incl2 (N, H, phi));
+
+registration
+  let G be finite strict Group;
+  let A be finite Group;
+  let phi be Homomorphism of A,AutGroup(G);
+  cluster semidirect_product(G,A,phi) -> finite;
+end;
+
+reserve G1,G2 for Group;
+
+::: theorem :: TH67
+:::   Image (1:(G1,G2)) = (1).G2 by GROUP_6:47;
+
+theorem :: GROUP_24:64
+  G2 is trivial implies
+  for phi being Homomorphism of G1,G2
+  holds phi = 1:(G1,G2);
+
+theorem :: GROUP_24:65
+  Aut (1).G = {id (1).G};
+
+theorem :: GROUP_24:66
+  G is strict trivial implies AutGroup G is trivial;
+
+theorem :: GROUP_24:67 :: TH71
+  G is strict trivial implies phi = 1:(A, AutGroup G);
+
+theorem :: GROUP_24:68
+  G1 is trivial implies product <*G1,G2*>, G2 are_isomorphic;
+
+theorem :: GROUP_24:69
+  G is strict trivial implies semidirect_product(G,A,phi), A are_isomorphic;
+
+theorem :: GROUP_24:70
+  for G, A being finite Group
+  for phi being Homomorphism of A,AutGroup(G)
+  holds card semidirect_product(G,A,phi) = (card G)*(card A);
+
+begin :: Appendix 1: Results about Cyclic Groups
+
+registration
+  cluster infinite -> non trivial for Group;
+  cluster trivial -> finite for Group;
+end;
+
+theorem :: GROUP_24:71
+  for n being non zero Nat
+  holds the multF of INT.Group n = addint n;
+
+theorem :: GROUP_24:72
+  for n being non zero Nat
+  holds the carrier of INT.Group n = Segm n;
+
+registration
+  cluster INT.Group 1 -> trivial;
+end;
+
+registration
+  let n be non zero Nat;
+  reduce card (INT.Group n) to n;
+end;
+
+theorem :: GROUP_24:73
+  for G being Group
+  holds G is trivial iff (for x being Element of G holds x = 1_G);
+
+theorem :: GROUP_24:74
+  for G being Group
+  for H being Subgroup of G
+  holds H is trivial iff (for x being Element of G holds x in H iff x = 1_G);
+
+theorem :: GROUP_24:75  :: TH80
+  for n being non zero Nat
+  holds INT.Group n is trivial iff n = 1;
+
+theorem :: GROUP_24:76  :: TH81
+  for n being non zero Nat
+  holds INT.Group n is non trivial iff n > 1;
+
+registration
+  cluster non trivial cyclic strict infinite for Group;
+  cluster non trivial cyclic strict finite for Group;
+end;
+
+:: Now, the random results concerning INT.Group 2 in particular
+theorem :: GROUP_24:77  :: TH82
+  for g being Element of INT.Group 2
+  st g = 1
+  holds g * g = 1_(INT.Group 2);
+
+theorem :: GROUP_24:78  :: TH83
+  for x being object
+  holds x in INT.Group 2 iff (x = 0 or x = 1);
+
+theorem :: GROUP_24:79  :: TH84
+  for x,y being Element of INT.Group 2
+  holds (x = 0 implies x*y = y)
+  & (y = 0 implies x*y = x)
+  & (x = 1 & y = 1 implies x*y = 1_(INT.Group 2));
+
+theorem :: GROUP_24:80 :: TH85
+  for n,k being non zero Nat
+  for g being Element of INT.Group n
+  st g = k holds g " = (n - k) mod n;
+
+theorem :: GROUP_24:81
+  for n being non zero Nat
+  for x being Element of INT.Group n
+  holds x" = x |^ (n - 1);
+
+theorem :: GROUP_24:82 :: TH87
+  for G being finite Group
+  for x being Element of G
+  holds 0 < ord x & ord x <= card G;
+
+theorem :: GROUP_24:83  :: TH88
+  for n being non zero Nat
+  for g,g1 being Element of INT.Group n st g1 = 1
+  ex k being Nat st g = g1 |^ k & g = k mod n;
+
+theorem :: GROUP_24:84 :: TH89
+  for n being non zero Nat
+  for g,g1 being Element of INT.Group n st g1 = 1
+  ex k being Nat st k < n & g = g1 |^ k & g = k mod n;
+
+theorem :: GROUP_24:85 :: TH90
+  for G being Group
+  for g being Element of G
+  for i,j being Integer
+  st g |^ i = g |^ j
+  holds g |^ (- i) = g |^ (- j);
+
+theorem :: GROUP_24:86  :: TH91
+  for n being non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for i being Nat
+  holds g1 |^ i = i mod n;
+
+theorem :: GROUP_24:87  :: TH92
+  for n being non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for i,j being Nat
+  holds g1 |^ i = g1 |^ j iff i mod n = j mod n;
+
+begin :: Appendix 2: Dihedral groups
+
+theorem :: GROUP_24:88 :: TH93
+  A is commutative implies inverse_op A is Automorphism of A;
+
+definition
+  let G be strict commutative Group;
+  func inversions G -> Function of (INT.Group 2), AutGroup G means
+:: GROUP_24:def 6
+
+  it.0 = id G & it.1 = inverse_op G;
+end;
+
+theorem :: GROUP_24:89  :: TH94
+  for G being Group
+  holds (inverse_op G) * (inverse_op G) = id G;
+
+theorem :: GROUP_24:90  :: TH95
+  for G being strict commutative Group
+  for a,b being Element of INT.Group 2 st b = 0
+  holds ((inversions G).b) * ((inversions G).a) = (inversions G).a
+  & ((inversions G).a) * ((inversions G).b) = (inversions G).a;
+
+theorem :: GROUP_24:91  :: TH96
+  for G being strict commutative Group
+  for a,b being Element of INT.Group 2 st a = 1 & b = 1
+  holds ((inversions G).b) * ((inversions G).a) = (inversions G).(a * b);
+
+registration
+  let G be strict commutative Group;
+  cluster inversions G -> multiplicative;
+end;
+
+definition
+  let G be strict commutative Group;
+  redefine func inversions G -> Homomorphism of INT.Group 2, AutGroup G;
+end;
+
+definition
+  let n be non zero ExtNat;
+  func Dihedral_group n -> strict Group means
+:: GROUP_24:def 7
+  (n = +infty implies it =
+    semidirect_product(INT.Group, INT.Group 2, inversions INT.Group))
+  & (n <> +infty implies
+     ex n1 being non zero Nat
+     st n = n1 & it = semidirect_product(INT.Group n1,
+                                         INT.Group 2,
+                                         inversions (INT.Group n1)));
+end;
+
+definition
+  let n be non zero Nat;
+  redefine func Dihedral_group n equals
+:: GROUP_24:def 8
+  semidirect_product(INT.Group n,
+                     INT.Group 2,
+                     inversions (INT.Group n));
+end;
+
+theorem :: GROUP_24:92 :: TH97
+  for n being non zero Nat
+  holds card (Dihedral_group n) = 2*n;
+
+registration
+  let n be non zero Nat;
+  cluster Dihedral_group n -> finite;
+end;
+
+definition
+  let n be non natural ExtNat;
+  redefine func Dihedral_group n equals
+:: GROUP_24:def 9
+  semidirect_product(INT.Group,
+                     INT.Group 2,
+                     inversions INT.Group);
+end;
+
+theorem :: GROUP_24:93 :: TH98
+  for g1 being Element of INT.Group
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group +infty
+  st x = <*g1,1_(INT.Group 2)*> & y = <* 1_(INT.Group), a2 *>
+  holds y*x = (x ")*y;
+
+theorem :: GROUP_24:94
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  holds y*x = (x ")*y;
+
+theorem :: GROUP_24:95
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  holds y*x = (x |^ (n - 1))*y;
+
+theorem :: GROUP_24:96
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for x being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*>
+  holds x |^ n = 1_(Dihedral_group n);
+
+theorem :: GROUP_24:97
+  for n being non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for x being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*>
+  for k being Nat st k <> 0 & k < n
+  holds x |^ k <> 1_(Dihedral_group n);
+
+theorem :: GROUP_24:98
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for x being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*>
+  holds x" = x |^ (n - 1);
+
+theorem :: GROUP_24:99 :: TH104
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for x being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*>
+  for j being Nat
+  holds (x |^ j)" = x |^ (n - j);
+
+theorem :: GROUP_24:100
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  holds y*x = (x |^ (- 1))*y;
+
+theorem :: GROUP_24:101
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  for i being Nat
+  holds y*(x |^ i) = (x |^ (n - i))*y;
+
+theorem :: GROUP_24:102
+  for n being non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  for z being Element of Dihedral_group n
+  ex k being Nat st z = (x |^ k)*y or z = x |^ k;
+
+theorem :: GROUP_24:103
+  for n being non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  for z being Element of Dihedral_group n
+  ex k being Nat st k < n & (z = (x |^ k)*y or z = x |^ k);
+
+theorem :: GROUP_24:104
+  for n being non zero Nat
+  for g1 being Element of INT.Group n
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  for i,j being Nat
+  holds ((x |^ i)*y) * (x |^ j) = (x |^ (n + i - j))*y;
+
+theorem :: GROUP_24:105 :: TH110
+  for n being non zero Nat
+  for a2 being Element of INT.Group 2
+  for y being Element of Dihedral_group n
+  st y = <*(1_(INT.Group n)),a2*>
+  holds y*y = 1_(Dihedral_group n);
+
+theorem :: GROUP_24:106  :: TH111
+  Dihedral_group 1, INT.Group 2 are_isomorphic
+  & Dihedral_group 1 is commutative;
+
+theorem :: GROUP_24:107 :: TH112
+  Dihedral_group 2 is commutative;
+
+theorem :: GROUP_24:108 :: TH113
+  for n being non zero Nat
+  st n > 2
+  holds Dihedral_group n is non commutative;
+
+theorem :: GROUP_24:109
+  for n being non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y,z being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  holds z in center Dihedral_group n
+  iff (y*z = z*y & for i being Nat holds (x |^ i)*z = z*(x |^ i));
+
+theorem :: GROUP_24:110 :: TH115
+  for n being non zero Nat
+  for z being Element of Dihedral_group n
+  holds z in center Dihedral_group n
+  iff (for g1 being Element of INT.Group n st g1 = 1
+  for a2 being Element of INT.Group 2 st a2 = 1
+  for x,y being Element of Dihedral_group n
+  st x = <*g1,1_(INT.Group 2)*> & y = <*(1_(INT.Group n)),a2*>
+  holds (y*z = z*y & for i being Nat holds (x |^ i)*z = z*(x |^ i)));
+
+theorem :: GROUP_24:111 :: TH116
+  center Dihedral_group 1 = Dihedral_group 1;
+
+theorem :: GROUP_24:112
+  for n being odd non zero Nat
+  for g1 being Element of INT.Group n st g1 = 1
+  for x being Element of Dihedral_group n st x = <*g1,1_(INT.Group 2)*>
+  for i being Nat st i < n
+  holds (i = 0 or x |^ i <> x |^ (n - i));
+
+theorem :: GROUP_24:113 :: TH118
+  for n being odd Nat st n > 1
+  holds center Dihedral_group n is trivial;
+
+theorem :: GROUP_24:114 :: TH119
+  for n being even non zero Nat
+  for k being Nat st n = 2*k
+  for g1 being Element of INT.Group n st g1 = 1
+  for x being Element of Dihedral_group n st x = <* g1, 1_(INT.Group 2) *>
+  holds (x |^ k) |^ 2 = 1_(Dihedral_group n);
+
+theorem :: GROUP_24:115
+  for n being even non zero Nat
+  for k being Nat st n = 2*k
+  for g1 being Element of INT.Group n st g1 = 1
+  for x being Element of Dihedral_group n st x = <* g1, 1_(INT.Group 2) *>
+  holds (x |^ k in center Dihedral_group n);
+
+theorem :: GROUP_24:116
+  for n being even non zero Nat
+  for k being Nat st n = 2*k & n > 2
+  for g1 being Element of INT.Group n st g1 = 1
+  for x being Element of Dihedral_group n st x = <* g1, 1_(INT.Group 2) *>
+  holds (for g being Element of Dihedral_group n holds
+  g in center Dihedral_group n iff g = 1_(Dihedral_group n) or g = x |^ k );
+
+theorem :: GROUP_24:117 :: TH123
+  for n being even non zero Nat st n > 2 holds
+    INT.Group 2, center Dihedral_group n are_isomorphic;
+
+:: In the end, it turns out the real semidirect product was the
+:: friends we made along the way

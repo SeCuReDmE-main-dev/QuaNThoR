@@ -1,0 +1,355 @@
+:: Formal Proof of Transcendence of the Number $e$. {P}art {II}
+::  by Yasushige Watase
+:: 
+:: Received November 17, 2024
+:: Copyright (c) 2024-2025 Association of Mizar Users
+::           (Stowarzyszenie Uzytkownikow Mizara, Bialystok, Poland).
+:: This code can be distributed under the GNU General Public Licence
+:: version 3.0 or later, or the Creative Commons Attribution-ShareAlike
+:: License version 3.0 or later, subject to the binding interpretation
+:: detailed in file COPYING.interpretation.
+:: See COPYING.GPL and COPYING.CC-BY-SA for the full text of these
+:: licenses, or see http://www.gnu.org/licenses/gpl.html and
+:: http://creativecommons.org/licenses/by-sa/3.0/.
+
+environ
+
+ vocabularies ARYTM_3, VECTSP_1, TARSKI, NAT_1, MESFUNC1, VECTSP_2, STRUCT_0,
+      SUBSET_1, SUPINF_2, POLYNOM1, POLYNOM3, HURWITZ, FINSEQ_1, FUNCT_1,
+      RELAT_1, CARD_1, XBOOLE_0, NUMBERS, CARD_3, AFINSQ_1, PARTFUN1, XXREAL_0,
+      XCMPLX_0, ORDINAL4, NEWTON, ARYTM_1, FUNCOP_1, RINGDER1, ZF_LANG,
+      ROUGHS_5, FUNCT_7, REALSET1, REAL_1, INT_3, INT_1, INT_2, IDEAL_1,
+      GROUP_1, POLYNOM5, FINSEQ_3, POLYFORM, FIB_NUM, LTLAXIO1, FIELD_1,
+      ORDINAL2, MSAFREE2, SIN_COS, QC_LANG1, POWER, ALGNUM_1, POLYNOM2,
+      RFINSEQ, FINSEQ_2, ABIAN, SEQ_2, COMPLEX1, C0SP1, SERIES_1, ROUGHIF2,
+      FIN_TOPO, FINSET_1, ALGSEQ_1, MEMBERED, FUNCT_3, GAUSSINT, YELLOW_8,
+      WAYBEL_8, COMPLFLD, GROUP_4, RAT_1, E_TRANS1;
+ notations TARSKI, XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, RELSET_1,
+      PARTFUN1, FUNCOP_1, FINSET_1, NUMBERS, XCMPLX_0, XXREAL_0, XREAL_0,
+      NAT_1, INT_1, MEMBERED, COMPLEX1, INT_2, NAT_D, XXREAL_2, FINSEQ_1,
+      RAT_1, FINSEQ_2, VALUED_1, SEQ_2, NEWTON, RFINSEQ, ABIAN, POWER,
+      SERIES_1, SIN_COS, WSIERP_1, STRUCT_0, GROUP_1, VECTSP_1, VECTSP_2,
+      GROUP_4, POLYNOM1, ALGSEQ_1, COMPLFLD, VFUNCT_1, GCD_1, BINOM, POLYNOM3,
+      POLYNOM4, RLVECT_1, POLYNOM5, INT_3, HURWITZ, IDEAL_1, C0SP1, VECTSP11,
+      RATFUNC1, GAUSSINT, RING_1, RING_2, RING_4, ALGNUM_1, POLYDIFF, FIELD_1,
+      RINGDER1, BASEL_2, E_TRANS1;
+ constructors RELSET_1, REALSET1, NAT_D, BINOP_2, XXREAL_2, FINSOP_1, COMSEQ_2,
+      SEQ_2, RFINSEQ, PREPOWER, COMSEQ_3, ABIAN, WSIERP_1, SIN_COS, PARTFUN3,
+      GROUP_4, ALGSEQ_1, VFUNCT_1, GCD_1, BINOM, POLYNOM4, VECTSP11, RATFUNC1,
+      RING_3, ALGNUM_1, POLYDIFF, FIELD_4, RINGDER1, BASEL_2, E_TRANS1;
+ registrations XXREAL_0, XREAL_0, CARD_1, ORDINAL1, RELSET_1, FUNCT_1, NAT_1,
+      INT_1, FINSEQ_1, STRUCT_0, RLVECT_1, VECTSP_1, ALGSTR_1, RING_4,
+      POLYNOM3, POLYNOM4, POLYNOM5, RATFUNC1, FUNCOP_1, FIELD_4, GAUSSINT,
+      INT_3, NAT_6, NEWTON04, XCMPLX_0, MEMBERED, RFINSEQ, FINSET_1, VALUED_0,
+      POWER, XXREAL_2, NEWTON, ALGSTR_0, WSIERP_1, PARTFUN3, FIELD_14, RVSUM_4,
+      RAT_1, COMPLEX1, FINSEQ_2, FIELD_15, XBOOLE_0, E_TRANS1, COMPLFLD,
+      BORSUK_5, LAGRA4SQ;
+ requirements NUMERALS, SUBSET, BOOLE, REAL, ARITHM;
+
+
+begin
+
+ reserve R for domRing;
+ reserve p for odd prime Nat, m for positive Nat;
+
+theorem :: E_TRANS2:1
+  for i be Nat, r be Element of F_Real holds
+    Sum(i |-> r) = i*r;
+
+theorem :: E_TRANS2:2
+  for p1, q1 be sequence of INT.Ring holds (p1 *' q1).0 = (p1.0) * q1.0;
+
+begin :: On the Ring of Polynomials
+
+theorem :: E_TRANS2:3
+  for f be Element of the carrier of Polynom-Ring INT.Ring, n be Nat holds
+    ^(f|^n) = (^ f)|^n;
+
+theorem :: E_TRANS2:4
+  for f be Element of the carrier of Polynom-Ring R, n be Nat holds
+    ~(f|^n) = (~f)`^n;
+
+theorem :: E_TRANS2:5   :: **
+  for n be Nat,
+      f be Element of the carrier of Polynom-Ring INT.Ring
+   holds n*f = In(n,INT.Ring)*f;
+
+theorem :: E_TRANS2:6
+  for M be Element of F_Real
+  for F be FinSequence of F_Real st
+  for i be Nat st i in dom F holds |. F.i .| <= M holds
+  |. Product F .| <= M|^(len F);
+
+definition
+  let p be Polynomial of INT.Ring;
+  redefine func |.p.| -> sequence of INT.Ring means
+:: E_TRANS2:def 1
+  for n being Nat holds it.n = |. p.n .|;
+end;
+
+registration
+  let p be Polynomial of INT.Ring;
+  cluster |. p .| -> finite-Support for
+                     (the carrier of INT.Ring)-valued Function;
+end;
+
+ reserve g for non zero Polynomial of INT.Ring;
+
+registration
+  let g;
+  cluster rng |.g.| -> finite;
+end;
+
+theorem :: E_TRANS2:7
+  for g be non zero Polynomial of INT.Ring holds
+  ex M be Nat st for i be Nat holds |. g.i .| <= M;
+
+begin :: The Polynomial $f_{0}$ and Its Properties
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+::  construct Polynomial
+::  f(p,m) = x^{p-1}(1-x)^{p}(2-x)^{p}\cdots (n-x)^{p}
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+definition
+  let i be Nat;
+  func tau(i) -> Element of the carrier of Polynom-Ring INT.Ring equals
+:: E_TRANS2:def 2
+  <% In(-i,INT.Ring), 1.INT.Ring %>;
+end;
+
+definition
+  let p be non zero Nat, m be Nat;
+  func x.(m,p) -> FinSequence of the carrier of Polynom-Ring (INT.Ring)
+  means
+:: E_TRANS2:def 3
+  len it = m & for i be Nat st i in dom it holds it.i = (tau(i))|^p;
+end;
+
+definition
+  let p be odd prime Nat, m be positive Nat;
+  func ff_0(m,p) -> FinSequence of the carrier of Polynom-Ring (INT.Ring)
+  equals
+:: E_TRANS2:def 4
+  (x.(m,p))^<* (tau(0))|^(p-'1) *>;
+end;
+
+definition
+  let p be odd prime Nat, m be positive Nat;
+  func f_0(m,p) -> Element of the carrier of Polynom-Ring INT.Ring equals
+:: E_TRANS2:def 5
+  Product ff_0(m,p);
+end;
+
+theorem :: E_TRANS2:8
+  for i,n be Nat holds len ~((tau(i))|^n) = n+1;
+
+theorem :: E_TRANS2:9
+  for f,g be Element of the carrier of Polynom-Ring INT.Ring
+  st (len ~f)*(len ~g) <> 0 holds len ~(f*g) = len ~f + len ~g -1;
+
+theorem :: E_TRANS2:10
+  for k be non zero Nat,p be odd prime Nat holds
+  (x.(k,p))^<* (tau(k+1))|^p *> = x.(k+1,p) &
+  Product(x.(k+1,p)) = Product((x.(k,p)))*((tau(k+1))|^p);
+
+theorem :: E_TRANS2:11
+  for p be odd prime Nat, m be positive Nat holds
+  len ~(Product (x.(m,p))) = m*p + 1;
+
+theorem :: E_TRANS2:12
+  for p be odd prime Nat, m be positive Nat holds
+  len ~(f_0(m,p)) = m*p + p;
+
+theorem :: E_TRANS2:13
+  for i be Nat holds
+  (Der1(INT.Ring)).(tau(i)) = 1.Polynom-Ring(INT.Ring);
+
+theorem :: E_TRANS2:14
+  for f be Element of the carrier of Polynom-Ring INT.Ring holds
+  for i be Nat holds
+  ((tau(0)) *'f).(i+1) = f.i & ((tau(0)) *'f).0 = 0.INT.Ring;
+
+ reserve f for Element of the carrier of Polynom-Ring INT.Ring;
+
+theorem :: E_TRANS2:15
+  for p be odd prime Nat, m be positive Nat holds
+  len (x.(m,p)) = m &
+  len ff_0(m,p) = m + 1 &
+  (ff_0(m,p)).(len (x.(m,p)) + 1) = (tau(0))|^(p-'1);
+
+theorem :: E_TRANS2:16
+  for p be odd prime Nat, m be positive Nat, k be Nat st 0<=k<=p-1
+  for i,j be Nat st i in Seg (k+1) holds
+  tau(j) divides
+  (LBZ(Der1(INT.Ring),k,Product Del(ff_0(m,p),j),(tau(j))|^p))/.i;
+
+theorem :: E_TRANS2:17
+  for p be odd prime Nat, m be positive Nat holds
+    ~(Product x.(m,p)).0 = (((-1)|^m)*(m!))|^p;
+
+theorem :: E_TRANS2:18
+  for p be odd prime Nat, m be positive Nat, k be Nat st 0 <= k <= p-'2
+  holds (((Der1(INT.Ring))|^k).f_0(m,p)).0 = 0.INT.Ring;
+
+theorem :: E_TRANS2:19
+  for p be odd prime Nat, m be positive Nat,k be Nat st 0 <= k <= p-'2 holds
+  eval(~(((Der1(INT.Ring))|^k).f_0(m,p)),0.INT.Ring) = 0.INT.Ring;
+
+theorem :: E_TRANS2:20
+  for p be odd prime Nat, m be positive Nat holds
+  eval(~(((Der1(INT.Ring))|^(p-'1)).f_0(m,p)),0.INT.Ring)
+    = ((p-'1)!)*(In((((-1)|^m)*(m!))|^p,INT.Ring));
+
+theorem :: E_TRANS2:21
+  for p be odd prime Nat, m be positive Nat,
+      k be non zero Nat st p <= k holds
+  eval(~(((Der1(INT.Ring))|^k).f_0(m,p)), 0.INT.Ring)
+    = (k!)*(~(Product (x.(m,p))).(k -' (p-'1)));
+
+theorem :: E_TRANS2:22
+  for j be Nat, u be Element of the carrier of Polynom-Ring INT.Ring
+  holds eval(~((tau(j))*u),In(j,INT.Ring)) = 0.INT.Ring;
+
+theorem :: E_TRANS2:23
+  for p be odd prime Nat, m be positive Nat,
+      k,j be Nat st k < p & j in Seg m
+  holds eval(~(((Der1(INT.Ring))|^k).f_0(m,p)),In(j,INT.Ring)) = 0.INT.Ring;
+
+theorem :: E_TRANS2:24
+  for i be Nat holds
+  (Der1(INT.Ring)).(tau(i)) = 1.Polynom-Ring(INT.Ring);
+
+theorem :: E_TRANS2:25
+  for p be odd prime Nat, m be positive Nat,
+      j,k be Nat st j in Seg m & p <= k holds
+  for i be Nat st i in Seg p holds
+  tau(j) divides
+  (LBZ(Der1(INT.Ring),k,Product Del(ff_0(m,p),j),(tau(j))|^p))/.i;
+
+theorem :: E_TRANS2:26
+  for p be odd prime Nat, m be positive Nat, k,j be Nat
+  for i be Nat st p+1 < i &
+  i in dom(LBZ(Der1(INT.Ring),k,Product Del(ff_0(m,p),j),(tau(j))|^p)) holds
+  (LBZ(Der1(INT.Ring),k,Product Del(ff_0(m,p),j),(tau(j))|^p))/.i
+  = 0.Polynom-Ring INT.Ring;
+
+theorem :: E_TRANS2:27
+  for p be odd prime Nat, m be positive Nat,
+  k,j be Nat st j in Seg m & p <= k
+  holds ex u,v be Element of the carrier of Polynom-Ring INT.Ring st
+  ((Der1(INT.Ring))|^k).f_0(m,p) = tau(j)*u + (p!)*v;
+
+theorem :: E_TRANS2:28
+  for u be Element of the carrier of Polynom-Ring INT.Ring,
+  a,b be Element of INT.Ring holds eval(a*(~u),b) in {a}-Ideal;
+
+theorem :: E_TRANS2:29
+  for p be odd prime Nat, m be positive Nat,
+      k,j be Nat st j in Seg m & p <= k
+  holds eval(~(((Der1(INT.Ring))|^k).f_0(m,p)),In(j,INT.Ring))
+    in {In(p!,INT.Ring)}-Ideal;
+
+::$N Now we apply the polynomial transformation 'F' to f_0.
+theorem :: E_TRANS2:30
+  for p be odd prime Nat, m be positive Nat holds
+  ex u be Element of INT.Ring st
+  ('F'(f_0(m,p))).0
+    = ((p-'1)!)*(In((((-1)|^m)*(m!))|^p,INT.Ring)) + (In(p!,INT.Ring))*u;
+
+theorem :: E_TRANS2:31
+  for p be odd prime Nat, m be positive Nat, j be Nat st j in Seg m holds
+    ('F'(f_0(m,p))).In(j,F_Real) in {In(p!,INT.Ring)}-Ideal;
+
+begin :: The Main Part of the Proof
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+::: Formalize "die Gleichumgen (4)"
+::: F(i) - e^{i}F(0) = \varepsilon_{i}  (i=1,...,n=deg g)
+::  delta_1.i corresponds to F(i)
+::  delta_2.i corresponds to -e^i*F(0)
+::  delta = epsilon_i = delta_1 + delta_2  however slightly modified to
+::  multiply g.i where g is deg g = n polynomial, also not yet apply
+::  the denominator 1/(p-1)! for faciltating later culuculation
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+theorem :: E_TRANS2:32
+  for x be Element of F_Real holds
+    (Eval(~(^ f_0(m,p)))).x
+    = eval(~(^Product((x.(m,p)))),x) * eval(~(^((tau(0))|^(p-'1))),x);
+
+definition
+  let m,p,g;
+  func delta_1(m,p,g) -> FinSequence of F_Real means
+:: E_TRANS2:def 6
+  len it = m & for i being Nat st i in dom it holds
+  it.i = (g.i)*(('F'(f_0(m,p))).(In(i,F_Real)));
+end;
+
+ reserve z0 for non zero Element of F_Real;
+
+definition
+  let m,p,g,z0;
+  func delta_2(m,p,g,z0) -> FinSequence of F_Real means
+:: E_TRANS2:def 7
+  len it = m & for i being Nat st i in dom it holds
+  it.i = -(g.i)*(((power F_Real).(z0,i))*(('F'(f_0(m,p))).0));
+end;
+
+definition
+  let m,p,g,z0;
+  func delta(m,p,g,z0) -> FinSequence of F_Real equals
+:: E_TRANS2:def 8
+  delta_1(m,p,g) + delta_2(m,p,g,z0);
+end;
+
+definition
+  let m,p,g;
+  func ^delta(m,p,g) -> FinSequence of INT.Ring equals
+:: E_TRANS2:def 9
+  delta_1(m,p,g);
+end;
+
+theorem :: E_TRANS2:33
+  for p,m,g holds Sum delta_1(m,p,g) in INT.Ring;
+
+theorem :: E_TRANS2:34
+  for g be non zero Polynomial of INT.Ring st deg g = m holds
+  for x be non zero Element of F_Real holds
+  Sum delta_2(m,p,g,x)
+    = (g.0)*(('F'(f_0(m,p))).0) - (Ext_eval(g,x))*(('F'(f_0(m,p))).0);
+
+theorem :: E_TRANS2:35
+  for p,m,g holds
+  Sum(delta_1(m,p,g)) in {In(p!,INT.Ring)}-Ideal;
+
+theorem :: E_TRANS2:36
+  for x be Element of F_Real st 0 < x <= m holds
+  for i be Nat st i in Seg m holds |.eval(~(^((x.(m,p))/.i)),x) .| <= m|^p;
+
+theorem :: E_TRANS2:37
+  for x be Element of F_Real holds
+  eval(~(^((tau(0))|^(p-'1))),x) = x|^(p-'1);
+
+theorem :: E_TRANS2:38
+  (m|^(m+1)) rExpSeq is convergent & lim ((m|^(m+1)) rExpSeq) = 0;
+
+theorem :: E_TRANS2:39
+  for M be non zero Nat, z0 be non zero Element of F_Real st z0 = number_e
+  holds
+  ex n1 be Nat st for n be Nat st n1 <= n holds
+  |. (m|^(m+1))|^n/(n!) - 0 .| < 1/(2*(M*(z0 to_power m)));
+
+theorem :: E_TRANS2:40   :: F_Rat version of LIOUVIL2:19
+  for f being INT -valued Polynomial of F_Rat holds
+  f is Polynomial of INT.Ring;
+
+::$INSERT The following theorem corresponds to the equation (3) in \cite{HURWITZ1}.
+theorem :: E_TRANS2:41
+  number_e is algebraic implies
+  ex g be INT -valued Polynomial of F_Rat st @g is irreducible &
+    Ext_eval(g,In(number_e,F_Real)) = 0 & deg g >=2 & g.0 <> 0.F_Rat;
+
+::$MR The Main Theorem
+theorem :: E_TRANS2:42
+  number_e is transcendental;
