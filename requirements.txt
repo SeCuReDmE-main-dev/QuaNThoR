@@ -1,3 +1,6 @@
 flask==3.0.3
 flask-cors==5.0.0
 requests==2.32.5
+scl-guardian-quanthor>=2.0.0
+cryptography>=3.4.8
+watchdog>=2.1.0
