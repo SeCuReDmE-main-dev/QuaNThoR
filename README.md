@@ -1,131 +1,75 @@
-# 🚀 QuaNTecH: Triple-AI Mathematical Verification System
+# QuaNThoR
 
-## Revolutionary Breakthrough: The World's First Triple-Layer AI Mathematical Verification System
+QuaNThoR verifies Mizar articles and turns the verifier output into readable feedback.
 
-**Powered by:**
-- 🧮 **Mizar Formal Verification** - Mathematical correctness
-- 🤖 **Claude AI Translation** - Human-readable explanations  
-- 🎯 **Gemini AI-First Colab** - Advanced analysis & code generation
+The current runtime is container-first:
 
----
+- Mizar runs inside Docker
+- the container installs the official Linux Mizar 8.1.15 package
+- explanations can use a remote Ollama server through `OLLAMA_BASE_URL`
 
-## 🎯 Project Overview
+## What this project is for
 
-QuaNTecH represents a paradigm shift in mathematical verification, combining three cutting-edge AI systems to create the most sophisticated mathematical proof assistant ever built.
+- Students can paste a proof and see where it fails
+- Mathematicians can inspect raw verifier output and the cleaned-up explanation side by side
+- Teachers can run the tool without a local Mizar installation on the host
 
-### Core Features
-- ✅ Formal mathematical verification with Mizar
-- ✅ AI translation of cryptic errors into human language
-- ✅ Real-time collaboration between Claude and Gemini
-- ✅ Google Colab integration with AI-first experience
-- ✅ Professional web interface with dual-layer feedback
-- ✅ Chrome Built-in AI integration ready
+## Quick Start
 
-### Early Access Programs
-- 🔥 **Chrome Built-in AI Early Preview Program** - Trusted Tester
-- 🔥 **AI-First Google Colab** - Trusted Tester  
-- 🔥 **Direct Google Contact** - Product team collaboration
+1. Install Docker Desktop.
+2. Set `OLLAMA_BASE_URL` if you have a cloud Ollama endpoint.
+3. Run `INSTALL_QUANTHOR.bat` to build the image.
+4. Run `START_QUANTHOR.bat` to start the container.
+5. Open `http://localhost:5000`.
 
----
+## Environment Variables
 
-## 🛠️ Quick Start
+- `OLLAMA_BASE_URL`: remote Ollama server root, for example `https://your-ollama.example.com`
+- `OLLAMA_MODEL`: model name sent to Ollama, default `llama3.1`
+- `MIZAR_TIMEOUT_SECONDS`: verifier timeout in seconds, default `60`
 
-### Option 1: Google Colab (Recommended)
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/YOUR_USERNAME/QuaNTecH-Verification-System)
+## API
 
-### Option 2: Local Development
+### `GET /health`
+
+Returns the active Mizar and Ollama runtime configuration.
+
+### `POST /verify`
+
+Request:
+
+```json
+{
+  "code": "environ\n\nbegin\n\ntheorem T1: 1 = 1;\nproof\n  thus 1 = 1;\nend;\n\nend."
+}
+```
+
+The response includes:
+
+- `status`
+- `errors`
+- `raw_output`
+- `ai_assistant`
+- `dual_layer_verification`
+
+## Local Development
+
+The container path is the supported path. A local Windows fallback still exists for development, but it is secondary.
+
 ```bash
-git clone https://github.com/YOUR_USERNAME/QuaNTecH-Verification-System.git
-cd QuaNTecH-Verification-System
 pip install -r requirements.txt
-python app.py
+python src/app.py
 ```
 
----
+## Repository Notes
 
-## 🏗️ Architecture
+- `src/app.py` runs the Flask API
+- `src/mizar_translator.py` converts verifier output into educational language
+- `src/google_proofreader.py` now uses Ollama when available
+- `mizar/` is a legacy Windows bundle kept for compatibility
+- `UI/` is a legacy front-end sample kept for compatibility
 
-```
-┌─────────────────────────────────────────┐
-│           QuaNTecH System               │
-├─────────────────────────────────────────┤
-│  🌐 Web Interface (Professional UI)     │
-├─────────────────────────────────────────┤
-│  🤖 Claude AI Translation Layer         │
-├─────────────────────────────────────────┤
-│  🎯 Gemini AI-First Analysis Layer      │
-├─────────────────────────────────────────┤
-│  🧮 Mizar Mathematical Verification     │
-└─────────────────────────────────────────┘
-```
+## License
 
-### Triple-AI Collaboration Flow
-1. **User Input** → Mathematical proof or question
-2. **Mizar Verification** → Formal mathematical validation
-3. **Claude Translation** → Human-readable error explanation
-4. **Gemini Enhancement** → Advanced analysis and suggestions
-5. **Chrome AI Polish** → Grammar and style improvements
-6. **Unified Response** → Complete mathematical assistance
+See `LICENSE.md`.
 
----
-
-## 🚀 Revolutionary Capabilities
-
-### For Students
-- Transform cryptic mathematical errors into clear explanations
-- Get step-by-step guidance on proof techniques
-- Learn formal verification principles interactively
-
-### For Researchers
-- Verify complex mathematical proofs automatically
-- Collaborate with AI to explore new mathematical concepts
-- Generate publication-ready formal proofs
-
-### For Educators
-- Create interactive mathematical learning experiences
-- Demonstrate formal verification principles visually
-- Provide AI-powered tutoring for mathematical concepts
-
----
-
-## 📊 Technical Specifications
-
-- **Backend**: Flask REST API with CORS support
-- **AI Integration**: Claude + Gemini + Chrome Built-in AI
-- **Mathematical Engine**: Mizar 8.1.15 with MML 5.94.1493
-- **Frontend**: Professional QuaNTecH-branded interface
-- **Deployment**: Google Colab + GitHub integration
-
----
-
-## 🤝 Contributing
-
-This project is part of Google's Early Access Programs. Please respect the trusted tester agreements and do not share details publicly until general release.
-
-### Development Team
-- **Lead Developer**: Jean-Sebastien Beaulieu (Secured_Me)
-- **AI Assistant**: Claude (Anthropic)  
-- **Collaboration**: Gemini (Google)
-- **Support**: Google Colab Team
-
----
-
-## 📜 License & Ethics
-
-**ProTecH YouR HeriTagE, SecureD OuR LegacieS.**
-
-This project is developed as "a gift to the children" learning mathematics, making formal verification accessible to everyone.
-
----
-
-## 🎯 Next Steps
-
-1. **Deploy to Google Colab** with AI-first experience
-2. **Integrate Chrome Built-in AI** for enhanced user experience  
-3. **Establish Claude ↔ Gemini collaboration** protocols
-4. **Launch public beta** after EAP completion
-5. **Educational outreach** to mathematics community
-
----
-
-*"The world's first AI-enhanced mathematical verification system - where formal mathematics meets human understanding."*
