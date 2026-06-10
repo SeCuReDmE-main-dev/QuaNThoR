@@ -1,34 +1,22 @@
 #!/usr/bin/env python3
-"""
-SCL Guardian Package for QuaNThoR Educational Tool
-Enforces SCL-2.0 license compliance automatically
-"""
+"""Packaging metadata for QuaNThoR."""
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
-    name="scl-guardian-quanthor",
-    version="2.0.0",
-    description="SCL-2.0 License enforcement for QuaNThoR educational tool",
-    long_description="""
-SCL Guardian automatically enforces Synaptic Code License 2.0 compliance 
-for QuaNThoR, the educational mathematical verification tool.
-
-Features:
-- Automatic license compliance checking
-- Educational tool protection mechanisms  
-- Student-safe software stability
-- Tamper detection and response
-- Classroom-ready security model
-
-This package is required for all QuaNThoR installations to ensure 
-educational stability and license compliance.
-    """,
+    name="quanthor",
+    version="1.0.0",
+    description="Containerized Mizar verifier with concise feedback for students and mathematicians",
+    long_description=(
+        "QuaNThoR runs the official Linux Mizar package in Docker and exposes "
+        "a Flask API that returns verifier output, parsed errors, and a short "
+        "plain-language explanation layer."
+    ),
     long_description_content_type="text/plain",
-    author="Jean-Sébastien Beaulieu & SeCuReDmE Initiative",
+    author="Jean-Sébastien Beaulieu",
     author_email="jeansebastienbeaulieuscrde.01@gmail.com",
     url="https://github.com/SeCuReDmE-main-dev/QuaNThoR",
-    license="SCL-2.0",
+    license="Apache-2.0",
     packages=find_packages(),
     python_requires=">=3.8",
     install_requires=[],
@@ -39,19 +27,19 @@ educational stability and license compliance.
         ],
     },
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Education",
-        "License :: Other/Proprietary License",
+        "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",  
+        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Topic :: Education :: Computer Aided Instruction (CAI)",
         "Topic :: Scientific/Engineering :: Mathematics",
-        "Topic :: Security",
     ],
-    keywords="education mathematics verification license compliance SCL",
+    keywords="mizar mathematics verification education docker ollama",
     include_package_data=True,
     zip_safe=False,
 )

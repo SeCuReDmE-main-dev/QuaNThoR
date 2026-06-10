@@ -20,6 +20,7 @@ echo    This prepares the Docker image that includes Mizar and Python.
 echo ========================================================================
 echo.
 echo Building the image may take a few minutes the first time.
+echo Default host port: 5050
 echo.
 
 docker compose build

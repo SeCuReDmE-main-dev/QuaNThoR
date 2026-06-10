@@ -13,8 +13,14 @@ from typing import Dict, Iterable, List, Optional
 from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
 
-from google_proofreader import OllamaProofreader
-from mizar_translator import MizarTranslator
+try:
+    from .ollama_proofreader import OllamaProofreader
+    from .mizar_drafter import MizarDraftAssistant
+    from .mizar_translator import MizarTranslator
+except ImportError:  # pragma: no cover - allows `python src/app.py`
+    from ollama_proofreader import OllamaProofreader
+    from mizar_drafter import MizarDraftAssistant
+    from mizar_translator import MizarTranslator
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -53,13 +59,15 @@ def _resolve_mizar_exec_dir(share_dir: Path) -> Path:
 
     for raw in (
         os.getenv("MIZAR_BIN"),
-        str(share_dir),
         "/usr/local/bin",
     ):
         if raw:
             candidate = Path(raw).expanduser()
             if candidate.exists():
                 return candidate
+
+    if share_dir.exists() and any((share_dir / name).exists() for name in ("verifier", "verifier.exe", "mizf", "mizf.bat")):
+        return share_dir
 
     return share_dir
 
@@ -72,9 +80,9 @@ def _prepend_path(path_to_add: Path) -> None:
 
 def _resolve_command_candidates(exec_dir: Path) -> List[str]:
     if os.name == "nt":
-        names = ["verifier.exe", "verifier", "mizf.bat", "mizf", "verifymain"]
+        names = ["mizf.bat", "mizf", "verifier.exe", "verifier", "verifymain"]
     else:
-        names = ["verifier", "mizf", "verifymain"]
+        names = ["mizf", "verifier", "verifymain"]
 
     candidates: List[str] = []
     for name in names:
@@ -184,6 +192,7 @@ CORS(app)
 
 translator = MizarTranslator()
 proofreader = OllamaProofreader()
+drafter = MizarDraftAssistant()
 
 
 @app.route("/")
@@ -201,7 +210,13 @@ def health():
             "mizar_share_dir": str(MIZAR_SHARE_DIR),
             "mizar_exec_dir": str(MIZAR_EXEC_DIR),
             "ollama_base_url": proofreader.base_url,
-            "ollama_model": proofreader.model,
+            "ollama_model_configured": proofreader.configured_model,
+            "ollama_model_resolved": proofreader.model,
+            "ollama_model_structured_outputs": not proofreader.model.lower().endswith("cloud"),
+            "mizar_draft_base_url": drafter.base_url,
+            "mizar_draft_model_configured": drafter.configured_model,
+            "mizar_draft_model_resolved": drafter.model,
+            "mizar_draft_structured_outputs": not drafter.model.lower().endswith("cloud"),
             "timeout_seconds": DEFAULT_TIMEOUT_SECONDS,
         }
     )
@@ -301,6 +316,23 @@ def verify_mizar():
         )
 
 
+@app.route("/draft", methods=["POST"])
+def draft_mizar():
+    data = request.get_json(silent=True) or {}
+    query = data.get("query") or data.get("prompt")
+    if not query or not str(query).strip():
+        return jsonify({"status": "error", "message": "JSON body with a 'query' field is required."}), 400
+
+    context = data.get("context") or ""
+    draft = drafter.draft_from_query(str(query), str(context))
+
+    return jsonify(
+        {
+            **draft,
+            "powered_by": "QuaNThoR Mizar drafting assistant",
+        }
+    )
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")))
-

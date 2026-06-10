@@ -6,7 +6,8 @@ services:
     environment:
       MIZAR_TIMEOUT_SECONDS: ${MIZAR_TIMEOUT_SECONDS:-60}
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.1}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:7b}
+      OLLAMA_MIZAR_MODEL: ${OLLAMA_MIZAR_MODEL:-qwen2.5:7b}
     ports:
-      - "5000:5000"
+      - "${QUANTHOR_HOST_PORT:-5050}:5000"
     restart: unless-stopped

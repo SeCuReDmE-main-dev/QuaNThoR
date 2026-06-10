@@ -19,7 +19,10 @@ echo   QuaNThoR container startup
 echo   Mizar runs inside Docker, not on the host machine.
 echo ========================================================
 echo.
-echo Open http://localhost:5000 after the container starts.
+if "%QUANTHOR_HOST_PORT%"=="" (
+    set "QUANTHOR_HOST_PORT=5050"
+)
+echo Open http://localhost:%QUANTHOR_HOST_PORT% after the container starts.
 echo Press Ctrl+C to stop the container.
 echo.
 

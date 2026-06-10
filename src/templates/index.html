@@ -58,13 +58,25 @@
 </head>
 <body>
     <div class="container">
-        <h1>Mizar Proof Verifier</h1>
-        <p>Paste a Mizar article. The API runs Mizar in Docker and can use Ollama for explanations.</p>
+        <h1>Mizar Proof Verifier and Drafter</h1>
+        <p>Verify a full Mizar article or draft one from a natural-language request. The API runs Mizar in Docker and can use Ollama for explanations.</p>
         <div id="runtimeStatus" class="status">Checking runtime...</div>
-        <textarea id="mizarCode" placeholder="environ ... begin ... theorem ... proof ... end;"></textarea>
-        <button onclick="verifyProof()">Verify</button>
-        <h2>Result:</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
+            <section>
+                <h2>Verify a proof</h2>
+                <textarea id="mizarCode" placeholder="environ ... begin ... theorem ... proof ... end;"></textarea>
+                <button onclick="verifyProof()">Verify</button>
+            </section>
+            <section>
+                <h2>Draft from a request</h2>
+                <textarea id="mizarQuery" placeholder="Explain the theorem or proof you want in plain language."></textarea>
+                <button onclick="draftMizar()">Draft Mizar</button>
+            </section>
+        </div>
+        <h2>Verification result:</h2>
         <pre id="resultOutput">The verifier output will appear here.</pre>
+        <h2>Draft result:</h2>
+        <pre id="draftOutput">The draft output will appear here.</pre>
     </div>
 
     <script>
@@ -94,6 +106,41 @@
             }
         }
 
+        async function draftMizar() {
+            const query = document.getElementById('mizarQuery').value;
+            const outputElement = document.getElementById('draftOutput');
+            outputElement.textContent = 'Drafting...';
+
+            const response = await fetch('/draft', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: query })
+            });
+
+            const data = await response.json();
+            if (data.status === 'draft' || data.status === 'needs_more_context') {
+                let draftDisplay = `${data.status === 'draft' ? '✅ Draft ready' : '⚠️ More context needed'}\n\n`;
+                draftDisplay += `Normalized request:\n${data.normalized_query}\n\n`;
+                draftDisplay += `Mizar draft:\n${data.mizar_draft}\n\n`;
+                if (data.clarifying_questions && data.clarifying_questions.length) {
+                    draftDisplay += `Clarifying questions:\n`;
+                    data.clarifying_questions.forEach(question => {
+                        draftDisplay += `• ${question}\n`;
+                    });
+                    draftDisplay += '\n';
+                }
+                if (data.editing_suggestions && data.editing_suggestions.length) {
+                    draftDisplay += `Editing suggestions:\n`;
+                    data.editing_suggestions.forEach(suggestion => {
+                        draftDisplay += `• ${suggestion.type}: ${suggestion.suggested}\n`;
+                    });
+                }
+                outputElement.textContent = draftDisplay;
+            } else {
+                outputElement.textContent = `⚠️ Error: ${data.message}`;
+            }
+        }
+
         async function loadRuntimeStatus() {
             const statusElement = document.getElementById('runtimeStatus');
             try {
@@ -101,7 +148,8 @@
                 const data = await response.json();
                 const ollama = data.ollama_base_url || 'not configured';
                 const mizar = data.mizar_available ? data.mizar_command : 'not found';
-                statusElement.textContent = `Mizar: ${mizar} | Ollama: ${ollama} | Timeout: ${data.timeout_seconds}s`;
+                const draftModel = data.mizar_draft_model_resolved || data.mizar_draft_model_configured || 'not configured';
+                statusElement.textContent = `Mizar: ${mizar} | Ollama: ${ollama} | Draft model: ${draftModel} | Timeout: ${data.timeout_seconds}s`;
             } catch (error) {
                 statusElement.textContent = 'Runtime status unavailable. Check the backend container.';
             }
