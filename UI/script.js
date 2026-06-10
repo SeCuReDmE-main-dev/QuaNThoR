@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // --- API Call ---
-            const response = await fetch('http://localhost:5000/verify', {
+            const response = await fetch('/verify', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,9 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. Display the Verdict
         const verdictDiv = document.createElement('div');
         verdictDiv.classList.add('verdict');
-        if (status === 'Success') {
+        if (status === 'success') {
             verdictDiv.classList.add('success');
-            verdictDiv.innerHTML = `<strong>Verdict:</strong> System Issue Identified & Explained`;
+            verdictDiv.innerHTML = `<strong>Verdict:</strong> Verification successful`;
         } else {
             // Future logic for other statuses like logical proof errors
             verdictDiv.classList.add('error');

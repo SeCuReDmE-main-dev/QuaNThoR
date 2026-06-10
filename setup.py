@@ -31,16 +31,11 @@ educational stability and license compliance.
     license="SCL-2.0",
     packages=find_packages(),
     python_requires=">=3.8",
-    install_requires=[
-        "cryptography>=3.4.8",
-        "requests>=2.25.1",
-        "hashlib3>=0.1.0",
-        "watchdog>=2.1.0",
-    ],
+    install_requires=[],
     entry_points={
         "console_scripts": [
-            "quanthor-verify=scl_guardian.quanthor:verify_compliance",
-            "quanthor-lock=scl_guardian.quanthor:educational_lock",
+            "quanthor-verify=scl_guardian:verify_compliance",
+            "quanthor-lock=scl_guardian:activate_educational_lock",
         ],
     },
     classifiers=[

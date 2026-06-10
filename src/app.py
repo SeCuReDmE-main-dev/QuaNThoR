@@ -1,152 +1,306 @@
-# 1. Import necessary libraries
-from flask import Flask, request, jsonify, render_template
-from flask_cors import CORS
+"""Flask entrypoint for the QuaNThoR verification service."""
+
+from __future__ import annotations
+
+import os
+import re
+import shutil
 import subprocess
 import tempfile
-import os
-import re # We use this to find the errors in the text
-from mizar_translator import MizarTranslator
-from google_proofreader import GoogleProofreader
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional
 
-# Set up Mizar environment variables for local installation
-import os
-# Set correct Mizar path - it's in the project root directory
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-mizar_path = os.path.join(project_root, 'mizar')
-mizar_path = os.path.abspath(mizar_path)  # Ensure absolute path
-os.environ['MIZFILES'] = mizar_path
-os.environ['PATH'] = os.environ.get('PATH', '') + f';{mizar_path}'
+from flask import Flask, jsonify, render_template, request
+from flask_cors import CORS
+
+from google_proofreader import OllamaProofreader
+from mizar_translator import MizarTranslator
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_TIMEOUT_SECONDS = int(os.getenv("MIZAR_TIMEOUT_SECONDS", "60"))
+
+
+def _resolve_mizar_share_dir() -> Path:
+    """Return the directory that holds Mizar shared data."""
+
+    candidates: List[Path] = []
+    for raw in (
+        os.getenv("MIZFILES"),
+        os.getenv("MIZAR_SHARE"),
+        str(PROJECT_ROOT / "mizar"),
+        "/usr/local/share/mizar",
+    ):
+        if raw:
+            candidates.append(Path(raw).expanduser())
+
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+
+    return candidates[0] if candidates else Path("/usr/local/share/mizar")
+
+
+def _resolve_mizar_exec_dir(share_dir: Path) -> Path:
+    """Return the directory that exposes the Mizar executables."""
+
+    home = os.getenv("MIZAR_HOME")
+    if home:
+        home_path = Path(home).expanduser()
+        for candidate in (home_path / "bin", home_path):
+            if candidate.exists():
+                return candidate
+
+    for raw in (
+        os.getenv("MIZAR_BIN"),
+        str(share_dir),
+        "/usr/local/bin",
+    ):
+        if raw:
+            candidate = Path(raw).expanduser()
+            if candidate.exists():
+                return candidate
+
+    return share_dir
+
+
+def _prepend_path(path_to_add: Path) -> None:
+    current_parts = os.environ.get("PATH", "").split(os.pathsep)
+    if str(path_to_add) not in current_parts:
+        os.environ["PATH"] = str(path_to_add) + os.pathsep + os.environ.get("PATH", "")
+
+
+def _resolve_command_candidates(exec_dir: Path) -> List[str]:
+    if os.name == "nt":
+        names = ["verifier.exe", "verifier", "mizf.bat", "mizf", "verifymain"]
+    else:
+        names = ["verifier", "mizf", "verifymain"]
+
+    candidates: List[str] = []
+    for name in names:
+        candidates.append(str(exec_dir / name))
+    candidates.extend(names)
+
+    ordered: List[str] = []
+    seen = set()
+    for candidate in candidates:
+        if candidate not in seen:
+            ordered.append(candidate)
+            seen.add(candidate)
+    return ordered
+
+
+def _resolve_mizar_command(exec_dir: Path) -> Optional[str]:
+    for candidate in _resolve_command_candidates(exec_dir):
+        if Path(candidate).exists() or shutil.which(candidate):
+            return candidate
+    return None
+
+
+def _needs_shell(command: str) -> bool:
+    return Path(command).suffix.lower() in {".bat", ".cmd", ".ps1"}
+
+
+def _run_mizar(command: str, article_name: str, work_dir: Path, env: Dict[str, str]) -> subprocess.CompletedProcess[str]:
+    if _needs_shell(command):
+        cmdline = f'"{command}" {article_name}'
+        return subprocess.run(  # noqa: S603 - command is selected from local binaries
+            cmdline,
+            capture_output=True,
+            text=True,
+            timeout=DEFAULT_TIMEOUT_SECONDS,
+            env=env,
+            cwd=str(work_dir),
+            shell=True,
+        )
+
+    return subprocess.run(  # noqa: S603 - command is selected from local binaries
+        [command, article_name],
+        capture_output=True,
+        text=True,
+        timeout=DEFAULT_TIMEOUT_SECONDS,
+        env=env,
+        cwd=str(work_dir),
+    )
+
+
+def _parse_mizar_errors(output: str) -> List[Dict[str, object]]:
+    errors: List[Dict[str, object]] = []
+    code_messages: Dict[str, str] = {}
+
+    for raw_line in output.splitlines():
+        line = raw_line.strip()
+        code_message_match = re.match(r"^(\d+):\s*(.+)$", line)
+        if code_message_match:
+            code_messages[code_message_match.group(1)] = code_message_match.group(2).strip()
+
+    for raw_line in output.splitlines():
+        line = raw_line.strip()
+
+        verbose_match = re.search(r"Error at line (\d+), character (\d+):(.*)", line)
+        if verbose_match:
+            errors.append(
+                {
+                    "line": int(verbose_match.group(1)),
+                    "character": int(verbose_match.group(2)),
+                    "message": verbose_match.group(3).strip() or "Mizar reported an error.",
+                }
+            )
+            continue
+
+        compact_match = re.match(r"^(\d+)\s+(\d+)\s+(\d+)$", line)
+        if compact_match:
+            code = compact_match.group(3)
+            errors.append(
+                {
+                    "line": int(compact_match.group(1)),
+                    "character": int(compact_match.group(2)),
+                    "message": code_messages.get(code, f"Mizar error code {code}"),
+                }
+            )
+
+    unique_errors: List[Dict[str, object]] = []
+    seen = set()
+    for error in errors:
+        key = (error["line"], error["character"], error["message"])
+        if key not in seen:
+            unique_errors.append(error)
+            seen.add(key)
+
+    return unique_errors
+
+
+MIZAR_SHARE_DIR = _resolve_mizar_share_dir()
+MIZAR_EXEC_DIR = _resolve_mizar_exec_dir(MIZAR_SHARE_DIR)
+_prepend_path(MIZAR_EXEC_DIR)
+
+os.environ.setdefault("MIZFILES", str(MIZAR_SHARE_DIR))
+os.environ.setdefault("mizfiles", str(MIZAR_SHARE_DIR))
+
+MIZAR_COMMAND = _resolve_mizar_command(MIZAR_EXEC_DIR)
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend-backend communication
+CORS(app)
 
-# Initialize our AI systems
 translator = MizarTranslator()
-proofreader = GoogleProofreader()
+proofreader = OllamaProofreader()
 
-# 2. The main page route stays the same
-@app.route('/')
+
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
-# 3. This is our new, professional API endpoint
-@app.route('/verify', methods=['POST'])
+
+@app.route("/health")
+def health():
+    return jsonify(
+        {
+            "status": "ok",
+            "mizar_available": bool(MIZAR_COMMAND),
+            "mizar_command": MIZAR_COMMAND,
+            "mizar_share_dir": str(MIZAR_SHARE_DIR),
+            "mizar_exec_dir": str(MIZAR_EXEC_DIR),
+            "ollama_base_url": proofreader.base_url,
+            "ollama_model": proofreader.model,
+            "timeout_seconds": DEFAULT_TIMEOUT_SECONDS,
+        }
+    )
+
+
+@app.route("/verify", methods=["POST"])
 def verify_mizar():
-    # --- CHANGE 1: We get data from a JSON request body ---
-    data = request.get_json()
-    if not data or 'code' not in data:
-        return jsonify({"status": "error", "message": "Invalid request. JSON with 'code' key required."}), 400
-    mizar_code = data['code']
-    # --- END CHANGE 1 ---
+    data = request.get_json(silent=True) or {}
+    if "code" not in data:
+        return jsonify({"status": "error", "message": "JSON body with a 'code' field is required."}), 400
 
-    # We use a temporary file to safely handle the user's code
-    with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.miz') as temp_file:
-        temp_file.write(mizar_code)
-        temp_filename = temp_file.name
+    mizar_code = data["code"]
 
-    try:
-        # Try different Mizar commands based on what's available
-        local_verifier = os.path.join(mizar_path, 'verifier.exe')
-        local_mizf = os.path.join(mizar_path, 'mizf.bat')
-        mizar_commands = [local_verifier, local_mizf, 'mizf', '/mizar/verifymain', '/usr/local/bin/mizf']
+    with tempfile.TemporaryDirectory(prefix="quanthor-") as temp_dir_name:
+        temp_dir = Path(temp_dir_name)
+        article_path = temp_dir / "proof.miz"
+        article_path.write_text(mizar_code, encoding="utf-8")
+
+        env = os.environ.copy()
+        env["MIZFILES"] = str(MIZAR_SHARE_DIR)
+        env["mizfiles"] = str(MIZAR_SHARE_DIR)
+
+        if MIZAR_EXEC_DIR.exists():
+            current_path = env.get("PATH", "")
+            if str(MIZAR_EXEC_DIR) not in current_path.split(os.pathsep):
+                env["PATH"] = str(MIZAR_EXEC_DIR) + os.pathsep + current_path
+
         process = None
-        
-        for cmd in mizar_commands:
-            print(f"Trying command: {cmd}")
+        attempted_commands: List[str] = []
+        for candidate in _resolve_command_candidates(MIZAR_EXEC_DIR):
+            attempted_commands.append(candidate)
             try:
-                if cmd == local_mizf:
-                    # Use mizf.bat with environment variable
-                    env = os.environ.copy()
-                    env['mizfiles'] = mizar_path
-                    # Get relative path from mizar directory to temp file
-                    relative_temp = os.path.relpath(temp_filename, mizar_path)
-                    process = subprocess.run(
-                        [cmd, relative_temp],
-                        capture_output=True,
-                        text=True,
-                        timeout=30,
-                        env=env,
-                        cwd=mizar_path
-                    )
-                else:
-                    process = subprocess.run(
-                        [cmd, temp_filename],
-                        capture_output=True,
-                        text=True,
-                        timeout=30
-                    )
-                print(f"Command {cmd} succeeded")
+                process = _run_mizar(candidate, article_path.name, temp_dir, env)
                 break
-            except FileNotFoundError as e:
-                print(f"FileNotFoundError for {cmd}: {e}")
+            except FileNotFoundError:
                 continue
-            except Exception as e:
-                print(f"Exception for {cmd}: {e}")
+            except subprocess.TimeoutExpired:
+                return jsonify({"status": "error", "message": "Verification timed out."}), 500
+            except Exception as exc:  # noqa: BLE001 - we want to try alternate Mizar entrypoints
+                last_error = str(exc)
                 continue
-        
+
         if process is None:
-            return jsonify({"status": "error", "message": "Mizar verifier not found. Please ensure Mizar is installed."}), 500
-            
-        output = process.stdout + process.stderr
+            return (
+                jsonify(
+                    {
+                        "status": "error",
+                        "message": "Mizar verifier not found. Check the container image or the local Mizar installation.",
+                        "attempted_commands": attempted_commands,
+                    }
+                ),
+                500,
+            )
 
-        # --- CHANGE 2: We parse the output and create a structured JSON response ---
-        errors = []
-        # Mizar errors often look like: "Error at line X, character Y: [message]"
-        # This regular expression helps us find and capture those details.
-        error_pattern = re.compile(r"Error at line (\d+), character (\d+):(.*)")
+        output = f"{process.stdout or ''}{process.stderr or ''}"
+        errors = _parse_mizar_errors(output)
 
-        for line in output.splitlines():
-            match = error_pattern.search(line)
-            if match:
-                errors.append({
-                    "line": int(match.group(1)),
-                    "character": int(match.group(2)),
-                    "message": match.group(3).strip()
-                })
-
-        # Determine the final status based on what we found
-        if not errors and "Correct" in output:
+        if process.returncode == 0 and not errors:
             status = "success"
         else:
             status = "failure"
 
-        # PHASE 3: AI-Enhanced Response with Human Translation
         ai_enhanced_response = translator.create_ai_response(mizar_code, output)
-        
-        # PHASE 4: Google Proofreader Integration - Dual Layer Verification
         human_explanation = ai_enhanced_response["ai_assistance"]["human_explanation"]
         grammar_analysis = proofreader.proofread_text(human_explanation)
-        
-        # Enhance AI assistant with grammar improvements
+
         enhanced_ai_assistant = ai_enhanced_response["ai_assistance"].copy()
         enhanced_ai_assistant["grammar_enhanced_explanation"] = grammar_analysis["improved_text"]
         enhanced_ai_assistant["grammar_suggestions"] = grammar_analysis["suggestions"]
         enhanced_ai_assistant["readability_score"] = grammar_analysis["readability_score"]
         enhanced_ai_assistant["grammar_score"] = grammar_analysis["grammar_score"]
-        
-        # Combine traditional verification with dual-layer AI assistance
-        response_data = {
-            "status": status,
-            "errors": errors,
-            "raw_output": output,
-            "ai_assistant": enhanced_ai_assistant,
-            "dual_layer_verification": {
-                "mathematical_analysis": "Mizar + AI Translation",
-                "grammatical_analysis": "Google Proofreader API",
-                "combined_confidence": (ai_enhanced_response["ai_assistance"]["confidence"] + grammar_analysis["grammar_score"]) / 2
-            },
-            "powered_by": "QuaNTecH Dual-Layer AI Mathematical Verification System"
-        }
-        return jsonify(response_data)
-        # --- END CHANGE 2 ---
+        enhanced_ai_assistant["proofreading_provider"] = grammar_analysis.get("provider", "heuristic")
 
-    except subprocess.TimeoutExpired:
-        return jsonify({"status": "error", "message": "Verification timed out."}), 500
-    finally:
-        # Always clean up the temporary file
-        os.remove(temp_filename)
+        return jsonify(
+            {
+                "status": status,
+                "return_code": process.returncode,
+                "errors": errors,
+                "raw_output": output,
+                "attempted_commands": attempted_commands,
+                "mizar_backend": {
+                    "command": MIZAR_COMMAND,
+                    "share_dir": str(MIZAR_SHARE_DIR),
+                    "exec_dir": str(MIZAR_EXEC_DIR),
+                },
+                "ai_assistant": enhanced_ai_assistant,
+                "dual_layer_verification": {
+                    "mathematical_analysis": "Mizar formal verification",
+                    "grammatical_analysis": "Ollama cloud proofreading",
+                    "combined_confidence": (
+                        ai_enhanced_response["ai_assistance"]["confidence"] + grammar_analysis["grammar_score"]
+                    )
+                    / 2,
+                },
+                "powered_by": "QuaNThoR containerized verification system",
+            }
+        )
 
-# This part allows us to run the server directly with "python app.py"
-if __name__ == '__main__':
-    # We will use port 5000 as it is standard for Flask development
-    app.run(host='0.0.0.0', port=5000)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")))
+

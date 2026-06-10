@@ -1,22 +1,35 @@
-@echo off 
-title QuaNThoR - Triple-AI Mathematical Verification System 
-color 0B 
-echo. 
-echo ======================================================== 
-echo    QuaNThoR - Triple-AI Mathematical Verification 
-echo    Starting Web Server... 
-echo ======================================================== 
-echo. 
-echo Server starting at: http://localhost:5000 
-echo. 
-echo INSTRUCTIONS FOR STUDENTS: 
-echo 1. Wait for "Running on http://127.0.0.1:5000" message 
-echo 2. Open your web browser 
-echo 3. Go to: http://localhost:5000 
-echo 4. Start verifying mathematical proofs! 
-echo. 
-echo Press Ctrl+C to stop the server when done 
-echo. 
-cd /d "C:\Users\jeans\Desktop\QuaNThoR\" 
-python src/app.py 
-pause 
+@echo off
+setlocal
+title QuaNThoR - Container Launch
+color 0B
+
+cd /d "%~dp0"
+
+where docker >nul 2>&1
+if errorlevel 1 (
+    echo Docker Desktop is required to run QuaNThoR in the container.
+    echo Install Docker Desktop, then run this script again.
+    pause
+    exit /b 1
+)
+
+echo.
+echo ========================================================
+echo   QuaNThoR container startup
+echo   Mizar runs inside Docker, not on the host machine.
+echo ========================================================
+echo.
+echo Open http://localhost:5000 after the container starts.
+echo Press Ctrl+C to stop the container.
+echo.
+
+docker compose up --build
+set "EXIT_CODE=%errorlevel%"
+
+if not "%EXIT_CODE%"=="0" (
+    echo.
+    echo QuaNThoR failed to start. Check the Docker logs above.
+    pause
+)
+
+exit /b %EXIT_CODE%

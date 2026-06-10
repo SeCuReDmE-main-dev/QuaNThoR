@@ -1,221 +1,191 @@
-# 🌟 MIZAR LANGUAGE TRANSLATOR 🌟
-# Transform cryptic Mizar errors into human-readable guidance
-# Gift to all children learning mathematics
+"""Translate raw Mizar verifier output into student-friendly guidance."""
+
+from __future__ import annotations
 
 import re
-import json
-from typing import Dict, List, Tuple
+from datetime import datetime, timezone
+from typing import Dict, List
+
 
 class MizarTranslator:
-    """
-    The heart of AI-enhanced mathematical verification.
-    Converts Mizar's cryptic language into human understanding.
-    """
-    
-    def __init__(self):
+    """Convert verifier output into clear, educational feedback."""
+
+    def __init__(self) -> None:
         self.error_patterns = {
-            # Common Mizar error patterns and their human translations
-            "verifier.exe": {
-                "pattern": r"Can't find.*verifier\.exe",
-                "human": "🔧 System Issue: The Mizar verification engine is not properly configured.",
-                "suggestion": "This is a setup problem, not an error in your proof. The system administrator needs to fix the installation.",
-                "category": "system_error"
+            "missing_binary": {
+                "pattern": r"(can't find|not found|no such file or directory|unable to execute).*(verifier|mizf)",
+                "human": "The Mizar verifier is not available in the current environment.",
+                "suggestion": "Check that the container installed Mizar correctly and that the executable directory is on PATH.",
+                "category": "system_error",
             },
             "unknown_symbol": {
-                "pattern": r".*unknown.*symbol.*",
-                "human": "❓ Unknown Symbol: You're using a symbol that Mizar doesn't recognize.",
-                "suggestion": "Check your spelling, or you might need to import the right vocabulary or definitions.",
-                "category": "syntax_error"
+                "pattern": r".*unknown.*symbol.*|.*unknown token.*",
+                "human": "Unknown symbol: Mizar does not recognize one of the names in your proof.",
+                "suggestion": "Check spelling, imported vocabularies, and whether the symbol belongs to the active environment.",
+                "category": "syntax_error",
+            },
+            "syntax_error": {
+                "pattern": r".*unexpected.*|.*illegal character.*|.*formula expected.*",
+                "human": "Syntax error: the article is not written in the form Mizar expects.",
+                "suggestion": "Check punctuation, line breaks, missing keywords, and the structure of the theorem or proof block.",
+                "category": "syntax_error",
             },
             "type_error": {
                 "pattern": r".*type.*mismatch.*",
-                "human": "🎯 Type Mismatch: The types don't match in your mathematical expression.",
-                "suggestion": "Make sure you're combining objects of compatible types (like adding numbers to numbers, not numbers to sets).",
-                "category": "logic_error"
+                "human": "Type mismatch: two expressions do not belong to the same mathematical type.",
+                "suggestion": "Verify that each object in the proof has the type required by the statement you are using.",
+                "category": "logic_error",
             },
             "proof_incomplete": {
-                "pattern": r".*proof.*incomplete.*",
-                "human": "📝 Proof Incomplete: Your proof doesn't fully justify the conclusion.",
-                "suggestion": "Add more steps to your proof, or check if you're missing some logical connections.",
-                "category": "proof_error"
+                "pattern": r".*proof.*incomplete.*|.*missing proof.*|.*proof not finished.*",
+                "human": "Proof incomplete: the argument stops before the conclusion is justified.",
+                "suggestion": "Add the missing proof steps or check whether a lemma should be cited explicitly.",
+                "category": "proof_error",
             },
             "theorem_false": {
                 "pattern": r".*false.*theorem.*|.*contradiction.*",
-                "human": "⚠️ False Statement: You're trying to prove something that isn't true.",
-                "suggestion": "Check your theorem statement - there might be a logical error in what you're claiming.",
-                "category": "logic_error"
-            }
+                "human": "The claim is likely false or inconsistent with the assumptions.",
+                "suggestion": "Re-check the theorem statement and the assumptions you are using before trying to prove it.",
+                "category": "logic_error",
+            },
         }
-        
+
         self.encouragement_messages = [
-            "🌟 You're doing great! Every mathematician makes errors while learning.",
-            "💪 Keep going! Each error teaches you something valuable.",
-            "🎓 This is how mathematical thinking develops - through careful reasoning.",
-            "✨ Remember: even the greatest mathematicians needed practice!"
+            "Every failed proof is still a useful step toward a correct one.",
+            "Small corrections in formal proofs often reveal the real mathematical structure.",
+            "Precision matters in Mizar, so each error message is a guide rather than a verdict.",
+            "Mathematical proof writing is iterative: diagnose, refine, and verify again.",
         ]
-    
+
     def translate_error(self, mizar_output: str) -> Dict:
-        """
-        Transform raw Mizar output into human-friendly guidance.
-        
-        Args:
-            mizar_output: Raw text from Mizar verifier
-            
-        Returns:
-            Dictionary with human translation, suggestions, and encouragement
-        """
-        
-        # Clean the output
-        clean_output = mizar_output.strip()
-        
-        # Default response for unknown errors
+        clean_output = (mizar_output or "").strip()
+        lowered = clean_output.lower()
+
         translation = {
             "status": "needs_help",
             "raw_mizar": clean_output,
-            "human_explanation": "🤔 I encountered something I haven't seen before.",
-            "suggestion": "This might be a new type of error. Let's learn together!",
+            "human_explanation": "I encountered output that needs interpretation.",
+            "suggestion": "Review the verifier output and the article structure.",
             "category": "unknown",
             "encouragement": self.encouragement_messages[0],
-            "confidence": 0.5
+            "confidence": 0.5,
         }
-        
-        # Check against known patterns
-        for error_type, info in self.error_patterns.items():
+
+        for info in self.error_patterns.values():
             if re.search(info["pattern"], clean_output, re.IGNORECASE):
-                translation.update({
-                    "human_explanation": info["human"],
-                    "suggestion": info["suggestion"], 
-                    "category": info["category"],
-                    "confidence": 0.9
-                })
+                translation.update(
+                    {
+                        "human_explanation": info["human"],
+                        "suggestion": info["suggestion"],
+                        "category": info["category"],
+                        "confidence": 0.9,
+                    }
+                )
                 break
-        
-        # Special handling for successful verifications
-        if "correct" in clean_output.lower() or not clean_output or len(clean_output.strip()) == 0:
-            translation.update({
-                "status": "success",
-                "human_explanation": "🎉 Perfect! Your proof is mathematically correct!",
-                "suggestion": "Great work! Your logical reasoning is sound.",
-                "category": "success",
-                "encouragement": "🏆 Excellent mathematical thinking!",
-                "confidence": 1.0
-            })
-        
+
+        if self._looks_like_success(lowered):
+            translation.update(
+                {
+                    "status": "success",
+                    "human_explanation": "The proof verified successfully.",
+                    "suggestion": "The formal argument is accepted by Mizar.",
+                    "category": "success",
+                    "encouragement": "The proof is in good shape.",
+                    "confidence": 1.0,
+                }
+            )
+
         return translation
-    
+
     def generate_learning_hints(self, error_category: str) -> List[str]:
-        """
-        Provide educational hints based on error type.
-        
-        Args:
-            error_category: Category of the mathematical error
-            
-        Returns:
-            List of learning hints and tips
-        """
-        
         hints = {
             "syntax_error": [
-                "💡 Check your spelling - Mizar is case-sensitive",
-                "📚 Make sure you've included the right 'vocabularies' at the top",
-                "🔍 Look for missing semicolons or incorrect punctuation"
+                "Check punctuation and keyword order.",
+                "Confirm the article structure: environ, begin, theorem, proof, end.",
+                "Look for a missing semicolon or an extra token.",
             ],
             "logic_error": [
-                "🧠 Think about whether your statement is always true",
-                "🔗 Check if your logical connections are valid",
-                "📋 Try breaking complex statements into smaller parts"
+                "Ask whether the theorem is true under the stated assumptions.",
+                "Break the argument into smaller lemmas if the step is too large.",
+                "Verify that every cited result matches the type of the objects involved.",
             ],
             "proof_error": [
-                "📝 Each step in your proof should follow logically from previous steps",
-                "🎯 Make sure you're proving exactly what the theorem states",
-                "🔍 Check if you need additional lemmas or definitions"
+                "Every line in the proof should justify the next one.",
+                "A missing citation is often enough to make a valid idea fail.",
+                "Try to make each inference explicit before retrying the verifier.",
             ],
             "system_error": [
-                "⚙️ This isn't a problem with your mathematics",
-                "🔧 The system needs technical attention",
-                "💪 Keep working on your proofs while this gets fixed"
-            ]
+                "This is an installation or container problem, not a proof problem.",
+                "Check the Mizar installation before debugging the article itself.",
+                "Verify the container or host has the right executables and data files.",
+            ],
         }
-        
-        return hints.get(error_category, [
-            "🌟 Every error is a learning opportunity",
-            "📚 Mathematics is about precision and careful thinking",
-            "💪 Keep practicing - you're building important skills"
-        ])
+
+        return hints.get(
+            error_category,
+            [
+                "Read the verifier output carefully and look for the first concrete failure.",
+                "Use smaller lemmas to isolate the place where the reasoning breaks.",
+                "Re-run the proof after each fix so the next error is easier to interpret.",
+            ],
+        )
 
     def create_ai_response(self, mizar_code: str, mizar_output: str) -> Dict:
-        """
-        Create a complete AI-enhanced response combining verification with human guidance.
-        
-        Args:
-            mizar_code: The mathematical proof code
-            mizar_output: Raw Mizar verification output
-            
-        Returns:
-            Complete AI response with translation, hints, and encouragement
-        """
-        
         translation = self.translate_error(mizar_output)
-        hints = self.generate_learning_hints(translation["category"])
-        
-        # Analyze the mathematical content
         proof_analysis = self._analyze_proof_structure(mizar_code)
-        
+
         return {
             "verification_result": {
                 "status": translation["status"],
-                "raw_output": mizar_output
+                "raw_output": mizar_output,
             },
             "ai_assistance": {
                 "human_explanation": translation["human_explanation"],
                 "suggestion": translation["suggestion"],
-                "learning_hints": hints,
+                "learning_hints": self.generate_learning_hints(translation["category"]),
                 "encouragement": translation["encouragement"],
-                "confidence": translation["confidence"]
+                "confidence": translation["confidence"],
             },
             "proof_analysis": proof_analysis,
-            "timestamp": "2024",  # Would use actual timestamp
-            "powered_by": "❤️ Built with love for mathematical education"
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "powered_by": "QuaNThoR educational assistant",
         }
-    
+
     def _analyze_proof_structure(self, mizar_code: str) -> Dict:
-        """
-        Analyze the structure of the mathematical proof.
-        
-        Args:
-            mizar_code: The proof code to analyze
-            
-        Returns:
-            Analysis of proof structure and complexity
-        """
-        
-        lines = mizar_code.split('\n')
-        
+        lines = mizar_code.splitlines()
         analysis = {
-            "proof_length": len([l for l in lines if l.strip()]),
+            "proof_length": len([line for line in lines if line.strip()]),
             "has_theorem": "theorem" in mizar_code.lower(),
             "has_proof": "proof" in mizar_code.lower(),
-            "complexity": "beginner"  # Could be enhanced with real analysis
+            "complexity": "beginner",
         }
-        
-        # Simple complexity assessment
+
         if analysis["proof_length"] > 10:
             analysis["complexity"] = "intermediate"
         if analysis["proof_length"] > 20:
             analysis["complexity"] = "advanced"
-            
+
         return analysis
 
+    def _looks_like_success(self, lowered_output: str) -> bool:
+        success_markers = (
+            "correct",
+            "verified",
+            "accepted",
+            "time of mizaring",
+            "no errors",
+            "registration is correct",
+        )
+        return bool(lowered_output) and any(marker in lowered_output for marker in success_markers)
 
-# Test the translator
+
 if __name__ == "__main__":
     translator = MizarTranslator()
-    
-    # Test with our current error
     test_output = "Can't find C:\\Users\\jeans\\Desktop\\Mathematic verifier\\mizar\\verifier.exe"
     result = translator.translate_error(test_output)
-    
-    print("🧪 TRANSLATOR TEST:")
+
+    print("TRANSLATOR TEST")
     print(f"Human: {result['human_explanation']}")
     print(f"Suggestion: {result['suggestion']}")
     print(f"Encouragement: {result['encouragement']}")
+
