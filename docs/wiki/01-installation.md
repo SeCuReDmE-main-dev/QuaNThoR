@@ -46,7 +46,7 @@ Conditions minimales attendues :
 2) Vérification test de base
 
 ```powershell
-curl -X POST http://localhost:5050/verify -H "Content-Type: application/json" --data-binary "@test.miz"
+curl -X POST http://localhost:5050/verify -H "Content-Type: application/json" --data-binary "@examples/mizar/minimal/test.miz"
 ```
 
 3) Revalidation rapide

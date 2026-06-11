@@ -29,7 +29,7 @@ Chaque appel suit ce schéma :
 ### Appel
 
 ```powershell
-curl -X POST http://localhost:5050/verify -H "Content-Type: application/json" --data-binary "@test.miz"
+curl -X POST http://localhost:5050/verify -H "Content-Type: application/json" --data-binary "@examples/mizar/minimal/test.miz"
 ```
 
 ### Réponse attendue
@@ -128,4 +128,3 @@ Le bloc RAG ne sert pas à vérifier le formalisme Mizar ; il sert d’aide docu
 2. Exiger une vérification à chaque modification.
 3. Garder la piste `/health`, puis logs quand une erreur persiste.
 4. Utiliser `needs_clarification` comme indicateur de consigne imprécise à renvoyer.
-

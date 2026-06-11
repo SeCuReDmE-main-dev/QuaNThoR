@@ -17,8 +17,9 @@ param(
 
 $Global:ScriptVersion = "2.0.0"
 $Global:StartTime = Get-Date
+$Global:ProjectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
 $Global:LogFile = Join-Path $PSScriptRoot "quanthor_debug_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
-$Global:ConfigFile = Join-Path $PSScriptRoot "quanthor_config.json"
+$Global:ConfigFile = Join-Path $Global:ProjectRoot "quanthor_config.json"
 $Global:ErrorCount = 0
 $Global:WarningCount = 0
 $Global:FixCount = 0
@@ -277,7 +278,7 @@ function Test-And-Fix-Mizar {
     Write-Log "🧮 PHASE 3: MIZAR MATHEMATICAL LIBRARY CONFIGURATION" -Level "INFO"
     Write-Log "═══════════════════════════════════════════════════════" -Level "INFO"
     
-    $mizarPath = Join-Path $PSScriptRoot "mizar"
+    $mizarPath = Join-Path $Global:ProjectRoot "mizar"
     
     # Test Mizar directory
     if (-not (Test-Path $mizarPath)) {
@@ -317,7 +318,7 @@ function Test-And-Fix-Mizar {
     
     try {
         # Create test file
-        $testFile = Join-Path $PSScriptRoot "auto_test.miz"
+        $testFile = Join-Path $Global:ProjectRoot "auto_test.miz"
         $testContent = @"
 environ
 
@@ -376,7 +377,7 @@ function Test-And-Fix-QuaNThoR {
     
     $allStructureOK = $true
     foreach ($item in $appStructure.GetEnumerator()) {
-        $path = Join-Path $PSScriptRoot $item.Key
+        $path = Join-Path $Global:ProjectRoot $item.Key
         if (Test-Path $path) {
             Write-Log "$($item.Value): FOUND" -Level "SUCCESS"
         } else {
@@ -394,7 +395,7 @@ function Test-And-Fix-QuaNThoR {
     Write-Log "Testing Python application import..." -Level "INFO"
     
     try {
-        $appPath = Join-Path $PSScriptRoot "src"
+        $appPath = Join-Path $Global:ProjectRoot "src"
         $testResult = python -c "
 import sys
 sys.path.insert(0, r'$appPath')
@@ -491,7 +492,7 @@ function Start-QuaNThoR-WithMonitoring {
     } -ArgumentList $Global:LogFile
     
     # Set up environment for QuaNThoR
-    $mizarPath = Join-Path $PSScriptRoot "mizar"
+    $mizarPath = Join-Path $Global:ProjectRoot "mizar"
     $env:mizfiles = $mizarPath
     $env:Path = "$mizarPath;$env:Path"
     
@@ -500,7 +501,7 @@ function Start-QuaNThoR-WithMonitoring {
     Write-Log "  PATH updated with Mizar" -Level "DEBUG"
     
     # Start QuaNThoR application
-    $appPath = Join-Path $PSScriptRoot "src"
+    $appPath = Join-Path $Global:ProjectRoot "src"
     Push-Location $appPath
     
     try {
@@ -554,7 +555,7 @@ function Invoke-EmergencyRecovery {
     # Clear temp files
     $tempFiles = @("*.tmp", "*.log", "auto_test.*", "test.*")
     foreach ($pattern in $tempFiles) {
-        Get-ChildItem -Path $PSScriptRoot -Filter $pattern -ErrorAction SilentlyContinue | Remove-Item -Force
+        Get-ChildItem -Path $Global:ProjectRoot -Filter $pattern -ErrorAction SilentlyContinue | Remove-Item -Force
     }
     
     # Reset environment

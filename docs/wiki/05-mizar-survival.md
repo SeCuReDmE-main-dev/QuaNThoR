@@ -45,7 +45,7 @@ et la correction plus prévisible pour les enseignants.
 ### Dépannage rapide (étudiant)
 
 ```powershell
-curl -X POST http://localhost:5050/verify -H "Content-Type: application/json" --data-binary "@test.miz"
+curl -X POST http://localhost:5050/verify -H "Content-Type: application/json" --data-binary "@examples/mizar/minimal/test.miz"
 curl -X POST http://localhost:5050/route -H "Content-Type: application/json" --data "{\"text\":\"Je pense que le lemme manque un `by` ici.\",\"execute\":true}"
 ```
 

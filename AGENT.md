@@ -11,5 +11,5 @@
 - Vérification fonctionnelle minimale après changement infra :
   - `docker compose build`
   - `docker compose up --build`
-  - `curl -X POST http://localhost:5050/verify -H "Content-Type: application/json" --data-binary "@test.miz"`.
+  - `curl -X POST http://localhost:5050/verify -H "Content-Type: application/json" --data-binary "@examples/mizar/minimal/test.miz"`.
 - Ne pas documenter ni utiliser le workflow de verrouillage obsolète.

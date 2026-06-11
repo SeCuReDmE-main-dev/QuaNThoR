@@ -83,7 +83,7 @@ docker compose --profile hipporag up --build
 ## 6) Checklist avant livraison d’un lot d’exercices
 
 1. `curl http://localhost:5050/health`
-2. `test.miz` via `/verify`
+2. `examples/mizar/minimal/test.miz` via `/verify`
 3. Une demande `curl /route` minimale
 4. Aucun appel critique en mode `execute: true` sans confirmation visuelle de la santé
 5. Logs de container propres pour les erreurs non déterministes

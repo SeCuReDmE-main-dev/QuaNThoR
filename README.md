@@ -110,7 +110,7 @@ I -> I_system^S -> D_f -> dF -> i_fractal
 ```powershell
 curl http://localhost:5050/health
 
-curl -X POST http://localhost:5050/verify -H "Content-Type: application/json" --data-binary "@test.miz"
+curl -X POST http://localhost:5050/verify -H "Content-Type: application/json" --data-binary "@examples/mizar/minimal/test.miz"
 
 curl -X POST http://localhost:5050/route -H "Content-Type: application/json" --data "{\"text\":\"Prove a minimal theorem about even numbers.\"}"
 ```
@@ -152,6 +152,7 @@ $env:OLLAMA_MIZAR_MODEL = "mizar-specialist"
 - `src/ollama_proofreader.py` : correction grammaticale/punctuation
 - `src/hipporag_service.py` / `src/hipporag_api.py` : couche RAG
 - `models/mizar-specialist/Modelfile` : prompt de modèle
+- `examples/mizar/minimal/test.miz` : fixture Mizar minimale
 - `docs/wiki/*` : mode d’emploi détaillé
 - `SECURITY.md`, `LICENSE` : règles de sécurité / licence
 
@@ -180,6 +181,14 @@ docker compose --profile docs up docs    # Prévisualisation locale en container
 - [x] Vérification de dérive docs auto via `python scripts/docgen.py check`.
 - [x] Prévisualisation locale via `python scripts/docgen.py serve --port 8000` ou `docker compose --profile docs up docs`.
 - [ ] Ajouter un "docs check" obligatoire avant tout release locale.
+
+## Public Archive Intent
+
+QuaNThoR est destiné à être publié comme outil public gratuit pour l’apprentissage, l’expérimentation et la vérification formelle. Il n’est pas destiné à être vendu ou transformé en produit commercial fermé.
+
+Le dépôt doit rester utilisable sans dépendance obligatoire à une API propriétaire. Certaines intégrations peuvent être optionnelles, mais le coeur de l’outil et ses exemples doivent rester accessibles publiquement.
+
+Après la présentation finale, le dépôt sera archivé dans l’état livré. Aucune maintenance continue, refonte, support commercial ou roadmap post-archive n’est promise. Les personnes qui souhaitent l’utiliser devront le trouver, le lire et l’exécuter tel quel.
 
 ## Licence
 
