@@ -1,0 +1,19 @@
+{
+  "phase": "phase3_relation_auditor_hardening",
+  "created_at": "2026-06-11T08:43:59.272651+00:00",
+  "phase2_status": "completed",
+  "output_dir": "C:\\Users\\jeans\\Desktop\\book\\QuaNThoR\\QuaNThoR\\output\\phase3_relation_auditor",
+  "python": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.26100-SP0",
+  "query_count": 10,
+  "neutrosophic_rows": 10,
+  "plithogenic_quaternion_rows": 10,
+  "expected_actual_conflicts": 4,
+  "missing_verification_mappings": 3,
+  "status": "completed",
+  "invariants": {
+    "hierarchy": "I -> I_system^S -> D_f -> dF -> i_fractal",
+    "dF_separate_from_I_system_S": true,
+    "no_quantum_computation_claim": true
+  }
+}
