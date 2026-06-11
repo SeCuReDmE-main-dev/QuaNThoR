@@ -1,0 +1,11 @@
+environ
+
+begin
+
+theorem
+  for x, y being set holds x = y implies y = x;
+proof
+  let x, y be set;
+  assume x = y;
+  hence y = x;
+end;

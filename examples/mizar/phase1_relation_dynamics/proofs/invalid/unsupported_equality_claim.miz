@@ -1,0 +1,10 @@
+environ
+
+begin
+
+theorem
+  for x, y being set holds x = y;
+proof
+  let x, y be set;
+  thus x = y;
+end;

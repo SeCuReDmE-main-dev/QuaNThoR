@@ -1,0 +1,37 @@
+{
+  "dataset": "phase1_relation_dynamics",
+  "version": 1,
+  "purpose": "Educational Mizar seed dataset for HippoRAG relation-dynamics evidence.",
+  "expected_counts": {
+    "valid_proofs": 5,
+    "invalid_or_incomplete_proofs": 5,
+    "student_queries": 10
+  },
+  "fields": [
+    "id",
+    "student_query",
+    "mizar_target",
+    "expected_retrieval_support",
+    "expected_failure_mode",
+    "education_note",
+    "expected_verifier_status",
+    "relation_dynamics_focus"
+  ],
+  "relation_dynamics_focus_values": [
+    "support",
+    "indeterminacy",
+    "contradiction",
+    "channel_conflict",
+    "verification_friction"
+  ],
+  "expected_behavior": {
+    "valid": "Verifier should succeed when local Mizar environment supports the minimal article form.",
+    "invalid": "Verifier should fail with a useful error that can be mapped to friction, missing support, contradiction, or indeterminacy.",
+    "ambiguous": "Router should prefer clarification over unsupported proof drafting."
+  },
+  "non_claims": [
+    "This dataset does not claim retrieval improvement.",
+    "This dataset does not claim quantum computation.",
+    "This dataset does not treat quaternion relation traces as formal proof."
+  ]
+}

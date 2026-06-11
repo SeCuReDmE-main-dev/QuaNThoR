@@ -1,0 +1,8 @@
+environ
+
+begin
+
+theorem
+  for x being set holds x = x;
+proof
+end;

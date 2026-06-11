@@ -1,0 +1,10 @@
+environ
+
+begin
+
+theorem
+  for x being UndefinedThing holds x = x;
+proof
+  let x be UndefinedThing;
+  thus x = x;
+end;

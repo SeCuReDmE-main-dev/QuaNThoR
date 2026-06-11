@@ -1,0 +1,10 @@
+environ
+
+begin
+
+theorem
+  for n being Nat holds n is useful;
+proof
+  let n be Nat;
+  thus n is useful;
+end;

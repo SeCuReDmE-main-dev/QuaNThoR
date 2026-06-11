@@ -1,0 +1,13 @@
+environ
+
+begin
+
+theorem
+  for x, y, z being set holds x = y & y = z implies x = z;
+proof
+  let x, y, z be set;
+  assume that
+    A1: x = y and
+    A2: y = z;
+  thus x = z by A1,A2;
+end;

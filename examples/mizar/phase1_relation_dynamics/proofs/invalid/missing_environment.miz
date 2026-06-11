@@ -1,0 +1,10 @@
+environ
+
+begin
+
+theorem
+  for n being Nat holds n + 0 = n;
+proof
+  let n be Nat;
+  thus n + 0 = n;
+end;
