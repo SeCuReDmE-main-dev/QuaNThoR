@@ -51,7 +51,14 @@ def _normalize_documents(raw_docs: object) -> List[str]:
 
 
 def _error_response(exc: Exception):
-    return jsonify({"status": "error", "message": str(exc), "hipporag": rag.status()}), 503
+    return jsonify(
+        {
+            "status": "error",
+            "message": str(exc),
+            "exception_type": type(exc).__name__,
+            "hipporag": rag.status(),
+        }
+    ), 503
 
 
 @app.route("/health")

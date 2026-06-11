@@ -75,6 +75,11 @@ def main() -> int:
     parser.add_argument("--top-k", type=int, default=int(os.getenv("PHASE2_TOP_K", "3")))
     parser.add_argument("--timeout", type=float, default=float(os.getenv("PHASE2_TIMEOUT_SECONDS", "30")))
     parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR))
+    parser.add_argument(
+        "--skip-route",
+        action="store_true",
+        help="Skip /route calls when the configured route model would activate a disallowed local model.",
+    )
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
@@ -95,6 +100,7 @@ def main() -> int:
         "platform": platform.platform(),
         "query_count": len(queries),
         "document_count": len(docs),
+        "route_skipped_by_operator": args.skip_route,
         "status": "started",
         "controlled_skips": [],
     }
@@ -160,20 +166,33 @@ def main() -> int:
             )
         retrieval_rows.append({"id": query_id, "query": text, "retrieval": retrieval})
 
-        try:
-            route = post_json(
-                f"{args.quanthor_url}/route",
+        if args.skip_route:
+            route = {
+                "status": "controlled_skip",
+                "message": "Route step skipped: current runtime policy forbids activating the resolved local route model.",
+            }
+            manifest["controlled_skips"].append(
                 {
-                    "text": text,
-                    "execute": False,
-                    "use_rag": False,
-                    "audit_neutrosophy": True,
-                    "audit_plithogenic_quaternion": False,
-                },
-                args.timeout,
+                    "component": "quanthor_route",
+                    "id": query_id,
+                    "reason": route["message"],
+                }
             )
-        except Exception as exc:  # noqa: BLE001
-            route = {"status": "controlled_skip", "message": str(exc)}
+        else:
+            try:
+                route = post_json(
+                    f"{args.quanthor_url}/route",
+                    {
+                        "text": text,
+                        "execute": False,
+                        "use_rag": False,
+                        "audit_neutrosophy": True,
+                        "audit_plithogenic_quaternion": False,
+                    },
+                    args.timeout,
+                )
+            except Exception as exc:  # noqa: BLE001
+                route = {"status": "controlled_skip", "message": str(exc)}
         route_rows.append({"id": query_id, "query": text, "route": route})
 
     for doc in docs:

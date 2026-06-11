@@ -31,6 +31,18 @@ def _ollama_cloud_api_key() -> str:
     return os.getenv("OLLAMA_API_KEY") or os.getenv("OLLAMA_CLOUD_TOKEN") or ""
 
 
+def _embedding_endpoint_required(
+    embedding_model_name: str, embedding_base_url: str, embedding_model_explicit: bool
+) -> bool:
+    if embedding_base_url:
+        return False
+    if not embedding_model_explicit:
+        return True
+    if embedding_model_name.startswith(("Transformers/", "GritLM", "nvidia/NV-Embed-v2", "contriever")):
+        return False
+    return True
+
+
 class HippoRAGService:
     """Lazy wrapper around OSU-NLP-Group/HippoRAG.
 
@@ -45,6 +57,7 @@ class HippoRAGService:
         ollama_cloud_base_url = "https://ollama.com/v1" if _ollama_cloud_enabled() else ""
         default_ollama_model = "gemma4:31b" if _ollama_cloud_enabled() else "gemma4:12b-it-qat"
         self.llm_model_name = os.getenv("HIPPORAG_LLM_MODEL", os.getenv("OLLAMA_MODEL", default_ollama_model))
+        self.embedding_model_explicit = bool(os.getenv("HIPPORAG_EMBEDDING_MODEL"))
         self.llm_base_url = (
             os.getenv("HIPPORAG_LLM_BASE_URL")
             or os.getenv("OPENAI_BASE_URL", "")
@@ -102,7 +115,9 @@ class HippoRAGService:
             "embedding_base_url": self.embedding_base_url or None,
             "paid_openai_api_required": not bool(_ollama_cloud_enabled() or self.llm_base_url),
             "ollama_cloud_configured": _ollama_cloud_enabled(),
-            "embedding_endpoint_required": not bool(self.embedding_base_url),
+            "embedding_endpoint_required": _embedding_endpoint_required(
+                self.embedding_model_name, self.embedding_base_url, self.embedding_model_explicit
+            ),
             "default_top_k": self.default_top_k,
         }
 
@@ -187,7 +202,7 @@ class HippoRAGService:
             raise RuntimeError(self._last_error)
 
         try:
-            from hipporag import HippoRAG  # type: ignore
+            from hipporag.HippoRAG import HippoRAG  # type: ignore
 
             Path(self.save_dir).mkdir(parents=True, exist_ok=True)
             kwargs: Dict[str, Any] = {

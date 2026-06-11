@@ -1,8 +1,8 @@
 # Phase 2 Retrieval Evidence Summary
 
-Status: `completed_with_skips`
-Created: `2026-06-11T05:29:45.904709+00:00`
-QuaNThoR URL: `http://localhost:5050`
+Status: `completed`
+Created: `2026-06-11T08:22:14.114793+00:00`
+QuaNThoR URL: `http://127.0.0.1:5051`
 
 ## Counts
 
@@ -11,22 +11,12 @@ QuaNThoR URL: `http://localhost:5050`
 - Retrieval rows: 10
 - Route rows: 10
 - Verification rows: 10
-- Successful retrieval rows: 0
+- Successful retrieval rows: 10
 - Successful route rows: 10
 
 ## Controlled Skips
 
-- `hipporag_index`: HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.
-- `hipporag_retrieve`: HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.
-- `hipporag_retrieve`: HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.
-- `hipporag_retrieve`: HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.
-- `hipporag_retrieve`: HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.
-- `hipporag_retrieve`: HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.
-- `hipporag_retrieve`: HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.
-- `hipporag_retrieve`: HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.
-- `hipporag_retrieve`: HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.
-- `hipporag_retrieve`: HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.
-- `hipporag_retrieve`: HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.
+- None recorded.
 
 ## Interpretation
 
