@@ -1,0 +1,137 @@
+{
+  "phase": "phase2_hipporag_retrieval_evidence",
+  "created_at": "2026-06-11T05:29:45.904709+00:00",
+  "dataset_dir": "C:\\Users\\jeans\\Desktop\\book\\QuaNThoR\\QuaNThoR\\examples\\mizar\\phase1_relation_dynamics",
+  "output_dir": "C:\\Users\\jeans\\Desktop\\book\\QuaNThoR\\QuaNThoR\\output\\phase2_relation_dynamics",
+  "quanthor_url": "http://localhost:5050",
+  "top_k": 3,
+  "python": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.26100-SP0",
+  "query_count": 10,
+  "document_count": 10,
+  "status": "completed_with_skips",
+  "controlled_skips": [
+    {
+      "component": "hipporag_index",
+      "reason": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "http_status": 503
+    },
+    {
+      "component": "hipporag_retrieve",
+      "id": "phase1-q001",
+      "reason": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "http_status": 503
+    },
+    {
+      "component": "hipporag_retrieve",
+      "id": "phase1-q002",
+      "reason": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "http_status": 503
+    },
+    {
+      "component": "hipporag_retrieve",
+      "id": "phase1-q003",
+      "reason": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "http_status": 503
+    },
+    {
+      "component": "hipporag_retrieve",
+      "id": "phase1-q004",
+      "reason": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "http_status": 503
+    },
+    {
+      "component": "hipporag_retrieve",
+      "id": "phase1-q005",
+      "reason": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "http_status": 503
+    },
+    {
+      "component": "hipporag_retrieve",
+      "id": "phase1-q006",
+      "reason": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "http_status": 503
+    },
+    {
+      "component": "hipporag_retrieve",
+      "id": "phase1-q007",
+      "reason": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "http_status": 503
+    },
+    {
+      "component": "hipporag_retrieve",
+      "id": "phase1-q008",
+      "reason": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "http_status": 503
+    },
+    {
+      "component": "hipporag_retrieve",
+      "id": "phase1-q009",
+      "reason": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "http_status": 503
+    },
+    {
+      "component": "hipporag_retrieve",
+      "id": "phase1-q010",
+      "reason": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "http_status": 503
+    }
+  ],
+  "quanthor_health": {
+    "hipporag": {
+      "available": false,
+      "default_top_k": 5,
+      "embedding_base_url": null,
+      "embedding_model_name": "nvidia/NV-Embed-v2",
+      "enabled": false,
+      "initialized": false,
+      "last_error": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "llm_base_url": null,
+      "llm_model_name": "qwen2.5:7b",
+      "mode": "in_process",
+      "package_available": false,
+      "save_dir": "/app/outputs/hipporag",
+      "service_url": null
+    },
+    "mizar_available": true,
+    "mizar_command": "/usr/local/bin/mizf",
+    "mizar_draft_base_url": "http://host.docker.internal:11434",
+    "mizar_draft_model_configured": "qwen2.5:7b",
+    "mizar_draft_model_resolved": "gpt-oss:120b-cloud",
+    "mizar_draft_structured_outputs": false,
+    "mizar_exec_dir": "/usr/local/bin",
+    "mizar_share_dir": "/usr/local/share/mizar",
+    "neutrosophic_audit_available": true,
+    "ollama_base_url": "http://host.docker.internal:11434",
+    "ollama_model_configured": "qwen2.5:7b",
+    "ollama_model_resolved": "gpt-oss:120b-cloud",
+    "ollama_model_structured_outputs": false,
+    "router_base_url": "http://host.docker.internal:11434",
+    "router_model_configured": "mizar-specialist",
+    "router_model_resolved": "gpt-oss:120b-cloud",
+    "router_structured_outputs": false,
+    "status": "ok",
+    "timeout_seconds": 60,
+    "http_status": 200
+  },
+  "index_result": {
+    "hipporag": {
+      "available": false,
+      "default_top_k": 5,
+      "embedding_base_url": null,
+      "embedding_model_name": "nvidia/NV-Embed-v2",
+      "enabled": false,
+      "initialized": false,
+      "last_error": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+      "llm_base_url": null,
+      "llm_model_name": "qwen2.5:7b",
+      "mode": "in_process",
+      "package_available": false,
+      "save_dir": "/app/outputs/hipporag",
+      "service_url": null
+    },
+    "message": "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it.",
+    "status": "error",
+    "http_status": 503
+  }
+}
