@@ -14,6 +14,23 @@ def _enabled_from_env(value: str | None) -> bool:
     return str(value or "").strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _openai_compatible_base_url(value: str | None) -> str:
+    cleaned = str(value or "").strip().rstrip("/")
+    if not cleaned:
+        return ""
+    if cleaned.endswith("/v1"):
+        return cleaned
+    return f"{cleaned}/v1"
+
+
+def _ollama_cloud_enabled() -> bool:
+    return bool(os.getenv("OLLAMA_API_KEY") or os.getenv("OLLAMA_CLOUD_TOKEN"))
+
+
+def _ollama_cloud_api_key() -> str:
+    return os.getenv("OLLAMA_API_KEY") or os.getenv("OLLAMA_CLOUD_TOKEN") or ""
+
+
 class HippoRAGService:
     """Lazy wrapper around OSU-NLP-Group/HippoRAG.
 
@@ -24,10 +41,20 @@ class HippoRAGService:
     def __init__(self) -> None:
         self.enabled = _enabled_from_env(os.getenv("HIPPORAG_ENABLED"))
         self.save_dir = os.getenv("HIPPORAG_SAVE_DIR", "outputs/hipporag")
-        self.llm_model_name = os.getenv("HIPPORAG_LLM_MODEL", os.getenv("OLLAMA_MODEL", "gpt-4o-mini"))
-        self.llm_base_url = os.getenv("HIPPORAG_LLM_BASE_URL", os.getenv("OPENAI_BASE_URL", ""))
-        self.embedding_model_name = os.getenv("HIPPORAG_EMBEDDING_MODEL", "nvidia/NV-Embed-v2")
-        self.embedding_base_url = os.getenv("HIPPORAG_EMBEDDING_BASE_URL", "")
+        ollama_openai_base_url = _openai_compatible_base_url(os.getenv("OLLAMA_BASE_URL"))
+        ollama_cloud_base_url = "https://ollama.com/v1" if _ollama_cloud_enabled() else ""
+        default_ollama_model = "gemma4:31b" if _ollama_cloud_enabled() else "gemma4:12b-it-qat"
+        self.llm_model_name = os.getenv("HIPPORAG_LLM_MODEL", os.getenv("OLLAMA_MODEL", default_ollama_model))
+        self.llm_base_url = (
+            os.getenv("HIPPORAG_LLM_BASE_URL")
+            or os.getenv("OPENAI_BASE_URL", "")
+            or ollama_cloud_base_url
+            or ollama_openai_base_url
+        )
+        self.embedding_model_name = os.getenv("HIPPORAG_EMBEDDING_MODEL") or (
+            "nomic-embed-text" if ollama_openai_base_url else "nvidia/NV-Embed-v2"
+        )
+        self.embedding_base_url = os.getenv("HIPPORAG_EMBEDDING_BASE_URL") or ollama_openai_base_url
         self.default_top_k = int(os.getenv("HIPPORAG_TOP_K", "5"))
         self.service_url = os.getenv("HIPPORAG_SERVICE_URL", "").rstrip("/")
         self.request_timeout = float(os.getenv("HIPPORAG_REQUEST_TIMEOUT_SECONDS", "120"))
@@ -73,6 +100,9 @@ class HippoRAGService:
             "llm_base_url": self.llm_base_url or None,
             "embedding_model_name": self.embedding_model_name,
             "embedding_base_url": self.embedding_base_url or None,
+            "paid_openai_api_required": not bool(_ollama_cloud_enabled() or self.llm_base_url),
+            "ollama_cloud_configured": _ollama_cloud_enabled(),
+            "embedding_endpoint_required": not bool(self.embedding_base_url),
             "default_top_k": self.default_top_k,
         }
 
@@ -143,6 +173,11 @@ class HippoRAGService:
         if not self.enabled:
             self._last_error = "HippoRAG is disabled. Set HIPPORAG_ENABLED=true to enable it."
             raise RuntimeError(self._last_error)
+        if _ollama_cloud_enabled():
+            os.environ.setdefault("OLLAMA_API_KEY", _ollama_cloud_api_key())
+            os.environ.setdefault("OPENAI_API_KEY", _ollama_cloud_api_key())
+        if self.llm_base_url or self.embedding_base_url:
+            os.environ.setdefault("OPENAI_API_KEY", "ollama-local-placeholder")
         if self._client is not None:
             return self._client
         if importlib.util.find_spec("hipporag") is None:

@@ -5,10 +5,10 @@ La liste est extraite automatiquement via `os.getenv(...)` dans le code Python d
 | Variable | Default détecté | Fichier source |
 |---|---|---|
 | `HIPPORAG_EMBEDDING_BASE_URL` |  | `hipporag_service.py` |
-| `HIPPORAG_EMBEDDING_MODEL` | nvidia/NV-Embed-v2 | `hipporag_service.py` |
+| `HIPPORAG_EMBEDDING_MODEL` |  | `hipporag_service.py` |
 | `HIPPORAG_ENABLED` |  | `hipporag_service.py` |
 | `HIPPORAG_LLM_BASE_URL` |  | `hipporag_service.py` |
-| `HIPPORAG_LLM_MODEL` | gpt-4o-mini | `hipporag_service.py` |
+| `HIPPORAG_LLM_MODEL` | default_ollama_model | `hipporag_service.py` |
 | `HIPPORAG_REQUEST_TIMEOUT_SECONDS` | 120 | `hipporag_service.py` |
 | `HIPPORAG_SAVE_DIR` | outputs/hipporag | `hipporag_service.py` |
 | `HIPPORAG_SERVICE_URL` |  | `hipporag_service.py` |
@@ -18,14 +18,15 @@ La liste est extraite automatiquement via `os.getenv(...)` dans le code Python d
 | `MIZAR_SHARE` |  | `app.py` |
 | `MIZAR_TIMEOUT_SECONDS` | 60 | `app.py` |
 | `MIZFILES` |  | `app.py` |
-| `OLLAMA_API_KEY` |  | `mizar_drafter.py` |
+| `OLLAMA_API_KEY` |  | `hipporag_service.py` |
 | `OLLAMA_AUTH_TOKEN` |  | `mizar_drafter.py` |
-| `OLLAMA_BASE_URL` |  | `mizar_drafter.py` |
+| `OLLAMA_BASE_URL` |  | `hipporag_service.py` |
+| `OLLAMA_CLOUD_TOKEN` |  | `hipporag_service.py` |
 | `OLLAMA_DRAFT_MODEL` |  | `mizar_drafter.py` |
 | `OLLAMA_HOST` |  | `ollama_proofreader.py` |
 | `OLLAMA_MIZAR_BASE_URL` |  | `mizar_drafter.py` |
 | `OLLAMA_MIZAR_MODEL` |  | `mizar_drafter.py` |
-| `OLLAMA_MODEL` | gpt-4o-mini | `hipporag_service.py` |
+| `OLLAMA_MODEL` | default_ollama_model | `hipporag_service.py` |
 | `OLLAMA_PROOFREADER_MODEL` |  | `ollama_proofreader.py` |
 | `OLLAMA_ROUTER_BASE_URL` |  | `mizar_router.py` |
 | `OLLAMA_ROUTER_MODEL` |  | `mizar_router.py` |
