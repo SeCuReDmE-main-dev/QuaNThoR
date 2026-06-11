@@ -88,12 +88,16 @@ I -> I_system^S -> D_f -> dF -> i_fractal
 
 ## Variables d’environnement utiles
 
-- `OLLAMA_BASE_URL` : endpoint Ollama (par défaut `http://host.docker.internal:11434` en container)
-- `OLLAMA_MODEL` : modèle de secours pour proofreading
-- `OLLAMA_MIZAR_MODEL` : modèle brouillon Mizar
-- `OLLAMA_ROUTER_MODEL` : modèle de routeur
-- `OLLAMA_MIZAR_BASE_URL` : endpoint dédié au drafting si différent
-- `MIZAR_TIMEOUT_SECONDS` : timeout vérifieur (par défaut `60`)
+- `OLLAMA_BASE_URL` : endpoint Ollama (en container: `http://host.docker.internal:11434`).
+- `OLLAMA_HOST` : fallback alternatif pour le proofreading.
+- `OLLAMA_MIZAR_BASE_URL` : endpoint dédié au drafting si différent.
+- `OLLAMA_ROUTER_BASE_URL` : endpoint dédié au routeur si différent.
+- `OLLAMA_MODEL` : modèle de secours (fallback global).
+- `OLLAMA_DRAFT_MODEL` : alias pour le drafting.
+- `OLLAMA_ROUTER_MODEL` : modèle dédié au routeur.
+- `OLLAMA_MIZAR_MODEL` : alias de drafting pour éviter les ambiguïtés.
+- `OLLAMA_PROOFREADER_MODEL` : alias de proofreading.
+- `MIZAR_TIMEOUT_SECONDS` : timeout vérifieur (défaut `60`).
 - `HIPPORAG_ENABLED` : `true|false` (défaut `false`)
 - `HIPPORAG_SERVICE_URL` : URL du sidecar, ex. `http://hipporag:5100`
 - `HIPPORAG_LLM_BASE_URL` / `HIPPORAG_EMBEDDING_BASE_URL`
@@ -150,6 +154,32 @@ $env:OLLAMA_MIZAR_MODEL = "mizar-specialist"
 - `models/mizar-specialist/Modelfile` : prompt de modèle
 - `docs/wiki/*` : mode d’emploi détaillé
 - `SECURITY.md`, `LICENSE` : règles de sécurité / licence
+
+## Documentation automatique (sans GitHub Action)
+
+### Solution choisie pour être 100% opérationnelle
+
+- Flux local primaire (sans GitHub Action) : **MkDocs Material + génération locale** (`scripts/docgen.py`).
+- Option éditeur : **GitBook** si vous voulez une édition SaaS collaborative.
+- Aucun pipeline GitHub Action requis dans ce dépôt.
+
+### Commandes utiles
+
+```powershell
+python scripts/docgen.py generate       # Génère la docs auto dans docs/generated/*
+python scripts/docgen.py check           # Vérifie la synchronisation docs auto
+python -m pip install -r requirements-docs.txt
+python scripts/docgen.py build           # Build du site local
+python scripts/docgen.py serve --port 8000 # Prévisualisation locale
+docker compose --profile docs up docs    # Prévisualisation locale en container MkDocs
+```
+
+### To-Do de la facette docs
+
+- [x] Workflow local gratuit actif (`scripts/docgen.py` + MkDocs).
+- [x] Vérification de dérive docs auto via `python scripts/docgen.py check`.
+- [x] Prévisualisation locale via `python scripts/docgen.py serve --port 8000` ou `docker compose --profile docs up docs`.
+- [ ] Ajouter un "docs check" obligatoire avant tout release locale.
 
 ## Licence
 

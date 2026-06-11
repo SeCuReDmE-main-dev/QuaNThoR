@@ -1,50 +1,96 @@
-# Dépannage
+# Dépannage opérationnel (runbook)
 
-## Le container ne démarre pas
+## 1) Lancement et santé
 
-- Vérifier Docker Desktop actif.
-- Relancer :
-  - `docker compose down`
-  - `docker compose build --no-cache`
-  - `docker compose up --build`
-- Vérifier les logs : `docker logs quanthor`.
+### Symptôme : impossible d’atteindre `http://localhost:5050/health`
 
-## `/health` indisponible
+1. `docker ps` : vérifier le container `quanthor` ou `quanthor_quanthor` selon votre compose.
+2. `docker logs quanthor` : lire le message d’init.
+3. Forcer un démarrage propre :
 
-- Attendre la fin de l’initialisation (10-30s).
-- Vérifier le port (par défaut `5050`).
-- Vérifier la ligne `ports` dans `docker-compose.yml`.
+```powershell
+docker compose down
+docker compose build --no-cache
+docker compose up --build
+```
 
-## `mizar_available = false`
+4. Attendre la fin du bootstrap (~10-30 s) puis retenter.
 
-- Vérifier image et binaire Mizar dans le container.
-- Refaire le build avec cache vidé.
-- S’assurer que l’article envoyé à `/verify` contient bien :
-  - `environ`
-  - `begin`
-  - `end;`
+### Symptôme : service up, mais port indisponible
 
-## Routeur bloqué (`needs_clarification`)
+- Contrôler `QUANTHOR_HOST_PORT`.
+- Vérifier qu’aucun autre service n’écoute déjà sur ce port.
+- Relancer avec `-p 0.0.0.0:5050:5000` si nécessaire depuis la config.
 
-- Votre entrée n’est pas assez précise.
-- Donner une forme claire :
-  - si proposition formelle -> utiliser `code`
-  - si question textuelle -> utiliser `text`/`query` et une phrase complète
+## 2) `/verify` retourne `mizar_available: false` ou erreur de commande
 
-## RAG indisponible
+1. Vérifier qu’un vrai article est envoyé (`environ`, `begin`, `theorem`, `proof`, `end;`).
+2. Contrôler que le conteneur a été reconstruit avec un Mizar téléchargé/valide.
+3. Relancer avec cache vidé :
 
-- `HIPPORAG_ENABLED` vaut `false` par défaut.
-- Pour le mode sidecar, vérifier le profil `hipporag` et `HIPPORAG_SERVICE_URL`.
+```powershell
+docker compose build --no-cache quanthor
+docker compose up quanthor
+```
 
-## Erreurs de syntaxe Mizar les plus fréquentes
+4. Vérifier `mizar_share_dir` et `mizar_exec_dir` via `/health`.
 
-- Point-virgule manquant.
-- `proof` non fermé correctement.
-- Importations manquantes dans `environ`.
-- Article incomplet (pas de `end;`).
+## 3) Routeur mal classé
 
-## Contrôle avant dépôt de travail
+### Symptôme : `route = needs_clarification`
 
-1. Lancer `curl http://localhost:5050/health`.
-2. Lancer `test.miz` via `/verify`.
-3. Corriger une erreur à la fois et revalider.
+- Donner un input plus précis :
+  - demande mathématique précise => `code` ou texte avec `theorem`, `lemma`, `proof`.
+  - demande textuelle => phrase complète et explicite en `text`.
+
+### Symptôme : route incorrecte mais exécution bloquée
+
+- Utiliser le même appel avec `execute: false` :
+
+```powershell
+curl -X POST http://localhost:5050/route -H "Content-Type: application/json" --data "{\"text\":\"...\",\"execute\":false}"
+```
+
+- Si la décision est cohérente, relancer avec `execute: true`.
+
+## 4) Erreurs Mizar classiques
+
+- `end;` manquant.
+- `proof` non fermé / bloc non équilibré.
+- Imports absents (`environ` incomplet).
+- Théorème sans hypothèses suffisantes.
+- Séquence de tokens incorrecte (`then`, `assume`, `thus` mal placés).
+
+## 5) RAG désactivé ou indisponible
+
+`HIPPORAG_ENABLED` vaut `false` par défaut. Deux modes :
+
+- **In-process** : `HIPPORAG_ENABLED=true` et package `hipporag` disponible.
+- **Proxy** : `HIPPORAG_SERVICE_URL` pointant vers un service externe.
+
+Vérifier :
+
+```powershell
+curl http://localhost:5050/rag/status
+```
+
+Puis, si proxy requis :
+
+```powershell
+docker compose --profile hipporag up --build
+```
+
+## 6) Checklist avant livraison d’un lot d’exercices
+
+1. `curl http://localhost:5050/health`
+2. `test.miz` via `/verify`
+3. Une demande `curl /route` minimale
+4. Aucun appel critique en mode `execute: true` sans confirmation visuelle de la santé
+5. Logs de container propres pour les erreurs non déterministes
+
+## 7) Escalade support
+
+Quand une erreur persiste :
+- exporter: request JSON, response JSON, logs et horaire.
+- noter la version du conteneur.
+- ouvrir une issue avec reproduction minimale (fichier `.miz`, commande exacte, output).

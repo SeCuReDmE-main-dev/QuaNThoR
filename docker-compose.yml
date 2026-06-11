@@ -43,3 +43,15 @@ services:
     volumes:
       - ./outputs:/app/outputs
     restart: unless-stopped
+
+  docs:
+    image: squidfunk/mkdocs-material
+    profiles:
+      - docs
+    working_dir: /workspace
+    command: ["serve", "--dev-addr", "0.0.0.0:8000"]
+    volumes:
+      - ./:/workspace
+    ports:
+      - "${QUANTHOR_DOCS_PORT:-8000}:8000"
+    restart: unless-stopped

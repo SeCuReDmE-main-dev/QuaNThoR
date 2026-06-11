@@ -1,49 +1,85 @@
-# Installation et démarrage
+# Installation et démarrage (Windows + container-first)
 
-## 1) Prérequis
+## 1. Ce que cette documentation suppose
 
-- Windows 10/11
-- Docker Desktop
-- (Optionnel) accès à un endpoint Ollama
-- PowerShell
+- Docker Desktop installé.
+- PowerShell (ou équivalent).
+- Un terminal curl (inclut dans PowerShell récent).
+- Un endpoint LLM pour la rédaction/routage (Ollama recommandé).  
+  Sans endpoint LLM, la plupart des routes fonctionnent encore, avec fallback heuristique.
 
-## 2) Installation minimale (recommandée)
+## 2. Installation recommandée (3 minutes)
+
+### Lancement rapide (Windows)
+
+Depuis `C:\Users\jeans\Desktop\book\QuaNThoR\QuaNThoR` :
 
 ```powershell
-cd C:\Users\jeans\Desktop\book\QuaNThoR\QuaNThoR
 .\INSTALL_QUANTHOR.bat
-```
-
-## 3) Démarrage
-
-```powershell
 .\START_QUANTHOR.bat
 ```
 
-URL par défaut : `http://localhost:5050`.
+### Lancement direct container
 
-## 4) Vérification de base
+```powershell
+docker compose up --build
+```
+
+## 3. Point d’entrée par défaut
+
+- Application : `http://localhost:5050`
+- Interface web de test : `http://localhost:5050/`
+- Santé : `http://localhost:5050/health`
+
+## 4. Vérification immédiate (5 minutes)
+
+1) Santé service
 
 ```powershell
 curl http://localhost:5050/health
 ```
 
-Contrôlez au moins : `mizar_available`, `mizar_command`, `status`.
+Conditions minimales attendues :
+- `status` vaut `ok`
+- `mizar_available` doit être `true` ou un diagnostic précis d’échec (mizar absent).
 
-## 5) `.env` utile
+2) Vérification test de base
+
+```powershell
+curl -X POST http://localhost:5050/verify -H "Content-Type: application/json" --data-binary "@test.miz"
+```
+
+3) Revalidation rapide
+
+```powershell
+curl http://localhost:5050/route -H "Content-Type: application/json" --data "{\"text\":\"Prove that 0 <= 0.\"}"
+```
+
+## 5. Variables d’environnement (minimal opérationnel)
+
+Copier ces valeurs dans votre session ou `.env` (valeurs selon votre setup) :
 
 ```env
 QUANTHOR_HOST_PORT=5050
 MIZAR_TIMEOUT_SECONDS=60
 OLLAMA_BASE_URL=http://host.docker.internal:11434
-OLLAMA_MODEL=qwen2.5:7b
-OLLAMA_MIZAR_MODEL=qwen2.5:7b
 OLLAMA_ROUTER_MODEL=mizar-specialist
+OLLAMA_MIZAR_MODEL=mizar-specialist
+OLLAMA_PROOFREADER_MODEL=qwen2.5:7b
 HIPPORAG_ENABLED=false
 HIPPORAG_TOP_K=5
 ```
 
-## 6) Activation HippoRAG (optionnel)
+Notes de robustesse :
+
+- `OLLAMA_ROUTER_MODEL` pilote le routage.
+- `OLLAMA_MIZAR_MODEL` pilote le drafting.
+- `OLLAMA_PROOFREADER_MODEL` pilote la correction (`proofread`).
+- Si une variable dédiée est vide, le code retombe sur la variable générique correspondante.
+
+## 6. Configuration avancée (professeur / laboratoire)
+
+### Mode RAG local (profil `hipporag`)
 
 ```powershell
 $env:HIPPORAG_ENABLED = "true"
@@ -53,7 +89,31 @@ $env:HIPPORAG_EMBEDDING_BASE_URL = "http://host.docker.internal:11434/v1"
 docker compose --profile hipporag up --build
 ```
 
-## 7) Références de reprise
+### Mode Docker Docs (preview locale)
 
-- `docker-compose.yml` et `Dockerfile` : source de vérité runtime.
-- `QUANTHOR_AUTODEBUG.ps1` : aide de diagnostique local.
+```powershell
+docker compose --profile docs up docs
+```
+
+## 7. Construction de modèle Mizar dédié (recommandé)
+
+1. Créer un modèle spécialisé :
+
+```powershell
+ollama create mizar-specialist -f .\models\mizar-specialist\Modelfile
+```
+
+2. Forcer sa sélection :
+
+```powershell
+$env:OLLAMA_ROUTER_MODEL = "mizar-specialist"
+$env:OLLAMA_MIZAR_MODEL = "mizar-specialist"
+```
+
+## 8. Bonnes commandes d’exploitation
+
+- `docker compose down` : arrêter proprement.
+- `docker compose build --no-cache` : reconstruire complètement.
+- `docker logs quanthor` : logs applicatifs.
+- `python scripts/docgen.py check` : vérifier la cohérence docs auto.
+- `python scripts/docgen.py build` : générer le site local de documentation.

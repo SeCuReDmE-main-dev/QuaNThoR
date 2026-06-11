@@ -1,0 +1,52 @@
+site_name: QuaNThoR
+site_description: Documentation technique et pédagogique pour l'assistant de vérification Mizar.
+site_author: QuaNThoR
+docs_dir: docs
+theme:
+  name: material
+  language: fr
+  features:
+    - navigation.instant
+    - navigation.sections
+    - toc.integrate
+    - search.highlight
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: blue grey
+      accent: indigo
+      toggle:
+        icon: material/lightbulb
+        name: Mode clair
+    - scheme: slate
+      primary: blue grey
+      accent: indigo
+      toggle:
+        icon: material/lightbulb-outline
+        name: Mode sombre
+
+nav:
+  - Accueil: wiki/Home.md
+  - Démarrage:
+      - Installation: wiki/01-installation.md
+      - Usage quotidien: wiki/02-usage.md
+      - Contrat API: wiki/03-api.md
+      - Dépannage: wiki/04-troubleshooting.md
+      - Survie Mizar: wiki/05-mizar-survival.md
+  - Documentation auto:
+      - Documentation générée automatiquement: generated/documentation-summary.md
+      - Endpoints API: generated/api-endpoints.md
+      - Variables d'environnement: generated/environment-variables.md
+      - Plan d'action docs: wiki/06-documentation-automation.md
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.highlight
+  - toc:
+      permalink: true
