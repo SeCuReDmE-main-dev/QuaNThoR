@@ -35,6 +35,7 @@ nav:
       - Survie Mizar: wiki/05-mizar-survival.md
       - Phase 2 Retrieval Evidence: wiki/07-phase2-retrieval-evidence.md
       - Phase 3 Relation Auditor: wiki/08-phase3-relation-auditor.md
+      - Phase 5 Public Evidence Package: wiki/09-phase5-public-evidence-package.md
   - Documentation auto:
       - Documentation générée automatiquement: generated/documentation-summary.md
       - Endpoints API: generated/api-endpoints.md
