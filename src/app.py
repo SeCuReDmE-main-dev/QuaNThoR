@@ -20,6 +20,7 @@ try:
     from .mizar_router import MizarWorkflowRouter
     from .mizar_translator import MizarTranslator
     from .neutrosophic_auditor import NeutrosophicAuditor
+    from .plithogenic_quaternion_auditor import PlithogenicQuaternionAuditor
 except ImportError:  # pragma: no cover - allows `python src/app.py`
     from ollama_proofreader import OllamaProofreader
     from hipporag_service import HippoRAGService
@@ -27,6 +28,7 @@ except ImportError:  # pragma: no cover - allows `python src/app.py`
     from mizar_router import MizarWorkflowRouter
     from mizar_translator import MizarTranslator
     from neutrosophic_auditor import NeutrosophicAuditor
+    from plithogenic_quaternion_auditor import PlithogenicQuaternionAuditor
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -202,6 +204,7 @@ drafter = MizarDraftAssistant()
 router = MizarWorkflowRouter()
 rag = HippoRAGService()
 auditor = NeutrosophicAuditor()
+plithogenic_quaternion_auditor = PlithogenicQuaternionAuditor()
 
 
 @app.route("/")
@@ -232,6 +235,7 @@ def health():
             "router_structured_outputs": not router.model.lower().endswith("cloud"),
             "hipporag": rag.status(),
             "neutrosophic_audit_available": True,
+            "plithogenic_quaternion_audit_available": True,
             "timeout_seconds": DEFAULT_TIMEOUT_SECONDS,
         }
     )
@@ -270,6 +274,40 @@ def _rag_error_response(exc: Exception):
 
 def _audit_requested(data: Dict[str, object]) -> bool:
     return bool(data.get("audit_neutrosophy") or data.get("neutrosophic_audit"))
+
+
+def _plithogenic_quaternion_audit_requested(data: Dict[str, object]) -> bool:
+    return bool(data.get("audit_plithogenic_quaternion") or data.get("plithogenic_quaternion_audit"))
+
+
+def _build_plithogenic_quaternion_audit(
+    text: str,
+    *,
+    context: str = "",
+    route_decision: Dict[str, object] | None = None,
+    rag_context: str = "",
+    rag_error: str | None = None,
+    tool_result: Dict[str, object] | None = None,
+    retrieval: object = None,
+    neutrosophic_audit: Dict[str, object] | None = None,
+    top_k: int = 5,
+) -> Dict[str, object]:
+    neutrosophic_audit = neutrosophic_audit or auditor.audit(
+        text,
+        context=context,
+        route_decision=route_decision or {},
+        rag_context=rag_context,
+        rag_error=rag_error,
+        tool_result=tool_result or {},
+    )
+    return plithogenic_quaternion_auditor.audit(
+        text,
+        context=rag_context or context,
+        retrieval=retrieval,
+        neutrosophic_audit=neutrosophic_audit,
+        tool_result=tool_result or {},
+        top_k=top_k,
+    )
 
 
 def _verify_mizar_code(mizar_code: str) -> Dict[str, object]:
@@ -461,6 +499,40 @@ def audit_neutrosophy():
     return jsonify(audit)
 
 
+@app.route("/audit/plithogenic-quaternion", methods=["POST"])
+def audit_plithogenic_quaternion():
+    data = request.get_json(silent=True) or {}
+    text = data.get("text") or data.get("query") or data.get("prompt") or data.get("code")
+    if not text or not str(text).strip():
+        return jsonify({"status": "error", "message": "JSON body with 'text', 'query', 'prompt', or 'code' is required."}), 400
+
+    context = str(data.get("context") or "")
+    route_decision = data.get("decision") if isinstance(data.get("decision"), dict) else router.route(str(text), context)
+    tool_result = data.get("tool_result") if isinstance(data.get("tool_result"), dict) else {}
+    rag_context = str(data.get("rag_context") or "")
+    retrieval = data.get("retrieval") or data.get("results") or data.get("documents")
+    neutrosophic_audit = data.get("neutrosophic_audit") if isinstance(data.get("neutrosophic_audit"), dict) else None
+    if bool(data.get("use_rag", False)) and not retrieval and not rag_context:
+        try:
+            rag_context = rag.retrieve_context(str(text), _parse_top_k(data.get("top_k")))
+        except Exception as exc:  # noqa: BLE001 - audit should report, not fail, optional RAG
+            rag_context = ""
+            tool_result = {**tool_result, "rag_error": str(exc)}
+
+    audit = _build_plithogenic_quaternion_audit(
+        str(text),
+        context=context,
+        route_decision=route_decision,
+        rag_context=rag_context,
+        rag_error=str(tool_result.get("rag_error")) if tool_result.get("rag_error") else None,
+        tool_result=tool_result,
+        retrieval=retrieval,
+        neutrosophic_audit=neutrosophic_audit,
+        top_k=_parse_top_k(data.get("top_k")),
+    )
+    return jsonify(audit)
+
+
 @app.route("/route", methods=["POST"])
 def route_request():
     data = request.get_json(silent=True) or {}
@@ -495,6 +567,16 @@ def route_request():
                 route_decision=decision,
                 tool_result=result,
             )
+        if _plithogenic_quaternion_audit_requested(data):
+            response["plithogenic_quaternion_audit"] = _build_plithogenic_quaternion_audit(
+                str(text),
+                context=context,
+                route_decision=decision,
+                tool_result=result,
+                retrieval=data.get("retrieval"),
+                neutrosophic_audit=response.get("neutrosophic_audit"),
+                top_k=_parse_top_k(data.get("top_k")),
+            )
         return jsonify(response), http_status
 
     if route == "draft_mizar":
@@ -525,6 +607,18 @@ def route_request():
                 rag_error=rag_error,
                 tool_result=draft_result,
             )
+        if _plithogenic_quaternion_audit_requested(data):
+            response["plithogenic_quaternion_audit"] = _build_plithogenic_quaternion_audit(
+                str(text),
+                context=context,
+                route_decision=decision,
+                rag_context=rag_context,
+                rag_error=rag_error,
+                tool_result=draft_result,
+                retrieval=data.get("retrieval"),
+                neutrosophic_audit=response.get("neutrosophic_audit"),
+                top_k=_parse_top_k(data.get("top_k")),
+            )
         return jsonify(response)
 
     if route == "proofread":
@@ -537,12 +631,31 @@ def route_request():
                 route_decision=decision,
                 tool_result=proofread_result,
             )
+        if _plithogenic_quaternion_audit_requested(data):
+            response["plithogenic_quaternion_audit"] = _build_plithogenic_quaternion_audit(
+                str(text),
+                context=context,
+                route_decision=decision,
+                tool_result=proofread_result,
+                retrieval=data.get("retrieval"),
+                neutrosophic_audit=response.get("neutrosophic_audit"),
+                top_k=_parse_top_k(data.get("top_k")),
+            )
         return jsonify(response)
 
     response["status"] = "needs_clarification"
     response["clarifying_questions"] = decision.get("clarifying_questions", [])
     if _audit_requested(data):
         response["neutrosophic_audit"] = auditor.audit(str(text), context=context, route_decision=decision)
+    if _plithogenic_quaternion_audit_requested(data):
+        response["plithogenic_quaternion_audit"] = _build_plithogenic_quaternion_audit(
+            str(text),
+            context=context,
+            route_decision=decision,
+            retrieval=data.get("retrieval"),
+            neutrosophic_audit=response.get("neutrosophic_audit"),
+            top_k=_parse_top_k(data.get("top_k")),
+        )
     return jsonify(response)
 
 

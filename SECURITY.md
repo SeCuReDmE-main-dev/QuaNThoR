@@ -1,29 +1,29 @@
-# Security Policy
+# Politique de sécurité
 
-QuaNThoR is supported as a Dockerized application. If you find a security issue, send a minimal reproduction with the exact input and the observed output.
+QuaNThoR est un outil d’éducation et de vérification formelle.
+Signalez toute vulnérabilité impactant le runtime container, l’API Flask ou
+l’intégration Ollama/HippoRAG.
 
-## Reporting
+## Contacter
 
-Please include:
+- Email : `jeansebastienbeaulieuscrde.01@gmail.com`
+- Sujet : `[SECURITY] QuaNThoR`
 
-- affected commit, tag, or image
-- steps to reproduce
-- expected behavior
-- actual behavior
-- logs or screenshots if they help
+## Reproduction minimale demandée
 
-Contact: jeansebastienbeaulieuscrde.01@gmail.com
-Subject: `[SECURITY] QuaNThoR issue`
+1. Requête exacte (`curl`), headers inclus.
+2. Payload complet.
+3. Résultat attendu vs obtenu.
+4. Étapes pour reproduire la panne.
+5. Logs du conteneur si pertinent (`docker logs ...`).
 
-## Scope
+## Zone couverte
 
-- Flask API failures
-- Docker build or startup failures
-- Mizar installation or execution issues inside the container
-- Ollama integration issues that affect the supported runtime path
+- Entrées/sorties API `/verify`, `/route`, `/proofread`, `/draft`, `/rag/*`, `/audit/*`.
+- Build et démarrage container.
+- Intégration Ollama et HippoRAG.
 
-## Not in scope
+## Hors périmètre
 
-- Feature requests
-- The removed SCL license scheme
-- Requests to revive the old lock/protection model
+- Demandes de fonctionnalités.
+- Questions de support usage standard.
