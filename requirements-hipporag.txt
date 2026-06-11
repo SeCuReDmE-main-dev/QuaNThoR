@@ -1,0 +1,7 @@
+# Optional HippoRAG backend.
+# Upstream HippoRAG currently documents Python 3.10; keep it separate from the
+# core QuaNThoR/Mizar container unless you build a dedicated RAG image.
+Flask>=3.0.3,<4
+flask-cors>=5.0.0,<7
+requests>=2.32.3,<3
+hipporag

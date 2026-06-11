@@ -15,12 +15,18 @@ from flask_cors import CORS
 
 try:
     from .ollama_proofreader import OllamaProofreader
+    from .hipporag_service import HippoRAGService
     from .mizar_drafter import MizarDraftAssistant
+    from .mizar_router import MizarWorkflowRouter
     from .mizar_translator import MizarTranslator
+    from .neutrosophic_auditor import NeutrosophicAuditor
 except ImportError:  # pragma: no cover - allows `python src/app.py`
     from ollama_proofreader import OllamaProofreader
+    from hipporag_service import HippoRAGService
     from mizar_drafter import MizarDraftAssistant
+    from mizar_router import MizarWorkflowRouter
     from mizar_translator import MizarTranslator
+    from neutrosophic_auditor import NeutrosophicAuditor
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -193,6 +199,9 @@ CORS(app)
 translator = MizarTranslator()
 proofreader = OllamaProofreader()
 drafter = MizarDraftAssistant()
+router = MizarWorkflowRouter()
+rag = HippoRAGService()
+auditor = NeutrosophicAuditor()
 
 
 @app.route("/")
@@ -217,19 +226,53 @@ def health():
             "mizar_draft_model_configured": drafter.configured_model,
             "mizar_draft_model_resolved": drafter.model,
             "mizar_draft_structured_outputs": not drafter.model.lower().endswith("cloud"),
+            "router_base_url": router.base_url,
+            "router_model_configured": router.configured_model,
+            "router_model_resolved": router.model,
+            "router_structured_outputs": not router.model.lower().endswith("cloud"),
+            "hipporag": rag.status(),
+            "neutrosophic_audit_available": True,
             "timeout_seconds": DEFAULT_TIMEOUT_SECONDS,
         }
     )
 
 
-@app.route("/verify", methods=["POST"])
-def verify_mizar():
-    data = request.get_json(silent=True) or {}
-    if "code" not in data:
-        return jsonify({"status": "error", "message": "JSON body with a 'code' field is required."}), 400
+def _parse_top_k(value: object) -> int:
+    try:
+        top_k = int(value or rag.default_top_k)
+    except (TypeError, ValueError):
+        top_k = rag.default_top_k
+    return max(1, min(top_k, 25))
 
-    mizar_code = data["code"]
 
+def _normalize_documents(raw_docs: object) -> List[str]:
+    if raw_docs is None:
+        return []
+    if isinstance(raw_docs, str):
+        return [raw_docs]
+    if not isinstance(raw_docs, list):
+        return [str(raw_docs)]
+
+    docs: List[str] = []
+    for doc in raw_docs:
+        if isinstance(doc, dict):
+            text = doc.get("text") or doc.get("content") or doc.get("document") or doc.get("body")
+            docs.append(str(text if text is not None else doc))
+        else:
+            docs.append(str(doc))
+    return docs
+
+
+def _rag_error_response(exc: Exception):
+    status = rag.status()
+    return jsonify({"status": "error", "message": str(exc), "hipporag": status}), 503
+
+
+def _audit_requested(data: Dict[str, object]) -> bool:
+    return bool(data.get("audit_neutrosophy") or data.get("neutrosophic_audit"))
+
+
+def _verify_mizar_code(mizar_code: str) -> Dict[str, object]:
     with tempfile.TemporaryDirectory(prefix="quanthor-") as temp_dir_name:
         temp_dir = Path(temp_dir_name)
         article_path = temp_dir / "proof.miz"
@@ -254,30 +297,21 @@ def verify_mizar():
             except FileNotFoundError:
                 continue
             except subprocess.TimeoutExpired:
-                return jsonify({"status": "error", "message": "Verification timed out."}), 500
-            except Exception as exc:  # noqa: BLE001 - we want to try alternate Mizar entrypoints
-                last_error = str(exc)
+                return {"status": "error", "message": "Verification timed out.", "http_status": 500}
+            except Exception:
                 continue
 
         if process is None:
-            return (
-                jsonify(
-                    {
-                        "status": "error",
-                        "message": "Mizar verifier not found. Check the container image or the local Mizar installation.",
-                        "attempted_commands": attempted_commands,
-                    }
-                ),
-                500,
-            )
+            return {
+                "status": "error",
+                "message": "Mizar verifier not found. Check the container image or the local Mizar installation.",
+                "attempted_commands": attempted_commands,
+                "http_status": 500,
+            }
 
         output = f"{process.stdout or ''}{process.stderr or ''}"
         errors = _parse_mizar_errors(output)
-
-        if process.returncode == 0 and not errors:
-            status = "success"
-        else:
-            status = "failure"
+        status = "success" if process.returncode == 0 and not errors else "failure"
 
         ai_enhanced_response = translator.create_ai_response(mizar_code, output)
         human_explanation = ai_enhanced_response["ai_assistance"]["human_explanation"]
@@ -290,30 +324,39 @@ def verify_mizar():
         enhanced_ai_assistant["grammar_score"] = grammar_analysis["grammar_score"]
         enhanced_ai_assistant["proofreading_provider"] = grammar_analysis.get("provider", "heuristic")
 
-        return jsonify(
-            {
-                "status": status,
-                "return_code": process.returncode,
-                "errors": errors,
-                "raw_output": output,
-                "attempted_commands": attempted_commands,
-                "mizar_backend": {
-                    "command": MIZAR_COMMAND,
-                    "share_dir": str(MIZAR_SHARE_DIR),
-                    "exec_dir": str(MIZAR_EXEC_DIR),
-                },
-                "ai_assistant": enhanced_ai_assistant,
-                "dual_layer_verification": {
-                    "mathematical_analysis": "Mizar formal verification",
-                    "grammatical_analysis": "Ollama cloud proofreading",
-                    "combined_confidence": (
-                        ai_enhanced_response["ai_assistance"]["confidence"] + grammar_analysis["grammar_score"]
-                    )
-                    / 2,
-                },
-                "powered_by": "QuaNThoR containerized verification system",
-            }
-        )
+        return {
+            "status": status,
+            "return_code": process.returncode,
+            "errors": errors,
+            "raw_output": output,
+            "attempted_commands": attempted_commands,
+            "mizar_backend": {
+                "command": MIZAR_COMMAND,
+                "share_dir": str(MIZAR_SHARE_DIR),
+                "exec_dir": str(MIZAR_EXEC_DIR),
+            },
+            "ai_assistant": enhanced_ai_assistant,
+            "dual_layer_verification": {
+                "mathematical_analysis": "Mizar formal verification",
+                "grammatical_analysis": "Ollama proofreading",
+                "combined_confidence": (
+                    ai_enhanced_response["ai_assistance"]["confidence"] + grammar_analysis["grammar_score"]
+                )
+                / 2,
+            },
+            "powered_by": "QuaNThoR containerized verification system",
+        }
+
+
+@app.route("/verify", methods=["POST"])
+def verify_mizar():
+    data = request.get_json(silent=True) or {}
+    if "code" not in data:
+        return jsonify({"status": "error", "message": "JSON body with a 'code' field is required."}), 400
+
+    result = _verify_mizar_code(str(data["code"]))
+    http_status = int(result.pop("http_status", 200))
+    return jsonify(result), http_status
 
 
 @app.route("/draft", methods=["POST"])
@@ -332,6 +375,175 @@ def draft_mizar():
             "powered_by": "QuaNThoR Mizar drafting assistant",
         }
     )
+
+
+@app.route("/proofread", methods=["POST"])
+def proofread_text():
+    data = request.get_json(silent=True) or {}
+    text = data.get("text") or data.get("query") or data.get("prompt")
+    if not text or not str(text).strip():
+        return jsonify({"status": "error", "message": "JSON body with a 'text' field is required."}), 400
+
+    result = proofreader.proofread_text(str(text))
+    return jsonify(
+        {
+            "status": "success",
+            **result,
+            "powered_by": "QuaNThoR proofreading assistant",
+        }
+    )
+
+
+@app.route("/rag/status", methods=["GET"])
+def rag_status():
+    return jsonify({"status": "success", "hipporag": rag.status()})
+
+
+@app.route("/rag/index", methods=["POST"])
+def rag_index():
+    data = request.get_json(silent=True) or {}
+    docs = _normalize_documents(data.get("docs") or data.get("documents") or data.get("text"))
+    try:
+        result = rag.index(docs)
+    except Exception as exc:  # noqa: BLE001 - endpoint returns integration status
+        return _rag_error_response(exc)
+
+    http_status = int(result.pop("http_status", 200))
+    return jsonify(result), http_status
+
+
+@app.route("/rag/retrieve", methods=["POST"])
+def rag_retrieve():
+    data = request.get_json(silent=True) or {}
+    query = data.get("query") or data.get("text") or data.get("prompt")
+    top_k = _parse_top_k(data.get("top_k"))
+    try:
+        result = rag.retrieve(str(query or ""), top_k)
+    except Exception as exc:  # noqa: BLE001 - endpoint returns integration status
+        return _rag_error_response(exc)
+
+    http_status = int(result.pop("http_status", 200))
+    return jsonify(result), http_status
+
+
+@app.route("/rag/qa", methods=["POST"])
+def rag_qa():
+    data = request.get_json(silent=True) or {}
+    query = data.get("query") or data.get("text") or data.get("prompt")
+    top_k = _parse_top_k(data.get("top_k"))
+    try:
+        result = rag.qa(str(query or ""), top_k)
+    except Exception as exc:  # noqa: BLE001 - endpoint returns integration status
+        return _rag_error_response(exc)
+
+    http_status = int(result.pop("http_status", 200))
+    return jsonify(result), http_status
+
+
+@app.route("/audit/neutrosophy", methods=["POST"])
+def audit_neutrosophy():
+    data = request.get_json(silent=True) or {}
+    text = data.get("text") or data.get("query") or data.get("prompt") or data.get("code")
+    if not text or not str(text).strip():
+        return jsonify({"status": "error", "message": "JSON body with 'text', 'query', 'prompt', or 'code' is required."}), 400
+
+    context = str(data.get("context") or "")
+    route_decision = data.get("decision") if isinstance(data.get("decision"), dict) else router.route(str(text), context)
+    tool_result = data.get("tool_result") if isinstance(data.get("tool_result"), dict) else {}
+    audit = auditor.audit(
+        str(text),
+        context=context,
+        route_decision=route_decision,
+        rag_context=str(data.get("rag_context") or ""),
+        rag_error=str(data["rag_error"]) if data.get("rag_error") else None,
+        tool_result=tool_result,
+    )
+    return jsonify(audit)
+
+
+@app.route("/route", methods=["POST"])
+def route_request():
+    data = request.get_json(silent=True) or {}
+    text = data.get("text") or data.get("query") or data.get("prompt") or data.get("code")
+    if not text or not str(text).strip():
+        return jsonify({"status": "error", "message": "JSON body with 'text', 'query', 'prompt', or 'code' is required."}), 400
+
+    context = str(data.get("context") or "")
+    should_execute = bool(data.get("execute", True))
+    decision = router.route(str(text), context)
+
+    response: Dict[str, object] = {
+        "status": "routed",
+        "route": decision["route"],
+        "decision": decision,
+        "executed": False,
+        "powered_by": "QuaNThoR workflow router",
+    }
+
+    if not should_execute:
+        return jsonify(response)
+
+    route = decision["route"]
+    if route == "verify_mizar":
+        result = _verify_mizar_code(str(text))
+        http_status = int(result.pop("http_status", 200))
+        response.update({"executed": True, "tool_result": result})
+        if _audit_requested(data):
+            response["neutrosophic_audit"] = auditor.audit(
+                str(text),
+                context=context,
+                route_decision=decision,
+                tool_result=result,
+            )
+        return jsonify(response), http_status
+
+    if route == "draft_mizar":
+        draft_context = context
+        rag_context = ""
+        rag_error = None
+        if bool(data.get("use_rag", False)):
+            try:
+                rag_context = rag.retrieve_context(str(text), _parse_top_k(data.get("top_k")))
+                if rag_context:
+                    draft_context = f"{context}\n\nRetrieved Mizar context:\n{rag_context}".strip()
+                    response["rag_context_used"] = True
+                else:
+                    response["rag_context_used"] = False
+            except Exception as exc:  # noqa: BLE001 - RAG must not break core routing
+                response["rag_context_used"] = False
+                rag_error = str(exc)
+                response["rag_context_error"] = rag_error
+
+        draft_result = drafter.draft_from_query(str(text), draft_context)
+        response.update({"executed": True, "tool_result": draft_result})
+        if _audit_requested(data):
+            response["neutrosophic_audit"] = auditor.audit(
+                str(text),
+                context=context,
+                route_decision=decision,
+                rag_context=rag_context,
+                rag_error=rag_error,
+                tool_result=draft_result,
+            )
+        return jsonify(response)
+
+    if route == "proofread":
+        proofread_result = proofreader.proofread_text(str(text))
+        response.update({"executed": True, "tool_result": proofread_result})
+        if _audit_requested(data):
+            response["neutrosophic_audit"] = auditor.audit(
+                str(text),
+                context=context,
+                route_decision=decision,
+                tool_result=proofread_result,
+            )
+        return jsonify(response)
+
+    response["status"] = "needs_clarification"
+    response["clarifying_questions"] = decision.get("clarifying_questions", [])
+    if _audit_requested(data):
+        response["neutrosophic_audit"] = auditor.audit(str(text), context=context, route_decision=decision)
+    return jsonify(response)
 
 
 if __name__ == "__main__":

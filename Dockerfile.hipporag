@@ -1,0 +1,18 @@
+FROM python:3.10-slim-bookworm
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    HIPPORAG_ENABLED=true \
+    HIPPORAG_SAVE_DIR=/app/outputs/hipporag
+
+WORKDIR /app
+
+COPY requirements-hipporag.txt .
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements-hipporag.txt
+
+COPY src/hipporag_service.py src/hipporag_api.py ./src/
+
+EXPOSE 5100
+
+CMD ["python", "src/hipporag_api.py"]

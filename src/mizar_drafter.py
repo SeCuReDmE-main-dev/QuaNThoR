@@ -149,7 +149,7 @@ class MizarDraftAssistant:
         parsed = extract_json_object(content)
 
         clarifying_questions = self._coerce_string_list(parsed.get("clarifying_questions"))
-        status = str(parsed.get("status") or self._derive_status(clarifying_questions))
+        status = self._normalize_status(parsed.get("status"), clarifying_questions)
 
         return {
             "status": status,
@@ -180,7 +180,7 @@ class MizarDraftAssistant:
         assumptions = self._default_assumptions(query, context)
         clarifying_questions = self._default_questions(query)
         return {
-            "status": self._derive_status(clarifying_questions),
+            "status": self._normalize_status(None, clarifying_questions),
             "original_query": query,
             "context": context,
             "normalized_query": normalized_query,
@@ -195,7 +195,10 @@ class MizarDraftAssistant:
             "error": error,
         }
 
-    def _derive_status(self, clarifying_questions: List[str]) -> str:
+    def _normalize_status(self, raw_status: Any, clarifying_questions: List[str]) -> str:
+        normalized = str(raw_status or "").strip().lower()
+        if normalized in {"draft", "needs_more_context"}:
+            return normalized
         return "needs_more_context" if clarifying_questions else "draft"
 
     def _heuristic_draft(self, query: str, context: str) -> str:

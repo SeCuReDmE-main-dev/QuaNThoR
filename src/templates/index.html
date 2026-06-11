@@ -63,6 +63,19 @@
         <div id="runtimeStatus" class="status">Checking runtime...</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
             <section>
+                <h2>Route automatically</h2>
+                <textarea id="routeText" placeholder="Paste prose, a theorem request, or a Mizar article."></textarea>
+                <label style="display:block;margin-bottom:0.5rem;">
+                    <input id="routeUseRag" type="checkbox">
+                    Use HippoRAG context when drafting
+                </label>
+                <label style="display:block;margin-bottom:0.75rem;">
+                    <input id="routeAuditNeutrosophy" type="checkbox" checked>
+                    Include neutrosophic workflow audit
+                </label>
+                <button onclick="routeRequest()">Route and Run</button>
+            </section>
+            <section>
                 <h2>Verify a proof</h2>
                 <textarea id="mizarCode" placeholder="environ ... begin ... theorem ... proof ... end;"></textarea>
                 <button onclick="verifyProof()">Verify</button>
@@ -73,6 +86,8 @@
                 <button onclick="draftMizar()">Draft Mizar</button>
             </section>
         </div>
+        <h2>Router result:</h2>
+        <pre id="routeOutput">The routed workflow output will appear here.</pre>
         <h2>Verification result:</h2>
         <pre id="resultOutput">The verifier output will appear here.</pre>
         <h2>Draft result:</h2>
@@ -80,6 +95,28 @@
     </div>
 
     <script>
+        async function routeRequest() {
+            const text = document.getElementById('routeText').value;
+            const useRag = document.getElementById('routeUseRag').checked;
+            const auditNeutrosophy = document.getElementById('routeAuditNeutrosophy').checked;
+            const outputElement = document.getElementById('routeOutput');
+            outputElement.textContent = 'Routing...';
+
+            const response = await fetch('/route', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    text: text,
+                    execute: true,
+                    use_rag: useRag,
+                    audit_neutrosophy: auditNeutrosophy
+                })
+            });
+
+            const data = await response.json();
+            outputElement.textContent = JSON.stringify(data, null, 2);
+        }
+
         async function verifyProof() {
             const code = document.getElementById('mizarCode').value;
             const outputElement = document.getElementById('resultOutput');
@@ -149,7 +186,10 @@
                 const ollama = data.ollama_base_url || 'not configured';
                 const mizar = data.mizar_available ? data.mizar_command : 'not found';
                 const draftModel = data.mizar_draft_model_resolved || data.mizar_draft_model_configured || 'not configured';
-                statusElement.textContent = `Mizar: ${mizar} | Ollama: ${ollama} | Draft model: ${draftModel} | Timeout: ${data.timeout_seconds}s`;
+                const routerModel = data.router_model_resolved || data.router_model_configured || 'not configured';
+                const hipporag = data.hipporag && data.hipporag.available ? data.hipporag.mode : 'off';
+                const audit = data.neutrosophic_audit_available ? 'on' : 'off';
+                statusElement.textContent = `Mizar: ${mizar} | Ollama: ${ollama} | Draft model: ${draftModel} | Router model: ${routerModel} | HippoRAG: ${hipporag} | Neutrosophic audit: ${audit} | Timeout: ${data.timeout_seconds}s`;
             } catch (error) {
                 statusElement.textContent = 'Runtime status unavailable. Check the backend container.';
             }

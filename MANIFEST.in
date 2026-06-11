@@ -1,9 +1,12 @@
 include LICENSE
 include README.md
 include SECURITY.md
+include Dockerfile.hipporag
 include requirements.txt
+include requirements-hipporag.txt
 recursive-include src *.py *.html
 recursive-include scl_guardian *.py
+recursive-include models/mizar-specialist Modelfile README.md
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 global-exclude *~

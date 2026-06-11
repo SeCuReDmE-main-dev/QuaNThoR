@@ -8,6 +8,38 @@ services:
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-}
       OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:7b}
       OLLAMA_MIZAR_MODEL: ${OLLAMA_MIZAR_MODEL:-qwen2.5:7b}
+      OLLAMA_ROUTER_MODEL: ${OLLAMA_ROUTER_MODEL:-mizar-specialist}
+      HIPPORAG_ENABLED: ${HIPPORAG_ENABLED:-false}
+      HIPPORAG_SAVE_DIR: ${HIPPORAG_SAVE_DIR:-/app/outputs/hipporag}
+      HIPPORAG_LLM_MODEL: ${HIPPORAG_LLM_MODEL:-qwen2.5:7b}
+      HIPPORAG_LLM_BASE_URL: ${HIPPORAG_LLM_BASE_URL:-}
+      HIPPORAG_EMBEDDING_MODEL: ${HIPPORAG_EMBEDDING_MODEL:-nvidia/NV-Embed-v2}
+      HIPPORAG_EMBEDDING_BASE_URL: ${HIPPORAG_EMBEDDING_BASE_URL:-}
+      HIPPORAG_TOP_K: ${HIPPORAG_TOP_K:-5}
+      HIPPORAG_SERVICE_URL: ${HIPPORAG_SERVICE_URL:-}
+      HIPPORAG_REQUEST_TIMEOUT_SECONDS: ${HIPPORAG_REQUEST_TIMEOUT_SECONDS:-120}
     ports:
       - "${QUANTHOR_HOST_PORT:-5050}:5000"
+    volumes:
+      - ./outputs:/app/outputs
+    restart: unless-stopped
+
+  hipporag:
+    profiles:
+      - hipporag
+    build:
+      context: .
+      dockerfile: Dockerfile.hipporag
+    environment:
+      HIPPORAG_ENABLED: ${HIPPORAG_ENABLED:-true}
+      HIPPORAG_SAVE_DIR: ${HIPPORAG_SAVE_DIR:-/app/outputs/hipporag}
+      HIPPORAG_LLM_MODEL: ${HIPPORAG_LLM_MODEL:-qwen2.5:7b}
+      HIPPORAG_LLM_BASE_URL: ${HIPPORAG_LLM_BASE_URL:-}
+      HIPPORAG_EMBEDDING_MODEL: ${HIPPORAG_EMBEDDING_MODEL:-nvidia/NV-Embed-v2}
+      HIPPORAG_EMBEDDING_BASE_URL: ${HIPPORAG_EMBEDDING_BASE_URL:-}
+      HIPPORAG_TOP_K: ${HIPPORAG_TOP_K:-5}
+    ports:
+      - "${HIPPORAG_HOST_PORT:-5100}:5100"
+    volumes:
+      - ./outputs:/app/outputs
     restart: unless-stopped
