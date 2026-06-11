@@ -20,7 +20,7 @@ The OpenAI Python SDK may still be used by HippoRAG as a protocol client, but th
 
 Do not activate the local Gemma path during Phase 2 unless explicitly approved. The future local candidate is `gemma4:12b-it-qat`, but the current machine may not be a good runtime target.
 
-Known blocker as of the first Phase 2 run: Ollama Cloud chat works with `gemma4:31b`, but `https://ollama.com/v1/embeddings` returned `404` for `nomic-embed-text`. HippoRAG retrieval still needs an embedding endpoint before the retrieval evidence gate can pass.
+Known blocker as of the first Phase 2 run: Ollama Cloud chat works with `gemma4:31b`, but `https://ollama.com/v1/embeddings` returned `404` for embedding models. The native Ollama embeddings endpoint `https://ollama.com/api/embed` is documented for models such as `embeddinggemma`, `qwen3-embedding`, and `all-minilm`, but the current token returned `401` against that direct cloud endpoint. HippoRAG retrieval still needs a verified embedding endpoint before the retrieval evidence gate can pass.
 
 Outputs are written under:
 
