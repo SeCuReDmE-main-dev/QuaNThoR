@@ -5,7 +5,9 @@
 - Docker Desktop installé.
 - PowerShell (ou équivalent).
 - Un terminal curl (inclut dans PowerShell récent).
-- Un endpoint LLM pour la rédaction/routage (Ollama recommandé).  
+- Un endpoint LLM optionnel pour la rédaction/routage. La route scolaire
+  officielle reste Codex/OpenAI ou Antigravity/Gemini; Ollama n'est pas un
+  fournisseur scolaire officiel.
   Sans endpoint LLM, la plupart des routes fonctionnent encore, avec fallback heuristique.
 
 ## 2. Installation recommandée (3 minutes)
@@ -62,19 +64,16 @@ Copier ces valeurs dans votre session ou `.env` (valeurs selon votre setup) :
 ```env
 QUANTHOR_HOST_PORT=5050
 MIZAR_TIMEOUT_SECONDS=60
-OLLAMA_BASE_URL=http://host.docker.internal:11434
-OLLAMA_ROUTER_MODEL=mizar-specialist
-OLLAMA_MIZAR_MODEL=mizar-specialist
-OLLAMA_PROOFREADER_MODEL=qwen2.5:7b
+# Variables historiques possibles pour compatibilité locale non officielle.
+# Ne pas les présenter comme route scolaire officielle.
 HIPPORAG_ENABLED=false
 HIPPORAG_TOP_K=5
 ```
 
 Notes de robustesse :
 
-- `OLLAMA_ROUTER_MODEL` pilote le routage.
-- `OLLAMA_MIZAR_MODEL` pilote le drafting.
-- `OLLAMA_PROOFREADER_MODEL` pilote la correction (`proofread`).
+- Le proofreader public maintenu utilise le fallback local `school-heuristic`.
+- Les anciennes variables de modèle sont compatibilité locale non officielle.
 - Si une variable dédiée est vide, le code retombe sur la variable générique correspondante.
 
 ## 6. Configuration avancée (professeur / laboratoire)
@@ -100,14 +99,13 @@ docker compose --profile docs up docs
 1. Créer un modèle spécialisé :
 
 ```powershell
-ollama create mizar-specialist -f .\models\mizar-specialist\Modelfile
+# Modèles locaux historiques: non officiels pour la route scolaire.
 ```
 
 2. Forcer sa sélection :
 
 ```powershell
-$env:OLLAMA_ROUTER_MODEL = "mizar-specialist"
-$env:OLLAMA_MIZAR_MODEL = "mizar-specialist"
+# Utiliser Codex/OpenAI ou Antigravity/Gemini pour la route scolaire maintenue.
 ```
 
 ## 8. Bonnes commandes d’exploitation

@@ -94,7 +94,7 @@ Réponse :
 - `suggestions`
 - `grammar_score`
 - `readability_score`
-- `provider` (ollama | heuristic)
+- `provider` (`school-heuristic`, `heuristic`, or legacy compatibility values)
 
 ## 5) Audit opérationnel
 

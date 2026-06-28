@@ -1,4 +1,8 @@
-"""Ollama-backed proofreading helper with heuristic fallback."""
+"""Unsupported legacy proofreading helper with heuristic fallback.
+
+This module is retained for compatibility with old imports. It is not an
+official school provider route for QuaNThoR.
+"""
 
 from __future__ import annotations
 
@@ -15,7 +19,7 @@ except ImportError:  # pragma: no cover - allows direct script execution
 
 
 class OllamaProofreader:
-    """Use a remote Ollama endpoint when available, otherwise fall back locally."""
+    """Legacy helper; the official school route uses SchoolProofreader."""
 
     def __init__(
         self,
@@ -121,7 +125,8 @@ class OllamaProofreader:
             "suggestions": self._coerce_suggestions(parsed.get("suggestions", []), original_text),
             "grammar_score": self._coerce_score(parsed.get("grammar_score"), 0.85),
             "readability_score": self._coerce_score(parsed.get("readability_score"), 0.9),
-            "provider": "ollama",
+            "provider": "legacy-unsupported",
+            "official_school_provider": False,
         }
 
     def _heuristic_response(self, text: str, provider: str, error: str | None = None) -> Dict[str, Any]:

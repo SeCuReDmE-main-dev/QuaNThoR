@@ -2,7 +2,7 @@
 
 QuaNThoR est un outil d’éducation et de vérification formelle.
 Signalez toute vulnérabilité impactant le runtime container, l’API Flask ou
-l’intégration Ollama/HippoRAG.
+l’intégration proofreader local/HippoRAG.
 
 ## Contacter
 
@@ -21,7 +21,7 @@ l’intégration Ollama/HippoRAG.
 
 - Entrées/sorties API `/verify`, `/route`, `/proofread`, `/draft`, `/rag/*`, `/audit/*`.
 - Build et démarrage container.
-- Intégration Ollama et HippoRAG.
+- Intégration proofreader local et HippoRAG.
 
 ## Hors périmètre
 

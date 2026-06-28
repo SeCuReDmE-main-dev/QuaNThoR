@@ -59,7 +59,7 @@
 <body>
     <div class="container">
         <h1>Mizar Proof Verifier and Drafter</h1>
-        <p>Verify a full Mizar article or draft one from a natural-language request. The API runs Mizar in Docker and can use Ollama for explanations.</p>
+        <p>Verify a full Mizar article or draft one from a natural-language request. The API runs Mizar in Docker and uses school-safe review boundaries.</p>
         <div id="runtimeStatus" class="status">Checking runtime...</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
             <section>
@@ -183,13 +183,13 @@
             try {
                 const response = await fetch('/health');
                 const data = await response.json();
-                const ollama = data.ollama_base_url || 'not configured';
+                const proofreader = data.proofreader_provider || 'school-heuristic';
                 const mizar = data.mizar_available ? data.mizar_command : 'not found';
                 const draftModel = data.mizar_draft_model_resolved || data.mizar_draft_model_configured || 'not configured';
                 const routerModel = data.router_model_resolved || data.router_model_configured || 'not configured';
                 const hipporag = data.hipporag && data.hipporag.available ? data.hipporag.mode : 'off';
                 const audit = data.neutrosophic_audit_available ? 'on' : 'off';
-                statusElement.textContent = `Mizar: ${mizar} | Ollama: ${ollama} | Draft model: ${draftModel} | Router model: ${routerModel} | HippoRAG: ${hipporag} | Neutrosophic audit: ${audit} | Timeout: ${data.timeout_seconds}s`;
+                statusElement.textContent = `Mizar: ${mizar} | Proofreader: ${proofreader} | Draft model: ${draftModel} | Router model: ${routerModel} | HippoRAG: ${hipporag} | Neutrosophic audit: ${audit} | Timeout: ${data.timeout_seconds}s`;
             } catch (error) {
                 statusElement.textContent = 'Runtime status unavailable. Check the backend container.';
             }

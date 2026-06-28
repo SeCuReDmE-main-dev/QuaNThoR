@@ -15,7 +15,7 @@ Ce que le service fait réellement :
   - `verify_mizar`
   - `needs_clarification`
 - Produit un brouillon Mizar depuis une demande en langage naturel.
-- Propose une correction grammaticale/punctuationnelle (via Ollama).
+- Propose une correction grammaticale/punctuationnelle locale et conservative.
 - Expose des aides de flux (RAG HippoRAG, audit neutrosophique) optionnelles.
 
 Toutes les exécutions lourdes (vérifieur, génération) tournent dans Docker.  
@@ -43,7 +43,7 @@ docker compose up --build
 
 ### `GET /health`
 
-- Vérifie la disponibilité des briques (Mizar, Ollama, HippoRAG, audit).
+- Vérifie la disponibilité des briques (Mizar, proofreader local, HippoRAG, audit).
 - Réponse attendue : JSON avec `status: "ok"`.
 
 ### `POST /verify`
@@ -90,15 +90,10 @@ I -> I_system^S -> D_f -> dF -> i_fractal
 
 ## Variables d’environnement utiles
 
-- `OLLAMA_BASE_URL` : endpoint Ollama (en container: `http://host.docker.internal:11434`).
-- `OLLAMA_HOST` : fallback alternatif pour le proofreading.
-- `OLLAMA_MIZAR_BASE_URL` : endpoint dédié au drafting si différent.
-- `OLLAMA_ROUTER_BASE_URL` : endpoint dédié au routeur si différent.
-- `OLLAMA_MODEL` : modèle de secours (fallback global).
-- `OLLAMA_DRAFT_MODEL` : alias pour le drafting.
-- `OLLAMA_ROUTER_MODEL` : modèle dédié au routeur.
-- `OLLAMA_MIZAR_MODEL` : alias de drafting pour éviter les ambiguïtés.
-- `OLLAMA_PROOFREADER_MODEL` : alias de proofreading.
+- Les variables historiques `OLLAMA_*` peuvent encore exister pour compatibilité
+  interne, mais elles ne sont pas la route scolaire officielle.
+- La route officielle de correction publique utilise le proofreader local
+  `school-heuristic`.
 - `MIZAR_TIMEOUT_SECONDS` : timeout vérifieur (défaut `60`).
 - `HIPPORAG_ENABLED` : `true|false` (défaut `false`)
 - `HIPPORAG_SERVICE_URL` : URL du sidecar, ex. `http://hipporag:5100`
@@ -130,20 +125,12 @@ $env:HIPPORAG_EMBEDDING_BASE_URL = "http://host.docker.internal:11434/v1"
 docker compose --profile hipporag up --build
 ```
 
-## Modèle spécialisé Mizar (recommandé)
+## Modèle spécialisé Mizar
 
-1. Construire le modèle :
-
-```powershell
-ollama create mizar-specialist -f .\models\mizar-specialist\Modelfile
-```
-
-2. Forcer son usage :
-
-```powershell
-$env:OLLAMA_ROUTER_MODEL = "mizar-specialist"
-$env:OLLAMA_MIZAR_MODEL = "mizar-specialist"
-```
+Le dossier `models/` peut contenir du matériel expérimental ou historique. Il ne
+définit pas une route scolaire officielle. Pour les usages de classe maintenus,
+utiliser la vérification Mizar, le proofreader local, Codex/OpenAI ou
+Antigravity/Gemini selon la gouvernance scolaire du dépôt.
 
 ## Références internes du dépôt
 
@@ -151,7 +138,8 @@ $env:OLLAMA_MIZAR_MODEL = "mizar-specialist"
 - `src/mizar_router.py` : logique de route
 - `src/mizar_drafter.py` : brouillon Mizar
 - `src/mizar_translator.py` : explicitation pédagogique
-- `src/ollama_proofreader.py` : correction grammaticale/punctuation
+- `src/school_proofreader.py` : correction grammaticale/punctuation locale
+- `src/ollama_proofreader.py` : compatibilité historique non officielle
 - `src/hipporag_service.py` / `src/hipporag_api.py` : couche RAG
 - `models/mizar-specialist/Modelfile` : prompt de modèle
 - `examples/mizar/minimal/test.miz` : fixture Mizar minimale

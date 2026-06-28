@@ -1,12 +1,16 @@
 """Compatibility shim for older imports.
 
-The active proofreading helper now lives in :mod:`ollama_proofreader`.
+The active school route now uses :mod:`school_proofreader`.
 """
 
 from __future__ import annotations
 
 try:
-    from .ollama_proofreader import GoogleProofreader, OllamaProofreader
+    from .school_proofreader import SchoolProofreader
 except ImportError:  # pragma: no cover - allows direct script execution
-    from ollama_proofreader import GoogleProofreader, OllamaProofreader
+    from school_proofreader import SchoolProofreader
+
+
+GoogleProofreader = SchoolProofreader
+OllamaProofreader = SchoolProofreader
 

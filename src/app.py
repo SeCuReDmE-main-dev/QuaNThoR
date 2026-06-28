@@ -14,21 +14,21 @@ from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
 
 try:
-    from .ollama_proofreader import OllamaProofreader
     from .hipporag_service import HippoRAGService
     from .mizar_drafter import MizarDraftAssistant
     from .mizar_router import MizarWorkflowRouter
     from .mizar_translator import MizarTranslator
     from .neutrosophic_auditor import NeutrosophicAuditor
     from .plithogenic_quaternion_auditor import PlithogenicQuaternionAuditor
+    from .school_proofreader import SchoolProofreader
 except ImportError:  # pragma: no cover - allows `python src/app.py`
-    from ollama_proofreader import OllamaProofreader
     from hipporag_service import HippoRAGService
     from mizar_drafter import MizarDraftAssistant
     from mizar_router import MizarWorkflowRouter
     from mizar_translator import MizarTranslator
     from neutrosophic_auditor import NeutrosophicAuditor
     from plithogenic_quaternion_auditor import PlithogenicQuaternionAuditor
+    from school_proofreader import SchoolProofreader
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -199,7 +199,7 @@ app = Flask(__name__)
 CORS(app)
 
 translator = MizarTranslator()
-proofreader = OllamaProofreader()
+proofreader = SchoolProofreader()
 drafter = MizarDraftAssistant()
 router = MizarWorkflowRouter()
 rag = HippoRAGService()
@@ -221,10 +221,8 @@ def health():
             "mizar_command": MIZAR_COMMAND,
             "mizar_share_dir": str(MIZAR_SHARE_DIR),
             "mizar_exec_dir": str(MIZAR_EXEC_DIR),
-            "ollama_base_url": proofreader.base_url,
-            "ollama_model_configured": proofreader.configured_model,
-            "ollama_model_resolved": proofreader.model,
-            "ollama_model_structured_outputs": not proofreader.model.lower().endswith("cloud"),
+            "proofreader_provider": proofreader.model,
+            "proofreader_official_school_provider": True,
             "mizar_draft_base_url": drafter.base_url,
             "mizar_draft_model_configured": drafter.configured_model,
             "mizar_draft_model_resolved": drafter.model,
@@ -376,7 +374,7 @@ def _verify_mizar_code(mizar_code: str) -> Dict[str, object]:
             "ai_assistant": enhanced_ai_assistant,
             "dual_layer_verification": {
                 "mathematical_analysis": "Mizar formal verification",
-                "grammatical_analysis": "Ollama proofreading",
+                "grammatical_analysis": "school-safe proofreading",
                 "combined_confidence": (
                     ai_enhanced_response["ai_assistance"]["confidence"] + grammar_analysis["grammar_score"]
                 )

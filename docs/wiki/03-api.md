@@ -22,8 +22,8 @@ Vérifier l’état global et les sous-systèmes.
 - `status`: `ok` ou `error`
 - `mizar_available`: bool
 - `mizar_share_dir`, `mizar_exec_dir`
-- `ollama_base_url`
-- `ollama_model_resolved`, `ollama_model_configured`
+- `proofreader_provider`
+- `proofreader_official_school_provider`
 - `mizar_draft_structured_outputs` (booléen)
 - `hipporag`: objet d’état HippoRAG
 - `neutrosophic_audit_available`, `plithogenic_quaternion_audit_available`
@@ -217,5 +217,5 @@ Questions/réponses appuyées par RAG.
 ## Codes d’erreur usuels
 
 - `400` : payload invalide ou vide
-- `500` : erreur d’infra (Ollama/Mizar/HippoRAG indisponibles)
+- `500` : erreur d’infra (Mizar/HippoRAG indisponibles ou service local mal configuré)
 - `503` : problème optionnel de dépendance RAG au runtime
