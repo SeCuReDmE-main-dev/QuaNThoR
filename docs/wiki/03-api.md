@@ -24,6 +24,8 @@ Vérifier l’état global et les sous-systèmes.
 - `mizar_share_dir`, `mizar_exec_dir`
 - `proofreader_provider`
 - `proofreader_official_school_provider`
+- `mizar_draft_base_url`, `mizar_draft_model_configured`, `mizar_draft_model_resolved`
+- `router_base_url`, `router_model_configured`, `router_model_resolved`
 - `mizar_draft_structured_outputs` (booléen)
 - `hipporag`: objet d’état HippoRAG
 - `neutrosophic_audit_available`, `plithogenic_quaternion_audit_available`

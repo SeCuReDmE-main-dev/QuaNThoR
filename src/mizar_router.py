@@ -10,9 +10,21 @@ from typing import Any, Dict, List
 import requests
 
 try:
-    from .ollama_runtime import default_ollama_base_url, extract_json_object, resolve_model, supports_structured_outputs
+    from .school_model_runtime import (
+        default_school_model_base_url,
+        extract_json_object,
+        resolve_model,
+        school_model_auth_token,
+        supports_structured_outputs,
+    )
 except ImportError:  # pragma: no cover - allows direct script execution
-    from ollama_runtime import default_ollama_base_url, extract_json_object, resolve_model, supports_structured_outputs
+    from school_model_runtime import (
+        default_school_model_base_url,
+        extract_json_object,
+        resolve_model,
+        school_model_auth_token,
+        supports_structured_outputs,
+    )
 
 
 VALID_ROUTES = {"proofread", "draft_mizar", "verify_mizar", "needs_clarification"}
@@ -27,10 +39,19 @@ class MizarWorkflowRouter:
         model: str | None = None,
         timeout_seconds: int = 30,
     ) -> None:
-        configured_base = base_url or os.getenv("OLLAMA_ROUTER_BASE_URL") or os.getenv("OLLAMA_BASE_URL")
-        self.base_url = self._normalize_base_url(configured_base or default_ollama_base_url())
+        configured_base = (
+            base_url
+            or os.getenv("SCHOOL_LLM_ROUTER_BASE_URL")
+            or os.getenv("SCHOOL_LLM_BASE_URL")
+            or os.getenv("OLLAMA_ROUTER_BASE_URL")
+            or os.getenv("OLLAMA_BASE_URL")
+        )
+        self.base_url = self._normalize_base_url(configured_base or default_school_model_base_url())
         self.configured_model = (
             model
+            or os.getenv("SCHOOL_LLM_ROUTER_MODEL")
+            or os.getenv("SCHOOL_LLM_MIZAR_MODEL")
+            or os.getenv("SCHOOL_LLM_MODEL")
             or os.getenv("OLLAMA_ROUTER_MODEL")
             or os.getenv("OLLAMA_MIZAR_MODEL")
             or os.getenv("OLLAMA_MODEL")
@@ -47,10 +68,10 @@ class MizarWorkflowRouter:
                 "mistral",
                 "llama3.1",
             ),
-            auth_token=os.getenv("OLLAMA_API_KEY") or os.getenv("OLLAMA_AUTH_TOKEN"),
+            auth_token=school_model_auth_token(),
         )
         self.timeout_seconds = timeout_seconds
-        self.auth_token = os.getenv("OLLAMA_API_KEY") or os.getenv("OLLAMA_AUTH_TOKEN")
+        self.auth_token = school_model_auth_token()
 
     def route(self, text: str, context: str | None = None) -> Dict[str, Any]:
         cleaned = str(text or "").strip()
@@ -66,7 +87,7 @@ class MizarWorkflowRouter:
                 timeout=self.timeout_seconds,
             )
             response.raise_for_status()
-            return self._parse_ollama_response(cleaned, context or "", response.json())
+            return self._parse_model_response(cleaned, context or "", response.json())
         except Exception as exc:  # noqa: BLE001 - fallback classification keeps the app usable
             return self._heuristic_route(cleaned, context or "", error=str(exc))
 
@@ -113,7 +134,7 @@ class MizarWorkflowRouter:
             payload["messages"][1]["content"] += "\n\nJSON schema:\n" + json.dumps(schema, indent=2)
         return payload
 
-    def _parse_ollama_response(self, text: str, context: str, response_json: Dict[str, Any]) -> Dict[str, Any]:
+    def _parse_model_response(self, text: str, context: str, response_json: Dict[str, Any]) -> Dict[str, Any]:
         content = response_json.get("message", {}).get("content")
         if content is None:
             content = response_json.get("response")
@@ -139,7 +160,7 @@ class MizarWorkflowRouter:
                 [] if use_fallback_fields else parsed.get("clarifying_questions"),
                 fallback["clarifying_questions"],
             ),
-            "provider": "ollama",
+            "provider": "school-model-runtime",
             "model": self.model,
         }
 

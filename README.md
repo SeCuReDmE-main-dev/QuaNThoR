@@ -2,6 +2,8 @@
 
 > **Official school governance.** QuaNThoR is a supervised mathematics/proof education tool. The maintained classroom route supports Codex/OpenAI or Antigravity/Gemini only. See [SCHOOL_TOOL_GOVERNANCE.md](SCHOOL_TOOL_GOVERNANCE.md) and [AGENTS.md](AGENTS.md).
 
+> **Notice and disclaimer.** The existing Apache-2.0 project license remains active. See [NOTICE](NOTICE) and [DISCLAIMER](DISCLAIMER) for attribution, school-governance, and misuse-responsibility boundaries.
+
 ## À quoi sert cet outil
 
 `QuaNThoR` est un assistant de vérification Mizar orienté **étudiants** et **mathématiciens**.
@@ -90,8 +92,9 @@ I -> I_system^S -> D_f -> dF -> i_fractal
 
 ## Variables d’environnement utiles
 
+- Les variables `SCHOOL_LLM_*` configurent le runtime modèle provider-neutre.
 - Les variables historiques `OLLAMA_*` peuvent encore exister pour compatibilité
-  interne, mais elles ne sont pas la route scolaire officielle.
+  locale, mais elles ne sont pas la route scolaire officielle.
 - La route officielle de correction publique utilise le proofreader local
   `school-heuristic`.
 - `MIZAR_TIMEOUT_SECONDS` : timeout vérifieur (défaut `60`).
@@ -139,6 +142,7 @@ Antigravity/Gemini selon la gouvernance scolaire du dépôt.
 - `src/mizar_drafter.py` : brouillon Mizar
 - `src/mizar_translator.py` : explicitation pédagogique
 - `src/school_proofreader.py` : correction grammaticale/punctuation locale
+- `src/school_model_runtime.py` : helper provider-neutre pour les usages modèle
 - `src/ollama_proofreader.py` : compatibilité historique non officielle
 - `src/hipporag_service.py` / `src/hipporag_api.py` : couche RAG
 - `models/mizar-specialist/Modelfile` : prompt de modèle

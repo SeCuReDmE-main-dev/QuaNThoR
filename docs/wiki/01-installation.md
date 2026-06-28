@@ -64,7 +64,11 @@ Copier ces valeurs dans votre session ou `.env` (valeurs selon votre setup) :
 ```env
 QUANTHOR_HOST_PORT=5050
 MIZAR_TIMEOUT_SECONDS=60
-# Variables historiques possibles pour compatibilité locale non officielle.
+SCHOOL_LLM_BASE_URL=http://127.0.0.1:11434
+SCHOOL_LLM_ROUTER_MODEL=mizar-specialist
+SCHOOL_LLM_MIZAR_MODEL=mizar-specialist
+
+# Variables OLLAMA_* historiques possibles pour compatibilité locale non officielle.
 # Ne pas les présenter comme route scolaire officielle.
 HIPPORAG_ENABLED=false
 HIPPORAG_TOP_K=5
@@ -73,6 +77,8 @@ HIPPORAG_TOP_K=5
 Notes de robustesse :
 
 - Le proofreader public maintenu utilise le fallback local `school-heuristic`.
+- `SCHOOL_LLM_ROUTER_MODEL` pilote le routage modèle provider-neutre.
+- `SCHOOL_LLM_MIZAR_MODEL` pilote le drafting modèle provider-neutre.
 - Les anciennes variables de modèle sont compatibilité locale non officielle.
 - Si une variable dédiée est vide, le code retombe sur la variable générique correspondante.
 

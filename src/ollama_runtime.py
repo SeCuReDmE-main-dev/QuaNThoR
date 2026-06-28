@@ -1,4 +1,8 @@
-"""Shared helpers for talking to Ollama models."""
+"""Legacy local-model helpers.
+
+The official QuaNThoR school route uses provider-neutral school model runtime
+helpers. This module remains for compatibility with older local model setups.
+"""
 
 from __future__ import annotations
 

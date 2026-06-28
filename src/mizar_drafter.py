@@ -10,9 +10,21 @@ from typing import Any, Dict, List
 import requests
 
 try:
-    from .ollama_runtime import default_ollama_base_url, extract_json_object, resolve_model, supports_structured_outputs
+    from .school_model_runtime import (
+        default_school_model_base_url,
+        extract_json_object,
+        resolve_model,
+        school_model_auth_token,
+        supports_structured_outputs,
+    )
 except ImportError:  # pragma: no cover - allows direct script execution
-    from ollama_runtime import default_ollama_base_url, extract_json_object, resolve_model, supports_structured_outputs
+    from school_model_runtime import (
+        default_school_model_base_url,
+        extract_json_object,
+        resolve_model,
+        school_model_auth_token,
+        supports_structured_outputs,
+    )
 
 
 class MizarDraftAssistant:
@@ -24,10 +36,19 @@ class MizarDraftAssistant:
         model: str | None = None,
         timeout_seconds: int = 75,
     ) -> None:
-        configured_base = base_url or os.getenv("OLLAMA_MIZAR_BASE_URL") or os.getenv("OLLAMA_BASE_URL")
-        self.base_url = self._normalize_base_url(configured_base or default_ollama_base_url())
+        configured_base = (
+            base_url
+            or os.getenv("SCHOOL_LLM_MIZAR_BASE_URL")
+            or os.getenv("SCHOOL_LLM_BASE_URL")
+            or os.getenv("OLLAMA_MIZAR_BASE_URL")
+            or os.getenv("OLLAMA_BASE_URL")
+        )
+        self.base_url = self._normalize_base_url(configured_base or default_school_model_base_url())
         self.configured_model = (
             model
+            or os.getenv("SCHOOL_LLM_DRAFT_MODEL")
+            or os.getenv("SCHOOL_LLM_MIZAR_MODEL")
+            or os.getenv("SCHOOL_LLM_MODEL")
             or os.getenv("OLLAMA_DRAFT_MODEL")
             or os.getenv("OLLAMA_MIZAR_MODEL")
             or os.getenv("OLLAMA_MODEL")
@@ -44,10 +65,10 @@ class MizarDraftAssistant:
                 "mistral",
                 "llama3.1",
             ),
-            auth_token=os.getenv("OLLAMA_API_KEY") or os.getenv("OLLAMA_AUTH_TOKEN"),
+            auth_token=school_model_auth_token(),
         )
         self.timeout_seconds = timeout_seconds
-        self.auth_token = os.getenv("OLLAMA_API_KEY") or os.getenv("OLLAMA_AUTH_TOKEN")
+        self.auth_token = school_model_auth_token()
 
     def draft_from_query(self, query: str, context: str | None = None) -> Dict[str, Any]:
         if not query or not query.strip():
@@ -62,7 +83,7 @@ class MizarDraftAssistant:
                 timeout=self.timeout_seconds,
             )
             response.raise_for_status()
-            return self._parse_ollama_response(query, context or "", response.json())
+            return self._parse_model_response(query, context or "", response.json())
         except Exception as exc:  # noqa: BLE001 - deliberate fallback path
             return self._heuristic_response(query, context or "", provider="heuristic", error=str(exc))
 
@@ -137,7 +158,7 @@ class MizarDraftAssistant:
             payload["messages"][1]["content"] += "\n\nJSON schema:\n" + json.dumps(schema, indent=2)
         return payload
 
-    def _parse_ollama_response(
+    def _parse_model_response(
         self,
         query: str,
         context: str,
@@ -166,7 +187,7 @@ class MizarDraftAssistant:
             "proof_strategy": self._coerce_text(parsed.get("proof_strategy"), self._default_strategy(query)),
             "confidence": self._coerce_score(parsed.get("confidence"), 0.55),
             "ready_for_verifier": bool(parsed.get("ready_for_verifier", False)),
-            "provider": "ollama",
+            "provider": "school-model-runtime",
         }
 
     def _heuristic_response(
@@ -329,7 +350,7 @@ class MizarDraftAssistant:
                     "type": str(suggestion.get("type", "style")),
                     "original": str(suggestion.get("original", original_text)),
                     "suggested": str(suggestion.get("suggested", original_text)),
-                    "explanation": str(suggestion.get("explanation", "Improvement suggested by Ollama.")),
+                    "explanation": str(suggestion.get("explanation", "Improvement suggested by school model runtime.")),
                 }
             )
         return cleaned or self._generate_suggestions(original_text)
