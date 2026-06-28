@@ -1,5 +1,7 @@
 # QuaNThoR
 
+> **Official school governance.** QuaNThoR is a supervised mathematics/proof education tool. The maintained classroom route supports Codex/OpenAI or Antigravity/Gemini only. See [SCHOOL_TOOL_GOVERNANCE.md](SCHOOL_TOOL_GOVERNANCE.md) and [AGENTS.md](AGENTS.md).
+
 ## À quoi sert cet outil
 
 `QuaNThoR` est un assistant de vérification Mizar orienté **étudiants** et **mathématiciens**.
