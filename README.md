@@ -1,5 +1,8 @@
 # QuaNThoR
 
+> **Development status.** This school tool is currently tagged **pre-alpha / in development**. External PRs are not evaluated for merge until the maintained tool reaches a stable, fully functional 100% classroom release after the pre-alpha phase. Issues and forks remain allowed, but official PR review is paused until that stability gate is met.
+
+
 > **Official school governance.** QuaNThoR is a supervised mathematics/proof education tool. The maintained classroom route supports Codex/OpenAI or Antigravity/Gemini only. See [SCHOOL_TOOL_GOVERNANCE.md](SCHOOL_TOOL_GOVERNANCE.md) and [AGENTS.md](AGENTS.md).
 
 > **Notice and disclaimer.** The existing Apache-2.0 project license remains active. See [NOTICE](NOTICE) and [DISCLAIMER](DISCLAIMER) for attribution, school-governance, and misuse-responsibility boundaries.
@@ -187,3 +190,5 @@ Après la présentation finale, le dépôt sera archivé dans l’état livré. 
 ## Licence
 
 Apache-2.0 (`LICENSE`).
+
+
