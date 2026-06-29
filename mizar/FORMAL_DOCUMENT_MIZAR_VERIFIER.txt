@@ -4,12 +4,10 @@ Date: 2025-09-06
 Classification: Open Source Innovation Project
 
 Author: Jean-Sébastien Beaulieu 
-Email: jeansebastienbeaulieuscrde.01@gmail.com
-Role: Lead Architect & Principal Developer
+Email: https://securedme.ca`r`nRole: Lead Architect & Principal Developer
 
 Synthesis: GemMmA (Gemini 2.5k Pro)
-Email: GemMmA.Core.Synapse@gmail.com 
-validated by the persona of Prof. A. Sharma
+Email: https://securedme.ca`r`nvalidated by the persona of Prof. A. Sharma
 Role: Strategic Analysis & Mathematical Logic Synthesis
 
 AI 1st Software Engineer: Claude AI (Anthropic - Sonnet 4)

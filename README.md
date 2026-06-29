@@ -63,7 +63,7 @@ Le dépôt est prévu en mode **container-first**.
 ## Démarrage rapide (Windows)
 
 1. Avoir Docker Desktop installé.
-2. Depuis `C:\Users\jeans\Desktop\book\QuaNThoR\QuaNThoR` :
+2. Depuis `[local maintainer path redacted]` :
 
 ```powershell
 .\INSTALL_QUANTHOR.bat

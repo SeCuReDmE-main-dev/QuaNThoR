@@ -14,7 +14,7 @@ setup(
     ),
     long_description_content_type="text/plain",
     author="Jean-Sébastien Beaulieu",
-    author_email="jeansebastienbeaulieuscrde.01@gmail.com",
+    author_email="contact@securedme.ca",
     url="https://github.com/SeCuReDmE-main-dev/QuaNThoR",
     license="Apache-2.0",
     packages=find_packages(),

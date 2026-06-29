@@ -6,7 +6,7 @@ l’intégration proofreader local/HippoRAG.
 
 ## Contacter
 
-- Email : `jeansebastienbeaulieuscrde.01@gmail.com`
+- Contact: https://securedme.ca
 - Sujet : `[SECURITY] QuaNThoR`
 
 ## Reproduction minimale demandée

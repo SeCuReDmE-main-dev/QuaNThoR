@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<?xml-stylesheet type="text/xml" href="file://C:\Users\jeans\Desktop\QuaNThoR\mizar\miz.xml"?>
-<Constructors aid="TEST" mizfiles="C:\Users\jeans\Desktop\QuaNThoR\mizar\">
+<?xml-stylesheet type="text/xml" href="file://./mizar/miz.xml"?>
+<Constructors aid="TEST" mizfiles="./mizar/">
 <Constructor kind="M" nr="1" aid="HIDDEN" relnr="1">
 <ArgTypes/>
 <Typ kind="M" nr="1">

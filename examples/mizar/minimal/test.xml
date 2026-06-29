@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<?xml-stylesheet type="text/xml" href="file://C:\Users\jeans\Desktop\QuaNThoR\mizar\miz.xml"?>
-<Article aid="TEST" mizfiles="C:\Users\jeans\Desktop\QuaNThoR\mizar\">
+<?xml-stylesheet type="text/xml" href="file://./mizar/miz.xml"?>
+<Article aid="TEST" mizfiles="./mizar/">
 <JustifiedTheorem line="5" col="7">
 <Proposition line="5" col="15" nr="1" vid="1">
 <Pred kind="R" nr="1" pid="1">

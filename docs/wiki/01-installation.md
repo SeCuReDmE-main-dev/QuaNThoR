@@ -14,7 +14,7 @@
 
 ### Lancement rapide (Windows)
 
-Depuis `C:\Users\jeans\Desktop\book\QuaNThoR\QuaNThoR` :
+Depuis `[local maintainer path redacted]` :
 
 ```powershell
 .\INSTALL_QUANTHOR.bat

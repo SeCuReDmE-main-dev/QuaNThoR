@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<?xml-stylesheet type="text/xml" href="file://C:\Users\jeans\Desktop\QuaNThoR\mizar\miz.xml"?>
-<Notations aid="TEST" mizfiles="C:\Users\jeans\Desktop\QuaNThoR\mizar\">
+<?xml-stylesheet type="text/xml" href="file://./mizar/miz.xml"?>
+<Notations aid="TEST" mizfiles="./mizar/">
 <Pattern kind="M" nr="1" aid="HIDDEN" formatnr="2" constrkind="M" constrnr="1" relnr="1">
 <ArgTypes/>
 <Visible/>
