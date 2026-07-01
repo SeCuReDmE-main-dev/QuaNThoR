@@ -1,0 +1,37 @@
+{
+  "name": "securedme-quanthor-codex-adapter",
+  "version": "0.1.0",
+  "description": "QuaNThoR quantitative reasoning adapter.",
+  "author": {
+    "name": "SecuredMe",
+    "url": "https://securedme.ca"
+  },
+  "homepage": "https://quanthor.securedme.ca",
+  "license": "Apache-2.0",
+  "keywords": [
+    "securedme",
+    "education",
+    "webauth",
+    "token-governor"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "QuaNThoR Codex Adapter",
+    "shortDescription": "QuaNThoR quantitative reasoning adapter.",
+    "longDescription": "Repo-local Codex adapter for QuaNThoR. It keeps the app in pre-alpha, uses browser-authenticated OpenAI/Codex workflows, forbids copied secrets, and prepares future Token Governor and MCP integration.",
+    "developerName": "SecuredMe",
+    "category": "Education",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Adapter"
+    ],
+    "websiteURL": "https://quanthor.securedme.ca",
+    "defaultPrompt": [
+      "Open the QuaNThoR adapter context.",
+      "Check WebAuth readiness without secrets.",
+      "Plan a Token Governor handoff."
+    ]
+  },
+  "repository": "https://github.com/SeCuReDmE-main-dev/QuaNThoR"
+}
