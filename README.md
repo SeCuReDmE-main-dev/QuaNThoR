@@ -45,7 +45,7 @@ The reason for excluding generic local AI routes from official school mode is st
 
 > **Official school governance.** QuaNThoR is a supervised mathematics/proof education tool. The maintained classroom route supports Codex/OpenAI or Antigravity/Gemini only. See [SCHOOL_TOOL_GOVERNANCE.md](SCHOOL_TOOL_GOVERNANCE.md) and [AGENTS.md](AGENTS.md).
 
-> **Notice and disclaimer.** The existing Apache-2.0 project license remains active. See [NOTICE](NOTICE) and [DISCLAIMER](DISCLAIMER) for attribution, school-governance, and misuse-responsibility boundaries.
+> **License.** This project uses the Secured Educational License 2.0 (SEL-2.0). It is provided for education, research, simulation, classroom training, and supervised learning. Misuse, unsafe private forks, unsupported provider routes, and unsupervised authority claims are not maintained or endorsed by the official school version. See [LICENSE](LICENSE), [NOTICE](NOTICE), [DISCLAIMER](DISCLAIMER), and [SAFETY.md](SAFETY.md).
 
 ## À quoi sert cet outil
 
@@ -227,10 +227,9 @@ Le dépôt doit rester utilisable sans dépendance obligatoire à une API propri
 
 Après la présentation finale, le dépôt sera archivé dans l’état livré. Aucune maintenance continue, refonte, support commercial ou roadmap post-archive n’est promise. Les personnes qui souhaitent l’utiliser devront le trouver, le lire et l’exécuter tel quel.
 
-## Licence
+## License
 
-Apache-2.0 (`LICENSE`).
-
+This project is licensed under the Secured Educational License 2.0 (SEL-2.0). See [LICENSE](LICENSE).
 ---
 
 ![Mascotte Orion Vey](assets/mascot/Orion%20Vey%204.png)
