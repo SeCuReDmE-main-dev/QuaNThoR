@@ -1,8 +1,8 @@
 """Legacy helper module kept for backward compatibility.
 
-The repository now uses Apache-2.0 and the supported runtime is the
-Docker-based Mizar verifier. These helpers no longer enforce any custom
-license scheme; they only preserve the old console-script entry points.
+The repository now uses the Secured Educational License 2.0 (SEL-2.0) and the
+supported runtime is the Docker-based Mizar verifier. These helpers preserve
+the old console-script entry points for compatibility.
 """
 
 from __future__ import annotations
@@ -10,7 +10,7 @@ from __future__ import annotations
 from pathlib import Path
 
 __version__ = "1.0.0"
-__license__ = "Apache-2.0"
+__license__ = "LicenseRef-SEL-2.0"
 
 
 def verify_compliance(file_path, *_, **__):

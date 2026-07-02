@@ -7,7 +7,7 @@
 - Référence d’exécution principale : `Dockerfile` + `docker-compose.yml`.
 - Exécution Python locale : uniquement pour debug/développement.
 - Documentation attendue : concise, orientée usage réel, adaptée étudiants/mathématiciens.
-- Licence : **Apache-2.0 uniquement**.
+- Licence : **Secured Educational License 2.0 (SEL-2.0)**, metadata `LicenseRef-SEL-2.0`.
 - Vérification fonctionnelle minimale après changement infra :
   - `docker compose build`
   - `docker compose up --build`
