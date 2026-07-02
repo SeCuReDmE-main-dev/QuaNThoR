@@ -1,4 +1,4 @@
-# QuaNThoR
+<h1 align="center">QuaNThoR</h1>
 
 ![QuaNThoR Marketing Asset](assets/Marketing%20kit/(8).png)
 
