@@ -231,6 +231,10 @@ Après la présentation finale, le dépôt sera archivé dans l’état livré. 
 
 Apache-2.0 (`LICENSE`).
 
+---
+
+![Mascotte Orion Vey](assets/mascot/Orion%20Vey%204.png)
+
 
 
 
