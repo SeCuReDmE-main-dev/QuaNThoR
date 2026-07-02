@@ -40,6 +40,7 @@ nav:
 - Accueil: wiki/Home.md
 - Accessibility:
   - Edge User Console: accessibility/edge-user-console.md
+  - Neurodivergent Comfort: accessibility/neurodivergent-comfort.md
 - Démarrage:
   - Installation: wiki/01-installation.md
   - Usage quotidien: wiki/02-usage.md
