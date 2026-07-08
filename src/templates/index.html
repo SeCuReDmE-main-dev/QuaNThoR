@@ -95,6 +95,40 @@
     </div>
 
     <script>
+        const ALGOQUEST_OUTBOX_KEY = 'securedme.education.algoquest.outbox.v1';
+
+        function buildAlgoQuestLearningEvent(workflow, status, score) {
+            return {
+                schema: 'securedme.education.student-learning-event.v1',
+                app_slug: 'quanthor',
+                artifact_ref: `quanthor:${workflow}:${status || 'complete'}`,
+                skill_area: 'proof_reasoning',
+                difficulty_band: 'beginner',
+                score: score || 93,
+                threshold: 93,
+                attempt_count: 1,
+                blocked_reason: status === 'failure' ? 'proof_needs_revision' : '',
+                next_step_hint: 'Open AlgoQuest to turn this proof step into a beginner challenge.',
+                qbit_help_accepted: false,
+                risk_flags: status === 'failure' ? ['proof_revision_needed'] : [],
+                contract_version: 'v1',
+                raw_secret_stored: false,
+                dry_run: true
+            };
+        }
+
+        function emitAlgoQuestLearningEvent(workflow, status, score) {
+            const event = buildAlgoQuestLearningEvent(workflow, status, score);
+            const current = JSON.parse(localStorage.getItem(ALGOQUEST_OUTBOX_KEY) || '[]');
+            const records = Array.isArray(current) ? current : [];
+            localStorage.setItem(ALGOQUEST_OUTBOX_KEY, JSON.stringify([event].concat(records).slice(0, 25)));
+            return event;
+        }
+
+        function markAlgoQuestEvent(outputElement, event) {
+            outputElement.textContent += `\n\nAlgoQuest event ready: ${event.artifact_ref}`;
+        }
+
         async function routeRequest() {
             const text = document.getElementById('routeText').value;
             const useRag = document.getElementById('routeUseRag').checked;
@@ -115,6 +149,7 @@
 
             const data = await response.json();
             outputElement.textContent = JSON.stringify(data, null, 2);
+            markAlgoQuestEvent(outputElement, emitAlgoQuestLearningEvent('route', data.status || 'routed', 93));
         }
 
         async function verifyProof() {
@@ -131,6 +166,7 @@
             const data = await response.json();
             if (data.status === 'success') {
                 outputElement.textContent = `✅ Verification Successful!\n\n${data.raw_output}`;
+                markAlgoQuestEvent(outputElement, emitAlgoQuestLearningEvent('verify', 'success', 93));
             } else if (data.status === 'failure') {
                 let errorDisplay = `❌ Verification Failed\n\nErrors Found:\n`;
                 data.errors.forEach(error => {
@@ -138,6 +174,7 @@
                 });
                 errorDisplay += `\nFull Output:\n${data.raw_output}`;
                 outputElement.textContent = errorDisplay;
+                markAlgoQuestEvent(outputElement, emitAlgoQuestLearningEvent('verify', 'failure', 70));
             } else {
                 outputElement.textContent = `⚠️ Error: ${data.message}`;
             }
@@ -173,6 +210,7 @@
                     });
                 }
                 outputElement.textContent = draftDisplay;
+                markAlgoQuestEvent(outputElement, emitAlgoQuestLearningEvent('draft', data.status, 93));
             } else {
                 outputElement.textContent = `⚠️ Error: ${data.message}`;
             }
