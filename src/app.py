@@ -14,6 +14,7 @@ from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
 
 try:
+    from .chamber_formalizer import chamber_formalizer_status, formalize_chamber_request
     from .hipporag_service import HippoRAGService
     from .mizar_drafter import MizarDraftAssistant
     from .mizar_router import MizarWorkflowRouter
@@ -22,6 +23,7 @@ try:
     from .plithogenic_quaternion_auditor import PlithogenicQuaternionAuditor
     from .school_proofreader import SchoolProofreader
 except ImportError:  # pragma: no cover - allows `python src/app.py`
+    from chamber_formalizer import chamber_formalizer_status, formalize_chamber_request
     from hipporag_service import HippoRAGService
     from mizar_drafter import MizarDraftAssistant
     from mizar_router import MizarWorkflowRouter
@@ -197,6 +199,25 @@ MIZAR_COMMAND = _resolve_mizar_command(MIZAR_EXEC_DIR)
 
 app = Flask(__name__)
 CORS(app)
+
+
+@app.route("/chamber/formalize/status", methods=["GET"])
+def chamber_formalize_status():
+    """Report the native formalizer boundary before any request is sent."""
+
+    return jsonify(chamber_formalizer_status())
+
+
+@app.route("/chamber/formalize", methods=["POST"])
+def chamber_formalize():
+    """Structure chamber intent without granting Synthia admission authority."""
+
+    data = request.get_json(silent=True) or {}
+    text = data.get("text") or data.get("query") or data.get("prompt") or ""
+    candidate = data.get("candidate") if isinstance(data.get("candidate"), dict) else {}
+    if not str(text).strip() and not candidate:
+        return jsonify({"status": "error", "message": "JSON body with intent text or a candidate is required."}), 400
+    return jsonify(formalize_chamber_request(str(text), candidate))
 
 translator = MizarTranslator()
 proofreader = SchoolProofreader()

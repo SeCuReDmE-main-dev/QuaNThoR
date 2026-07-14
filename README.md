@@ -126,6 +126,15 @@ docker compose up --build
 I -> I_system^S -> D_f -> dF -> i_fractal
 ```
 
+### `POST /chamber/formalize`
+
+- Corps JSON : `text` et, si disponible, `candidate.carriers`.
+- Formalise une intention en une proposition des dix porteurs fixes pour le
+  visualiseur de chambre FNP-QNN.
+- Le retour `ready_for_synthia_admission` est une préparation de dossier, pas
+  une admission : seule Synthia peut autoriser la création de la chambre.
+- Diagnostic : `GET /chamber/formalize/status`.
+
 ### RAG (optionnel)
 
 - `GET /rag/status`
