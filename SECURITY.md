@@ -1,39 +1,36 @@
-# Politique de sÃ©curitÃ©
+# Security Policy
 
-## SecuredMe Education Governance Alignment
+## Supported Versions
 
-- Current phase: pre-alpha / in development.
-- Repository license: Secured Educational License 2.0 (SEL-2.0), local metadata reference LicenseRef-SEL-2.0.
-- Official AI-assisted classroom routes: Codex/OpenAI and Antigravity/Gemini only.
-- Do not add Ollama Cloud, uncensored local AI, raw-token student flows, or unknown agent providers as official school routes.
-- Preserve human-review boundaries; do not claim production, clinical, regulatory, enforcement, safety-critical, or autonomous authority readiness.
-- Private modified copies, broken forks, and unreviewed rewrites are not a maintainer support obligation.
+QuaNThoR is pre-alpha. There are no production-supported versions yet. Security fixes target the current main branch unless a maintainer explicitly publishes another supported line.
 
+## Scope
 
-QuaNThoR est un outil dâ€™Ã©ducation et de vÃ©rification formelle.
-Signalez toute vulnÃ©rabilitÃ© impactant le runtime container, lâ€™API Flask ou
-lâ€™intÃ©gration proofreader local/HippoRAG.
+Security-sensitive areas include mathematics education, Mizar verification, proof drafting, optional RAG/audit helpers, and Docker execution. Reports should focus on real behavior in this repository or on its documented gateway boundary.
 
-## Contacter
+## Responsible Disclosure
 
-- Contact: https://securedme.ca
-- Sujet : `[SECURITY] QuaNThoR`
+Report security issues privately to the maintainer before public disclosure. If GitHub Security Advisories are enabled, use that channel first. If not, use a private maintainer channel and include enough detail to reproduce without exposing secrets or personal data.
 
-## Reproduction minimale demandÃ©e
+Useful report content:
 
-1. RequÃªte exacte (`curl`), headers inclus.
-2. Payload complet.
-3. RÃ©sultat attendu vs obtenu.
-4. Ã‰tapes pour reproduire la panne.
-5. Logs du conteneur si pertinent (`docker logs ...`).
+- affected file, route, module, command, or workflow;
+- reproduction steps;
+- expected and observed behavior;
+- impact and affected users;
+- whether credentials, personal information, student data, private evidence, or operational details were exposed;
+- proposed fix, if known.
 
-## Zone couverte
+## Secret Boundary
 
-- EntrÃ©es/sorties API `/verify`, `/route`, `/proofread`, `/draft`, `/rag/*`, `/audit/*`.
-- Build et dÃ©marrage container.
-- IntÃ©gration proofreader local et HippoRAG.
+Never commit or disclose API keys, OAuth tokens, cookies, browser sessions, .env values, passwords, cPanel details, payment credentials, private corpora, raw student records, production logs, or unpublished research material.
 
-## Hors pÃ©rimÃ¨tre
+The shared SecuredMe gateway may route configured audit, observability, and assistant handoff metadata. This repository must not expose gateway secrets, provider tokens, or private operator state in README files, tests, logs, exceptions, screenshots, or issue reports.
 
-- Demandes de fonctionnalitÃ©s.
-- Questions de support usage standard.
+## AI And Human Review Boundary
+
+Official school AI routes are Codex/OpenAI and Antigravity/Gemini only. Model output must remain advisory and reviewable. Do not convert this tool into autonomous authority, enforcement, diagnosis, grading, legal decision-making, or unsupervised production safety infrastructure.
+
+## Public Issues
+
+Do not open public issues containing exploit payloads, live credentials, personal data, private student information, customer records, camera/audio samples, payment secrets, or enough operational detail to compromise a deployment.

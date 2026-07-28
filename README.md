@@ -14,7 +14,7 @@
 [![Issues](https://img.shields.io/github/issues/SeCuReDmE-main-dev/QuaNThoR?color=161B6A)](https://github.com/SeCuReDmE-main-dev/QuaNThoR/issues)
 [![Milestones](https://img.shields.io/badge/milestones-M0--M7-23B8FF)](https://github.com/SeCuReDmE-main-dev/QuaNThoR/milestones)
 [![Project Board](https://img.shields.io/badge/project-kanban-6F42FF)](https://github.com/users/SeCuReDmE-main-dev/projects/3)
-[![Branch](https://img.shields.io/badge/branch-PaQBoT-0E7490)](https://github.com/SeCuReDmE-main-dev/QuaNThoR/tree/PaQBoT)
+[![Branch](https://img.shields.io/badge/branch-main-0E7490)](https://github.com/SeCuReDmE-main-dev/QuaNThoR/tree/main)
 <!-- SECUREDME-SUITE-BADGES:END -->
 
 <!-- SECUREDME-STARTUP-SUPPORT:START -->
