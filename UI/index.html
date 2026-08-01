@@ -11,7 +11,37 @@
         <header>
             <h1>QuaNThoR Verification</h1>
             <p>Containerized Mizar verification with school-safe local explanations.</p>
+
+            <div class="stitch-telemetry-card">
+              <div class="stitch-header">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="stitch-live-dot is-idle"></span>
+                  <span style="color: var(--primary-teal); font-weight: 800; font-size: 0.72rem; letter-spacing: 0.05em;">QUANTHOR VERIFICATION PROFILE</span>
+                </div>
+                <span style="font-size: 0.8rem; color: var(--text-primary); font-weight: 600;">Formal Proof & Dual-Layer Verification</span>
+                <span class="stitch-badge">CAPABILITY PREVIEW</span>
+              </div>
+              <div class="stitch-metrics-grid">
+                <div class="stitch-metric">
+                  <span>Mizar Engine</span>
+                  <strong>Container-backed</strong>
+                </div>
+                <div class="stitch-metric">
+                  <span>Formal Gate</span>
+                  <strong>NOT RUN</strong>
+                </div>
+                <div class="stitch-metric">
+                  <span>Proof Verification</span>
+                  <strong>Runs on submit</strong>
+                </div>
+                <div class="stitch-metric">
+                  <span>Grammar Check</span>
+                  <strong>Local + Mizar</strong>
+                </div>
+              </div>
+            </div>
         </header>
+
         <main class="main-grid">
             <div class="editor-container">
                 <h2>Proof Editor</h2>
@@ -28,6 +58,14 @@
             </div>
         </main>
     </div>
+
+    <aside class="utility-dock" aria-label="Page utilities">
+      <button class="utility-dock-button" type="button" data-utility-language aria-label="Change locale preference">Locale: EN</button>
+      <button class="utility-dock-button" type="button" data-utility-theme>Theme: Night</button>
+      <button class="utility-dock-button" type="button" data-utility-access>Access</button>
+      <a class="utility-dock-button utility-dock-support" href="https://securedme.ca/pay/" target="_blank" rel="noopener">Support SecuredMe</a>
+    </aside>
+
     <script src="script.js"></script>
 </body>
 </html>

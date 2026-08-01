@@ -137,3 +137,170 @@ h2 {
     color: var(--border-color);
     margin-top: 1rem;
 }
+
+/* Stitch Design System & Utility Dock */
+.stitch-telemetry-card {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid rgba(0, 169, 157, 0.4);
+    border-radius: 10px;
+    background: rgba(13, 22, 38, 0.88);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    text-align: left;
+}
+
+.stitch-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(0, 169, 157, 0.2);
+}
+
+.stitch-live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary-teal);
+    box-shadow: 0 0 8px var(--primary-teal);
+}
+
+.stitch-live-dot.is-idle {
+    background: #8b949e;
+    box-shadow: none;
+}
+
+.stitch-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(0, 169, 157, 0.15);
+    border: 1px solid rgba(0, 169, 157, 0.35);
+    color: var(--primary-teal);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+}
+
+.stitch-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+@media (max-width: 640px) {
+    .stitch-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.stitch-metric {
+    background: rgba(27, 38, 59, 0.7);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.stitch-metric span {
+    display: block;
+    color: #8b949e;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.stitch-metric strong {
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    font-family: monospace;
+}
+
+.utility-dock {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.utility-dock-button {
+    border: 1px solid var(--border-color);
+    background: rgba(13, 22, 38, 0.92);
+    color: var(--text-primary);
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.utility-dock-button:hover {
+    border-color: var(--primary-teal);
+    color: var(--text-secondary);
+}
+
+.utility-dock-support {
+    border-color: var(--primary-teal);
+    background: linear-gradient(135deg, var(--primary-teal), var(--warning-purple));
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+:root[data-theme="day"] {
+    --bg-default: #f4f6f8;
+    --bg-paper: #ffffff;
+    --text-primary: #0d1117;
+    --text-secondary: #00776f;
+    --border-color: #d0d7de;
+}
+
+:root[data-theme="day"] .stitch-telemetry-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 169, 157, 0.3);
+}
+
+:root[data-theme="day"] .stitch-metric {
+    background: rgba(240, 244, 248, 0.9);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+:root[data-access-profile="autism-calm"] * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+}
+
+:root[data-access-profile="adhd-sprint"] button:focus-visible,
+:root[data-access-profile="adhd-sprint"] a:focus-visible,
+:root[data-access-profile="adhd-sprint"] textarea:focus-visible {
+    outline: 3px solid var(--primary-teal);
+    outline-offset: 3px;
+}
+
+:root[data-access-profile="deep-work"] header .stitch-telemetry-card {
+    display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .utility-dock {
+        position: static;
+        margin: 1rem;
+        align-items: stretch;
+    }
+}

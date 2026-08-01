@@ -148,4 +148,65 @@ document.addEventListener('DOMContentLoaded', () => {
         card.appendChild(suggestionsList);
         return card;
     }
+
+    // --- Utility Dock Controls ---
+    const root = document.documentElement;
+    const langBtn = document.querySelector('[data-utility-language]');
+    const themeBtn = document.querySelector('[data-utility-theme]');
+    const accessBtn = document.querySelector('[data-utility-access]');
+
+    const languages = ['en', 'fr', 'es'];
+    const langLabels = { en: 'Locale: EN', fr: 'Locale : FR', es: 'Configuración: ES' };
+    const accessProfiles = ['base', 'autism-calm', 'adhd-sprint', 'deep-work'];
+    const accessLabels = { base: 'Access', 'autism-calm': 'Access: Calm', 'adhd-sprint': 'Access: Sprint', 'deep-work': 'Access: Deep' };
+
+    let currentLang = localStorage.getItem('securedme.quanthor.language') || 'en';
+    let currentTheme = localStorage.getItem('securedme.quanthor.theme') || 'night';
+    let currentAccess = localStorage.getItem('securedme.quanthor.access') || 'base';
+
+    function setLang(lang) {
+        currentLang = languages.includes(lang) ? lang : 'en';
+        root.lang = currentLang;
+        root.dataset.lang = currentLang;
+        localStorage.setItem('securedme.quanthor.language', currentLang);
+        if (langBtn) langBtn.textContent = langLabels[currentLang];
+    }
+
+    function setTheme(theme) {
+        currentTheme = theme === 'day' ? 'day' : 'night';
+        root.dataset.theme = currentTheme;
+        localStorage.setItem('securedme.quanthor.theme', currentTheme);
+        if (themeBtn) themeBtn.textContent = currentTheme === 'day' ? 'Theme: Day' : 'Theme: Night';
+    }
+
+    function setAccess(profile) {
+        currentAccess = accessProfiles.includes(profile) ? profile : 'base';
+        root.dataset.accessProfile = currentAccess;
+        localStorage.setItem('securedme.quanthor.access', currentAccess);
+        if (accessBtn) accessBtn.textContent = accessLabels[currentAccess];
+    }
+
+    setLang(currentLang);
+    setTheme(currentTheme);
+    setAccess(currentAccess);
+
+    if (langBtn) {
+        langBtn.addEventListener('click', () => {
+            const idx = languages.indexOf(currentLang);
+            setLang(languages[(idx + 1) % languages.length]);
+        });
+    }
+
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            setTheme(currentTheme === 'day' ? 'night' : 'day');
+        });
+    }
+
+    if (accessBtn) {
+        accessBtn.addEventListener('click', () => {
+            const idx = accessProfiles.indexOf(currentAccess);
+            setAccess(accessProfiles[(idx + 1) % accessProfiles.length]);
+        });
+    }
 });
