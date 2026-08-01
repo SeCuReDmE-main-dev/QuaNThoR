@@ -1,0 +1,37 @@
+schema: securedme.tool-doc.v2
+slug: quanthor
+title: QuaNThoR
+version: pre-alpha
+status: public-pre-alpha
+license: LicenseRef-SEL-2.0
+summary: A formalization coach that moves informal mathematical claims toward reviewable
+  structure.
+identity:
+  logo: assets/Logo branding 1th draft/first draft.png
+  family: QuaNThoR
+runtime:
+  type: local-app
+  availability: verified
+  public_url: https://quanthor.securedme.ca
+source:
+  repository: https://github.com/SeCuReDmE-main-dev/QuaNThoR
+  issues: https://github.com/SeCuReDmE-main-dev/QuaNThoR/issues
+documentation:
+  public_root: docs/public
+  source_language: en
+  languages:
+  - en
+  - fr
+  - es
+commands:
+  install:
+  - docker compose build
+  start:
+  - docker compose up
+  - Open http://localhost:5050
+  test:
+  - Invoke-WebRequest http://localhost:5050/health
+boundaries:
+  authority: Formalization assistance does not establish a theorem until an accepted
+    proof and qualified review exist.
+  human_review_required: true
