@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" data-theme="night" data-access="base">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QuaNThoR | SecuredMe Education</title>
+    <meta name="description" content="QuaNThoR is a pre-alpha SecuredMe Education workbench for supervised Mizar verification, conservative drafting, local proofreading, optional RAG context, and operational audit traces.">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="https://securedme.ca/" aria-label="Return to SecuredMe home">
+        <span class="brand-mark">Q</span>
+        <span>
+          <strong>QuaNThoR</strong>
+          <small>SecuredMe Education</small>
+        </span>
+      </a>
+      <nav class="primary-nav" aria-label="QuaNThoR sections">
+        <a href="https://securedme.ca/product/education/">Education</a>
+        <a href="#start">Start</a>
+        <a href="#workbench">Workbench</a>
+        <a href="#api">API</a>
+        <a href="#boundary">Boundary</a>
+      </nav>
+      <a class="source-link" href="https://github.com/SeCuReDmE-main-dev/QuaNThoR">Source</a>
+    </header>
+
+    <main>
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <p class="eyebrow">Tier 4 - mathematical verification - public pre-alpha</p>
+          <h1>Mathematical verification, routed with supervision.</h1>
+          <p class="lede">QuaNThoR helps students and mathematicians move between theorem intent, conservative Mizar drafts, formal verifier feedback, local proofreading, optional retrieval context, and operational audit traces.</p>
+          <p class="boundary-note">Mizar verification remains the formal check. Human mathematical review remains required. AI is traceability support, not proof authority.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#start">Launch local workflow</a>
+            <a class="button secondary" href="#workbench">Inspect workbench</a>
+            <a class="button quiet" href="https://securedme.ca/product/education/">Education hub</a>
+          </div>
+          <div class="signal-row" aria-label="Product signals">
+            <span>Theorem-aware</span>
+            <span>Container-first</span>
+            <span>Route-intelligent</span>
+            <span>SEL-2.0</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="QuaNThoR supervised route inspector">
+          <div class="route-console">
+            <div class="console-head">
+              <div>
+                <span>SUPERVISED ROUTE INSPECTOR</span>
+                <strong>Browser demonstration</strong>
+              </div>
+              <span class="local-badge">NO SERVER EXECUTION</span>
+            </div>
+
+            <form class="route-form" data-route-demo>
+              <label for="route-input">Theorem intent or Mizar article</label>
+              <textarea id="route-input" rows="8" spellcheck="false">theorem
+  for x being Real holds x + 0 = x;</textarea>
+              <div class="route-options">
+                <label><input type="checkbox" data-context-toggle> Include optional retrieval context</label>
+                <label><input type="checkbox" checked data-audit-toggle> Preserve audit trace</label>
+              </div>
+              <div class="route-actions">
+                <button class="button primary" type="submit">Inspect route</button>
+                <button class="button secondary" type="button" data-load-mizar>Load Mizar sample</button>
+              </div>
+            </form>
+
+            <div class="route-result" aria-live="polite" data-route-result>
+              <span>Proposed route</span>
+              <strong>draft_mizar</strong>
+              <p>Intent detected. Formal verification requires a complete Mizar article and the local verifier.</p>
+              <dl>
+                <div><dt>Execution</dt><dd>Not started</dd></div>
+                <div><dt>Authority</dt><dd>Mizar + human</dd></div>
+                <div><dt>Trace</dt><dd>Enabled</dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section start-flow" id="start">
+        <div class="section-heading">
+          <p class="eyebrow">Start in 15 minutes</p>
+          <h2>Container-first local execution, no classroom token handling.</h2>
+          <p>Official classroom use must not require students or teachers to provide raw API keys, local model secrets, or unmanaged provider routes.</p>
+        </div>
+        <div class="steps">
+          <article>
+            <span class="step-number">1</span>
+            <h3>Initialize environment</h3>
+            <p>Run the Windows installer and startup scripts from the maintained repo, or use Docker Compose directly.</p>
+            <code>.\INSTALL_QUANTHOR.bat<br>.\START_QUANTHOR.bat</code>
+          </article>
+          <article>
+            <span class="step-number">2</span>
+            <h3>Submit Mizar or intent</h3>
+            <p>Use a full Mizar article for verification, or plain language for conservative draft routing.</p>
+            <code>environ ...<br>begin ... end;</code>
+          </article>
+          <article>
+            <span class="step-number">3</span>
+            <h3>Route and correct</h3>
+            <p>The router chooses proofread, draft_mizar, verify_mizar, or needs_clarification, then executes only when asked.</p>
+            <code>proofread -> draft_mizar<br>verify_mizar -> review</code>
+          </article>
+          <article>
+            <span class="step-number">4</span>
+            <h3>Review evidence</h3>
+            <p>Read success, failure, parsed errors, raw verifier output, and optional audit traces before accepting any result.</p>
+            <code>status: success | failure | error</code>
+          </article>
+        </div>
+      </section>
+
+      <section class="section workbench-section" id="workbench">
+        <div class="section-heading">
+          <p class="eyebrow">Real interface model</p>
+          <h2>Three panels, runtime strip, explicit review boundary.</h2>
+          <p>The landing must represent the actual Flask workbench, not a generic AI dashboard.</p>
+        </div>
+        <div class="workbench">
+          <div class="runtime-strip">
+            <span>Mizar: runtime checked</span>
+            <span>Proofreader: school-heuristic</span>
+            <span>HippoRAG: optional</span>
+            <span>Timeout: 60s default</span>
+          </div>
+          <div class="panels">
+            <article>
+              <h3>Route automatically</h3>
+              <p>Paste prose, theorem intent, or Mizar. Optionally include HippoRAG context and neutrosophic audit.</p>
+              <div class="fake-input">text | query | prompt | code</div>
+              <button type="button">Route and Run</button>
+            </article>
+            <article>
+              <h3>Verify a proof</h3>
+              <p>Submit a complete Mizar article to the verifier and inspect structured errors plus raw output.</p>
+              <div class="fake-input">POST /verify</div>
+              <button type="button">Verify</button>
+            </article>
+            <article>
+              <h3>Draft from a request</h3>
+              <p>Create a conservative Mizar draft with clarification questions and editing suggestions.</p>
+              <div class="fake-input">POST /draft</div>
+              <button type="button">Draft Mizar</button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section api-section" id="api">
+        <div class="section-heading">
+          <p class="eyebrow">API logical functions</p>
+          <h2>Represent the real endpoints and nothing beyond them.</h2>
+        </div>
+        <div class="feature-grid">
+          <article>
+            <span class="tag">/verify</span>
+            <h3>Formal verifier path</h3>
+            <p>Accepts a complete Mizar article and returns success, failure, error, parsed errors, and raw verifier output.</p>
+          </article>
+          <article>
+            <span class="tag">/route</span>
+            <h3>Intent router</h3>
+            <p>Classifies requests into proofread, draft_mizar, verify_mizar, or needs_clarification with optional execution.</p>
+          </article>
+          <article>
+            <span class="tag">/proofread</span>
+            <h3>Local proofreader</h3>
+            <p>Uses a conservative school-heuristic proofreader for grammar, punctuation, and clarity support.</p>
+          </article>
+          <article>
+            <span class="tag">/rag/*</span>
+            <h3>Optional context</h3>
+            <p>HippoRAG can provide retrieval context when enabled; retrieval context does not verify formal correctness.</p>
+          </article>
+          <article>
+            <span class="tag">/audit/neutrosophy</span>
+            <h3>Operational audit</h3>
+            <p>Reports trace layers and recommendation signals. It does not certify a theorem.</p>
+          </article>
+          <article>
+            <span class="tag">/audit/plithogenic-quaternion</span>
+            <h3>Relation audit</h3>
+            <p>Classical zero-dependency audit over retrieval relations; not quantum computation and not a formal proof.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section boundary-section" id="boundary">
+        <div class="boundary-card">
+          <div>
+            <p class="eyebrow">Evidence boundary</p>
+            <h2>I -> I_system^S -> D_f -> dF -> i_fractal</h2>
+            <p>QuaNThoR keeps operational uncertainty, structural drift, dynamic falsification, and fractal residue separate. The audit trace supports review; it does not replace Mizar or a qualified human reader.</p>
+          </div>
+          <ul>
+            <li>Pre-alpha / in development.</li>
+            <li>Education, research, simulation, classroom training, and supervised learning only.</li>
+            <li>No production, clinical, regulatory, enforcement, safety-critical, or autonomous proof authority claim.</li>
+            <li>No Ollama Cloud, uncensored local AI, raw-token student flow, or unknown classroom agent provider as official school route.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <aside class="utility-dock" aria-label="SecuredMe utility controls">
+      <button type="button" data-language-toggle>Language: EN</button>
+      <button type="button" data-theme-toggle>Theme: Night</button>
+      <button type="button" data-access-toggle>Access</button>
+      <a href="https://securedme.ca/pay/">Support SecuredMe</a>
+    </aside>
+
+    <footer class="footer">
+      <a href="https://securedme.ca/">SecuredMe</a>
+      <span>QuaNThoR - public pre-alpha - SEL-2.0</span>
+      <a href="https://securedme.ca/product/education/">Education hub</a>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
