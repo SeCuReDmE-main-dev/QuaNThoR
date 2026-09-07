@@ -1,0 +1,130 @@
+{
+  "tools": {
+    "quanthor_inspect_runtime": {
+      "validInput": {},
+      "invalidInput": {
+        "__invalid": true
+      },
+      "expectedStatus": "completed"
+    },
+    "quanthor_inspect_formalizer": {
+      "validInput": {},
+      "invalidInput": {
+        "__invalid": true
+      },
+      "expectedStatus": "completed"
+    },
+    "quanthor_stage_formalization": {
+      "validInput": {
+        "text": "x"
+      },
+      "invalidInput": {
+        "__invalid": true
+      },
+      "expectedStatus": "staged"
+    },
+    "quanthor_stage_mizar_draft": {
+      "validInput": {
+        "query": "x"
+      },
+      "invalidInput": {
+        "__invalid": true
+      },
+      "expectedStatus": "staged"
+    },
+    "quanthor_proofread_text": {
+      "validInput": {
+        "text": "x"
+      },
+      "invalidInput": {
+        "__invalid": true
+      },
+      "expectedStatus": "completed"
+    },
+    "quanthor_inspect_rag_status": {
+      "validInput": {},
+      "invalidInput": {
+        "__invalid": true
+      },
+      "expectedStatus": "completed"
+    },
+    "quanthor_retrieve_context": {
+      "validInput": {
+        "query": "x"
+      },
+      "invalidInput": {
+        "__invalid": true
+      },
+      "expectedStatus": "completed"
+    },
+    "quanthor_audit_neutrosophy": {
+      "validInput": {
+        "text": "x"
+      },
+      "invalidInput": {
+        "__invalid": true
+      },
+      "expectedStatus": "completed"
+    },
+    "quanthor_audit_plithogenic_quaternion": {
+      "validInput": {
+        "text": "x"
+      },
+      "invalidInput": {
+        "__invalid": true
+      },
+      "expectedStatus": "completed"
+    },
+    "quanthor_verify_mizar": {
+      "validInput": {
+        "code": "x"
+      },
+      "invalidInput": {
+        "__invalid": true
+      },
+      "expectedStatus": "completed"
+    },
+    "securedme_companion_context": {
+      "validInput": {},
+      "invalidInput": {
+        "__invalid": true
+      },
+      "expectedStatus": "completed"
+    },
+    "securedme_qbit_plan_handoff": {
+      "validInput": {
+        "mission_ref": "x"
+      },
+      "invalidInput": {
+        "__invalid": true
+      },
+      "expectedStatus": "staged"
+    }
+  },
+  "journeys": [
+    [
+      "quanthor_inspect_runtime",
+      "quanthor_inspect_formalizer"
+    ],
+    [
+      "quanthor_stage_formalization",
+      "quanthor_stage_mizar_draft"
+    ],
+    [
+      "quanthor_proofread_text",
+      "quanthor_inspect_rag_status"
+    ],
+    [
+      "quanthor_retrieve_context",
+      "quanthor_audit_neutrosophy"
+    ],
+    [
+      "quanthor_audit_plithogenic_quaternion",
+      "quanthor_verify_mizar"
+    ],
+    [
+      "securedme_companion_context",
+      "securedme_qbit_plan_handoff"
+    ]
+  ]
+}

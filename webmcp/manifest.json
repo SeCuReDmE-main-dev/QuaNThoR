@@ -1,0 +1,618 @@
+{
+  "schema": "securedme.webmcp.v1",
+  "manifestVersion": "1.0.0",
+  "product": {
+    "slug": "quanthor",
+    "name": "QuaNThoR",
+    "status": "public-pre-alpha",
+    "canonicalStateOwner": "algoquest",
+    "applicationStateOwner": "quanthor",
+    "pagePatterns": [
+      "https://quanthor.securedme.ca/",
+      "http://localhost:5050/"
+    ],
+    "theme": {
+      "slug": "quanthor",
+      "source": "securedme-site/assets/landing/secureme.ca-product/education/QuaNThoR/desing/stitch_quanthor_landing_page_design_system/stitch_quanthor_landing_page_design_system/desing.md",
+      "sourceStatus": "verified-product-stitch",
+      "assets": {
+        "dark": "quanthor dark landing.png",
+        "light": "quanthor light landing.png"
+      },
+      "tokens": {
+        "background": "#061026",
+        "surface": "#111a3c",
+        "primary": "#1f7aff",
+        "secondary": "#6f42ff",
+        "accent": "#d8a548",
+        "text": "#f7fbff",
+        "muted": "#7c8aa7",
+        "focus": "#23b8ff"
+      },
+      "typography": {
+        "display": "Georgia, serif",
+        "body": "system-ui, sans-serif",
+        "code": "monospace"
+      },
+      "fallback": "High-contrast system fonts, visible focus, no image-dependent meaning."
+    }
+  },
+  "tools": [
+    {
+      "name": "quanthor_inspect_runtime",
+      "title": "Quanthor Inspect Runtime",
+      "mode": "READ",
+      "description": "Inspect a sanitized QuaNThoR runtime status.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "availability": "available",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "status",
+          "tool",
+          "data",
+          "secret_values_exposed"
+        ],
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "quanthor_inspect_runtime"
+          },
+          "data": {},
+          "secret_values_exposed": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "handler": {
+        "kind": "http",
+        "method": "GET",
+        "path": "/health"
+      }
+    },
+    {
+      "name": "quanthor_inspect_formalizer",
+      "title": "Quanthor Inspect Formalizer",
+      "mode": "READ",
+      "description": "Inspect the chamber formalizer boundary.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "availability": "available",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "status",
+          "tool",
+          "data",
+          "secret_values_exposed"
+        ],
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "quanthor_inspect_formalizer"
+          },
+          "data": {},
+          "secret_values_exposed": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "handler": {
+        "kind": "http",
+        "method": "GET",
+        "path": "/chamber/formalize/status"
+      }
+    },
+    {
+      "name": "quanthor_stage_formalization",
+      "title": "Quanthor Stage Formalization",
+      "mode": "STAGE",
+      "description": "Stage a structured chamber candidate without admitting it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "availability": "available",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "status",
+          "tool",
+          "data",
+          "secret_values_exposed"
+        ],
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "quanthor_stage_formalization"
+          },
+          "data": {},
+          "secret_values_exposed": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "handler": {
+        "kind": "http",
+        "method": "POST",
+        "path": "/chamber/formalize"
+      }
+    },
+    {
+      "name": "quanthor_stage_mizar_draft",
+      "title": "Quanthor Stage Mizar Draft",
+      "mode": "STAGE",
+      "description": "Create a conservative Mizar draft; a draft is not proof.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "context": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      },
+      "availability": "available",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "status",
+          "tool",
+          "data",
+          "secret_values_exposed"
+        ],
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "quanthor_stage_mizar_draft"
+          },
+          "data": {},
+          "secret_values_exposed": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "handler": {
+        "kind": "http",
+        "method": "POST",
+        "path": "/draft"
+      }
+    },
+    {
+      "name": "quanthor_proofread_text",
+      "title": "Quanthor Proofread Text",
+      "mode": "READ",
+      "description": "Apply the local school-safe proofreader.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "availability": "available",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "status",
+          "tool",
+          "data",
+          "secret_values_exposed"
+        ],
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "quanthor_proofread_text"
+          },
+          "data": {},
+          "secret_values_exposed": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "handler": {
+        "kind": "http",
+        "method": "POST",
+        "path": "/proofread"
+      }
+    },
+    {
+      "name": "quanthor_inspect_rag_status",
+      "title": "Quanthor Inspect Rag Status",
+      "mode": "READ",
+      "description": "Inspect optional HippoRAG availability without exposing configuration.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "availability": "available",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "status",
+          "tool",
+          "data",
+          "secret_values_exposed"
+        ],
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "quanthor_inspect_rag_status"
+          },
+          "data": {},
+          "secret_values_exposed": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "handler": {
+        "kind": "http",
+        "method": "GET",
+        "path": "/rag/status"
+      }
+    },
+    {
+      "name": "quanthor_retrieve_context",
+      "title": "Quanthor Retrieve Context",
+      "mode": "READ",
+      "description": "Retrieve bounded optional context; context does not verify formality.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "top_k": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      },
+      "availability": "available",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "status",
+          "tool",
+          "data",
+          "secret_values_exposed"
+        ],
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "quanthor_retrieve_context"
+          },
+          "data": {},
+          "secret_values_exposed": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "handler": {
+        "kind": "http",
+        "method": "POST",
+        "path": "/rag/retrieve"
+      }
+    },
+    {
+      "name": "quanthor_audit_neutrosophy",
+      "title": "Quanthor Audit Neutrosophy",
+      "mode": "READ",
+      "description": "Produce the operational I -> I_system^S -> D_f -> dF -> i_fractal audit.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "context": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "availability": "available",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "status",
+          "tool",
+          "data",
+          "secret_values_exposed"
+        ],
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "quanthor_audit_neutrosophy"
+          },
+          "data": {},
+          "secret_values_exposed": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "handler": {
+        "kind": "http",
+        "method": "POST",
+        "path": "/audit/neutrosophy"
+      }
+    },
+    {
+      "name": "quanthor_audit_plithogenic_quaternion",
+      "title": "Quanthor Audit Plithogenic Quaternion",
+      "mode": "READ",
+      "description": "Produce a classical relation audit; not quantum computation or proof.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "context": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "availability": "available",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "status",
+          "tool",
+          "data",
+          "secret_values_exposed"
+        ],
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "quanthor_audit_plithogenic_quaternion"
+          },
+          "data": {},
+          "secret_values_exposed": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "handler": {
+        "kind": "http",
+        "method": "POST",
+        "path": "/audit/plithogenic-quaternion"
+      }
+    },
+    {
+      "name": "quanthor_verify_mizar",
+      "title": "Quanthor Verify Mizar",
+      "mode": "READ",
+      "description": "Run the non-mutating local Mizar verifier and inspect its result.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "additionalProperties": false
+      },
+      "availability": "available",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "status",
+          "tool",
+          "data",
+          "secret_values_exposed"
+        ],
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "quanthor_verify_mizar"
+          },
+          "data": {},
+          "secret_values_exposed": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "handler": {
+        "kind": "http",
+        "method": "POST",
+        "path": "/verify"
+      }
+    },
+    {
+      "name": "securedme_companion_context",
+      "title": "Securedme Companion Context",
+      "mode": "READ",
+      "description": "Read the sanitized Hero Book companion projection supplied by Gateway.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "availability": "available",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "status",
+          "tool",
+          "data",
+          "secret_values_exposed"
+        ],
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "securedme_companion_context"
+          },
+          "data": {},
+          "secret_values_exposed": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "handler": {
+        "kind": "local",
+        "operation": "Gateway_session_projection"
+      }
+    },
+    {
+      "name": "securedme_qbit_plan_handoff",
+      "title": "Securedme Qbit Plan Handoff",
+      "mode": "STAGE",
+      "description": "Prepare a Qbit return proposal without changing pedagogical progression.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "mission_ref": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "artifact_refs": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "maxLength": 160
+            }
+          }
+        },
+        "required": [
+          "mission_ref"
+        ],
+        "additionalProperties": false
+      },
+      "availability": "available",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "status",
+          "tool",
+          "data",
+          "secret_values_exposed"
+        ],
+        "properties": {
+          "status": {
+            "const": "success"
+          },
+          "tool": {
+            "const": "securedme_qbit_plan_handoff"
+          },
+          "data": {},
+          "secret_values_exposed": {
+            "const": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "handler": {
+        "kind": "local",
+        "operation": "local_proposal_only"
+      }
+    }
+  ],
+  "boundaries": {
+    "authority": "Mizar is the formal check and qualified human review remains required.",
+    "secrets": "Provider secrets, .env values and raw private evidence are forbidden.",
+    "externalWrites": "The generic /route endpoint is not exposed through WebMCP; no provider or browser automation is available.",
+    "heroProgression": "AlgoQuest alone owns Hero Book progression and evidence admission."
+  }
+}

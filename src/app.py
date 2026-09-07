@@ -7,6 +7,9 @@ import re
 import shutil
 import subprocess
 import tempfile
+import hashlib
+import json
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional
 
@@ -22,6 +25,7 @@ try:
     from .neutrosophic_auditor import NeutrosophicAuditor
     from .plithogenic_quaternion_auditor import PlithogenicQuaternionAuditor
     from .school_proofreader import SchoolProofreader
+    from .webmcp import EXECUTE_TOOLS, PRODUCT_SLUG, manifest as webmcp_manifest, tool as webmcp_tool
 except ImportError:  # pragma: no cover - allows `python src/app.py`
     from chamber_formalizer import chamber_formalizer_status, formalize_chamber_request
     from hipporag_service import HippoRAGService
@@ -31,6 +35,7 @@ except ImportError:  # pragma: no cover - allows `python src/app.py`
     from neutrosophic_auditor import NeutrosophicAuditor
     from plithogenic_quaternion_auditor import PlithogenicQuaternionAuditor
     from school_proofreader import SchoolProofreader
+    from webmcp import EXECUTE_TOOLS, PRODUCT_SLUG, manifest as webmcp_manifest, tool as webmcp_tool
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -198,7 +203,21 @@ os.environ.setdefault("mizfiles", str(MIZAR_SHARE_DIR))
 MIZAR_COMMAND = _resolve_mizar_command(MIZAR_EXEC_DIR)
 
 app = Flask(__name__)
-CORS(app)
+_cors_origins = tuple(
+    origin.strip()
+    for origin in os.getenv(
+        "QUANTHOR_CORS_ORIGINS",
+        "http://127.0.0.1:5050,http://localhost:5050,https://quanthor.securedme.ca",
+    ).split(",")
+    if origin.strip() and origin.strip() != "*"
+)
+CORS(
+    app,
+    resources={r"/*": {"origins": _cors_origins}},
+    supports_credentials=True,
+    methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "X-SecuredMe-WebMCP", "X-CSRF-Token"],
+)
 
 
 @app.route("/chamber/formalize/status", methods=["GET"])
@@ -239,25 +258,174 @@ def health():
         {
             "status": "ok",
             "mizar_available": bool(MIZAR_COMMAND),
-            "mizar_command": MIZAR_COMMAND,
-            "mizar_share_dir": str(MIZAR_SHARE_DIR),
-            "mizar_exec_dir": str(MIZAR_EXEC_DIR),
-            "proofreader_provider": proofreader.model,
+            "proofreader_available": True,
             "proofreader_official_school_provider": True,
-            "mizar_draft_base_url": drafter.base_url,
-            "mizar_draft_model_configured": drafter.configured_model,
-            "mizar_draft_model_resolved": drafter.model,
-            "mizar_draft_structured_outputs": not drafter.model.lower().endswith("cloud"),
-            "router_base_url": router.base_url,
-            "router_model_configured": router.configured_model,
-            "router_model_resolved": router.model,
-            "router_structured_outputs": not router.model.lower().endswith("cloud"),
-            "hipporag": rag.status(),
+            "draft_service_available": True,
+            "router_service_available": True,
+            "official_school_ai_route": "browser-webauth-required",
+            "hipporag": _sanitized_rag_status(),
             "neutrosophic_audit_available": True,
             "plithogenic_quaternion_audit_available": True,
             "timeout_seconds": DEFAULT_TIMEOUT_SECONDS,
+            "configuration_paths_exposed": False,
+            "secret_values_exposed": False,
         }
     )
+
+
+@app.route("/webmcp/manifest", methods=["GET"])
+def webmcp_manifest_route():
+    """Public discovery surface. Invocations remain authenticated and gated."""
+
+    return jsonify(webmcp_manifest())
+
+
+def _safe_webmcp_value(value, depth=0):
+    if depth > 8:
+        return "<depth-limited>"
+    if isinstance(value, dict):
+        blocked = ("secret", "token", "cookie", "password", "authorization", "env", "path", "command", "base_url", "model", "provider")
+        return {
+            str(key): _safe_webmcp_value(item, depth + 1)
+            for key, item in value.items()
+            if not any(marker in str(key).lower() for marker in blocked)
+        }
+    if isinstance(value, list):
+        return [_safe_webmcp_value(item, depth + 1) for item in value[:100]]
+    if isinstance(value, str):
+        return value[:20000]
+    return value
+
+
+def _sanitized_rag_status():
+    """Return capability flags only; never expose model, URL, path or error data."""
+
+    raw = rag.status()
+    allowed = (
+        "enabled",
+        "available",
+        "package_available",
+        "initialized",
+        "mode",
+        "default_top_k",
+        "proxy_http_status",
+    )
+    return {name: raw.get(name) for name in allowed if name in raw}
+
+
+def _validate_webmcp_arguments(descriptor, arguments):
+    if not isinstance(arguments, dict):
+        raise ValueError("arguments must be an object")
+    schema = descriptor["inputSchema"]
+    properties = schema.get("properties", {})
+    unknown = set(arguments) - set(properties)
+    if unknown:
+        raise ValueError("unknown arguments: " + ", ".join(sorted(unknown)))
+    missing = [name for name in schema.get("required", []) if name not in arguments]
+    if missing:
+        raise ValueError("missing arguments: " + ", ".join(missing))
+    for name, value in arguments.items():
+        rule = properties[name]
+        if rule.get("type") == "string" and (not isinstance(value, str) or len(value) < rule.get("minLength", 0) or len(value) > rule.get("maxLength", 10**9)):
+            raise ValueError(f"invalid string argument: {name}")
+        if rule.get("type") == "integer" and (not isinstance(value, int) or value < rule.get("minimum", value) or value > rule.get("maximum", value)):
+            raise ValueError(f"invalid integer argument: {name}")
+
+
+def _dispatch_webmcp(name, arguments, session):
+    if name == "quanthor_inspect_runtime":
+        return {
+            "status": "ok",
+            "mizar_available": bool(MIZAR_COMMAND),
+            "proofreader_available": True,
+            "hipporag": _sanitized_rag_status(),
+            "timeout_seconds": DEFAULT_TIMEOUT_SECONDS,
+        }
+    if name == "quanthor_inspect_formalizer":
+        return chamber_formalizer_status()
+    if name == "quanthor_stage_formalization":
+        return formalize_chamber_request(arguments["text"], {})
+    if name == "quanthor_stage_mizar_draft":
+        # WebMCP never selects a legacy model route. It exposes the
+        # deterministic conservative fallback until an approved browser WebAuth
+        # adapter is installed outside this service.
+        return drafter._heuristic_response(arguments["query"], arguments.get("context", ""), provider="school-heuristic")
+    if name == "quanthor_proofread_text":
+        return proofreader.proofread_text(arguments["text"])
+    if name == "quanthor_inspect_rag_status":
+        return {"status": "success", "hipporag": _sanitized_rag_status()}
+    if name == "quanthor_retrieve_context":
+        return rag.retrieve(arguments["query"], min(arguments.get("top_k", 5), 10))
+    if name == "quanthor_audit_neutrosophy":
+        decision = {"route": "audit_only", "executed": False}
+        return auditor.audit(arguments["text"], context=arguments.get("context", ""), route_decision=decision, tool_result={})
+    if name == "quanthor_audit_plithogenic_quaternion":
+        decision = {"route": "audit_only", "executed": False}
+        return _build_plithogenic_quaternion_audit(arguments["text"], context=arguments.get("context", ""), route_decision=decision)
+    if name == "quanthor_verify_mizar":
+        result = _verify_mizar_code(arguments["code"])
+        result.pop("http_status", None)
+        return result
+    if name == "securedme_companion_context":
+        return {
+            "schema": "HeroBookPanelState.projection.v1",
+            "canonical_state_owner": "algoquest",
+            "hero_context": session.get("hero_context", {}),
+            "revision": session.get("hero_revision"),
+            "specialist": "quanthor",
+            "raw_learner_record_exposed": False,
+        }
+    if name == "securedme_qbit_plan_handoff":
+        return {
+            "schema": "securedme.qbit.handoff-plan.v1",
+            "status": "staged",
+            "mission_ref": arguments["mission_ref"],
+            "artifact_refs": arguments.get("artifact_refs", []),
+            "target": "algoquest",
+            "progression_modified": False,
+        }
+    raise LookupError("tool has no real handler")
+
+
+@app.route("/webmcp/invoke", methods=["POST"])
+def webmcp_invoke():
+    authorizer = app.config.get("SECUREDME_WEBMCP_AUTHORIZER")
+    if not callable(authorizer):
+        return jsonify({"status": "error", "error_code": "GATEWAY_SESSION_REQUIRED", "secret_values_exposed": False}), 503
+    try:
+        session = authorizer(request)
+    except Exception:
+        session = None
+    if not isinstance(session, dict) or session.get("schema") != "securedme.education.session.v2":
+        return jsonify({"status": "error", "error_code": "UNAUTHORIZED", "secret_values_exposed": False}), 401
+    if PRODUCT_SLUG not in session.get("allowed_tools", []) or session.get("consent_scope") not in {"tool", "suite"}:
+        return jsonify({"status": "error", "error_code": "FORBIDDEN", "secret_values_exposed": False}), 403
+    try:
+        expires_at = datetime.fromisoformat(str(session["expires_at"]).replace("Z", "+00:00"))
+        if expires_at <= datetime.now(timezone.utc):
+            raise ValueError("expired")
+    except Exception:
+        return jsonify({"status": "error", "error_code": "SESSION_EXPIRED", "secret_values_exposed": False}), 401
+    payload = request.get_json(silent=True) or {}
+    name = str(payload.get("name") or "")
+    descriptor = webmcp_tool(name)
+    if descriptor is None:
+        return jsonify({"status": "error", "error_code": "TOOL_UNAVAILABLE", "secret_values_exposed": False}), 404
+    arguments = payload.get("arguments") or {}
+    try:
+        _validate_webmcp_arguments(descriptor, arguments)
+    except ValueError as exc:
+        return jsonify({"status": "error", "error_code": "INVALID_ARGUMENTS", "message": str(exc), "secret_values_exposed": False}), 400
+    if name in EXECUTE_TOOLS:
+        consumer = app.config.get("SECUREDME_WEBMCP_APPROVAL_CONSUMER")
+        digest = hashlib.sha256(json.dumps(arguments, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        if not callable(consumer) or not consumer(arguments.get("approval_receipt", ""), arguments.get("idempotency_key", ""), name, digest):
+            return jsonify({"status": "error", "error_code": "ONE_TIME_APPROVAL_REQUIRED", "secret_values_exposed": False}), 403
+    try:
+        result = _safe_webmcp_value(_dispatch_webmcp(name, arguments, session))
+    except Exception:
+        return jsonify({"status": "error", "error_code": "TOOL_EXECUTION_FAILED", "secret_values_exposed": False}), 500
+    return jsonify({"status": "success", "tool": name, "data": result, "secret_values_exposed": False})
 
 
 def _parse_top_k(value: object) -> int:
