@@ -1,269 +1,66 @@
-<h1 align="center">QuaNThoR</h1>
+# QuaNThoR
 
-<!-- SECUREDME-ZENODO:START -->
-<p align="center">
-  <a href="https://doi.org/10.5281/zenodo.21893187"><img alt="Zenodo DOI: 10.5281/zenodo.21893187" src="https://img.shields.io/badge/Zenodo%20DOI-10.5281%2Fzenodo.21893187-1682D4?style=for-the-badge" /></a>
-</p>
-<!-- SECUREDME-ZENODO:END -->
+![QuaNThoR — SecuredMe Education](docs/assets/repository/readme-banner-2026.png)
 
-<!-- SECUREDME-CPAI-MESH:START -->
-<p align="center">
-  <img alt="CodeProject.AI Server embedded mesh node" src="https://img.shields.io/badge/CodeProject.AI%20Server-Embedded%20Mesh%20Node-1F6FEB?style=for-the-badge" />
-  <img alt="YOLO real local inference validated" src="https://img.shields.io/badge/YOLO-Real%20Local%20Inference-16A34A?style=for-the-badge" />
-</p>
-<!-- SECUREDME-CPAI-MESH:END -->
+[![License SEL-2.0](https://img.shields.io/badge/license-SEL--2.0-6F42FF)](LICENSE)
+[![Pre-alpha](https://img.shields.io/badge/status-pre--alpha-0E7490)](AGENTS.md)
+[![Issues](https://img.shields.io/github/issues/SeCuReDmE-main-dev/QuaNThoR)](https://github.com/SeCuReDmE-main-dev/QuaNThoR/issues)
+[![Main history](https://img.shields.io/github/last-commit/SeCuReDmE-main-dev/QuaNThoR/main)](https://github.com/SeCuReDmE-main-dev/QuaNThoR/commits/main/)
+[![SPONSORED BY E2B FOR STARTUPS](https://img.shields.io/badge/SPONSORED%20BY-E2B%20FOR%20STARTUPS-ff3001?style=for-the-badge&labelColor=black)](https://e2b.dev/startups)
 
-[Embedded CodeProject.AI node operations](infra/codeproject-ai/README.md)
+Étudier la vérification formelle, la relecture et les contrats de recherche avec des résultats inspectables.
 
-![QuaNThoR Marketing Asset](assets/Marketing%20kit/(8).png)
+[Public surface](https://quanthor.securedme.ca/) · [Tool documentation](https://securedme-main-dev.github.io/securedme-scholarium/en/tools/quanthor/) · [Education hub](https://securedme.ca/product/education/)
 
-<div align="center">
+**Status:** pre-alpha, active public development. Public pages and a successful local test do not establish a deployed school service. E2B sponsorship recognition is separate from runtime availability and included quota.
 
-[![SecuredMe Education Suite public calendar](https://img.shields.io/badge/SecuredMe%20Education%20Suite-public%20calendar%20%7C%20pre--alpha%20%7C%20active%20public%20development-5484ED?style=for-the-badge&logo=googlecalendar&logoColor=white)](https://calendrier.securedme.ca)
+## How it works
 
-</div>
+Les routes locales séparent la vérification, la proposition et la relecture. La disponibilité de chaque moteur doit être observée ; une réponse rédigée ne constitue pas une preuve formelle.
 
-**Attribution:** Jean-Sebastien Beaulieu · [ORCID 0009-0007-2904-0443](https://orcid.org/0009-0007-2904-0443) · [SecuredMe](https://securedme.ca) · [QuaNThoR](https://quanthor.securedme.ca)
+## Local development
 
-<!-- SECUREDME-SUITE-BADGES:START -->
-[![Issues](https://img.shields.io/github/issues/SeCuReDmE-main-dev/QuaNThoR?color=161B6A)](https://github.com/SeCuReDmE-main-dev/QuaNThoR/issues)
-[![Milestones](https://img.shields.io/badge/milestones-M0--M7-23B8FF)](https://github.com/SeCuReDmE-main-dev/QuaNThoR/milestones)
-[![Project Board](https://img.shields.io/badge/project-kanban-6F42FF)](https://github.com/users/SeCuReDmE-main-dev/projects/3)
-[![Branch](https://img.shields.io/badge/branch-main-0E7490)](https://github.com/SeCuReDmE-main-dev/QuaNThoR/tree/main)
-<!-- SECUREDME-SUITE-BADGES:END -->
-
-<!-- SECUREDME-STARTUP-SUPPORT:START -->
-<p align="center">
-  <a href="https://e2b.dev/startups">
-    <img alt="Gateway-ready E2B audit lane" src="https://img.shields.io/badge/Gateway--ready-E2B%20audit%20lane-FF8800?style=for-the-badge" />
-  </a>
-  <a href="https://www.datadoghq.com/partner/datadog-for-startups/">
-    <img alt="Gateway-ready Datadog observability" src="https://img.shields.io/badge/Gateway--ready-Datadog%20observability-632CA6?style=for-the-badge&amp;logo=datadog&amp;logoColor=white" />
-  </a>
-</p>
-
-> **Gateway support acknowledgement.** This SecuredMe school tool is gateway-compatible. E2B audit support and Datadog observability are routed through the shared SecuredMe gateway when that lane is configured; this repository does not claim a direct E2B or Datadog runtime dependency by default, and no E2B or Datadog secret is stored in this README.
-<!-- SECUREDME-STARTUP-SUPPORT:END -->
-
-> **Maintainer intake during active finishing week.** This repository is maintained directly on `main` by the SecuredMe maintainer. Public issues are open for bug reports, documentation corrections, security-safe observations, and reproducible feedback, but opening an issue does not promise a response or a delivery date. Pull requests are not accepted during the active code-finishing week; use issues only until this notice is replaced.
-
-
-
-
-## School Authentication And Secret Boundary
-This repository is a small SecuredMe school tool. Official classroom use must not require `.env` files, API keys, raw tokens, or local model secrets. Student and teacher workflows must use Codex/OpenAI or Antigravity/Gemini through browser WebAuth, fingerprinted session approval, and encrypted local session records when authentication is needed.
-
-Both host adapters implement the shared `securedme.education.webauth-template.v1` policy and are auditable through the Gateway. That proves policy compatibility, not a deployed QuaNThoR login. Provider callback, account binding, session expiry, logout, recovery, and accessible browser acceptance remain required before live-login claims.
-
-The reason for excluding generic local AI routes from official school mode is student and teacher safety: education accounts, provider-side account controls, browser login, and governed AI refusal behavior are safer than unguided local model endpoints for classroom cybersecurity and algorithm-building tools.
-
-> **Development status.** This school tool is currently **pre-alpha — active public development**. Public issues remain open for intake, but no response or delivery date is promised. Pull requests are paused during active development.
-
-> **SecuredMe Education visual theme.** This pre-alpha school tool uses the shared SecuredMe Education open-source visual identity. See [assets/securedme/education](assets/securedme/education) for light/dark logo and thin banner assets.
-
-
-> **Official school governance.** QuaNThoR is a supervised mathematics/proof education tool. The maintained classroom route supports Codex/OpenAI or Antigravity/Gemini only. See [SCHOOL_TOOL_GOVERNANCE.md](SCHOOL_TOOL_GOVERNANCE.md) and [AGENTS.md](AGENTS.md).
-
-> **License.** This project uses the Secured Educational License 2.0 (SEL-2.0). It is provided for education, research, simulation, classroom training, and supervised learning. Misuse, unsafe private forks, unsupported provider routes, and unsupervised authority claims are not maintained or endorsed by the official school version. See [LICENSE](LICENSE), [NOTICE](NOTICE), [DISCLAIMER](DISCLAIMER), and [SAFETY.md](SAFETY.md).
-
-## À quoi sert cet outil
-
-`QuaNThoR` est un assistant de vérification Mizar orienté **étudiants** et **mathématiciens**.
-
-Ce que le service fait réellement :
-
-- Vérifie des articles Mizar complets (`.miz`) via le vérifieur Mizar.
-- Route automatiquement une demande entre :
-  - `proofread`
-  - `draft_mizar`
-  - `verify_mizar`
-  - `needs_clarification`
-- Produit un brouillon Mizar depuis une demande en langage naturel.
-- Propose une correction grammaticale/punctuationnelle locale et conservative.
-- Expose des aides de flux (RAG HippoRAG, audit neutrosophique) optionnelles.
-
-Toutes les exécutions lourdes (vérifieur, génération) tournent dans Docker.  
-Le dépôt est prévu en mode **container-first**.
-
-## Démarrage rapide (Windows)
-
-1. Avoir Docker Desktop installé.
-2. Depuis `[local maintainer path redacted]` :
+Record the checkout and existing changes before editing:
 
 ```powershell
-.\INSTALL_QUANTHOR.bat
-.\START_QUANTHOR.bat
+git status --short --branch
+git rev-parse HEAD
 ```
 
-3. Ouvrir `http://localhost:5050`.
+Review the source entry points and repository-specific requirements linked below before installing. Optional container, model, API and infrastructure routes require separate availability checks. Do not start external services or copy private environment files into a classroom checkout.
 
-Alternative directe :
+Run the relevant local checks from the repository root; the indicated `Set-Location` is needed only when starting from that root:
 
 ```powershell
-docker compose up --build
+python scripts/docgen.py check
 ```
 
-## Fonctions utiles (endpoints)
+## Source map
 
-### `GET /health`
+- [src](src)
+- [scripts/docgen.py](scripts/docgen.py)
+- [INSTALL_QUANTHOR.bat](INSTALL_QUANTHOR.bat)
+- [START_QUANTHOR.bat](START_QUANTHOR.bat)
+- [docker-compose.yml](docker-compose.yml)
 
-- Vérifie la disponibilité des briques (Mizar, proofreader local, HippoRAG, audit).
-- Réponse attendue : JSON avec `status: "ok"`.
+## Practice exercise
 
-### `POST /verify`
+Choisir un exemple Mizar borné et comparer la réponse du vérificateur avec une simple relecture. Expliquer ce que chaque réponse prouve réellement.
 
-- Corps JSON : `{ "code": "environ ... theorem ... end;" }`
-- `code` doit être un article Mizar complet (`environ`, `begin`, `end;`).
-- Réponses principales :
-  - `status`: `success | failure | error`
-  - `errors`: liste structurée d’erreurs détectées
-  - `raw_output`: sortie brute du vérifieur
+During an individual course, learners choose suite tools to practice. The eight-week final project is the learner's own tool, submitted by the learner to an eligible hackathon after checking its age, AI, originality and licensing rules.
 
-### `POST /route`
+## Boundaries and privacy
 
-- Corps JSON : `text` OU `query` OU `prompt` OU `code`
-- Retourne un `route` puis, si `execute: true`, exécute la branche choisie.
-- Champs utiles : `route`, `executed`, `tool_result`, `neutrosophic_audit` (optionnel).
+Les backends optionnels et l’authentification réelle restent à valider. Une ancienne consigne Docker ou un rapport de disponibilité ne prouve pas que le moteur fonctionne aujourd’hui.
 
-### `POST /draft`
+The official school routes are Codex/OpenAI and Antigravity/Gemini with human review. Never distribute raw tokens, learner data, prompts or private correspondence. No hidden learner analytics are added. Public analytics require explicit consent; general autocapture and session replay remain disabled. Optional local technical telemetry is separate from learner records and product audit history.
 
-- Corps JSON : `{ "query": "..." }`
-- Produit un brouillon Mizar conservatif : `status`, `mizar_draft`, questions de clarification.
+See [AGENTS.md](AGENTS.md) and [SCHOOL_TOOL_GOVERNANCE.md](SCHOOL_TOOL_GOVERNANCE.md) for current authority and provider boundaries. Maintainer-authorized maintenance follows repository protections and required reviews. General contribution restrictions remain governed by [CONTRIBUTING.md](CONTRIBUTING.md).
 
-### `POST /proofread`
+## License, authorship and history
 
-- Corps JSON : `{ "text": "..." }`
-- Retourne un texte amélioré + suggestions.
+The repository's actual license is [SEL-2.0](LICENSE). Keep the license, attribution, notices and safety boundaries when reusing the code.
 
-### `POST /audit/neutrosophy`
+Jean-Sebastien Beaulieu · [ORCID 0009-0007-2904-0443](https://orcid.org/0009-0007-2904-0443) · [SecuredMe](https://securedme.ca/)
 
-- Corps JSON : `text | query | prompt | code`
-- Retour : chaîne d’audit opérationnel (`T`, `I_system_S`, `D_f`, `dF`, `F`, `i_fractal`) et recommandation.
-- La chaîne officielle reste :
-
-```text
-I -> I_system^S -> D_f -> dF -> i_fractal
-```
-
-### `POST /chamber/formalize`
-
-- Corps JSON : `text` et, si disponible, `candidate.carriers`.
-- Formalise une intention en une proposition des dix porteurs fixes pour le
-  visualiseur de chambre FNP-QNN.
-- Le retour `ready_for_synthia_admission` est une préparation de dossier, pas
-  une admission : seule Synthia peut autoriser la création de la chambre.
-- Diagnostic : `GET /chamber/formalize/status`.
-
-### RAG (optionnel)
-
-- `GET /rag/status`
-- `POST /rag/index`
-- `POST /rag/retrieve`
-- `POST /rag/qa`
-
-## Variables d’environnement utiles
-
-- Les variables `SCHOOL_LLM_*` configurent le runtime modèle provider-neutre.
-- Les variables historiques `OLLAMA_*` peuvent encore exister pour compatibilité
-  locale, mais elles ne sont pas la route scolaire officielle.
-- La route officielle de correction publique utilise le proofreader local
-  `school-heuristic`.
-- `MIZAR_TIMEOUT_SECONDS` : timeout vérifieur (défaut `60`).
-- `HIPPORAG_ENABLED` : `true|false` (défaut `false`)
-- `HIPPORAG_SERVICE_URL` : URL du sidecar, ex. `http://hipporag:5100`
-- `HIPPORAG_LLM_BASE_URL` / `HIPPORAG_EMBEDDING_BASE_URL`
-- `HIPPORAG_LLM_MODEL` / `HIPPORAG_EMBEDDING_MODEL`
-- `HIPPORAG_TOP_K` : nombre de résultats
-- `QUANTHOR_HOST_PORT` : port hôte de l’API (défaut `5050`)
-
-## Exemples d’usage minimal
-
-```powershell
-curl http://localhost:5050/health
-
-curl -X POST http://localhost:5050/verify -H "Content-Type: application/json" --data-binary "@examples/mizar/minimal/test.miz"
-
-curl -X POST http://localhost:5050/route -H "Content-Type: application/json" --data "{\"text\":\"Prove a minimal theorem about even numbers.\"}"
-```
-
-## Profils recommandés
-
-- Sans RAG (recommandé) : `docker compose up --build`
-- Avec RAG local (expérimental) :
-
-```powershell
-$env:HIPPORAG_ENABLED = "true"
-$env:HIPPORAG_SERVICE_URL = "http://hipporag:5100"
-$env:HIPPORAG_LLM_BASE_URL = "http://host.docker.internal:11434/v1"
-$env:HIPPORAG_EMBEDDING_BASE_URL = "http://host.docker.internal:11434/v1"
-docker compose --profile hipporag up --build
-```
-
-## Modèle spécialisé Mizar
-
-Le dossier `models/` peut contenir du matériel expérimental ou historique. Il ne
-définit pas une route scolaire officielle. Pour les usages de classe maintenus,
-utiliser la vérification Mizar, le proofreader local, Codex/OpenAI ou
-Antigravity/Gemini selon la gouvernance scolaire du dépôt.
-
-## Références internes du dépôt
-
-- `src/app.py` : API Flask
-- `src/mizar_router.py` : logique de route
-- `src/mizar_drafter.py` : brouillon Mizar
-- `src/mizar_translator.py` : explicitation pédagogique
-- `src/school_proofreader.py` : correction grammaticale/punctuation locale
-- `src/school_model_runtime.py` : helper provider-neutre pour les usages modèle
-- `src/ollama_proofreader.py` : compatibilité historique non officielle
-- `src/hipporag_service.py` / `src/hipporag_api.py` : couche RAG
-- `models/mizar-specialist/Modelfile` : prompt de modèle
-- `examples/mizar/minimal/test.miz` : fixture Mizar minimale
-- `docs/wiki/*` : mode d’emploi détaillé
-- `SECURITY.md`, `LICENSE` : règles de sécurité / licence
-
-## Documentation automatique (sans GitHub Action)
-
-### Solution choisie pour être 100% opérationnelle
-
-- Flux local primaire (sans GitHub Action) : **MkDocs Material + génération locale** (`scripts/docgen.py`).
-- Option éditeur : **GitBook** si vous voulez une édition SaaS collaborative.
-- Aucun pipeline GitHub Action requis dans ce dépôt.
-
-### Commandes utiles
-
-```powershell
-python scripts/docgen.py generate       # Génère la docs auto dans docs/generated/*
-python scripts/docgen.py check           # Vérifie la synchronisation docs auto
-python -m pip install -r requirements-docs.txt
-python scripts/docgen.py build           # Build du site local
-python scripts/docgen.py serve --port 8000 # Prévisualisation locale
-docker compose --profile docs up docs    # Prévisualisation locale en container MkDocs
-```
-
-### To-Do de la facette docs
-
-- [x] Workflow local gratuit actif (`scripts/docgen.py` + MkDocs).
-- [x] Vérification de dérive docs auto via `python scripts/docgen.py check`.
-- [x] Prévisualisation locale via `python scripts/docgen.py serve --port 8000` ou `docker compose --profile docs up docs`.
-- [ ] Ajouter un "docs check" obligatoire avant tout release locale.
-
-## Public Archive Intent
-
-QuaNThoR est destiné à être publié comme outil public gratuit pour l’apprentissage, l’expérimentation et la vérification formelle. Il n’est pas destiné à être vendu ou transformé en produit commercial fermé.
-
-Le dépôt doit rester utilisable sans dépendance obligatoire à une API propriétaire. Certaines intégrations peuvent être optionnelles, mais le coeur de l’outil et ses exemples doivent rester accessibles publiquement.
-
-Après la présentation finale, le dépôt sera archivé dans l’état livré. Aucune maintenance continue, refonte, support commercial ou roadmap post-archive n’est promise. Les personnes qui souhaitent l’utiliser devront le trouver, le lire et l’exécuter tel quel.
-
-## License
-
-This project is licensed under the Secured Educational License 2.0 (SEL-2.0). See [LICENSE](LICENSE).
----
-
-![Mascotte Orion Vey](assets/mascot/Orion%20Vey%204.png)
-
-
-
-
-
-
+[README source before curation](docs/archive/README-before-curation-2026-09-30.txt) retains the exact previous text, implementation journals and attribution. It is historical: its old telemetry commands, readiness claims and contribution dates are not current operating instructions. [Presentation history](docs/repository-presentation-history-2026-09-30.md) retains previous badges. [GitHub social image](docs/assets/repository/github-social-preview-2026.jpg) accompanies this README.
